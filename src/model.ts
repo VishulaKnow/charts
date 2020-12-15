@@ -15,7 +15,7 @@ enum AxisType {
 enum ScaleType {
     Key, Value
 }
-//#region Confg interfaces
+//#region Config interfaces
 interface Chart {
     title: string;
     type: 'bar' | 'line' | 'area';
@@ -85,7 +85,7 @@ const config: Config = {
                 start: 0,
                 end: 150
             },
-            position: 'start'
+            position: 'end'
         }
     },
     charts: [
@@ -131,21 +131,29 @@ function getScaleRangePeek(scaleType: ScaleType, chartOrientation: string, block
     return rangePeek;
 }
 
-function getScaleDomain(scaleType: ScaleType, configDomain: Domain, data: DataRow[], chart: Chart): any[] {
+function getScaleDomain(scaleType: ScaleType, configDomain: Domain, data: DataRow[], chart: Chart, keyAxisPosition: string = null): any[] {
     if(scaleType === ScaleType.Key) {
         return data.map(d => d[chart.data.keyField]);
     } else {
+        let domainPeekMin: number;
+        let domainPeekMax: number;
         if(configDomain.start === -1 || configDomain.end === -1) {
-            if(chart.orientation === 'horizontal')
-                return [0, d3.max(data, d => d[chart.data.valueField])];
-            else
-                return [d3.max(data, d => d[chart.data.valueField]), 0];
+            domainPeekMin = 0;
+            domainPeekMax = d3.max(data, d => d[chart.data.valueField]);
         } else {
-            if(chart.orientation === 'horizontal')
-                return [configDomain.start, configDomain.end];
-            else 
-                return [configDomain.end, configDomain.start];
+            domainPeekMin = configDomain.start;
+            domainPeekMax = configDomain.end;
         }
+        if(chart.orientation === 'horizontal')
+            if(keyAxisPosition === 'start')
+                return [domainPeekMin, domainPeekMax];
+            else 
+                return [domainPeekMax, domainPeekMin]
+        else 
+            if(keyAxisPosition === 'start')
+                return [domainPeekMin, domainPeekMax];
+            else 
+                return [domainPeekMax, domainPeekMin];
     }
 }
 
@@ -182,8 +190,6 @@ function getTranslateY(axisType: AxisType, chartOrientation: string, axisPositio
     else
         return margin.top;
 }
-
-
 
 interface Model {
     blockCanvas: BlockCanvas;
@@ -256,7 +262,7 @@ const model: Model = {
             }
         },
         scaleValue: {
-            domain: getScaleDomain(ScaleType.Value, config.axis.keyAxis.domain, dataSet, config.charts[0]),
+            domain: getScaleDomain(ScaleType.Value, config.axis.keyAxis.domain, dataSet, config.charts[0], config.axis.keyAxis.position),
             range: {
                 start: 0,
                 end: getScaleRangePeek(ScaleType.Value, config.charts[0].orientation, config.canvas.size.width, config.canvas.size.height)

@@ -62,7 +62,6 @@ const scales: any = {
 scales.scaleKey = getScaleBand(model.scale.scaleKey.domain,
     model.scale.scaleKey.range.start,
     model.scale.scaleKey.range.end);
-
 scales.scaleValue = getScaleLinear(model.scale.scaleValue.domain,
     model.scale.scaleValue.range.start,
     model.scale.scaleValue.range.end)
@@ -71,7 +70,6 @@ renderSvgBlock(model.blockCanvas.class,
     model.blockCanvas.size.width, 
     model.blockCanvas.size.height, 
     model.blockCanvas.style);
-
 
 renderAxis(scales.scaleKey, 
     model.axis.keyAxis.orient, 
