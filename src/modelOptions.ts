@@ -1,6 +1,6 @@
 import * as d3 from 'd3'
 
-import { Config, Domain, Chart } from './config/config';
+import { Domain, Chart } from './config/config';
 import { ChartModel, Model } from './model';
 
 const data = require('./assets/dataSet.json');
@@ -16,8 +16,6 @@ enum AxisType {
 enum ScaleType {
     Key, Value
 }
-
-console.log(config);
 
 const dataSet: DataRow[] = data[config.charts[0].data.dataSource];
 
@@ -139,7 +137,7 @@ const model: Model = {
             }
         },
         scaleValue: {
-            domain: getScaleDomain(ScaleType.Value, config.axis.keyAxis.domain, dataSet, config.charts[0], config.axis.keyAxis.position),
+            domain: getScaleDomain(ScaleType.Value, config.axis.valueAxis.domain, dataSet, config.charts[0], config.axis.keyAxis.position),
             range: {
                 start: 0,
                 end: getScaleRangePeek(ScaleType.Value, config.charts[0].orientation, config.canvas.size.width, config.canvas.size.height)

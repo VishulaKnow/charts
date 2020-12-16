@@ -17,14 +17,14 @@ const config: Config = {
                 start: -1,
                 end: -1
             },
-            position: 'end'
+            position: 'start'
         },
         valueAxis: {
             domain: {
                 start: 0,
                 end: 150
             },
-            position: 'start'
+            position: 'end'
         }
     },
     charts: [
@@ -42,25 +42,7 @@ const config: Config = {
                 keyField: 'brand',
                 valueField: 'price'
             },
-            orientation: 'vertical'
-        },
-        {
-            title: 'Car prices',
-            legend: {
-                position: 'off'
-            },
-            style: {
-                'fill': 'none',
-                'stroke': 'green',
-                'stroke-width': 2
-            },
-            type: 'line',
-            data: {
-                dataSource: 'dataSet',
-                keyField: 'brand',
-                valueField: 'price'
-            },
-            orientation: 'vertical'
+            orientation: 'horizontal'
         }
     ]
 }
