@@ -1,5 +1,3 @@
-import config from "./configOptions";
-
 type CssStyle = {
     [cssProp: string]: string | number;
 }
