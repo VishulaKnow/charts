@@ -1,4 +1,5 @@
 import * as d3 from 'd3'
+import { Model } from './model';
 
 type DataRow = {
     [field: string]: any
@@ -262,21 +263,24 @@ function renderCharts(charts: any[], scaleKey: d3.ScaleBand<string>, scaleValue:
     });
 }
 
+function fillScales(scales: Scales, modelScale: any) {
+    scales.scaleKey = getScaleBand(modelScale.scaleKey.domain,
+        modelScale.scaleKey.range.start,
+        modelScale.scaleKey.range.end);
+    scales.scaleValue = getScaleLinear(modelScale.scaleValue.domain,
+        modelScale.scaleValue.range.start,
+        modelScale.scaleValue.range.end);
+}
+
 
 const scales: Scales = {
     scaleKey: null,
     scaleValue: null
 }
-import { Model } from './model';
 
 export default {
     render(model: Model, data: DataRow[]) {
-        scales.scaleKey = getScaleBand(model.scale.scaleKey.domain,
-            model.scale.scaleKey.range.start,
-            model.scale.scaleKey.range.end);
-        scales.scaleValue = getScaleLinear(model.scale.scaleValue.domain,
-            model.scale.scaleValue.range.start,
-            model.scale.scaleValue.range.end)
+        fillScales(scales, model.scale);
         
         renderSvgBlock(model.blockCanvas.class,
             model.blockCanvas.size.width, 
