@@ -1,5 +1,5 @@
 {
-    "data": [
+    "dataSet": [
         { "brand": "BMW", "price": 120 },
         { "brand": "LADA", "price": 92 },
         { "brand": "MERCEDES", "price": 15 },

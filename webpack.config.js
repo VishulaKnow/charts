@@ -21,6 +21,9 @@ module.exports = {
             chunks: 'all'
         }
     },
+    resolve: {
+        extensions: ['.js', '.ts']
+    },
     module: {
         rules: [
             {
