@@ -116,7 +116,7 @@ function getChartsModel(charts: Chart[]): ChartModel[] {
     return chartsModel;
 }
 
-const model: Model = {
+export const model: Model = {
     blockCanvas: {
         size: {
             width: config.canvas.size.width,
@@ -150,16 +150,68 @@ const model: Model = {
             translate: {
                 translateX: getTranslateX(AxisType.Key, config.charts[0].orientation, config.axis.keyAxis.position, config.canvas.size.width, config.canvas.size.height),
                 translateY: getTranslateY(AxisType.Key, config.charts[0].orientation, config.axis.keyAxis.position, config.canvas.size.width, config.canvas.size.height)
-            }
+            },
+            class: 'key-axis'
         },
         valueAxis: {
             orient: getAxisOrient(AxisType.Value, config.charts[0].orientation, config.axis.valueAxis.position),
             translate: {
                 translateX: getTranslateX(AxisType.Value, config.charts[0].orientation, config.axis.valueAxis.position, config.canvas.size.width, config.canvas.size.height),
                 translateY: getTranslateY(AxisType.Value, config.charts[0].orientation, config.axis.valueAxis.position, config.canvas.size.width, config.canvas.size.height)
-            }
+            },          
+            class: 'value-axis'
         }
     },
     charts: getChartsModel(config.charts)
 }
-export default model;
+
+export function getUpdatedModel(config: any): Model {
+    return {
+        blockCanvas: {
+            size: {
+                width: config.canvas.size.width,
+                height: config.canvas.size.height
+            },
+            class: config.canvas.class,
+            style: config.canvas.style
+        },
+        chartBlock: {
+            margin
+        },
+        scale: {
+            scaleKey: {
+                domain: getScaleDomain(ScaleType.Key, config.axis.keyAxis.domain, dataSet, config.charts[0]),
+                range: {
+                    start: 0,
+                    end: getScaleRangePeek(ScaleType.Key, config.charts[0].orientation, config.canvas.size.width, config.canvas.size.height)
+                }
+            },
+            scaleValue: {
+                domain: getScaleDomain(ScaleType.Value, config.axis.valueAxis.domain, dataSet, config.charts[0], config.axis.keyAxis.position),
+                range: {
+                    start: 0,
+                    end: getScaleRangePeek(ScaleType.Value, config.charts[0].orientation, config.canvas.size.width, config.canvas.size.height)
+                }
+            }
+        },
+        axis: {
+            keyAxis: {
+                orient: getAxisOrient(AxisType.Key, config.charts[0].orientation, config.axis.keyAxis.position),
+                translate: {
+                    translateX: getTranslateX(AxisType.Key, config.charts[0].orientation, config.axis.keyAxis.position, config.canvas.size.width, config.canvas.size.height),
+                    translateY: getTranslateY(AxisType.Key, config.charts[0].orientation, config.axis.keyAxis.position, config.canvas.size.width, config.canvas.size.height)
+                },
+                class: 'key-axis'
+            },
+            valueAxis: {
+                orient: getAxisOrient(AxisType.Value, config.charts[0].orientation, config.axis.valueAxis.position),
+                translate: {
+                    translateX: getTranslateX(AxisType.Value, config.charts[0].orientation, config.axis.valueAxis.position, config.canvas.size.width, config.canvas.size.height),
+                    translateY: getTranslateY(AxisType.Value, config.charts[0].orientation, config.axis.valueAxis.position, config.canvas.size.width, config.canvas.size.height)
+                },
+                class: 'value-axis'
+            }
+        },
+        charts: getChartsModel(config.charts)
+    }
+}

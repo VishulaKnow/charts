@@ -9,6 +9,12 @@
             margin: 0 auto;
             width: 1000px;
         }
+        .form {
+            display: flex;
+        }
+        .form-group {
+            margin: 10px;
+        }
     </style>
 </head>
 <body>
@@ -16,12 +22,37 @@
         <div class="form-group">
             <label for="">Orient</label>
             <br>
-            <select name="" id="">
+            <select name="" id="chart-orient">
                 <option value="vertical">vertical</option>
                 <option value="horizontal">horizontal</option>
             </select>
             <button class="btn-orient">Apply</button>
         </div>
+        <div class="form-group">
+            <label for="">KeyAxisPosition</label>
+            <br>
+            <select name="" id="key-axis-orient">
+                <option value="start">start</option>
+                <option value="end">end</option>
+            </select>
+            <button class="btn-key-position">Apply</button>
+        </div>
+        <div class="form-group">
+            <label for="">ValueAxisPosition</label>
+            <br>
+            <select name="" id="value-axis-orient">
+                <option value="start">start</option>
+                <option value="end">end</option>
+            </select>
+            <button class="btn-value-position">Apply</button>
+        </div>
+        <div class="form-group">
+            <label for="">ValueAxisDomain</label>
+            <br>
+            <input type="number" placeholder="start" id="domain-start">
+            <input type="number" placeholder="end" id="domain-end">
+            <button class="btn-domain">Apply</button>
+        </div> 
     </div>
 
     <div class="wrapper">

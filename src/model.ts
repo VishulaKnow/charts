@@ -43,6 +43,7 @@ interface AxisModel {
 interface AxisModelOptions {
     orient: Orient;
     translate: TranslateModel;
+    class: string;
 }
 interface TranslateModel {
     translateX: number;
