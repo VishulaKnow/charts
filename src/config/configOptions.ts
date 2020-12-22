@@ -34,27 +34,10 @@ const config: Config = {
                 position: 'off'
             },
             style: {
-                'stroke': 'steelblue',
-                'fill': 'rgba(0, 0, 255, 0.1)'
+                'fill': 'steelblue',
+                'stroke': 'none'
             },
-            type: 'bar',
-            data: {
-                dataSource: 'dataSet',
-                keyField: 'brand',
-                valueField: 'price'
-            },
-            orientation: 'vertical'
-        },
-        {
-            title: 'Car prices',
-            legend: {
-                position: 'off'
-            },
-            style: {
-                'stroke': 'green',
-                'fill': 'none'
-            },
-            type: 'line',
+            type: 'area',
             data: {
                 dataSource: 'dataSet',
                 keyField: 'brand',

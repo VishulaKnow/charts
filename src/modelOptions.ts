@@ -27,17 +27,13 @@ const margin = {
 }
 
 function getScaleRangePeek(scaleType: ScaleType, chartOrientation: string, blockWidth: number, blockHeight: number): number {
-    let rangePeek;
     if(chartOrientation === 'vertical')
-        rangePeek = scaleType === ScaleType.Key 
+        return scaleType === ScaleType.Key 
             ? blockWidth - margin.left - margin.right
             : blockHeight - margin.top - margin.bottom;
-    else
-        rangePeek = scaleType === ScaleType.Key 
-            ? blockHeight - margin.top - margin.bottom
-            : blockWidth - margin.left - margin.right;
-    
-    return rangePeek;
+    return scaleType === ScaleType.Key 
+        ? blockHeight - margin.top - margin.bottom
+        : blockWidth - margin.left - margin.right;
 }
 
 function getScaleDomain(scaleType: ScaleType, configDomain: Domain, data: DataRow[], chart: Chart, keyAxisPosition: string = null): any[] {
@@ -46,13 +42,14 @@ function getScaleDomain(scaleType: ScaleType, configDomain: Domain, data: DataRo
     } else {
         let domainPeekMin: number;
         let domainPeekMax: number;
-        if(configDomain.start === -1 || configDomain.end === -1) {
+        if(configDomain.start === -1)
             domainPeekMin = 0;
-            domainPeekMax = d3.max(data, d => d[chart.data.valueField]);
-        } else {
+        else
             domainPeekMin = configDomain.start;
+        if(configDomain.end === -1)
+            domainPeekMax = d3.max(data, d => d[chart.data.valueField]);
+        else
             domainPeekMax = configDomain.end;
-        }
         if(chart.orientation === 'horizontal')
             if(keyAxisPosition === 'start')
                 return [domainPeekMin, domainPeekMax];

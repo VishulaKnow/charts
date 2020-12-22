@@ -443,7 +443,7 @@ export default {
             model.blockCanvas.size.width,
             model.blockCanvas.size.height);
     },
-    updateOrient(model: Model, data: DataRow[]) {
+    updateFullBlock(model: Model, data: DataRow[]) {
         clearBlock();
         this.render(model, data);
     },
