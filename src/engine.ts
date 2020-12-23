@@ -1,5 +1,6 @@
 import * as d3 from 'd3'
-import { Model } from './model';
+import config from './config/configOptions';
+import { Model, TwoDimensionalOptionsModel, PolarOptionsModel } from './model';
 
 type DataRow = {
     [field: string]: any
@@ -99,7 +100,7 @@ function fillBarAttrsByKeyOrient(bars: d3.Selection<SVGRectElement, DataRow, d3.
             .attr('width', d => blockWidth - margin.left - margin.right - scaleValue(d[valueField]));   
 }
 
-function renderBar(scaleKey: d3.ScaleBand<string>, scaleValue: d3.ScaleLinear<number, number>, data: DataRow[], margin: BlockMargin, keyField: string, valueField: string, barStyle: CssStyle, keyAxisOrient: string, blockWidth: number, blockHeight: number): void {
+function renderBar(scaleKey: d3.ScaleBand<string>, scaleValue: d3.ScaleLinear<number, number>, data: DataRow[], margin: BlockMargin, keyField: string, valueField: string, cssStyle: CssStyle, keyAxisOrient: string, blockWidth: number, blockHeight: number): void {
     const bars = d3.select('svg')
         .selectAll('rect.bar')
         .data(data)
@@ -116,8 +117,8 @@ function renderBar(scaleKey: d3.ScaleBand<string>, scaleValue: d3.ScaleLinear<nu
         blockWidth,
         blockHeight);
 
-    for(let key in barStyle) {
-        bars.style(key, barStyle[key]);
+    for(let key in cssStyle) {
+        bars.style(key, cssStyle[key]);
     }
 }
 
@@ -146,7 +147,7 @@ function getLineCoordinateByKeyOrient(axisOrient: string, data: DataRow[], scale
     return lineCoordinate;
 }
 
-function getArea(keyAxisOrient: string): d3.Area<Area | Line> {
+function getArea(keyAxisOrient: string): d3.Area<Area> {
     if(keyAxisOrient === 'bottom' || keyAxisOrient === 'top')
         return d3.area<Area>()
             .x(d => d.x0)
@@ -190,7 +191,7 @@ function getAreaCoordinateByKeyOrient(axisOrient: string, data: DataRow[], scale
     return areaCoordinate;
 }
 
-function renderLine(scaleKey: d3.ScaleBand<string>, scaleValue: d3.ScaleLinear<number, number>, data: DataRow[], margin: BlockMargin, keyField: string, valueField: string, barStyle: CssStyle, keyAxisOrient: string): void {
+function renderLine(scaleKey: d3.ScaleBand<string>, scaleValue: d3.ScaleLinear<number, number>, data: DataRow[], margin: BlockMargin, keyField: string, valueField: string, cssStyle: CssStyle, keyAxisOrient: string): void {
     const line = getLine();
     const lineCoordinate: Line[] = getLineCoordinateByKeyOrient(keyAxisOrient,
         data,
@@ -205,12 +206,12 @@ function renderLine(scaleKey: d3.ScaleBand<string>, scaleValue: d3.ScaleLinear<n
         .attr('d', line(lineCoordinate))
         .attr('class', 'line');
 
-    for(let key in barStyle) {
-        path.style(key, barStyle[key]);
+    for(let key in cssStyle) {
+        path.style(key, cssStyle[key]);
     }
 }
 
-function renderArea(scaleKey: d3.ScaleBand<string>, scaleValue: d3.ScaleLinear<number, number>, data: DataRow[], margin: BlockMargin, keyField: string, valueField: string, barStyle: CssStyle, keyAxisOrient: string, blockWidth: number, blockHeight: number): void {
+function renderArea(scaleKey: d3.ScaleBand<string>, scaleValue: d3.ScaleLinear<number, number>, data: DataRow[], margin: BlockMargin, keyField: string, valueField: string, cssStyle: CssStyle, keyAxisOrient: string, blockWidth: number, blockHeight: number): void {
     const area = getArea(keyAxisOrient);
     const areaCoordinate: Area[] = getAreaCoordinateByKeyOrient(keyAxisOrient,
         data,
@@ -227,8 +228,44 @@ function renderArea(scaleKey: d3.ScaleBand<string>, scaleValue: d3.ScaleLinear<n
         .attr('d', area(areaCoordinate))
         .attr('class', 'area');
 
-    for(let key in barStyle) {
-        path.style(key, barStyle[key]);
+    for(let key in cssStyle) {
+        path.style(key, cssStyle[key]);
+    }
+}
+
+function getPieRadius(margin: BlockMargin, blockWidth: number, blockHeight: number): number {
+    return Math.min(blockWidth - margin.left - margin.right,
+        blockHeight - margin.top - margin.bottom) / 2;
+}
+
+function getArc(outerRadius: number, innerRadius: number = 0): d3.Arc<any, d3.PieArcDatum<DataRow>> {
+    return d3.arc<d3.PieArcDatum<DataRow>>()
+        .innerRadius(innerRadius)
+        .outerRadius(outerRadius);
+}
+
+function getPie(valueField: string, padAngle: number = 0): d3.Pie<any, DataRow> {
+    return d3.pie<DataRow>()
+        .padAngle(padAngle)
+        .sort(null)
+        .value(d => d[valueField]);
+}
+
+function renderDonut(data: DataRow[], margin: BlockMargin, valueField: string, cssStyle: CssStyle, blockWidth: number, blockHeight: number): void {
+    const radius = getPieRadius(margin, blockWidth, blockHeight);
+    const arc = getArc(radius);
+    const pie = getPie(valueField, 0.005);
+
+    const arcs = d3.select('svg')
+        .selectAll('.arc')
+        .data(pie(data))
+        .enter()
+        .append('path')
+        .attr('d', arc)
+        .attr('transform', `translate(${blockWidth / 2}, ${blockHeight / 2})`);
+
+    for(let key in cssStyle) {
+        arcs.style(key, cssStyle[key]);
     }
 }
 
@@ -268,13 +305,13 @@ function renderCharts(charts: any[], scaleKey: d3.ScaleBand<string>, scaleValue:
     });
 }
 
-function fillScales(scales: Scales, modelScale: any): void {
-    scales.scaleKey = getScaleBand(modelScale.scaleKey.domain,
-        modelScale.scaleKey.range.start,
-        modelScale.scaleKey.range.end);
-    scales.scaleValue = getScaleLinear(modelScale.scaleValue.domain,
-        modelScale.scaleValue.range.start,
-        modelScale.scaleValue.range.end);
+function fillScales(scales: Scales, keyDomain: any[], keyRangeStart: number, keyRangeEnd: number, valueDomain: any[], valueRangeStart: number, valueRangeEnd: number): void {
+    scales.scaleKey = getScaleBand(keyDomain,
+        keyRangeStart,
+        keyRangeEnd);
+    scales.scaleValue = getScaleLinear(valueDomain,
+        valueRangeStart,
+        valueRangeEnd);
 }
 
 function clearBlock(): void {
@@ -408,6 +445,60 @@ function fillBarAttrsByKeyOrientWithTransition(bars: d3.Selection<SVGRectElement
             .attr('width', d => blockWidth - margin.left - margin.right - scaleValue(d[valueField]));  
 }
 
+function render2D(model: Model, data: DataRow[]): void {
+    const options = <TwoDimensionalOptionsModel>model.options;
+
+    fillScales(scales,
+        options.scale.scaleKey.domain,
+        options.scale.scaleKey.range.start,
+        options.scale.scaleKey.range.end,
+        options.scale.scaleValue.domain,
+        options.scale.scaleValue.range.start,
+        options.scale.scaleValue.range.end);
+        
+    renderSvgBlock(model.blockCanvas.class,
+        model.blockCanvas.size.width, 
+        model.blockCanvas.size.height, 
+        model.blockCanvas.style);
+
+    renderAxis(scales.scaleKey, 
+        options.axis.keyAxis.orient, 
+        options.axis.keyAxis.translate.translateX, 
+        options.axis.keyAxis.translate.translateY,
+        options.axis.keyAxis.class);
+    
+    renderAxis(scales.scaleValue, 
+        options.axis.valueAxis.orient, 
+        options.axis.valueAxis.translate.translateX, 
+        options.axis.valueAxis.translate.translateY,
+        options.axis.valueAxis.class);
+    
+    renderCharts(options.charts,
+        scales.scaleKey,
+        scales.scaleValue,
+        data,
+        model.chartBlock.margin,
+        options.axis.keyAxis.orient,
+        model.blockCanvas.size.width,
+        model.blockCanvas.size.height);
+}
+
+function renderPolar(model: Model, data: any) {
+    const options = <PolarOptionsModel>model.options;
+
+    renderSvgBlock(model.blockCanvas.class,
+        model.blockCanvas.size.width, 
+        model.blockCanvas.size.height, 
+        model.blockCanvas.style);
+
+    renderDonut(data[options.charts[0].data.dataSource], 
+        model.chartBlock.margin,
+        options.charts[0].data.valueField,
+        options.charts[0].style,
+        model.blockCanvas.size.width, 
+        model.blockCanvas.size.height);
+}
+
 const scales: Scales = {
     scaleKey: null,
     scaleValue: null
@@ -415,52 +506,29 @@ const scales: Scales = {
 
 export default {
     render(model: Model, data: DataRow[]) {
-        fillScales(scales, model.scale);
-        
-        renderSvgBlock(model.blockCanvas.class,
-            model.blockCanvas.size.width, 
-            model.blockCanvas.size.height, 
-            model.blockCanvas.style);
-        
-        renderAxis(scales.scaleKey, 
-            model.axis.keyAxis.orient, 
-            model.axis.keyAxis.translate.translateX, 
-            model.axis.keyAxis.translate.translateY,
-            model.axis.keyAxis.class);
-        
-        renderAxis(scales.scaleValue, 
-            model.axis.valueAxis.orient, 
-            model.axis.valueAxis.translate.translateX, 
-            model.axis.valueAxis.translate.translateY,
-            model.axis.valueAxis.class);
-        
-        renderCharts(model.charts,
-            scales.scaleKey,
-            scales.scaleValue,
-            data,
-            model.chartBlock.margin,
-            model.axis.keyAxis.orient,
-            model.blockCanvas.size.width,
-            model.blockCanvas.size.height);
+        if(model.options.type === '2d')
+            render2D(model, data);
+        else
+            renderPolar(model, data);
     },
     updateFullBlock(model: Model, data: DataRow[]) {
         clearBlock();
         this.render(model, data);
     },
-    updateValueAxis(model: Model, data: DataRow[]) {
-        fillScales(scales, model.scale);
+    // updateValueAxis(model: Model, data: DataRow[]) {
+    //     fillScales(scales, model.scale);
 
-        updateValueAxisDomain(scales.scaleValue,
-            model.axis.valueAxis.class,
-            model.axis.valueAxis.orient);
+    //     updateValueAxisDomain(scales.scaleValue,
+    //         model.axis.valueAxis.class,
+    //         model.axis.valueAxis.orient);
 
-        updateChartsByValueAxis(model.charts,
-            scales.scaleKey,
-            scales.scaleValue,
-            data,
-            model.chartBlock.margin,
-            model.axis.keyAxis.orient,
-            model.blockCanvas.size.width,
-            model.blockCanvas.size.height);
-    }
+    //     updateChartsByValueAxis(model.charts,
+    //         scales.scaleKey,
+    //         scales.scaleValue,
+    //         data,
+    //         model.chartBlock.margin,
+    //         model.axis.keyAxis.orient,
+    //         model.blockCanvas.size.width,
+    //         model.blockCanvas.size.height);
+    // }
 }

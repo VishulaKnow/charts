@@ -1,10 +1,12 @@
 import * as d3 from 'd3'
 
-import { Domain, Chart } from './config/config';
-import { ChartModel, Model } from './model';
+import { Domain, TwoDimensionalOptions, PolarOptions, TwoDimensionalChart, PolarChart } from './config/config';
+import { Model, TwoDimensionalChartModel, BlockCanvas, ChartBlock, TwoDimensionalOptionsModel, PolarOptionsModel, PolarChartModel } from './model';
 
 const data = require('./assets/dataSet.json');
 import config from './config/configOptions';
+
+const options = (<TwoDimensionalOptions>config.options);
 
 type DataRow = {
     [field: string]: any
@@ -17,7 +19,7 @@ enum ScaleType {
     Key, Value
 }
 
-const dataSet: DataRow[] = data[config.charts[0].data.dataSource];
+const dataSet: DataRow[] = data[config.options.charts[0].data.dataSource];
 
 const margin = {
     top: 50,
@@ -36,7 +38,7 @@ function getScaleRangePeek(scaleType: ScaleType, chartOrientation: string, block
         : blockWidth - margin.left - margin.right;
 }
 
-function getScaleDomain(scaleType: ScaleType, configDomain: Domain, data: DataRow[], chart: Chart, keyAxisPosition: string = null): any[] {
+function getScaleDomain(scaleType: ScaleType, configDomain: Domain, data: DataRow[], chart: TwoDimensionalChart, keyAxisPosition: string = null): any[] {
     if(scaleType === ScaleType.Key) {
         return data.map(d => d[chart.data.keyField]);
     } else {
@@ -97,118 +99,131 @@ function getTranslateY(axisType: AxisType, chartOrientation: string, axisPositio
         return margin.top;
 }
 
-function getChartsModel(charts: Chart[]): ChartModel[] {
-    const chartsModel: ChartModel[] = [];
+function getOuterRadius(blockWidth: number, blockHeight: number): number {
+    return Math.min(blockWidth - margin.left - margin.right,
+        blockHeight - margin.top - margin.bottom) / 2;
+}
+
+function get2DChartsModel(charts: TwoDimensionalChart[]): TwoDimensionalChartModel[] {
+    const chartsModel: TwoDimensionalChartModel[] = [];
     charts.forEach(chart => {
         chartsModel.push({
+            type: chart.type,
+            data: {
+                dataSource: chart.data.dataSource,
+                keyField: chart.data.keyField,
+                valueField: chart.data.valueField
+            },
+            style: chart.style
+        });
+    });
+    return chartsModel;
+}
+
+function getPolarChartsModel(charts: PolarChart[], blockWidth: number, blockHeight: number): PolarChartModel[] {
+    const chartsModel: PolarChartModel[] = [];
+    charts.forEach(chart => {
+        chartsModel.push({
+            type: chart.type,
             data: {
                 dataSource: chart.data.dataSource,
                 keyField: chart.data.keyField,
                 valueField: chart.data.valueField
             },
             style: chart.style,
-            type: chart.type
+            appearanceOptions: {
+                innerRadius: chart.appearanceOptions.innerRadius,
+                padAngle: chart.appearanceOptions.padAngle
+            }
         });
     });
     return chartsModel;
 }
 
-export const model: Model = {
-    blockCanvas: {
+function getBlockCanvas(): BlockCanvas {
+    return {
         size: {
             width: config.canvas.size.width,
             height: config.canvas.size.height
         },
         class: config.canvas.class,
         style: config.canvas.style
-    },
-    chartBlock: {
-        margin
-    },
-    scale: {
-        scaleKey: {
-            domain: getScaleDomain(ScaleType.Key, config.axis.keyAxis.domain, dataSet, config.charts[0]),
-            range: {
-                start: 0,
-                end: getScaleRangePeek(ScaleType.Key, config.charts[0].orientation, config.canvas.size.width, config.canvas.size.height)
-            }
-        },
-        scaleValue: {
-            domain: getScaleDomain(ScaleType.Value, config.axis.valueAxis.domain, dataSet, config.charts[0], config.axis.keyAxis.position),
-            range: {
-                start: 0,
-                end: getScaleRangePeek(ScaleType.Value, config.charts[0].orientation, config.canvas.size.width, config.canvas.size.height)
-            }
-        }
-    },
-    axis: {
-        keyAxis: {
-            orient: getAxisOrient(AxisType.Key, config.charts[0].orientation, config.axis.keyAxis.position),
-            translate: {
-                translateX: getTranslateX(AxisType.Key, config.charts[0].orientation, config.axis.keyAxis.position, config.canvas.size.width, config.canvas.size.height),
-                translateY: getTranslateY(AxisType.Key, config.charts[0].orientation, config.axis.keyAxis.position, config.canvas.size.width, config.canvas.size.height)
-            },
-            class: 'key-axis'
-        },
-        valueAxis: {
-            orient: getAxisOrient(AxisType.Value, config.charts[0].orientation, config.axis.valueAxis.position),
-            translate: {
-                translateX: getTranslateX(AxisType.Value, config.charts[0].orientation, config.axis.valueAxis.position, config.canvas.size.width, config.canvas.size.height),
-                translateY: getTranslateY(AxisType.Value, config.charts[0].orientation, config.axis.valueAxis.position, config.canvas.size.width, config.canvas.size.height)
-            },          
-            class: 'value-axis'
-        }
-    },
-    charts: getChartsModel(config.charts)
+    }
 }
 
-export function getUpdatedModel(config: any): Model {
+function getChartBlock(): ChartBlock {
     return {
-        blockCanvas: {
-            size: {
-                width: config.canvas.size.width,
-                height: config.canvas.size.height
-            },
-            class: config.canvas.class,
-            style: config.canvas.style
-        },
-        chartBlock: {
-            margin
-        },
+        margin
+    }
+}
+
+function get2DOptions(configOptions: TwoDimensionalOptions): TwoDimensionalOptionsModel {
+    return {
         scale: {
             scaleKey: {
-                domain: getScaleDomain(ScaleType.Key, config.axis.keyAxis.domain, dataSet, config.charts[0]),
+                domain: getScaleDomain(ScaleType.Key, options.axis.keyAxis.domain, dataSet, options.charts[0]),
                 range: {
                     start: 0,
-                    end: getScaleRangePeek(ScaleType.Key, config.charts[0].orientation, config.canvas.size.width, config.canvas.size.height)
+                    end: getScaleRangePeek(ScaleType.Key, options.charts[0].orientation, config.canvas.size.width, config.canvas.size.height)
                 }
             },
             scaleValue: {
-                domain: getScaleDomain(ScaleType.Value, config.axis.valueAxis.domain, dataSet, config.charts[0], config.axis.keyAxis.position),
+                domain: getScaleDomain(ScaleType.Value, options.axis.valueAxis.domain, dataSet, options.charts[0], options.axis.keyAxis.position),
                 range: {
                     start: 0,
-                    end: getScaleRangePeek(ScaleType.Value, config.charts[0].orientation, config.canvas.size.width, config.canvas.size.height)
+                    end: getScaleRangePeek(ScaleType.Value, options.charts[0].orientation, config.canvas.size.width, config.canvas.size.height)
                 }
             }
         },
         axis: {
             keyAxis: {
-                orient: getAxisOrient(AxisType.Key, config.charts[0].orientation, config.axis.keyAxis.position),
+                orient: getAxisOrient(AxisType.Key, options.charts[0].orientation, options.axis.keyAxis.position),
                 translate: {
-                    translateX: getTranslateX(AxisType.Key, config.charts[0].orientation, config.axis.keyAxis.position, config.canvas.size.width, config.canvas.size.height),
-                    translateY: getTranslateY(AxisType.Key, config.charts[0].orientation, config.axis.keyAxis.position, config.canvas.size.width, config.canvas.size.height)
+                    translateX: getTranslateX(AxisType.Key, options.charts[0].orientation, options.axis.keyAxis.position, config.canvas.size.width, config.canvas.size.height),
+                    translateY: getTranslateY(AxisType.Key, options.charts[0].orientation, options.axis.keyAxis.position, config.canvas.size.width, config.canvas.size.height)
                 },
                 class: 'key-axis'
             },
             valueAxis: {
-                orient: getAxisOrient(AxisType.Value, config.charts[0].orientation, config.axis.valueAxis.position),
+                orient: getAxisOrient(AxisType.Value, options.charts[0].orientation, options.axis.valueAxis.position),
                 translate: {
-                    translateX: getTranslateX(AxisType.Value, config.charts[0].orientation, config.axis.valueAxis.position, config.canvas.size.width, config.canvas.size.height),
-                    translateY: getTranslateY(AxisType.Value, config.charts[0].orientation, config.axis.valueAxis.position, config.canvas.size.width, config.canvas.size.height)
-                },
+                    translateX: getTranslateX(AxisType.Value, options.charts[0].orientation, options.axis.valueAxis.position, config.canvas.size.width, config.canvas.size.height),
+                    translateY: getTranslateY(AxisType.Value, options.charts[0].orientation, options.axis.valueAxis.position, config.canvas.size.width, config.canvas.size.height)
+                },          
                 class: 'value-axis'
             }
         },
-        charts: getChartsModel(config.charts)
+        type: configOptions.type,
+        charts: get2DChartsModel(options.charts)
     }
 }
+
+function getPolarOptions(configOptions: PolarOptions, blockWidth: number, blockHeight: number): PolarOptionsModel {
+    return {
+        type: configOptions.type,
+        charts: getPolarChartsModel(configOptions.charts, blockWidth, blockHeight),
+    }
+}
+
+function getOptions(): TwoDimensionalOptionsModel | PolarOptionsModel {
+    if(config.options.type === '2d') {
+        return get2DOptions(config.options);
+    } else {
+        return getPolarOptions(config.options, config.canvas.size.width, config.canvas.size.height);
+    }
+} 
+
+function assembleModel(): Model {
+    const blockCanvas = getBlockCanvas();
+    const chartBlock = getChartBlock();
+    const options = getOptions();
+    return {
+        blockCanvas,
+        chartBlock,
+        options
+    }
+}
+
+const model = assembleModel();
+
+export default model;

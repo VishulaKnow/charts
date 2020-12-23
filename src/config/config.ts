@@ -2,7 +2,8 @@ type CssStyle = {
     [cssProp: string]: string | number;
 }
 
-export interface Chart {
+
+export interface TwoDimensionalChart {
     title: string;
     type: 'bar' | 'line' | 'area';
     data: ChartData;
@@ -10,6 +11,20 @@ export interface Chart {
     legend: Legend;
     orientation: 'vertical' | 'horizontal';
 }
+export interface PolarChart {
+    title: string;
+    type: 'donut';
+    data: ChartData;
+    style: CssStyle;
+    legend: Legend;
+    appearanceOptions: PolarChartAppearanceOptions;
+}
+
+interface PolarChartAppearanceOptions {
+    innerRadius: number;
+    padAngle: number;
+}
+
 interface ChartData {
     dataSource: string;
     keyField: string;
@@ -25,9 +40,18 @@ interface Size {
 }
 export interface Config {
     canvas: Canvas;
-    axis: Axis;
-    charts: Chart[];
+    options: PolarOptions | TwoDimensionalOptions;
 }
+export interface TwoDimensionalOptions {
+    type: '2d';
+    axis: Axis;
+    charts: TwoDimensionalChart[];
+}
+export interface PolarOptions {
+    type: 'polar';
+    charts: PolarChart[];
+}
+
 interface Canvas {
     size: Size;
     class: string;

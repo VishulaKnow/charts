@@ -3,7 +3,7 @@ type CssStyle = {
 }
 type Orient = 'top' | 'bottom' | 'left' | 'right'
 
-interface BlockCanvas {
+export interface BlockCanvas {
     size: Size;
     class: string;
     style: CssStyle;
@@ -13,7 +13,7 @@ interface Size {
     height: number;
 }
 
-interface ChartBlock {
+export interface ChartBlock {
     margin: BlockMargin
 }
 interface BlockMargin {
@@ -50,17 +50,35 @@ interface TranslateModel {
     translateY: number;
 }
 
-export interface ChartModel {
+export interface TwoDimensionalChartModel {
     type: 'bar' | 'line' | 'area';
     data: ChartDataModel;
     style: CssStyle;
 }
+export interface PolarChartModel {
+    type: 'donut';
+    data: ChartDataModel;
+    style: CssStyle;
+    appearanceOptions: PolarChartAppearanceModel;
+}
 export interface Model {
     blockCanvas: BlockCanvas;
     chartBlock: ChartBlock;
+    options: TwoDimensionalOptionsModel | PolarOptionsModel;
+}
+export interface TwoDimensionalOptionsModel {
+    type: '2d';
     scale: ScaleModel;
     axis: AxisModel;
-    charts: ChartModel[];
+    charts: TwoDimensionalChartModel[];
+}
+export interface PolarOptionsModel {
+    type: 'polar';
+    charts: PolarChartModel[];
+}
+interface PolarChartAppearanceModel {
+    innerRadius: number;
+    padAngle: number
 }
 interface ChartDataModel {
     dataSource: string;
