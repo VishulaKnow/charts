@@ -260,7 +260,8 @@ function renderDonutText(arcItems: d3.Selection<SVGGElement, d3.PieArcDatum<Data
             (d.startAngle / 2  + d.endAngle / 2 + Math.PI) * 180 / Math.PI})`)
         .attr('font-size', 10)
         .text(d => d.data[field])
-        .style('text-anchor', 'middle');
+        .style('text-anchor', 'middle')
+        .style('font-family', 'sans-serif');
 }
 
 function renderDonut(data: DataRow[], margin: BlockMargin, keyField: string, valueField: string, innerRadius: number, padAngle: number, cssStyle: CssStyle, blockWidth: number, blockHeight: number): void {
