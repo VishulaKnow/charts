@@ -56,12 +56,13 @@ function changeConfigOptions(notationType: '2d' | 'polar'): void {
     } else {
         options.charts[0].type = getInputValue('#chart-polar-type');
         options.charts[0].appearanceOptions = {
-            innerRadius: getInputValue('#inner-radius') || 0,
-            padAngle: getInputValue('#pad-angle') || 0
+            innerRadius: getInputValue('#inner-radius') || 30,
+            padAngle: getInputValue('#pad-angle') || 0.005
         }
     }
     config.options = options;
     engine.updateFullBlock(getUpdatedModel(), data);
+    setControlsValues();
 }
 
 function set2DListeners(): void {
