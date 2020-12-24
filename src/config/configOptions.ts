@@ -11,26 +11,49 @@ const config: Config = {
             'border': '1px solid black'
         }
     },
+    options: {
+        type: '2d',
+        axis: {
+            keyAxis: {
+                domain: {
+                    start: -1,
+                    end: -1
+                },
+                position: 'end'
+            },
+            valueAxis: {
+                domain: {
+                    start: 0,
+                    end: 150
+                },
+                position: 'start'
+            }
+        },
+        charts: [
+            {
+                title: 'Car prices',
+                type: 'area',
+                legend: {
+                    position: 'off'
+                },
+                style: {
+                    'fill': 'steelblue',
+                    'stroke': 'none'
+                },
+                data: {
+                    dataSource: 'dataSet',
+                    keyField: 'brand',
+                    valueField: 'price'
+                },
+                orientation: 'vertical'
+            }
+        ]
+    }
     // options: {
-    //     type: '2d',
-    //     axis: {
-    //         keyAxis: {
-    //             domain: {
-    //                 start: -1,
-    //                 end: -1
-    //             },
-    //             position: 'end'
-    //         },
-    //         valueAxis: {
-    //             domain: {
-    //                 start: 0,
-    //                 end: 150
-    //             },
-    //             position: 'start'
-    //         }
-    //     },
+    //     type: 'polar',
     //     charts: [
     //         {
+    //             type: 'donut',
     //             title: 'Car prices',
     //             legend: {
     //                 position: 'off'
@@ -39,41 +62,18 @@ const config: Config = {
     //                 'fill': 'steelblue',
     //                 'stroke': 'none'
     //             },
-    //             type: 'area',
     //             data: {
     //                 dataSource: 'dataSet',
     //                 keyField: 'brand',
     //                 valueField: 'price'
     //             },
-    //             orientation: 'vertical'
+    //             appearanceOptions: {
+    //                 innerRadius: 10,
+    //                 padAngle: 0.005
+    //             }
     //         }
     //     ]
     // }
-    options: {
-        type: 'polar',
-        charts: [
-            {
-                title: 'Car prices',
-                legend: {
-                    position: 'off'
-                },
-                style: {
-                    'fill': 'steelblue',
-                    'stroke': 'none'
-                },
-                type: 'donut',
-                data: {
-                    dataSource: 'dataSet',
-                    keyField: 'brand',
-                    valueField: 'price'
-                },
-                appearanceOptions: {
-                    innerRadius: 10,
-                    padAngle: 0.005
-                }
-            }
-        ]
-    }
 }
 
 export default config;

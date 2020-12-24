@@ -20,13 +20,31 @@
 <body>
     <div class="form">
         <div class="form-group">
+            <label for="">Notation</label>
+            <br>
+            <select name="" id="notation">
+                <option value="2d" selected>2D</option>
+                <option value="polar">Polar</option>
+            </select>
+        </div>
+    </div>
+    <div class="form controls-2d">
+        <div class="form-group">
+            <label for="">Chart type</label>
+            <br>
+            <select name="" id="chart-2d-type">
+                <option value="bar">bar</option>
+                <option value="line">line</option>
+                <option value="area" selected>area</option>
+            </select>
+        </div>
+        <div class="form-group">
             <label for="">Orient</label>
             <br>
             <select name="" id="chart-orient">
                 <option value="vertical">vertical</option>
                 <option value="horizontal">horizontal</option>
             </select>
-            <button class="btn-orient">Apply</button>
         </div>
         <div class="form-group">
             <label for="">KeyAxisPosition</label>
@@ -35,7 +53,6 @@
                 <option value="start">start</option>
                 <option value="end">end</option>
             </select>
-            <button class="btn-key-position">Apply</button>
         </div>
         <div class="form-group">
             <label for="">ValueAxisPosition</label>
@@ -44,7 +61,6 @@
                 <option value="start">start</option>
                 <option value="end">end</option>
             </select>
-            <button class="btn-value-position">Apply</button>
         </div>
         <div class="form-group">
             <label for="">ValueAxisDomain</label>
@@ -54,26 +70,40 @@
             <button class="btn-domain">Apply</button>
         </div> 
     </div>
-    <div class="form-group" style="display: flex;">
-        <div style="margin-right: 2rem;">
+    <div class="controls-polar">
+        <div class="form-group">
             <label for="">Chart type</label>
             <br>
-            <select name="" id="chart-type">
-                <option value="bar">bar</option>
-                <option value="line">line</option>
-                <option value="area" selected>area</option>
+            <select name="" id="chart-polar-type">
+                <option value="donut" selected>donut</option>
             </select>
         </div>
-        <div style="margin-right: 2rem;">
-            <label for="">Fill</label>
+        <div class="form-group">
+            <label for="">Inner radius in percent</label>
             <br>
-            <input type="text" placeholder="none" id="chart-fill">
+            <input type="number" placeholder="0%-100%" id="inner-radius">
+            <button class="btn-inner-radius">Apply</button>
         </div>
-        <div style="margin-right: 2rem;">
-            <label for="">Stroke</label>
+        <div class="form-group">
+            <label for="">Pad Angle</label>
             <br>
-            <input type="text" placeholder="none" id="chart-stroke">
-            <button class="btn-chart-type">Apply</button>
+            <input type="number" placeholder="" id="pad-angle">
+            <button class="btn-pad-angle">Apply</button>
+        </div>
+    </div>
+    <div class="form controls-style">
+        <div class="form-group" style="display: flex;">
+            <div style="margin-right: 2rem;">
+                <label for="">Fill</label>
+                <br>
+                <input type="text" placeholder="none" id="chart-fill">
+            </div>
+            <div style="margin-right: 2rem;">
+                <label for="">Stroke</label>
+                <br>
+                <input type="text" placeholder="none" id="chart-stroke">
+                <button class="btn-chart-style">Apply</button>
+            </div>
         </div>
     </div>
 

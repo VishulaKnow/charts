@@ -1,12 +1,10 @@
 import * as d3 from 'd3'
 
-import { Domain, TwoDimensionalOptions, PolarOptions, TwoDimensionalChart, PolarChart } from './config/config';
+import { Domain, TwoDimensionalOptions, PolarOptions, TwoDimensionalChart, PolarChart } from '../config/config';
 import { Model, TwoDimensionalChartModel, BlockCanvas, ChartBlock, TwoDimensionalOptionsModel, PolarOptionsModel, PolarChartModel } from './model';
 
-const data = require('./assets/dataSet.json');
-import config from './config/configOptions';
-
-const options = (<TwoDimensionalOptions>config.options);
+const data = require('../assets/dataSet.json');
+import config from '../config/configOptions';
 
 type DataRow = {
     [field: string]: any
@@ -161,40 +159,40 @@ function get2DOptions(configOptions: TwoDimensionalOptions): TwoDimensionalOptio
     return {
         scale: {
             scaleKey: {
-                domain: getScaleDomain(ScaleType.Key, options.axis.keyAxis.domain, dataSet, options.charts[0]),
+                domain: getScaleDomain(ScaleType.Key, configOptions.axis.keyAxis.domain, dataSet, configOptions.charts[0]),
                 range: {
                     start: 0,
-                    end: getScaleRangePeek(ScaleType.Key, options.charts[0].orientation, config.canvas.size.width, config.canvas.size.height)
+                    end: getScaleRangePeek(ScaleType.Key, configOptions.charts[0].orientation, config.canvas.size.width, config.canvas.size.height)
                 }
             },
             scaleValue: {
-                domain: getScaleDomain(ScaleType.Value, options.axis.valueAxis.domain, dataSet, options.charts[0], options.axis.keyAxis.position),
+                domain: getScaleDomain(ScaleType.Value, configOptions.axis.valueAxis.domain, dataSet, configOptions.charts[0], configOptions.axis.keyAxis.position),
                 range: {
                     start: 0,
-                    end: getScaleRangePeek(ScaleType.Value, options.charts[0].orientation, config.canvas.size.width, config.canvas.size.height)
+                    end: getScaleRangePeek(ScaleType.Value, configOptions.charts[0].orientation, config.canvas.size.width, config.canvas.size.height)
                 }
             }
         },
         axis: {
             keyAxis: {
-                orient: getAxisOrient(AxisType.Key, options.charts[0].orientation, options.axis.keyAxis.position),
+                orient: getAxisOrient(AxisType.Key, configOptions.charts[0].orientation, configOptions.axis.keyAxis.position),
                 translate: {
-                    translateX: getTranslateX(AxisType.Key, options.charts[0].orientation, options.axis.keyAxis.position, config.canvas.size.width, config.canvas.size.height),
-                    translateY: getTranslateY(AxisType.Key, options.charts[0].orientation, options.axis.keyAxis.position, config.canvas.size.width, config.canvas.size.height)
+                    translateX: getTranslateX(AxisType.Key, configOptions.charts[0].orientation, configOptions.axis.keyAxis.position, config.canvas.size.width, config.canvas.size.height),
+                    translateY: getTranslateY(AxisType.Key, configOptions.charts[0].orientation, configOptions.axis.keyAxis.position, config.canvas.size.width, config.canvas.size.height)
                 },
                 class: 'key-axis'
             },
             valueAxis: {
-                orient: getAxisOrient(AxisType.Value, options.charts[0].orientation, options.axis.valueAxis.position),
+                orient: getAxisOrient(AxisType.Value, configOptions.charts[0].orientation, configOptions.axis.valueAxis.position),
                 translate: {
-                    translateX: getTranslateX(AxisType.Value, options.charts[0].orientation, options.axis.valueAxis.position, config.canvas.size.width, config.canvas.size.height),
-                    translateY: getTranslateY(AxisType.Value, options.charts[0].orientation, options.axis.valueAxis.position, config.canvas.size.width, config.canvas.size.height)
+                    translateX: getTranslateX(AxisType.Value, configOptions.charts[0].orientation, configOptions.axis.valueAxis.position, config.canvas.size.width, config.canvas.size.height),
+                    translateY: getTranslateY(AxisType.Value, configOptions.charts[0].orientation, configOptions.axis.valueAxis.position, config.canvas.size.width, config.canvas.size.height)
                 },          
                 class: 'value-axis'
             }
         },
         type: configOptions.type,
-        charts: get2DChartsModel(options.charts)
+        charts: get2DChartsModel(configOptions.charts)
     }
 }
 
@@ -213,7 +211,7 @@ function getOptions(): TwoDimensionalOptionsModel | PolarOptionsModel {
     }
 } 
 
-function assembleModel(): Model {
+export function assembleModel(): Model {
     const blockCanvas = getBlockCanvas();
     const chartBlock = getChartBlock();
     const options = getOptions();
@@ -224,6 +222,8 @@ function assembleModel(): Model {
     }
 }
 
-const model = assembleModel();
 
-export default model;
+export const model = assembleModel();
+export function getUpdatedModel(): Model {
+    return assembleModel();
+}

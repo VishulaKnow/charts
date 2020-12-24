@@ -1,6 +1,7 @@
 import * as d3 from 'd3'
+import { dragDisable } from 'd3';
 import config from './config/configOptions';
-import { Model, TwoDimensionalOptionsModel, PolarOptionsModel } from './model';
+import { Model, TwoDimensionalOptionsModel, PolarOptionsModel } from './model/model';
 
 type DataRow = {
     [field: string]: any
@@ -251,25 +252,45 @@ function getPie(valueField: string, padAngle: number = 0): d3.Pie<any, DataRow> 
         .value(d => d[valueField]);
 }
 
-function renderDonut(data: DataRow[], margin: BlockMargin, valueField: string, cssStyle: CssStyle, blockWidth: number, blockHeight: number): void {
-    const radius = getPieRadius(margin, blockWidth, blockHeight);
-    const arc = getArc(radius);
-    const pie = getPie(valueField, 0.005);
+function renderDonutText(arcItems: d3.Selection<SVGGElement, d3.PieArcDatum<DataRow>, d3.BaseType, unknown>, arc: d3.Arc<any, d3.PieArcDatum<DataRow>>, field: string): void {
+    arcItems
+        .append('text')
+        .attr('transform', d => `translate(${arc.centroid(d)}) rotate(-90) rotate(${d.endAngle < Math.PI ? 
+            (d.startAngle / 2 + d.endAngle / 2) * 180 / Math.PI : 
+            (d.startAngle / 2  + d.endAngle / 2 + Math.PI) * 180 / Math.PI})`)
+        .attr('font-size', 10)
+        .text(d => d.data[field])
+        .style('text-anchor', 'middle');
+}
 
-    const arcs = d3.select('svg')
+function renderDonut(data: DataRow[], margin: BlockMargin, keyField: string, valueField: string, innerRadius: number, padAngle: number, cssStyle: CssStyle, blockWidth: number, blockHeight: number): void {
+    const radius = getPieRadius(margin, blockWidth, blockHeight);
+    const arc = getArc(radius, radius * 0.01 * innerRadius);
+    const pie = getPie(valueField, padAngle);
+
+    const donutBlock = d3.select('svg')
+        .append('g')
+        .attr('transform', `translate(${blockWidth / 2}, ${blockHeight / 2})`);
+
+    const items = donutBlock
         .selectAll('.arc')
         .data(pie(data))
         .enter()
+        .append('g')
+        .attr('class', 'arc')
+
+    const arcs = items
         .append('path')
-        .attr('d', arc)
-        .attr('transform', `translate(${blockWidth / 2}, ${blockHeight / 2})`);
+        .attr('d', arc);
+
+    renderDonutText(items, arc, keyField);
 
     for(let key in cssStyle) {
         arcs.style(key, cssStyle[key]);
     }
 }
 
-function renderCharts(charts: any[], scaleKey: d3.ScaleBand<string>, scaleValue: d3.ScaleLinear<number, number>, data: any, margin: BlockMargin, keyAxisOrient: string, blockWidth: number, blockHeight: number) {
+function render2DCharts(charts: any[], scaleKey: d3.ScaleBand<string>, scaleValue: d3.ScaleLinear<number, number>, data: any, margin: BlockMargin, keyAxisOrient: string, blockWidth: number, blockHeight: number) {
     charts.forEach(chart => {
         if(chart.type === 'bar')
             renderBar(scaleKey,
@@ -303,6 +324,21 @@ function renderCharts(charts: any[], scaleKey: d3.ScaleBand<string>, scaleValue:
                 blockWidth,
                 blockHeight);
     });
+}
+
+function renderPolarCharts(charts: any[], data: any, margin: BlockMargin, keyField: string, valueField: string, innerRadius: number, padAngle: number, cssStyle: CssStyle, blockWidth: number, blockHeight: number) {
+    charts.forEach(chart => {
+        if(chart.type === 'donut')
+            renderDonut(data,
+                margin,
+                keyField,
+                valueField,
+                innerRadius,
+                padAngle,
+                cssStyle,
+                blockWidth,
+                blockHeight);
+    })
 }
 
 function fillScales(scales: Scales, keyDomain: any[], keyRangeStart: number, keyRangeEnd: number, valueDomain: any[], valueRangeStart: number, valueRangeEnd: number): void {
@@ -445,7 +481,7 @@ function fillBarAttrsByKeyOrientWithTransition(bars: d3.Selection<SVGRectElement
             .attr('width', d => blockWidth - margin.left - margin.right - scaleValue(d[valueField]));  
 }
 
-function render2D(model: Model, data: DataRow[]): void {
+function render2D(model: Model, data: any): void {
     const options = <TwoDimensionalOptionsModel>model.options;
 
     fillScales(scales,
@@ -473,7 +509,7 @@ function render2D(model: Model, data: DataRow[]): void {
         options.axis.valueAxis.translate.translateY,
         options.axis.valueAxis.class);
     
-    renderCharts(options.charts,
+    render2DCharts(options.charts,
         scales.scaleKey,
         scales.scaleValue,
         data,
@@ -491,11 +527,41 @@ function renderPolar(model: Model, data: any) {
         model.blockCanvas.size.height, 
         model.blockCanvas.style);
 
-    renderDonut(data[options.charts[0].data.dataSource], 
+
+    renderPolarCharts(options.charts,
+        data[options.charts[0].data.dataSource], 
         model.chartBlock.margin,
+        options.charts[0].data.keyField,
         options.charts[0].data.valueField,
+        options.charts[0].appearanceOptions.innerRadius,
+        options.charts[0].appearanceOptions.padAngle,
         options.charts[0].style,
         model.blockCanvas.size.width, 
+        model.blockCanvas.size.height);
+}
+
+function updateByValueAxis(model: Model, data: any) {
+    const options = <TwoDimensionalOptionsModel>model.options;
+
+    fillScales(scales,
+        options.scale.scaleKey.domain,
+        options.scale.scaleKey.range.start,
+        options.scale.scaleKey.range.end,
+        options.scale.scaleValue.domain,
+        options.scale.scaleValue.range.start,
+        options.scale.scaleValue.range.end);
+
+    updateValueAxisDomain(scales.scaleValue,
+        options.axis.valueAxis.class,
+        options.axis.valueAxis.orient);
+    
+    updateChartsByValueAxis(options.charts,
+        scales.scaleKey,
+        scales.scaleValue,
+        data,
+        model.chartBlock.margin,
+        options.axis.keyAxis.orient,
+        model.blockCanvas.size.width,
         model.blockCanvas.size.height);
 }
 
@@ -505,30 +571,17 @@ const scales: Scales = {
 }
 
 export default {
-    render(model: Model, data: DataRow[]) {
+    render(model: Model, data: any) {
         if(model.options.type === '2d')
             render2D(model, data);
         else
             renderPolar(model, data);
     },
-    updateFullBlock(model: Model, data: DataRow[]) {
+    updateFullBlock(model: Model, data: any) {
         clearBlock();
         this.render(model, data);
     },
-    // updateValueAxis(model: Model, data: DataRow[]) {
-    //     fillScales(scales, model.scale);
-
-    //     updateValueAxisDomain(scales.scaleValue,
-    //         model.axis.valueAxis.class,
-    //         model.axis.valueAxis.orient);
-
-    //     updateChartsByValueAxis(model.charts,
-    //         scales.scaleKey,
-    //         scales.scaleValue,
-    //         data,
-    //         model.chartBlock.margin,
-    //         model.axis.keyAxis.orient,
-    //         model.blockCanvas.size.width,
-    //         model.blockCanvas.size.height);
-    // }
+    updateValueAxis(model: Model, data: any) {
+        updateByValueAxis(model, data);
+    }
 }
