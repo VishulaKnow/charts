@@ -1,6 +1,4 @@
 import * as d3 from 'd3'
-import { dragDisable } from 'd3';
-import config from './config/configOptions';
 import { Model, TwoDimensionalOptionsModel, PolarOptionsModel } from './model/model';
 
 type DataRow = {
@@ -45,16 +43,12 @@ function getScaleLinear(domain: any, rangeStart: number, rangeEnd: number): d3.S
         .range([rangeStart, rangeEnd]);
 }
 
-function renderSvgBlock(cssClass: string, width: number, height: number, style: CssStyle): void {
-    const svg = d3.select('.wrapper')
+function renderSvgBlock(cssClass: string, width: number, height: number): void {
+    d3.select('.wrapper')
         .append('svg')
         .attr('width', width)
         .attr('height', height)
         .attr('class', cssClass);
-
-    for(let key in style) {
-        svg.style(key, style[key]);
-    }
 }
 
 function getAxisByOrient(orient: string, scale: d3.AxisScale<any>): d3.Axis<any> {
@@ -68,14 +62,28 @@ function getAxisByOrient(orient: string, scale: d3.AxisScale<any>): d3.Axis<any>
         return d3.axisRight(scale);
 }
 
-function renderAxis(scale: d3.AxisScale<any>, axisOrient: string, translateX: number, translateY: number, cssClass: string): void {
+function cropLabels(labelBlocks: any, maxWidth: number) {
+    for(let i = 0; i < labelBlocks.nodes().length; i++) {
+        if(labelBlocks.nodes()[i].getBBox().width > maxWidth) {
+            const text: string = labelBlocks.nodes()[i].textContent;
+            let textLength = text.length;
+            while(labelBlocks.nodes()[i].getBBox().width > maxWidth) {
+                labelBlocks.nodes()[i].textContent = text.substring(0, --textLength) + '...';
+            }
+        }
+    }
+}
+
+function renderAxis(scale: d3.AxisScale<any>, axisOrient: string, translateX: number, translateY: number, cssClass: string, maxLabelSize: number): void {
     const axis = getAxisByOrient(axisOrient, scale);
 
     d3.select('svg')
         .append('g')
         .attr('transform', `translate(${translateX}, ${translateY})`)
-        .attr('class', cssClass)
+        .attr('class', `${cssClass} data-label`)
         .call(axis);
+
+    cropLabels(d3.select(`.${cssClass}`).selectAll('text'), maxLabelSize);
 }
 
 function fillBarAttrsByKeyOrient(bars: d3.Selection<SVGRectElement, DataRow, d3.BaseType, unknown>, axisOrient: string, scaleKey: d3.ScaleBand<string>, scaleValue: d3.ScaleLinear<number, number>, margin: BlockMargin, keyField: string, valueField: string, blockWidth: number, blockHeight: number): void {
@@ -101,7 +109,7 @@ function fillBarAttrsByKeyOrient(bars: d3.Selection<SVGRectElement, DataRow, d3.
             .attr('width', d => blockWidth - margin.left - margin.right - scaleValue(d[valueField]));   
 }
 
-function renderBar(scaleKey: d3.ScaleBand<string>, scaleValue: d3.ScaleLinear<number, number>, data: DataRow[], margin: BlockMargin, keyField: string, valueField: string, cssStyle: CssStyle, keyAxisOrient: string, blockWidth: number, blockHeight: number): void {
+function renderBar(scaleKey: d3.ScaleBand<string>, scaleValue: d3.ScaleLinear<number, number>, data: DataRow[], margin: BlockMargin, keyField: string, valueField: string, keyAxisOrient: string, blockWidth: number, blockHeight: number): void {
     const bars = d3.select('svg')
         .selectAll('rect.bar')
         .data(data)
@@ -117,10 +125,6 @@ function renderBar(scaleKey: d3.ScaleBand<string>, scaleValue: d3.ScaleLinear<nu
         valueField,
         blockWidth,
         blockHeight);
-
-    for(let key in cssStyle) {
-        bars.style(key, cssStyle[key]);
-    }
 }
 
 function getLine(): d3.Line<Line> {
@@ -192,7 +196,7 @@ function getAreaCoordinateByKeyOrient(axisOrient: string, data: DataRow[], scale
     return areaCoordinate;
 }
 
-function renderLine(scaleKey: d3.ScaleBand<string>, scaleValue: d3.ScaleLinear<number, number>, data: DataRow[], margin: BlockMargin, keyField: string, valueField: string, cssStyle: CssStyle, keyAxisOrient: string): void {
+function renderLine(scaleKey: d3.ScaleBand<string>, scaleValue: d3.ScaleLinear<number, number>, data: DataRow[], margin: BlockMargin, keyField: string, valueField: string, keyAxisOrient: string): void {
     const line = getLine();
     const lineCoordinate: Line[] = getLineCoordinateByKeyOrient(keyAxisOrient,
         data,
@@ -206,13 +210,9 @@ function renderLine(scaleKey: d3.ScaleBand<string>, scaleValue: d3.ScaleLinear<n
         .append('path')
         .attr('d', line(lineCoordinate))
         .attr('class', 'line');
-
-    for(let key in cssStyle) {
-        path.style(key, cssStyle[key]);
-    }
 }
 
-function renderArea(scaleKey: d3.ScaleBand<string>, scaleValue: d3.ScaleLinear<number, number>, data: DataRow[], margin: BlockMargin, keyField: string, valueField: string, cssStyle: CssStyle, keyAxisOrient: string, blockWidth: number, blockHeight: number): void {
+function renderArea(scaleKey: d3.ScaleBand<string>, scaleValue: d3.ScaleLinear<number, number>, data: DataRow[], margin: BlockMargin, keyField: string, valueField: string, keyAxisOrient: string, blockWidth: number, blockHeight: number): void {
     const area = getArea(keyAxisOrient);
     const areaCoordinate: Area[] = getAreaCoordinateByKeyOrient(keyAxisOrient,
         data,
@@ -228,10 +228,6 @@ function renderArea(scaleKey: d3.ScaleBand<string>, scaleValue: d3.ScaleLinear<n
         .append('path')
         .attr('d', area(areaCoordinate))
         .attr('class', 'area');
-
-    for(let key in cssStyle) {
-        path.style(key, cssStyle[key]);
-    }
 }
 
 function getPieRadius(margin: BlockMargin, blockWidth: number, blockHeight: number): number {
@@ -259,12 +255,12 @@ function renderDonutText(arcItems: d3.Selection<SVGGElement, d3.PieArcDatum<Data
             (d.startAngle / 2 + d.endAngle / 2) * 180 / Math.PI : 
             (d.startAngle / 2  + d.endAngle / 2 + Math.PI) * 180 / Math.PI})`)
         .attr('font-size', 10)
+        .attr('class', 'data-label')
         .text(d => d.data[field])
-        .style('text-anchor', 'middle')
-        .style('font-family', 'sans-serif');
+        .style('text-anchor', 'middle');
 }
 
-function renderDonut(data: DataRow[], margin: BlockMargin, keyField: string, valueField: string, innerRadius: number, padAngle: number, cssStyle: CssStyle, blockWidth: number, blockHeight: number): void {
+function renderDonut(data: DataRow[], margin: BlockMargin, keyField: string, valueField: string, innerRadius: number, padAngle: number, blockWidth: number, blockHeight: number): void {
     const radius = getPieRadius(margin, blockWidth, blockHeight);
     const arc = getArc(radius, radius * 0.01 * innerRadius);
     const pie = getPie(valueField, padAngle);
@@ -272,23 +268,20 @@ function renderDonut(data: DataRow[], margin: BlockMargin, keyField: string, val
     const donutBlock = d3.select('svg')
         .append('g')
         .attr('transform', `translate(${blockWidth / 2}, ${blockHeight / 2})`);
-
+    console.log(data);
+    
     const items = donutBlock
         .selectAll('.arc')
         .data(pie(data))
         .enter()
         .append('g')
-        .attr('class', 'arc')
+        .attr('class', 'arc');
 
     const arcs = items
         .append('path')
         .attr('d', arc);
 
     renderDonutText(items, arc, keyField);
-
-    for(let key in cssStyle) {
-        arcs.style(key, cssStyle[key]);
-    }
 }
 
 function render2DCharts(charts: any[], scaleKey: d3.ScaleBand<string>, scaleValue: d3.ScaleLinear<number, number>, data: any, margin: BlockMargin, keyAxisOrient: string, blockWidth: number, blockHeight: number) {
@@ -300,7 +293,6 @@ function render2DCharts(charts: any[], scaleKey: d3.ScaleBand<string>, scaleValu
                 margin,
                 chart.data.keyField,
                 chart.data.valueField,
-                chart.style,
                 keyAxisOrient,
                 blockWidth,
                 blockHeight);
@@ -311,7 +303,6 @@ function render2DCharts(charts: any[], scaleKey: d3.ScaleBand<string>, scaleValu
                 margin,
                 chart.data.keyField,
                 chart.data.valueField,
-                chart.style,
                 keyAxisOrient);  
         else if(chart.type === 'area')
             renderArea(scaleKey,
@@ -320,23 +311,21 @@ function render2DCharts(charts: any[], scaleKey: d3.ScaleBand<string>, scaleValu
                 margin,
                 chart.data.keyField,
                 chart.data.valueField,
-                chart.style,
                 keyAxisOrient,
                 blockWidth,
                 blockHeight);
     });
 }
 
-function renderPolarCharts(charts: any[], data: any, margin: BlockMargin, keyField: string, valueField: string, innerRadius: number, padAngle: number, cssStyle: CssStyle, blockWidth: number, blockHeight: number) {
+function renderPolarCharts(charts: any[], data: any, margin: BlockMargin, blockWidth: number, blockHeight: number) {
     charts.forEach(chart => {
         if(chart.type === 'donut')
-            renderDonut(data,
+            renderDonut(data[chart.data.dataSource],
                 margin,
-                keyField,
-                valueField,
-                innerRadius,
-                padAngle,
-                cssStyle,
+                chart.data.keyField,
+                chart.data.valueField,
+                chart.appearanceOptions.innerRadius,
+                chart.appearanceOptions.padAngle,
                 blockWidth,
                 blockHeight);
     })
@@ -495,20 +484,21 @@ function render2D(model: Model, data: any): void {
         
     renderSvgBlock(model.blockCanvas.class,
         model.blockCanvas.size.width, 
-        model.blockCanvas.size.height, 
-        model.blockCanvas.style);
+        model.blockCanvas.size.height);
 
     renderAxis(scales.scaleKey, 
         options.axis.keyAxis.orient, 
         options.axis.keyAxis.translate.translateX, 
         options.axis.keyAxis.translate.translateY,
-        options.axis.keyAxis.class);
+        options.axis.keyAxis.class,
+        options.axis.keyAxis.maxLabelSize);
     
     renderAxis(scales.scaleValue, 
         options.axis.valueAxis.orient, 
         options.axis.valueAxis.translate.translateX, 
         options.axis.valueAxis.translate.translateY,
-        options.axis.valueAxis.class);
+        options.axis.valueAxis.class,
+        options.axis.valueAxis.maxLabelSize);
     
     render2DCharts(options.charts,
         scales.scaleKey,
@@ -525,19 +515,13 @@ function renderPolar(model: Model, data: any) {
 
     renderSvgBlock(model.blockCanvas.class,
         model.blockCanvas.size.width, 
-        model.blockCanvas.size.height, 
-        model.blockCanvas.style);
+        model.blockCanvas.size.height);
 
 
     renderPolarCharts(options.charts,
-        data[options.charts[0].data.dataSource], 
+        data,
         model.chartBlock.margin,
-        options.charts[0].data.keyField,
-        options.charts[0].data.valueField,
-        options.charts[0].appearanceOptions.innerRadius,
-        options.charts[0].appearanceOptions.padAngle,
-        options.charts[0].style,
-        model.blockCanvas.size.width, 
+        model.blockCanvas.size.width,
         model.blockCanvas.size.height);
 }
 

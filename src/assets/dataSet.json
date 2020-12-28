@@ -9,5 +9,12 @@
         { "brand": "SAAB", "price": 50 },
         { "brand": "HONDA", "price": 20 },
         { "brand": "TOYOTA", "price": 115 }
-    ]    
+    ],
+    "dataSet2": [
+        { "brand": "BMW", "price": 120 },
+        { "brand": "LADA", "price": 50 },
+        { "brand": "MERCEDES", "price": 15 },
+        { "brand": "AUDI", "price": 20 },
+        { "brand": "VOLKSWAGEN", "price": 40 }
+    ]   
 }

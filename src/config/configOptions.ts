@@ -2,13 +2,10 @@ import { Config } from './config';
 
 const config: Config = {
     canvas: {
-        class: 'chart-1',
+        class: 'chart-1 border',
         size: {
             width: 1000,
             height: 500
-        },
-        style: {
-            'border': '1px solid black'
         }
     },
     options: {
@@ -32,20 +29,21 @@ const config: Config = {
         charts: [
             {
                 title: 'Car prices',
-                type: 'area',
+                type: 'bar',
                 legend: {
                     position: 'off'
-                },
-                style: {
-                    'fill': 'steelblue',
-                    'stroke': 'none'
                 },
                 data: {
                     dataSource: 'dataSet',
                     keyField: 'brand',
                     valueField: 'price'
                 },
-                orientation: 'vertical'
+                tooltip: {
+                    data: {
+                        fields: ['count', 'price']
+                    }
+                },
+                orientation: 'horizontal'
             }
         ]
     }
@@ -58,14 +56,15 @@ const config: Config = {
     //             legend: {
     //                 position: 'off'
     //             },
-    //             style: {
-    //                 'fill': 'steelblue',
-    //                 'stroke': 'none'
-    //             },
     //             data: {
     //                 dataSource: 'dataSet',
     //                 keyField: 'brand',
     //                 valueField: 'price'
+    //             },
+    //             tooltip: {
+    //                 data: {
+    //                     fields: ['count', 'price']
+    //                 }
     //             },
     //             appearanceOptions: {
     //                 innerRadius: 10,

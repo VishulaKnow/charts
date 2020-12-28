@@ -1,10 +1,12 @@
 import * as d3 from 'd3'
 
-import { Domain, TwoDimensionalOptions, PolarOptions, TwoDimensionalChart, PolarChart } from '../config/config';
-import { Model, TwoDimensionalChartModel, BlockCanvas, ChartBlock, TwoDimensionalOptionsModel, PolarOptionsModel, PolarChartModel } from './model';
+import { Domain, TwoDimensionalOptions, PolarOptions, TwoDimensionalChart, PolarChart, Axis } from '../config/config';
+import { Model, TwoDimensionalChartModel, BlockCanvas, ChartBlock, TwoDimensionalOptionsModel, PolarOptionsModel, PolarChartModel, BlockMargin } from './model';
+import { AxisLabelCanvas } from '../designer/designerConfig'
 
 const data = require('../assets/dataSet.json');
 import config from '../config/configOptions';
+import designerConfig from '../designer/designerConfigOptions';
 
 type DataRow = {
     [field: string]: any
@@ -17,13 +19,60 @@ enum ScaleType {
     Key, Value
 }
 
-const dataSet: DataRow[] = data[config.options.charts[0].data.dataSource];
+const CLASSES = {
+    dataLabel: 'data-label'
+}
+const AXISLABELPADDING = 9;
 
-const margin = {
-    top: 50,
-    bottom: 50,
-    left: 50,
-    right: 50
+const margin = getMargin();
+
+function getMargin(): BlockMargin {
+    const margin = {
+        top: designerConfig.canvas.chartBlockMargin.top,
+        bottom: designerConfig.canvas.chartBlockMargin.bottom,
+        left: designerConfig.canvas.chartBlockMargin.left,
+        right: designerConfig.canvas.chartBlockMargin.right
+    }
+    recalcMarginWithLegend(margin, config.options.charts, designerConfig.canvas.legendBlock.maxWidth);
+    if(config.options.type === '2d') {
+        recalcMarginWithAxisLabelWidth(margin, config.options.charts, designerConfig.canvas.axisLabel.maxSize.main, config.options.axis);
+    }
+        
+    return margin;
+}
+
+function recalcMarginWithLegend(margin: BlockMargin, charts: PolarChart[] | TwoDimensionalChart[], legendMaxWidth: number): void {
+    charts.forEach((chart: PolarChart | TwoDimensionalChart) => {
+        if(chart.legend.position !== 'off')
+            margin[chart.legend.position] += legendMaxWidth;
+    });
+}
+
+function recalcMarginWithAxisLabelWidth(margin: BlockMargin, charts: TwoDimensionalChart[], labelsMaxWidth: number, axis: Axis): void {
+    const keyAxisOrient = getAxisOrient(AxisType.Key, charts[0].orientation, axis.keyAxis.position);
+    if(keyAxisOrient === 'left' || keyAxisOrient === 'right') {
+        const labelTexts = data[charts[0].data.dataSource].map((dataSet: DataRow) => dataSet[charts[0].data.keyField]);
+        margin[keyAxisOrient] += getLabelTextMaxWidth(labelsMaxWidth, labelTexts) + AXISLABELPADDING;
+    } else {
+        const valueAxisOrient = getAxisOrient(AxisType.Value, charts[0].orientation, axis.valueAxis.position);
+        const labelTexts = data[charts[0].data.dataSource].map((dataSet: DataRow) => dataSet[charts[0].data.valueField]);
+        margin[valueAxisOrient] += getLabelTextMaxWidth(labelsMaxWidth, labelTexts) + AXISLABELPADDING;
+    }
+}
+
+function getLabelTextMaxWidth(legendMaxWidth: number, labelTexts: any[]): number {
+    const textBlock = document.createElement('span');
+    textBlock.classList.add(CLASSES.dataLabel);
+    let maxWidth = 0;
+    labelTexts.forEach((text: string) => {
+        textBlock.textContent = text;
+        document.body.append(textBlock);
+        if(textBlock.getBoundingClientRect().width > maxWidth) {
+            maxWidth = textBlock.getBoundingClientRect().width;
+        }
+    });
+    textBlock.remove();
+    return maxWidth > legendMaxWidth ? legendMaxWidth : maxWidth;
 }
 
 function getScaleRangePeek(scaleType: ScaleType, chartOrientation: string, blockWidth: number, blockHeight: number): number {
@@ -97,11 +146,6 @@ function getTranslateY(axisType: AxisType, chartOrientation: string, axisPositio
         return margin.top;
 }
 
-function getOuterRadius(blockWidth: number, blockHeight: number): number {
-    return Math.min(blockWidth - margin.left - margin.right,
-        blockHeight - margin.top - margin.bottom) / 2;
-}
-
 function get2DChartsModel(charts: TwoDimensionalChart[]): TwoDimensionalChartModel[] {
     const chartsModel: TwoDimensionalChartModel[] = [];
     charts.forEach(chart => {
@@ -111,8 +155,7 @@ function get2DChartsModel(charts: TwoDimensionalChart[]): TwoDimensionalChartMod
                 dataSource: chart.data.dataSource,
                 keyField: chart.data.keyField,
                 valueField: chart.data.valueField
-            },
-            style: chart.style
+            }
         });
     });
     return chartsModel;
@@ -128,7 +171,6 @@ function getPolarChartsModel(charts: PolarChart[], blockWidth: number, blockHeig
                 keyField: chart.data.keyField,
                 valueField: chart.data.valueField
             },
-            style: chart.style,
             appearanceOptions: {
                 innerRadius: chart.appearanceOptions.innerRadius,
                 padAngle: chart.appearanceOptions.padAngle
@@ -144,8 +186,7 @@ function getBlockCanvas(): BlockCanvas {
             width: config.canvas.size.width,
             height: config.canvas.size.height
         },
-        class: config.canvas.class,
-        style: config.canvas.style
+        class: config.canvas.class
     }
 }
 
@@ -155,18 +196,18 @@ function getChartBlock(): ChartBlock {
     }
 }
 
-function get2DOptions(configOptions: TwoDimensionalOptions): TwoDimensionalOptionsModel {
+function get2DOptions(configOptions: TwoDimensionalOptions, axisLabelDesignerOptions: AxisLabelCanvas): TwoDimensionalOptionsModel {
     return {
         scale: {
             scaleKey: {
-                domain: getScaleDomain(ScaleType.Key, configOptions.axis.keyAxis.domain, dataSet, configOptions.charts[0]),
+                domain: getScaleDomain(ScaleType.Key, configOptions.axis.keyAxis.domain, data[configOptions.charts[0].data.dataSource], configOptions.charts[0]),
                 range: {
                     start: 0,
                     end: getScaleRangePeek(ScaleType.Key, configOptions.charts[0].orientation, config.canvas.size.width, config.canvas.size.height)
                 }
             },
             scaleValue: {
-                domain: getScaleDomain(ScaleType.Value, configOptions.axis.valueAxis.domain, dataSet, configOptions.charts[0], configOptions.axis.keyAxis.position),
+                domain: getScaleDomain(ScaleType.Value, configOptions.axis.valueAxis.domain, data[configOptions.charts[0].data.dataSource], configOptions.charts[0], configOptions.axis.keyAxis.position),
                 range: {
                     start: 0,
                     end: getScaleRangePeek(ScaleType.Value, configOptions.charts[0].orientation, config.canvas.size.width, config.canvas.size.height)
@@ -180,7 +221,8 @@ function get2DOptions(configOptions: TwoDimensionalOptions): TwoDimensionalOptio
                     translateX: getTranslateX(AxisType.Key, configOptions.charts[0].orientation, configOptions.axis.keyAxis.position, config.canvas.size.width, config.canvas.size.height),
                     translateY: getTranslateY(AxisType.Key, configOptions.charts[0].orientation, configOptions.axis.keyAxis.position, config.canvas.size.width, config.canvas.size.height)
                 },
-                class: 'key-axis'
+                class: 'key-axis',
+                maxLabelSize: axisLabelDesignerOptions.maxSize.main
             },
             valueAxis: {
                 orient: getAxisOrient(AxisType.Value, configOptions.charts[0].orientation, configOptions.axis.valueAxis.position),
@@ -188,7 +230,8 @@ function get2DOptions(configOptions: TwoDimensionalOptions): TwoDimensionalOptio
                     translateX: getTranslateX(AxisType.Value, configOptions.charts[0].orientation, configOptions.axis.valueAxis.position, config.canvas.size.width, config.canvas.size.height),
                     translateY: getTranslateY(AxisType.Value, configOptions.charts[0].orientation, configOptions.axis.valueAxis.position, config.canvas.size.width, config.canvas.size.height)
                 },          
-                class: 'value-axis'
+                class: 'value-axis',
+                maxLabelSize: axisLabelDesignerOptions.maxSize.main
             }
         },
         type: configOptions.type,
@@ -205,7 +248,7 @@ function getPolarOptions(configOptions: PolarOptions, blockWidth: number, blockH
 
 function getOptions(): TwoDimensionalOptionsModel | PolarOptionsModel {
     if(config.options.type === '2d') {
-        return get2DOptions(config.options);
+        return get2DOptions(config.options, designerConfig.canvas.axisLabel);
     } else {
         return getPolarOptions(config.options, config.canvas.size.width, config.canvas.size.height);
     }
@@ -222,6 +265,7 @@ export function assembleModel(): Model {
     }
 }
 
+console.log(margin);
 
 export const model = assembleModel();
 export function getUpdatedModel(): Model {

@@ -1,12 +1,8 @@
-type CssStyle = {
-    [cssProp: string]: string | number;
-}
 type Orient = 'top' | 'bottom' | 'left' | 'right'
 
 export interface BlockCanvas {
     size: Size;
     class: string;
-    style: CssStyle;
 }
 interface Size {
     width: number;
@@ -16,7 +12,7 @@ interface Size {
 export interface ChartBlock {
     margin: BlockMargin
 }
-interface BlockMargin {
+export interface BlockMargin {
     top: number;
     bottom: number;
     left: number;
@@ -44,6 +40,7 @@ interface AxisModelOptions {
     orient: Orient;
     translate: TranslateModel;
     class: string;
+    maxLabelSize: number;
 }
 interface TranslateModel {
     translateX: number;
@@ -53,12 +50,10 @@ interface TranslateModel {
 export interface TwoDimensionalChartModel {
     type: 'bar' | 'line' | 'area';
     data: ChartDataModel;
-    style: CssStyle;
 }
 export interface PolarChartModel {
     type: 'donut';
     data: ChartDataModel;
-    style: CssStyle;
     appearanceOptions: PolarChartAppearanceModel;
 }
 export interface Model {
