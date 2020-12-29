@@ -1,4 +1,4 @@
-console.log('asd');
+// console.log('asd');
 
 // import engine from './engine';
 // import config from './config/configOptions';

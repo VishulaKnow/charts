@@ -49,13 +49,6 @@ function getMargin(): BlockMargin {
     return margin;
 }
 
-function ceilObjValues(obj: any): any {
-    for(let key in obj) {
-        obj[key] = Math.ceil(obj[key]);
-    }
-    return obj;
-}
-
 function recalcMarginWithLegend(margin: BlockMargin, options: TwoDimensionalOptions | PolarOptions, legendMaxWidth: number): void {
     if(options.type === '2d') {
         const chartsWithLegendLeft = options.charts.filter((chart: TwoDimensionalChart) => chart.legend.position === 'left');        

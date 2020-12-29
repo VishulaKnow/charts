@@ -489,6 +489,23 @@ function renderLegend(data: any, options: TwoDimensionalOptionsModel | PolarOpti
         if(chartsWithLegendBottom.length !== 0) {
             renderLegendBlock(chartsWithLegendBottom.map(chart => chart.data.dataSource), 'bottom', legendsSize.bottom.size, margin, blockWidth, blockHeight);
         }
+    } else {
+        const chartsWithLegendLeft = options.charts.filter((chart: any) => chart.legend.position === 'left');        
+        if(chartsWithLegendLeft.length !== 0) {
+            renderLegendBlock(chartsWithLegendLeft.map(chart => data[chart.data.dataSource].map((record: DataRow) => record[chart.data.keyField]))[0], 'left', legendsSize.left.size, margin, blockWidth, blockHeight);
+        }
+        const chartsWithLegendRight = options.charts.filter((chart: any) => chart.legend.position === 'right');        
+        if(chartsWithLegendRight.length !== 0) {
+            renderLegendBlock(chartsWithLegendRight.map(chart => data[chart.data.dataSource].map((record: DataRow) => record[chart.data.keyField]))[0], 'right', legendsSize.right.size, margin, blockWidth, blockHeight);
+        } 
+        const chartsWithLegendTop = options.charts.filter((chart: any) => chart.legend.position === 'top');        
+        if(chartsWithLegendTop.length !== 0) {
+            renderLegendBlock(chartsWithLegendTop.map(chart => data[chart.data.dataSource].map((record: DataRow) => record[chart.data.keyField]))[0], 'top', legendsSize.top.size, margin, blockWidth, blockHeight);
+        }
+        const chartsWithLegendBottom = options.charts.filter((chart: any) => chart.legend.position === 'bottom');        
+        if(chartsWithLegendBottom.length !== 0) {
+            renderLegendBlock(chartsWithLegendBottom.map(chart => data[chart.data.dataSource].map((record: DataRow) => record[chart.data.keyField]))[0], 'bottom', legendsSize.bottom.size, margin, blockWidth, blockHeight);
+        }
     }
 }
 
@@ -506,8 +523,8 @@ function renderLegendBlock(items: string[], legendPosition: string, legendSize: 
         blockHeight);  
         
     fillLegend(legendBlock,
-            items,
-            legendPosition);
+        items,
+        legendPosition);
 }
 
 function fillLegendCoordinateByPosition(legendBlock: d3.Selection<SVGForeignObjectElement, unknown, HTMLElement, any>, legendPosition: string, legendSize: number, margin: BlockMargin, blockWidth: number, blockHeight: number): void {
@@ -524,7 +541,6 @@ function fillLegendCoordinateByPosition(legendBlock: d3.Selection<SVGForeignObje
             .attr('width', Math.ceil(legendSize))
             .attr('height', Math.ceil(blockHeight - margin.top - margin.bottom));
     } else if(legendPosition === 'top') {
-        console.log('hre');
         legendBlock
             .attr('y', 0)
             .attr('x', margin.left)
@@ -556,9 +572,11 @@ function fillLegend(legendBlock: d3.Selection<SVGForeignObjectElement, unknown, 
         .enter()
         .append('div')
             .attr('class', 'item');
+
     itemWrappers
         .append('span')
         .attr('class', 'legend-circle');
+
     itemWrappers
         .data(items)
         .append('span')
@@ -622,6 +640,13 @@ function renderPolar(model: Model, data: any) {
 
     renderPolarCharts(options.charts,
         data,
+        model.chartBlock.globalMargin,
+        model.blockCanvas.size.width,
+        model.blockCanvas.size.height);
+
+    renderLegend(data,
+        options,
+        model.legendBlock,
         model.chartBlock.globalMargin,
         model.blockCanvas.size.width,
         model.blockCanvas.size.height);
