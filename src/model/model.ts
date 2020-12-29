@@ -10,7 +10,8 @@ interface Size {
 }
 
 export interface ChartBlock {
-    margin: BlockMargin
+    globalMargin: BlockMargin;
+    blockMargin: BlockMargin;
 }
 export interface BlockMargin {
     top: number;
@@ -50,15 +51,21 @@ interface TranslateModel {
 export interface TwoDimensionalChartModel {
     type: 'bar' | 'line' | 'area';
     data: ChartDataModel;
+    legend: LegendModel;
 }
 export interface PolarChartModel {
     type: 'donut';
     data: ChartDataModel;
     appearanceOptions: PolarChartAppearanceModel;
+    legend: LegendModel;
+}
+interface LegendModel {
+    position: 'off' | 'top' | 'bottom' | 'right' | 'left';
 }
 export interface Model {
     blockCanvas: BlockCanvas;
     chartBlock: ChartBlock;
+    legendBlock: LegendBlockModel;
     options: TwoDimensionalOptionsModel | PolarOptionsModel;
 }
 export interface TwoDimensionalOptionsModel {
@@ -79,4 +86,15 @@ interface ChartDataModel {
     dataSource: string;
     keyField: string;
     valueField: string;
+}
+
+export interface LegendBlockModel {
+    top: LegendBlockCanvas;
+    bottom: LegendBlockCanvas;
+    left: LegendBlockCanvas;
+    right: LegendBlockCanvas;
+}
+
+interface LegendBlockCanvas {
+    size: number;
 }

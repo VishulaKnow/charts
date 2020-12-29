@@ -1,7 +1,7 @@
 import * as d3 from 'd3'
 
 import { Domain, TwoDimensionalOptions, PolarOptions, TwoDimensionalChart, PolarChart, Axis } from '../config/config';
-import { Model, TwoDimensionalChartModel, BlockCanvas, ChartBlock, TwoDimensionalOptionsModel, PolarOptionsModel, PolarChartModel, BlockMargin } from './model';
+import { Model, TwoDimensionalChartModel, BlockCanvas, ChartBlock, TwoDimensionalOptionsModel, PolarOptionsModel, PolarChartModel, BlockMargin, LegendBlockModel } from './model';
 import { AxisLabelCanvas } from '../designer/designerConfig'
 
 const data = require('../assets/dataSet.json');
@@ -20,10 +20,18 @@ enum ScaleType {
 }
 
 const CLASSES = {
-    dataLabel: 'data-label'
+    dataLabel: 'data-label',
+    legendLabel: 'legend-label',
+    legendColor: 'legend-circle'
 }
-const AXISLABELPADDING = 9;
+const AXIS_LABEL_PADDING = 9;
 
+const legendBlockModel: LegendBlockModel = {
+    bottom: { size: 0 },
+    left: { size: 0 },
+    right: { size: 0 },
+    top: { size: 0 }
+}
 const margin = getMargin();
 
 function getMargin(): BlockMargin {
@@ -33,7 +41,7 @@ function getMargin(): BlockMargin {
         left: designerConfig.canvas.chartBlockMargin.left,
         right: designerConfig.canvas.chartBlockMargin.right
     }
-    recalcMarginWithLegend(margin, config.options.charts, designerConfig.canvas.legendBlock.maxWidth);
+    recalcMarginWithLegend(margin, config.options, designerConfig.canvas.legendBlock.maxWidth);
     if(config.options.type === '2d') {
         recalcMarginWithAxisLabelWidth(margin, config.options.charts, designerConfig.canvas.axisLabel.maxSize.main, config.options.axis);
     }
@@ -41,22 +49,134 @@ function getMargin(): BlockMargin {
     return margin;
 }
 
-function recalcMarginWithLegend(margin: BlockMargin, charts: PolarChart[] | TwoDimensionalChart[], legendMaxWidth: number): void {
-    charts.forEach((chart: PolarChart | TwoDimensionalChart) => {
-        if(chart.legend.position !== 'off')
-            margin[chart.legend.position] += legendMaxWidth;
+function ceilObjValues(obj: any): any {
+    for(let key in obj) {
+        obj[key] = Math.ceil(obj[key]);
+    }
+    return obj;
+}
+
+function recalcMarginWithLegend(margin: BlockMargin, options: TwoDimensionalOptions | PolarOptions, legendMaxWidth: number): void {
+    if(options.type === '2d') {
+        const chartsWithLegendLeft = options.charts.filter((chart: TwoDimensionalChart) => chart.legend.position === 'left');        
+        if(chartsWithLegendLeft.length !== 0) {
+            const legendSize = getLegendWidth(chartsWithLegendLeft.map(chart => chart.data.dataSource), legendMaxWidth);
+            margin.left += legendSize;
+            legendBlockModel.left.size = legendSize;
+        }
+
+        const chartsWithLegendRight = options.charts.filter((chart: TwoDimensionalChart) => chart.legend.position === 'right');
+        if(chartsWithLegendRight.length !== 0) {
+            const legendSize = getLegendWidth(chartsWithLegendRight.map(chart => chart.data.dataSource), legendMaxWidth); 
+            margin.right += legendSize;
+            legendBlockModel.right.size = legendSize;
+        }
+
+        const chartsWithLegendBottom = options.charts.filter((chart: TwoDimensionalChart) => chart.legend.position === 'bottom');
+        if(chartsWithLegendBottom.length !== 0) {
+            const legendSize = getLegendHeight(chartsWithLegendBottom.map(chart => chart.data.dataSource)); 
+            margin.bottom += legendSize;
+            legendBlockModel.bottom.size = legendSize;
+        }
+
+        const chartsWithLegendTop = options.charts.filter((chart: TwoDimensionalChart) => chart.legend.position === 'top');
+        if(chartsWithLegendTop.length !== 0) {
+            const legendSize = getLegendHeight(chartsWithLegendTop.map(chart => chart.data.dataSource));
+            margin.top += legendSize;
+            legendBlockModel.top.size = legendSize;
+        }
+    } else {
+        const chartsWithLegendLeft = options.charts.filter((chart: PolarChart) => chart.legend.position === 'left');        
+        if(chartsWithLegendLeft.length !== 0) {
+            const legendSize = getLegendWidth(chartsWithLegendLeft.map(chart => {
+                return data[chart.data.dataSource].map((record: DataRow) => record[chart.data.keyField])
+            })[0], legendMaxWidth);
+            margin.left += legendSize;
+            legendBlockModel.left.size = legendSize;
+        }  
+
+        const chartsWithLegendRight = options.charts.filter((chart: PolarChart) => chart.legend.position === 'right');
+        if(chartsWithLegendRight.length !== 0) {
+            const legendSize = getLegendWidth(chartsWithLegendRight.map(chart => {
+                return data[chart.data.dataSource].map((record: DataRow) => record[chart.data.keyField])
+            })[0], legendMaxWidth);
+            margin.right += legendSize;
+            legendBlockModel.right.size = legendSize
+        }    
+
+        const chartsWithLegendBottom = options.charts.filter((chart: PolarChart) => chart.legend.position === 'bottom');
+        if(chartsWithLegendBottom.length !== 0) {
+            const legendSize = getLegendHeight(chartsWithLegendBottom.map(chart => {
+                return data[chart.data.dataSource].map((record: DataRow) => record[chart.data.keyField])
+            })[0]);
+            margin.bottom += legendSize;
+            legendBlockModel.bottom.size = legendSize;
+        } 
+
+        const chartsWithLegendTop = options.charts.filter((chart: PolarChart) => chart.legend.position === 'top');
+        if(chartsWithLegendTop.length !== 0) {
+            const legendSize = getLegendHeight(chartsWithLegendTop.map(chart => {
+                return data[chart.data.dataSource].map((record: DataRow) => record[chart.data.keyField])
+            })[0]);
+            margin.top += legendSize;
+            legendBlockModel.top.size = legendSize;
+        } 
+    }
+}
+
+function getLegendWidth(texts: string[], legendMaxWidth: number): number {
+    let maxWidth = 0;
+    texts.forEach(text => {
+        const width = getLegendItemWidth(text);
+        if(maxWidth < width)
+            maxWidth = width;
     });
+    return maxWidth > legendMaxWidth ? legendMaxWidth : maxWidth;
+}
+
+function getLegendHeight(texts: string[]): number {
+    const legendWrapper = document.createElement('div');
+    legendWrapper.style.display = 'flex';
+    texts.forEach(text => {
+        const itemWrapper = document.createElement('div');
+        const colorBlock = document.createElement('span');
+        const textBlock = document.createElement('span');
+        colorBlock.classList.add(CLASSES.legendColor);
+        textBlock.classList.add(CLASSES.legendLabel);
+        textBlock.textContent = text;
+        itemWrapper.append(colorBlock, textBlock);
+        legendWrapper.append(itemWrapper)
+    });
+    document.body.append(legendWrapper);
+    const height = legendWrapper.getBoundingClientRect().height;
+    legendWrapper.remove();
+    return height;
+}
+
+function getLegendItemWidth(text: string): number {
+    const itemWrapper = document.createElement('div');
+    const colorBlock = document.createElement('span');
+    const textBlock = document.createElement('span');
+    itemWrapper.style.display = 'inline-block'
+    colorBlock.classList.add(CLASSES.legendColor);
+    textBlock.classList.add(CLASSES.legendLabel);
+    textBlock.textContent = text;
+    itemWrapper.append(colorBlock, textBlock);
+    document.body.append(itemWrapper);
+    const sumWidth = itemWrapper.getBoundingClientRect().width;
+    itemWrapper.remove();
+    return sumWidth;
 }
 
 function recalcMarginWithAxisLabelWidth(margin: BlockMargin, charts: TwoDimensionalChart[], labelsMaxWidth: number, axis: Axis): void {
     const keyAxisOrient = getAxisOrient(AxisType.Key, charts[0].orientation, axis.keyAxis.position);
     if(keyAxisOrient === 'left' || keyAxisOrient === 'right') {
         const labelTexts = data[charts[0].data.dataSource].map((dataSet: DataRow) => dataSet[charts[0].data.keyField]);
-        margin[keyAxisOrient] += getLabelTextMaxWidth(labelsMaxWidth, labelTexts) + AXISLABELPADDING;
+        margin[keyAxisOrient] += getLabelTextMaxWidth(labelsMaxWidth, labelTexts) + AXIS_LABEL_PADDING;
     } else {
         const valueAxisOrient = getAxisOrient(AxisType.Value, charts[0].orientation, axis.valueAxis.position);
         const labelTexts = data[charts[0].data.dataSource].map((dataSet: DataRow) => dataSet[charts[0].data.valueField]);
-        margin[valueAxisOrient] += getLabelTextMaxWidth(labelsMaxWidth, labelTexts) + AXISLABELPADDING;
+        margin[valueAxisOrient] += getLabelTextMaxWidth(labelsMaxWidth, labelTexts) + AXIS_LABEL_PADDING;
     }
 }
 
@@ -155,7 +275,8 @@ function get2DChartsModel(charts: TwoDimensionalChart[]): TwoDimensionalChartMod
                 dataSource: chart.data.dataSource,
                 keyField: chart.data.keyField,
                 valueField: chart.data.valueField
-            }
+            },
+            legend: chart.legend
         });
     });
     return chartsModel;
@@ -174,7 +295,8 @@ function getPolarChartsModel(charts: PolarChart[], blockWidth: number, blockHeig
             appearanceOptions: {
                 innerRadius: chart.appearanceOptions.innerRadius,
                 padAngle: chart.appearanceOptions.padAngle
-            }
+            },
+            legend: chart.legend
         });
     });
     return chartsModel;
@@ -192,7 +314,8 @@ function getBlockCanvas(): BlockCanvas {
 
 function getChartBlock(): ChartBlock {
     return {
-        margin
+        globalMargin: margin,
+        blockMargin: designerConfig.canvas.chartBlockMargin
     }
 }
 
@@ -254,13 +377,19 @@ function getOptions(): TwoDimensionalOptionsModel | PolarOptionsModel {
     }
 } 
 
+function getLegendBlock(): LegendBlockModel {
+    return legendBlockModel;
+}
+
 export function assembleModel(): Model {
     const blockCanvas = getBlockCanvas();
     const chartBlock = getChartBlock();
     const options = getOptions();
+    const legendBlock = getLegendBlock();
     return {
         blockCanvas,
         chartBlock,
+        legendBlock,
         options
     }
 }

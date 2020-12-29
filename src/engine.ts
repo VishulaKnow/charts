@@ -83,7 +83,8 @@ function renderAxis(scale: d3.AxisScale<any>, axisOrient: string, translateX: nu
         .attr('class', `${cssClass} data-label`)
         .call(axis);
 
-    cropLabels(d3.select(`.${cssClass}`).selectAll('text'), maxLabelSize);
+    if(axisOrient === 'left' || axisOrient === 'right')
+        cropLabels(d3.select(`.${cssClass}`).selectAll('text'), maxLabelSize);
 }
 
 function fillBarAttrsByKeyOrient(bars: d3.Selection<SVGRectElement, DataRow, d3.BaseType, unknown>, axisOrient: string, scaleKey: d3.ScaleBand<string>, scaleValue: d3.ScaleLinear<number, number>, margin: BlockMargin, keyField: string, valueField: string, blockWidth: number, blockHeight: number): void {
@@ -268,7 +269,6 @@ function renderDonut(data: DataRow[], margin: BlockMargin, keyField: string, val
     const donutBlock = d3.select('svg')
         .append('g')
         .attr('transform', `translate(${blockWidth / 2}, ${blockHeight / 2})`);
-    console.log(data);
     
     const items = donutBlock
         .selectAll('.arc')
@@ -471,6 +471,101 @@ function fillBarAttrsByKeyOrientWithTransition(bars: d3.Selection<SVGRectElement
             .attr('width', d => blockWidth - margin.left - margin.right - scaleValue(d[valueField]));  
 }
 
+function renderLegend(data: any, options: TwoDimensionalOptionsModel | PolarOptionsModel, legendsSize: any, margin: BlockMargin, blockWidth: number, blockHeight: number): void {
+    if(options.type === '2d') {
+        const chartsWithLegendLeft = options.charts.filter((chart: any) => chart.legend.position === 'left');        
+        if(chartsWithLegendLeft.length !== 0) {
+            renderLegendBlock(chartsWithLegendLeft.map(chart => chart.data.dataSource), 'left', legendsSize.left.size, margin, blockWidth, blockHeight);
+        }
+        const chartsWithLegendRight = options.charts.filter((chart: any) => chart.legend.position === 'right');        
+        if(chartsWithLegendRight.length !== 0) {
+            renderLegendBlock(chartsWithLegendRight.map(chart => chart.data.dataSource), 'right', legendsSize.right.size, margin, blockWidth, blockHeight);
+        } 
+        const chartsWithLegendTop = options.charts.filter((chart: any) => chart.legend.position === 'top');        
+        if(chartsWithLegendTop.length !== 0) {
+            renderLegendBlock(chartsWithLegendTop.map(chart => chart.data.dataSource), 'top', legendsSize.top.size, margin, blockWidth, blockHeight);
+        }
+        const chartsWithLegendBottom = options.charts.filter((chart: any) => chart.legend.position === 'bottom');        
+        if(chartsWithLegendBottom.length !== 0) {
+            renderLegendBlock(chartsWithLegendBottom.map(chart => chart.data.dataSource), 'bottom', legendsSize.bottom.size, margin, blockWidth, blockHeight);
+        }
+    }
+}
+
+function renderLegendBlock(items: string[], legendPosition: string, legendSize: number, margin: BlockMargin, blockWidth: number, blockHeight: number): void {
+    const legendBlock = d3.select('svg')
+        .append('foreignObject')
+            .attr('class', 'legend')
+            .style('outline', '1px solid red');
+    
+    fillLegendCoordinateByPosition(legendBlock,
+        legendPosition,
+        legendSize,
+        margin,
+        blockWidth,
+        blockHeight);  
+        
+    fillLegend(legendBlock,
+            items,
+            legendPosition);
+}
+
+function fillLegendCoordinateByPosition(legendBlock: d3.Selection<SVGForeignObjectElement, unknown, HTMLElement, any>, legendPosition: string, legendSize: number, margin: BlockMargin, blockWidth: number, blockHeight: number): void {
+    if(legendPosition === 'left') {
+        legendBlock
+            .attr('y', margin.top)
+            .attr('x', 0)
+            .attr('width', legendSize)
+            .attr('height', blockHeight - margin.top - margin.bottom);
+    } else if(legendPosition === 'right') {
+        legendBlock
+            .attr('y', margin.top)
+            .attr('x', Math.ceil(blockWidth - legendSize))
+            .attr('width', Math.ceil(legendSize))
+            .attr('height', Math.ceil(blockHeight - margin.top - margin.bottom));
+    } else if(legendPosition === 'top') {
+        console.log('hre');
+        legendBlock
+            .attr('y', 0)
+            .attr('x', margin.left)
+            .attr('width', blockWidth - margin.left - margin.right)
+            .attr('height', legendSize);
+    } else if(legendPosition === 'bottom') {
+        legendBlock
+            .attr('y', blockHeight - legendSize)
+            .attr('x', margin.left)
+            .attr('width', blockWidth - margin.left - margin.right)
+            .attr('height', legendSize);
+    }
+}
+
+function fillLegend(legendBlock: d3.Selection<SVGForeignObjectElement, unknown, HTMLElement, any>, items: string[], legendPosition: string): void {
+    const wrapper = legendBlock.append('xhtml:div');
+    wrapper 
+        .style('width', '100%')
+        .style('height', '100%')
+        .style('display', 'flex')
+        .style('justify-content', 'center');
+
+    if(legendPosition === 'left' || legendPosition === 'right')
+        wrapper.style('flex-direction', 'column');
+    
+    const itemWrappers = wrapper
+        .selectAll('.item')
+        .data(items)
+        .enter()
+        .append('div')
+            .attr('class', 'item');
+    itemWrappers
+        .append('span')
+        .attr('class', 'legend-circle');
+    itemWrappers
+        .data(items)
+        .append('span')
+        .attr('class', 'legend-label')
+        .text(d => d.toString());
+}
+
 function render2D(model: Model, data: any): void {
     const options = <TwoDimensionalOptionsModel>model.options;
 
@@ -504,8 +599,15 @@ function render2D(model: Model, data: any): void {
         scales.scaleKey,
         scales.scaleValue,
         data,
-        model.chartBlock.margin,
+        model.chartBlock.globalMargin,
         options.axis.keyAxis.orient,
+        model.blockCanvas.size.width,
+        model.blockCanvas.size.height);
+
+    renderLegend(data,
+        options,
+        model.legendBlock,
+        model.chartBlock.globalMargin,
         model.blockCanvas.size.width,
         model.blockCanvas.size.height);
 }
@@ -520,7 +622,7 @@ function renderPolar(model: Model, data: any) {
 
     renderPolarCharts(options.charts,
         data,
-        model.chartBlock.margin,
+        model.chartBlock.globalMargin,
         model.blockCanvas.size.width,
         model.blockCanvas.size.height);
 }
@@ -544,7 +646,7 @@ function updateByValueAxis(model: Model, data: any) {
         scales.scaleKey,
         scales.scaleValue,
         data,
-        model.chartBlock.margin,
+        model.chartBlock.globalMargin,
         options.axis.keyAxis.orient,
         model.blockCanvas.size.width,
         model.blockCanvas.size.height);

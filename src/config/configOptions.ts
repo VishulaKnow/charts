@@ -16,7 +16,7 @@ const config: Config = {
                     start: -1,
                     end: -1
                 },
-                position: 'end'
+                position: 'start'
             },
             valueAxis: {
                 domain: {
@@ -31,10 +31,28 @@ const config: Config = {
                 title: 'Car prices',
                 type: 'bar',
                 legend: {
-                    position: 'off'
+                    position: 'bottom'
                 },
                 data: {
                     dataSource: 'dataSet',
+                    keyField: 'brand',
+                    valueField: 'price'
+                },
+                tooltip: {
+                    data: {
+                        fields: ['count', 'price']
+                    }
+                },
+                orientation: 'horizontal'
+            },
+            {
+                title: 'Car prices',
+                type: 'bar',
+                legend: {
+                    position: 'bottom'
+                },
+                data: {
+                    dataSource: 'dataSet2',
                     keyField: 'brand',
                     valueField: 'price'
                 },
@@ -54,7 +72,7 @@ const config: Config = {
     //             type: 'donut',
     //             title: 'Car prices',
     //             legend: {
-    //                 position: 'off'
+    //                 position: 'bottom'
     //             },
     //             data: {
     //                 dataSource: 'dataSet',
