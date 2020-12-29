@@ -110,13 +110,14 @@ function fillBarAttrsByKeyOrient(bars: d3.Selection<SVGRectElement, DataRow, d3.
             .attr('width', d => blockWidth - margin.left - margin.right - scaleValue(d[valueField]));   
 }
 
-function renderBar(scaleKey: d3.ScaleBand<string>, scaleValue: d3.ScaleLinear<number, number>, data: DataRow[], margin: BlockMargin, keyField: string, valueField: string, keyAxisOrient: string, blockWidth: number, blockHeight: number): void {
+function renderBar(scaleKey: d3.ScaleBand<string>, scaleValue: d3.ScaleLinear<number, number>, data: DataRow[], margin: BlockMargin, keyField: string, valueField: string, keyAxisOrient: string, tooltipFields: string[], blockWidth: number, blockHeight: number): void {
     const bars = d3.select('svg')
         .selectAll('rect.bar')
         .data(data)
             .enter()
             .append('rect')
             .attr('class', 'bar');
+
     fillBarAttrsByKeyOrient(bars,
         keyAxisOrient,
         scaleKey,
@@ -126,6 +127,46 @@ function renderBar(scaleKey: d3.ScaleBand<string>, scaleValue: d3.ScaleLinear<nu
         valueField,
         blockWidth,
         blockHeight);
+
+    renderTooltipForBar(bars, tooltipFields, data);
+}
+
+function renderTooltipForBar(bars: d3.Selection<SVGRectElement, DataRow, d3.BaseType, unknown>, fields: string[], data: DataRow[]): void {
+    const tooltip = d3.select("svg")
+        .append('foreignObject')
+        .attr('width', 0)
+        .attr('height', 0)
+        .style('position', 'relative')
+        .style('display', 'none')
+        .style('overflow', 'visible');
+
+    const div = d3.create('xhtml:div') as d3.Selection<d3.BaseType, unknown, HTMLElement, any>;
+    div.attr("class", "tooltip")
+        .style("background-color", "white")
+        .style("border", "solid")
+        .style("border-width", "2px")
+        .style("border-radius", "5px")
+        .style("padding", "5px")
+        .style("position", "absolute")
+        .style("left", "0")
+        .style("top", "0");
+
+    tooltip.append(d => div.node());;
+
+    bars
+        .on('mouseover', d => tooltip.style('display', 'block'));
+
+    bars
+        .data(data)
+        .on('mousemove', (event, d) => {
+            div.text(d['brand']);
+            console.log((div.node() as any).getBoundingClientRect());
+            tooltip
+                .attr('x', d3.pointer(event, this)[0] + 10)
+                .attr('y', d3.pointer(event, this)[1]); 
+        });
+
+    bars.on('mouseleave', d => tooltip.style('display', 'none'))
 }
 
 function getLine(): d3.Line<Line> {
@@ -268,7 +309,7 @@ function renderDonut(data: DataRow[], margin: BlockMargin, keyField: string, val
 
     const donutBlock = d3.select('svg')
         .append('g')
-        .attr('transform', `translate(${blockWidth / 2}, ${blockHeight / 2})`);
+        .attr('transform', `translate(${(blockWidth - margin.left - margin.right) / 2 + margin.left}, ${(blockHeight - margin.top - margin.bottom) / 2 + margin.top})`);
     
     const items = donutBlock
         .selectAll('.arc')
@@ -294,6 +335,7 @@ function render2DCharts(charts: any[], scaleKey: d3.ScaleBand<string>, scaleValu
                 chart.data.keyField,
                 chart.data.valueField,
                 keyAxisOrient,
+                chart.tooltip.data.fields,
                 blockWidth,
                 blockHeight);
         else if(chart.type === 'line')
@@ -561,17 +603,18 @@ function fillLegend(legendBlock: d3.Selection<SVGForeignObjectElement, unknown, 
         .style('width', '100%')
         .style('height', '100%')
         .style('display', 'flex')
+        .style('flex-wrap', 'wrap')
         .style('justify-content', 'center');
 
     if(legendPosition === 'left' || legendPosition === 'right')
         wrapper.style('flex-direction', 'column');
     
     const itemWrappers = wrapper
-        .selectAll('.item')
+        .selectAll('.legend-item')
         .data(items)
         .enter()
         .append('div')
-            .attr('class', 'item');
+            .attr('class', 'legend-item');
 
     itemWrappers
         .append('span')

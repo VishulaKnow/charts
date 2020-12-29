@@ -48,16 +48,25 @@ interface TranslateModel {
     translateY: number;
 }
 
+interface TooltipModel {
+    data: TooltipDataModel;
+}
+interface TooltipDataModel {
+    fields: string[]
+}
+
 export interface TwoDimensionalChartModel {
     type: 'bar' | 'line' | 'area';
     data: ChartDataModel;
     legend: LegendModel;
+    tooltip: TooltipModel;
 }
 export interface PolarChartModel {
     type: 'donut';
     data: ChartDataModel;
     appearanceOptions: PolarChartAppearanceModel;
     legend: LegendModel;
+    tooltip: TooltipModel;
 }
 interface LegendModel {
     position: 'off' | 'top' | 'bottom' | 'right' | 'left';

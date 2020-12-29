@@ -22,7 +22,8 @@ enum ScaleType {
 const CLASSES = {
     dataLabel: 'data-label',
     legendLabel: 'legend-label',
-    legendColor: 'legend-circle'
+    legendColor: 'legend-circle',
+    legendItem: 'legend-item'
 }
 const AXIS_LABEL_PADDING = 9;
 
@@ -130,10 +131,13 @@ function getLegendWidth(texts: string[], legendMaxWidth: number): number {
 function getLegendHeight(texts: string[]): number {
     const legendWrapper = document.createElement('div');
     legendWrapper.style.display = 'flex';
+    legendWrapper.style.flexWrap = 'wrap';
+    legendWrapper.style.width = 900 + 'px';
     texts.forEach(text => {
         const itemWrapper = document.createElement('div');
         const colorBlock = document.createElement('span');
         const textBlock = document.createElement('span');
+        itemWrapper.classList.add(CLASSES.legendItem);
         colorBlock.classList.add(CLASSES.legendColor);
         textBlock.classList.add(CLASSES.legendLabel);
         textBlock.textContent = text;
@@ -141,7 +145,7 @@ function getLegendHeight(texts: string[]): number {
         legendWrapper.append(itemWrapper)
     });
     document.body.append(legendWrapper);
-    const height = legendWrapper.getBoundingClientRect().height;
+    const height = legendWrapper.offsetHeight;
     legendWrapper.remove();
     return height;
 }
@@ -150,13 +154,16 @@ function getLegendItemWidth(text: string): number {
     const itemWrapper = document.createElement('div');
     const colorBlock = document.createElement('span');
     const textBlock = document.createElement('span');
-    itemWrapper.style.display = 'inline-block'
+    itemWrapper.style.display = 'inline-block';
+    itemWrapper.classList.add(CLASSES.legendItem);
     colorBlock.classList.add(CLASSES.legendColor);
     textBlock.classList.add(CLASSES.legendLabel);
     textBlock.textContent = text;
     itemWrapper.append(colorBlock, textBlock);
     document.body.append(itemWrapper);
-    const sumWidth = itemWrapper.getBoundingClientRect().width;
+    const sumWidth = itemWrapper.getBoundingClientRect().width 
+        + parseFloat(window.getComputedStyle(itemWrapper, null).getPropertyValue('margin-left'))
+        + parseFloat(window.getComputedStyle(itemWrapper, null).getPropertyValue('margin-right'));
     itemWrapper.remove();
     return sumWidth;
 }
@@ -269,7 +276,8 @@ function get2DChartsModel(charts: TwoDimensionalChart[]): TwoDimensionalChartMod
                 keyField: chart.data.keyField,
                 valueField: chart.data.valueField
             },
-            legend: chart.legend
+            legend: chart.legend,
+            tooltip: chart.tooltip
         });
     });
     return chartsModel;
@@ -289,7 +297,8 @@ function getPolarChartsModel(charts: PolarChart[], blockWidth: number, blockHeig
                 innerRadius: chart.appearanceOptions.innerRadius,
                 padAngle: chart.appearanceOptions.padAngle
             },
-            legend: chart.legend
+            legend: chart.legend,
+            tooltip: chart.tooltip
         });
     });
     return chartsModel;

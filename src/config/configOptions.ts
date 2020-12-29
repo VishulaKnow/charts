@@ -8,53 +8,30 @@ const config: Config = {
             height: 500
         }
     },
-    // options: {
-    //     type: '2d',
-    //     axis: {
-    //         keyAxis: {
-    //             domain: {
-    //                 start: -1,
-    //                 end: -1
-    //             },
-    //             position: 'start'
-    //         },
-    //         valueAxis: {
-    //             domain: {
-    //                 start: 0,
-    //                 end: 150
-    //             },
-    //             position: 'start'
-    //         }
-    //     },
-    //     charts: [
-    //         {
-    //             title: 'Car prices',
-    //             type: 'bar',
-    //             legend: {
-    //                 position: 'bottom'
-    //             },
-    //             data: {
-    //                 dataSource: 'dataSet',
-    //                 keyField: 'brand',
-    //                 valueField: 'price'
-    //             },
-    //             tooltip: {
-    //                 data: {
-    //                     fields: ['count', 'price']
-    //                 }
-    //             },
-    //             orientation: 'horizontal'
-    //         }
-    //     ]
-    // }
     options: {
-        type: 'polar',
+        type: '2d',
+        axis: {
+            keyAxis: {
+                domain: {
+                    start: -1,
+                    end: -1
+                },
+                position: 'start'
+            },
+            valueAxis: {
+                domain: {
+                    start: 0,
+                    end: 150
+                },
+                position: 'start'
+            }
+        },
         charts: [
             {
-                type: 'donut',
                 title: 'Car prices',
+                type: 'bar',
                 legend: {
-                    position: 'top'
+                    position: 'bottom'
                 },
                 data: {
                     dataSource: 'dataSet',
@@ -66,13 +43,36 @@ const config: Config = {
                         fields: ['count', 'price']
                     }
                 },
-                appearanceOptions: {
-                    innerRadius: 10,
-                    padAngle: 0.005
-                }
+                orientation: 'vertical'
             }
         ]
     }
+    // options: {
+    //     type: 'polar',
+    //     charts: [
+    //         {
+    //             type: 'donut',
+    //             title: 'Car prices',
+    //             legend: {
+    //                 position: 'left'
+    //             },
+    //             data: {
+    //                 dataSource: 'dataSet',
+    //                 keyField: 'brand',
+    //                 valueField: 'price'
+    //             },
+    //             tooltip: {
+    //                 data: {
+    //                     fields: ['count', 'price']
+    //                 }
+    //             },
+    //             appearanceOptions: {
+    //                 innerRadius: 10,
+    //                 padAngle: 0.005
+    //             }
+    //         }
+    //     ]
+    // }
 }
 
 export default config;
