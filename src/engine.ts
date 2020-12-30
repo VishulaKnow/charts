@@ -90,8 +90,10 @@ function renderAxis(scale: d3.AxisScale<any>, axisOrient: string, translateX: nu
 
     if(axisOrient === 'left' || axisOrient === 'right')
         cropLabels(d3.select(`.${cssClass}`).selectAll('text'), maxLabelSize);
-    else if(axisOrient === 'bottom' || axisOrient === 'top')
-        cropLabels(d3.select(`.${cssClass}`).selectAll('text'), scale.bandwidth());
+    else if(axisOrient === 'bottom' || axisOrient === 'top') {
+        if(scale.bandwidth)
+            cropLabels(d3.select(`.${cssClass}`).selectAll('text'), scale.bandwidth());
+    }
 }
 
 function fillBarAttrsByKeyOrient(bars: d3.Selection<SVGRectElement, DataRow, d3.BaseType, unknown>, axisOrient: string, scaleKey: d3.ScaleBand<string>, scaleValue: d3.ScaleLinear<number, number>, margin: BlockMargin, keyField: string, valueField: string, blockWidth: number, blockHeight: number): void {
