@@ -63,6 +63,24 @@ const config: Config = {
     //             },
     //             orientation: 'vertical'
     //         }
+    //         // {
+    //         //     title: 'Car prices',
+    //         //     type: 'line',
+    //         //     legend: {
+    //         //         position: 'bottom'
+    //         //     },
+    //         //     data: {
+    //         //         dataSource: 'dataSet2',
+    //         //         keyField: 'brand',
+    //         //         valueField: 'price'
+    //         //     },
+    //         //     tooltip: {
+    //         //         data: {
+    //         //             fields: ['count', 'price', 'brand']
+    //         //         }
+    //         //     },
+    //         //     orientation: 'vertical'
+    //         // }
     //     ]
     // }
     options: {
@@ -72,7 +90,7 @@ const config: Config = {
                 type: 'donut',
                 title: 'Car prices',
                 legend: {
-                    position: 'bottom'
+                    position: 'right'
                 },
                 data: {
                     dataSource: 'dataSet',

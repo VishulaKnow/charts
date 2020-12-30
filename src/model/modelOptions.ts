@@ -1,7 +1,7 @@
 import * as d3 from 'd3'
 
 import { Domain, TwoDimensionalOptions, PolarOptions, TwoDimensionalChart, PolarChart, Axis } from '../config/config';
-import { Model, TwoDimensionalChartModel, BlockCanvas, ChartBlock, TwoDimensionalOptionsModel, PolarOptionsModel, PolarChartModel, BlockMargin, LegendBlockModel } from './model';
+import { Model, TwoDimensionalChartModel, BlockCanvas, ChartBlock, TwoDimensionalOptionsModel, PolarOptionsModel, PolarChartModel, BlockMargin, LegendBlockModel, DataSettings } from './model';
 import { AxisLabelCanvas } from '../designer/designerConfig'
 
 const data = require('../assets/dataSet.json');
@@ -40,6 +40,7 @@ const legendBlockModel: LegendBlockModel = {
     top: { size: 0 }
 }
 const margin = getMargin();
+const dataLimit = calcDataLimit();
 
 function getMargin(): BlockMargin {
     const margin = {
@@ -54,6 +55,33 @@ function getMargin(): BlockMargin {
     }
         
     return margin;
+}
+
+function getDataLimit(dataLength: number, axisLength: number, minBarWidth: number, barDistance: number): number {
+    let sumSize = dataLength * (minBarWidth + barDistance);
+    while(dataLength !== 0 && axisLength < sumSize) {
+        dataLength--;
+        sumSize = dataLength * (minBarWidth + barDistance);
+    }
+    return dataLength;
+}
+
+function calcDataLimit(): number {
+    let limit: number = -1;
+    if(config.options.type === '2d') {
+        const barCharts = config.options.charts.filter(chart => chart.type === 'bar');
+        if(barCharts.length !== 0) {
+            let axisLength: number;
+            if(barCharts.map(chart => chart.orientation).findIndex(s => s === 'vertical') !== -1) {
+                axisLength = config.canvas.size.width - margin.left - margin.right;
+            } else {
+                axisLength = config.canvas.size.height - margin.top - margin.bottom;
+            }
+            const dataLength = data[barCharts[0].data.dataSource].length;
+            limit = getDataLimit(dataLength, axisLength, designerConfig.canvas.chartOptions.bar.minBarWidth, designerConfig.canvas.chartOptions.bar.barDistance);
+        }
+    }
+    return limit;
 }
 
 function recalcMarginWithLegend(margin: BlockMargin, options: TwoDimensionalOptions | PolarOptions, legendMaxWidth: number): void {
@@ -213,7 +241,13 @@ function getScaleRangePeek(scaleType: ScaleType, chartOrientation: string, block
 
 function getScaleDomain(scaleType: ScaleType, configDomain: Domain, data: DataRow[], chart: TwoDimensionalChart, keyAxisPosition: string = null): any[] {
     if(scaleType === ScaleType.Key) {
-        return data.map(d => d[chart.data.keyField]);
+        const domain = data.map(d => d[chart.data.keyField]);
+        console.log('dataLimit', dataLimit);
+        console.log('domain.length', domain.length);
+        
+        if(dataLimit !== domain.length)     
+            domain.splice(dataLimit, domain.length - dataLimit) 
+        return domain;
     } else {
         let domainPeekMin: number;
         let domainPeekMax: number;
@@ -412,16 +446,24 @@ function getLegendBlock(): LegendBlockModel {
     return legendBlockModel;
 }
 
+function getDataSettings(): DataSettings {
+    return {
+        limit: dataLimit
+    }
+}
+
 export function assembleModel(): Model {
     const blockCanvas = getBlockCanvas();
     const chartBlock = getChartBlock();
     const options = getOptions();
     const legendBlock = getLegendBlock();
+    const dataSettings = getDataSettings();
     return {
         blockCanvas,
         chartBlock,
         legendBlock,
-        options
+        options,
+        dataSettings
     }
 }
 

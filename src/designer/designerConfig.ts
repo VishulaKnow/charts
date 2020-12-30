@@ -17,6 +17,14 @@ interface Canvas {
     axisLabel: AxisLabelCanvas;
     chartBlockMargin: BlockMargin;
     legendBlock: LegendBlockCanvas;
+    chartOptions: ChartOptionsCanvas;
+}
+interface ChartOptionsCanvas {
+    bar: BarOptionsCanvas;
+}
+interface BarOptionsCanvas {
+    minBarWidth: number;
+    barDistance: number;
 }
 interface LegendBlockCanvas {
     maxWidth: number;

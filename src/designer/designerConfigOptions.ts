@@ -17,11 +17,17 @@ const designerConfig: DesignerConfig = {
         },
         legendBlock: {
             maxWidth: 200
+        },
+        chartOptions: {
+            bar: {
+                barDistance: 10,
+                minBarWidth: 10
+            }
         }
     },
     chart: {
         style: {
-            palette: [color('red'), color('green'), color('blue')]
+            palette: [color('steelblue'), color('green'), color('blue'), color('yellow')]
         }
     },
     dataFormat: {

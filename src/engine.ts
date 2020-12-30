@@ -1,7 +1,7 @@
 import * as d3 from 'd3'
 import { color, Color } from 'd3';
 
-import { Model, TwoDimensionalOptionsModel, PolarOptionsModel } from './model/model';
+import { Model, TwoDimensionalOptionsModel, PolarOptionsModel, TwoDimensionalChartModel, PolarChartModel } from './model/model';
 
 type DataRow = {
     [field: string]: any
@@ -33,10 +33,13 @@ interface BlockMargin {
 }
 
 function getScaleBand(domain: any, rangeStart: number, rangeEnd: number): d3.ScaleBand<string> {
-    return d3.scaleBand()
+    const pad = 20 / 2;
+    
+    const scale = d3.scaleBand()
         .domain(domain)
-        .range([rangeStart, rangeEnd])
-        .padding(0.1);
+        .range([rangeStart, rangeEnd]);
+    scale.padding(pad / scale.bandwidth());
+    return scale;
 }
 
 function getScaleLinear(domain: any, rangeStart: number, rangeEnd: number): d3.ScaleLinear<number, number> {
@@ -87,6 +90,8 @@ function renderAxis(scale: d3.AxisScale<any>, axisOrient: string, translateX: nu
 
     if(axisOrient === 'left' || axisOrient === 'right')
         cropLabels(d3.select(`.${cssClass}`).selectAll('text'), maxLabelSize);
+    else if(axisOrient === 'bottom' || axisOrient === 'top')
+        cropLabels(d3.select(`.${cssClass}`).selectAll('text'), scale.bandwidth());
 }
 
 function fillBarAttrsByKeyOrient(bars: d3.Selection<SVGRectElement, DataRow, d3.BaseType, unknown>, axisOrient: string, scaleKey: d3.ScaleBand<string>, scaleValue: d3.ScaleLinear<number, number>, margin: BlockMargin, keyField: string, valueField: string, blockWidth: number, blockHeight: number): void {
@@ -594,6 +599,7 @@ function fillBarAttrsByKeyOrientWithTransition(bars: d3.Selection<SVGRectElement
 }
 
 function renderLegend(data: any, options: TwoDimensionalOptionsModel | PolarOptionsModel, legendsSize: any, margin: BlockMargin, blockWidth: number, blockHeight: number): void {
+    //FIXME Make it better
     if(options.type === '2d') {
         const chartsWithLegendLeft = options.charts.filter((chart: any) => chart.legend.position === 'left');        
         if(chartsWithLegendLeft.length !== 0) {
@@ -683,7 +689,7 @@ function renderLegendBlock(items: string[], legendPosition: string, legendSize: 
     const legendBlock = d3.select('svg')
         .append('foreignObject')
             .attr('class', 'legend')
-            .style('outline', '1px solid red');
+            // .style('outline', '1px solid red');
     
     fillLegendCoordinateByPosition(legendBlock,
         legendPosition,
@@ -850,6 +856,15 @@ function updateByValueAxis(model: Model, data: any) {
         model.blockCanvas.size.height);
 }
 
+function prepareData(data: any, model: Model): void {
+    console.log('limit', model.dataSettings.limit);
+    if(model.dataSettings.limit !== -1) {
+        (model.options.charts as any).map((chart: any) => chart.data.dataSource).forEach((set: any) => {
+            data[set].splice(model.dataSettings.limit, data[set].length - model.dataSettings.limit);
+        })
+    }
+}
+ 
 const scales: Scales = {
     scaleKey: null,
     scaleValue: null
@@ -857,6 +872,7 @@ const scales: Scales = {
 
 export default {
     render(model: Model, data: any) {
+        prepareData(data, model);
         if(model.options.type === '2d')
             render2D(model, data);
         else

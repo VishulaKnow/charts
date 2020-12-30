@@ -82,6 +82,10 @@ export interface Model {
     chartBlock: ChartBlock;
     legendBlock: LegendBlockModel;
     options: TwoDimensionalOptionsModel | PolarOptionsModel;
+    dataSettings: DataSettings
+}
+export interface DataSettings {
+    limit: number;
 }
 export interface TwoDimensionalOptionsModel {
     type: '2d';
