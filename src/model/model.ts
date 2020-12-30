@@ -1,3 +1,5 @@
+import { Color } from "d3";
+
 type Orient = 'top' | 'bottom' | 'left' | 'right'
 
 export interface BlockCanvas {
@@ -60,6 +62,8 @@ export interface TwoDimensionalChartModel {
     data: ChartDataModel;
     legend: LegendModel;
     tooltip: TooltipModel;
+    cssClasses: string[];
+    elementColors: Color[];
 }
 export interface PolarChartModel {
     type: 'donut';
@@ -67,6 +71,8 @@ export interface PolarChartModel {
     appearanceOptions: PolarChartAppearanceModel;
     legend: LegendModel;
     tooltip: TooltipModel;
+    cssClasses: string[];
+    elementColors: Color[];
 }
 interface LegendModel {
     position: 'off' | 'top' | 'bottom' | 'right' | 'left';

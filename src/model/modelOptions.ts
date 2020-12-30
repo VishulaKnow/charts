@@ -7,6 +7,7 @@ import { AxisLabelCanvas } from '../designer/designerConfig'
 const data = require('../assets/dataSet.json');
 import config from '../config/configOptions';
 import designerConfig from '../designer/designerConfigOptions';
+import { Color, index } from 'd3';
 
 type DataRow = {
     [field: string]: any
@@ -23,7 +24,12 @@ const CLASSES = {
     dataLabel: 'data-label',
     legendLabel: 'legend-label',
     legendColor: 'legend-circle',
-    legendItem: 'legend-item'
+    legendItem: 'legend-item',
+
+    line: 'line',
+    bar: 'bar',
+    area: 'area',
+    donut: 'donut'
 }
 const AXIS_LABEL_PADDING = 9;
 
@@ -266,9 +272,28 @@ function getTranslateY(axisType: AxisType, chartOrientation: string, axisPositio
         return margin.top;
 }
 
-function get2DChartsModel(charts: TwoDimensionalChart[]): TwoDimensionalChartModel[] {
+function getCssClasses(chartType: string): string[] {
+    if(chartType === 'line')
+        return [CLASSES.line];
+    if(chartType === 'bar')
+        return [CLASSES.bar];
+    if(chartType === 'area')
+        return [CLASSES.area];
+    if(chartType === 'donut')
+        return [CLASSES.donut];
+    return [];
+}
+
+function getElementColorPallete(palette: Color[], notation: '2d' | 'polar', index: number = 0): Color[] {
+    if(notation === '2d')
+        return [palette[index % palette.length]];
+    else
+        return palette;
+}
+
+function get2DChartsModel(charts: TwoDimensionalChart[], chartPalette: Color[]): TwoDimensionalChartModel[] {
     const chartsModel: TwoDimensionalChartModel[] = [];
-    charts.forEach(chart => {
+    charts.forEach((chart, index) => {
         chartsModel.push({
             type: chart.type,
             data: {
@@ -277,13 +302,15 @@ function get2DChartsModel(charts: TwoDimensionalChart[]): TwoDimensionalChartMod
                 valueField: chart.data.valueField
             },
             legend: chart.legend,
-            tooltip: chart.tooltip
+            tooltip: chart.tooltip,
+            cssClasses: getCssClasses(chart.type),
+            elementColors: getElementColorPallete(chartPalette, '2d', index)
         });
     });
     return chartsModel;
 }
 
-function getPolarChartsModel(charts: PolarChart[], blockWidth: number, blockHeight: number): PolarChartModel[] {
+function getPolarChartsModel(charts: PolarChart[], chartPalette: Color[]): PolarChartModel[] {
     const chartsModel: PolarChartModel[] = [];
     charts.forEach(chart => {
         chartsModel.push({
@@ -298,7 +325,9 @@ function getPolarChartsModel(charts: PolarChart[], blockWidth: number, blockHeig
                 padAngle: chart.appearanceOptions.padAngle
             },
             legend: chart.legend,
-            tooltip: chart.tooltip
+            tooltip: chart.tooltip,
+            cssClasses: getCssClasses(chart.type),
+            elementColors: getElementColorPallete(chartPalette, 'polar')
         });
     });
     return chartsModel;
@@ -321,7 +350,7 @@ function getChartBlock(): ChartBlock {
     }
 }
 
-function get2DOptions(configOptions: TwoDimensionalOptions, axisLabelDesignerOptions: AxisLabelCanvas): TwoDimensionalOptionsModel {
+function get2DOptions(configOptions: TwoDimensionalOptions, axisLabelDesignerOptions: AxisLabelCanvas, chartPalette: Color[]): TwoDimensionalOptionsModel {
     return {
         scale: {
             scaleKey: {
@@ -360,22 +389,22 @@ function get2DOptions(configOptions: TwoDimensionalOptions, axisLabelDesignerOpt
             }
         },
         type: configOptions.type,
-        charts: get2DChartsModel(configOptions.charts)
+        charts: get2DChartsModel(configOptions.charts, chartPalette)
     }
 }
 
-function getPolarOptions(configOptions: PolarOptions, blockWidth: number, blockHeight: number): PolarOptionsModel {
+function getPolarOptions(configOptions: PolarOptions, chartPalette: Color[]): PolarOptionsModel {
     return {
         type: configOptions.type,
-        charts: getPolarChartsModel(configOptions.charts, blockWidth, blockHeight),
+        charts: getPolarChartsModel(configOptions.charts, chartPalette),
     }
 }
 
 function getOptions(): TwoDimensionalOptionsModel | PolarOptionsModel {
     if(config.options.type === '2d') {
-        return get2DOptions(config.options, designerConfig.canvas.axisLabel);
+        return get2DOptions(config.options, designerConfig.canvas.axisLabel, designerConfig.chart.style.palette);
     } else {
-        return getPolarOptions(config.options, config.canvas.size.width, config.canvas.size.height);
+        return getPolarOptions(config.options, designerConfig.chart.style.palette);
     }
 } 
 

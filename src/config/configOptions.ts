@@ -8,28 +8,69 @@ const config: Config = {
             height: 500
         }
     },
+    // options: {
+    //     type: '2d',
+    //     axis: {
+    //         keyAxis: {
+    //             domain: {
+    //                 start: -1,
+    //                 end: -1
+    //             },
+    //             position: 'end'
+    //         },
+    //         valueAxis: {
+    //             domain: {
+    //                 start: -1,
+    //                 end: -1
+    //             },
+    //             position: 'start'
+    //         }
+    //     },
+    //     charts: [
+    //         {
+    //             title: 'Car prices',
+    //             type: 'line',
+    //             legend: {
+    //                 position: 'bottom'
+    //             },
+    //             data: {
+    //                 dataSource: 'dataSet',
+    //                 keyField: 'brand',
+    //                 valueField: 'price'
+    //             },
+    //             tooltip: {
+    //                 data: {
+    //                     fields: ['count', 'price', 'brand']
+    //                 }
+    //             },
+    //             orientation: 'vertical'
+    //         },
+    //         {
+    //             title: 'Car prices',
+    //             type: 'line',
+    //             legend: {
+    //                 position: 'bottom'
+    //             },
+    //             data: {
+    //                 dataSource: 'dataSet2',
+    //                 keyField: 'brand',
+    //                 valueField: 'price'
+    //             },
+    //             tooltip: {
+    //                 data: {
+    //                     fields: ['count', 'price', 'brand']
+    //                 }
+    //             },
+    //             orientation: 'vertical'
+    //         }
+    //     ]
+    // }
     options: {
-        type: '2d',
-        axis: {
-            keyAxis: {
-                domain: {
-                    start: -1,
-                    end: -1
-                },
-                position: 'start'
-            },
-            valueAxis: {
-                domain: {
-                    start: 0,
-                    end: 150
-                },
-                position: 'start'
-            }
-        },
+        type: 'polar',
         charts: [
             {
+                type: 'donut',
                 title: 'Car prices',
-                type: 'bar',
                 legend: {
                     position: 'bottom'
                 },
@@ -43,36 +84,13 @@ const config: Config = {
                         fields: ['count', 'price']
                     }
                 },
-                orientation: 'vertical'
+                appearanceOptions: {
+                    innerRadius: 10,
+                    padAngle: 0.005
+                }
             }
         ]
     }
-    // options: {
-    //     type: 'polar',
-    //     charts: [
-    //         {
-    //             type: 'donut',
-    //             title: 'Car prices',
-    //             legend: {
-    //                 position: 'left'
-    //             },
-    //             data: {
-    //                 dataSource: 'dataSet',
-    //                 keyField: 'brand',
-    //                 valueField: 'price'
-    //             },
-    //             tooltip: {
-    //                 data: {
-    //                     fields: ['count', 'price']
-    //                 }
-    //             },
-    //             appearanceOptions: {
-    //                 innerRadius: 10,
-    //                 padAngle: 0.005
-    //             }
-    //         }
-    //     ]
-    // }
 }
 
 export default config;

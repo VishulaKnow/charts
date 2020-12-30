@@ -1,24 +1,24 @@
 {
     "dataSet": [
-        { "brand": "BMW", "price": 120 },
-        { "brand": "LADA", "price": 50 },
-        { "brand": "MERCEDES", "price": 15 },
-        { "brand": "AUDI", "price": 20 },
-        { "brand": "VOLKSWAGEN", "price": 40 },
-        { "brand": "DODGE", "price": 70 },
-        { "brand": "SAAB", "price": 50 },
-        { "brand": "HONDA", "price": 20 },
-        { "brand": "TOYOTA", "price": 115 }
+        { "brand": "BMW", "price": 120, "count": 12 },
+        { "brand": "LADA", "price": 50, "count": 10 },
+        { "brand": "MERCEDES", "price": 15, "count": 12 },
+        { "brand": "AUDI", "price": 20, "count": 5 },
+        { "brand": "VOLKSWAGEN", "price": 40, "count": 10 },
+        { "brand": "DODGE", "price": 70, "count": 4 },
+        { "brand": "SAAB", "price": 50, "count": 11 },
+        { "brand": "HONDA", "price": 20, "count": 2 },
+        { "brand": "TOYOTA", "price": 115, "count": 1 }
     ],
     "dataSet2": [
-        { "brand": "BMW", "price": 120 },
-        { "brand": "LADA", "price": 50 },
-        { "brand": "MERCEDES", "price": 15 },
-        { "brand": "AUDI", "price": 20 },
-        { "brand": "VOLKSWAGEN", "price": 40 },
-        { "brand": "DODGE", "price": 70 },
-        { "brand": "SAAB", "price": 50 },
-        { "brand": "HONDA", "price": 20 },
-        { "brand": "TOYOTA", "price": 115 }
-    ]  
+        { "brand": "BMW", "price": 100, "count": 5 },
+        { "brand": "LADA", "price": 25, "count": 2 },
+        { "brand": "MERCEDES", "price": 28, "count": 0 },
+        { "brand": "AUDI", "price": 16, "count": 4 },
+        { "brand": "VOLKSWAGEN", "price": 85, "count": 3 },
+        { "brand": "DODGE", "price": 100, "count": 4 },
+        { "brand": "SAAB", "price": 101, "count": 11 },
+        { "brand": "HONDA", "price": 15, "count": 11 },
+        { "brand": "TOYOTA", "price": 60, "count": 0 }
+    ] 
 }

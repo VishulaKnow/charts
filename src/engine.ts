@@ -1,4 +1,6 @@
 import * as d3 from 'd3'
+import { color, Color } from 'd3';
+
 import { Model, TwoDimensionalOptionsModel, PolarOptionsModel } from './model/model';
 
 type DataRow = {
@@ -110,13 +112,13 @@ function fillBarAttrsByKeyOrient(bars: d3.Selection<SVGRectElement, DataRow, d3.
             .attr('width', d => blockWidth - margin.left - margin.right - scaleValue(d[valueField]));   
 }
 
-function renderBar(scaleKey: d3.ScaleBand<string>, scaleValue: d3.ScaleLinear<number, number>, data: DataRow[], margin: BlockMargin, keyField: string, valueField: string, keyAxisOrient: string, tooltipFields: string[], blockWidth: number, blockHeight: number): void {
+function renderBar(scaleKey: d3.ScaleBand<string>, scaleValue: d3.ScaleLinear<number, number>, data: DataRow[], margin: BlockMargin, keyField: string, valueField: string, keyAxisOrient: string, tooltipFields: string[], classes: string[], chartPalette: Color[], blockWidth: number, blockHeight: number): void {
     const bars = d3.select('svg')
-        .selectAll('rect.bar')
+        .selectAll('rect.bar-item')
         .data(data)
             .enter()
             .append('rect')
-            .attr('class', 'bar');
+            .attr('class', 'bar-item');
 
     fillBarAttrsByKeyOrient(bars,
         keyAxisOrient,
@@ -127,46 +129,47 @@ function renderBar(scaleKey: d3.ScaleBand<string>, scaleValue: d3.ScaleLinear<nu
         valueField,
         blockWidth,
         blockHeight);
-
+    
+    setCssClasses(bars, classes);
+    setChartColor(bars, chartPalette, 'bar');
     renderTooltipForBar(bars, tooltipFields, data);
 }
 
 function renderTooltipForBar(bars: d3.Selection<SVGRectElement, DataRow, d3.BaseType, unknown>, fields: string[], data: DataRow[]): void {
-    const tooltip = d3.select("svg")
-        .append('foreignObject')
-        .attr('width', 0)
-        .attr('height', 0)
-        .style('position', 'relative')
-        .style('display', 'none')
-        .style('overflow', 'visible');
+    const wrapper = d3.select('.wrapper')
+        .append('div')
+        .attr('class', 'tooltip-bar');
 
-    const div = d3.create('xhtml:div') as d3.Selection<d3.BaseType, unknown, HTMLElement, any>;
-    div.attr("class", "tooltip")
-        .style("background-color", "white")
-        .style("border", "solid")
-        .style("border-width", "2px")
-        .style("border-radius", "5px")
-        .style("padding", "5px")
-        .style("position", "absolute")
-        .style("left", "0")
-        .style("top", "0");
-
-    tooltip.append(d => div.node());;
-
-    bars
-        .on('mouseover', d => tooltip.style('display', 'block'));
+    const tooltip = wrapper
+        .append('div')
+        .attr('class', 'tooltip')
+        .style('position', 'absolute')
+        .style('display', 'none');
 
     bars
         .data(data)
-        .on('mousemove', (event, d) => {
-            div.text(d['brand']);
-            console.log((div.node() as any).getBoundingClientRect());
-            tooltip
-                .attr('x', d3.pointer(event, this)[0] + 10)
-                .attr('y', d3.pointer(event, this)[1]); 
+        .on('mouseover', function(e, d) {
+            tooltip.html(getTooltipText(fields, d));
+            tooltip.style('display', 'block');
         });
 
-    bars.on('mouseleave', d => tooltip.style('display', 'none'))
+    bars
+        .data(data)
+        .on('mousemove', function(event, d) {
+            tooltip
+                .style('left', d3.pointer(event, this)[0] + 10 + 'px')
+                .style('top', d3.pointer(event, this)[1] + 'px'); 
+        });
+
+    bars.on('mouseleave', d => tooltip.style('display', 'none'));
+}
+
+function getTooltipText(fields: string[], data: DataRow): string {
+    let text = '';
+    fields.forEach(field => {
+        text += `<div><strong>${field}: ${data[field]}</strong><br></div>`;
+    });
+    return text;
 }
 
 function getLine(): d3.Line<Line> {
@@ -238,7 +241,7 @@ function getAreaCoordinateByKeyOrient(axisOrient: string, data: DataRow[], scale
     return areaCoordinate;
 }
 
-function renderLine(scaleKey: d3.ScaleBand<string>, scaleValue: d3.ScaleLinear<number, number>, data: DataRow[], margin: BlockMargin, keyField: string, valueField: string, keyAxisOrient: string): void {
+function renderLine(scaleKey: d3.ScaleBand<string>, scaleValue: d3.ScaleLinear<number, number>, data: DataRow[], margin: BlockMargin, keyField: string, valueField: string, keyAxisOrient: string, cssClasses: string[], chartPalette: Color[]): void {
     const line = getLine();
     const lineCoordinate: Line[] = getLineCoordinateByKeyOrient(keyAxisOrient,
         data,
@@ -252,9 +255,12 @@ function renderLine(scaleKey: d3.ScaleBand<string>, scaleValue: d3.ScaleLinear<n
         .append('path')
         .attr('d', line(lineCoordinate))
         .attr('class', 'line');
+
+    setCssClasses(path, cssClasses);
+    setChartColor(path, chartPalette, 'line');
 }
 
-function renderArea(scaleKey: d3.ScaleBand<string>, scaleValue: d3.ScaleLinear<number, number>, data: DataRow[], margin: BlockMargin, keyField: string, valueField: string, keyAxisOrient: string, blockWidth: number, blockHeight: number): void {
+function renderArea(scaleKey: d3.ScaleBand<string>, scaleValue: d3.ScaleLinear<number, number>, data: DataRow[], margin: BlockMargin, keyField: string, valueField: string, keyAxisOrient: string, cssClasses: string[], chartPalette: Color[], blockWidth: number, blockHeight: number): void {
     const area = getArea(keyAxisOrient);
     const areaCoordinate: Area[] = getAreaCoordinateByKeyOrient(keyAxisOrient,
         data,
@@ -270,6 +276,9 @@ function renderArea(scaleKey: d3.ScaleBand<string>, scaleValue: d3.ScaleLinear<n
         .append('path')
         .attr('d', area(areaCoordinate))
         .attr('class', 'area');
+
+    setCssClasses(path, cssClasses);
+    setChartColor(path, chartPalette, 'area');
 }
 
 function getPieRadius(margin: BlockMargin, blockWidth: number, blockHeight: number): number {
@@ -302,14 +311,17 @@ function renderDonutText(arcItems: d3.Selection<SVGGElement, d3.PieArcDatum<Data
         .style('text-anchor', 'middle');
 }
 
-function renderDonut(data: DataRow[], margin: BlockMargin, keyField: string, valueField: string, innerRadius: number, padAngle: number, blockWidth: number, blockHeight: number): void {
+function renderDonut(data: DataRow[], margin: BlockMargin, keyField: string, valueField: string, innerRadius: number, padAngle: number, tooltipFields: string[], cssClasses: string[], chartPalette: Color[], blockWidth: number, blockHeight: number): void {
     const radius = getPieRadius(margin, blockWidth, blockHeight);
     const arc = getArc(radius, radius * 0.01 * innerRadius);
     const pie = getPie(valueField, padAngle);
 
+    const translateX = (blockWidth - margin.left - margin.right) / 2 + margin.left;
+    const translateY = (blockHeight - margin.top - margin.bottom) / 2 + margin.top;
+
     const donutBlock = d3.select('svg')
         .append('g')
-        .attr('transform', `translate(${(blockWidth - margin.left - margin.right) / 2 + margin.left}, ${(blockHeight - margin.top - margin.bottom) / 2 + margin.top})`);
+        .attr('transform', `translate(${translateX}, ${translateY})`);
     
     const items = donutBlock
         .selectAll('.arc')
@@ -322,7 +334,66 @@ function renderDonut(data: DataRow[], margin: BlockMargin, keyField: string, val
         .append('path')
         .attr('d', arc);
 
+    setCssClasses(arcs, cssClasses);
+    setElementsColor(items, chartPalette, 'donut');
     renderDonutText(items, arc, keyField);
+    renderTooltipForDonut(arcs, tooltipFields, data, translateX, translateY);
+}
+
+function renderTooltipForDonut(arcs: d3.Selection<SVGPathElement, d3.PieArcDatum<DataRow>, SVGGElement, unknown>, fields: string[], data: DataRow[], translateX: number, translateY: number): void {
+    const wrapper = d3.select('.wrapper')
+        .append('div')
+        .attr('class', 'tooltip-donut');
+
+    const tooltip = wrapper
+        .append('div')
+        .attr('class', 'tooltip')
+        .style('position', 'absolute')
+        .style('display', 'none')
+        .style('transform', `translate(${translateX}px, ${translateY}px)`);
+
+    arcs
+        .data(data)
+        .on('mouseover', function(e, d) {
+            tooltip.html(getTooltipText(fields, d));
+            tooltip.style('display', 'block');
+        });
+
+    arcs
+        .data(data)
+        .on('mousemove', function(event, d) {
+            tooltip
+                .style('left', d3.pointer(event, this)[0] + 10 + 'px')
+                .style('top', d3.pointer(event, this)[1] + 'px'); 
+        });
+
+    arcs.on('mouseleave', d => tooltip.style('display', 'none'));
+}
+
+function setChartColor(elements: any, colorPalette: Color[], chartType: 'line' | 'bar' | 'area'): void {
+    if(chartType === 'line') {
+        elements.style('stroke', colorPalette[0])
+    } else {
+        elements.style('fill', colorPalette[0])
+    }
+}
+
+function setElementsColor(arcItems: d3.Selection<SVGGElement, d3.PieArcDatum<DataRow>, d3.BaseType, unknown>, colorPalette: Color[], chartType: 'donut'): void {
+    if(chartType === 'donut') {
+        arcItems
+            .select('path')
+            .style('fill', (d, i) =>  {
+                console.log(i % colorPalette.length);
+                
+                return colorPalette[i % colorPalette.length].toString()
+            })
+    }
+}
+
+function setCssClasses(elem: any, cssClasses: string[]): void {
+    cssClasses.forEach(cssClass => {
+        elem.classed(cssClass, true);
+    })
 }
 
 function render2DCharts(charts: any[], scaleKey: d3.ScaleBand<string>, scaleValue: d3.ScaleLinear<number, number>, data: any, margin: BlockMargin, keyAxisOrient: string, blockWidth: number, blockHeight: number) {
@@ -336,6 +407,8 @@ function render2DCharts(charts: any[], scaleKey: d3.ScaleBand<string>, scaleValu
                 chart.data.valueField,
                 keyAxisOrient,
                 chart.tooltip.data.fields,
+                chart.cssClasses,
+                chart.elementColors,
                 blockWidth,
                 blockHeight);
         else if(chart.type === 'line')
@@ -345,7 +418,9 @@ function render2DCharts(charts: any[], scaleKey: d3.ScaleBand<string>, scaleValu
                 margin,
                 chart.data.keyField,
                 chart.data.valueField,
-                keyAxisOrient);  
+                keyAxisOrient,
+                chart.cssClasses,
+                chart.elementColors);  
         else if(chart.type === 'area')
             renderArea(scaleKey,
                 scaleValue,
@@ -354,6 +429,8 @@ function render2DCharts(charts: any[], scaleKey: d3.ScaleBand<string>, scaleValu
                 chart.data.keyField,
                 chart.data.valueField,
                 keyAxisOrient,
+                chart.cssClasses,
+                chart.elementColors,
                 blockWidth,
                 blockHeight);
     });
@@ -368,6 +445,9 @@ function renderPolarCharts(charts: any[], data: any, margin: BlockMargin, blockW
                 chart.data.valueField,
                 chart.appearanceOptions.innerRadius,
                 chart.appearanceOptions.padAngle,
+                chart.tooltip.data.fields,
+                chart.cssClasses,
+                chart.elementColors,
                 blockWidth,
                 blockHeight);
     })
@@ -517,41 +597,89 @@ function renderLegend(data: any, options: TwoDimensionalOptionsModel | PolarOpti
     if(options.type === '2d') {
         const chartsWithLegendLeft = options.charts.filter((chart: any) => chart.legend.position === 'left');        
         if(chartsWithLegendLeft.length !== 0) {
-            renderLegendBlock(chartsWithLegendLeft.map(chart => chart.data.dataSource), 'left', legendsSize.left.size, margin, blockWidth, blockHeight);
+            renderLegendBlock(chartsWithLegendLeft.map(chart => chart.data.dataSource),
+                'left',
+                legendsSize.left.size,
+                margin,
+                chartsWithLegendLeft.map(chart => chart.elementColors[0]),
+                blockWidth,
+                blockHeight);
         }
         const chartsWithLegendRight = options.charts.filter((chart: any) => chart.legend.position === 'right');        
         if(chartsWithLegendRight.length !== 0) {
-            renderLegendBlock(chartsWithLegendRight.map(chart => chart.data.dataSource), 'right', legendsSize.right.size, margin, blockWidth, blockHeight);
+            renderLegendBlock(chartsWithLegendRight.map(chart => chart.data.dataSource),
+            'right', 
+            legendsSize.right.size, 
+            margin, 
+            chartsWithLegendRight.map(chart => chart.elementColors[0]), 
+            blockWidth, 
+            blockHeight);
         } 
         const chartsWithLegendTop = options.charts.filter((chart: any) => chart.legend.position === 'top');        
         if(chartsWithLegendTop.length !== 0) {
-            renderLegendBlock(chartsWithLegendTop.map(chart => chart.data.dataSource), 'top', legendsSize.top.size, margin, blockWidth, blockHeight);
+            renderLegendBlock(chartsWithLegendTop.map(chart => chart.data.dataSource), 
+            'top', 
+            legendsSize.top.size, 
+            margin, 
+            chartsWithLegendTop.map(chart => chart.elementColors[0]), 
+            blockWidth, 
+            blockHeight);
         }
         const chartsWithLegendBottom = options.charts.filter((chart: any) => chart.legend.position === 'bottom');        
         if(chartsWithLegendBottom.length !== 0) {
-            renderLegendBlock(chartsWithLegendBottom.map(chart => chart.data.dataSource), 'bottom', legendsSize.bottom.size, margin, blockWidth, blockHeight);
+            renderLegendBlock(chartsWithLegendBottom.map(chart => chart.data.dataSource), 
+            'bottom', 
+            legendsSize.bottom.size,
+            margin, 
+            chartsWithLegendBottom.map(chart => chart.elementColors[0]), 
+            blockWidth, 
+            blockHeight);
         }
     } else {
         const chartsWithLegendLeft = options.charts.filter((chart: any) => chart.legend.position === 'left');        
         if(chartsWithLegendLeft.length !== 0) {
-            renderLegendBlock(chartsWithLegendLeft.map(chart => data[chart.data.dataSource].map((record: DataRow) => record[chart.data.keyField]))[0], 'left', legendsSize.left.size, margin, blockWidth, blockHeight);
+            renderLegendBlock(chartsWithLegendLeft.map(chart => data[chart.data.dataSource].map((record: DataRow) => record[chart.data.keyField]))[0], 
+            'left', 
+            legendsSize.left.size, 
+            margin,
+            chartsWithLegendLeft.map(chart => chart.elementColors)[0],
+            blockWidth, 
+            blockHeight);
         }
         const chartsWithLegendRight = options.charts.filter((chart: any) => chart.legend.position === 'right');        
         if(chartsWithLegendRight.length !== 0) {
-            renderLegendBlock(chartsWithLegendRight.map(chart => data[chart.data.dataSource].map((record: DataRow) => record[chart.data.keyField]))[0], 'right', legendsSize.right.size, margin, blockWidth, blockHeight);
+            renderLegendBlock(chartsWithLegendRight.map(chart => data[chart.data.dataSource].map((record: DataRow) => record[chart.data.keyField]))[0], 
+            'right', 
+            legendsSize.right.size, 
+            margin,
+            chartsWithLegendRight.map(chart => chart.elementColors)[0], 
+            blockWidth, 
+            blockHeight);
         } 
         const chartsWithLegendTop = options.charts.filter((chart: any) => chart.legend.position === 'top');        
         if(chartsWithLegendTop.length !== 0) {
-            renderLegendBlock(chartsWithLegendTop.map(chart => data[chart.data.dataSource].map((record: DataRow) => record[chart.data.keyField]))[0], 'top', legendsSize.top.size, margin, blockWidth, blockHeight);
+            renderLegendBlock(chartsWithLegendTop.map(chart => data[chart.data.dataSource].map((record: DataRow) => record[chart.data.keyField]))[0], 
+            'top', 
+            legendsSize.top.size, 
+            margin,
+            chartsWithLegendTop.map(chart => chart.elementColors)[0], 
+            blockWidth, 
+            blockHeight);
         }
         const chartsWithLegendBottom = options.charts.filter((chart: any) => chart.legend.position === 'bottom');        
         if(chartsWithLegendBottom.length !== 0) {
-            renderLegendBlock(chartsWithLegendBottom.map(chart => data[chart.data.dataSource].map((record: DataRow) => record[chart.data.keyField]))[0], 'bottom', legendsSize.bottom.size, margin, blockWidth, blockHeight);
+            renderLegendBlock(chartsWithLegendBottom.map(chart => data[chart.data.dataSource].map((record: DataRow) => record[chart.data.keyField]))[0], 
+            'bottom', 
+            legendsSize.bottom.size, 
+            margin,
+            chartsWithLegendBottom.map(chart => chart.elementColors)[0], 
+            blockWidth, 
+            blockHeight);
         }
     }
 }
 
-function renderLegendBlock(items: string[], legendPosition: string, legendSize: number, margin: BlockMargin, blockWidth: number, blockHeight: number): void {
+function renderLegendBlock(items: string[], legendPosition: string, legendSize: number, margin: BlockMargin, colorPalette: Color[], blockWidth: number, blockHeight: number): void {
     const legendBlock = d3.select('svg')
         .append('foreignObject')
             .attr('class', 'legend')
@@ -566,7 +694,8 @@ function renderLegendBlock(items: string[], legendPosition: string, legendSize: 
         
     fillLegend(legendBlock,
         items,
-        legendPosition);
+        legendPosition,
+        colorPalette);
 }
 
 function fillLegendCoordinateByPosition(legendBlock: d3.Selection<SVGForeignObjectElement, unknown, HTMLElement, any>, legendPosition: string, legendSize: number, margin: BlockMargin, blockWidth: number, blockHeight: number): void {
@@ -597,7 +726,7 @@ function fillLegendCoordinateByPosition(legendBlock: d3.Selection<SVGForeignObje
     }
 }
 
-function fillLegend(legendBlock: d3.Selection<SVGForeignObjectElement, unknown, HTMLElement, any>, items: string[], legendPosition: string): void {
+function fillLegend(legendBlock: d3.Selection<SVGForeignObjectElement, unknown, HTMLElement, any>, items: string[], legendPosition: string, colorPalette: Color[]): void {
     const wrapper = legendBlock.append('xhtml:div');
     wrapper 
         .style('width', '100%')
@@ -618,7 +747,8 @@ function fillLegend(legendBlock: d3.Selection<SVGForeignObjectElement, unknown, 
 
     itemWrappers
         .append('span')
-        .attr('class', 'legend-circle');
+        .attr('class', 'legend-circle')
+        .style('background-color', (d, i) => colorPalette[i % colorPalette.length].toString());
 
     itemWrappers
         .data(items)

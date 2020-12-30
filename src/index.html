@@ -8,6 +8,7 @@
         .wrapper {
             margin: 0 auto;
             width: 1000px;
+            position: relative
         }
         .form {
             display: flex;
@@ -18,6 +19,15 @@
 
         svg {
             position: relative;
+        }
+        .bar, .area, .donut {
+            fill: steelblue;
+            stroke: none
+        }
+        .line {
+            fill: none;
+            stroke: steelblue;
+            stroke-width: 2;
         }
         .border {
             border: 1px solid black;
@@ -39,6 +49,16 @@
             height: 12px;
             background-color: red;
             border-radius: 50%;
+        }
+        .tooltip {
+            font-size: 12px;
+            font-family: sans-serif;
+            line-height: 1;
+            font-weight: bold;
+            padding: 12px;
+            background: white;
+            color: black;
+            border-radius: 2px;
         }
     </style>
 </head>
