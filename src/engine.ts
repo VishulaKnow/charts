@@ -33,7 +33,7 @@ interface BlockMargin {
 }
 
 function getScaleBand(domain: any, rangeStart: number, rangeEnd: number): d3.ScaleBand<string> {
-    const pad = 20 / 2;
+    const pad = 0;
     
     const scale = d3.scaleBand()
         .domain(domain)
@@ -119,9 +119,10 @@ function fillBarAttrsByKeyOrient(bars: d3.Selection<SVGRectElement, DataRow, d3.
             .attr('width', d => blockWidth - margin.left - margin.right - scaleValue(d[valueField]));   
 }
 
-function renderBar(scaleKey: d3.ScaleBand<string>, scaleValue: d3.ScaleLinear<number, number>, data: DataRow[], margin: BlockMargin, keyField: string, valueField: string, keyAxisOrient: string, tooltipFields: string[], classes: string[], chartPalette: Color[], blockWidth: number, blockHeight: number): void {
+function renderBar(scaleKey: d3.ScaleBand<string>, scaleValue: d3.ScaleLinear<number, number>, data: DataRow[], margin: BlockMargin, keyField: string, valueField: string, keyAxisOrient: string, tooltipFields: string[], cssClasses: string[], chartPalette: Color[], blockWidth: number, blockHeight: number): void {
+    const classes = '.' + cssClasses.join('.');
     const bars = d3.select('svg')
-        .selectAll('rect.bar-item')
+        .selectAll(`rect.bar-item${classes}`)
         .data(data)
             .enter()
             .append('rect')
@@ -137,7 +138,7 @@ function renderBar(scaleKey: d3.ScaleBand<string>, scaleValue: d3.ScaleLinear<nu
         blockWidth,
         blockHeight);
     
-    setCssClasses(bars, classes);
+    setCssClasses(bars, cssClasses);
     setChartColor(bars, chartPalette, 'bar');
     renderTooltipForBar(bars, tooltipFields, data);
 }
@@ -145,7 +146,7 @@ function renderBar(scaleKey: d3.ScaleBand<string>, scaleValue: d3.ScaleLinear<nu
 function renderTooltipForBar(bars: d3.Selection<SVGRectElement, DataRow, d3.BaseType, unknown>, fields: string[], data: DataRow[]): void {
     const wrapper = d3.select('.wrapper')
         .append('div')
-        .attr('class', 'tooltip-bar');
+        .attr('class', 'tooltip-wrapper');
 
     const tooltip = wrapper
         .append('div')
@@ -248,7 +249,7 @@ function getAreaCoordinateByKeyOrient(axisOrient: string, data: DataRow[], scale
     return areaCoordinate;
 }
 
-function renderLine(scaleKey: d3.ScaleBand<string>, scaleValue: d3.ScaleLinear<number, number>, data: DataRow[], margin: BlockMargin, keyField: string, valueField: string, keyAxisOrient: string, cssClasses: string[], chartPalette: Color[]): void {
+function renderLine(scaleKey: d3.ScaleBand<string>, scaleValue: d3.ScaleLinear<number, number>, data: DataRow[], margin: BlockMargin, keyField: string, valueField: string, keyAxisOrient: string, cssClasses: string[], chartPalette: Color[], blockWidth: number, blockHeight: number): void {
     const line = getLine();
     const lineCoordinate: Line[] = getLineCoordinateByKeyOrient(keyAxisOrient,
         data,
@@ -256,7 +257,7 @@ function renderLine(scaleKey: d3.ScaleBand<string>, scaleValue: d3.ScaleLinear<n
         scaleValue,
         margin,
         keyField,
-        valueField);
+        valueField);    
     
     const path = d3.select('svg')
         .append('path')
@@ -264,7 +265,54 @@ function renderLine(scaleKey: d3.ScaleBand<string>, scaleValue: d3.ScaleLinear<n
         .attr('class', 'line');
 
     setCssClasses(path, cssClasses);
+    renderTooltipForLine(scaleKey, margin, blockWidth, blockHeight);
     setChartColor(path, chartPalette, 'line');
+}
+
+function renderTooltipForLine(scaleKey: d3.ScaleBand<string>, margin: BlockMargin, blockWidth: number, blockHeight: number): void {
+    const wrapper = d3.select('.wrapper')
+        .append('div')
+        .attr('class', 'tooltip-wrapper');
+
+    const tooltip = wrapper
+        .append('div')
+        .attr('class', 'tooltip')
+        .style('position', 'absolute')
+        .style('display', 'none');
+
+    const tooltipLine = d3.select('svg')
+        .append('line')
+        .style('stroke', 'black');
+
+    const tipBox = d3.select('svg')
+        .append('rect')
+        .attr('class', 'tipbox')
+        .attr('x', margin.left)
+        .attr('y', margin.top)
+        .attr('width', blockWidth - margin.left - margin.right)
+        .attr('height', blockHeight - margin.top - margin.bottom)
+        .style('opacity', 0)
+        .style('outline', '1px solid red')
+        .on('mousemove', function(event) {
+            const eachBand = scaleKey.step() + scaleKey.padding() * 2;
+            const index = Math.round((d3.pointer(event, this)[0] - margin.left - scaleKey.bandwidth() / 2 - scaleKey.padding()) / eachBand);
+            const key = scaleKey.domain()[index];
+            tooltip.style('display', 'block');
+            tooltip.html(key);
+            tooltip
+                .style('left', d3.pointer(event, this)[0] + 10 + 'px')
+                .style('top', d3.pointer(event, this)[1] + 'px');
+            tooltipLine
+                .style('display', 'block')
+                .attr('x1', scaleKey(key) + margin.left + scaleKey.bandwidth() / 2)
+                .attr('x2', scaleKey(key) + margin.left + scaleKey.bandwidth() / 2)
+                .attr('y1', 0)
+                .attr('y2', blockHeight);
+        })
+        .on('mouseleave', function(event) {
+            tooltip.style('display', 'none');
+            tooltipLine.style('display', 'none');
+        });
 }
 
 function renderArea(scaleKey: d3.ScaleBand<string>, scaleValue: d3.ScaleLinear<number, number>, data: DataRow[], margin: BlockMargin, keyField: string, valueField: string, keyAxisOrient: string, cssClasses: string[], chartPalette: Color[], blockWidth: number, blockHeight: number): void {
@@ -343,14 +391,14 @@ function renderDonut(data: DataRow[], margin: BlockMargin, keyField: string, val
 
     setCssClasses(arcs, cssClasses);
     setElementsColor(items, chartPalette, 'donut');
-    renderDonutText(items, arc, keyField);
+    // renderDonutText(items, arc, keyField);
     renderTooltipForDonut(arcs, tooltipFields, data, translateX, translateY);
 }
 
 function renderTooltipForDonut(arcs: d3.Selection<SVGPathElement, d3.PieArcDatum<DataRow>, SVGGElement, unknown>, fields: string[], data: DataRow[], translateX: number, translateY: number): void {
     const wrapper = d3.select('.wrapper')
         .append('div')
-        .attr('class', 'tooltip-donut');
+        .attr('class', 'tooltip-wrapper');
 
     const tooltip = wrapper
         .append('div')
@@ -389,11 +437,7 @@ function setElementsColor(arcItems: d3.Selection<SVGGElement, d3.PieArcDatum<Dat
     if(chartType === 'donut') {
         arcItems
             .select('path')
-            .style('fill', (d, i) =>  {
-                console.log(i % colorPalette.length);
-                
-                return colorPalette[i % colorPalette.length].toString()
-            })
+            .style('fill', (d, i) => colorPalette[i % colorPalette.length].toString());
     }
 }
 
@@ -427,7 +471,9 @@ function render2DCharts(charts: any[], scaleKey: d3.ScaleBand<string>, scaleValu
                 chart.data.valueField,
                 keyAxisOrient,
                 chart.cssClasses,
-                chart.elementColors);  
+                chart.elementColors,
+                blockWidth,
+                blockHeight);  
         else if(chart.type === 'area')
             renderArea(scaleKey,
                 scaleValue,
@@ -859,10 +905,9 @@ function updateByValueAxis(model: Model, data: any) {
 }
 
 function prepareData(data: any, model: Model): void {
-    console.log('limit', model.dataSettings.limit);
     if(model.dataSettings.limit !== -1) {
-        (model.options.charts as any).map((chart: any) => chart.data.dataSource).forEach((set: any) => {
-            data[set].splice(model.dataSettings.limit, data[set].length - model.dataSettings.limit);
+        (model.options.charts as any).map((chart: any) => chart.data.dataSource).forEach((dataset: any) => {
+            data[dataset].splice(model.dataSettings.limit, data[dataset].length - model.dataSettings.limit);
         })
     }
 }

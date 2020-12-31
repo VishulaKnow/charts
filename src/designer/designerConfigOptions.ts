@@ -27,7 +27,7 @@ const designerConfig: DesignerConfig = {
     },
     chart: {
         style: {
-            palette: [color('steelblue'), color('green'), color('blue'), color('yellow')]
+            palette: [color('steelblue'), color('lightgreen'), color('#92a8d1'), color('#034f84'), color('#deeaee'), color('#b1cbbb'), color('#d5f4e6'), color('#80ced6'), color('#9fa9a3')]
         }
     },
     dataFormat: {

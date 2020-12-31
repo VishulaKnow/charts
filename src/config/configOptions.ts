@@ -31,10 +31,10 @@ const config: Config = {
                 title: 'Car prices',
                 type: 'bar',
                 legend: {
-                    position: 'bottom'
+                    position: 'right'
                 },
                 data: {
-                    dataSource: 'dataSet_large',
+                    dataSource: 'dataSet',
                     keyField: 'brand',
                     valueField: 'price'
                 },
@@ -43,26 +43,26 @@ const config: Config = {
                         fields: ['count', 'price', 'brand']
                     }
                 },
-                orientation: 'horizontal'
+                orientation: 'vertical'
+            },
+            {
+                title: 'Car prices',
+                type: 'bar',
+                legend: {
+                    position: 'right'
+                },
+                data: {
+                    dataSource: 'dataSet2',
+                    keyField: 'brand',
+                    valueField: 'price'
+                },
+                tooltip: {
+                    data: {
+                        fields: ['count', 'price', 'brand']
+                    }
+                },
+                orientation: 'vertical'
             }
-            // {
-            //     title: 'Car prices',
-            //     type: 'line',
-            //     legend: {
-            //         position: 'bottom'
-            //     },
-            //     data: {
-            //         dataSource: 'dataSet2',
-            //         keyField: 'brand',
-            //         valueField: 'price'
-            //     },
-            //     tooltip: {
-            //         data: {
-            //             fields: ['count', 'price', 'brand']
-            //         }
-            //     },
-            //     orientation: 'vertical'
-            // }
         ]
     }
     // options: {
@@ -72,7 +72,7 @@ const config: Config = {
     //             type: 'donut',
     //             title: 'Car prices',
     //             legend: {
-    //                 position: 'right'
+    //                 position: 'bottom'
     //             },
     //             data: {
     //                 dataSource: 'dataSet',
@@ -81,7 +81,7 @@ const config: Config = {
     //             },
     //             tooltip: {
     //                 data: {
-    //                     fields: ['count', 'price']
+    //                     fields: ['count', 'price', 'brand']
     //                 }
     //             },
     //             appearanceOptions: {

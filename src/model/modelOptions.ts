@@ -241,11 +241,8 @@ function getScaleRangePeek(scaleType: ScaleType, chartOrientation: string, block
 
 function getScaleDomain(scaleType: ScaleType, configDomain: Domain, data: DataRow[], chart: TwoDimensionalChart, keyAxisPosition: string = null): any[] {
     if(scaleType === ScaleType.Key) {
-        const domain = data.map(d => d[chart.data.keyField]);
-        console.log('dataLimit', dataLimit);
-        console.log('domain.length', domain.length);
-        
-        if(dataLimit !== domain.length)     
+        const domain = data.map(d => d[chart.data.keyField]);        
+        if(dataLimit !== domain.length && dataLimit !== -1)     
             domain.splice(dataLimit, domain.length - dataLimit) 
         return domain;
     } else {
@@ -306,16 +303,17 @@ function getTranslateY(axisType: AxisType, chartOrientation: string, axisPositio
         return margin.top;
 }
 
-function getCssClasses(chartType: string): string[] {
+function getCssClasses(chartType: string, chartIndex: number): string[] {
+    const cssClasses = [`chart-${chartIndex}`];
     if(chartType === 'line')
-        return [CLASSES.line];
+        cssClasses.concat([CLASSES.line]);
     if(chartType === 'bar')
-        return [CLASSES.bar];
+        cssClasses.concat([CLASSES.bar]);
     if(chartType === 'area')
-        return [CLASSES.area];
+        cssClasses.concat([CLASSES.area]);
     if(chartType === 'donut')
-        return [CLASSES.donut];
-    return [];
+        cssClasses.concat([CLASSES.donut]);
+    return cssClasses
 }
 
 function getElementColorPallete(palette: Color[], notation: '2d' | 'polar', index: number = 0): Color[] {
@@ -337,7 +335,7 @@ function get2DChartsModel(charts: TwoDimensionalChart[], chartPalette: Color[]):
             },
             legend: chart.legend,
             tooltip: chart.tooltip,
-            cssClasses: getCssClasses(chart.type),
+            cssClasses: getCssClasses(chart.type, index),
             elementColors: getElementColorPallete(chartPalette, '2d', index)
         });
     });
@@ -346,7 +344,7 @@ function get2DChartsModel(charts: TwoDimensionalChart[], chartPalette: Color[]):
 
 function getPolarChartsModel(charts: PolarChart[], chartPalette: Color[]): PolarChartModel[] {
     const chartsModel: PolarChartModel[] = [];
-    charts.forEach(chart => {
+    charts.forEach((chart, index) => {
         chartsModel.push({
             type: chart.type,
             data: {
@@ -360,7 +358,7 @@ function getPolarChartsModel(charts: PolarChart[], chartPalette: Color[]): Polar
             },
             legend: chart.legend,
             tooltip: chart.tooltip,
-            cssClasses: getCssClasses(chart.type),
+            cssClasses: getCssClasses(chart.type, index),
             elementColors: getElementColorPallete(chartPalette, 'polar')
         });
     });
