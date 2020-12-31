@@ -85,6 +85,7 @@ function calcDataLimit(): number {
 }
 
 function recalcMarginWithLegend(margin: BlockMargin, options: TwoDimensionalOptions | PolarOptions, legendMaxWidth: number): void {
+    //FIXME Make it better
     if(options.type === '2d') {
         const chartsWithLegendLeft = options.charts.filter((chart: TwoDimensionalChart) => chart.legend.position === 'left');        
         if(chartsWithLegendLeft.length !== 0) {
@@ -333,6 +334,7 @@ function get2DChartsModel(charts: TwoDimensionalChart[], chartPalette: Color[]):
                 keyField: chart.data.keyField,
                 valueField: chart.data.valueField
             },
+            orient: chart.orientation,
             legend: chart.legend,
             tooltip: chart.tooltip,
             cssClasses: getCssClasses(chart.type, index),

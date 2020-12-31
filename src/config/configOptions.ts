@@ -47,7 +47,7 @@ const config: Config = {
             },
             {
                 title: 'Car prices',
-                type: 'bar',
+                type: 'line',
                 legend: {
                     position: 'right'
                 },

@@ -59,6 +59,7 @@ interface TooltipDataModel {
 
 export interface TwoDimensionalChartModel {
     type: 'bar' | 'line' | 'area';
+    orient: 'vertical' | 'horizontal';
     data: ChartDataModel;
     legend: LegendModel;
     tooltip: TooltipModel;
