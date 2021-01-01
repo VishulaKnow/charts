@@ -83,7 +83,8 @@ export interface Model {
     chartBlock: ChartBlock;
     legendBlock: LegendBlockModel;
     options: TwoDimensionalOptionsModel | PolarOptionsModel;
-    dataSettings: DataSettings
+    dataSettings: DataSettings;
+    chartSettings: ChartSettings;
 }
 export interface DataSettings {
     limit: number;
@@ -106,6 +107,14 @@ interface ChartDataModel {
     dataSource: string;
     keyField: string;
     valueField: string;
+}
+
+export interface ChartSettings {
+    bar: BarChartSettings;
+}
+
+interface BarChartSettings {
+    distance: number;
 }
 
 export interface LegendBlockModel {

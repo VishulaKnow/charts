@@ -1,7 +1,7 @@
 import * as d3 from 'd3'
 
 import { Domain, TwoDimensionalOptions, PolarOptions, TwoDimensionalChart, PolarChart, Axis } from '../config/config';
-import { Model, TwoDimensionalChartModel, BlockCanvas, ChartBlock, TwoDimensionalOptionsModel, PolarOptionsModel, PolarChartModel, BlockMargin, LegendBlockModel, DataSettings } from './model';
+import { Model, TwoDimensionalChartModel, BlockCanvas, ChartBlock, TwoDimensionalOptionsModel, PolarOptionsModel, PolarChartModel, BlockMargin, LegendBlockModel, DataSettings, ChartSettings } from './model';
 import { AxisLabelCanvas } from '../designer/designerConfig'
 
 const data = require('../assets/dataSet.json');
@@ -454,18 +454,29 @@ function getDataSettings(): DataSettings {
     }
 }
 
+function getChartSettings(): ChartSettings {
+    return {
+        bar: {
+            distance: designerConfig.canvas.chartOptions.bar.barDistance
+        }
+    }
+}
+
 export function assembleModel(): Model {
     const blockCanvas = getBlockCanvas();
     const chartBlock = getChartBlock();
     const options = getOptions();
     const legendBlock = getLegendBlock();
     const dataSettings = getDataSettings();
+    const chartSettings = getChartSettings();
+
     return {
         blockCanvas,
         chartBlock,
         legendBlock,
         options,
-        dataSettings
+        dataSettings,
+        chartSettings
     }
 }
 

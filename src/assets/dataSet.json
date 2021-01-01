@@ -40,5 +40,25 @@
         { "brand": "SAAB2", "price": 50, "count": 11 },
         { "brand": "HONDA2", "price": 20, "count": 2 },
         { "brand": "TOYOTA2", "price": 115, "count": 1 }
+    ],
+    "dataSet2_large": [
+        { "brand": "BMW", "price": 100, "count": 5 },
+        { "brand": "LADA", "price": 25, "count": 2 },
+        { "brand": "MERCEDES", "price": 28, "count": 0 },
+        { "brand": "AUDI", "price": 16, "count": 4 },
+        { "brand": "VOLKSWAGEN", "price": 85, "count": 3 },
+        { "brand": "DODGE", "price": 100, "count": 4 },
+        { "brand": "SAAB", "price": 101, "count": 11 },
+        { "brand": "HONDA", "price": 15, "count": 11 },
+        { "brand": "TOYOTA", "price": 60, "count": 0 },
+        { "brand": "BMW2", "price": 100, "count": 5 },
+        { "brand": "LADA2", "price": 25, "count": 2 },
+        { "brand": "MERCEDES2", "price": 28, "count": 0 },
+        { "brand": "AUDI2", "price": 16, "count": 4 },
+        { "brand": "VOLKSWAGEN2", "price": 85, "count": 3 },
+        { "brand": "DODGE2", "price": 100, "count": 4 },
+        { "brand": "SAAB2", "price": 101, "count": 11 },
+        { "brand": "HONDA2", "price": 15, "count": 11 },
+        { "brand": "TOYOTA2", "price": 60, "count": 0 }
     ]
 }

@@ -5,7 +5,7 @@ const config: Config = {
         class: 'chart-1 border',
         size: {
             width: 1000,
-            height: 500
+            height: 200
         }
     },
     options: {
@@ -29,12 +29,12 @@ const config: Config = {
         charts: [
             {
                 title: 'Car prices',
-                type: 'bar',
+                type: 'line',
                 legend: {
-                    position: 'right'
+                    position: 'off'
                 },
                 data: {
-                    dataSource: 'dataSet',
+                    dataSource: 'dataSet_large',
                     keyField: 'brand',
                     valueField: 'price'
                 },
@@ -43,16 +43,16 @@ const config: Config = {
                         fields: ['count', 'price', 'brand']
                     }
                 },
-                orientation: 'horizontal'
+                orientation: 'vertical'
             },
             {
                 title: 'Car prices',
                 type: 'line',
                 legend: {
-                    position: 'right'
+                    position: 'off'
                 },
                 data: {
-                    dataSource: 'dataSet2',
+                    dataSource: 'dataSet2_large',
                     keyField: 'brand',
                     valueField: 'price'
                 },

@@ -36,14 +36,17 @@ function getCssClassesLine(cssClasses: string[]): string {
     return '.' + cssClasses.join('.');
 }
 
-function getScaleBand(domain: any, rangeStart: number, rangeEnd: number): d3.ScaleBand<string> {
-    const pad = 0;
-    
+function getScaleBand(domain: any, rangeStart: number, rangeEnd: number, scalePadding: number): d3.ScaleBand<string> {
     const scale = d3.scaleBand()
         .domain(domain)
         .range([rangeStart, rangeEnd]);
-        
-    scale.padding(pad / scale.bandwidth());
+            
+    const bandSize = scale.bandwidth();
+    console.log(bandSize, scalePadding);
+    if(scalePadding < bandSize) {
+        scale.paddingInner(scalePadding / bandSize);
+        scale.paddingOuter(scalePadding / 2 / bandSize);
+    }
     return scale;
 }
 
@@ -77,9 +80,11 @@ function cropLabels(labelBlocks: any, maxWidth: number) {
         if(labelBlocks.nodes()[i].getBBox().width > maxWidth) {
             const text: string = labelBlocks.nodes()[i].textContent;
             let textLength = text.length;
-            while(labelBlocks.nodes()[i].getBBox().width > maxWidth) {
+            while(labelBlocks.nodes()[i].getBBox().width > maxWidth && textLength > 0) {
                 labelBlocks.nodes()[i].textContent = text.substring(0, --textLength) + '...';
             }
+            if(textLength === 0)
+                labelBlocks.nodes()[i].textContent = '';
         }
     }
 }
@@ -394,10 +399,11 @@ function renderPolarCharts(charts: any[], data: any, margin: BlockMargin, blockW
     })
 }
 
-function fillScales(scales: Scales, keyDomain: any[], keyRangeStart: number, keyRangeEnd: number, valueDomain: any[], valueRangeStart: number, valueRangeEnd: number): void {
+function fillScales(scales: Scales, keyDomain: any[], keyRangeStart: number, keyRangeEnd: number, scaleKeyPadding: number, valueDomain: any[], valueRangeStart: number, valueRangeEnd: number): void {
     scales.scaleKey = getScaleBand(keyDomain,
         keyRangeStart,
-        keyRangeEnd);
+        keyRangeEnd,
+        scaleKeyPadding);
     scales.scaleValue = getScaleLinear(valueDomain,
         valueRangeStart,
         valueRangeEnd);
@@ -706,6 +712,7 @@ function render2D(model: Model, data: any): void {
         options.scale.scaleKey.domain,
         options.scale.scaleKey.range.start,
         options.scale.scaleKey.range.end,
+        model.chartSettings.bar.distance,
         options.scale.scaleValue.domain,
         options.scale.scaleValue.range.start,
         options.scale.scaleValue.range.end);
@@ -780,9 +787,8 @@ function getTooltipText(fields: string[], data: DataRow): string {
 function getMultplyTooltipText(charts: TwoDimensionalChartModel[], data: any, key: string): string {
     let text = '';   
     charts.forEach(chart => {
-        // console.log(key, data[chart.data.dataSource].find((d: DataRow) => d[chart.data.keyField] === key));
-        
-        text += getTooltipText(chart.tooltip.data.fields, data[chart.data.dataSource].find((d: DataRow) => d[chart.data.keyField] === key));
+        if(chart.tooltip.data.fields.length !== 0)
+            text += getTooltipText(chart.tooltip.data.fields, data[chart.data.dataSource].find((d: DataRow) => d[chart.data.keyField] === key));
     });
     return text;
 }
@@ -813,7 +819,7 @@ function renderTooltipForBar(bars: d3.Selection<d3.BaseType, unknown, d3.BaseTyp
                 .style('top', d3.pointer(event, this)[1] + 'px'); 
         });
 
-    bars.on('mouseleave', d => tooltip.style('display', 'none'));
+    bars.on('mouseleave', event => tooltip.style('display', 'none'));
 }
 
 function renderTooltipsForBar(charts: TwoDimensionalChartModel[], data: any): void {
@@ -837,10 +843,10 @@ function renderLineTooltip(scaleKey: d3.ScaleBand<string>, margin: BlockMargin, 
 
     const tooltipLine = d3.select('svg')
         .append('line')
-        .style('stroke', 'black');
-
-    const eachBand = scaleKey.step() + scaleKey.padding();
-
+        .style('stroke', 'black');    
+    
+    const bandSize = scaleKey.step();
+    console.log(bandSize);  
     d3.select('svg')
         .append('rect')
         .attr('class', 'tipbox')
@@ -849,12 +855,12 @@ function renderLineTooltip(scaleKey: d3.ScaleBand<string>, margin: BlockMargin, 
         .attr('width', blockWidth - margin.left - margin.right)
         .attr('height', blockHeight - margin.top - margin.bottom)
         .style('opacity', 0)
-        .style('outline', '1px solid red')
+        // .style('outline', '1px solid red')
         .on('mouseover', function(event) {
             tooltip.style('display', 'block');
         })
         .on('mousemove', function(event) {
-            const index = getKeyIndex(event, this, charts[0].orient, margin, scaleKey, eachBand);           
+            const index = getKeyIndex(event, this, charts[0].orient, margin, bandSize);        
             const key = scaleKey.domain()[index];
             tooltip.html(`${getMultplyTooltipText(charts, data, key)}`);
             
@@ -871,11 +877,15 @@ function renderLineTooltip(scaleKey: d3.ScaleBand<string>, margin: BlockMargin, 
         });
 }
 
-function getKeyIndex(event: any, context: SVGRectElement, orient: 'vertical' | 'horizontal', margin: BlockMargin, scaleKey: d3.ScaleBand<string>, bandSize: number): number {
-    const point = d3.pointer(event, context)[orient === 'vertical' ? 0 : 1] - 1 - (orient === 'vertical' ? margin.left : margin.top) - scaleKey.bandwidth() / 2 - scaleKey.padding() * scaleKey.bandwidth();
+function getKeyIndex(event: any, context: SVGRectElement, orient: 'vertical' | 'horizontal', margin: BlockMargin, bandSize: number): number {
+    const pointerAxis = orient === 'vertical' ? 0 : 1;
+    const marginByOrient = orient === 'vertical' ? margin.left : margin.top;
+    console.log(d3.pointer(event, context)[pointerAxis] - marginByOrient);
+    
+    const point = d3.pointer(event, context)[pointerAxis] - marginByOrient - 1;
     if(point < 0)
         return 0;
-    return Math.round(point / bandSize);
+    return Math.floor(point / bandSize);
 }
 
 function setTooltipLineAttributes(tooltipLine: d3.Selection<SVGLineElement, unknown, HTMLElement, any>, scaleKey: d3.ScaleBand<string>, margin: BlockMargin, key: string, orient: 'vertical' | 'horizontal',  blockWidth: number, blockHeight: number): void {
@@ -941,6 +951,7 @@ function updateByValueAxis(model: Model, data: any) {
         options.scale.scaleKey.domain,
         options.scale.scaleKey.range.start,
         options.scale.scaleKey.range.end,
+        model.chartSettings.bar.distance,
         options.scale.scaleValue.domain,
         options.scale.scaleValue.range.start,
         options.scale.scaleValue.range.end);
