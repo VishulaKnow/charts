@@ -21,6 +21,8 @@ enum ScaleType {
 }
 
 const CLASSES = {
+    wrapper: 'wrapper',
+
     dataLabel: 'data-label',
     legendLabel: 'legend-label',
     legendColor: 'legend-circle',
@@ -179,7 +181,7 @@ function getLegendHeight(texts: string[]): number {
         itemWrapper.append(colorBlock, textBlock);
         legendWrapper.append(itemWrapper)
     });
-    document.body.append(legendWrapper);
+    document.querySelector(`.${CLASSES.wrapper}`).append(legendWrapper);
     const height = legendWrapper.offsetHeight;
     legendWrapper.remove();
     return height;
@@ -195,7 +197,7 @@ function getLegendItemWidth(text: string): number {
     textBlock.classList.add(CLASSES.legendLabel);
     textBlock.textContent = text;
     itemWrapper.append(colorBlock, textBlock);
-    document.body.append(itemWrapper);
+    document.querySelector(`.${CLASSES.wrapper}`).append(itemWrapper);
     const sumWidth = itemWrapper.getBoundingClientRect().width 
         + parseFloat(window.getComputedStyle(itemWrapper, null).getPropertyValue('margin-left'))
         + parseFloat(window.getComputedStyle(itemWrapper, null).getPropertyValue('margin-right'));
@@ -221,7 +223,7 @@ function getLabelTextMaxWidth(legendMaxWidth: number, labelTexts: any[]): number
     let maxWidth = 0;
     labelTexts.forEach((text: string) => {
         textBlock.textContent = text;
-        document.body.append(textBlock);
+        document.querySelector(`.${CLASSES.wrapper}`).append(textBlock);
         if(textBlock.getBoundingClientRect().width > maxWidth) {
             maxWidth = textBlock.getBoundingClientRect().width;
         }

@@ -43,7 +43,7 @@ const config: Config = {
                         fields: ['count', 'price', 'brand']
                     }
                 },
-                orientation: 'vertical'
+                orientation: 'horizontal'
             },
             {
                 title: 'Car prices',

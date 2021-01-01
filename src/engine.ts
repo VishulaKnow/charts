@@ -625,7 +625,7 @@ function renderLegendBlock(items: string[], legendPosition: string, legendSize: 
     const legendBlock = d3.select('svg')
         .append('foreignObject')
             .attr('class', 'legend')
-            // .style('outline', '1px solid red');
+            .style('outline', '1px solid red');
     
     fillLegendCoordinateByPosition(legendBlock,
         legendPosition,
@@ -883,8 +883,8 @@ function setTooltipLineAttributes(tooltipLine: d3.Selection<SVGLineElement, unkn
         tooltipLine
             .attr('x1', scaleKey(key) + margin.left + scaleKey.bandwidth() / 2)
             .attr('x2', scaleKey(key) + margin.left + scaleKey.bandwidth() / 2)
-            .attr('y1', 0)
-            .attr('y2', blockHeight);
+            .attr('y1', margin.top)
+            .attr('y2', blockHeight - margin.bottom);
     else
         tooltipLine
             .attr('x1', margin.left)

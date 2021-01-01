@@ -12,8 +12,8 @@ const designerConfig: DesignerConfig = {
         chartBlockMargin: {
             top: 20,
             bottom: 20,
-            left: 50,
-            right: 50
+            left: 20,
+            right: 10
         },
         legendBlock: {
             maxWidth: 200
