@@ -20,8 +20,8 @@ const designerConfig: DesignerConfig = {
         },
         chartOptions: {
             bar: {
-                barDistance: 500,
-                minBarWidth: 40
+                barDistance: 10,
+                minBarWidth: 50
             }
         }
     },

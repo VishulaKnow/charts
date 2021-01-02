@@ -52,7 +52,7 @@ const config: Config = {
                     position: 'off'
                 },
                 data: {
-                    dataSource: 'dataSet2_large',
+                    dataSource: 'dataSet_large2',
                     keyField: 'brand',
                     valueField: 'price'
                 },

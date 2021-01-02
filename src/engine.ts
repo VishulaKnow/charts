@@ -780,7 +780,7 @@ function renderPolar(model: Model, data: any) {
 }
 
 function getTooltipText(fields: string[], data: DataRow): string {
-    let text = '';
+    let text = '';    
     fields.forEach(field => {
         text += `<div><strong>${field}: ${data[field]}</strong><br></div>`;
     });
@@ -819,7 +819,7 @@ function renderTooltipForBar(bars: d3.Selection<d3.BaseType, unknown, d3.BaseTyp
         .on('mousemove', function(event, d) {
             tooltip
                 .style('left', d3.pointer(event, this)[0] + 10 + 'px')
-                .style('top', d3.pointer(event, this)[1] + 'px'); 
+                .style('top', d3.pointer(event, this)[1] + 10 + 'px'); 
         });
 
     bars.on('mouseleave', event => tooltip.style('display', 'none'));
@@ -868,7 +868,7 @@ function renderLineTooltip(scaleKey: d3.ScaleBand<string>, margin: BlockMargin, 
             
             tooltip
                 .style('left', d3.pointer(event, this)[0] + 10 + 'px')
-                .style('top', d3.pointer(event, this)[1] + 'px');
+                .style('top', d3.pointer(event, this)[1] + 10 + 'px');
             tooltipLine
                 .style('display', 'block');
             setTooltipLineAttributes(tooltipLine, scaleKey, margin, key, charts[0].orient, blockWidth, blockHeight);
@@ -938,7 +938,7 @@ function renderTooltipForDonut(arcs: d3.Selection<d3.BaseType, unknown, d3.BaseT
         .on('mousemove', function(event, d) {
             tooltip
                 .style('left', d3.pointer(event, this)[0] + 10 + 'px')
-                .style('top', d3.pointer(event, this)[1] + 'px'); 
+                .style('top', d3.pointer(event, this)[1] + 10 + 'px'); 
         });
 
     arcs.on('mouseleave', d => tooltip.style('display', 'none'));
@@ -987,7 +987,7 @@ function updateByValueAxis(model: Model, data: any) {
 
 function prepareData(data: any, model: Model): void {
     if(model.dataSettings.limit !== -1) {
-        (model.options.charts as any).map((chart: any) => chart.data.dataSource).forEach((dataset: any) => {
+        (model.options.charts as any).map((chart: any) => chart.data.dataSource).forEach((dataset: any) => {            
             data[dataset].splice(model.dataSettings.limit, data[dataset].length - model.dataSettings.limit);
         })
     }

@@ -465,8 +465,6 @@ export function assembleModel(): Model {
     const dataSettings = getDataSettings(dataLimit);
     const chartSettings = getChartSettings();
 
-    console.log(margin);
-
     return {
         blockCanvas,
         chartBlock,

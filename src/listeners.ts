@@ -5,6 +5,28 @@ import { getUpdatedModel } from './model/modelOptions';
 import { PolarChart, PolarOptions, TwoDimensionalChart, TwoDimensionalOptions } from './config/config'
 const data = require('./assets/dataSet.json');
 
+function getCopy(obj: any) {
+    const newObj: any = {};
+    if(typeof obj === 'object') {
+        for(let key in obj) {        
+            if(Array.isArray(obj[key])) {
+                newObj[key] = getCopyOfArr(obj[key]);
+            } else if(typeof obj[key] === 'object') {
+                newObj[key] = getCopy(obj[key]);
+            } else {
+                newObj[key] = obj[key];
+            }
+        } 
+    } else {
+        return obj;
+    }
+    return newObj;
+}
+function getCopyOfArr(initial: any[]): any[] {
+    const newArr: any[] = [];
+    initial.forEach(d => newArr.push(getCopy(d)));
+    return newArr;
+}
 function getInputValue(selector: string): string {
     return (document.querySelector(selector) as HTMLInputElement).value;
 }
@@ -96,25 +118,34 @@ function setCommonListeners(): void {
         config.options.charts.forEach((chart: TwoDimensionalChart | PolarChart) => {
             chart.legend.position = this.value;
         });
-        console.log(config.options.charts);
         
         engine.updateFullBlock(getUpdatedModel(), data);
     });
 }
 
+function changeChartConfig(chartType: 'bar' | 'line' | 'area'): void {
+    if(chartType === 'bar' || chartType === 'area') {
+        if(config.options.charts.length !== 1)
+            config.options.charts.splice(1, config.options.charts.length - 1);
+        config.options.charts[0].type = chartType;
+    } else {
+        config.options.charts.push(getCopy(config.options.charts[0]));
+        config.options.charts.forEach((chart: any) => chart.type = chartType);
+        config.options.charts[1].data.dataSource = config.options.charts[1].data.dataSource + '2';
+    }
+}
+
 function set2DListeners(): void {
+    document.querySelector('#chart-2d-type').addEventListener('change', function() {
+        if(config.options.type === '2d') {
+            changeChartConfig(this.value);
+            engine.updateFullBlock(getUpdatedModel(), getCopy(data));
+        }
+    });
     document.querySelector('#chart-orient').addEventListener('change', function() {
         if(config.options.type === '2d') {
             config.options.charts[0].orientation = this.value;
-            engine.updateFullBlock(getUpdatedModel(), data);
-        }
-    });
-    document.querySelector('#chart-2d-type').addEventListener('change', function() {
-        if(config.options.type === '2d') {
-            const chartFill = getInputValue('#chart-fill');
-            const chartStroke = getInputValue('#chart-stroke');
-            config.options.charts[0].type = this.value as 'bar' | 'line' | 'area';
-            engine.updateFullBlock(getUpdatedModel(), data);
+            engine.updateFullBlock(getUpdatedModel(), getCopy(data));
         }
     });
     document.querySelector('#key-axis-orient').addEventListener('change', function() {

@@ -41,7 +41,7 @@
         { "brand": "HONDA2", "price": 20, "count": 2 },
         { "brand": "TOYOTA2", "price": 115, "count": 1 }
     ],
-    "dataSet2_large": [
+    "dataSet_large2": [
         { "brand": "BMW", "price": 100, "count": 5 },
         { "brand": "LADA", "price": 25, "count": 2 },
         { "brand": "MERCEDES", "price": 28, "count": 0 },
