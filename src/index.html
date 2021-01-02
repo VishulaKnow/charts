@@ -38,7 +38,7 @@
             font-family: sans-serif;
         }
         .legend-item {
-            margin: 10px;
+            margin: 5px;
         }
         .legend-label {
             font-size: 12px;
@@ -60,17 +60,60 @@
             background: white;
             color: black;
             border-radius: 2px;
+            z-index: 999;
         }
     </style>
 </head>
 <body>
-    <div class="form">
+    <div class="form notation">
         <div class="form-group">
             <label for="">Notation</label>
             <br>
             <select name="" id="notation">
                 <option value="2d" selected>2D</option>
                 <option value="polar">Polar</option>
+            </select>
+        </div>
+    </div>
+    <div class="form designer">
+        <div class="form-group">
+            <label for="">AxisLabelMaxWidth</label>
+            <br>
+            <input type="number" max="100" id="axis-label-width">
+            <button type="button" class="btn-axis-label-width">Apply</button>
+        </div>
+        <div class="form-group">
+            <label for="">ChartBlockMarginTop</label>
+            <br>
+            <input type="number" id="chart-block-margin-top">
+        </div>
+        <div class="form-group">
+            <label for="">ChartBlockMarginBottom</label>
+            <br>
+            <input type="number" id="chart-block-margin-bottom">
+        </div>
+        <div class="form-group">
+            <label for="">ChartBlockMarginLeft</label>
+            <br>
+            <input type="number" id="chart-block-margin-left">
+        </div>
+        <div class="form-group">
+            <label for="">ChartBlockMarginRight</label>
+            <br>
+            <input type="number" id="chart-block-margin-right">
+            <button class="btn-chart-block-margin">Apply</button>
+        </div>
+    </div>
+    <div class="form common-options">
+        <div class="form-group">
+            <label for="">Legend</label>
+            <br>
+            <select name="" id="legend">
+                <option value="off" selected>Off</option>
+                <option value="left" selected>Left</option>
+                <option value="right" selected>Right</option>
+                <option value="top" selected>Top</option>
+                <option value="bottom" selected>Bottom</option>
             </select>
         </div>
     </div>
@@ -135,21 +178,6 @@
             <br>
             <input type="number" placeholder="" id="pad-angle">
             <button class="btn-pad-angle">Apply</button>
-        </div>
-    </div>
-    <div class="form controls-style">
-        <div class="form-group" style="display: flex;">
-            <div style="margin-right: 2rem;">
-                <label for="">Fill</label>
-                <br>
-                <input type="text" placeholder="none" id="chart-fill">
-            </div>
-            <div style="margin-right: 2rem;">
-                <label for="">Stroke</label>
-                <br>
-                <input type="text" placeholder="none" id="chart-stroke">
-                <button class="btn-chart-style">Apply</button>
-            </div>
         </div>
     </div>
 

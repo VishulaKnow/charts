@@ -12,8 +12,7 @@ interface Size {
 }
 
 export interface ChartBlock {
-    globalMargin: BlockMargin;
-    blockMargin: BlockMargin;
+    margin: BlockMargin;
 }
 export interface BlockMargin {
     top: number;

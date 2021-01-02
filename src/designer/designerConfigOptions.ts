@@ -11,7 +11,7 @@ const designerConfig: DesignerConfig = {
         },
         chartBlockMargin: {
             top: 20,
-            bottom: 20,
+            bottom: 50,
             left: 20,
             right: 10
         },

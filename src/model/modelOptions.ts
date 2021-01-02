@@ -35,23 +35,14 @@ const CLASSES = {
 }
 const AXIS_LABEL_PADDING = 9;
 
-const legendBlockModel: LegendBlockModel = {
-    bottom: { size: 0 },
-    left: { size: 0 },
-    right: { size: 0 },
-    top: { size: 0 }
-}
-const margin = getMargin();
-const dataLimit = calcDataLimit();
-
-function getMargin(): BlockMargin {
+function getMargin(legendBlockModel: LegendBlockModel): BlockMargin {
     const margin = {
         top: designerConfig.canvas.chartBlockMargin.top,
         bottom: designerConfig.canvas.chartBlockMargin.bottom,
         left: designerConfig.canvas.chartBlockMargin.left,
         right: designerConfig.canvas.chartBlockMargin.right
     }
-    recalcMarginWithLegend(margin, config.options, designerConfig.canvas.legendBlock.maxWidth);
+    recalcMarginWithLegend(margin, config.options, designerConfig.canvas.legendBlock.maxWidth, legendBlockModel);
     if(config.options.type === '2d') {
         recalcMarginWithAxisLabelWidth(margin, config.options.charts, designerConfig.canvas.axisLabel.maxSize.main, config.options.axis);
     }
@@ -68,7 +59,7 @@ function getDataLimit(dataLength: number, axisLength: number, minBarWidth: numbe
     return dataLength;
 }
 
-function calcDataLimit(): number {
+function calcDataLimit(margin: BlockMargin): number {
     let limit: number = -1;
     if(config.options.type === '2d') {
         const barCharts = config.options.charts.filter(chart => chart.type === 'bar');
@@ -86,7 +77,7 @@ function calcDataLimit(): number {
     return limit;
 }
 
-function recalcMarginWithLegend(margin: BlockMargin, options: TwoDimensionalOptions | PolarOptions, legendMaxWidth: number): void {
+function recalcMarginWithLegend(margin: BlockMargin, options: TwoDimensionalOptions | PolarOptions, legendMaxWidth: number, legendBlockModel: LegendBlockModel): void {
     //FIXME Make it better
     if(options.type === '2d') {
         const chartsWithLegendLeft = options.charts.filter((chart: TwoDimensionalChart) => chart.legend.position === 'left');        
@@ -232,7 +223,7 @@ function getLabelTextMaxWidth(legendMaxWidth: number, labelTexts: any[]): number
     return maxWidth > legendMaxWidth ? legendMaxWidth : maxWidth;
 }
 
-function getScaleRangePeek(scaleType: ScaleType, chartOrientation: string, blockWidth: number, blockHeight: number): number {
+function getScaleRangePeek(scaleType: ScaleType, chartOrientation: string, margin: BlockMargin, blockWidth: number, blockHeight: number): number {
     if(chartOrientation === 'vertical')
         return scaleType === ScaleType.Key 
             ? blockWidth - margin.left - margin.right
@@ -242,7 +233,7 @@ function getScaleRangePeek(scaleType: ScaleType, chartOrientation: string, block
         : blockWidth - margin.left - margin.right;
 }
 
-function getScaleDomain(scaleType: ScaleType, configDomain: Domain, data: DataRow[], chart: TwoDimensionalChart, keyAxisPosition: string = null): any[] {
+function getScaleDomain(scaleType: ScaleType, configDomain: Domain, data: DataRow[], chart: TwoDimensionalChart, keyAxisPosition: string = null, dataLimit: number = -1): any[] {
     if(scaleType === ScaleType.Key) {
         const domain = data.map(d => d[chart.data.keyField]);        
         if(dataLimit !== domain.length && dataLimit !== -1)     
@@ -286,7 +277,7 @@ function getAxisOrient(axisType: AxisType, chartOrientation: string, axisPositio
     }
 }
 
-function getTranslateX(axisType: AxisType, chartOrientation: string, axisPosition: string, blockWidth: number, blockHeight: number): number {
+function getTranslateX(axisType: AxisType, chartOrientation: string, axisPosition: string, margin: BlockMargin, blockWidth: number, blockHeight: number): number {
     const orient = getAxisOrient(axisType, chartOrientation, axisPosition);
     if(orient === 'top' || orient === 'left')
         return margin.left;
@@ -296,7 +287,7 @@ function getTranslateX(axisType: AxisType, chartOrientation: string, axisPositio
         return blockWidth - margin.right;
 }
 
-function getTranslateY(axisType: AxisType, chartOrientation: string, axisPosition: string, blockWidth: number, blockHeight: number): number {
+function getTranslateY(axisType: AxisType, chartOrientation: string, axisPosition: string, margin: BlockMargin, blockWidth: number, blockHeight: number): number {
     const orient = getAxisOrient(axisType, chartOrientation, axisPosition);
     if(orient === 'top' || orient === 'left')
         return margin.top;
@@ -379,28 +370,27 @@ function getBlockCanvas(): BlockCanvas {
     }
 }
 
-function getChartBlock(): ChartBlock {
+function getChartBlock(margin: BlockMargin): ChartBlock {
     return {
-        globalMargin: margin,
-        blockMargin: designerConfig.canvas.chartBlockMargin
+        margin
     }
 }
 
-function get2DOptions(configOptions: TwoDimensionalOptions, axisLabelDesignerOptions: AxisLabelCanvas, chartPalette: Color[]): TwoDimensionalOptionsModel {
+function get2DOptions(configOptions: TwoDimensionalOptions, axisLabelDesignerOptions: AxisLabelCanvas, chartPalette: Color[], margin: BlockMargin, dataLimit: number): TwoDimensionalOptionsModel {
     return {
         scale: {
             scaleKey: {
-                domain: getScaleDomain(ScaleType.Key, configOptions.axis.keyAxis.domain, data[configOptions.charts[0].data.dataSource], configOptions.charts[0]),
+                domain: getScaleDomain(ScaleType.Key, configOptions.axis.keyAxis.domain, data[configOptions.charts[0].data.dataSource], configOptions.charts[0], null, dataLimit),
                 range: {
                     start: 0,
-                    end: getScaleRangePeek(ScaleType.Key, configOptions.charts[0].orientation, config.canvas.size.width, config.canvas.size.height)
+                    end: getScaleRangePeek(ScaleType.Key, configOptions.charts[0].orientation, margin, config.canvas.size.width, config.canvas.size.height)
                 }
             },
             scaleValue: {
                 domain: getScaleDomain(ScaleType.Value, configOptions.axis.valueAxis.domain, data[configOptions.charts[0].data.dataSource], configOptions.charts[0], configOptions.axis.keyAxis.position),
                 range: {
                     start: 0,
-                    end: getScaleRangePeek(ScaleType.Value, configOptions.charts[0].orientation, config.canvas.size.width, config.canvas.size.height)
+                    end: getScaleRangePeek(ScaleType.Value, configOptions.charts[0].orientation, margin, config.canvas.size.width, config.canvas.size.height)
                 }
             }
         },
@@ -408,8 +398,8 @@ function get2DOptions(configOptions: TwoDimensionalOptions, axisLabelDesignerOpt
             keyAxis: {
                 orient: getAxisOrient(AxisType.Key, configOptions.charts[0].orientation, configOptions.axis.keyAxis.position),
                 translate: {
-                    translateX: getTranslateX(AxisType.Key, configOptions.charts[0].orientation, configOptions.axis.keyAxis.position, config.canvas.size.width, config.canvas.size.height),
-                    translateY: getTranslateY(AxisType.Key, configOptions.charts[0].orientation, configOptions.axis.keyAxis.position, config.canvas.size.width, config.canvas.size.height)
+                    translateX: getTranslateX(AxisType.Key, configOptions.charts[0].orientation, configOptions.axis.keyAxis.position, margin, config.canvas.size.width, config.canvas.size.height),
+                    translateY: getTranslateY(AxisType.Key, configOptions.charts[0].orientation, configOptions.axis.keyAxis.position, margin, config.canvas.size.width, config.canvas.size.height)
                 },
                 class: 'key-axis',
                 maxLabelSize: axisLabelDesignerOptions.maxSize.main
@@ -417,8 +407,8 @@ function get2DOptions(configOptions: TwoDimensionalOptions, axisLabelDesignerOpt
             valueAxis: {
                 orient: getAxisOrient(AxisType.Value, configOptions.charts[0].orientation, configOptions.axis.valueAxis.position),
                 translate: {
-                    translateX: getTranslateX(AxisType.Value, configOptions.charts[0].orientation, configOptions.axis.valueAxis.position, config.canvas.size.width, config.canvas.size.height),
-                    translateY: getTranslateY(AxisType.Value, configOptions.charts[0].orientation, configOptions.axis.valueAxis.position, config.canvas.size.width, config.canvas.size.height)
+                    translateX: getTranslateX(AxisType.Value, configOptions.charts[0].orientation, configOptions.axis.valueAxis.position, margin, config.canvas.size.width, config.canvas.size.height),
+                    translateY: getTranslateY(AxisType.Value, configOptions.charts[0].orientation, configOptions.axis.valueAxis.position, margin, config.canvas.size.width, config.canvas.size.height)
                 },          
                 class: 'value-axis',
                 maxLabelSize: axisLabelDesignerOptions.maxSize.main
@@ -436,19 +426,16 @@ function getPolarOptions(configOptions: PolarOptions, chartPalette: Color[]): Po
     }
 }
 
-function getOptions(): TwoDimensionalOptionsModel | PolarOptionsModel {
+function getOptions(margin: BlockMargin, dataLimit: number): TwoDimensionalOptionsModel | PolarOptionsModel {
     if(config.options.type === '2d') {
-        return get2DOptions(config.options, designerConfig.canvas.axisLabel, designerConfig.chart.style.palette);
+        return get2DOptions(config.options, designerConfig.canvas.axisLabel, designerConfig.chart.style.palette, margin, dataLimit);
     } else {
         return getPolarOptions(config.options, designerConfig.chart.style.palette);
     }
 } 
 
-function getLegendBlock(): LegendBlockModel {
-    return legendBlockModel;
-}
 
-function getDataSettings(): DataSettings {
+function getDataSettings(dataLimit: number): DataSettings {
     return {
         limit: dataLimit
     }
@@ -463,12 +450,22 @@ function getChartSettings(): ChartSettings {
 }
 
 export function assembleModel(): Model {
+    const legendBlock: LegendBlockModel = {
+        bottom: { size: 0 },
+        left: { size: 0 },
+        right: { size: 0 },
+        top: { size: 0 }
+    }
+    const margin = getMargin(legendBlock);
+    const dataLimit = calcDataLimit(margin);
+
     const blockCanvas = getBlockCanvas();
-    const chartBlock = getChartBlock();
-    const options = getOptions();
-    const legendBlock = getLegendBlock();
-    const dataSettings = getDataSettings();
+    const chartBlock = getChartBlock(margin);
+    const options = getOptions(margin, dataLimit);
+    const dataSettings = getDataSettings(dataLimit);
     const chartSettings = getChartSettings();
+
+    console.log(margin);
 
     return {
         blockCanvas,
@@ -479,8 +476,6 @@ export function assembleModel(): Model {
         chartSettings
     }
 }
-
-console.log(margin);
 
 export const model = assembleModel();
 export function getUpdatedModel(): Model {

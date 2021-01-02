@@ -2,10 +2,10 @@ import { Config } from './config';
 
 const config: Config = {
     canvas: {
-        class: 'chart-1 border',
+        class: 'svg-chart border',
         size: {
             width: 1000,
-            height: 200
+            height: 500
         }
     },
     options: {

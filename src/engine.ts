@@ -42,7 +42,6 @@ function getScaleBand(domain: any, rangeStart: number, rangeEnd: number, scalePa
         .range([rangeStart, rangeEnd]);
             
     const bandSize = scale.bandwidth();
-    console.log(bandSize, scalePadding);
     if(scalePadding < bandSize) {
         scale.paddingInner(scalePadding / bandSize);
         scale.paddingOuter(scalePadding / 2 / bandSize);
@@ -300,6 +299,7 @@ function renderDonut(data: DataRow[], margin: BlockMargin, keyField: string, val
 
     const donutBlock = d3.select('svg')
         .append('g')
+        .attr('class', 'donut-block')
         .attr('transform', `translate(${translateX}, ${translateY})`);
     
     const items = donutBlock
@@ -315,6 +315,7 @@ function renderDonut(data: DataRow[], margin: BlockMargin, keyField: string, val
 
     setCssClasses(arcs, cssClasses);
     setElementsColor(items, chartPalette, 'donut');
+    // renderTooltipForDonut(items, tooltipFields, data, translateX, translateY);
     // renderDonutText(items, arc, keyField);
 }
 
@@ -649,27 +650,27 @@ function renderLegendBlock(items: string[], legendPosition: string, legendSize: 
 function fillLegendCoordinateByPosition(legendBlock: d3.Selection<SVGForeignObjectElement, unknown, HTMLElement, any>, legendPosition: string, legendSize: number, margin: BlockMargin, blockWidth: number, blockHeight: number): void {
     if(legendPosition === 'left') {
         legendBlock
-            .attr('y', margin.top)
+            .attr('y', 0)
             .attr('x', 0)
             .attr('width', legendSize)
-            .attr('height', blockHeight - margin.top - margin.bottom);
+            .attr('height', blockHeight);
     } else if(legendPosition === 'right') {
         legendBlock
-            .attr('y', margin.top)
+            .attr('y', 0)
             .attr('x', Math.ceil(blockWidth - legendSize))
             .attr('width', Math.ceil(legendSize))
-            .attr('height', Math.ceil(blockHeight - margin.top - margin.bottom));
+            .attr('height', blockHeight);
     } else if(legendPosition === 'top') {
         legendBlock
             .attr('y', 0)
-            .attr('x', margin.left)
-            .attr('width', blockWidth - margin.left - margin.right)
+            .attr('x', 0)
+            .attr('width', blockWidth)
             .attr('height', legendSize);
     } else if(legendPosition === 'bottom') {
         legendBlock
             .attr('y', blockHeight - legendSize)
-            .attr('x', margin.left)
-            .attr('width', blockWidth - margin.left - margin.right)
+            .attr('x', 0)
+            .attr('width', blockWidth)
             .attr('height', legendSize);
     }
 }
@@ -739,7 +740,7 @@ function render2D(model: Model, data: any): void {
         scales.scaleKey,
         scales.scaleValue,
         data,
-        model.chartBlock.globalMargin,
+        model.chartBlock.margin,
         options.axis.keyAxis.orient,
         model.blockCanvas.size.width,
         model.blockCanvas.size.height);
@@ -747,7 +748,7 @@ function render2D(model: Model, data: any): void {
     renderLegend(data,
         options,
         model.legendBlock,
-        model.chartBlock.globalMargin,
+        model.chartBlock.margin,
         model.blockCanvas.size.width,
         model.blockCanvas.size.height);
     
@@ -764,16 +765,18 @@ function renderPolar(model: Model, data: any) {
 
     renderPolarCharts(options.charts,
         data,
-        model.chartBlock.globalMargin,
+        model.chartBlock.margin,
         model.blockCanvas.size.width,
         model.blockCanvas.size.height);
 
     renderLegend(data,
         options,
         model.legendBlock,
-        model.chartBlock.globalMargin,
+        model.chartBlock.margin,
         model.blockCanvas.size.width,
         model.blockCanvas.size.height);
+
+    renderTooltips(model, data);
 }
 
 function getTooltipText(fields: string[], data: DataRow): string {
@@ -825,7 +828,7 @@ function renderTooltipForBar(bars: d3.Selection<d3.BaseType, unknown, d3.BaseTyp
 function renderTooltipsForBar(charts: TwoDimensionalChartModel[], data: any): void {
     charts.forEach(chart => {
         const bars = d3.select('svg')
-            .selectAll(`rect${getCssClassesLine(chart.cssClasses)}`)
+            .selectAll(`rect${getCssClassesLine(chart.cssClasses)}`);
         renderTooltipForBar(bars, chart.tooltip.data.fields, data[chart.data.dataSource]);
     })
 }
@@ -845,8 +848,7 @@ function renderLineTooltip(scaleKey: d3.ScaleBand<string>, margin: BlockMargin, 
         .append('line')
         .style('stroke', 'black');    
     
-    const bandSize = scaleKey.step();
-    console.log(bandSize);  
+    const bandSize = scaleKey.step(); 
     d3.select('svg')
         .append('rect')
         .attr('class', 'tipbox')
@@ -880,7 +882,6 @@ function renderLineTooltip(scaleKey: d3.ScaleBand<string>, margin: BlockMargin, 
 function getKeyIndex(event: any, context: SVGRectElement, orient: 'vertical' | 'horizontal', margin: BlockMargin, bandSize: number): number {
     const pointerAxis = orient === 'vertical' ? 0 : 1;
     const marginByOrient = orient === 'vertical' ? margin.left : margin.top;
-    console.log(d3.pointer(event, context)[pointerAxis] - marginByOrient);
     
     const point = d3.pointer(event, context)[pointerAxis] - marginByOrient - 1;
     if(point < 0)
@@ -903,9 +904,21 @@ function setTooltipLineAttributes(tooltipLine: d3.Selection<SVGLineElement, unkn
             .attr('y2', scaleKey(key) + margin.top + scaleKey.bandwidth() / 2);
 }
 
-function renderTooltipForDonut(arcs: d3.Selection<SVGPathElement, d3.PieArcDatum<DataRow>, SVGGElement, unknown>, fields: string[], data: DataRow[], translateX: number, translateY: number): void {
-    const wrapper = d3.select('.tooltip-wrapper');
+function renderTooltipsForDonut(charts: PolarChartModel[], data: any): void {
+    charts.forEach(chart => {
+        const attrTransform = d3.select('.donut-block').attr('transform');
+        const translateNumbers = attrTransform.substring(10, attrTransform.length - 1).split(', ');
+        const translateX = parseFloat(translateNumbers[0]);
+        const translateY = parseFloat(translateNumbers[1]);
 
+        const items = d3.select('svg')
+            .selectAll(`path${getCssClassesLine(chart.cssClasses)}`);
+        renderTooltipForDonut(items, chart.tooltip.data.fields, data[chart.data.dataSource], translateX, translateY);
+    })
+}
+
+function renderTooltipForDonut(arcs: d3.Selection<d3.BaseType, unknown, d3.BaseType, unknown>, fields: string[], data: DataRow[], translateX: number, translateY: number): void {
+    const wrapper = d3.select('.tooltip-wrapper');
     const tooltip = wrapper
         .append('div')
         .attr('class', 'tooltip')
@@ -939,8 +952,10 @@ function renderTooltips(model: Model, data: any) {
         if(model.options.charts.findIndex(chart => chart.type === 'area' || chart.type === 'line') === -1) {
             renderTooltipsForBar(model.options.charts, data);
         } else {
-            renderLineTooltip(scales.scaleKey, model.chartBlock.globalMargin, model.blockCanvas.size.width, model.blockCanvas.size.height, model.options.charts, data);
+            renderLineTooltip(scales.scaleKey, model.chartBlock.margin, model.blockCanvas.size.width, model.blockCanvas.size.height, model.options.charts, data);
         }
+    } else {
+        renderTooltipsForDonut(model.options.charts, data);
     }
 }
 
@@ -964,7 +979,7 @@ function updateByValueAxis(model: Model, data: any) {
         scales.scaleKey,
         scales.scaleValue,
         data,
-        model.chartBlock.globalMargin,
+        model.chartBlock.margin,
         options.axis.keyAxis.orient,
         model.blockCanvas.size.width,
         model.blockCanvas.size.height);
