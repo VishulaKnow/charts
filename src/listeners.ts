@@ -30,8 +30,8 @@ function getCopyOfArr(initial: any[]): any[] {
 function getInputValue(selector: string): string {
     return (document.querySelector(selector) as HTMLInputElement).value;
 }
-function setInputValue(selector: string, value: string): void {
-    (document.querySelector(selector) as HTMLInputElement).value = value;
+function setInputValue(selector: string, value: any): void {
+    (document.querySelector(selector) as HTMLInputElement).value = value.toString();
 }
 
 function showControlsForNotation(notationType: '2d' | 'polar'): void {
@@ -125,7 +125,7 @@ function setDesignerListeners(): void {
         designerConfig.canvas.chartBlockMargin.bottom = parseFloat(getInputValue('#chart-block-margin-bottom')) || 0;
         designerConfig.canvas.chartBlockMargin.left = parseFloat(getInputValue('#chart-block-margin-left')) || 0;
         designerConfig.canvas.chartBlockMargin.right = parseFloat(getInputValue('#chart-block-margin-right')) || 0;
-        engine.updateFullBlock(getUpdatedModel(), data);
+        engine.updateFullBlock(getUpdatedModel(), getCopy(data));
     });
     document.querySelector('.btn-bar-distance').addEventListener('click', function() {
         designerConfig.canvas.chartOptions.bar.barDistance = parseFloat(getInputValue('#bar-distance'));
@@ -212,6 +212,16 @@ function setPolarListeners(): void {
 function setControlsValues(): void {
     setInputValue('#notation', config.options.type);
     setInputValue('#legend', config.options.charts[0].legend.position);
+    setInputValue('#data-size', config.options.charts[0].data.dataSource.includes('large') ? 'large' : 'normal');
+
+    setInputValue('#axis-label-width', designerConfig.canvas.axisLabel.maxSize.main);
+    setInputValue('#chart-block-margin-top', designerConfig.canvas.chartBlockMargin.top);
+    setInputValue('#chart-block-margin-bottom', designerConfig.canvas.chartBlockMargin.bottom);
+    setInputValue('#chart-block-margin-left', designerConfig.canvas.chartBlockMargin.left);
+    setInputValue('#chart-block-margin-right', designerConfig.canvas.chartBlockMargin.right);
+    setInputValue('#bar-distance', designerConfig.canvas.chartOptions.bar.barDistance);
+    setInputValue('#min-bar-size', designerConfig.canvas.chartOptions.bar.minBarWidth);
+
     if(config.options.type === '2d') {
         setInputValue('#chart-2d-type', config.options.charts[0].type);
         setInputValue('#chart-orient', config.options.charts[0].orientation);

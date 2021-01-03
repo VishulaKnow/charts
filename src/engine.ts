@@ -627,7 +627,7 @@ function renderLegendBlock(items: string[], legendPosition: string, legendSize: 
     const legendBlock = d3.select('svg')
         .append('foreignObject')
             .attr('class', 'legend')
-            .style('outline', '1px solid red');
+            // .style('outline', '1px solid red');
     
     fillLegendCoordinateByPosition(legendBlock,
         legendPosition,
@@ -785,7 +785,7 @@ function getTooltipText(fields: string[], data: DataRow): string {
 function getMultplyTooltipText(charts: TwoDimensionalChartModel[], data: any, key: string): string {
     let text = '';
     charts.forEach((chart: TwoDimensionalChartModel) => {
-        text += `<div><span class="legend-circle" style="background-color: ${chart.elementColors[0]}"></span><br>`;
+        text += `<div class="tooltip-chart-item"><span class="legend-circle" style="background-color: ${chart.elementColors[0]}"></span><br>`;
         if(chart.tooltip.data.fields.length !== 0)
             text += getTooltipText(chart.tooltip.data.fields, data[chart.data.dataSource].find((d: DataRow) => d[chart.data.keyField] === key));
         text += '</div>'
