@@ -17,6 +17,9 @@
         .form-group {
             margin: 10px;
         }
+        input[type="number"] {
+            max-width: 100px;
+        }
 
         svg {
             position: relative;
@@ -103,8 +106,28 @@
             <input type="number" id="chart-block-margin-right">
             <button class="btn-chart-block-margin">Apply</button>
         </div>
+        <div class="form-group">
+            <label for="">Bar distance</label>
+            <br>
+            <input type="number" id="bar-distance">
+            <button class="btn-bar-distance">Apply</button>
+        </div>
+        <div class="form-group">
+            <label for="">Min bar size</label>
+            <br>
+            <input type="number" id="min-bar-size">
+            <button class="btn-min-bar-size">Apply</button>
+        </div>
     </div>
     <div class="form common-options">
+        <div class="form-group">
+            <label for="">Data size</label>
+            <br>
+            <select name="" id="data-size">
+                <option value="normal">normal</option>
+                <option value="x2">x2</option>
+            </select>
+        </div>
         <div class="form-group">
             <label for="">Legend</label>
             <br>

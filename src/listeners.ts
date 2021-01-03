@@ -76,6 +76,10 @@ function changeConfigOptions(notationType: '2d' | 'polar'): void {
                 }
             }
         }
+        if(options.charts[0].type === 'line') {
+            options.charts.push(getCopy(options.charts[0]));
+            options.charts[1].data.dataSource = options.charts[1].data.dataSource + '2';
+        }
         config.options = options;
     } else {
         const options: PolarOptions = {
@@ -96,7 +100,19 @@ function changeConfigOptions(notationType: '2d' | 'polar'): void {
         }
         config.options = options;
     }
-    engine.updateFullBlock(getUpdatedModel(), data);
+    engine.updateFullBlock(getUpdatedModel(), getCopy(data));
+}
+
+function changeChartConfig(chartType: 'bar' | 'line' | 'area'): void {
+    if(chartType === 'bar' || chartType === 'area') {
+        if(config.options.charts.length !== 1)
+            config.options.charts.splice(1, config.options.charts.length - 1);
+        config.options.charts[0].type = chartType;
+    } else {
+        config.options.charts.push(getCopy(config.options.charts[0]));
+        config.options.charts.forEach((chart: any) => chart.type = chartType);
+        config.options.charts[1].data.dataSource = config.options.charts[1].data.dataSource + '2';
+    }
 }
 
 function setDesignerListeners(): void {
@@ -111,28 +127,31 @@ function setDesignerListeners(): void {
         designerConfig.canvas.chartBlockMargin.right = parseFloat(getInputValue('#chart-block-margin-right')) || 0;
         engine.updateFullBlock(getUpdatedModel(), data);
     });
+    document.querySelector('.btn-bar-distance').addEventListener('click', function() {
+        designerConfig.canvas.chartOptions.bar.barDistance = parseFloat(getInputValue('#bar-distance'));
+        engine.updateFullBlock(getUpdatedModel(), getCopy(data));
+    });
+    document.querySelector('.btn-min-bar-size').addEventListener('click', function() {
+        designerConfig.canvas.chartOptions.bar.minBarWidth = parseFloat(getInputValue('#min-bar-size'));
+        engine.updateFullBlock(getUpdatedModel(), getCopy(data));
+    });
 }
 
 function setCommonListeners(): void {
+    document.querySelector('#data-size').addEventListener('change', function() {
+        config.options.charts.forEach((chart: TwoDimensionalChart | PolarChart, index: number) => {
+            chart.data.dataSource = this.value === 'normal' 
+                ? 'dataSet' + (index === 0 ? '' : `${index + 1}`)
+                : 'dataSet_large' + (index === 0 ? '' : `${index + 1}`);
+        });
+        engine.updateFullBlock(getUpdatedModel(), getCopy(data));
+    });
     document.querySelector('#legend').addEventListener('change', function() {
         config.options.charts.forEach((chart: TwoDimensionalChart | PolarChart) => {
             chart.legend.position = this.value;
         });
-        
         engine.updateFullBlock(getUpdatedModel(), data);
     });
-}
-
-function changeChartConfig(chartType: 'bar' | 'line' | 'area'): void {
-    if(chartType === 'bar' || chartType === 'area') {
-        if(config.options.charts.length !== 1)
-            config.options.charts.splice(1, config.options.charts.length - 1);
-        config.options.charts[0].type = chartType;
-    } else {
-        config.options.charts.push(getCopy(config.options.charts[0]));
-        config.options.charts.forEach((chart: any) => chart.type = chartType);
-        config.options.charts[1].data.dataSource = config.options.charts[1].data.dataSource + '2';
-    }
 }
 
 function set2DListeners(): void {
