@@ -134,7 +134,8 @@ function renderBar(scaleKey: d3.ScaleBand<string>, scaleValue: d3.ScaleLinear<nu
         .data(data)
             .enter()
             .append('rect')
-            .attr('class', 'bar-item');
+            .attr('class', 'bar-item')
+            .style('clip-path', 'url(#chart-block)');
 
     fillBarAttrsByKeyOrient(bars,
         keyAxisOrient,
@@ -232,7 +233,8 @@ function renderLine(scaleKey: d3.ScaleBand<string>, scaleValue: d3.ScaleLinear<n
     const path = d3.select('svg')
         .append('path')
         .attr('d', line(lineCoordinate))
-        .attr('class', 'line');
+        .attr('class', 'line')
+        .style('clip-path', 'url(#chart-block)');
 
     setCssClasses(path, cssClasses);
     setChartColor(path, chartPalette, 'line');
@@ -253,7 +255,8 @@ function renderArea(scaleKey: d3.ScaleBand<string>, scaleValue: d3.ScaleLinear<n
     const path = d3.select('svg')
         .append('path')
         .attr('d', area(areaCoordinate))
-        .attr('class', 'area');
+        .attr('class', 'area')
+        .style('clip-path', 'url(#chart-block)');
 
     setCssClasses(path, cssClasses);
     setChartColor(path, chartPalette, 'area');
@@ -340,6 +343,15 @@ function setCssClasses(elem: any, cssClasses: string[]): void {
 }
 
 function render2DCharts(charts: any[], scaleKey: d3.ScaleBand<string>, scaleValue: d3.ScaleLinear<number, number>, data: any, margin: BlockMargin, keyAxisOrient: string, blockWidth: number, blockHeight: number) {
+    d3.select('svg')
+        .append('clipPath')
+        .attr('id', 'chart-block')
+        .append('rect')
+        .attr('x', margin.left)
+        .attr('y', margin.top)
+        .attr('width', blockWidth - margin.left - margin.right)
+        .attr('height', blockHeight - margin.top - margin.bottom);
+    
     charts.forEach(chart => {
         if(chart.type === 'bar')
             renderBar(scaleKey,
