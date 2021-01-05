@@ -36,6 +36,10 @@ function getCssClassesLine(cssClasses: string[]): string {
     return '.' + cssClasses.join('.');
 }
 
+function getValueOrZero(value: number): number {
+    return value > 0 ? value : 0;
+}
+
 function getScaleBand(domain: any, rangeStart: number, rangeEnd: number, scalePadding: number): d3.ScaleBand<string> {
     const scale = d3.scaleBand()
         .domain(domain)
@@ -109,23 +113,23 @@ function fillBarAttrsByKeyOrient(bars: d3.Selection<SVGRectElement, DataRow, d3.
     if(axisOrient === 'top')
         bars.attr('x', d => scaleKey(d[keyField]) + margin.left)
             .attr('y', d => margin.top)
-            .attr('height', d => scaleValue(d[valueField]))
+            .attr('height', d => getValueOrZero(scaleValue(d[valueField])))
             .attr('width', d => scaleKey.bandwidth());
     else if(axisOrient === 'bottom')
         bars.attr('x', d => scaleKey(d[keyField]) + margin.left)
             .attr('y', d => scaleValue(d[valueField]) + margin.top)
-            .attr('height', d => blockHeight - margin.top - margin.bottom - scaleValue(d[valueField]))
+            .attr('height', d => getValueOrZero(blockHeight - margin.top - margin.bottom - scaleValue(d[valueField])))
             .attr('width', d => scaleKey.bandwidth());
     else if(axisOrient === 'left')
         bars.attr('x', d => margin.left)
             .attr('y', d => scaleKey(d[keyField]) + margin.top)
             .attr('height', d => scaleKey.bandwidth())
-            .attr('width', d => scaleValue(d[valueField]));
+            .attr('width', d => getValueOrZero(scaleValue(d[valueField])));
     else if(axisOrient === 'right')
         bars.attr('x', d => scaleValue(d[valueField]) + margin.left)
             .attr('y', d => scaleKey(d[keyField]) + margin.top)
             .attr('height', d => scaleKey.bandwidth())
-            .attr('width', d => blockWidth - margin.left - margin.right - scaleValue(d[valueField]));   
+            .attr('width', d => getValueOrZero(blockWidth - margin.left - margin.right - scaleValue(d[valueField])));   
 }
 
 function renderBar(scaleKey: d3.ScaleBand<string>, scaleValue: d3.ScaleLinear<number, number>, data: DataRow[], margin: BlockMargin, keyField: string, valueField: string, keyAxisOrient: string, tooltipFields: string[], cssClasses: string[], chartPalette: Color[], blockWidth: number, blockHeight: number): void {
@@ -529,23 +533,23 @@ function fillBarAttrsByKeyOrientWithTransition(bars: d3.Selection<SVGRectElement
     if(axisOrient === 'top')
         barsTran.attr('x', d => scaleKey(d[keyField]) + margin.left)
             .attr('y', d => margin.top)
-            .attr('height', d => scaleValue(d[valueField]))
+            .attr('height', d => getValueOrZero(scaleValue(d[valueField])))
             .attr('width', d => scaleKey.bandwidth());
     else if(axisOrient === 'bottom')
         barsTran.attr('x', d => scaleKey(d[keyField]) + margin.left)
             .attr('y', d => scaleValue(d[valueField]) + margin.top)
-            .attr('height', d => blockHeight - margin.top - margin.bottom - scaleValue(d[valueField]))
+            .attr('height', d => getValueOrZero(blockHeight - margin.top - margin.bottom - scaleValue(d[valueField])))
             .attr('width', d => scaleKey.bandwidth());
     else if(axisOrient === 'left')
         barsTran.attr('x', d => margin.left)
             .attr('y', d => scaleKey(d[keyField]) + margin.top)
             .attr('height', d => scaleKey.bandwidth())
-            .attr('width', d => scaleValue(d[valueField]));
+            .attr('width', d => getValueOrZero(scaleValue(d[valueField])));
     else if(axisOrient === 'right')
         barsTran.attr('x', d => scaleValue(d[valueField]) + margin.left)
             .attr('y', d => scaleKey(d[keyField]) + margin.top)
             .attr('height', d => scaleKey.bandwidth())
-            .attr('width', d => blockWidth - margin.left - margin.right - scaleValue(d[valueField]));  
+            .attr('width', d => getValueOrZero(blockWidth - margin.left - margin.right - scaleValue(d[valueField])));  
 }
 
 function renderLegend(data: any, options: TwoDimensionalOptionsModel | PolarOptionsModel, legendsSize: any, margin: BlockMargin, blockWidth: number, blockHeight: number): void {

@@ -170,13 +170,13 @@ function set2DListeners(): void {
     document.querySelector('#key-axis-orient').addEventListener('change', function() {
         if(config.options.type === '2d') {
             config.options.axis.keyAxis.position = this.value;
-            engine.updateFullBlock(getUpdatedModel(), data);
+            engine.updateFullBlock(getUpdatedModel(), getCopy(data));
         }
     });
     document.querySelector('#value-axis-orient').addEventListener('change', function() {
         if(config.options.type === '2d') {
             config.options.axis.valueAxis.position = this.value;
-            engine.updateFullBlock(getUpdatedModel(), data);
+            engine.updateFullBlock(getUpdatedModel(), getCopy(data));
         }
     });
     document.querySelector('.btn-domain').addEventListener('click', function() {
@@ -185,7 +185,7 @@ function set2DListeners(): void {
             const end = getInputValue('#domain-end');
             config.options.axis.valueAxis.domain.start = parseInt(start) || -1;
             config.options.axis.valueAxis.domain.end = parseInt(end) || -1;
-            engine.updateValueAxis(getUpdatedModel(), data);
+            engine.updateValueAxis(getUpdatedModel(), getCopy(data));
         }
     });
 }
