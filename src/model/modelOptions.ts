@@ -7,7 +7,8 @@ import { AxisLabelCanvas } from '../designer/designerConfig'
 const data = require('../assets/dataSet.json');
 import config from '../config/configOptions';
 import designerConfig from '../designer/designerConfigOptions';
-import { Color, index } from 'd3';
+import { Color } from 'd3';
+import '../style/main.css'
 
 type DataRow = {
     [field: string]: any
@@ -160,7 +161,7 @@ function getLegendHeight(texts: string[]): number {
     const legendWrapper = document.createElement('div');
     legendWrapper.style.display = 'flex';
     legendWrapper.style.flexWrap = 'wrap';
-    legendWrapper.style.width = 900 + 'px';
+    legendWrapper.style.width = config.canvas.size.width + 'px';
     texts.forEach(text => {
         const itemWrapper = document.createElement('div');
         const colorBlock = document.createElement('span');

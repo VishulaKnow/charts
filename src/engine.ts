@@ -40,6 +40,10 @@ function getValueOrZero(value: number): number {
     return value > 0 ? value : 0;
 }
 
+function getSvg(): d3.Selection<d3.BaseType, unknown, HTMLElement, any> {
+    return d3.select('svg');
+}
+
 function getScaleBand(domain: any, rangeStart: number, rangeEnd: number, scalePadding: number): d3.ScaleBand<string> {
     const scale = d3.scaleBand()
         .domain(domain)
@@ -95,7 +99,7 @@ function cropLabels(labelBlocks: any, maxWidth: number) {
 function renderAxis(scale: d3.AxisScale<any>, axisOrient: string, translateX: number, translateY: number, cssClass: string, maxLabelSize: number): void {
     const axis = getAxisByOrient(axisOrient, scale);
 
-    d3.select('svg')
+    getSvg()
         .append('g')
         .attr('transform', `translate(${translateX}, ${translateY})`)
         .attr('class', `${cssClass} data-label`)
@@ -133,7 +137,7 @@ function fillBarAttrsByKeyOrient(bars: d3.Selection<SVGRectElement, DataRow, d3.
 }
 
 function renderBar(scaleKey: d3.ScaleBand<string>, scaleValue: d3.ScaleLinear<number, number>, data: DataRow[], margin: BlockMargin, keyField: string, valueField: string, keyAxisOrient: string, tooltipFields: string[], cssClasses: string[], chartPalette: Color[], blockWidth: number, blockHeight: number): void {
-    const bars = d3.select('svg')
+    const bars = getSvg()
         .selectAll(`rect.bar-item${getCssClassesLine(cssClasses)}`)
         .data(data)
             .enter()
@@ -234,7 +238,7 @@ function renderLine(scaleKey: d3.ScaleBand<string>, scaleValue: d3.ScaleLinear<n
         keyField,
         valueField);    
     
-    const path = d3.select('svg')
+    const path = getSvg()
         .append('path')
         .attr('d', line(lineCoordinate))
         .attr('class', 'line')
@@ -256,7 +260,7 @@ function renderArea(scaleKey: d3.ScaleBand<string>, scaleValue: d3.ScaleLinear<n
         blockWidth,
         blockHeight);
 
-    const path = d3.select('svg')
+    const path = getSvg()
         .append('path')
         .attr('d', area(areaCoordinate))
         .attr('class', 'area')
@@ -304,7 +308,7 @@ function renderDonut(data: DataRow[], margin: BlockMargin, keyField: string, val
     const translateX = (blockWidth - margin.left - margin.right) / 2 + margin.left;
     const translateY = (blockHeight - margin.top - margin.bottom) / 2 + margin.top;
 
-    const donutBlock = d3.select('svg')
+    const donutBlock = getSvg()
         .append('g')
         .attr('class', 'donut-block')
         .attr('transform', `translate(${translateX}, ${translateY})`);
@@ -347,7 +351,7 @@ function setCssClasses(elem: any, cssClasses: string[]): void {
 }
 
 function render2DCharts(charts: any[], scaleKey: d3.ScaleBand<string>, scaleValue: d3.ScaleLinear<number, number>, data: any, margin: BlockMargin, keyAxisOrient: string, blockWidth: number, blockHeight: number) {
-    d3.select('svg')
+    getSvg()
         .append('clipPath')
         .attr('id', 'chart-block')
         .append('rect')
@@ -425,14 +429,14 @@ function fillScales(scales: Scales, keyDomain: any[], keyRangeStart: number, key
 }
 
 function clearBlock(): void {
-    d3.select('svg')
+    getSvg()
         .remove();
 }
 
 function updateValueAxisDomain(scaleValue: d3.ScaleLinear<number, number>, axisClass: string, axisOrient: string) {
     const axis = getAxisByOrient(axisOrient, scaleValue);
     
-    d3.select('svg')
+    getSvg()
         .select(`.${axisClass}`)
         .transition()
         .duration(1000)
@@ -486,7 +490,7 @@ function updateLineChartByValueAxis(scaleKey: d3.ScaleBand<string>, scaleValue: 
         keyField,
         valueField);
     
-    d3.select('svg')
+    getSvg()
         .select(`.line${getCssClassesLine(cssClasses)}`)
         .transition()
         .duration(1000)
@@ -505,7 +509,7 @@ function updateAreaChartByValueAxis(scaleKey: d3.ScaleBand<string>, scaleValue: 
         blockWidth,
         blockHeight);
 
-    d3.select('svg')
+    getSvg()
         .select(`.area${getCssClassesLine(cssClasses)}`)
         .transition()
         .duration(1000)
@@ -513,7 +517,7 @@ function updateAreaChartByValueAxis(scaleKey: d3.ScaleBand<string>, scaleValue: 
 }
 
 function updateBarChartByValueAxis(scaleKey: d3.ScaleBand<string>, scaleValue: d3.ScaleLinear<number, number>, data: DataRow[], margin: BlockMargin, keyField: string, valueField: string, keyAxisOrient: string, blockWidth: number, blockHeight: number, cssClasses: string[]): void {
-    const bars = d3.select('svg')
+    const bars = getSvg()
         .selectAll(`.bar-item${getCssClassesLine(cssClasses)}`) as d3.Selection<SVGRectElement, DataRow, d3.BaseType, unknown>;
 
     fillBarAttrsByKeyOrientWithTransition(bars,
@@ -640,9 +644,10 @@ function renderLegend(data: any, options: TwoDimensionalOptionsModel | PolarOpti
 }
 
 function renderLegendBlock(items: string[], legendPosition: string, legendSize: number, margin: BlockMargin, colorPalette: Color[], blockWidth: number, blockHeight: number): void {
-    const legendBlock = d3.select('svg')
+    const legendBlock = getSvg()
         .append('foreignObject')
             .attr('class', 'legend')
+            // .style('overflow-y', 'scroll');
             // .style('outline', '1px solid red');
     
     fillLegendCoordinateByPosition(legendBlock,
@@ -840,7 +845,7 @@ function renderTooltipForBar(bars: d3.Selection<d3.BaseType, unknown, d3.BaseTyp
 
 function renderTooltipsForBar(charts: TwoDimensionalChartModel[], data: any): void {
     charts.forEach(chart => {
-        const bars = d3.select('svg')
+        const bars = getSvg()
             .selectAll(`rect${getCssClassesLine(chart.cssClasses)}`);
         renderTooltipForBar(bars, chart.tooltip.data.fields, data[chart.data.dataSource]);
     })
@@ -857,12 +862,12 @@ function renderLineTooltip(scaleKey: d3.ScaleBand<string>, margin: BlockMargin, 
             .style('position', 'absolute')
             .style('display', 'none');
 
-    const tooltipLine = d3.select('svg')
+    const tooltipLine = getSvg()
         .append('line')
         .style('stroke', 'black');    
     
     const bandSize = scaleKey.step(); 
-    d3.select('svg')
+    getSvg()
         .append('rect')
         .attr('class', 'tipbox')
         .attr('x', margin.left)
@@ -924,7 +929,7 @@ function renderTooltipsForDonut(charts: PolarChartModel[], data: any): void {
         const translateX = parseFloat(translateNumbers[0]);
         const translateY = parseFloat(translateNumbers[1]);
 
-        const items = d3.select('svg')
+        const items = getSvg()
             .selectAll(`path${getCssClassesLine(chart.cssClasses)}`);
         renderTooltipForDonut(items, chart.tooltip.data.fields, data[chart.data.dataSource], translateX, translateY);
     })

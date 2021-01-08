@@ -16,7 +16,7 @@
   \*********************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
-eval("__webpack_require__.r(__webpack_exports__);\n/* harmony import */ var _engine__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./engine */ \"./src/engine.ts\");\n/* harmony import */ var _model_modelOptions__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./model/modelOptions */ \"./src/model/modelOptions.ts\");\n\r\n\r\nvar data = __webpack_require__(/*! ./assets/dataSet.json */ \"./src/assets/dataSet.json\");\r\n_engine__WEBPACK_IMPORTED_MODULE_0__.default.render(_model_modelOptions__WEBPACK_IMPORTED_MODULE_1__.model, data);\r\n\n\n//# sourceURL=webpack://packd3ts/./src/main.ts?");
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony import */ var _engine__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./engine */ \"./src/engine.ts\");\n/* harmony import */ var _model_modelOptions__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./model/modelOptions */ \"./src/model/modelOptions.ts\");\n/* harmony import */ var _style_main_css__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./style/main.css */ \"./src/style/main.css\");\n\r\n\r\n\r\nvar data = __webpack_require__(/*! ./assets/dataSet.json */ \"./src/assets/dataSet.json\");\r\n_engine__WEBPACK_IMPORTED_MODULE_0__.default.render(_model_modelOptions__WEBPACK_IMPORTED_MODULE_1__.model, data);\r\n\n\n//# sourceURL=webpack://packd3ts/./src/main.ts?");
 
 /***/ })
 
@@ -33,7 +33,7 @@ eval("__webpack_require__.r(__webpack_exports__);\n/* harmony import */ var _eng
 /******/ 		}
 /******/ 		// Create a new module (and put it into the cache)
 /******/ 		var module = __webpack_module_cache__[moduleId] = {
-/******/ 			// no module.id needed
+/******/ 			id: moduleId,
 /******/ 			// no module.loaded needed
 /******/ 			exports: {}
 /******/ 		};
@@ -52,6 +52,18 @@ eval("__webpack_require__.r(__webpack_exports__);\n/* harmony import */ var _eng
 /******/ 	// It's empty as some runtime module handles the default behavior
 /******/ 	__webpack_require__.x = x => {}
 /************************************************************************/
+/******/ 	/* webpack/runtime/compat get default export */
+/******/ 	(() => {
+/******/ 		// getDefaultExport function for compatibility with non-harmony modules
+/******/ 		__webpack_require__.n = (module) => {
+/******/ 			var getter = module && module.__esModule ?
+/******/ 				() => module['default'] :
+/******/ 				() => module;
+/******/ 			__webpack_require__.d(getter, { a: getter });
+/******/ 			return getter;
+/******/ 		};
+/******/ 	})();
+/******/ 	
 /******/ 	/* webpack/runtime/define property getters */
 /******/ 	(() => {
 /******/ 		// define getter functions for harmony exports
@@ -92,7 +104,7 @@ eval("__webpack_require__.r(__webpack_exports__);\n/* harmony import */ var _eng
 /******/ 		};
 /******/ 		
 /******/ 		var deferredModules = [
-/******/ 			["./src/main.ts","vendors-node_modules_d3_index_js","src_engine_ts-src_model_modelOptions_ts"]
+/******/ 			["./src/main.ts","vendors-node_modules_css-loader_dist_runtime_api_js-node_modules_d3_index_js-node_modules_sty-ef83b8","src_engine_ts-src_model_modelOptions_ts"]
 /******/ 		];
 /******/ 		// no chunk on demand loading
 /******/ 		
