@@ -51,11 +51,11 @@ function getMargin(legendBlockModel: LegendBlockModel): BlockMargin {
     return margin;
 }
 
-function getDataLimit(dataLength: number, axisLength: number, minBarWidth: number, barDistance: number): number {
-    let sumSize = dataLength * (minBarWidth + barDistance);
+function getDataLimit(chartsAmount: number, dataLength: number, axisLength: number, minBarWidth: number, groupDistance: number, barDistance: number): number {
+    let sumSize = dataLength * (chartsAmount * minBarWidth + (chartsAmount - 1) * barDistance + groupDistance);
     while(dataLength !== 0 && axisLength < sumSize) {
         dataLength--;
-        sumSize = dataLength * (minBarWidth + barDistance);
+        sumSize = dataLength * (chartsAmount * minBarWidth + (chartsAmount - 1) * barDistance + groupDistance);
     }
     return dataLength;
 }
@@ -66,13 +66,20 @@ function calcDataLimit(margin: BlockMargin): number {
         const barCharts = config.options.charts.filter(chart => chart.type === 'bar');
         if(barCharts.length !== 0) {
             let axisLength: number;
-            if(barCharts.map(chart => chart.orientation).findIndex(s => s === 'vertical') !== -1) {
-                axisLength = config.canvas.size.width - margin.left - margin.right;
-            } else {
+            if(barCharts[0].orientation === 'horizontal') {
                 axisLength = config.canvas.size.height - margin.top - margin.bottom;
+            } else {
+                axisLength = config.canvas.size.width - margin.left - margin.right;
             }
             const dataLength = data[barCharts[0].data.dataSource].length;
-            limit = getDataLimit(dataLength, axisLength, designerConfig.canvas.chartOptions.bar.minBarWidth, designerConfig.canvas.chartOptions.bar.barDistance);
+            console.log('axis', axisLength);
+            
+            limit = getDataLimit(config.options.charts.filter(chart => chart.type === 'bar').length,
+                dataLength, 
+                axisLength, 
+                designerConfig.canvas.chartOptions.bar.minBarWidth, 
+                designerConfig.canvas.chartOptions.bar.groupDistance, 
+                designerConfig.canvas.chartOptions.bar.barDistance);
         }
     }
     return limit;
@@ -445,7 +452,8 @@ function getDataSettings(dataLimit: number): DataSettings {
 function getChartSettings(): ChartSettings {
     return {
         bar: {
-            distance: designerConfig.canvas.chartOptions.bar.barDistance
+            groupDistance: designerConfig.canvas.chartOptions.bar.groupDistance,
+            barDistance: designerConfig.canvas.chartOptions.bar.barDistance
         }
     }
 }

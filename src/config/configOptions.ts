@@ -29,7 +29,7 @@ const config: Config = {
         charts: [
             {
                 title: 'Car prices',
-                type: 'line',
+                type: 'bar',
                 legend: {
                     position: 'off'
                 },
@@ -43,11 +43,11 @@ const config: Config = {
                         fields: ['count', 'price', 'brand']
                     }
                 },
-                orientation: 'vertical'
+                orientation: 'horizontal'
             },
             {
                 title: 'Car prices',
-                type: 'line',
+                type: 'bar',
                 legend: {
                     position: 'off'
                 },
@@ -75,7 +75,7 @@ const config: Config = {
     //                 position: 'bottom'
     //             },
     //             data: {
-    //                 dataSource: 'dataSet',
+    //                 dataSource: 'dataSet_large',
     //                 keyField: 'brand',
     //                 valueField: 'price'
     //             },

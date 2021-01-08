@@ -113,34 +113,51 @@ function renderAxis(scale: d3.AxisScale<any>, axisOrient: string, translateX: nu
     }
 }
 
-function fillBarAttrsByKeyOrient(bars: d3.Selection<SVGRectElement, DataRow, d3.BaseType, unknown>, axisOrient: string, scaleKey: d3.ScaleBand<string>, scaleValue: d3.ScaleLinear<number, number>, margin: BlockMargin, keyField: string, valueField: string, blockWidth: number, blockHeight: number): void {
+function fillBarAttrsByKeyOrient(bars: d3.Selection<SVGRectElement, DataRow, d3.BaseType, unknown>, axisOrient: string, scaleKey: d3.ScaleBand<string>, scaleValue: d3.ScaleLinear<number, number>, margin: BlockMargin, keyField: string, valueField: string, blockWidth: number, blockHeight: number, barChartsAmount: number, barDistance: number): void {
+    const chartIndex = d3.select('.bar-group').selectAll('.bar-item').size() - 1;
+    const barSize = (scaleKey.bandwidth() - barDistance * (barChartsAmount - 1)) / barChartsAmount;
     if(axisOrient === 'top')
-        bars.attr('x', d => scaleKey(d[keyField]) + margin.left)
+        bars.attr('x', d => scaleKey(d[keyField]) + margin.left + barSize * chartIndex + barDistance * chartIndex)
             .attr('y', d => margin.top)
             .attr('height', d => getValueOrZero(scaleValue(d[valueField])))
-            .attr('width', d => scaleKey.bandwidth());
+            .attr('width', d => barSize);
     else if(axisOrient === 'bottom')
-        bars.attr('x', d => scaleKey(d[keyField]) + margin.left)
+        bars.attr('x', d => scaleKey(d[keyField]) + margin.left + barSize * chartIndex + barDistance * chartIndex)
             .attr('y', d => scaleValue(d[valueField]) + margin.top)
             .attr('height', d => getValueOrZero(blockHeight - margin.top - margin.bottom - scaleValue(d[valueField])))
-            .attr('width', d => scaleKey.bandwidth());
+            .attr('width', d => barSize);
     else if(axisOrient === 'left')
         bars.attr('x', d => margin.left)
-            .attr('y', d => scaleKey(d[keyField]) + margin.top)
-            .attr('height', d => scaleKey.bandwidth())
+            .attr('y', d => scaleKey(d[keyField]) + margin.top + barSize * chartIndex + barDistance * chartIndex)
+            .attr('height', d => barSize)
             .attr('width', d => getValueOrZero(scaleValue(d[valueField])));
     else if(axisOrient === 'right')
         bars.attr('x', d => scaleValue(d[valueField]) + margin.left)
-            .attr('y', d => scaleKey(d[keyField]) + margin.top)
-            .attr('height', d => scaleKey.bandwidth())
+            .attr('y', d => scaleKey(d[keyField]) + margin.top + barSize * chartIndex + barDistance * chartIndex)
+            .attr('height', d => barSize)
             .attr('width', d => getValueOrZero(blockWidth - margin.left - margin.right - scaleValue(d[valueField])));   
 }
 
-function renderBar(scaleKey: d3.ScaleBand<string>, scaleValue: d3.ScaleLinear<number, number>, data: DataRow[], margin: BlockMargin, keyField: string, valueField: string, keyAxisOrient: string, tooltipFields: string[], cssClasses: string[], chartPalette: Color[], blockWidth: number, blockHeight: number): void {
-    const bars = getSvg()
-        .selectAll(`rect.bar-item${getCssClassesLine(cssClasses)}`)
-        .data(data)
+function renderBar(scaleKey: d3.ScaleBand<string>, scaleValue: d3.ScaleLinear<number, number>, data: DataRow[], margin: BlockMargin, keyField: string, valueField: string, keyAxisOrient: string, cssClasses: string[], chartPalette: Color[], blockWidth: number, blockHeight: number, barChartsAmount: number, barDistance: number): void {
+    let groups = getSvg()
+        .selectAll('.bar-group');
+
+    if(groups.size() === 0)
+        groups = getSvg()
+            .selectAll('.bar-group')
+            .data(data)
             .enter()
+                .append('g')
+                .attr('class', 'bar-group')
+                .attr('x', d => scaleKey(d[keyField]) + margin.left)
+                .attr('y', margin.top)
+                .attr('width', scaleKey.bandwidth())
+                .attr('height', blockHeight - margin.top - margin.bottom);
+
+    
+    const bars = getSvg()
+        .selectAll('.bar-group')
+        .data(data)
             .append('rect')
             .attr('class', 'bar-item')
             .style('clip-path', 'url(#chart-block)');
@@ -153,7 +170,9 @@ function renderBar(scaleKey: d3.ScaleBand<string>, scaleValue: d3.ScaleLinear<nu
         keyField,
         valueField,
         blockWidth,
-        blockHeight);
+        blockHeight,
+        barChartsAmount,
+        barDistance);
     
     setCssClasses(bars, cssClasses);
     setChartColor(bars, chartPalette, 'bar');
@@ -350,7 +369,7 @@ function setCssClasses(elem: any, cssClasses: string[]): void {
     })
 }
 
-function render2DCharts(charts: any[], scaleKey: d3.ScaleBand<string>, scaleValue: d3.ScaleLinear<number, number>, data: any, margin: BlockMargin, keyAxisOrient: string, blockWidth: number, blockHeight: number) {
+function render2DCharts(charts: any[], scaleKey: d3.ScaleBand<string>, scaleValue: d3.ScaleLinear<number, number>, data: any, margin: BlockMargin, keyAxisOrient: string, barDistance: number, blockWidth: number, blockHeight: number) {
     getSvg()
         .append('clipPath')
         .attr('id', 'chart-block')
@@ -369,11 +388,12 @@ function render2DCharts(charts: any[], scaleKey: d3.ScaleBand<string>, scaleValu
                 chart.data.keyField,
                 chart.data.valueField,
                 keyAxisOrient,
-                chart.tooltip.data.fields,
                 chart.cssClasses,
                 chart.elementColors,
                 blockWidth,
-                blockHeight);
+                blockHeight,
+                charts.filter(ch => ch.type === 'bar').length,
+                barDistance);
         else if(chart.type === 'line')
             renderLine(scaleKey,
                 scaleValue,
@@ -729,7 +749,7 @@ function render2D(model: Model, data: any): void {
         options.scale.scaleKey.domain,
         options.scale.scaleKey.range.start,
         options.scale.scaleKey.range.end,
-        model.chartSettings.bar.distance,
+        model.chartSettings.bar.groupDistance,
         options.scale.scaleValue.domain,
         options.scale.scaleValue.range.start,
         options.scale.scaleValue.range.end);
@@ -758,6 +778,7 @@ function render2D(model: Model, data: any): void {
         data,
         model.chartBlock.margin,
         options.axis.keyAxis.orient,
+        model.chartSettings.bar.barDistance,
         model.blockCanvas.size.width,
         model.blockCanvas.size.height);
 
@@ -984,7 +1005,7 @@ function updateByValueAxis(model: Model, data: any) {
         options.scale.scaleKey.domain,
         options.scale.scaleKey.range.start,
         options.scale.scaleKey.range.end,
-        model.chartSettings.bar.distance,
+        model.chartSettings.bar.groupDistance,
         options.scale.scaleValue.domain,
         options.scale.scaleValue.range.start,
         options.scale.scaleValue.range.end);

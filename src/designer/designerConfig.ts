@@ -24,6 +24,7 @@ interface ChartOptionsCanvas {
 }
 interface BarOptionsCanvas {
     minBarWidth: number;
+    groupDistance: number;
     barDistance: number;
 }
 interface LegendBlockCanvas {

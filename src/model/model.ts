@@ -113,7 +113,8 @@ export interface ChartSettings {
 }
 
 interface BarChartSettings {
-    distance: number;
+    groupDistance: number;
+    barDistance: number;
 }
 
 export interface LegendBlockModel {

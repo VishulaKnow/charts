@@ -128,7 +128,7 @@ function setDesignerListeners(): void {
         engine.updateFullBlock(getUpdatedModel(), getCopy(data));
     });
     document.querySelector('.btn-bar-distance').addEventListener('click', function() {
-        designerConfig.canvas.chartOptions.bar.barDistance = parseFloat(getInputValue('#bar-distance'));
+        designerConfig.canvas.chartOptions.bar.groupDistance = parseFloat(getInputValue('#bar-distance'));
         engine.updateFullBlock(getUpdatedModel(), getCopy(data));
     });
     document.querySelector('.btn-min-bar-size').addEventListener('click', function() {
@@ -219,7 +219,7 @@ function setControlsValues(): void {
     setInputValue('#chart-block-margin-bottom', designerConfig.canvas.chartBlockMargin.bottom);
     setInputValue('#chart-block-margin-left', designerConfig.canvas.chartBlockMargin.left);
     setInputValue('#chart-block-margin-right', designerConfig.canvas.chartBlockMargin.right);
-    setInputValue('#bar-distance', designerConfig.canvas.chartOptions.bar.barDistance);
+    setInputValue('#bar-distance', designerConfig.canvas.chartOptions.bar.groupDistance);
     setInputValue('#min-bar-size', designerConfig.canvas.chartOptions.bar.minBarWidth);
 
     if(config.options.type === '2d') {
