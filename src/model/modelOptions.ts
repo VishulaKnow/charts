@@ -155,12 +155,12 @@ function recalcMarginWithLegend(margin: BlockMargin, options: TwoDimensionalOpti
 }
 
 function getLegendWidth(texts: string[], legendMaxWidth: number): number {
-    let maxWidth = 0;
+    let longestText = '';
     texts.forEach(text => {
-        const width = getLegendItemWidth(text);
-        if(maxWidth < width)
-            maxWidth = width;
+        if(text.length > longestText.length) 
+            longestText = text;
     });
+    const maxWidth = getLegendItemWidth(longestText);
     return maxWidth > legendMaxWidth ? legendMaxWidth : maxWidth;
 }
 
