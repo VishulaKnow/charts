@@ -5,6 +5,9 @@ import { getUpdatedModel } from './model/modelOptions';
 import { PolarChart, PolarOptions, TwoDimensionalChart, TwoDimensionalOptions } from './config/config'
 const data = require('./assets/dataSet.json');
 
+function randInt(min: number, max: number): number {
+    return Math.round(Math.random() * (max - min) + min);
+}
 function getCopy(obj: any) {
     const newObj: any = {};
     if(typeof obj === 'object') {
@@ -21,6 +24,15 @@ function getCopy(obj: any) {
         return obj;
     }
     return newObj;
+}
+function getNewData(obj: any, maxRand: number) {
+    const newData = getCopy(obj);
+    config.options.charts.forEach((chart: TwoDimensionalChart | PolarChart) => {
+        newData[chart.data.dataSource].forEach((row: any) => {
+            row[chart.data.valueField] = randInt(0, maxRand);
+        });
+    });
+    return newData;
 }
 function getCopyOfArr(initial: any[]): any[] {
     const newArr: any[] = [];
@@ -76,9 +88,12 @@ function changeConfigOptions(notationType: '2d' | 'polar'): void {
                 }
             }
         }
-        if(options.charts[0].type === 'line') {
+        if((options.charts[0].type === 'line' || options.charts[0].type === 'bar') && options.charts.length === 1) {
             options.charts.push(getCopy(options.charts[0]));
-            options.charts[1].data.dataSource = options.charts[1].data.dataSource + '2';
+            options.charts[1].data.dataSource = options.charts[0].data.dataSource + '2';
+        } else if((options.charts[0].type === 'line' || options.charts[0].type === 'bar') && options.charts.length === 2) {
+            options.charts[1] = getCopy(options.charts[0]);
+            options.charts[1].data.dataSource = options.charts[0].data.dataSource + '2';
         }
         config.options = options;
     } else {
@@ -104,14 +119,18 @@ function changeConfigOptions(notationType: '2d' | 'polar'): void {
 }
 
 function changeChartConfig(chartType: 'bar' | 'line' | 'area'): void {
-    if(chartType === 'bar' || chartType === 'area') {
+    if(chartType === 'area') {
         if(config.options.charts.length !== 1)
             config.options.charts.splice(1, config.options.charts.length - 1);
         config.options.charts[0].type = chartType;
-    } else {
+    } else if((chartType === 'bar' || chartType === 'line') && config.options.charts.length === 1) {
         config.options.charts.push(getCopy(config.options.charts[0]));
         config.options.charts.forEach((chart: any) => chart.type = chartType);
-        config.options.charts[1].data.dataSource = config.options.charts[1].data.dataSource + '2';
+        config.options.charts[1].data.dataSource = config.options.charts[0].data.dataSource + '2';
+    } else if((chartType === 'bar' || chartType === 'line') && config.options.charts.length === 2) {
+        config.options.charts[1] = getCopy(config.options.charts[0]);
+        config.options.charts.forEach((chart: any) => chart.type = chartType);
+        config.options.charts[1].data.dataSource = config.options.charts[0].data.dataSource + '2';
     }
 }
 
@@ -128,7 +147,11 @@ function setDesignerListeners(): void {
         engine.updateFullBlock(getUpdatedModel(), getCopy(data));
     });
     document.querySelector('.btn-bar-distance').addEventListener('click', function() {
-        designerConfig.canvas.chartOptions.bar.groupDistance = parseFloat(getInputValue('#bar-distance'));
+        designerConfig.canvas.chartOptions.bar.barDistance = parseFloat(getInputValue('#bar-distance'));
+        engine.updateFullBlock(getUpdatedModel(), getCopy(data));
+    });
+    document.querySelector('.btn-bar-group-distance').addEventListener('click', function() {
+        designerConfig.canvas.chartOptions.bar.groupDistance = parseFloat(getInputValue('#bar-group-distance'));        
         engine.updateFullBlock(getUpdatedModel(), getCopy(data));
     });
     document.querySelector('.btn-min-bar-size').addEventListener('click', function() {
@@ -151,6 +174,10 @@ function setCommonListeners(): void {
             chart.legend.position = this.value;
         });
         engine.updateFullBlock(getUpdatedModel(), data);
+    });
+    document.querySelector('.btn-random').addEventListener('click', function() {
+        const max = parseInt(getInputValue('#max-random-value')) || 120;
+        engine.updateFullBlock(getUpdatedModel(), getNewData(data, max));
     });
 }
 
@@ -219,7 +246,8 @@ function setControlsValues(): void {
     setInputValue('#chart-block-margin-bottom', designerConfig.canvas.chartBlockMargin.bottom);
     setInputValue('#chart-block-margin-left', designerConfig.canvas.chartBlockMargin.left);
     setInputValue('#chart-block-margin-right', designerConfig.canvas.chartBlockMargin.right);
-    setInputValue('#bar-distance', designerConfig.canvas.chartOptions.bar.groupDistance);
+    setInputValue('#bar-distance', designerConfig.canvas.chartOptions.bar.barDistance);
+    setInputValue('#bar-group-distance', designerConfig.canvas.chartOptions.bar.groupDistance);
     setInputValue('#min-bar-size', designerConfig.canvas.chartOptions.bar.minBarWidth);
 
     if(config.options.type === '2d') {

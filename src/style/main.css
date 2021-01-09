@@ -6,6 +6,7 @@
 }
 .form {
     display: flex;
+    flex-wrap: wrap;
 }
 .form-group {
     margin: 10px;

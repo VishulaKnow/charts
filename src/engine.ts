@@ -463,12 +463,11 @@ function updateValueAxisDomain(scaleValue: d3.ScaleLinear<number, number>, axisC
             .call(axis.bind(this));
 }
 
-function updateChartsByValueAxis(charts: any[], scaleKey: d3.ScaleBand<string>, scaleValue: d3.ScaleLinear<number, number>, data: any, margin: BlockMargin, keyAxisOrient: string, blockWidth: number, blockHeight: number): void {
+function updateChartsByValueAxis(charts: any[], scaleKey: d3.ScaleBand<string>, scaleValue: d3.ScaleLinear<number, number>, data: any, margin: BlockMargin, keyAxisOrient: string, blockWidth: number, blockHeight: number, barDistance: number): void {
     charts.forEach((chart: TwoDimensionalChartModel) => {
         if(chart.type === 'bar')
             updateBarChartByValueAxis(scaleKey,
                 scaleValue,
-                data[chart.data.dataSource],
                 margin,
                 chart.data.keyField,
                 chart.data.valueField,
@@ -536,7 +535,7 @@ function updateAreaChartByValueAxis(scaleKey: d3.ScaleBand<string>, scaleValue: 
             .attr('d', area(areaCoordinate));
 }
 
-function updateBarChartByValueAxis(scaleKey: d3.ScaleBand<string>, scaleValue: d3.ScaleLinear<number, number>, data: DataRow[], margin: BlockMargin, keyField: string, valueField: string, keyAxisOrient: string, blockWidth: number, blockHeight: number, cssClasses: string[]): void {
+function updateBarChartByValueAxis(scaleKey: d3.ScaleBand<string>, scaleValue: d3.ScaleLinear<number, number>, margin: BlockMargin, keyField: string, valueField: string, keyAxisOrient: string, blockWidth: number, blockHeight: number, cssClasses: string[]): void {
     const bars = getSvg()
         .selectAll(`.bar-item${getCssClassesLine(cssClasses)}`) as d3.Selection<SVGRectElement, DataRow, d3.BaseType, unknown>;
 
@@ -555,25 +554,19 @@ function updateBarChartByValueAxis(scaleKey: d3.ScaleBand<string>, scaleValue: d
 function fillBarAttrsByKeyOrientWithTransition(bars: d3.Selection<SVGRectElement, DataRow, d3.BaseType, unknown>, axisOrient: string, scaleKey: d3.ScaleBand<string>, scaleValue: d3.ScaleLinear<number, number>, margin: BlockMargin, keyField: string, valueField: string, blockWidth: number, blockHeight: number, transitionDuration: number): void {
     const barsTran = bars.transition().duration(transitionDuration);
     if(axisOrient === 'top')
-        barsTran.attr('x', d => scaleKey(d[keyField]) + margin.left)
+        barsTran
             .attr('y', d => margin.top)
-            .attr('height', d => getValueOrZero(scaleValue(d[valueField])))
-            .attr('width', d => scaleKey.bandwidth());
+            .attr('height', d => getValueOrZero(scaleValue(d[valueField])));
     else if(axisOrient === 'bottom')
-        barsTran.attr('x', d => scaleKey(d[keyField]) + margin.left)
+        barsTran
             .attr('y', d => scaleValue(d[valueField]) + margin.top)
-            .attr('height', d => getValueOrZero(blockHeight - margin.top - margin.bottom - scaleValue(d[valueField])))
-            .attr('width', d => scaleKey.bandwidth());
+            .attr('height', d => getValueOrZero(blockHeight - margin.top - margin.bottom - scaleValue(d[valueField])));
     else if(axisOrient === 'left')
         barsTran.attr('x', d => margin.left)
-            .attr('y', d => scaleKey(d[keyField]) + margin.top)
-            .attr('height', d => scaleKey.bandwidth())
             .attr('width', d => getValueOrZero(scaleValue(d[valueField])));
     else if(axisOrient === 'right')
         barsTran.attr('x', d => scaleValue(d[valueField]) + margin.left)
-            .attr('y', d => scaleKey(d[keyField]) + margin.top)
-            .attr('height', d => scaleKey.bandwidth())
-            .attr('width', d => getValueOrZero(blockWidth - margin.left - margin.right - scaleValue(d[valueField])));  
+            .attr('width', d => getValueOrZero(blockWidth - margin.left - margin.right - scaleValue(d[valueField]))); 
 }
 
 function renderLegend(data: any, options: TwoDimensionalOptionsModel | PolarOptionsModel, legendsSize: any, margin: BlockMargin, blockWidth: number, blockHeight: number): void {
@@ -819,7 +812,7 @@ function renderPolar(model: Model, data: any) {
 function getTooltipText(fields: string[], data: DataRow): string {
     let text = '';    
     fields.forEach(field => {
-        text += `<strong>${field}: ${data[field]}</strong><br>`;
+        text += `<strong>${field}</strong>: ${data[field]}<br>`;
     });
     return text;
 }
@@ -827,10 +820,12 @@ function getTooltipText(fields: string[], data: DataRow): string {
 function getMultplyTooltipText(charts: TwoDimensionalChartModel[], data: any, key: string): string {
     let text = '';
     charts.forEach((chart: TwoDimensionalChartModel) => {
-        text += `<div class="tooltip-chart-item"><span class="legend-circle" style="background-color: ${chart.elementColors[0]}"></span><br>`;
-        if(chart.tooltip.data.fields.length !== 0)
-            text += getTooltipText(chart.tooltip.data.fields, data[chart.data.dataSource].find((d: DataRow) => d[chart.data.keyField] === key));
-        text += '</div>'
+        if(chart.tooltip.data.fields.length !== 0) {
+            text += `<div class="tooltip-chart-item"><span class="legend-circle" style="background-color: ${chart.elementColors[0]}"></span><br>`;
+            if(chart.tooltip.data.fields.length !== 0)
+                text += getTooltipText(chart.tooltip.data.fields, data[chart.data.dataSource].find((d: DataRow) => d[chart.data.keyField] === key));
+            text += '</div>'
+        }
     });
     return text;
 }
@@ -866,9 +861,11 @@ function renderTooltipForBar(bars: d3.Selection<d3.BaseType, unknown, d3.BaseTyp
 
 function renderTooltipsForBar(charts: TwoDimensionalChartModel[], data: any): void {
     charts.forEach(chart => {
-        const bars = getSvg()
+        if(chart.tooltip.data.fields.length !== 0) {
+            const bars = getSvg()
             .selectAll(`rect${getCssClassesLine(chart.cssClasses)}`);
-        renderTooltipForBar(bars, chart.tooltip.data.fields, data[chart.data.dataSource]);
+            renderTooltipForBar(bars, chart.tooltip.data.fields, data[chart.data.dataSource]);
+        }
     })
 }
 
@@ -883,39 +880,41 @@ function renderLineTooltip(scaleKey: d3.ScaleBand<string>, margin: BlockMargin, 
             .style('position', 'absolute')
             .style('display', 'none');
 
-    const tooltipLine = getSvg()
-        .append('line')
-        .style('stroke', 'black');    
+    if(charts.filter(chart => chart.tooltip.data.fields.length !== 0).length !== 0) {
+        const tooltipLine = getSvg()
+            .append('line')
+            .style('stroke', 'black');    
     
-    const bandSize = scaleKey.step(); 
-    getSvg()
-        .append('rect')
-        .attr('class', 'tipbox')
-        .attr('x', margin.left)
-        .attr('y', margin.top)
-        .attr('width', blockWidth - margin.left - margin.right)
-        .attr('height', blockHeight - margin.top - margin.bottom)
-        .style('opacity', 0)
-        // .style('outline', '1px solid red')
-        .on('mouseover', function(event) {
-            tooltip.style('display', 'block');
-        })
-        .on('mousemove', function(event) {
-            const index = getKeyIndex(event, this, charts[0].orient, margin, bandSize);        
-            const key = scaleKey.domain()[index];
-            tooltip.html(`${getMultplyTooltipText(charts, data, key)}`);
-            
-            tooltip
-                .style('left', d3.pointer(event, this)[0] + 10 + 'px')
-                .style('top', d3.pointer(event, this)[1] + 10 + 'px');
-            tooltipLine
-                .style('display', 'block');
-            setTooltipLineAttributes(tooltipLine, scaleKey, margin, key, charts[0].orient, blockWidth, blockHeight);
-        })
-        .on('mouseleave', function(event) {
-            tooltip.style('display', 'none');
-            tooltipLine.style('display', 'none');
-        });
+        const bandSize = scaleKey.step(); 
+        getSvg()
+            .append('rect')
+            .attr('class', 'tipbox')
+            .attr('x', margin.left)
+            .attr('y', margin.top)
+            .attr('width', blockWidth - margin.left - margin.right)
+            .attr('height', blockHeight - margin.top - margin.bottom)
+            .style('opacity', 0)
+            // .style('outline', '1px solid red')
+            .on('mouseover', function(event) {
+                tooltip.style('display', 'block');
+            })
+            .on('mousemove', function(event) {
+                const index = getKeyIndex(event, this, charts[0].orient, margin, bandSize);        
+                const key = scaleKey.domain()[index];
+                tooltip.html(`${getMultplyTooltipText(charts, data, key)}`);
+                
+                tooltip
+                    .style('left', d3.pointer(event, this)[0] + 10 + 'px')
+                    .style('top', d3.pointer(event, this)[1] + 10 + 'px');
+                tooltipLine
+                    .style('display', 'block');
+                setTooltipLineAttributes(tooltipLine, scaleKey, margin, key, charts[0].orient, blockWidth, blockHeight);
+            })
+            .on('mouseleave', function(event) {
+                tooltip.style('display', 'none');
+                tooltipLine.style('display', 'none');
+            });
+    }
 }
 
 function getKeyIndex(event: any, context: SVGRectElement, orient: 'vertical' | 'horizontal', margin: BlockMargin, bandSize: number): number {
@@ -965,22 +964,24 @@ function renderTooltipForDonut(arcs: d3.Selection<d3.BaseType, unknown, d3.BaseT
         .style('display', 'none')
         .style('transform', `translate(${translateX}px, ${translateY}px)`);
 
-    arcs
-        .data(data)
-        .on('mouseover', function(e, d) {
-            tooltip.html(getTooltipText(fields, d));
-            tooltip.style('display', 'block');
-        });
+    if(fields.length !== 0) {
+        arcs
+            .data(data)
+            .on('mouseover', function(e, d) {
+                tooltip.html(getTooltipText(fields, d));
+                tooltip.style('display', 'block');
+            });
 
-    arcs
-        .data(data)
-        .on('mousemove', function(event, d) {
-            tooltip
-                .style('left', d3.pointer(event, this)[0] + 10 + 'px')
-                .style('top', d3.pointer(event, this)[1] + 10 + 'px'); 
-        });
+        arcs
+            .data(data)
+            .on('mousemove', function(event, d) {
+                tooltip
+                    .style('left', d3.pointer(event, this)[0] + 10 + 'px')
+                    .style('top', d3.pointer(event, this)[1] + 10 + 'px'); 
+            });
 
-    arcs.on('mouseleave', d => tooltip.style('display', 'none'));
+        arcs.on('mouseleave', d => tooltip.style('display', 'none'));
+    }
 }
 
 function renderTooltips(model: Model, data: any) {
@@ -1021,7 +1022,8 @@ function updateByValueAxis(model: Model, data: any) {
         model.chartBlock.margin,
         options.axis.keyAxis.orient,
         model.blockCanvas.size.width,
-        model.blockCanvas.size.height);
+        model.blockCanvas.size.height,
+        model.chartSettings.bar.barDistance);
 }
 
 function prepareData(data: any, model: Model): void {
