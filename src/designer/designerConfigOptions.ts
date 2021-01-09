@@ -28,7 +28,19 @@ const designerConfig: DesignerConfig = {
     },
     chart: {
         style: {
-            palette: [color('steelblue'), color('lightgreen'), color('#92a8d1'), color('#034f84'), color('#deeaee'), color('#b1cbbb'), color('#d5f4e6'), color('#80ced6'), color('#9fa9a3')]
+            palette: [color('#0A7CB8'),
+                color('#1AB179'),
+                color('#FF2D2D'),
+                color('#065580'), 
+                color('#138058'),
+                color('#801717'), 
+                color('#0DAAFF'), 
+                color('#26FFB0'),
+                color('#FF2E2E'), 
+                color('#032B40'), 
+                color('#0A402C'), 
+                color('#0B99E6'),
+                color('#E62929')]
         }
     },
     dataFormat: {
