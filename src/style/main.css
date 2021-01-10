@@ -49,6 +49,7 @@ svg {
     border-radius: 50%;
 }
 .tooltip {
+    pointer-events: none;
     font-size: 12px;
     font-family: sans-serif;
     line-height: 1;
