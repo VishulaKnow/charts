@@ -1,7 +1,7 @@
 import * as d3 from 'd3'
 import { Color } from 'd3';
 
-import { Model, TwoDimensionalOptionsModel, PolarOptionsModel, TwoDimensionalChartModel, PolarChartModel } from './model/model';
+import { Model, TwoDimensionalOptionsModel, PolarOptionsModel, TwoDimensionalChartModel, PolarChartModel, DataType, DataOptions } from './model/model';
 
 type DataRow = {
     [field: string]: any
@@ -31,6 +31,18 @@ interface BlockMargin {
     left: number;
     right: number;
 }
+interface Field {
+    format: DataType;
+    name: string;
+}
+interface Aggregator {
+    name: string;
+    value: number;
+}
+interface Translate {
+    x: number;
+    y: number;
+}
 
 function getCssClassesLine(cssClasses: string[]): string {
     return '.' + cssClasses.join('.');
@@ -42,6 +54,10 @@ function getValueOrZero(value: number): number {
 
 function getSvg(): d3.Selection<d3.BaseType, unknown, HTMLElement, any> {
     return d3.select('svg');
+}
+
+function formatValue(valueType: DataType, value: any): string {
+    return format[valueType]({}, value);
 }
 
 function getScaleBand(domain: any, rangeStart: number, rangeEnd: number, scalePadding: number): d3.ScaleBand<string> {
@@ -289,7 +305,7 @@ function renderArea(scaleKey: d3.ScaleBand<string>, scaleValue: d3.ScaleLinear<n
     setChartColor(path, chartPalette, 'area');
 }
 
-function getPieRadius(margin: BlockMargin, blockWidth: number, blockHeight: number): number {
+function getOuterRadiusRadius(margin: BlockMargin, blockWidth: number, blockHeight: number): number {
     return Math.min(blockWidth - margin.left - margin.right,
         blockHeight - margin.top - margin.bottom) / 2;
 }
@@ -319,8 +335,8 @@ function renderDonutText(arcItems: d3.Selection<SVGGElement, d3.PieArcDatum<Data
         .style('text-anchor', 'middle');
 }
 
-function renderDonut(data: DataRow[], margin: BlockMargin, keyField: string, valueField: string, innerRadius: number, padAngle: number, tooltipFields: string[], cssClasses: string[], chartPalette: Color[], blockWidth: number, blockHeight: number): void {
-    const radius = getPieRadius(margin, blockWidth, blockHeight);
+function renderDonut(data: DataRow[], margin: BlockMargin, keyField: string, valueField: string, innerRadius: number, padAngle: number, cssClasses: string[], chartPalette: Color[], blockWidth: number, blockHeight: number): void {
+    const radius = getOuterRadiusRadius(margin, blockWidth, blockHeight);
     const arc = getArc(radius, radius * 0.01 * innerRadius);
     const pie = getPie(valueField, padAngle);
 
@@ -345,6 +361,33 @@ function renderDonut(data: DataRow[], margin: BlockMargin, keyField: string, val
 
     setCssClasses(arcs, cssClasses);
     setElementsColor(items, chartPalette, 'donut');
+
+    const aggregator: Aggregator = {
+        name: 'Сумма',
+        value: d3.sum(data.map(d => d[valueField]))
+    }
+    const translate: Translate = {
+        x: translateX,
+        y: translateY
+    }
+    renderDonutCenterText(radius * 0.01 * innerRadius, aggregator,translate);
+}
+
+function renderDonutCenterText(innerRadius: number, aggregator: Aggregator, translate: Translate): void {
+    if(innerRadius > 100) {
+        const text = getSvg()
+            .append('text')
+            .attr('text-anchor', 'middle')
+            .attr('class', 'donut-aggregator')
+            .attr('transform', `translate(${translate.x}, ${translate.y})`)
+            .html(`${aggregator.name}: ${aggregator.value}`);
+
+        let size = 10;
+        while(text.node().getBBox().width < innerRadius) {
+            size++;
+            text.style('font-size', size + 'px');
+        }
+    }
 }
 
 function setChartColor(elements: any, colorPalette: Color[], chartType: 'line' | 'bar' | 'area'): void {
@@ -379,14 +422,14 @@ function render2DCharts(charts: any[], scaleKey: d3.ScaleBand<string>, scaleValu
         .attr('width', blockWidth - margin.left - margin.right)
         .attr('height', blockHeight - margin.top - margin.bottom);
     
-    charts.forEach(chart => {
+    charts.forEach((chart: TwoDimensionalChartModel) => {
         if(chart.type === 'bar')
             renderBar(scaleKey,
                 scaleValue,
                 data[chart.data.dataSource],
                 margin,
-                chart.data.keyField,
-                chart.data.valueField,
+                chart.data.keyField.name,
+                chart.data.valueField.name,
                 keyAxisOrient,
                 chart.cssClasses,
                 chart.elementColors,
@@ -399,8 +442,8 @@ function render2DCharts(charts: any[], scaleKey: d3.ScaleBand<string>, scaleValu
                 scaleValue,
                 data[chart.data.dataSource],
                 margin,
-                chart.data.keyField,
-                chart.data.valueField,
+                chart.data.keyField.name,
+                chart.data.valueField.name,
                 keyAxisOrient,
                 chart.cssClasses,
                 chart.elementColors,
@@ -411,8 +454,8 @@ function render2DCharts(charts: any[], scaleKey: d3.ScaleBand<string>, scaleValu
                 scaleValue,
                 data[chart.data.dataSource],
                 margin,
-                chart.data.keyField,
-                chart.data.valueField,
+                chart.data.keyField.name,
+                chart.data.valueField.name,
                 keyAxisOrient,
                 chart.cssClasses,
                 chart.elementColors,
@@ -422,15 +465,14 @@ function render2DCharts(charts: any[], scaleKey: d3.ScaleBand<string>, scaleValu
 }
 
 function renderPolarCharts(charts: any[], data: any, margin: BlockMargin, blockWidth: number, blockHeight: number) {
-    charts.forEach(chart => {
+    charts.forEach((chart: PolarChartModel) => {
         if(chart.type === 'donut')
             renderDonut(data[chart.data.dataSource],
                 margin,
-                chart.data.keyField,
-                chart.data.valueField,
+                chart.data.keyField.name,
+                chart.data.valueField.name,
                 chart.appearanceOptions.innerRadius,
                 chart.appearanceOptions.padAngle,
-                chart.tooltip.data.fields,
                 chart.cssClasses,
                 chart.elementColors,
                 blockWidth,
@@ -469,8 +511,8 @@ function updateChartsByValueAxis(charts: any[], scaleKey: d3.ScaleBand<string>, 
             updateBarChartByValueAxis(scaleKey,
                 scaleValue,
                 margin,
-                chart.data.keyField,
-                chart.data.valueField,
+                chart.data.keyField.name,
+                chart.data.valueField.name,
                 keyAxisOrient,
                 blockWidth,
                 blockHeight,
@@ -480,8 +522,8 @@ function updateChartsByValueAxis(charts: any[], scaleKey: d3.ScaleBand<string>, 
                 scaleValue,
                 data[chart.data.dataSource],
                 margin,
-                chart.data.keyField,
-                chart.data.valueField,
+                chart.data.keyField.name,
+                chart.data.valueField.name,
                 keyAxisOrient,
                 chart.cssClasses);
         }   
@@ -490,8 +532,8 @@ function updateChartsByValueAxis(charts: any[], scaleKey: d3.ScaleBand<string>, 
                 scaleValue,
                 data[chart.data.dataSource],
                 margin,
-                chart.data.keyField,
-                chart.data.valueField,
+                chart.data.keyField.name,
+                chart.data.valueField.name,
                 keyAxisOrient,
                 blockWidth,
                 blockHeight,
@@ -615,7 +657,7 @@ function renderLegend(data: any, options: TwoDimensionalOptionsModel | PolarOpti
     } else {
         const chartsWithLegendLeft = options.charts.filter((chart: any) => chart.legend.position === 'left');        
         if(chartsWithLegendLeft.length !== 0) {
-            renderLegendBlock(chartsWithLegendLeft.map(chart => data[chart.data.dataSource].map((record: DataRow) => record[chart.data.keyField]))[0], 
+            renderLegendBlock(chartsWithLegendLeft.map(chart => data[chart.data.dataSource].map((record: DataRow) => record[chart.data.keyField.name]))[0], 
             'left', 
             legendsSize.left.size, 
             margin,
@@ -625,7 +667,7 @@ function renderLegend(data: any, options: TwoDimensionalOptionsModel | PolarOpti
         }
         const chartsWithLegendRight = options.charts.filter((chart: any) => chart.legend.position === 'right');        
         if(chartsWithLegendRight.length !== 0) {
-            renderLegendBlock(chartsWithLegendRight.map(chart => data[chart.data.dataSource].map((record: DataRow) => record[chart.data.keyField]))[0], 
+            renderLegendBlock(chartsWithLegendRight.map(chart => data[chart.data.dataSource].map((record: DataRow) => record[chart.data.keyField.name]))[0], 
             'right', 
             legendsSize.right.size, 
             margin,
@@ -635,7 +677,7 @@ function renderLegend(data: any, options: TwoDimensionalOptionsModel | PolarOpti
         } 
         const chartsWithLegendTop = options.charts.filter((chart: any) => chart.legend.position === 'top');        
         if(chartsWithLegendTop.length !== 0) {
-            renderLegendBlock(chartsWithLegendTop.map(chart => data[chart.data.dataSource].map((record: DataRow) => record[chart.data.keyField]))[0], 
+            renderLegendBlock(chartsWithLegendTop.map(chart => data[chart.data.dataSource].map((record: DataRow) => record[chart.data.keyField.name]))[0], 
             'top', 
             legendsSize.top.size, 
             margin,
@@ -645,7 +687,7 @@ function renderLegend(data: any, options: TwoDimensionalOptionsModel | PolarOpti
         }
         const chartsWithLegendBottom = options.charts.filter((chart: any) => chart.legend.position === 'bottom');        
         if(chartsWithLegendBottom.length !== 0) {
-            renderLegendBlock(chartsWithLegendBottom.map(chart => data[chart.data.dataSource].map((record: DataRow) => record[chart.data.keyField]))[0], 
+            renderLegendBlock(chartsWithLegendBottom.map(chart => data[chart.data.dataSource].map((record: DataRow) => record[chart.data.keyField.name]))[0], 
             'bottom', 
             legendsSize.bottom.size, 
             margin,
@@ -809,10 +851,10 @@ function renderPolar(model: Model, data: any) {
     renderTooltips(model, data);
 }
 
-function getTooltipText(fields: string[], data: DataRow): string {
+function getTooltipText(fields: Field[], data: DataRow): string {
     let text = '';    
     fields.forEach(field => {
-        text += `<strong>${field}</strong>: ${data[field]}<br>`;
+        text += `<strong class="tooltip-field">${field.name}</strong>: <span class="tooltip-value">${formatValue(field.format, data[field.name])}</span><br>`;
     });
     return text;
 }
@@ -823,14 +865,14 @@ function getMultplyTooltipText(charts: TwoDimensionalChartModel[], data: any, ke
         if(chart.tooltip.data.fields.length !== 0) {
             text += `<div class="tooltip-chart-item"><span class="legend-circle" style="background-color: ${chart.elementColors[0]}"></span><br>`;
             if(chart.tooltip.data.fields.length !== 0)
-                text += getTooltipText(chart.tooltip.data.fields, data[chart.data.dataSource].find((d: DataRow) => d[chart.data.keyField] === key));
+                text += getTooltipText(chart.tooltip.data.fields, data[chart.data.dataSource].find((d: DataRow) => d[chart.data.keyField.name] === key));
             text += '</div>'
         }
     });
     return text;
 }
 
-function renderTooltipForBar(bars: d3.Selection<d3.BaseType, unknown, d3.BaseType, unknown>, fields: string[], data: DataRow[]): void {
+function renderTooltipForBar(bars: d3.Selection<d3.BaseType, unknown, d3.BaseType, unknown>, fields: Field[], data: DataRow[]): void {
     const wrapper = d3.select('.tooltip-wrapper');
 
     let tooltip = wrapper.select('.tooltip');
@@ -863,7 +905,7 @@ function renderTooltipsForBar(charts: TwoDimensionalChartModel[], data: any): vo
     charts.forEach(chart => {
         if(chart.tooltip.data.fields.length !== 0) {
             const bars = getSvg()
-            .selectAll(`rect${getCssClassesLine(chart.cssClasses)}`);
+                .selectAll(`rect${getCssClassesLine(chart.cssClasses)}`);
             renderTooltipForBar(bars, chart.tooltip.data.fields, data[chart.data.dataSource]);
         }
     })
@@ -955,7 +997,7 @@ function renderTooltipsForDonut(charts: PolarChartModel[], data: any): void {
     })
 }
 
-function renderTooltipForDonut(arcs: d3.Selection<d3.BaseType, unknown, d3.BaseType, unknown>, fields: string[], data: DataRow[], translateX: number, translateY: number): void {
+function renderTooltipForDonut(arcs: d3.Selection<d3.BaseType, unknown, d3.BaseType, unknown>, fields: Field[], data: DataRow[], translateX: number, translateY: number): void {
     const wrapper = d3.select('.tooltip-wrapper');
     const tooltip = wrapper
         .append('div')
@@ -1027,11 +1069,10 @@ function updateByValueAxis(model: Model, data: any) {
 }
 
 function prepareData(data: any, model: Model): void {
-    if(model.dataSettings.limit !== -1) {
-        (model.options.charts as any).map((chart: any) => chart.data.dataSource).forEach((dataset: any) => {            
-            data[dataset].splice(model.dataSettings.limit, data[dataset].length - model.dataSettings.limit);
-        })
-    }
+    const allowableKeys = model.dataSettings.allowableKeys;
+    model.options.charts.forEach((chart: TwoDimensionalChartModel | PolarChartModel) => {
+        data[chart.data.dataSource] = data[chart.data.dataSource].filter((d: DataRow) => allowableKeys.includes(d[chart.data.keyField.name]));
+    });
 }
  
 const scales: Scales = {
@@ -1039,8 +1080,13 @@ const scales: Scales = {
     scaleValue: null
 }
 
+let format: {
+    [type: string]: (options: DataOptions, value: any) => string;
+}
+
 export default {
     render(model: Model, data: any) {
+        format = model.dataFormat.formatters;
         prepareData(data, model);
         if(model.options.type === '2d')
             render2D(model, data);

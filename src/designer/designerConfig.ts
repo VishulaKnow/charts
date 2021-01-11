@@ -1,5 +1,10 @@
 import { Color } from "d3";
 
+export type DataType = 'integer' | 'decimal' | 'date' | 'money' | 'string';
+export type DataOptions = {
+    [option: string]: any
+}
+
 export interface DesignerConfig {
     canvas: Canvas;
     chart: ChartOptions;
@@ -21,11 +26,15 @@ interface Canvas {
 }
 interface ChartOptionsCanvas {
     bar: BarOptionsCanvas;
+    donut: DonutOptionsCanvas;
 }
 interface BarOptionsCanvas {
     minBarWidth: number;
     groupDistance: number;
     barDistance: number;
+}
+interface DonutOptionsCanvas {
+    minPartSize: number;
 }
 interface LegendBlockCanvas {
     maxWidth: number;
@@ -47,6 +56,6 @@ interface ChartStyle {
 
 interface DataFormat {
     formatters: {
-        [field: string]: (value: any) => string
+        [type: string]: (options: DataOptions, value: any) => string
     }
 }

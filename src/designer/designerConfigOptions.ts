@@ -1,5 +1,5 @@
 import { color } from 'd3'
-import { DesignerConfig } from './designerConfig'
+import { DesignerConfig, DataOptions, DataType } from './designerConfig'
 
 const designerConfig: DesignerConfig = {
     canvas: {
@@ -23,6 +23,9 @@ const designerConfig: DesignerConfig = {
                 groupDistance: 10,
                 minBarWidth: 30,
                 barDistance: 2
+            },
+            donut: {
+                minPartSize: 50
             }
         }
     },
@@ -45,7 +48,11 @@ const designerConfig: DesignerConfig = {
     },
     dataFormat: {
         formatters: {
-            'time': () => ''
+            'integer': (options: DataOptions, value: any) => Intl.NumberFormat().format(value),
+            'decimal': (options: DataOptions, value: any) => Intl.NumberFormat().format(value),
+            'money': (options: DataOptions, value: any) => Intl.NumberFormat('ru-RU', { style: 'currency', currency: 'RUB' }).format(value),
+            'date': (options: DataOptions, value: any) => value,
+            'string': (options: DataOptions, value: any) => value
         }
     }
 }

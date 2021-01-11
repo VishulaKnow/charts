@@ -1,3 +1,6 @@
+type DataType = 'integer' | 'decimal' | 'date' | 'money' | 'string';
+
+
 export interface TwoDimensionalChart {
     title: string;
     type: 'bar' | 'line' | 'area';
@@ -22,14 +25,18 @@ interface PolarChartAppearanceOptions {
 
 interface ChartData {
     dataSource: string;
-    keyField: string;
-    valueField: string;
+    keyField: Field;
+    valueField: Field;
+}
+interface Field {
+    name: string;
+    format: DataType;
 }
 interface Tooltip {
     data: TooltipData;
 }
 interface TooltipData {
-    fields: string[];
+    fields: Field[];
 }
 interface Legend {
     position: 'off' | 'top' | 'left' | 'right' | 'bottom';

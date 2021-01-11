@@ -35,12 +35,27 @@ const config: Config = {
                 },
                 data: {
                     dataSource: 'dataSet_large',
-                    keyField: 'brand',
-                    valueField: 'price'
+                    keyField:  {
+                        name: 'brand',
+                        format: 'string'
+                    },
+                    valueField: {
+                        name: 'price',
+                        format: 'integer'
+                    }
                 },
                 tooltip: {
                     data: {
-                        fields: ['count']
+                        fields: [
+                            {
+                                name: 'brand',
+                                format: 'string'
+                            },
+                            {
+                                name: 'price',
+                                format: 'money'
+                            }
+                        ]
                     }
                 },
                 orientation: 'vertical'
@@ -53,12 +68,28 @@ const config: Config = {
                 },
                 data: {
                     dataSource: 'dataSet_large2',
-                    keyField: 'brand',
-                    valueField: 'price'
+                    keyField:  {
+                        name: 'brand',
+                        format: 'string'
+                    },
+                    valueField: {
+                        name: 'price',
+                        format: 'integer'
+                    }
                 },
                 tooltip: {
                     data: {
-                        fields: ['brand', 'count']
+                        fields: [
+                            {
+                                name: 'brand',
+                                format: 'string'
+                            },
+                            {
+                                name: 'price',
+                                format: 'money'
+                            }
+
+                        ]
                     }
                 },
                 orientation: 'vertical'
@@ -75,13 +106,29 @@ const config: Config = {
     //                 position: 'bottom'
     //             },
     //             data: {
-    //                 dataSource: 'dataSet_large',
-    //                 keyField: 'brand',
-    //                 valueField: 'price'
+    //                 dataSource: 'dataSet_date',
+    //                 keyField:  {
+    //                     name: 'brand',
+    //                     format: 'date'
+    //                 },
+    //                 valueField: {
+    //                     name: 'price',
+    //                     format: 'integer'
+    //                 }
     //             },
     //             tooltip: {
     //                 data: {
-    //                     fields: []
+    //                     fields: [
+    //                         {
+    //                             name: 'brand',
+    //                             format: 'date'
+    //                         },
+    //                         {
+    //                             name: 'price',
+    //                             format: 'money'
+    //                         }
+
+    //                     ]
     //                 }
     //             },
     //             appearanceOptions: {

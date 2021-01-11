@@ -1,6 +1,10 @@
 import { Color } from "d3";
 
 type Orient = 'top' | 'bottom' | 'left' | 'right'
+export type DataType = 'integer' | 'decimal' | 'date' | 'money' | 'string';
+export type DataOptions = {
+    [option: string]: any
+}
 
 export interface BlockCanvas {
     size: Size;
@@ -53,7 +57,7 @@ interface TooltipModel {
     data: TooltipDataModel;
 }
 interface TooltipDataModel {
-    fields: string[]
+    fields: Field[];
 }
 
 export interface TwoDimensionalChartModel {
@@ -84,9 +88,15 @@ export interface Model {
     options: TwoDimensionalOptionsModel | PolarOptionsModel;
     dataSettings: DataSettings;
     chartSettings: ChartSettings;
+    dataFormat: DataFormat;
+}
+export interface DataFormat {
+    formatters: {
+        [type: string]: (options: DataOptions, value: any) => string
+    }
 }
 export interface DataSettings {
-    limit: number;
+    allowableKeys: string[];
 }
 export interface TwoDimensionalOptionsModel {
     type: '2d';
@@ -104,8 +114,12 @@ interface PolarChartAppearanceModel {
 }
 interface ChartDataModel {
     dataSource: string;
-    keyField: string;
-    valueField: string;
+    keyField: Field;
+    valueField: Field;
+}
+interface Field {
+    name: string;
+    format: DataType;
 }
 
 export interface ChartSettings {

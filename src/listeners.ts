@@ -25,14 +25,13 @@ function getCopy(obj: any) {
     }
     return newObj;
 }
-function getNewData(obj: any, maxRand: number) {
-    const newData = getCopy(obj);
+function getDataWithRandomValues(data: any, maxRand: number) {
     config.options.charts.forEach((chart: TwoDimensionalChart | PolarChart) => {
-        newData[chart.data.dataSource].forEach((row: any) => {
-            row[chart.data.valueField] = randInt(0, maxRand);
+        data[chart.data.dataSource].forEach((row: any) => {
+            row[chart.data.valueField.name] = randInt(0, maxRand);
         });
     });
-    return newData;
+    return data;
 }
 function getCopyOfArr(initial: any[]): any[] {
     const newArr: any[] = [];
@@ -134,28 +133,61 @@ function changeChartConfig(chartType: 'bar' | 'line' | 'area'): void {
     }
 }
 
-function setDesignerListeners(): void {
-    document.querySelector('.btn-axis-label-width').addEventListener('click', function() {
-        designerConfig.canvas.axisLabel.maxSize.main = parseFloat(getInputValue('#axis-label-width'));
-        engine.updateFullBlock(getUpdatedModel(), data);
+function setMainListeners(): void {
+    document.querySelector('#notation').addEventListener('change', function() {
+        showControlsForNotation(this.value);
+        changeConfigOptions(this.value);
+        setControlsValues();
     });
-    document.querySelector('.btn-chart-block-margin').addEventListener('click', function() {
+    document.querySelector('#block-width').addEventListener('keydown', function(e: KeyboardEvent) {
+        if(e.code === 'Enter') {
+            config.canvas.size.width = parseFloat(getInputValue('#block-width')) || 0;
+            engine.updateFullBlock(getUpdatedModel(), getCopy(data));
+        }
+    });
+    document.querySelector('#block-height').addEventListener('keydown', function(e: KeyboardEvent) {
+        if(e.code === 'Enter') {
+            config.canvas.size.height = parseFloat(getInputValue('#block-height')) || 0;
+            engine.updateFullBlock(getUpdatedModel(), getCopy(data));
+        }
+    });
+}
+
+function setDesignerListeners(): void {
+    document.querySelector('#axis-label-width').addEventListener('input', function() {
+        designerConfig.canvas.axisLabel.maxSize.main = parseFloat(getInputValue('#axis-label-width'));
+        engine.updateFullBlock(getUpdatedModel(), getCopy(data));
+    });
+    document.querySelector('#chart-block-margin-top').addEventListener('input', function() {
         designerConfig.canvas.chartBlockMargin.top = parseFloat(getInputValue('#chart-block-margin-top')) || 0;
+        engine.updateFullBlock(getUpdatedModel(), getCopy(data));
+    });
+    document.querySelector('#chart-block-margin-bottom').addEventListener('input', function() {
         designerConfig.canvas.chartBlockMargin.bottom = parseFloat(getInputValue('#chart-block-margin-bottom')) || 0;
+        engine.updateFullBlock(getUpdatedModel(), getCopy(data));
+    });
+    document.querySelector('#chart-block-margin-left').addEventListener('input', function() {
         designerConfig.canvas.chartBlockMargin.left = parseFloat(getInputValue('#chart-block-margin-left')) || 0;
+        engine.updateFullBlock(getUpdatedModel(), getCopy(data));
+    });
+    document.querySelector('#chart-block-margin-right').addEventListener('input', function() {
         designerConfig.canvas.chartBlockMargin.right = parseFloat(getInputValue('#chart-block-margin-right')) || 0;
         engine.updateFullBlock(getUpdatedModel(), getCopy(data));
     });
-    document.querySelector('.btn-bar-distance').addEventListener('click', function() {
-        designerConfig.canvas.chartOptions.bar.barDistance = parseFloat(getInputValue('#bar-distance'));
+    document.querySelector('#bar-distance').addEventListener('input', function() {
+        designerConfig.canvas.chartOptions.bar.barDistance = parseFloat(getInputValue('#bar-distance')) || 0;
         engine.updateFullBlock(getUpdatedModel(), getCopy(data));
     });
-    document.querySelector('.btn-bar-group-distance').addEventListener('click', function() {
+    document.querySelector('#bar-group-distance').addEventListener('input', function() {
         designerConfig.canvas.chartOptions.bar.groupDistance = parseFloat(getInputValue('#bar-group-distance'));        
         engine.updateFullBlock(getUpdatedModel(), getCopy(data));
     });
-    document.querySelector('.btn-min-bar-size').addEventListener('click', function() {
-        designerConfig.canvas.chartOptions.bar.minBarWidth = parseFloat(getInputValue('#min-bar-size'));
+    document.querySelector('#min-bar-size').addEventListener('input', function() {
+        designerConfig.canvas.chartOptions.bar.minBarWidth = parseFloat(getInputValue('#min-bar-size')) || 0;
+        engine.updateFullBlock(getUpdatedModel(), getCopy(data));
+    });
+    document.querySelector('#min-donut-part-size').addEventListener('input', function() {
+        designerConfig.canvas.chartOptions.donut.minPartSize = parseFloat(getInputValue('#min-donut-part-size')) || 0;
         engine.updateFullBlock(getUpdatedModel(), getCopy(data));
     });
 }
@@ -173,11 +205,29 @@ function setCommonListeners(): void {
         config.options.charts.forEach((chart: TwoDimensionalChart | PolarChart) => {
             chart.legend.position = this.value;
         });
-        engine.updateFullBlock(getUpdatedModel(), data);
+        engine.updateFullBlock(getUpdatedModel(), getCopy(data));
     });
     document.querySelector('.btn-random').addEventListener('click', function() {
         const max = parseInt(getInputValue('#max-random-value')) || 120;
-        engine.updateFullBlock(getUpdatedModel(), getNewData(data, max));
+        const copy = getCopy(data);
+        const newData = getDataWithRandomValues(copy, max);
+        if(config.options.type === '2d') {
+            config.options.axis.valueAxis.domain.start = -1;
+            config.options.axis.valueAxis.domain.end = max;
+        }
+        engine.updateFullBlock(getUpdatedModel(newData), newData);
+    });
+    document.querySelector('#max-random-value').addEventListener('keydown', function(e: KeyboardEvent) {
+        if(e.code === 'Enter') {
+            const max = parseInt(getInputValue('#max-random-value')) || 120;
+            const copy = getCopy(data);
+            const newData = getDataWithRandomValues(copy, max);
+            if(config.options.type === '2d') {
+                config.options.axis.valueAxis.domain.start = -1;
+                config.options.axis.valueAxis.domain.end = max;
+            }
+            engine.updateFullBlock(getUpdatedModel(newData), newData);
+        }
     });
 }
 
@@ -215,20 +265,40 @@ function set2DListeners(): void {
             engine.updateValueAxis(getUpdatedModel(), getCopy(data));
         }
     });
+    document.querySelector('#domain-start').addEventListener('keydown', function(e: KeyboardEvent) {
+        if(e.code === 'Enter') {
+            if(config.options.type === '2d') {
+                const start = getInputValue('#domain-start');
+                const end = getInputValue('#domain-end');
+                config.options.axis.valueAxis.domain.start = parseInt(start) || -1;
+                config.options.axis.valueAxis.domain.end = parseInt(end) || -1;
+                engine.updateValueAxis(getUpdatedModel(), getCopy(data));
+            }
+        }
+    });
+    document.querySelector('#domain-end').addEventListener('keydown', function(e: KeyboardEvent) {
+        if(e.code === 'Enter') {
+            if(config.options.type === '2d') {
+                const start = getInputValue('#domain-start');
+                const end = getInputValue('#domain-end');
+                config.options.axis.valueAxis.domain.start = parseInt(start) || -1;
+                config.options.axis.valueAxis.domain.end = parseInt(end) || -1;
+                engine.updateValueAxis(getUpdatedModel(), getCopy(data));
+            }
+        }
+    });
 }
 
 function setPolarListeners(): void {
-    document.querySelector('.btn-inner-radius').addEventListener('click', function() {
+    document.querySelector('#inner-radius').addEventListener('input', function() {
         if(config.options.type === 'polar') {
             const innerRadius = getInputValue('#inner-radius');
             config.options.charts[0].appearanceOptions.innerRadius = parseInt(innerRadius) || 0;
             engine.updateFullBlock(getUpdatedModel(), data);
         }
     });
-    document.querySelector('.btn-pad-angle').addEventListener('click', function() {
+    document.querySelector('#pad-angle').addEventListener('input', function() {
         if(config.options.type === 'polar') {
-            
-            
             const padAngle = getInputValue('#pad-angle');
             config.options.charts[0].appearanceOptions.padAngle = parseFloat(padAngle) || 0;
             engine.updateFullBlock(getUpdatedModel(), data);
@@ -238,6 +308,10 @@ function setPolarListeners(): void {
 
 function setControlsValues(): void {
     setInputValue('#notation', config.options.type);
+    setInputValue('#block-width', config.canvas.size.width);
+    setInputValue('#block-height', config.canvas.size.height);
+
+
     setInputValue('#legend', config.options.charts[0].legend.position);
     setInputValue('#data-size', config.options.charts[0].data.dataSource.includes('large') ? 'large' : 'normal');
 
@@ -249,7 +323,8 @@ function setControlsValues(): void {
     setInputValue('#bar-distance', designerConfig.canvas.chartOptions.bar.barDistance);
     setInputValue('#bar-group-distance', designerConfig.canvas.chartOptions.bar.groupDistance);
     setInputValue('#min-bar-size', designerConfig.canvas.chartOptions.bar.minBarWidth);
-
+    setInputValue('#min-donut-part-size', designerConfig.canvas.chartOptions.donut.minPartSize);
+    
     if(config.options.type === '2d') {
         setInputValue('#chart-2d-type', config.options.charts[0].type);
         setInputValue('#chart-orient', config.options.charts[0].orientation);
@@ -262,14 +337,10 @@ function setControlsValues(): void {
     }
 }
 
-document.querySelector('#notation').addEventListener('change', function() {
-    showControlsForNotation(this.value);
-    changeConfigOptions(this.value);
-    setControlsValues();
-});
 
 setControlsValues();
 showControlsForNotation(config.options.type);
+setMainListeners();
 setDesignerListeners();
 setCommonListeners();
 set2DListeners();
