@@ -1,4 +1,4 @@
-import engine from './engine';
+import engine from './engine/engine';
 import { model } from './model/modelOptions';
 import './style/main.css'
 

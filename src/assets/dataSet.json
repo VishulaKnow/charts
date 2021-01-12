@@ -60,10 +60,5 @@
         { "brand": "SAAB2", "price": 101, "count": 11 },
         { "brand": "HONDA2", "price": 15, "count": 11 },
         { "brand": "TOYOTA2", "price": 60, "count": 0 }
-    ],
-    "dataSet_date": [
-        { "brand": "2020-12-12", "price": 120, "count": 12 },
-        { "brand": "2020-11-13", "price": 50, "count": 10 },
-        { "brand": "2020-11-11", "price": 15, "count": 12 }
     ]
 }

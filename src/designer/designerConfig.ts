@@ -8,8 +8,20 @@ export type DataOptions = {
 export interface DesignerConfig {
     canvas: Canvas;
     chart: ChartOptions;
+    additionalElements: Elements;
     dataFormat: DataFormat;
 }
+interface Elements {
+    gridLine: GridLineOptions;
+}
+interface GridLineOptions {
+    flag: GridLineFlag;
+}
+interface GridLineFlag {
+    vertical: boolean;
+    horizontal: boolean;
+}
+
 
 interface BlockMargin {
     top: number;
@@ -28,7 +40,7 @@ interface ChartOptionsCanvas {
     bar: BarOptionsCanvas;
     donut: DonutOptionsCanvas;
 }
-interface BarOptionsCanvas {
+export interface BarOptionsCanvas {
     minBarWidth: number;
     groupDistance: number;
     barDistance: number;

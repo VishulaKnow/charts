@@ -1,9 +1,9 @@
-import engine from './engine';
-import config from './config/configOptions';
-import designerConfig from './designer/designerConfigOptions';
-import { getUpdatedModel } from './model/modelOptions';
-import { PolarChart, PolarOptions, TwoDimensionalChart, TwoDimensionalOptions } from './config/config'
-const data = require('./assets/dataSet.json');
+import engine from '../engine/engine';
+import config from '../config/configOptions';
+import designerConfig from '../designer/designerConfigOptions';
+import { getUpdatedModel } from '../model/modelOptions';
+import { PolarChart, PolarOptions, TwoDimensionalChart, TwoDimensionalOptions } from '../config/config'
+const data = require('../assets/dataSet.json');
 
 function randInt(min: number, max: number): number {
     return Math.round(Math.random() * (max - min) + min);
@@ -84,6 +84,14 @@ function changeConfigOptions(notationType: '2d' | 'polar'): void {
                         end: -1
                     },
                     position: getInputValue('#key-axis-orient') as "start" | "end"
+                }
+            },
+            additionalElements: {
+                gridLine: {
+                    flag: {
+                        horizontal: true,
+                        vertical: true
+                    }
                 }
             }
         }

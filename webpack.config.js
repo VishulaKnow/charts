@@ -5,7 +5,7 @@ const {CleanWebpackPlugin} = require('clean-webpack-plugin')
 module.exports = {
     entry: {
         main: './src/main.ts',
-        listeners: './src/listeners.ts'
+        listeners: './src/listeners/listeners.ts'
     },
     output: {
         filename: '[name].[contenthash].js',

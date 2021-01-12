@@ -54,6 +54,14 @@ const designerConfig: DesignerConfig = {
             'date': (options: DataOptions, value: any) => value,
             'string': (options: DataOptions, value: any) => value
         }
+    },
+    additionalElements: {
+        gridLine: {
+            flag: {
+                horizontal: true,
+                vertical: true
+            }
+        }
     }
 }
 

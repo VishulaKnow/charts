@@ -4,8 +4,8 @@ const config: Config = {
     canvas: {
         class: 'svg-chart border',
         size: {
-            width: 1000,
-            height: 500
+            width: 1200,
+            height: 650
         }
     },
     options: {
@@ -24,6 +24,14 @@ const config: Config = {
                     end: -1
                 },
                 position: 'start'
+            }
+        },
+        additionalElements: {
+            gridLine: {
+                flag: {
+                    horizontal: true,
+                    vertical: false
+                }
             }
         },
         charts: [

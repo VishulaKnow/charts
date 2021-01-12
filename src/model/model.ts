@@ -1,6 +1,6 @@
 import { Color } from "d3";
 
-type Orient = 'top' | 'bottom' | 'left' | 'right'
+export type Orient = 'top' | 'bottom' | 'left' | 'right'
 export type DataType = 'integer' | 'decimal' | 'date' | 'money' | 'string';
 export type DataOptions = {
     [option: string]: any
@@ -10,7 +10,7 @@ export interface BlockCanvas {
     size: Size;
     class: string;
 }
-interface Size {
+export interface Size {
     width: number;
     height: number;
 }
@@ -29,7 +29,7 @@ interface ScaleModel {
     scaleKey: ScaleOptions;
     scaleValue: ScaleOptions;
 }
-interface ScaleOptions {
+export interface ScaleOptions {
     domain: any[];
     range: RangeModel;
 }
@@ -42,7 +42,7 @@ interface AxisModel {
     keyAxis: AxisModelOptions;
     valueAxis: AxisModelOptions;
 }
-interface AxisModelOptions {
+export interface AxisModelOptions {
     orient: Orient;
     translate: TranslateModel;
     class: string;
@@ -90,10 +90,11 @@ export interface Model {
     chartSettings: ChartSettings;
     dataFormat: DataFormat;
 }
+export interface Formatter {
+    [type: string]: (options: DataOptions, value: any) => string
+}
 export interface DataFormat {
-    formatters: {
-        [type: string]: (options: DataOptions, value: any) => string
-    }
+    formatters: Formatter;
 }
 export interface DataSettings {
     allowableKeys: string[];
@@ -103,12 +104,23 @@ export interface TwoDimensionalOptionsModel {
     scale: ScaleModel;
     axis: AxisModel;
     charts: TwoDimensionalChartModel[];
+    additionalElements: TwoDimensionalAdditionalElementsOptions
+}
+export interface TwoDimensionalAdditionalElementsOptions {
+    gridLine: GridLineOptions;
+}
+export interface GridLineOptions {
+    flag: GridLineFlag;
+}
+export interface GridLineFlag {
+    horizontal: boolean;
+    vertical: boolean;
 }
 export interface PolarOptionsModel {
     type: 'polar';
     charts: PolarChartModel[];
 }
-interface PolarChartAppearanceModel {
+export interface PolarChartAppearanceModel {
     innerRadius: number;
     padAngle: number
 }
@@ -117,7 +129,7 @@ interface ChartDataModel {
     keyField: Field;
     valueField: Field;
 }
-interface Field {
+export interface Field {
     name: string;
     format: DataType;
 }

@@ -1,5 +1,10 @@
 type DataType = 'integer' | 'decimal' | 'date' | 'money' | 'string';
+export type AxisPosition = 'start' | 'end';
 
+export interface Config {
+    canvas: Canvas;
+    options: PolarOptions | TwoDimensionalOptions;
+}
 
 export interface TwoDimensionalChart {
     title: string;
@@ -41,20 +46,31 @@ interface TooltipData {
 interface Legend {
     position: 'off' | 'top' | 'left' | 'right' | 'bottom';
 }
-
 interface Size {
     width: number;
     height: number;
 }
-export interface Config {
-    canvas: Canvas;
-    options: PolarOptions | TwoDimensionalOptions;
-}
+
+
 export interface TwoDimensionalOptions {
     type: '2d';
     axis: Axis;
+    additionalElements: TwoDimensionalAdditionalElements;
     charts: TwoDimensionalChart[];
 }
+interface TwoDimensionalAdditionalElements {
+    gridLine: GridLineOptions;
+}
+interface GridLineOptions {
+    flag: GridLineFlag;
+}
+interface GridLineFlag {
+    vertical: boolean;
+    horizontal: boolean;
+}
+
+
+
 export interface PolarOptions {
     type: 'polar';
     charts: PolarChart[];

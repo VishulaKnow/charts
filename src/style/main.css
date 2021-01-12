@@ -1,9 +1,9 @@
-.wrapper {
-    margin: 0 auto;
-    width: 1000px;
-    position: relative;
-    margin-bottom: 100px;
+.main-wrapper  {
+    display: flex;
+    justify-content: center;
 }
+
+
 .form {
     display: flex;
     flex-wrap: wrap;
@@ -15,6 +15,11 @@ input[type="number"] {
     max-width: 100px;
 }
 
+.wrapper {
+    margin: 0 auto;
+    position: relative;
+    margin-bottom: 100px;
+}
 svg {
     position: relative;
 }
@@ -24,8 +29,8 @@ svg {
 }
 .line {
     fill: none;
-    stroke: steelblue;
-    stroke-width: 2;
+    stroke-width: 5;
+    stroke-linecap: butt;
 }
 .border {
     border: 1px solid black;
@@ -63,8 +68,28 @@ svg {
 .tooltip-chart-item {
     margin: 5px 0;
 }
+.tooltip-line {
+    stroke: #b6b6b6;
+    stroke-dasharray: 3;
+}
 
 .donut-aggregator {
     font-family: sans-serif;
     font-weight: bold;
+}
+
+.grid-line {
+    stroke: #e0e0e0;
+    stroke-dasharray: 0;
+}
+
+.key-axis .domain, .key-axis .tick line {
+    stroke: #e0e0e0;
+    stroke-width: 1;
+}
+.value-axis .domain {
+    stroke: none;
+}
+.value-axis .tick line:first-of-type {
+    stroke: none;
 }
