@@ -1,29 +1,29 @@
-import { BlockMargin, Model, PolarChartModel, PolarOptionsModel, Size, TwoDimensionalChartModel, TwoDimensionalOptionsModel } from "../../model/model";
-import { Area } from "../area/area";
-import { Axis } from "../axis/axis";
-import { Bar } from "../bar/bar";
-import { Donut } from "../donut/donut";
-import { GridLine } from "../gridLine/gridLine";
-import { Legend } from "../legend/legend";
-import { Line } from "../line/line";
-import { Scale, Scales } from "../scale/scale";
-import { SvgBlock } from "../svgBlock/svgBlock";
-import { Tooltip } from "../tolltip/tooltip";
+import { BlockMargin, DataSource, Model, Orient, PolarChartModel, PolarOptionsModel, Size, TwoDimensionalChartModel, TwoDimensionalOptionsModel } from "../model/model";
+import { Area } from "./twoDimensionalNotation/area/area";
+import { Axis } from "./twoDimensionalNotation/axis/axis";
+import { Bar } from "./twoDimensionalNotation/bar/bar";
+import { Donut } from "./polarNotation/donut/donut";
+import { GridLine } from "./twoDimensionalNotation/gridLine/gridLine";
+import { Legend } from "./legend/legend";
+import { Line } from "./twoDimensionalNotation/line/line";
+import { Scale, Scales } from "./twoDimensionalNotation/scale/scale";
+import { SvgBlock } from "./svgBlock/svgBlock";
+import { Tooltip } from "./tolltip/tooltip";
+import { RecordOverflowAlert } from "./recordOverflowAlert/recordOverflowAlert";
 
 export class ChartRenderer
 {
-    static render2D(model: Model, data: any): void {
+    static render2D(model: Model, data: DataSource): void {
         const options = <TwoDimensionalOptionsModel>model.options;
     
         Scale.fillScales(options.scale.scaleKey,
             options.scale.scaleValue,
             model.chartSettings.bar.groupDistance);
             
-        SvgBlock.renderSvgBlock(model.blockCanvas.class, model.blockCanvas.size);
+        SvgBlock.render(model.blockCanvas.class, model.blockCanvas.size);
     
-        Axis.renderAxis(Scale.scales.scaleValue, options.axis.valueAxis);
-    
-        Axis.renderAxis(Scale.scales.scaleKey, options.axis.keyAxis);    
+        Axis.render(Scale.scales.scaleValue, options.axis.valueAxis);
+        Axis.render(Scale.scales.scaleKey, options.axis.keyAxis);    
     
         GridLine.render(options.additionalElements.gridLine.flag, options.axis.keyAxis, options.axis.valueAxis, model.blockCanvas.size, model.chartBlock.margin);
         
@@ -35,35 +35,37 @@ export class ChartRenderer
             model.chartSettings.bar.barDistance,
             model.blockCanvas.size);
     
-        Legend.renderLegend(data,
+        Legend.render(data,
             options,
             model.legendBlock,
-            model.chartBlock.margin,
             model.blockCanvas.size);
         
         Tooltip.renderTooltips(model, data, Scale.scales);
+        if(model.dataSettings.scope.hidedRecordsAmount !== 0)
+            RecordOverflowAlert.render(model.dataSettings.scope.hidedRecordsAmount);
     }
     
-    static renderPolar(model: Model, data: any) {
+    static renderPolar(model: Model, data: DataSource) {
         const options = <PolarOptionsModel>model.options;
     
-        SvgBlock.renderSvgBlock(model.blockCanvas.class, model.blockCanvas.size);
+        SvgBlock.render(model.blockCanvas.class, model.blockCanvas.size);
     
         this.renderPolarCharts(options.charts,
             data,
             model.chartBlock.margin,
             model.blockCanvas.size);
     
-        Legend.renderLegend(data,
+        Legend.render(data,
             options,
             model.legendBlock,
-            model.chartBlock.margin,
             model.blockCanvas.size);
     
         Tooltip.renderTooltips(model, data, Scale.scales);
+        if(model.dataSettings.scope.hidedRecordsAmount !== 0)
+            RecordOverflowAlert.render(model.dataSettings.scope.hidedRecordsAmount);
     }
 
-    static render2DCharts(charts: any[], scales: Scales, data: any, margin: BlockMargin, keyAxisOrient: string, barDistance: number, blockSize: Size) {
+    static render2DCharts(charts: TwoDimensionalChartModel[], scales: Scales, data: DataSource, margin: BlockMargin, keyAxisOrient: Orient, barDistance: number, blockSize: Size) {
         SvgBlock.getSvg()
             .append('clipPath')
             .attr('id', 'chart-block')
@@ -75,7 +77,7 @@ export class ChartRenderer
         
         charts.forEach((chart: TwoDimensionalChartModel) => {
             if(chart.type === 'bar')
-                Bar.renderBar(scales,
+                Bar.render(scales,
                     data[chart.data.dataSource],
                     margin,
                     chart.data.keyField.name,
@@ -96,7 +98,7 @@ export class ChartRenderer
                     chart.cssClasses,
                     chart.elementColors);  
             else if(chart.type === 'area')
-                Area.renderArea(scales,
+                Area.render(scales,
                     data[chart.data.dataSource],
                     margin,
                     chart.data.keyField.name,
@@ -108,20 +110,20 @@ export class ChartRenderer
         });
     }
     
-    static renderPolarCharts(charts: any[], data: any, margin: BlockMargin, blockSize: Size) {
+    static renderPolarCharts(charts: PolarChartModel[], data: DataSource, margin: BlockMargin, blockSize: Size) {
         charts.forEach((chart: PolarChartModel) => {
             if(chart.type === 'donut')
-                Donut.renderDonut(data[chart.data.dataSource],
+                Donut.render(data[chart.data.dataSource],
                     margin,
                     chart.data.valueField.name,
                     chart.appearanceOptions,
                     chart.cssClasses,
                     chart.elementColors,
                     blockSize);
-        })
+        });
     }
 
-    static updateChartsByValueAxis(charts: any[], scales: Scales, data: any, margin: BlockMargin, keyAxisOrient: string, blockSize: Size): void {
+    static updateChartsByValueAxis(charts: TwoDimensionalChartModel[], scales: Scales, data: DataSource, margin: BlockMargin, keyAxisOrient: string, blockSize: Size): void {
         charts.forEach((chart: TwoDimensionalChartModel) => {
             if(chart.type === 'bar')
                 Bar.updateBarChartByValueAxis(scales,
@@ -152,7 +154,7 @@ export class ChartRenderer
         });
     }
     
-    static updateByValueAxis(model: Model, data: any) {
+    static updateByValueAxis(model: Model, data: DataSource) {
         const options = <TwoDimensionalOptionsModel>model.options;
     
         Scale.fillScales(options.scale.scaleKey,

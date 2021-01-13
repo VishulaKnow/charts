@@ -1,7 +1,6 @@
 import * as d3 from "d3";
-import { AxisPosition, Domain, TwoDimensionalChart } from "../../config/config";
-import { DataRow } from "../../engine/dataHelper/dataHelper";
-import { BlockMargin, Size } from "../model";
+import { AxisPosition, Domain, TwoDimensionalChart } from "../config/config";
+import { BlockMargin, DataRow, Size } from "./model";
 
 export enum ScaleType {
     Key, Value

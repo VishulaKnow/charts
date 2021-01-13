@@ -1,11 +1,11 @@
 import { Color } from "d3";
-import { Config, TwoDimensionalChart, TwoDimensionalOptions } from "../../config/config";
-import { AxisLabelCanvas, DesignerConfig } from "../../designer/designerConfig";
-import { AxisModel } from "../axisModel/axisModel";
-import { ChartStyleModel } from "../chartStyleModel/chartStyleModel";
-import { BlockMargin, GridLineOptions, TwoDimensionalAdditionalElementsOptions, TwoDimensionalChartModel, TwoDimensionalOptionsModel } from "../model";
-import { AxisType } from "../modelOptions";
-import { ScaleModel, ScaleType } from "../scaleModel/scaleModel";
+import { Config, TwoDimensionalChart, TwoDimensionalOptions } from "../config/config";
+import { AxisLabelCanvas, DesignerConfig } from "../designer/designerConfig";
+import { AxisModel } from "./axisModel";
+import { ChartStyleModel } from "./chartStyleModel";
+import { BlockMargin, GridLineOptions, TwoDimensionalAdditionalElementsOptions, TwoDimensionalChartModel, TwoDimensionalOptionsModel } from "./model";
+import { AxisType } from "./modelOptions";
+import { ScaleModel, ScaleType } from "./scaleModel";
 
 export class TwoDimensionalModel
 {
@@ -67,7 +67,7 @@ export class TwoDimensionalModel
                 legend: chart.legend,
                 tooltip: chart.tooltip,
                 cssClasses: ChartStyleModel.getCssClasses(chart.type, index),
-                elementColors: ChartStyleModel.getElementColorPallete(chartPalette, '2d', index)
+                elementColors: ChartStyleModel.getElementColorPallete(chartPalette, '2d', charts.length, index)
             });
         });
         return chartsModel;

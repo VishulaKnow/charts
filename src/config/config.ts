@@ -1,5 +1,11 @@
 type DataType = 'integer' | 'decimal' | 'date' | 'money' | 'string';
+
 export type AxisPosition = 'start' | 'end';
+export type ChartOrientation = 'vertical' | 'horizontal';
+export type ChartNotation = '2d' | 'polar';
+export type ChartType = 'bar' | 'line' | 'area' | 'donut';
+export type TwoDimensionalChartType = 'line' | 'bar' | 'area';
+export type LegendPosition = 'off' | 'top' | 'left' | 'right' | 'bottom';
 
 export interface Config {
     canvas: Canvas;
@@ -8,11 +14,11 @@ export interface Config {
 
 export interface TwoDimensionalChart {
     title: string;
-    type: 'bar' | 'line' | 'area';
+    type: TwoDimensionalChartType;
     data: ChartData;
     legend: Legend;
     tooltip: Tooltip;
-    orientation: 'vertical' | 'horizontal';
+    orientation: ChartOrientation;
 }
 export interface PolarChart {
     title: string;
@@ -44,7 +50,7 @@ interface TooltipData {
     fields: Field[];
 }
 interface Legend {
-    position: 'off' | 'top' | 'left' | 'right' | 'bottom';
+    position: LegendPosition;
 }
 interface Size {
     width: number;

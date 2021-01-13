@@ -1,22 +1,16 @@
-import * as d3 from 'd3'
-
-import { PolarOptions, PolarChart, Config } from '../config/config';
-import { Model, BlockCanvas, ChartBlock, TwoDimensionalOptionsModel, PolarOptionsModel, PolarChartModel, BlockMargin, LegendBlockModel, DataSettings, ChartSettings, DataFormat, Size } from './model';
-import { BarOptionsCanvas, DesignerConfig } from '../designer/designerConfig'
+import { Config } from '../config/config';
+import { Model, BlockCanvas, ChartBlock, TwoDimensionalOptionsModel, PolarOptionsModel, BlockMargin, LegendBlockModel, DataSettings, ChartSettings, DataFormat, DataScope, DataRow, DataSource } from './model';
+import { MarginModel } from './marginModel';
+import { TwoDimensionalModel } from './twoDimensionalModel';
+import { PolarModel } from './polarModel';
+import '../style/main.css'
 
 import config from '../config/configOptions';
 import designerConfig from '../designer/designerConfigOptions';
-import { Color } from 'd3';
-import '../style/main.css'
-import { MarginModel } from './marginModel/marginModel';
-import { AxisModel } from './axisModel/axisModel';
-import { ChartStyleModel } from './chartStyleModel/chartStyleModel';
-import { TwoDimensionalModel } from './twoDimensionalModel/twoDimensionalModel';
-import { PolarModel } from './polarModel/polarModel';
+import { DataManagerModel } from './dataManagerModel';
+import { DesignerConfig } from '../designer/designerConfig';
 
-type DataRow = {
-    [field: string]: any
-}
+
 export enum AxisType {
     Key, Value
 }
@@ -28,70 +22,6 @@ export const CLASSES = {
     legendLabel: 'legend-label',
     legendColor: 'legend-circle',
     legendItem: 'legend-item',
-}
-
-function getDataLimitByBarSize(chartsAmount: number, dataLength: number, axisLength: number, barOptions: BarOptionsCanvas): number {
-    let sumSize = dataLength * (chartsAmount * barOptions.minBarWidth + (chartsAmount - 1) * barOptions.barDistance + barOptions.groupDistance);
-    while(dataLength !== 0 && axisLength < sumSize) {
-        dataLength--;
-        sumSize = dataLength * (chartsAmount * barOptions.minBarWidth + (chartsAmount - 1) * barOptions.barDistance + barOptions.groupDistance);
-    }
-    return dataLength;
-}
-
-function getValuesSum(values: number[]): number {
-    let sum = 0;
-    for (let i = 0; i < values.length; i++) {
-        sum += values[i];
-    }
-    return sum;
-}
-
-function getDonutRadius(margin: BlockMargin, blockSize: Size): number {
-    return Math.min(blockSize.height - margin.top - margin.bottom, blockSize.width - margin.left - margin.right) / 2;
-}
-
-function getAngleByValue(value: number, valuesSum: number): number {
-    return value / valuesSum * 360;
-}
-
-function getMinAngleByLength(minLength: number, radius: number): number {
-    return minLength * 360 / (2 * Math.PI * radius);
-}
-
-function getAllowableKeys(margin: BlockMargin, data: any): string[] {
-    if(config.options.type === '2d') {
-        const barCharts = config.options.charts.filter(chart => chart.type === 'bar');
-        if(barCharts.length !== 0) {
-            const axisLength = AxisModel.getAxisLength(barCharts[0].orientation, margin, config.canvas.size);
-            const dataLength = data[barCharts[0].data.dataSource].length;
-            
-            const limit = getDataLimitByBarSize(config.options.charts.filter(chart => chart.type === 'bar').length,
-                dataLength, 
-                axisLength, 
-                designerConfig.canvas.chartOptions.bar);
-
-            return data[barCharts[0].data.dataSource].slice(0, limit).map((d: DataRow) => d[barCharts[0].data.keyField.name]);
-        }
-    } else {
-        const dataset = data[config.options.charts[0].data.dataSource];
-        const valueField = config.options.charts[0].data.valueField.name;
-        const keyField = config.options.charts[0].data.keyField.name;
-        
-        const values = dataset.map((dataRow: DataRow) => dataRow[valueField]);
-        let sum = getValuesSum(values);
-        const radius = getDonutRadius(margin, config.canvas.size);
-        const minAngle = getMinAngleByLength(designerConfig.canvas.chartOptions.donut.minPartSize, radius);
-        
-        const allowableKeys: string[] = [];
-        dataset.forEach((dataRow: DataRow) => {
-            const angle = getAngleByValue(dataRow[valueField], sum);
-            if(angle > minAngle)
-                allowableKeys.push(dataRow[keyField])
-        });
-        return allowableKeys;
-    }
-    return data[config.options.charts[0].data.dataSource].map((d: DataRow) => d[config.options.charts[0].data.keyField.name]);
 }
 
 function getBlockCanvas(config: Config): BlockCanvas {
@@ -110,24 +40,17 @@ function getChartBlock(margin: BlockMargin): ChartBlock {
     }
 }
 
-function getPolarOptions(configOptions: PolarOptions, chartPalette: Color[]): PolarOptionsModel {
-    return {
-        type: configOptions.type,
-        charts: PolarModel.getPolarChartsModel(configOptions.charts, chartPalette),
-    }
-}
-
-function getOptions(config: Config, designerConfig: DesignerConfig, margin: BlockMargin, allowableKeys: string[], data: any): TwoDimensionalOptionsModel | PolarOptionsModel {
+function getOptions(config: Config, designerConfig: DesignerConfig, margin: BlockMargin, dataScope: DataScope, data: DataSource): TwoDimensionalOptionsModel | PolarOptionsModel {
     if(config.options.type === '2d') {
-        return TwoDimensionalModel.get2DOptions(config, designerConfig, config.options, designerConfig.canvas.axisLabel, designerConfig.chart.style.palette, margin, allowableKeys, data);
+        return TwoDimensionalModel.get2DOptions(config, designerConfig, config.options, designerConfig.canvas.axisLabel, designerConfig.chart.style.palette, margin, dataScope.allowableKeys, data);
     } else {
-        return getPolarOptions(config.options, designerConfig.chart.style.palette);
+        return PolarModel.getPolarOptions(config.options, designerConfig.chart.style.palette, data, dataScope);
     }
 } 
 
-function getDataSettings(allowableKeys: string[]): DataSettings {
+function getDataSettings(dataScope: DataScope): DataSettings {
     return {
-        allowableKeys
+        scope: dataScope
     }
 }
 
@@ -157,12 +80,12 @@ function assembleModel(data: any = null): Model {
         top: { size: 0 }
     }
     const margin = MarginModel.getMargin(designerConfig, config, legendBlock, data);
-    const allowableKeys = getAllowableKeys(margin, data);
+    const dataScope = DataManagerModel.getDataScope(config, margin, data, designerConfig);
 
     const blockCanvas = getBlockCanvas(config);
     const chartBlock = getChartBlock(margin);
-    const options = getOptions(config, designerConfig, margin, allowableKeys, data);
-    const dataSettings = getDataSettings(allowableKeys);
+    const options = getOptions(config, designerConfig, margin, dataScope, data);
+    const dataSettings = getDataSettings(dataScope);
     const chartSettings = getChartSettings(designerConfig);
     const dataFormat = getDataFormat(designerConfig);
     

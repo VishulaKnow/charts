@@ -36,7 +36,7 @@ svg {
     border: 1px solid black;
 }
 .data-label {
-    font-size: 10px;
+    font-size: 12px;
     font-family: sans-serif;
 }
 .legend-item {
@@ -64,6 +64,7 @@ svg {
     color: black;
     border-radius: 2px;
     z-index: 999;
+    min-width: 100px;
 }
 .tooltip-chart-item {
     margin: 5px 0;
@@ -92,4 +93,21 @@ svg {
 }
 .value-axis .tick line:first-of-type {
     stroke: none;
+}
+
+.record-overflow-alert {
+    font-family: sans-serif;
+    box-sizing: border-box;
+    display: flex;
+    justify-content: space-between;
+    background-color: #f8d7da;
+    color: #721c24;
+    border-radius: 3px;
+    padding: 0.5rem;
+}
+.record-overflow-alert .btn-close {
+    border: none;
+    background-color: transparent;
+    cursor: pointer;
+    font-size: 1.3rem;
 }

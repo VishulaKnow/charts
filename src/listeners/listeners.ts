@@ -3,6 +3,7 @@ import config from '../config/configOptions';
 import designerConfig from '../designer/designerConfigOptions';
 import { getUpdatedModel } from '../model/modelOptions';
 import { PolarChart, PolarOptions, TwoDimensionalChart, TwoDimensionalOptions } from '../config/config'
+import { color } from 'd3';
 const data = require('../assets/dataSet.json');
 
 function randInt(min: number, max: number): number {
@@ -43,6 +44,9 @@ function getInputValue(selector: string): string {
 }
 function setInputValue(selector: string, value: any): void {
     (document.querySelector(selector) as HTMLInputElement).value = value.toString();
+}
+function setCheckboxValue(selector: string, value: boolean): void {
+    (document.querySelector(selector) as HTMLInputElement).checked = value;
 }
 
 function showControlsForNotation(notationType: '2d' | 'polar'): void {
@@ -90,7 +94,7 @@ function changeConfigOptions(notationType: '2d' | 'polar'): void {
                 gridLine: {
                     flag: {
                         horizontal: true,
-                        vertical: true
+                        vertical: false
                     }
                 }
             }
@@ -125,7 +129,7 @@ function changeConfigOptions(notationType: '2d' | 'polar'): void {
     engine.updateFullBlock(getUpdatedModel(), getCopy(data));
 }
 
-function changeChartConfig(chartType: 'bar' | 'line' | 'area'): void {
+function change2DChartConfig(chartType: 'bar' | 'line' | 'area'): void {
     if(chartType === 'area') {
         if(config.options.charts.length !== 1)
             config.options.charts.splice(1, config.options.charts.length - 1);
@@ -135,7 +139,7 @@ function changeChartConfig(chartType: 'bar' | 'line' | 'area'): void {
         config.options.charts.forEach((chart: any) => chart.type = chartType);
         config.options.charts[1].data.dataSource = config.options.charts[0].data.dataSource + '2';
     } else if((chartType === 'bar' || chartType === 'line') && config.options.charts.length === 2) {
-        config.options.charts[1] = getCopy(config.options.charts[0]);
+        // config.options.charts[1] = getCopy(config.options.charts[0]);
         config.options.charts.forEach((chart: any) => chart.type = chartType);
         config.options.charts[1].data.dataSource = config.options.charts[0].data.dataSource + '2';
     }
@@ -198,6 +202,18 @@ function setDesignerListeners(): void {
         designerConfig.canvas.chartOptions.donut.minPartSize = parseFloat(getInputValue('#min-donut-part-size')) || 0;
         engine.updateFullBlock(getUpdatedModel(), getCopy(data));
     });
+    document.querySelector('#designer-vertical-grid').addEventListener('change', function() {
+        designerConfig.additionalElements.gridLine.flag.vertical = this.checked;
+        engine.updateFullBlock(getUpdatedModel(), data);
+    });
+    document.querySelector('#designer-horizontal-grid').addEventListener('change', function() {
+        designerConfig.additionalElements.gridLine.flag.horizontal = this.checked;
+        engine.updateFullBlock(getUpdatedModel(), data);
+    });
+    document.querySelector('.btn-base-color').addEventListener('click', function() {
+        designerConfig.chart.style.palette[0] = color(getInputValue('#base-color'));
+        engine.updateFullBlock(getUpdatedModel(), data);
+    });
 }
 
 function setCommonListeners(): void {
@@ -242,7 +258,7 @@ function setCommonListeners(): void {
 function set2DListeners(): void {
     document.querySelector('#chart-2d-type').addEventListener('change', function() {
         if(config.options.type === '2d') {
-            changeChartConfig(this.value);
+            change2DChartConfig(this.value);
             engine.updateFullBlock(getUpdatedModel(), getCopy(data));
         }
     });
@@ -295,6 +311,18 @@ function set2DListeners(): void {
             }
         }
     });
+    document.querySelector('#config-vertical-grid').addEventListener('change', function() {
+        if(config.options.type === '2d') {
+            config.options.additionalElements.gridLine.flag.vertical = this.checked;
+            engine.updateFullBlock(getUpdatedModel(), data);
+        }
+    });
+    document.querySelector('#config-horizontal-grid').addEventListener('change', function() {
+        if(config.options.type === '2d') {
+            config.options.additionalElements.gridLine.flag.horizontal = this.checked;
+            engine.updateFullBlock(getUpdatedModel(), data);
+        }
+    });
 }
 
 function setPolarListeners(): void {
@@ -319,7 +347,6 @@ function setControlsValues(): void {
     setInputValue('#block-width', config.canvas.size.width);
     setInputValue('#block-height', config.canvas.size.height);
 
-
     setInputValue('#legend', config.options.charts[0].legend.position);
     setInputValue('#data-size', config.options.charts[0].data.dataSource.includes('large') ? 'large' : 'normal');
 
@@ -332,12 +359,17 @@ function setControlsValues(): void {
     setInputValue('#bar-group-distance', designerConfig.canvas.chartOptions.bar.groupDistance);
     setInputValue('#min-bar-size', designerConfig.canvas.chartOptions.bar.minBarWidth);
     setInputValue('#min-donut-part-size', designerConfig.canvas.chartOptions.donut.minPartSize);
+    setCheckboxValue('#designer-horizontal-grid', designerConfig.additionalElements.gridLine.flag.horizontal);
+    setCheckboxValue('#designer-vertical-grid', designerConfig.additionalElements.gridLine.flag.vertical);
+    setInputValue('#base-color', designerConfig.chart.style.palette[0].hex());
     
     if(config.options.type === '2d') {
         setInputValue('#chart-2d-type', config.options.charts[0].type);
         setInputValue('#chart-orient', config.options.charts[0].orientation);
         setInputValue('#key-axis-orient', config.options.axis.keyAxis.position);
         setInputValue('#value-axis-orient', config.options.axis.valueAxis.position);
+        setCheckboxValue('#config-horizontal-grid', config.options.additionalElements.gridLine.flag.horizontal);
+        setCheckboxValue('#config-vertical-grid', config.options.additionalElements.gridLine.flag.vertical);
     } else {
         setInputValue('#chart-polar-type', config.options.charts[0].type);
         setInputValue('#inner-radius', config.options.charts[0].appearanceOptions.innerRadius.toString());

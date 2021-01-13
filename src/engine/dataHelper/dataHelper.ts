@@ -1,19 +1,16 @@
-import { DataType, Formatter, Model, PolarChartModel, TwoDimensionalChartModel } from '../../model/model'
-
-export type DataRow = {
-    [field: string]: any
-}
+import { DataType, Formatter } from '../../designer/designerConfig';
+import { DataRow, DataSource, Model, PolarChartModel, TwoDimensionalChartModel } from '../../model/model'
 
 export class DataHelper
 {
     static format: Formatter;
 
-    static formatValue(valueType: DataType, value: any): string {
+    static formatValue(valueType: DataType, value: string): string {
         return this.format[valueType]({}, value);
     }
 
-    static prepareData(data: any, model: Model): void {
-        const allowableKeys = model.dataSettings.allowableKeys;
+    static prepareData(data: DataSource, model: Model): void {
+        const allowableKeys = model.dataSettings.scope.allowableKeys;
         model.options.charts.forEach((chart: TwoDimensionalChartModel | PolarChartModel) => {
             data[chart.data.dataSource] = data[chart.data.dataSource].filter((d: DataRow) => allowableKeys.includes(d[chart.data.keyField.name]));
         });

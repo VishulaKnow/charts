@@ -1,9 +1,8 @@
 import * as d3 from "d3";
 import { Color } from "d3";
-import { BlockMargin, PolarChartAppearanceModel, Size } from "../../model/model";
-import { DataRow } from "../dataHelper/dataHelper";
-import { Helper } from "../helper/helper";
-import { SvgBlock } from "../svgBlock/svgBlock";
+import { BlockMargin, DataRow, PolarChartAppearanceModel, Size } from "../../../model/model";
+import { Helper } from "../../helper";
+import { SvgBlock } from "../../svgBlock/svgBlock";
 
 interface Aggregator {
     name: string;
@@ -46,7 +45,7 @@ export class Donut
             .style('text-anchor', 'middle');
     }
     
-    static renderDonut(data: DataRow[], margin: BlockMargin, valueField: string, appearanceOptions: PolarChartAppearanceModel, cssClasses: string[], chartPalette: Color[], blockSize: Size): void {
+    static render(data: DataRow[], margin: BlockMargin, valueField: string, appearanceOptions: PolarChartAppearanceModel, cssClasses: string[], chartPalette: Color[], blockSize: Size): void {
         const radius = this.getOuterRadiusRadius(margin, blockSize);
         const arc = this.getArc(radius, radius * 0.01 * appearanceOptions.innerRadius);
         const pie = this.getPie(valueField, appearanceOptions.padAngle);

@@ -18,12 +18,12 @@
         <div class="form-group">
             <label for="">Width</label>
             <br>
-            <input type="number" id="block-width">
+            <input type="number" step="10" id="block-width">
         </div>
         <div class="form-group">
             <label for="">Height</label>
             <br>
-            <input type="number" id="block-height">
+            <input type="number" step="10" id="block-height">
         </div>
     </div>
     <div class="form designer">
@@ -71,6 +71,22 @@
             <label for="">Min donut part size</label>
             <br>
             <input type="number" id="min-donut-part-size">
+        </div>
+        <div class="form-group">
+            <br>
+            <input type="checkbox" id="designer-vertical-grid">
+            <label for="designer-vertical-grid">VerticalGridLine</label>
+        </div>
+        <div class="form-group">
+            <br>
+            <input type="checkbox" id="designer-horizontal-grid">
+            <label for="designer-horizontal-grid">HorizontalGridLine</label>
+        </div>
+        <div class="form-group">
+            <label for="">BaseColor</label>
+            <br>
+            <input type="color" id="base-color">
+            <button class="btn-base-color">Apply</button>
         </div>
     </div>
     <div class="form common-options">
@@ -140,7 +156,17 @@
             <input type="number" placeholder="start" id="domain-start">
             <input type="number" placeholder="end" id="domain-end">
             <button class="btn-domain">Apply</button>
-        </div> 
+        </div>
+        <div class="form-group">
+            <br>
+            <input type="checkbox" id="config-vertical-grid">
+            <label for="config-vertical-grid">VerticalGridLine</label>
+        </div>
+        <div class="form-group">
+            <br>
+            <input type="checkbox" id="config-horizontal-grid">
+            <label for="config-horizontal-grid">HorizontalGridLine</label>
+        </div>
     </div>
     <div class="controls-polar">
         <div class="form-group">
@@ -162,6 +188,7 @@
         </div>
     </div>
 
+    
     <div class="main-wrapper"></div>
 
 </body>

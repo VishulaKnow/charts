@@ -148,4 +148,110 @@ const config: Config = {
     // }
 }
 
+// const config: Config = {
+//     canvas: {
+//         class: 'svg-chart border',
+//         size: {
+//             width: 1200,
+//             height: 650
+//         }
+//     },
+//     options: {
+//         type: '2d',
+//         axis: {
+//             keyAxis: {
+//                 domain: {
+//                     start: -1,
+//                     end: -1
+//                 },
+//                 position: 'end'
+//             },
+//             valueAxis: {
+//                 domain: {
+//                     start: -1,
+//                     end: -1
+//                 },
+//                 position: 'start'
+//             }
+//         },
+//         additionalElements: {
+//             gridLine: {
+//                 flag: {
+//                     horizontal: true,
+//                     vertical: false
+//                 }
+//             }
+//         },
+//         charts: [
+//             {
+//                 title: 'Car prices',
+//                 type: 'line',
+//                 legend: {
+//                     position: 'off'
+//                 },
+//                 data: {
+//                     dataSource: 'dataSet_data',
+//                     keyField:  {
+//                         name: 'MonthYear',
+//                         format: 'string'
+//                     },
+//                     valueField: {
+//                         name: 'EventCost',
+//                         format: 'integer'
+//                     }
+//                 },
+//                 tooltip: {
+//                     data: {
+//                         fields: [
+//                             {
+//                                 name: 'MonthYear',
+//                                 format: 'string'
+//                             },
+//                             {
+//                                 name: 'EventCost',
+//                                 format: 'money'
+//                             }
+//                         ]
+//                     }
+//                 },
+//                 orientation: 'vertical'
+//             },
+//             {
+//                 title: 'Car prices',
+//                 type: 'line',
+//                 legend: {
+//                     position: 'off'
+//                 },
+//                 data: {
+//                     dataSource: 'dataSet_data2',
+//                     keyField:  {
+//                         name: 'MonthYear',
+//                         format: 'string'
+//                     },
+//                     valueField: {
+//                         name: 'AlcoholCost',
+//                         format: 'integer'
+//                     }
+//                 },
+//                 tooltip: {
+//                     data: {
+//                         fields: [
+//                             {
+//                                 name: 'MonthYear',
+//                                 format: 'string'
+//                             },
+//                             {
+//                                 name: 'AlcoholCost',
+//                                 format: 'money'
+//                             }
+
+//                         ]
+//                     }
+//                 },
+//                 orientation: 'vertical'
+//             }
+//         ]
+//     }
+// }
+
 export default config;

@@ -1,7 +1,7 @@
 import * as d3 from "d3";
-import { AxisModelOptions, Orient } from "../../model/model";
-import { Helper } from "../helper/helper";
-import { SvgBlock } from "../svgBlock/svgBlock";
+import { AxisModelOptions, Orient } from "../../../model/model";
+import { Helper } from "../../helper";
+import { SvgBlock } from "../../svgBlock/svgBlock";
 
 export class Axis
 {
@@ -16,7 +16,7 @@ export class Axis
             return d3.axisRight(scale);
     }
 
-    static renderAxis(scale: d3.AxisScale<any>, options: AxisModelOptions): void {
+    static render(scale: d3.AxisScale<any>, options: AxisModelOptions): void {
         const axis = this.getAxisByOrient(options.orient, scale);
     
         SvgBlock.getSvg()
@@ -24,12 +24,14 @@ export class Axis
             .attr('transform', `translate(${options.translate.translateX}, ${options.translate.translateY})`)
             .attr('class', `${options.class} data-label`)
             .call(axis);
+
+        const axisText = d3.select(`.${options.class}`).selectAll('text') as d3.Selection<SVGGraphicsElement, unknown, HTMLElement, unknown>;
     
         if(options.orient === 'left' || options.orient === 'right')
-            Helper.cropLabels(d3.select(`.${options.class}`).selectAll('text'), options.maxLabelSize);
+            Helper.cropLabels(axisText, options.maxLabelSize);
         else if(options.orient === 'bottom' || options.orient === 'top') {
             if((scale as d3.ScaleBand<string>).step)
-                Helper.cropLabels(d3.select(`.${options.class}`).selectAll('text'), (scale as d3.ScaleBand<string>).step());
+                Helper.cropLabels(axisText, (scale as d3.ScaleBand<string>).step());
         }
     }
 

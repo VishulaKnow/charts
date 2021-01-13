@@ -4,6 +4,9 @@ export type DataType = 'integer' | 'decimal' | 'date' | 'money' | 'string';
 export type DataOptions = {
     [option: string]: any
 }
+export interface Formatter {
+    [type: string]: (options: DataOptions, value: any) => string
+}
 
 export interface DesignerConfig {
     canvas: Canvas;
@@ -67,7 +70,5 @@ interface ChartStyle {
 }
 
 interface DataFormat {
-    formatters: {
-        [type: string]: (options: DataOptions, value: any) => string
-    }
+    formatters: Formatter;
 }

@@ -1,17 +1,17 @@
-import { BlockMargin, Field, TwoDimensionalChartModel } from "../../model/model";
-import { DataHelper, DataRow } from "../dataHelper/dataHelper";
+import { BlockMargin, DataRow, DataSource, Field, TwoDimensionalChartModel } from "../../model/model";
+import { DataHelper, } from "../dataHelper/dataHelper";
 
 export class TooltipHelper
 {
-    static getTooltipText(fields: Field[], data: DataRow): string {
+    static getTooltipText(fields: Field[], dataRow: DataRow): string {
         let text = '';    
         fields.forEach(field => {
-            text += `<strong class="tooltip-field">${field.name}</strong>: <span class="tooltip-value">${DataHelper.formatValue(field.format, data[field.name])}</span><br>`;
+            text += `<strong class="tooltip-field">${field.name}</strong>: <span class="tooltip-value">${DataHelper.formatValue(field.format, dataRow[field.name])}</span><br>`;
         });
         return text;
     }
     
-    static getMultplyTooltipText(charts: TwoDimensionalChartModel[], data: any, key: string): string {
+    static getMultplyTooltipText(charts: TwoDimensionalChartModel[], data: DataSource, key: string): string {
         let text = '';
         charts.forEach((chart: TwoDimensionalChartModel) => {
             if(chart.tooltip.data.fields.length !== 0) {
@@ -24,7 +24,7 @@ export class TooltipHelper
         return text;
     }
 
-    static getKeyIndex(pointer: number[], context: SVGRectElement, orient: 'vertical' | 'horizontal', margin: BlockMargin, bandSize: number): number {
+    static getKeyIndex(pointer: [number, number], context: SVGRectElement, orient: 'vertical' | 'horizontal', margin: BlockMargin, bandSize: number): number {
         const pointerAxis = orient === 'vertical' ? 0 : 1;
         const marginByOrient = orient === 'vertical' ? margin.left : margin.top;
         

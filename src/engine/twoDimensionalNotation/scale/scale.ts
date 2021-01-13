@@ -1,5 +1,5 @@
 import * as d3 from 'd3'
-import { ScaleOptions } from '../../model/model';
+import { ScaleOptions } from '../../../model/model';
 
 export interface Scales {
     scaleKey: d3.ScaleBand<string>;
@@ -26,7 +26,7 @@ export class Scale
         return scale;
     }
     
-    static getScaleLinear(domain: any, rangeStart: number, rangeEnd: number): d3.ScaleLinear<number, number> {
+    static getScaleLinear(domain: number[], rangeStart: number, rangeEnd: number): d3.ScaleLinear<number, number> {
         return d3.scaleLinear()
             .domain(domain)
             .range([rangeStart, rangeEnd]);

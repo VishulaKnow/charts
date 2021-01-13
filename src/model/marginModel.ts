@@ -1,16 +1,15 @@
-import { Axis, Config, PolarChart, PolarOptions, TwoDimensionalChart, TwoDimensionalOptions } from "../../config/config";
-import { DesignerConfig } from "../../designer/designerConfig";
-import { DataRow } from "../../engine/dataHelper/dataHelper";
-import { AxisModel } from "../axisModel/axisModel";
-import { LegendModel } from "../legendModel/legendModel";
-import { BlockMargin, LegendBlockModel, Orient } from "../model";
-import { AxisType, CLASSES } from "../modelOptions";
+import { Axis, Config, PolarChart, PolarOptions, TwoDimensionalChart, TwoDimensionalOptions } from "../config/config";
+import { DesignerConfig } from "../designer/designerConfig";
+import { AxisModel } from "./axisModel";
+import { LegendModel } from "./legendModel/legendModel";
+import { BlockMargin, DataRow, DataSource, LegendBlockModel, Orient } from "./model";
+import { AxisType, CLASSES } from "./modelOptions";
 
 const AXIS_LABEL_PADDING = 9;
 
 export class MarginModel
 {
-    static getMargin(designerConfig: DesignerConfig, config: Config, legendBlockModel: LegendBlockModel, data: any): BlockMargin {
+    static getMargin(designerConfig: DesignerConfig, config: Config, legendBlockModel: LegendBlockModel, data: DataSource): BlockMargin {
         const margin: BlockMargin = {
             top: designerConfig.canvas.chartBlockMargin.top,
             bottom: designerConfig.canvas.chartBlockMargin.bottom,
@@ -25,7 +24,7 @@ export class MarginModel
         return margin;
     }
 
-    static recalcMarginWithLegend(margin: BlockMargin, config: Config, legendMaxWidth: number, legendBlockModel: LegendBlockModel, data: any): void {
+    static recalcMarginWithLegend(margin: BlockMargin, config: Config, legendMaxWidth: number, legendBlockModel: LegendBlockModel, data: DataSource): void {
         const positions: Orient[] = ['left', 'right', 'top', 'bottom'];
         positions.forEach(position => {
             let legendSize = 0;
@@ -47,7 +46,7 @@ export class MarginModel
         });
     }
 
-    static recalcMarginWithAxisLabelWidth(margin: BlockMargin, charts: TwoDimensionalChart[], labelsMaxWidth: number, axis: Axis, data: any): void {
+    static recalcMarginWithAxisLabelWidth(margin: BlockMargin, charts: TwoDimensionalChart[], labelsMaxWidth: number, axis: Axis, data: DataSource): void {
         const keyAxisOrient = AxisModel.getAxisOrient(AxisType.Key, charts[0].orientation, axis.keyAxis.position);
         if(keyAxisOrient === 'left' || keyAxisOrient === 'right') {
             const labelTexts = data[charts[0].data.dataSource].map((dataSet: DataRow) => dataSet[charts[0].data.keyField.name]);

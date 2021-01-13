@@ -1,5 +1,5 @@
 import { color } from 'd3'
-import { DesignerConfig, DataOptions, DataType } from './designerConfig'
+import { DesignerConfig, DataOptions } from './designerConfig'
 
 const designerConfig: DesignerConfig = {
     canvas: {
@@ -22,7 +22,7 @@ const designerConfig: DesignerConfig = {
             bar: {
                 groupDistance: 10,
                 minBarWidth: 30,
-                barDistance: 2
+                barDistance: 0
             },
             donut: {
                 minPartSize: 50
@@ -31,11 +31,11 @@ const designerConfig: DesignerConfig = {
     },
     chart: {
         style: {
-            palette: [color('#0A7CB8'),
-                color('#1AB179'),
-                color('#FF2D2D'),
-                color('#065580'), 
-                color('#138058'),
+            palette: [color('#008FFB'),
+                color('#00E396'),
+                color('#FEB019'),
+                color('#FF4560'), 
+                color('#775DD0'),
                 color('#801717'), 
                 color('#0DAAFF'), 
                 color('#26FFB0'),

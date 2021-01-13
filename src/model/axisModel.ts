@@ -1,6 +1,6 @@
-import { AxisPosition } from "../../config/config";
-import { BlockMargin, Orient, Size } from "../model";
-import { AxisType, CLASSES } from "../modelOptions";
+import { AxisPosition, ChartOrientation } from "../config/config";
+import { BlockMargin, Orient, Size } from "./model";
+import { AxisType, CLASSES } from "./modelOptions";
 
 export class AxisModel
 {
@@ -19,8 +19,8 @@ export class AxisModel
         return maxWidth > legendMaxWidth ? legendMaxWidth : maxWidth;
     }
 
-    static getAxisLength(orientation: 'horizontal' | 'vertical', margin: BlockMargin, blockSize: Size): number {
-        if(orientation === 'horizontal') {
+    static getAxisLength(chartOrientation: ChartOrientation, margin: BlockMargin, blockSize: Size): number {
+        if(chartOrientation === 'horizontal') {
             return blockSize.height - margin.top - margin.bottom;
         } else {
             return blockSize.width - margin.left - margin.right;
@@ -36,7 +36,7 @@ export class AxisModel
         return size;
     }
 
-    static getAxisOrient(axisType: AxisType, chartOrientation: string, axisPosition: AxisPosition): Orient {
+    static getAxisOrient(axisType: AxisType, chartOrientation: ChartOrientation, axisPosition: AxisPosition): Orient {
         if(chartOrientation === 'vertical') {
             if(axisPosition === 'start')
                 return axisType === AxisType.Key ? 'top' : 'left';
@@ -50,7 +50,7 @@ export class AxisModel
         }
     }
 
-    static getAxisTranslateX(axisType: AxisType, chartOrientation: string, axisPosition: AxisPosition, margin: BlockMargin, blockWidth: number): number {
+    static getAxisTranslateX(axisType: AxisType, chartOrientation: ChartOrientation, axisPosition: AxisPosition, margin: BlockMargin, blockWidth: number): number {
         const orient = AxisModel.getAxisOrient(axisType, chartOrientation, axisPosition);
         if(orient === 'top' || orient === 'left')
             return margin.left;
@@ -60,7 +60,7 @@ export class AxisModel
             return blockWidth - margin.right;
     }
     
-    static getAxisTranslateY(axisType: AxisType, chartOrientation: string, axisPosition: AxisPosition, margin: BlockMargin, blockHeight: number): number {
+    static getAxisTranslateY(axisType: AxisType, chartOrientation: ChartOrientation, axisPosition: AxisPosition, margin: BlockMargin, blockHeight: number): number {
         const orient = AxisModel.getAxisOrient(axisType, chartOrientation, axisPosition);
         if(orient === 'top' || orient === 'left')
             return margin.top;

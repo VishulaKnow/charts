@@ -3,14 +3,14 @@ import { Size } from "../../model/model";
 
 export class SvgBlock
 {
-    static renderSvgBlock(cssClass: string, blockSize: Size): void {
+    static render(cssClass: string, blockSize: Size): void {
         const wrapper = d3.select('.main-wrapper')
             .append('div')
             .attr('class', 'wrapper')
             .attr('width', blockSize.width)
             .attr('height', blockSize.height);
     
-        d3.select('.wrapper')
+        wrapper
             .append('svg')
             .attr('width', blockSize.width)
             .attr('height', blockSize.height)

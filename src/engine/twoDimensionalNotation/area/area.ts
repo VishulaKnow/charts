@@ -1,10 +1,9 @@
 import * as d3 from "d3";
 import { Color } from "d3";
-import { BlockMargin, Size } from "../../model/model";
-import { DataRow } from "../dataHelper/dataHelper";
-import { Helper } from "../helper/helper";
+import { BlockMargin, DataRow, Size } from "../../../model/model";
+import { Helper } from "../../helper";
 import { Scales } from "../scale/scale";
-import { SvgBlock } from "../svgBlock/svgBlock";
+import { SvgBlock } from "../../svgBlock/svgBlock";
 
 interface AreaChartCoordinate {
     x0: number;
@@ -59,7 +58,7 @@ export class Area
         return areaCoordinate;
     }
     
-    static renderArea(scales: Scales, data: DataRow[], margin: BlockMargin, keyField: string, valueField: string, keyAxisOrient: string, cssClasses: string[], chartPalette: Color[], blockSize: Size): void {
+    static render(scales: Scales, data: DataRow[], margin: BlockMargin, keyField: string, valueField: string, keyAxisOrient: string, cssClasses: string[], chartPalette: Color[], blockSize: Size): void {
         const area = this.getAreaGenerator(keyAxisOrient);
         const areaCoordinate: AreaChartCoordinate[] = this.getAreaCoordinateByKeyOrient(keyAxisOrient,
             data,

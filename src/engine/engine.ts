@@ -2,7 +2,7 @@ import * as d3 from 'd3'
 
 import { SvgBlock } from './svgBlock/svgBlock';
 import { DataHelper } from './dataHelper/dataHelper';
-import { ChartRenderer } from './chartRenderer/chartRenderer';
+import { ChartRenderer } from './chartRenderer';
 import { Model } from '../model/model';
 
 function clearBlock(): void {

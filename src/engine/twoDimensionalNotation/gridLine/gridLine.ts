@@ -1,5 +1,5 @@
 import * as d3 from "d3";
-import { AxisModelOptions, BlockMargin, GridLineFlag, Size } from "../../model/model";
+import { AxisModelOptions, BlockMargin, GridLineFlag, Size } from "../../../model/model";
 
 type GridLineType = 'vertical' | 'horizontal';
 

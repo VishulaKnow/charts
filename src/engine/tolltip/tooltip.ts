@@ -1,13 +1,32 @@
 import * as d3 from "d3";
-import { BlockMargin, Field, Model, PolarChartModel, Size, TwoDimensionalChartModel } from "../../model/model";
-import { DataRow } from "../dataHelper/dataHelper";
-import { Helper } from "../helper/helper";
-import { Scales } from "../scale/scale";
+import { BlockMargin, DataRow, DataSource, Field, Model, PolarChartModel, Size, TwoDimensionalChartModel } from "../../model/model";
+import { Helper } from "../helper";
+import { Scales } from "../twoDimensionalNotation/scale/scale";
 import { SvgBlock } from "../svgBlock/svgBlock";
 import { TooltipHelper } from "./tooltipHelper";
 
+interface TooltipCoordinate {
+    left: string;
+    top: string;
+}
+
 export class Tooltip
 {
+    static renderTooltips(model: Model, data: DataSource, scales: Scales) {
+        d3.select('.wrapper')
+            .append('div')
+            .attr('class', 'tooltip-wrapper');
+        if(model.options.type === '2d') {
+            if(model.options.charts.findIndex(chart => chart.type === 'area' || chart.type === 'line') === -1) {
+                this.renderTooltipsForBar(model.options.charts, data);
+            } else {
+                this.renderLineTooltip(scales.scaleKey, model.chartBlock.margin, model.blockCanvas.size, model.options.charts, data);
+            }
+        } else {
+            this.renderTooltipsForDonut(model.options.charts, data);
+        }
+    }
+
     static renderTooltipForBar(bars: d3.Selection<d3.BaseType, unknown, d3.BaseType, unknown>, fields: Field[], data: DataRow[]): void {
         const wrapper = d3.select('.tooltip-wrapper');
 
@@ -37,7 +56,7 @@ export class Tooltip
         bars.on('mouseleave', event => tooltip.style('display', 'none'));
     }
     
-    static renderTooltipsForBar(charts: TwoDimensionalChartModel[], data: any): void {
+    static renderTooltipsForBar(charts: TwoDimensionalChartModel[], data: DataSource): void {
         charts.forEach(chart => {
             if(chart.tooltip.data.fields.length !== 0) {
                 const bars = SvgBlock.getSvg()
@@ -47,11 +66,11 @@ export class Tooltip
         })
     }
     
-    static renderLineTooltip(scaleKey: d3.ScaleBand<string>, margin: BlockMargin, blockSize: Size, charts: TwoDimensionalChartModel[], data: any): void {
+    static renderLineTooltip(scaleKey: d3.ScaleBand<string>, margin: BlockMargin, blockSize: Size, charts: TwoDimensionalChartModel[], data: DataSource): void {
         const wrapper = d3.select('.tooltip-wrapper');
         const tooltipClass = this;
     
-        let tooltip = wrapper.select('.tooltip');
+        let tooltip = wrapper.select('div.tooltip');
         if(tooltip.size() === 0)
             tooltip = wrapper
                 .append('div')
@@ -81,9 +100,11 @@ export class Tooltip
                     const key = scaleKey.domain()[index];
                     tooltip.html(`${TooltipHelper.getMultplyTooltipText(charts, data, key)}`);
                     
+                    const tooltipCoordinate = tooltipClass.getTooltipCoordinate(tooltip, d3.pointer(event, this), blockSize, margin);
                     tooltip
-                        .style('left', d3.pointer(event, this)[0] + 10 + 'px')
-                        .style('top', d3.pointer(event, this)[1] + 10 + 'px');
+                        .style('left', tooltipCoordinate.left)
+                        .style('top', tooltipCoordinate.top);
+
                     tooltipLine.style('display', 'block');
                     tooltipClass.setTooltipLineAttributes(tooltipLine, scaleKey, margin, key, charts[0].orient, blockSize);
                 })
@@ -91,6 +112,27 @@ export class Tooltip
                     tooltip.style('display', 'none');
                     tooltipLine.style('display', 'none');
                 });
+        }
+    }
+
+    static getTooltipCoordinate(tooltip: d3.Selection<d3.BaseType, unknown, HTMLElement, any>, pointer: [number, number], blockSize: Size, margin: BlockMargin): TooltipCoordinate {
+        let x = pointer[0];
+        let y = pointer[1];
+        // let tooltipWidth = (tooltip.node() as HTMLElement).getBoundingClientRect().width;
+        // if(tooltipWidth >= blockSize.width - margin.left - margin.right) {
+        //     return {
+        //         left: x + 'px',
+        //         top: y + 'px'
+        //     }
+        // }
+        // if(x + tooltipWidth >= blockSize.width) {
+        //     while(x + tooltipWidth + 10 > blockSize.width) {
+        //         x--;
+        //     }
+        // }
+        return {
+            left: x + 'px',
+            top: y + 'px'
         }
     }
     
@@ -109,7 +151,7 @@ export class Tooltip
                 .attr('y2', scaleKey(key) + margin.top + scaleKey.bandwidth() / 2);
     }
     
-    static renderTooltipsForDonut(charts: PolarChartModel[], data: any): void {
+    static renderTooltipsForDonut(charts: PolarChartModel[], data: DataSource): void {
         charts.forEach(chart => {
             const attrTransform = d3.select('.donut-block').attr('transform');
             const translateNumbers = attrTransform.substring(10, attrTransform.length - 1).split(', ');
@@ -149,21 +191,6 @@ export class Tooltip
                 });
     
             arcs.on('mouseleave', d => tooltip.style('display', 'none'));
-        }
-    }
-    
-    static renderTooltips(model: Model, data: any, scales: Scales) {
-        d3.select('.wrapper')
-            .append('div')
-            .attr('class', 'tooltip-wrapper');
-        if(model.options.type === '2d') {
-            if(model.options.charts.findIndex(chart => chart.type === 'area' || chart.type === 'line') === -1) {
-                this.renderTooltipsForBar(model.options.charts, data);
-            } else {
-                this.renderLineTooltip(scales.scaleKey, model.chartBlock.margin, model.blockCanvas.size, model.options.charts, data);
-            }
-        } else {
-            this.renderTooltipsForDonut(model.options.charts, data);
         }
     }
 }

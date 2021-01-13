@@ -1,9 +1,16 @@
 import { Color } from "d3";
+import { ChartOrientation, LegendPosition, TwoDimensionalChartType } from "../config/config";
+import { DataType, Formatter } from "../designer/designerConfig";
 
-export type Orient = 'top' | 'bottom' | 'left' | 'right'
-export type DataType = 'integer' | 'decimal' | 'date' | 'money' | 'string';
+export type Orient = 'top' | 'bottom' | 'left' | 'right';
 export type DataOptions = {
     [option: string]: any
+}
+export type DataRow = {
+    [field: string]: any
+}
+export interface DataSource {
+    [source: string]: DataRow[];
 }
 
 export interface BlockCanvas {
@@ -61,8 +68,8 @@ interface TooltipDataModel {
 }
 
 export interface TwoDimensionalChartModel {
-    type: 'bar' | 'line' | 'area';
-    orient: 'vertical' | 'horizontal';
+    type: TwoDimensionalChartType;
+    orient: ChartOrientation;
     data: ChartDataModel;
     legend: LegendModel;
     tooltip: TooltipModel;
@@ -79,7 +86,7 @@ export interface PolarChartModel {
     elementColors: Color[];
 }
 interface LegendModel {
-    position: 'off' | 'top' | 'bottom' | 'right' | 'left';
+    position: LegendPosition;
 }
 export interface Model {
     blockCanvas: BlockCanvas;
@@ -90,13 +97,15 @@ export interface Model {
     chartSettings: ChartSettings;
     dataFormat: DataFormat;
 }
-export interface Formatter {
-    [type: string]: (options: DataOptions, value: any) => string
-}
+
 export interface DataFormat {
     formatters: Formatter;
 }
 export interface DataSettings {
+    scope: DataScope;
+}
+export interface DataScope {
+    hidedRecordsAmount: number;
     allowableKeys: string[];
 }
 export interface TwoDimensionalOptionsModel {

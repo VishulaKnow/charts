@@ -1,11 +1,10 @@
 import { Color } from "d3";
-import { BlockMargin, Orient, PolarOptionsModel, Size, TwoDimensionalOptionsModel } from "../../model/model";
-import { DataRow } from "../dataHelper/dataHelper";
+import { BlockMargin, DataRow, DataSource, LegendBlockModel, Orient, PolarOptionsModel, Size, TwoDimensionalOptionsModel } from "../../model/model";
 import { SvgBlock } from "../svgBlock/svgBlock";
 
 export class Legend
 {
-    static renderLegend(data: any, options: TwoDimensionalOptionsModel | PolarOptionsModel, legendsSize: any, margin: BlockMargin, blockSize: Size): void {
+    static render(data: DataSource, options: TwoDimensionalOptionsModel | PolarOptionsModel, legendsSize: LegendBlockModel, blockSize: Size): void {
         const positions: Orient[] = ['left', 'right', 'top', 'bottom'];
         positions.forEach(position => {
             if(options.type === '2d') {
