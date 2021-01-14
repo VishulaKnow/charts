@@ -1,24 +1,22 @@
 import * as d3 from 'd3'
 
 import { SvgBlock } from './svgBlock/svgBlock';
-import { DataHelper } from './dataHelper/dataHelper';
+import { ValueFormatter } from './valueFormatter';
 import { ChartRenderer } from './chartRenderer';
 import { Model } from '../model/model';
 
 function clearBlock(): void {
     SvgBlock.getSvg().remove();
-    d3.select('.wrapper').remove()
-    d3.select('.tooltip-wrapper').remove();
+    d3.select('.wrapper').remove();
 }
 
 export default {
     render(model: Model, data: any) {
-        DataHelper.format = model.dataFormat.formatters;
-        DataHelper.prepareData(data, model);
+        ValueFormatter.format = model.dataFormat.formatters;
         if(model.options.type === '2d')
             ChartRenderer.render2D(model, data);
         else
-        ChartRenderer.renderPolar(model, data);
+            ChartRenderer.renderPolar(model, data);
     },
     updateFullBlock(model: Model, data: any) {
         clearBlock();

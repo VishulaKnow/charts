@@ -1,10 +1,10 @@
 import { Color } from "d3";
-import { BlockMargin, DataRow, DataSource, LegendBlockModel, Orient, PolarOptionsModel, Size, TwoDimensionalOptionsModel } from "../../model/model";
-import { SvgBlock } from "../svgBlock/svgBlock";
+import { DataRow, DataSource, LegendBlockModel, Orient, PolarOptionsModel, Size, TwoDimensionalOptionsModel } from "../../../model/model";
+import { SvgBlock } from "../../svgBlock/svgBlock";
 
 export class Legend
 {
-    static render(data: DataSource, options: TwoDimensionalOptionsModel | PolarOptionsModel, legendsSize: LegendBlockModel, blockSize: Size): void {
+    public static render(data: DataSource, options: TwoDimensionalOptionsModel | PolarOptionsModel, legendsSize: LegendBlockModel, blockSize: Size): void {
         const positions: Orient[] = ['left', 'right', 'top', 'bottom'];
         positions.forEach(position => {
             if(options.type === '2d') {
@@ -29,7 +29,7 @@ export class Legend
         });
     }
     
-    static renderLegendBlock(items: string[], legendPosition: string, legendSize: number, colorPalette: Color[], blockSize: Size): void {
+    private static renderLegendBlock(items: string[], legendPosition: string, legendSize: number, colorPalette: Color[], blockSize: Size): void {
         const legendBlock = SvgBlock.getSvg()
             .append('foreignObject')
                 .attr('class', 'legend');
@@ -45,7 +45,7 @@ export class Legend
             colorPalette);
     }
     
-    static fillLegendCoordinateByPosition(legendBlock: d3.Selection<SVGForeignObjectElement, unknown, HTMLElement, any>, legendPosition: string, legendSize: number, blockSize: Size): void {
+    private static fillLegendCoordinateByPosition(legendBlock: d3.Selection<SVGForeignObjectElement, unknown, HTMLElement, any>, legendPosition: string, legendSize: number, blockSize: Size): void {
         if(legendPosition === 'left') {
             legendBlock
                 .attr('y', 0)
@@ -73,17 +73,18 @@ export class Legend
         }
     }
     
-    static fillLegend(legendBlock: d3.Selection<SVGForeignObjectElement, unknown, HTMLElement, any>, items: string[], legendPosition: string, colorPalette: Color[]): void {
+    private static fillLegend(legendBlock: d3.Selection<SVGForeignObjectElement, unknown, HTMLElement, any>, items: string[], legendPosition: string, colorPalette: Color[]): void {
         const wrapper = legendBlock.append('xhtml:div');
         wrapper 
             .style('width', '100%')
             .style('height', '100%')
             .style('display', 'flex')
-            .style('flex-wrap', 'wrap')
             .style('justify-content', 'center');
     
         if(legendPosition === 'left' || legendPosition === 'right')
             wrapper.style('flex-direction', 'column');
+        else
+            wrapper.style('flex-wrap', 'wrap');
         
         const itemWrappers = wrapper
             .selectAll('.legend-item')

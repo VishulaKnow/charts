@@ -1,6 +1,7 @@
-import * as d3 from "d3";
 import { AxisPosition, Domain, TwoDimensionalChart } from "../config/config";
-import { BlockMargin, DataRow, Size } from "./model";
+import { DataManagerModel } from "./dataManagerModel";
+import { BlockMargin, DataRow, DataSource, Size } from "./model";
+import { ModelHelper } from "./modelHelper";
 
 export enum ScaleType {
     Key, Value
@@ -8,7 +9,7 @@ export enum ScaleType {
 
 export class ScaleModel
 {
-    static getScaleRangePeek(scaleType: ScaleType, chartOrientation: string, margin: BlockMargin, blockSize: Size): number {
+    public static getScaleRangePeek(scaleType: ScaleType, chartOrientation: string, margin: BlockMargin, blockSize: Size): number {
         if(chartOrientation === 'vertical')
             return scaleType === ScaleType.Key 
                 ? blockSize.width - margin.left - margin.right
@@ -17,32 +18,41 @@ export class ScaleModel
             ? blockSize.height - margin.top - margin.bottom
             : blockSize.width - margin.left - margin.right;
     }
+
+    public static getScaleKeyDomain(allowableKeys: string[]): any[] {
+        return allowableKeys;
+    }
     
-    static getScaleDomain(scaleType: ScaleType, configDomain: Domain, data: DataRow[], chart: TwoDimensionalChart, keyAxisPosition: AxisPosition = null, allowableKeys: string[] = []): any[] {
-        if(scaleType === ScaleType.Key) {
-            return allowableKeys;
-        } else {
-            let domainPeekMin: number;
-            let domainPeekMax: number;
-            if(configDomain.start === -1)
-                domainPeekMin = 0;
-            else
-                domainPeekMin = configDomain.start;
-            if(configDomain.end === -1)
-                domainPeekMax = d3.max(data, d => d[chart.data.valueField.name]);
-            else
-                domainPeekMax = configDomain.end;
-                
-            if(chart.orientation === 'horizontal')
-                if(keyAxisPosition === 'start')
-                    return [domainPeekMin, domainPeekMax];
-                else 
-                    return [domainPeekMax, domainPeekMin]
-            else 
-                if(keyAxisPosition === 'start')
-                    return [domainPeekMin, domainPeekMax];
-                else 
-                    return [domainPeekMax, domainPeekMin];
-        }
+    public static getScaleValueDomain(configDomain: Domain, data: DataSource, charts: TwoDimensionalChart[], keyAxisPosition: AxisPosition, allowableKeys: string[]): any[] {
+        let domainPeekMin: number;
+        let domainPeekMax: number;
+        if(configDomain.start === -1)
+            domainPeekMin = 0;
+        else
+            domainPeekMin = configDomain.start;
+        if(configDomain.end === -1)
+            domainPeekMax = this.getScopedScalesMaxValue(charts, data, allowableKeys);
+        else
+            domainPeekMax = configDomain.end;
+            
+        if(keyAxisPosition === 'start')
+            return [domainPeekMin, domainPeekMax];
+        else 
+            return [domainPeekMax, domainPeekMin];
+    }
+
+    private static getScopedScalesMaxValue(charts: TwoDimensionalChart[], data: DataSource, allowableKeys: string[]): number {
+        let max: number = 0;
+        charts.forEach(chart => {
+            const scopedData = DataManagerModel.getScopedChartData(data[chart.data.dataSource], allowableKeys, chart.data.keyField.name);
+            const chartMaxValue = this.getChartMaxValue(chart, scopedData);
+            if(max < chartMaxValue)
+                max = chartMaxValue;
+        });
+        return max;
+    }
+
+    private static getChartMaxValue(chart: TwoDimensionalChart, data: DataRow[]): number {
+        return ModelHelper.getMaxValue(data.map(d => d[chart.data.valueField.name]));
     }
 }

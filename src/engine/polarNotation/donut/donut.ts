@@ -15,38 +15,8 @@ interface Translate {
 
 export class Donut
 {
-    static getOuterRadiusRadius(margin: BlockMargin, blockSize: Size): number {
-        return Math.min(blockSize.width - margin.left - margin.right,
-            blockSize.height - margin.top - margin.bottom) / 2;
-    }
-    
-    static getArc(outerRadius: number, innerRadius: number = 0): d3.Arc<any, d3.PieArcDatum<DataRow>> {
-        return d3.arc<d3.PieArcDatum<DataRow>>()
-            .innerRadius(innerRadius)
-            .outerRadius(outerRadius);
-    }
-    
-    static getPie(valueField: string, padAngle: number = 0): d3.Pie<any, DataRow> {
-        return d3.pie<DataRow>()
-            .padAngle(padAngle)
-            .sort(null)
-            .value(d => d[valueField]);
-    }
-    
-    static renderDonutText(arcItems: d3.Selection<SVGGElement, d3.PieArcDatum<DataRow>, d3.BaseType, unknown>, arc: d3.Arc<any, d3.PieArcDatum<DataRow>>, field: string): void {
-        arcItems
-            .append('text')
-            .attr('transform', d => `translate(${arc.centroid(d)}) rotate(-90) rotate(${d.endAngle < Math.PI ? 
-                (d.startAngle / 2 + d.endAngle / 2) * 180 / Math.PI : 
-                (d.startAngle / 2  + d.endAngle / 2 + Math.PI) * 180 / Math.PI})`)
-            .attr('font-size', 10)
-            .attr('class', 'data-label')
-            .text(d => d.data[field])
-            .style('text-anchor', 'middle');
-    }
-    
-    static render(data: DataRow[], margin: BlockMargin, valueField: string, appearanceOptions: PolarChartAppearanceModel, cssClasses: string[], chartPalette: Color[], blockSize: Size): void {
-        const radius = this.getOuterRadiusRadius(margin, blockSize);
+    public static render(data: DataRow[], margin: BlockMargin, valueField: string, appearanceOptions: PolarChartAppearanceModel, cssClasses: string[], chartPalette: Color[], blockSize: Size): void {
+        const radius = this.getOuterRadius(margin, blockSize);
         const arc = this.getArc(radius, radius * 0.01 * appearanceOptions.innerRadius);
         const pie = this.getPie(valueField, appearanceOptions.padAngle);
     
@@ -82,8 +52,38 @@ export class Donut
         }
         this.renderDonutCenterText(radius * 0.01 * appearanceOptions.innerRadius, aggregator, translate);
     }
+
+    private static getOuterRadius(margin: BlockMargin, blockSize: Size): number {
+        return Math.min(blockSize.width - margin.left - margin.right,
+            blockSize.height - margin.top - margin.bottom) / 2;
+    }
     
-    static renderDonutCenterText(innerRadius: number, aggregator: Aggregator, translate: Translate): void {
+    private static getArc(outerRadius: number, innerRadius: number = 0): d3.Arc<any, d3.PieArcDatum<DataRow>> {
+        return d3.arc<d3.PieArcDatum<DataRow>>()
+            .innerRadius(innerRadius)
+            .outerRadius(outerRadius);
+    }
+    
+    private static getPie(valueField: string, padAngle: number = 0): d3.Pie<any, DataRow> {
+        return d3.pie<DataRow>()
+            .padAngle(padAngle)
+            .sort(null)
+            .value(d => d[valueField]);
+    }
+    
+    private static renderDonutText(arcItems: d3.Selection<SVGGElement, d3.PieArcDatum<DataRow>, d3.BaseType, unknown>, arc: d3.Arc<any, d3.PieArcDatum<DataRow>>, field: string): void {
+        arcItems
+            .append('text')
+            .attr('transform', d => `translate(${arc.centroid(d)}) rotate(-90) rotate(${d.endAngle < Math.PI ? 
+                (d.startAngle / 2 + d.endAngle / 2) * 180 / Math.PI : 
+                (d.startAngle / 2  + d.endAngle / 2 + Math.PI) * 180 / Math.PI})`)
+            .attr('font-size', 10)
+            .attr('class', 'data-label')
+            .text(d => d.data[field])
+            .style('text-anchor', 'middle');
+    }
+    
+    private static renderDonutCenterText(innerRadius: number, aggregator: Aggregator, translate: Translate): void {
         if(innerRadius > 100) {
             const text = SvgBlock.getSvg()
                 .append('text')
@@ -100,7 +100,7 @@ export class Donut
         }
     }
 
-    static setElementsColor(arcItems: d3.Selection<SVGGElement, d3.PieArcDatum<DataRow>, d3.BaseType, unknown>, colorPalette: Color[], chartType: 'donut'): void {
+    private static setElementsColor(arcItems: d3.Selection<SVGGElement, d3.PieArcDatum<DataRow>, d3.BaseType, unknown>, colorPalette: Color[], chartType: 'donut'): void {
         if(chartType === 'donut') {
             arcItems
                 .select('path')

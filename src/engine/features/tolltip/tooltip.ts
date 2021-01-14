@@ -1,8 +1,8 @@
 import * as d3 from "d3";
-import { BlockMargin, DataRow, DataSource, Field, Model, PolarChartModel, Size, TwoDimensionalChartModel } from "../../model/model";
-import { Helper } from "../helper";
-import { Scales } from "../twoDimensionalNotation/scale/scale";
-import { SvgBlock } from "../svgBlock/svgBlock";
+import { BlockMargin, DataRow, DataSource, Field, Model, PolarChartModel, Size, TwoDimensionalChartModel } from "../../../model/model";
+import { Helper } from "../../helper";
+import { Scales } from "../../twoDimensionalNotation/scale/scale";
+import { SvgBlock } from "../../svgBlock/svgBlock";
 import { TooltipHelper } from "./tooltipHelper";
 
 interface TooltipCoordinate {
@@ -12,7 +12,7 @@ interface TooltipCoordinate {
 
 export class Tooltip
 {
-    static renderTooltips(model: Model, data: DataSource, scales: Scales) {
+    public static renderTooltips(model: Model, data: DataSource, scales: Scales) {
         d3.select('.wrapper')
             .append('div')
             .attr('class', 'tooltip-wrapper');
@@ -66,7 +66,7 @@ export class Tooltip
         })
     }
     
-    static renderLineTooltip(scaleKey: d3.ScaleBand<string>, margin: BlockMargin, blockSize: Size, charts: TwoDimensionalChartModel[], data: DataSource): void {
+    private static renderLineTooltip(scaleKey: d3.ScaleBand<string>, margin: BlockMargin, blockSize: Size, charts: TwoDimensionalChartModel[], data: DataSource): void {
         const wrapper = d3.select('.tooltip-wrapper');
         const tooltipClass = this;
     
@@ -96,9 +96,9 @@ export class Tooltip
                     tooltip.style('display', 'block');
                 })
                 .on('mousemove', function(event) {
-                    const index = TooltipHelper.getKeyIndex(d3.pointer(event, this), this, charts[0].orient, margin, bandSize);        
+                    const index = TooltipHelper.getKeyIndex(d3.pointer(event, this), charts[0].orient, margin, bandSize);        
                     const key = scaleKey.domain()[index];
-                    tooltip.html(`${TooltipHelper.getMultplyTooltipText(charts, data, key)}`);
+                    tooltip.html(`${TooltipHelper.getTooltipMultyText(charts, data, key)}`);
                     
                     const tooltipCoordinate = tooltipClass.getTooltipCoordinate(tooltip, d3.pointer(event, this), blockSize, margin);
                     tooltip
@@ -115,7 +115,7 @@ export class Tooltip
         }
     }
 
-    static getTooltipCoordinate(tooltip: d3.Selection<d3.BaseType, unknown, HTMLElement, any>, pointer: [number, number], blockSize: Size, margin: BlockMargin): TooltipCoordinate {
+    private static getTooltipCoordinate(tooltip: d3.Selection<d3.BaseType, unknown, HTMLElement, any>, pointer: [number, number], blockSize: Size, margin: BlockMargin): TooltipCoordinate {
         let x = pointer[0];
         let y = pointer[1];
         // let tooltipWidth = (tooltip.node() as HTMLElement).getBoundingClientRect().width;
@@ -136,7 +136,7 @@ export class Tooltip
         }
     }
     
-    static setTooltipLineAttributes(tooltipLine: d3.Selection<SVGLineElement, unknown, HTMLElement, any>, scaleKey: d3.ScaleBand<string>, margin: BlockMargin, key: string, orient: 'vertical' | 'horizontal',  blockSize: Size): void {
+    private static setTooltipLineAttributes(tooltipLine: d3.Selection<SVGLineElement, unknown, HTMLElement, any>, scaleKey: d3.ScaleBand<string>, margin: BlockMargin, key: string, orient: 'vertical' | 'horizontal',  blockSize: Size): void {
         if(orient === 'vertical')
             tooltipLine
                 .attr('x1', scaleKey(key) + margin.left + scaleKey.bandwidth() / 2)
@@ -151,7 +151,7 @@ export class Tooltip
                 .attr('y2', scaleKey(key) + margin.top + scaleKey.bandwidth() / 2);
     }
     
-    static renderTooltipsForDonut(charts: PolarChartModel[], data: DataSource): void {
+    private static renderTooltipsForDonut(charts: PolarChartModel[], data: DataSource): void {
         charts.forEach(chart => {
             const attrTransform = d3.select('.donut-block').attr('transform');
             const translateNumbers = attrTransform.substring(10, attrTransform.length - 1).split(', ');
@@ -164,7 +164,7 @@ export class Tooltip
         })
     }
     
-    static renderTooltipForDonut(arcs: d3.Selection<d3.BaseType, unknown, d3.BaseType, unknown>, fields: Field[], data: DataRow[], translateX: number, translateY: number): void {
+    private static renderTooltipForDonut(arcs: d3.Selection<d3.BaseType, unknown, d3.BaseType, unknown>, fields: Field[], data: DataRow[], translateX: number, translateY: number): void {
         const wrapper = d3.select('.tooltip-wrapper');
 
         const tooltip = wrapper

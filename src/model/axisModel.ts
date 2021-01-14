@@ -2,24 +2,37 @@ import { AxisPosition, ChartOrientation } from "../config/config";
 import { BlockMargin, Orient, Size } from "./model";
 import { AxisType, CLASSES } from "./modelOptions";
 
+interface LabelSize {
+    width: number;
+    height: number
+}
+
 export class AxisModel
 {
-    static getLabelTextMaxWidth(legendMaxWidth: number, labelTexts: any[]): number {
+    public static getLabelSize(legendMaxWidth: number, labelTexts: any[]): LabelSize {
+        const labelSize = {
+            width: 0,
+            height: 0
+        }
         const textBlock = document.createElement('span');
+        textBlock.style.position = 'absolute';
         textBlock.classList.add(CLASSES.dataLabel);
+        let maxLabel = '';
         let maxWidth = 0;
         labelTexts.forEach((text: string) => {
-            textBlock.textContent = text;
-            document.querySelector(`.${CLASSES.mainWrapper}`).append(textBlock);
-            if(textBlock.getBoundingClientRect().width > maxWidth) {
-                maxWidth = textBlock.getBoundingClientRect().width;
-            }
+            if(text.length > maxLabel.length)
+                maxLabel = text;
         });
+        textBlock.textContent = maxLabel;
+        document.querySelector(`.${CLASSES.mainWrapper}`).append(textBlock);
+        maxWidth = textBlock.getBoundingClientRect().width;
+        labelSize.height = textBlock.getBoundingClientRect().height;
+        labelSize.width = maxWidth > legendMaxWidth ? legendMaxWidth : maxWidth;
         textBlock.remove();
-        return maxWidth > legendMaxWidth ? legendMaxWidth : maxWidth;
+        return labelSize;
     }
 
-    static getAxisLength(chartOrientation: ChartOrientation, margin: BlockMargin, blockSize: Size): number {
+    public static getAxisLength(chartOrientation: ChartOrientation, margin: BlockMargin, blockSize: Size): number {
         if(chartOrientation === 'horizontal') {
             return blockSize.height - margin.top - margin.bottom;
         } else {
@@ -27,16 +40,7 @@ export class AxisModel
         }
     }
 
-    static getLabelHeight(cssClass: string): number {
-        const span = document.createElement('span');
-        span.classList.add(cssClass);
-        document.querySelector(`.${CLASSES.mainWrapper}`).append(span)    
-        const size = parseFloat(window.getComputedStyle(span, null).getPropertyValue('font-size'));
-        span.remove();
-        return size;
-    }
-
-    static getAxisOrient(axisType: AxisType, chartOrientation: ChartOrientation, axisPosition: AxisPosition): Orient {
+    public static getAxisOrient(axisType: AxisType, chartOrientation: ChartOrientation, axisPosition: AxisPosition): Orient {
         if(chartOrientation === 'vertical') {
             if(axisPosition === 'start')
                 return axisType === AxisType.Key ? 'top' : 'left';
@@ -50,7 +54,7 @@ export class AxisModel
         }
     }
 
-    static getAxisTranslateX(axisType: AxisType, chartOrientation: ChartOrientation, axisPosition: AxisPosition, margin: BlockMargin, blockWidth: number): number {
+    public static getAxisTranslateX(axisType: AxisType, chartOrientation: ChartOrientation, axisPosition: AxisPosition, margin: BlockMargin, blockWidth: number): number {
         const orient = AxisModel.getAxisOrient(axisType, chartOrientation, axisPosition);
         if(orient === 'top' || orient === 'left')
             return margin.left;
@@ -60,7 +64,7 @@ export class AxisModel
             return blockWidth - margin.right;
     }
     
-    static getAxisTranslateY(axisType: AxisType, chartOrientation: ChartOrientation, axisPosition: AxisPosition, margin: BlockMargin, blockHeight: number): number {
+    public static getAxisTranslateY(axisType: AxisType, chartOrientation: ChartOrientation, axisPosition: AxisPosition, margin: BlockMargin, blockHeight: number): number {
         const orient = AxisModel.getAxisOrient(axisType, chartOrientation, axisPosition);
         if(orient === 'top' || orient === 'left')
             return margin.top;

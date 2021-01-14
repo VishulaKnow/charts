@@ -14,7 +14,44 @@ interface AreaChartCoordinate {
 
 export class Area
 {
-    static getAreaGenerator(keyAxisOrient: string): d3.Area<AreaChartCoordinate> {
+    public static render(scales: Scales, data: DataRow[], margin: BlockMargin, keyField: string, valueField: string, keyAxisOrient: string, cssClasses: string[], chartPalette: Color[], blockSize: Size): void {
+        const area = this.getAreaGenerator(keyAxisOrient);
+        const areaCoordinate: AreaChartCoordinate[] = this.getAreaCoordinateByKeyOrient(keyAxisOrient,
+            data,
+            scales,
+            margin,
+            keyField,
+            valueField,
+            blockSize);
+    
+        const path = SvgBlock.getSvg()
+            .append('path')
+            .attr('d', area(areaCoordinate))
+            .attr('class', 'area')
+            .style('clip-path', 'url(#chart-block)');
+    
+        Helper.setCssClasses(path, cssClasses);
+        Helper.setChartColor(path, chartPalette, 'area');
+    }
+
+    public static updateAreaChartByValueAxis(scales: Scales, data: DataRow[], margin: BlockMargin, keyField: string, valueField: string, keyAxisOrient: string, blockSize: Size, cssClasses: string[]): void {
+        const area = this.getAreaGenerator(keyAxisOrient);
+        const areaCoordinate: AreaChartCoordinate[] = this.getAreaCoordinateByKeyOrient(keyAxisOrient,
+            data,
+            scales,
+            margin,
+            keyField,
+            valueField,
+            blockSize);
+    
+        SvgBlock.getSvg()
+            .select(`.area${Helper.getCssClassesLine(cssClasses)}`)
+            .transition()
+            .duration(1000)
+                .attr('d', area(areaCoordinate));
+    }
+
+    private static getAreaGenerator(keyAxisOrient: string): d3.Area<AreaChartCoordinate> {
         if(keyAxisOrient === 'bottom' || keyAxisOrient === 'top')
             return d3.area<AreaChartCoordinate>()
                 .x(d => d.x0)
@@ -27,7 +64,7 @@ export class Area
                 .y(d => d.y0);
     }
     
-    static getAreaCoordinateByKeyOrient(axisOrient: string, data: DataRow[], scales: Scales, margin: BlockMargin, keyField: string, valueField: string, blockSize: Size) : AreaChartCoordinate[] {
+    private static getAreaCoordinateByKeyOrient(axisOrient: string, data: DataRow[], scales: Scales, margin: BlockMargin, keyField: string, valueField: string, blockSize: Size) : AreaChartCoordinate[] {
         const areaCoordinate: AreaChartCoordinate[] = [];
         if(axisOrient === 'bottom' || axisOrient === 'top') {
             let y0: number = margin.top;
@@ -56,42 +93,5 @@ export class Area
             });
         }   
         return areaCoordinate;
-    }
-    
-    static render(scales: Scales, data: DataRow[], margin: BlockMargin, keyField: string, valueField: string, keyAxisOrient: string, cssClasses: string[], chartPalette: Color[], blockSize: Size): void {
-        const area = this.getAreaGenerator(keyAxisOrient);
-        const areaCoordinate: AreaChartCoordinate[] = this.getAreaCoordinateByKeyOrient(keyAxisOrient,
-            data,
-            scales,
-            margin,
-            keyField,
-            valueField,
-            blockSize);
-    
-        const path = SvgBlock.getSvg()
-            .append('path')
-            .attr('d', area(areaCoordinate))
-            .attr('class', 'area')
-            .style('clip-path', 'url(#chart-block)');
-    
-        Helper.setCssClasses(path, cssClasses);
-        Helper.setChartColor(path, chartPalette, 'area');
-    }
-
-    static updateAreaChartByValueAxis(scales: Scales, data: DataRow[], margin: BlockMargin, keyField: string, valueField: string, keyAxisOrient: string, blockSize: Size, cssClasses: string[]): void {
-        const area = this.getAreaGenerator(keyAxisOrient);
-        const areaCoordinate: AreaChartCoordinate[] = this.getAreaCoordinateByKeyOrient(keyAxisOrient,
-            data,
-            scales,
-            margin,
-            keyField,
-            valueField,
-            blockSize);
-    
-        SvgBlock.getSvg()
-            .select(`.area${Helper.getCssClassesLine(cssClasses)}`)
-            .transition()
-            .duration(1000)
-                .attr('d', area(areaCoordinate));
     }
 }

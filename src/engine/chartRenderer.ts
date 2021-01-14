@@ -4,16 +4,17 @@ import { Axis } from "./twoDimensionalNotation/axis/axis";
 import { Bar } from "./twoDimensionalNotation/bar/bar";
 import { Donut } from "./polarNotation/donut/donut";
 import { GridLine } from "./twoDimensionalNotation/gridLine/gridLine";
-import { Legend } from "./legend/legend";
+import { Legend } from "./features/legend/legend";
 import { Line } from "./twoDimensionalNotation/line/line";
 import { Scale, Scales } from "./twoDimensionalNotation/scale/scale";
 import { SvgBlock } from "./svgBlock/svgBlock";
-import { Tooltip } from "./tolltip/tooltip";
+import { Tooltip } from "./features/tolltip/tooltip";
 import { RecordOverflowAlert } from "./recordOverflowAlert/recordOverflowAlert";
+import config from "../config/configOptions";
 
 export class ChartRenderer
 {
-    static render2D(model: Model, data: DataSource): void {
+    public static render2D(model: Model, data: DataSource): void {
         const options = <TwoDimensionalOptionsModel>model.options;
     
         Scale.fillScales(options.scale.scaleKey,
@@ -45,7 +46,7 @@ export class ChartRenderer
             RecordOverflowAlert.render(model.dataSettings.scope.hidedRecordsAmount);
     }
     
-    static renderPolar(model: Model, data: DataSource) {
+    public static renderPolar(model: Model, data: DataSource) {
         const options = <PolarOptionsModel>model.options;
     
         SvgBlock.render(model.blockCanvas.class, model.blockCanvas.size);
@@ -65,7 +66,32 @@ export class ChartRenderer
             RecordOverflowAlert.render(model.dataSettings.scope.hidedRecordsAmount);
     }
 
-    static render2DCharts(charts: TwoDimensionalChartModel[], scales: Scales, data: DataSource, margin: BlockMargin, keyAxisOrient: Orient, barDistance: number, blockSize: Size) {
+    public static updateByValueAxis(model: Model, data: DataSource) {
+        const options = <TwoDimensionalOptionsModel>model.options;
+    
+        Scale.fillScales(options.scale.scaleKey,
+            options.scale.scaleValue,
+            model.chartSettings.bar.groupDistance);
+    
+        Axis.updateValueAxisDomain(Scale.scales.scaleValue,
+            options.axis.valueAxis.class,
+            options.axis.valueAxis.orient);
+
+        GridLine.rerender(options.additionalElements.gridLine.flag,
+            options.axis.keyAxis, 
+            options.axis.valueAxis, 
+            config.canvas.size, 
+            model.chartBlock.margin);
+        
+        this.updateChartsByValueAxis(options.charts,
+            Scale.scales,
+            data,
+            model.chartBlock.margin,
+            options.axis.keyAxis.orient,
+            model.blockCanvas.size);
+    }
+
+    private static render2DCharts(charts: TwoDimensionalChartModel[], scales: Scales, data: DataSource, margin: BlockMargin, keyAxisOrient: Orient, barDistance: number, blockSize: Size) {
         SvgBlock.getSvg()
             .append('clipPath')
             .attr('id', 'chart-block')
@@ -110,7 +136,7 @@ export class ChartRenderer
         });
     }
     
-    static renderPolarCharts(charts: PolarChartModel[], data: DataSource, margin: BlockMargin, blockSize: Size) {
+    private static renderPolarCharts(charts: PolarChartModel[], data: DataSource, margin: BlockMargin, blockSize: Size) {
         charts.forEach((chart: PolarChartModel) => {
             if(chart.type === 'donut')
                 Donut.render(data[chart.data.dataSource],
@@ -123,12 +149,11 @@ export class ChartRenderer
         });
     }
 
-    static updateChartsByValueAxis(charts: TwoDimensionalChartModel[], scales: Scales, data: DataSource, margin: BlockMargin, keyAxisOrient: string, blockSize: Size): void {
+    private static updateChartsByValueAxis(charts: TwoDimensionalChartModel[], scales: Scales, data: DataSource, margin: BlockMargin, keyAxisOrient: string, blockSize: Size): void {
         charts.forEach((chart: TwoDimensionalChartModel) => {
             if(chart.type === 'bar')
                 Bar.updateBarChartByValueAxis(scales,
                     margin,
-                    chart.data.keyField.name,
                     chart.data.valueField.name,
                     keyAxisOrient,
                     blockSize,
@@ -152,24 +177,5 @@ export class ChartRenderer
                     blockSize,
                     chart.cssClasses);
         });
-    }
-    
-    static updateByValueAxis(model: Model, data: DataSource) {
-        const options = <TwoDimensionalOptionsModel>model.options;
-    
-        Scale.fillScales(options.scale.scaleKey,
-            options.scale.scaleValue,
-            model.chartSettings.bar.groupDistance);
-    
-        Axis.updateValueAxisDomain(Scale.scales.scaleValue,
-            options.axis.valueAxis.class,
-            options.axis.valueAxis.orient);
-        
-        this.updateChartsByValueAxis(options.charts,
-            Scale.scales,
-            data,
-            model.chartBlock.margin,
-            options.axis.keyAxis.orient,
-            model.blockCanvas.size);
     }
 }

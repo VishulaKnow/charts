@@ -2,7 +2,7 @@ import { Config } from './config';
 
 const config: Config = {
     canvas: {
-        class: 'svg-chart border',
+        class: 'svg-chart outline',
         size: {
             width: 1200,
             height: 650
@@ -29,15 +29,15 @@ const config: Config = {
         additionalElements: {
             gridLine: {
                 flag: {
-                    horizontal: true,
-                    vertical: false
+                    value: true,
+                    key: false
                 }
             }
         },
         charts: [
             {
                 title: 'Car prices',
-                type: 'line',
+                type: 'bar',
                 legend: {
                     position: 'off'
                 },
@@ -70,7 +70,7 @@ const config: Config = {
             },
             {
                 title: 'Car prices',
-                type: 'line',
+                type: 'bar',
                 legend: {
                     position: 'off'
                 },

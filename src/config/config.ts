@@ -5,7 +5,7 @@ export type ChartOrientation = 'vertical' | 'horizontal';
 export type ChartNotation = '2d' | 'polar';
 export type ChartType = 'bar' | 'line' | 'area' | 'donut';
 export type TwoDimensionalChartType = 'line' | 'bar' | 'area';
-export type LegendPosition = 'off' | 'top' | 'left' | 'right' | 'bottom';
+export type LegendPosition = 'off' | 'top' | 'bottom' | 'left' | 'right';
 
 export interface Config {
     canvas: Canvas;
@@ -71,8 +71,8 @@ interface GridLineOptions {
     flag: GridLineFlag;
 }
 interface GridLineFlag {
-    vertical: boolean;
-    horizontal: boolean;
+    key: boolean;
+    value: boolean;
 }
 
 

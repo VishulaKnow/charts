@@ -21,8 +21,8 @@ interface GridLineOptions {
     flag: GridLineFlag;
 }
 interface GridLineFlag {
-    vertical: boolean;
-    horizontal: boolean;
+    key: boolean;
+    value: boolean;
 }
 
 

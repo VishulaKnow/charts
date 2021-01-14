@@ -2,7 +2,7 @@ import { CLASSES } from "../modelOptions";
 
 export class LegendCanvasModel
 {
-    static getLegendHeight(texts: string[], blockWidth: number): number {
+    public static getLegendHeight(texts: string[], blockWidth: number): number {
         const legendWrapper = document.createElement('div');
         legendWrapper.style.display = 'flex';
         legendWrapper.style.position = 'absolute';
@@ -25,7 +25,7 @@ export class LegendCanvasModel
         return height;
     }
     
-    static getLegendItemWidth(text: string): number {
+    public static getLegendItemWidth(text: string): number {
         const itemWrapper = document.createElement('div');
         const colorBlock = document.createElement('span');
         const textBlock = document.createElement('span');

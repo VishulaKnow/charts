@@ -1,7 +1,7 @@
 import * as d3 from "d3";
 import { Color } from "d3";
 import { BlockMargin, DataRow, Orient, Size } from "../../../model/model";
-import { DataHelper } from "../../dataHelper/dataHelper";
+import { ValueFormatter } from "../../valueFormatter";
 import { Helper } from "../../helper";
 import { Scales } from "../scale/scale";
 import { SvgBlock } from "../../svgBlock/svgBlock";
@@ -15,7 +15,7 @@ interface BarAttrs {
 
 export class Bar
 {
-    static render(scales: Scales, data: DataRow[], margin: BlockMargin, keyField: string, valueField: string, keyAxisOrient: Orient, cssClasses: string[], chartPalette: Color[], blockSize: Size, barChartsAmount: number, barDistance: number): void {
+    public static render(scales: Scales, data: DataRow[], margin: BlockMargin, keyField: string, valueField: string, keyAxisOrient: Orient, cssClasses: string[], chartPalette: Color[], blockSize: Size, barChartsAmount: number, barDistance: number): void {
         let groups = SvgBlock.getSvg()
             .selectAll('.bar-group');
     
@@ -54,7 +54,20 @@ export class Bar
         Helper.setChartColor(bars, chartPalette, 'bar');
     }
 
-    static getBarAttrsByKeyOrient(axisOrient: Orient, scales: Scales, margin: BlockMargin, keyField: string, valueField: string, blockSize: Size, barChartsAmount: number, barDistance: number): BarAttrs {
+    public static updateBarChartByValueAxis(scales: Scales, margin: BlockMargin, valueField: string, keyAxisOrient: string, blockSize: Size, cssClasses: string[]): void {
+        const bars = SvgBlock.getSvg()
+            .selectAll(`.bar-item${Helper.getCssClassesLine(cssClasses)}`) as d3.Selection<SVGRectElement, DataRow, d3.BaseType, unknown>;
+    
+        this.fillBarAttrsByKeyOrientWithTransition(bars,
+            keyAxisOrient,
+            scales.scaleValue,
+            margin,
+            valueField,
+            blockSize,
+            1000);
+    }
+
+    private static getBarAttrsByKeyOrient(axisOrient: Orient, scales: Scales, margin: BlockMargin, keyField: string, valueField: string, blockSize: Size, barChartsAmount: number, barDistance: number): BarAttrs {
         const chartIndex = d3.select('.bar-group').selectAll('.bar-item').size() - 1;
         const barSize = (scales.scaleKey.bandwidth() - barDistance * (barChartsAmount - 1)) / barChartsAmount;
         const attrs: BarAttrs = {
@@ -73,60 +86,47 @@ export class Bar
         }
         if(axisOrient === 'top') {
             attrs.y = d => margin.top;
-            attrs.height = d => DataHelper.getValueOrZero(scales.scaleValue(d[valueField]));
+            attrs.height = d => ValueFormatter.getValueOrZero(scales.scaleValue(d[valueField]));
         } 
         else if(axisOrient === 'bottom') {
             attrs.y = d => scales.scaleValue(d[valueField]) + margin.top;
-            attrs.height = d => DataHelper.getValueOrZero(blockSize.height - margin.top - margin.bottom - scales.scaleValue(d[valueField]));
+            attrs.height = d => ValueFormatter.getValueOrZero(blockSize.height - margin.top - margin.bottom - scales.scaleValue(d[valueField]));
         }   
         else if(axisOrient === 'left') {
             attrs.x = d => margin.left;
-            attrs.width = d => DataHelper.getValueOrZero(scales.scaleValue(d[valueField]));
+            attrs.width = d => ValueFormatter.getValueOrZero(scales.scaleValue(d[valueField]));
         }    
         else if(axisOrient === 'right') {
             attrs.x = d => scales.scaleValue(d[valueField]) + margin.left;
-            attrs.width = d => DataHelper.getValueOrZero(blockSize.width - margin.left - margin.right - scales.scaleValue(d[valueField]))
+            attrs.width = d => ValueFormatter.getValueOrZero(blockSize.width - margin.left - margin.right - scales.scaleValue(d[valueField]))
         }
         return attrs;
     }
 
-    static fillBarAttrsByKeyOrient(bars: d3.Selection<SVGRectElement, DataRow, d3.BaseType, unknown>, barAttrs: BarAttrs): void {
+    private static fillBarAttrsByKeyOrient(bars: d3.Selection<SVGRectElement, DataRow, d3.BaseType, unknown>, barAttrs: BarAttrs): void {
         bars.attr('x', d => barAttrs.x(d))
             .attr('y', d => barAttrs.y(d))
             .attr('height', d => barAttrs.height(d))
             .attr('width', d => barAttrs.width(d));   
     }
-
-    static updateBarChartByValueAxis(scales: Scales, margin: BlockMargin, keyField: string, valueField: string, keyAxisOrient: string, blockSize: Size, cssClasses: string[]): void {
-        const bars = SvgBlock.getSvg()
-            .selectAll(`.bar-item${Helper.getCssClassesLine(cssClasses)}`) as d3.Selection<SVGRectElement, DataRow, d3.BaseType, unknown>;
     
-        this.fillBarAttrsByKeyOrientWithTransition(bars,
-            keyAxisOrient,
-            scales.scaleValue,
-            margin,
-            valueField,
-            blockSize,
-            1000);
-    }
-    
-    static fillBarAttrsByKeyOrientWithTransition(bars: d3.Selection<SVGRectElement, DataRow, d3.BaseType, unknown>, axisOrient: string, scaleValue: d3.ScaleLinear<number, number>, margin: BlockMargin, valueField: string, blockSize: Size, transitionDuration: number): void {
+    private static fillBarAttrsByKeyOrientWithTransition(bars: d3.Selection<SVGRectElement, DataRow, d3.BaseType, unknown>, axisOrient: string, scaleValue: d3.ScaleLinear<number, number>, margin: BlockMargin, valueField: string, blockSize: Size, transitionDuration: number): void {
         const barsTran = bars.transition().duration(transitionDuration);
         if(axisOrient === 'top')
             barsTran
                 .attr('y', d => margin.top)
-                .attr('height', d => DataHelper.getValueOrZero(scaleValue(d[valueField])));
+                .attr('height', d => ValueFormatter.getValueOrZero(scaleValue(d[valueField])));
         else if(axisOrient === 'bottom')
             barsTran
                 .attr('y', d => scaleValue(d[valueField]) + margin.top)
-                .attr('height', d => DataHelper.getValueOrZero(blockSize.height - margin.top - margin.bottom - scaleValue(d[valueField])));
+                .attr('height', d => ValueFormatter.getValueOrZero(blockSize.height - margin.top - margin.bottom - scaleValue(d[valueField])));
         else if(axisOrient === 'left')
             barsTran
                 .attr('x', d => margin.left)
-                .attr('width', d => DataHelper.getValueOrZero(scaleValue(d[valueField])));
+                .attr('width', d => ValueFormatter.getValueOrZero(scaleValue(d[valueField])));
         else if(axisOrient === 'right')
             barsTran
                 .attr('x', d => scaleValue(d[valueField]) + margin.left)
-                .attr('width', d => DataHelper.getValueOrZero(blockSize.width - margin.left - margin.right - scaleValue(d[valueField]))); 
+                .attr('width', d => ValueFormatter.getValueOrZero(blockSize.width - margin.left - margin.right - scaleValue(d[valueField]))); 
     }
 }

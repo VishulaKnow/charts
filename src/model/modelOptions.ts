@@ -1,5 +1,5 @@
 import { Config } from '../config/config';
-import { Model, BlockCanvas, ChartBlock, TwoDimensionalOptionsModel, PolarOptionsModel, BlockMargin, LegendBlockModel, DataSettings, ChartSettings, DataFormat, DataScope, DataRow, DataSource } from './model';
+import { Model, BlockCanvas, ChartBlock, TwoDimensionalOptionsModel, PolarOptionsModel, BlockMargin, LegendBlockModel, DataSettings, ChartSettings, DataFormat, DataScope, DataSource } from './model';
 import { MarginModel } from './marginModel';
 import { TwoDimensionalModel } from './twoDimensionalModel';
 import { PolarModel } from './polarModel';
@@ -42,7 +42,7 @@ function getChartBlock(margin: BlockMargin): ChartBlock {
 
 function getOptions(config: Config, designerConfig: DesignerConfig, margin: BlockMargin, dataScope: DataScope, data: DataSource): TwoDimensionalOptionsModel | PolarOptionsModel {
     if(config.options.type === '2d') {
-        return TwoDimensionalModel.get2DOptions(config, designerConfig, config.options, designerConfig.canvas.axisLabel, designerConfig.chart.style.palette, margin, dataScope.allowableKeys, data);
+        return TwoDimensionalModel.get2DOptions(config, designerConfig, designerConfig.canvas.axisLabel, designerConfig.chart.style.palette, margin, dataScope, data);
     } else {
         return PolarModel.getPolarOptions(config.options, designerConfig.chart.style.palette, data, dataScope);
     }
@@ -81,6 +81,8 @@ function assembleModel(data: any = null): Model {
     }
     const margin = MarginModel.getMargin(designerConfig, config, legendBlock, data);
     const dataScope = DataManagerModel.getDataScope(config, margin, data, designerConfig);
+    if(config.options.type === 'polar')
+        MarginModel.recalcPolarMarginWithScopedData(margin, designerConfig, config, legendBlock, dataScope);
 
     const blockCanvas = getBlockCanvas(config);
     const chartBlock = getChartBlock(margin);
@@ -101,6 +103,12 @@ function assembleModel(data: any = null): Model {
 }
 
 export const model = assembleModel();
+
+export function getPreparedData(model: Model, data: DataSource): DataSource {
+    const preparedData = DataManagerModel.getScopedData(data, model);
+    return preparedData;
+}
+
 export function getUpdatedModel(data: any = null): Model {
     return assembleModel(data);
 }

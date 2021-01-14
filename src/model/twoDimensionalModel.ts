@@ -3,24 +3,26 @@ import { Config, TwoDimensionalChart, TwoDimensionalOptions } from "../config/co
 import { AxisLabelCanvas, DesignerConfig } from "../designer/designerConfig";
 import { AxisModel } from "./axisModel";
 import { ChartStyleModel } from "./chartStyleModel";
-import { BlockMargin, GridLineOptions, TwoDimensionalAdditionalElementsOptions, TwoDimensionalChartModel, TwoDimensionalOptionsModel } from "./model";
+import { GridLineModel } from "./gridLineModel";
+import { BlockMargin, DataScope, DataSource, GridLineOptions, TwoDimensionalAdditionalElementsOptions, TwoDimensionalChartModel, TwoDimensionalOptionsModel } from "./model";
 import { AxisType } from "./modelOptions";
 import { ScaleModel, ScaleType } from "./scaleModel";
 
 export class TwoDimensionalModel
 {
-    static get2DOptions(config: Config, designerConfig: DesignerConfig, configOptions: TwoDimensionalOptions, axisLabelDesignerOptions: AxisLabelCanvas, chartPalette: Color[], margin: BlockMargin, allowableKeys: string[], data: any): TwoDimensionalOptionsModel {
+    public static get2DOptions(config: Config, designerConfig: DesignerConfig, axisLabelDesignerOptions: AxisLabelCanvas, chartPalette: Color[], margin: BlockMargin, dataScope: DataScope, data: DataSource): TwoDimensionalOptionsModel {
+        const configOptions = <TwoDimensionalOptions>config.options
         return {
             scale: {
                 scaleKey: {
-                    domain: ScaleModel.getScaleDomain(ScaleType.Key, configOptions.axis.keyAxis.domain, data[configOptions.charts[0].data.dataSource], configOptions.charts[0], null, allowableKeys),
+                    domain: ScaleModel.getScaleKeyDomain(dataScope.allowableKeys),
                     range: {
                         start: 0,
                         end: ScaleModel.getScaleRangePeek(ScaleType.Key, configOptions.charts[0].orientation, margin, config.canvas.size)
                     }
                 },
                 scaleValue: {
-                    domain: ScaleModel.getScaleDomain(ScaleType.Value, configOptions.axis.valueAxis.domain, data[configOptions.charts[0].data.dataSource], configOptions.charts[0], configOptions.axis.keyAxis.position),
+                    domain: ScaleModel.getScaleValueDomain(configOptions.axis.valueAxis.domain, data, configOptions.charts, configOptions.axis.keyAxis.position, dataScope.allowableKeys),
                     range: {
                         start: 0,
                         end: ScaleModel.getScaleRangePeek(ScaleType.Value, configOptions.charts[0].orientation, margin, config.canvas.size)
@@ -53,16 +55,12 @@ export class TwoDimensionalModel
         }
     }
 
-    static get2DChartsModel(charts: TwoDimensionalChart[], chartPalette: Color[]): TwoDimensionalChartModel[] {
+    private static get2DChartsModel(charts: TwoDimensionalChart[], chartPalette: Color[]): TwoDimensionalChartModel[] {
         const chartsModel: TwoDimensionalChartModel[] = [];
         charts.forEach((chart, index) => {
             chartsModel.push({
                 type: chart.type,
-                data: {
-                    dataSource: chart.data.dataSource,
-                    keyField: chart.data.keyField,
-                    valueField: chart.data.valueField
-                },
+                data: { ...chart.data },
                 orient: chart.orientation,
                 legend: chart.legend,
                 tooltip: chart.tooltip,
@@ -73,24 +71,9 @@ export class TwoDimensionalModel
         return chartsModel;
     }
 
-    static get2DAdditionalElements(options: TwoDimensionalOptions, designerConfig: DesignerConfig): TwoDimensionalAdditionalElementsOptions {
+    public static get2DAdditionalElements(options: TwoDimensionalOptions, designerConfig: DesignerConfig): TwoDimensionalAdditionalElementsOptions {
         return {
-            gridLine: this.getGridLineOptions(options, designerConfig)
-        }
-    }
-
-    static getGridLineOptions(options: TwoDimensionalOptions, designerConfig: DesignerConfig): GridLineOptions {
-        let vertical: boolean = false;
-        let horizontal: boolean = false;
-        if(designerConfig.additionalElements.gridLine.flag.horizontal)
-            horizontal = options.additionalElements.gridLine.flag.horizontal;
-        if(designerConfig.additionalElements.gridLine.flag.vertical)
-            vertical = options.additionalElements.gridLine.flag.vertical;
-        return {
-            flag: {
-                vertical,
-                horizontal
-            }
+            gridLine: GridLineModel.getGridLineOptions(options, designerConfig)
         }
     }
 }

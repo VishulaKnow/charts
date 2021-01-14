@@ -3,17 +3,17 @@ import { TwoDimensionalChartType } from "../config/config";
 
 export class Helper
 {
-    static setCssClasses(elem: d3.Selection<d3.BaseType, unknown, any, unknown>, cssClasses: string[]): void {
+    public static setCssClasses(elem: d3.Selection<d3.BaseType, unknown, any, unknown>, cssClasses: string[]): void {
         cssClasses.forEach(cssClass => {
             elem.classed(cssClass, true);
         });
     }
 
-    static getCssClassesLine(cssClasses: string[]): string {
+    public static getCssClassesLine(cssClasses: string[]): string {
         return '.' + cssClasses.join('.');
     }
 
-    static setChartColor(elements: d3.Selection<d3.BaseType, unknown, d3.BaseType, unknown>, colorPalette: Color[], chartType: TwoDimensionalChartType): void {
+    public static setChartColor(elements: d3.Selection<d3.BaseType, unknown, d3.BaseType, unknown>, colorPalette: Color[], chartType: TwoDimensionalChartType): void {
         if(chartType === 'line') {
             elements.style('stroke', colorPalette[0].toString())
         } else {
@@ -21,7 +21,7 @@ export class Helper
         }
     }
 
-    static cropLabels(labelBlocks: d3.Selection<SVGGraphicsElement, unknown, HTMLElement, unknown>, maxWidth: number): void {
+    public static cropLabels(labelBlocks: d3.Selection<SVGGraphicsElement, unknown, HTMLElement, unknown>, maxWidth: number): void {
         for(let i = 0; i < labelBlocks.nodes().length; i++) {
             if(labelBlocks.nodes()[i].getBBox().width > maxWidth) {
                 const text = labelBlocks.nodes()[i].textContent;

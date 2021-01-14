@@ -8,12 +8,22 @@ export interface Scales {
 
 export class Scale 
 {
-    static scales: Scales = {
+    public static scales: Scales = {
         scaleKey: null,
         scaleValue: null
     }
 
-    static getScaleBand(domain: string[], rangeStart: number, rangeEnd: number, scalePadding: number): d3.ScaleBand<string> {
+    public static fillScales(scaleKey: ScaleOptions, scaleValue: ScaleOptions, scaleKeyPadding: number): void {
+        this.scales.scaleKey = this.getScaleBand(scaleKey.domain,
+            scaleKey.range.start,
+            scaleKey.range.end,
+            scaleKeyPadding);
+        this.scales.scaleValue = this.getScaleLinear(scaleValue.domain,
+            scaleValue.range.start,
+            scaleValue.range.end);
+    }
+
+    private static getScaleBand(domain: string[], rangeStart: number, rangeEnd: number, scalePadding: number): d3.ScaleBand<string> {
         const scale = d3.scaleBand()
             .domain(domain)
             .range([rangeStart, rangeEnd]);
@@ -26,19 +36,9 @@ export class Scale
         return scale;
     }
     
-    static getScaleLinear(domain: number[], rangeStart: number, rangeEnd: number): d3.ScaleLinear<number, number> {
+    private static getScaleLinear(domain: number[], rangeStart: number, rangeEnd: number): d3.ScaleLinear<number, number> {
         return d3.scaleLinear()
             .domain(domain)
             .range([rangeStart, rangeEnd]);
-    }
-
-    static fillScales(scaleKey: ScaleOptions, scaleValue: ScaleOptions, scaleKeyPadding: number): void {
-        this.scales.scaleKey = this.getScaleBand(scaleKey.domain,
-            scaleKey.range.start,
-            scaleKey.range.end,
-            scaleKeyPadding);
-        this.scales.scaleValue = this.getScaleLinear(scaleValue.domain,
-            scaleValue.range.start,
-            scaleValue.range.end);
     }
 }

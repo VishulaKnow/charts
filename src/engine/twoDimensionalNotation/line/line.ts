@@ -12,32 +12,7 @@ interface LineChartCoordinate {
 
 export class Line
 {
-    static getLineGenerator(): d3.Line<LineChartCoordinate> {
-        return d3.line<LineChartCoordinate>()
-            .x(d => d.x)
-            .y(d => d.y);
-    }
-    
-    static getLineCoordinateByKeyOrient(axisOrient: string, data: DataRow[], scales: Scales, margin: BlockMargin, keyField: string, valueField: string): LineChartCoordinate[] {
-        const lineCoordinate: LineChartCoordinate[] = [];
-        if(axisOrient === 'bottom' || axisOrient === 'top')
-            data.forEach(d => {
-                lineCoordinate.push({
-                    x: scales.scaleKey(d[keyField]) + scales.scaleKey.bandwidth() / 2 + margin.left,
-                    y: scales.scaleValue(d[valueField]) + margin.top
-                });
-            });
-        else if(axisOrient === 'left' || axisOrient === 'right')
-            data.forEach(d => {
-                lineCoordinate.push({
-                    x: scales.scaleValue(d[valueField]) + margin.left,
-                    y: scales.scaleKey(d[keyField]) + scales.scaleKey.bandwidth() / 2 + margin.top
-                });
-            });
-        return lineCoordinate;
-    }
-
-    static render(scales: Scales, data: DataRow[], margin: BlockMargin, keyField: string, valueField: string, keyAxisOrient: string, cssClasses: string[], chartPalette: Color[]): void {
+    public static render(scales: Scales, data: DataRow[], margin: BlockMargin, keyField: string, valueField: string, keyAxisOrient: string, cssClasses: string[], chartPalette: Color[]): void {
         const line = this.getLineGenerator();
         const lineCoordinate: LineChartCoordinate[] = this.getLineCoordinateByKeyOrient(keyAxisOrient,
             data,
@@ -56,7 +31,7 @@ export class Line
         Helper.setChartColor(path, chartPalette, 'line');
     }
 
-    static updateLineChartByValueAxis(scales: Scales, data: DataRow[], margin: BlockMargin, keyField: string, valueField: string, keyAxisOrient: string, cssClasses: string[]): void {
+    public static updateLineChartByValueAxis(scales: Scales, data: DataRow[], margin: BlockMargin, keyField: string, valueField: string, keyAxisOrient: string, cssClasses: string[]): void {
         const line = this.getLineGenerator();
         const lineCoordinate: LineChartCoordinate[] = this.getLineCoordinateByKeyOrient(keyAxisOrient,
             data,
@@ -70,5 +45,30 @@ export class Line
             .transition()
             .duration(1000)
                 .attr('d', line(lineCoordinate));
+    }
+
+    private static getLineGenerator(): d3.Line<LineChartCoordinate> {
+        return d3.line<LineChartCoordinate>()
+            .x(d => d.x)
+            .y(d => d.y);
+    }
+    
+    private static getLineCoordinateByKeyOrient(axisOrient: string, data: DataRow[], scales: Scales, margin: BlockMargin, keyField: string, valueField: string): LineChartCoordinate[] {
+        const lineCoordinate: LineChartCoordinate[] = [];
+        if(axisOrient === 'bottom' || axisOrient === 'top')
+            data.forEach(d => {
+                lineCoordinate.push({
+                    x: scales.scaleKey(d[keyField]) + scales.scaleKey.bandwidth() / 2 + margin.left,
+                    y: scales.scaleValue(d[valueField]) + margin.top
+                });
+            });
+        else if(axisOrient === 'left' || axisOrient === 'right')
+            data.forEach(d => {
+                lineCoordinate.push({
+                    x: scales.scaleValue(d[valueField]) + margin.left,
+                    y: scales.scaleKey(d[keyField]) + scales.scaleKey.bandwidth() / 2 + margin.top
+                });
+            });
+        return lineCoordinate;
     }
 }

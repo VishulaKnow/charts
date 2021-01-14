@@ -6,190 +6,212 @@
     <title>Charts</title>
 </head>
 <body>
-    <div class="form notation">
-        <div class="form-group">
-            <label for="">Notation</label>
-            <br>
-            <select name="" id="notation">
-                <option value="2d" selected>2D</option>
-                <option value="polar">Polar</option>
-            </select>
+    <div class="controls-block designer-block">
+        <h2>Дизайнер (статические настройки)</h2>
+        <div class="form designer">
+            <div class="form-group">
+                <label for="">Макс. ширина подписей</label>
+                <br>
+                <input type="number" max="100" id="axis-label-width">
+            </div>
+            <div class="form-group">
+                <label for="">Расстояние между барами</label>
+                <br>
+                <input type="number" id="bar-distance">
+            </div>
+            <div class="form-group">
+                <label for="">Расстояние между группами баров</label>
+                <br>
+                <input type="number" id="bar-group-distance">
+            </div>
+            <div class="form-group">
+                <label for="">Мин. ширина бара</label>
+                <br>
+                <input type="number" id="min-bar-size">
+            </div>
+            <div class="form-group">
+                <label for="">Мин. размер частей доната</label>
+                <br>
+                <input type="number" id="min-donut-part-size">
+            </div>
+            <div class="form-group">
+                <br>
+                <input type="checkbox" id="designer-key-grid">
+                <label for="designer-key-grid">Грид оси ключей</label>
+            </div>
+            <div class="form-group">
+                <br>
+                <input type="checkbox" id="designer-value-grid">
+                <label for="designer-value-grid">Грид оси значений</label>
+            </div>
+            <div class="form-group">
+                <label for="">Базовый цвет</label>
+                <br>
+                <input type="color" id="base-color">
+                <button class="btn-base-color">Применить</button>
+            </div>
         </div>
-        <div class="form-group">
-            <label for="">Width</label>
-            <br>
-            <input type="number" step="10" id="block-width">
-        </div>
-        <div class="form-group">
-            <label for="">Height</label>
-            <br>
-            <input type="number" step="10" id="block-height">
-        </div>
-    </div>
-    <div class="form designer">
-        <div class="form-group">
-            <label for="">AxisLabelMaxWidth</label>
-            <br>
-            <input type="number" max="100" id="axis-label-width">
-        </div>
-        <div class="form-group">
-            <label for="">ChartBlockMarginTop</label>
-            <br>
-            <input type="number" id="chart-block-margin-top">
-        </div>
-        <div class="form-group">
-            <label for="">ChartBlockMarginBottom</label>
-            <br>
-            <input type="number" id="chart-block-margin-bottom">
-        </div>
-        <div class="form-group">
-            <label for="">ChartBlockMarginLeft</label>
-            <br>
-            <input type="number" id="chart-block-margin-left">
-        </div>
-        <div class="form-group">
-            <label for="">ChartBlockMarginRight</label>
-            <br>
-            <input type="number" id="chart-block-margin-right">
-        </div>
-        <div class="form-group">
-            <label for="">Bar distance</label>
-            <br>
-            <input type="number" id="bar-distance">
-        </div>
-        <div class="form-group">
-            <label for="">Bar group distance</label>
-            <br>
-            <input type="number" id="bar-group-distance">
-        </div>
-        <div class="form-group">
-            <label for="">Min bar size</label>
-            <br>
-            <input type="number" id="min-bar-size">
-        </div>
-        <div class="form-group">
-            <label for="">Min donut part size</label>
-            <br>
-            <input type="number" id="min-donut-part-size">
-        </div>
-        <div class="form-group">
-            <br>
-            <input type="checkbox" id="designer-vertical-grid">
-            <label for="designer-vertical-grid">VerticalGridLine</label>
-        </div>
-        <div class="form-group">
-            <br>
-            <input type="checkbox" id="designer-horizontal-grid">
-            <label for="designer-horizontal-grid">HorizontalGridLine</label>
-        </div>
-        <div class="form-group">
-            <label for="">BaseColor</label>
-            <br>
-            <input type="color" id="base-color">
-            <button class="btn-base-color">Apply</button>
+        <div class="designer-margin controls-section">
+            <div>Margin блока с графиком</div>
+            <div class="controls-group">
+                <div class="form-group">
+                    <label for="">Top</label>
+                    <br>
+                    <input type="number" id="chart-block-margin-top">
+                </div>
+                <div class="form-group">
+                    <label for="">Bottom</label>
+                    <br>
+                    <input type="number" id="chart-block-margin-bottom">
+                </div>
+                <div class="form-group">
+                    <label for="">Left</label>
+                    <br>
+                    <input type="number" id="chart-block-margin-left">
+                </div>
+                <div class="form-group">
+                    <label for="">Right</label>
+                    <br>
+                    <input type="number" id="chart-block-margin-right">
+                </div>
+            </div>
         </div>
     </div>
-    <div class="form common-options">
-        <div class="form-group">
-            <label for="">Data size</label>
-            <br>
-            <select name="" id="data-size">
-                <option value="normal">normal</option>
-                <option value="large">large</option>
-            </select>
+    <div class="controls-block common-block">
+        <h2>Пользовательские настройки</h2>
+        <div class="form notation">
+            <div class="form-group">
+                <label for="">Тип исчисления</label>
+                <br>
+                <select name="" id="notation">
+                    <option value="2d" selected>2D</option>
+                    <option value="polar">Polar</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="">Ширина</label>
+                <br>
+                <input type="number" step="10" id="block-width">
+            </div>
+            <div class="form-group">
+                <label for="">Высота</label>
+                <br>
+                <input type="number" step="10" id="block-height">
+            </div>
+            <div class="form-group">
+                <br>
+                <input type="checkbox" id="wrapper-border">
+                <label for="wrapper-border">Outline svg-блока</label>
+            </div>
         </div>
-        <div class="form-group">
-            <label for="">Legend</label>
-            <br>
-            <select name="" id="legend">
-                <option value="off" selected>Off</option>
-                <option value="left" selected>Left</option>
-                <option value="right" selected>Right</option>
-                <option value="top" selected>Top</option>
-                <option value="bottom" selected>Bottom</option>
-            </select>
-        </div>
-        <div class="form-group">
-            <label for="">Max value</label>
-            <br>
-            <input type="number" id="max-random-value">
-            <button class="btn-random">Random</button>
-        </div>
-    </div>
-    <div class="form controls-2d">
-        <div class="form-group">
-            <label for="">Chart type</label>
-            <br>
-            <select name="" id="chart-2d-type">
-                <option value="bar">bar</option>
-                <option value="line">line</option>
-                <option value="area" selected>area</option>
-            </select>
-        </div>
-        <div class="form-group">
-            <label for="">Orient</label>
-            <br>
-            <select name="" id="chart-orient">
-                <option value="vertical">vertical</option>
-                <option value="horizontal">horizontal</option>
-            </select>
-        </div>
-        <div class="form-group">
-            <label for="">KeyAxisPosition</label>
-            <br>
-            <select name="" id="key-axis-orient">
-                <option value="start">start</option>
-                <option value="end">end</option>
-            </select>
-        </div>
-        <div class="form-group">
-            <label for="">ValueAxisPosition</label>
-            <br>
-            <select name="" id="value-axis-orient">
-                <option value="start">start</option>
-                <option value="end">end</option>
-            </select>
-        </div>
-        <div class="form-group">
-            <label for="">ValueAxisDomain</label>
-            <br>
-            <input type="number" placeholder="start" id="domain-start">
-            <input type="number" placeholder="end" id="domain-end">
-            <button class="btn-domain">Apply</button>
-        </div>
-        <div class="form-group">
-            <br>
-            <input type="checkbox" id="config-vertical-grid">
-            <label for="config-vertical-grid">VerticalGridLine</label>
-        </div>
-        <div class="form-group">
-            <br>
-            <input type="checkbox" id="config-horizontal-grid">
-            <label for="config-horizontal-grid">HorizontalGridLine</label>
+        <div class="form common-options">
+            <div class="form-group">
+                <label for="">Количество записей</label>
+                <br>
+                <select name="" id="data-size">
+                    <option value="normal">9</option>
+                    <option value="large">18</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="">Позиция легенды</label>
+                <br>
+                <select name="" id="legend">
+                    <option value="off" selected>Off</option>
+                    <option value="left" selected>Left</option>
+                    <option value="right" selected>Right</option>
+                    <option value="top" selected>Top</option>
+                    <option value="bottom" selected>Bottom</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="">Максимальное значение</label>
+                <br>
+                <input type="number" id="max-random-value">
+                <button class="btn-random">Random</button>
+            </div>
         </div>
     </div>
-    <div class="controls-polar">
-        <div class="form-group">
-            <label for="">Chart type</label>
-            <br>
-            <select name="" id="chart-polar-type">
-                <option value="donut" selected>donut</option>
-            </select>
+    <div class="controls-block block-2d">
+        <h2>Настройки 2D-графиков</h2>
+        <div class="form controls-2d">
+            <div class="form-group">
+                <label for="">Тип графика</label>
+                <br>
+                <select name="" id="chart-2d-type">
+                    <option value="bar">bar</option>
+                    <option value="line">line</option>
+                    <option value="area" selected>area</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="">Ориентация</label>
+                <br>
+                <select name="" id="chart-orient">
+                    <option value="vertical">vertical</option>
+                    <option value="horizontal">horizontal</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="">Поз. оси ключей</label>
+                <br>
+                <select name="" id="key-axis-orient">
+                    <option value="start">start</option>
+                    <option value="end">end</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="">Поз. оси значений</label>
+                <br>
+                <select name="" id="value-axis-orient">
+                    <option value="start">start</option>
+                    <option value="end">end</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="">Интервал оси значений</label>
+                <br>
+                <input type="number" placeholder="start" id="domain-start">
+                <input type="number" placeholder="end" id="domain-end">
+                <button class="btn-domain">Apply</button>
+            </div>
+            <div class="form-group">
+                <br>
+                <input type="checkbox" id="config-key-grid">
+                <label for="config-key-grid">Грид оси ключей</label>
+            </div>
+            <div class="form-group">
+                <br>
+                <input type="checkbox" id="config-value-grid">
+                <label for="config-value-grid">Грид оси значений</label>
+            </div>
         </div>
-        <div class="form-group">
-            <label for="">Inner radius in percent</label>
-            <br>
-            <input type="number" placeholder="0%-100%" id="inner-radius">
-        </div>
-        <div class="form-group">
-            <label for="">Pad Angle</label>
-            <br>
-            <input type="number" placeholder="" step="0.001" min="0" max="0.05" id="pad-angle">
+    </div>
+    <div class="controls-block block-polar">
+        <h2>Настройки Polar-графиков</h2>
+        <div class="controls-polar form">
+            <div class="form-group">
+                <label for="">Тип графика</label>
+                <br>
+                <select name="" id="chart-polar-type">
+                    <option value="donut" selected>donut</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="">Внутренний радиус (в %)</label>
+                <br>
+                <input type="number" placeholder="0%-100%" id="inner-radius">
+            </div>
+            <div class="form-group">
+                <label for="">Расстояние между долями</label>
+                <br>
+                <input type="number" placeholder="" step="0.001" min="0" max="0.05" id="pad-angle">
+            </div>
         </div>
     </div>
 
     
     <div class="main-wrapper"></div>
 
-<script src="vendors-node_modules_css-loader_dist_runtime_api_js-node_modules_d3_index_js-node_modules_sty-ef83b8.d50c56cae1d66d725495.js"></script><script src="src_engine_engine_ts-src_model_modelOptions_ts.6b2b6a54e1e9bc973398.js"></script><script src="main.1a9075ddedad3299af5c.js"></script><script src="listeners.ddd50930862c14c78018.js"></script></body>
+<script src="vendors-node_modules_css-loader_dist_runtime_api_js-node_modules_d3_index_js-node_modules_sty-ef83b8.d50c56cae1d66d725495.js"></script><script src="src_engine_engine_ts-src_model_modelOptions_ts.142aa4aa7494bd42d4f9.js"></script><script src="main.6f9697217a9efe5f7bb0.js"></script><script src="listeners.b243cfaac0b619cf2e62.js"></script></body>
 </html>

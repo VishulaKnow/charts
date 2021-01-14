@@ -8,20 +8,31 @@
     display: flex;
     flex-wrap: wrap;
 }
+.controls-block  {
+    font-family: "Roboto", sans-serif;
+    border: 1px solid black;
+    padding: .5rem;
+    box-sizing: border-box;
+    margin: 1rem 0;
+}
 .form-group {
     margin: 10px;
+    font-family: "Roboto", sans-serif;
 }
-input[type="number"] {
-    max-width: 100px;
+.controls-group {
+    display: flex;
+}
+.controls-section {
+    margin-top: 1rem;
+}
+label {
+    font-size: 12px;
 }
 
 .wrapper {
     margin: 0 auto;
     position: relative;
     margin-bottom: 100px;
-}
-svg {
-    position: relative;
 }
 .bar, .area, .donut {
     fill: steelblue;
@@ -32,19 +43,19 @@ svg {
     stroke-width: 5;
     stroke-linecap: butt;
 }
-.border {
-    border: 1px solid black;
+.outline {
+    outline: 1px solid black;
 }
 .data-label {
     font-size: 12px;
-    font-family: sans-serif;
+    font-family: "Roboto", sans-serif;
 }
 .legend-item {
     margin: 5px;
 }
 .legend-label {
     font-size: 12px;
-    font-family: sans-serif;
+    font-family: "Roboto", sans-serif;
 }
 .legend-circle {
     display: inline-block;
@@ -55,8 +66,8 @@ svg {
 }
 .tooltip {
     pointer-events: none;
-    font-size: 12px;
-    font-family: sans-serif;
+    font-size: 14px;
+    font-family: "Roboto", sans-serif;
     line-height: 1;
     font-weight: bold;
     padding: 12px;
@@ -75,7 +86,7 @@ svg {
 }
 
 .donut-aggregator {
-    font-family: sans-serif;
+    font-family: "Roboto", sans-serif;
     font-weight: bold;
 }
 
@@ -84,7 +95,7 @@ svg {
     stroke-dasharray: 0;
 }
 
-.key-axis .domain, .key-axis .tick line {
+/* .key-axis .domain, .key-axis .tick line {
     stroke: #e0e0e0;
     stroke-width: 1;
 }
@@ -93,10 +104,10 @@ svg {
 }
 .value-axis .tick line:first-of-type {
     stroke: none;
-}
+} */
 
 .record-overflow-alert {
-    font-family: sans-serif;
+    font-family: "Roboto", sans-serif;
     box-sizing: border-box;
     display: flex;
     justify-content: space-between;

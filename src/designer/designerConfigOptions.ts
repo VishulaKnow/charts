@@ -58,8 +58,8 @@ const designerConfig: DesignerConfig = {
     additionalElements: {
         gridLine: {
             flag: {
-                horizontal: true,
-                vertical: true
+                value: true,
+                key: true
             }
         }
     }

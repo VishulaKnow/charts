@@ -1,8 +1,8 @@
 import engine from '../engine/engine';
 import config from '../config/configOptions';
 import designerConfig from '../designer/designerConfigOptions';
-import { getUpdatedModel } from '../model/modelOptions';
-import { PolarChart, PolarOptions, TwoDimensionalChart, TwoDimensionalOptions } from '../config/config'
+import { getPreparedData, getUpdatedModel } from '../model/modelOptions';
+import { Config, PolarChart, PolarOptions, TwoDimensionalChart, TwoDimensionalOptions } from '../config/config'
 import { color } from 'd3';
 const data = require('../assets/dataSet.json');
 
@@ -49,14 +49,27 @@ function setCheckboxValue(selector: string, value: boolean): void {
     (document.querySelector(selector) as HTMLInputElement).checked = value;
 }
 
+function updateFull(): void {
+    dropAxisDomain(config);
+    const model = getUpdatedModel();
+    const preparedData = getPreparedData(model, getCopy(data));
+    engine.updateFullBlock(model, preparedData);
+}
+function dropAxisDomain(config: Config) {
+    if(config.options.type === '2d') {
+        config.options.axis.valueAxis.domain.end = -1;
+        config.options.axis.valueAxis.domain.start = -1;
+    }
+}
+
 function showControlsForNotation(notationType: '2d' | 'polar'): void {
     if(notationType === '2d') {
-        (document.querySelector('.controls-polar') as HTMLElement).style.display = 'none';
-        (document.querySelector('.controls-2d') as HTMLElement).style.display = 'flex';
+        (document.querySelector('.block-polar') as HTMLElement).style.display = 'none';
+        (document.querySelector('.block-2d') as HTMLElement).style.display = 'block';
     }
     else {
-        (document.querySelector('.controls-2d') as HTMLElement).style.display = 'none';
-        (document.querySelector('.controls-polar') as HTMLElement).style.display = 'flex';
+        (document.querySelector('.block-2d') as HTMLElement).style.display = 'none';
+        (document.querySelector('.block-polar') as HTMLElement).style.display = 'block';
     }
 }
 
@@ -87,14 +100,14 @@ function changeConfigOptions(notationType: '2d' | 'polar'): void {
                         start: -1,
                         end: -1
                     },
-                    position: getInputValue('#key-axis-orient') as "start" | "end"
+                    position: getInputValue('#value-axis-orient') as "start" | "end"
                 }
             },
             additionalElements: {
                 gridLine: {
                     flag: {
-                        horizontal: true,
-                        vertical: false
+                        value: true,
+                        key: false
                     }
                 }
             }
@@ -126,7 +139,7 @@ function changeConfigOptions(notationType: '2d' | 'polar'): void {
         }
         config.options = options;
     }
-    engine.updateFullBlock(getUpdatedModel(), getCopy(data));
+    updateFull();
 }
 
 function change2DChartConfig(chartType: 'bar' | 'line' | 'area'): void {
@@ -151,68 +164,71 @@ function setMainListeners(): void {
         changeConfigOptions(this.value);
         setControlsValues();
     });
-    document.querySelector('#block-width').addEventListener('keydown', function(e: KeyboardEvent) {
-        if(e.code === 'Enter') {
-            config.canvas.size.width = parseFloat(getInputValue('#block-width')) || 0;
-            engine.updateFullBlock(getUpdatedModel(), getCopy(data));
-        }
+    document.querySelector('#block-width').addEventListener('input', function(e: KeyboardEvent) {
+        config.canvas.size.width = parseFloat(getInputValue('#block-width')) || 0;
+        updateFull();
     });
-    document.querySelector('#block-height').addEventListener('keydown', function(e: KeyboardEvent) {
-        if(e.code === 'Enter') {
-            config.canvas.size.height = parseFloat(getInputValue('#block-height')) || 0;
-            engine.updateFullBlock(getUpdatedModel(), getCopy(data));
-        }
+    document.querySelector('#block-height').addEventListener('input', function(e: KeyboardEvent) {
+        config.canvas.size.height = parseFloat(getInputValue('#block-height')) || 0;
+        updateFull();
+    });
+    document.querySelector('#wrapper-border').addEventListener('change', function() {
+        if(this.checked)
+            config.canvas.class = 'svg-chart outline';
+        else 
+            config.canvas.class = 'svg-chart';
+        updateFull();
     });
 }
 
 function setDesignerListeners(): void {
     document.querySelector('#axis-label-width').addEventListener('input', function() {
         designerConfig.canvas.axisLabel.maxSize.main = parseFloat(getInputValue('#axis-label-width'));
-        engine.updateFullBlock(getUpdatedModel(), getCopy(data));
+        updateFull();
     });
     document.querySelector('#chart-block-margin-top').addEventListener('input', function() {
         designerConfig.canvas.chartBlockMargin.top = parseFloat(getInputValue('#chart-block-margin-top')) || 0;
-        engine.updateFullBlock(getUpdatedModel(), getCopy(data));
+        updateFull();
     });
     document.querySelector('#chart-block-margin-bottom').addEventListener('input', function() {
         designerConfig.canvas.chartBlockMargin.bottom = parseFloat(getInputValue('#chart-block-margin-bottom')) || 0;
-        engine.updateFullBlock(getUpdatedModel(), getCopy(data));
+        updateFull();
     });
     document.querySelector('#chart-block-margin-left').addEventListener('input', function() {
         designerConfig.canvas.chartBlockMargin.left = parseFloat(getInputValue('#chart-block-margin-left')) || 0;
-        engine.updateFullBlock(getUpdatedModel(), getCopy(data));
+        updateFull();
     });
     document.querySelector('#chart-block-margin-right').addEventListener('input', function() {
         designerConfig.canvas.chartBlockMargin.right = parseFloat(getInputValue('#chart-block-margin-right')) || 0;
-        engine.updateFullBlock(getUpdatedModel(), getCopy(data));
+        updateFull();
     });
     document.querySelector('#bar-distance').addEventListener('input', function() {
         designerConfig.canvas.chartOptions.bar.barDistance = parseFloat(getInputValue('#bar-distance')) || 0;
-        engine.updateFullBlock(getUpdatedModel(), getCopy(data));
+        updateFull();
     });
     document.querySelector('#bar-group-distance').addEventListener('input', function() {
         designerConfig.canvas.chartOptions.bar.groupDistance = parseFloat(getInputValue('#bar-group-distance'));        
-        engine.updateFullBlock(getUpdatedModel(), getCopy(data));
+        updateFull();
     });
     document.querySelector('#min-bar-size').addEventListener('input', function() {
         designerConfig.canvas.chartOptions.bar.minBarWidth = parseFloat(getInputValue('#min-bar-size')) || 0;
-        engine.updateFullBlock(getUpdatedModel(), getCopy(data));
+        updateFull();
     });
     document.querySelector('#min-donut-part-size').addEventListener('input', function() {
         designerConfig.canvas.chartOptions.donut.minPartSize = parseFloat(getInputValue('#min-donut-part-size')) || 0;
-        engine.updateFullBlock(getUpdatedModel(), getCopy(data));
-    });
-    document.querySelector('#designer-vertical-grid').addEventListener('change', function() {
-        designerConfig.additionalElements.gridLine.flag.vertical = this.checked;
-        engine.updateFullBlock(getUpdatedModel(), data);
-    });
-    document.querySelector('#designer-horizontal-grid').addEventListener('change', function() {
-        designerConfig.additionalElements.gridLine.flag.horizontal = this.checked;
-        engine.updateFullBlock(getUpdatedModel(), data);
+        updateFull();
     });
     document.querySelector('.btn-base-color').addEventListener('click', function() {
         designerConfig.chart.style.palette[0] = color(getInputValue('#base-color'));
-        engine.updateFullBlock(getUpdatedModel(), data);
+        updateFull();
+    });
+    document.querySelector('#designer-key-grid').addEventListener('change', function() {
+        designerConfig.additionalElements.gridLine.flag.key = this.checked;
+        updateFull();
+    });
+    document.querySelector('#designer-value-grid').addEventListener('change', function() {
+        designerConfig.additionalElements.gridLine.flag.value = this.checked;
+        updateFull();
     });
 }
 
@@ -223,13 +239,13 @@ function setCommonListeners(): void {
                 ? 'dataSet' + (index === 0 ? '' : `${index + 1}`)
                 : 'dataSet_large' + (index === 0 ? '' : `${index + 1}`);
         });
-        engine.updateFullBlock(getUpdatedModel(), getCopy(data));
+        updateFull();
     });
     document.querySelector('#legend').addEventListener('change', function() {
         config.options.charts.forEach((chart: TwoDimensionalChart | PolarChart) => {
             chart.legend.position = this.value;
         });
-        engine.updateFullBlock(getUpdatedModel(), getCopy(data));
+        updateFull();
     });
     document.querySelector('.btn-random').addEventListener('click', function() {
         const max = parseInt(getInputValue('#max-random-value')) || 120;
@@ -239,7 +255,9 @@ function setCommonListeners(): void {
             config.options.axis.valueAxis.domain.start = -1;
             config.options.axis.valueAxis.domain.end = max;
         }
-        engine.updateFullBlock(getUpdatedModel(newData), newData);
+        const model = getUpdatedModel(newData);
+        const preparedData = getPreparedData(model, newData);
+        engine.updateFullBlock(model, preparedData);
     });
     document.querySelector('#max-random-value').addEventListener('keydown', function(e: KeyboardEvent) {
         if(e.code === 'Enter') {
@@ -250,7 +268,9 @@ function setCommonListeners(): void {
                 config.options.axis.valueAxis.domain.start = -1;
                 config.options.axis.valueAxis.domain.end = max;
             }
-            engine.updateFullBlock(getUpdatedModel(newData), newData);
+            const model = getUpdatedModel(newData);
+            const preparedData = getPreparedData(model, newData);
+            engine.updateFullBlock(model, preparedData);
         }
     });
 }
@@ -259,25 +279,25 @@ function set2DListeners(): void {
     document.querySelector('#chart-2d-type').addEventListener('change', function() {
         if(config.options.type === '2d') {
             change2DChartConfig(this.value);
-            engine.updateFullBlock(getUpdatedModel(), getCopy(data));
+            updateFull();
         }
     });
     document.querySelector('#chart-orient').addEventListener('change', function() {
         if(config.options.type === '2d') {
             config.options.charts[0].orientation = this.value;
-            engine.updateFullBlock(getUpdatedModel(), getCopy(data));
+            updateFull();
         }
     });
     document.querySelector('#key-axis-orient').addEventListener('change', function() {
         if(config.options.type === '2d') {
             config.options.axis.keyAxis.position = this.value;
-            engine.updateFullBlock(getUpdatedModel(), getCopy(data));
+            updateFull();
         }
     });
     document.querySelector('#value-axis-orient').addEventListener('change', function() {
         if(config.options.type === '2d') {
             config.options.axis.valueAxis.position = this.value;
-            engine.updateFullBlock(getUpdatedModel(), getCopy(data));
+            updateFull();
         }
     });
     document.querySelector('.btn-domain').addEventListener('click', function() {
@@ -311,16 +331,16 @@ function set2DListeners(): void {
             }
         }
     });
-    document.querySelector('#config-vertical-grid').addEventListener('change', function() {
+    document.querySelector('#config-key-grid').addEventListener('change', function() {
         if(config.options.type === '2d') {
-            config.options.additionalElements.gridLine.flag.vertical = this.checked;
-            engine.updateFullBlock(getUpdatedModel(), data);
+            config.options.additionalElements.gridLine.flag.key = this.checked;
+            updateFull();
         }
     });
-    document.querySelector('#config-horizontal-grid').addEventListener('change', function() {
+    document.querySelector('#config-value-grid').addEventListener('change', function() {
         if(config.options.type === '2d') {
-            config.options.additionalElements.gridLine.flag.horizontal = this.checked;
-            engine.updateFullBlock(getUpdatedModel(), data);
+            config.options.additionalElements.gridLine.flag.value = this.checked;
+            updateFull();
         }
     });
 }
@@ -330,14 +350,14 @@ function setPolarListeners(): void {
         if(config.options.type === 'polar') {
             const innerRadius = getInputValue('#inner-radius');
             config.options.charts[0].appearanceOptions.innerRadius = parseInt(innerRadius) || 0;
-            engine.updateFullBlock(getUpdatedModel(), data);
+            updateFull();
         }
     });
     document.querySelector('#pad-angle').addEventListener('input', function() {
         if(config.options.type === 'polar') {
             const padAngle = getInputValue('#pad-angle');
             config.options.charts[0].appearanceOptions.padAngle = parseFloat(padAngle) || 0;
-            engine.updateFullBlock(getUpdatedModel(), data);
+            updateFull();
         }
     });
 }
@@ -346,6 +366,7 @@ function setControlsValues(): void {
     setInputValue('#notation', config.options.type);
     setInputValue('#block-width', config.canvas.size.width);
     setInputValue('#block-height', config.canvas.size.height);
+    setCheckboxValue('#wrapper-border', config.canvas.class === 'svg-chart outline');
 
     setInputValue('#legend', config.options.charts[0].legend.position);
     setInputValue('#data-size', config.options.charts[0].data.dataSource.includes('large') ? 'large' : 'normal');
@@ -359,17 +380,17 @@ function setControlsValues(): void {
     setInputValue('#bar-group-distance', designerConfig.canvas.chartOptions.bar.groupDistance);
     setInputValue('#min-bar-size', designerConfig.canvas.chartOptions.bar.minBarWidth);
     setInputValue('#min-donut-part-size', designerConfig.canvas.chartOptions.donut.minPartSize);
-    setCheckboxValue('#designer-horizontal-grid', designerConfig.additionalElements.gridLine.flag.horizontal);
-    setCheckboxValue('#designer-vertical-grid', designerConfig.additionalElements.gridLine.flag.vertical);
     setInputValue('#base-color', designerConfig.chart.style.palette[0].hex());
+    setCheckboxValue('#designer-key-grid', designerConfig.additionalElements.gridLine.flag.key);
+    setCheckboxValue('#designer-value-grid', designerConfig.additionalElements.gridLine.flag.value);
     
     if(config.options.type === '2d') {
         setInputValue('#chart-2d-type', config.options.charts[0].type);
         setInputValue('#chart-orient', config.options.charts[0].orientation);
         setInputValue('#key-axis-orient', config.options.axis.keyAxis.position);
         setInputValue('#value-axis-orient', config.options.axis.valueAxis.position);
-        setCheckboxValue('#config-horizontal-grid', config.options.additionalElements.gridLine.flag.horizontal);
-        setCheckboxValue('#config-vertical-grid', config.options.additionalElements.gridLine.flag.vertical);
+        setCheckboxValue('#config-key-grid', config.options.additionalElements.gridLine.flag.key);
+        setCheckboxValue('#config-value-grid', config.options.additionalElements.gridLine.flag.value);
     } else {
         setInputValue('#chart-polar-type', config.options.charts[0].type);
         setInputValue('#inner-radius', config.options.charts[0].appearanceOptions.innerRadius.toString());

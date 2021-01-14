@@ -122,8 +122,8 @@ export interface GridLineOptions {
     flag: GridLineFlag;
 }
 export interface GridLineFlag {
-    horizontal: boolean;
-    vertical: boolean;
+    key: boolean;
+    value: boolean;
 }
 export interface PolarOptionsModel {
     type: 'polar';

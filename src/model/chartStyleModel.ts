@@ -4,7 +4,7 @@ import { ChartNotation, ChartType } from "../config/config";
 
 export class ChartStyleModel
 {
-    static getCssClasses(chartType: ChartType, chartIndex: number): string[] {
+    public static getCssClasses(chartType: ChartType, chartIndex: number): string[] {
         const cssClasses = [`chart-${chartIndex}`];
         if(chartType === 'line')
             cssClasses.concat(['line']);
@@ -17,7 +17,7 @@ export class ChartStyleModel
         return cssClasses
     }
     
-    static getElementColorPallete(palette: Color[], notation: ChartNotation, elementsAmount: number, chartIndex: number = 0): Color[] {
+    public static getElementColorPallete(palette: Color[], notation: ChartNotation, elementsAmount: number, chartIndex: number = 0): Color[] {
         if(notation === '2d') {
             const generatedPalette = this.generatePalette(palette, elementsAmount);
             return [generatedPalette[chartIndex % palette.length]];
@@ -28,7 +28,7 @@ export class ChartStyleModel
         }    
     }
 
-    static generatePalette(baseColors: Color[], colorAmount: number): Color[] {
+    private static generatePalette(baseColors: Color[], colorAmount: number): Color[] {
         const hslColor = d3.hsl(baseColors[0].toString());
         let step = 360 / colorAmount;
         if(step < 31)
