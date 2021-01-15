@@ -2,8 +2,8 @@ import * as d3 from "d3";
 import { Color } from "d3";
 import { BlockMargin, DataRow, Size } from "../../../model/model";
 import { Helper } from "../../helper";
-import { Scales } from "../scale/scale";
-import { SvgBlock } from "../../svgBlock/svgBlock";
+import { Scale, Scales } from "../scale/scale";
+import { Block } from "../../block/svgBlock";
 
 interface AreaChartCoordinate {
     x0: number;
@@ -24,11 +24,11 @@ export class Area
             valueField,
             blockSize);
     
-        const path = SvgBlock.getSvg()
+        const path = Block.getChartBlock()
             .append('path')
             .attr('d', area(areaCoordinate))
             .attr('class', 'area')
-            .style('clip-path', 'url(#chart-block)');
+            .style('clip-path', `url(${Block.getClipPathId()})`);
     
         Helper.setCssClasses(path, cssClasses);
         Helper.setChartColor(path, chartPalette, 'area');
@@ -44,7 +44,7 @@ export class Area
             valueField,
             blockSize);
     
-        SvgBlock.getSvg()
+        Block.getChartBlock()
             .select(`.area${Helper.getCssClassesLine(cssClasses)}`)
             .transition()
             .duration(1000)
@@ -72,7 +72,7 @@ export class Area
                 y0 = blockSize.height - margin.bottom;
             data.forEach(d => {
                 areaCoordinate.push({
-                    x0: scales.scaleKey(d[keyField]) + scales.scaleKey.bandwidth() / 2 + margin.left,
+                    x0: Scale.getScaleKeyPoint(scales.scaleKey, d[keyField]) + margin.left,
                     x1: 0,
                     y0,
                     y1: scales.scaleValue(d[valueField]) + margin.top
@@ -87,7 +87,7 @@ export class Area
                 areaCoordinate.push({
                     x0,
                     x1: scales.scaleValue(d[valueField]) + margin.left,
-                    y0: scales.scaleKey(d[keyField]) + scales.scaleKey.bandwidth() / 2 + margin.top,
+                    y0: Scale.getScaleKeyPoint(scales.scaleKey, d[keyField]) + margin.top,
                     y1: 0
                 });
             });

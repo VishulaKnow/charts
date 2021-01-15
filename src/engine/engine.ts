@@ -1,12 +1,12 @@
 import * as d3 from 'd3'
 
-import { SvgBlock } from './svgBlock/svgBlock';
+import { Block } from './block/svgBlock';
 import { ValueFormatter } from './valueFormatter';
 import { ChartRenderer } from './chartRenderer';
 import { Model } from '../model/model';
 
 function clearBlock(): void {
-    SvgBlock.getSvg().remove();
+    Block.getSvg().remove();
     d3.select('.wrapper').remove();
 }
 

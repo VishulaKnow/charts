@@ -26,8 +26,7 @@ export class RecordOverflowAlert
     }
 
     private static setButtonCloseEvent(button: d3.Selection<HTMLButtonElement, unknown, HTMLElement, any>, alertBlock: d3.Selection<HTMLDivElement, unknown, HTMLElement, any>): void {
-        button
-            .on('click', function(e) {
+        button.on('click', function(e) {
                 alertBlock.style('display', 'none');
             });
     }

@@ -3,12 +3,15 @@ import { ChartOrientation, LegendPosition, TwoDimensionalChartType } from "../co
 import { DataType, Formatter } from "../designer/designerConfig";
 
 export type Orient = 'top' | 'bottom' | 'left' | 'right';
+export type ScaleKeyType = 'band' | 'point';
+export type ScaleValueType = 'linear';
 export type DataOptions = {
     [option: string]: any
 }
 export type DataRow = {
     [field: string]: any
 }
+
 export interface DataSource {
     [source: string]: DataRow[];
 }
@@ -17,6 +20,7 @@ export interface BlockCanvas {
     size: Size;
     class: string;
 }
+
 export interface Size {
     width: number;
     height: number;
@@ -25,6 +29,7 @@ export interface Size {
 export interface ChartBlock {
     margin: BlockMargin;
 }
+
 export interface BlockMargin {
     top: number;
     bottom: number;
@@ -32,70 +37,28 @@ export interface BlockMargin {
     right: number;
 }
 
-interface ScaleModel {
-    scaleKey: ScaleOptions;
-    scaleValue: ScaleOptions;
-}
-export interface ScaleOptions {
+export interface ScaleKeyModel {
     domain: any[];
     range: RangeModel;
+    type: ScaleKeyType;
 }
-interface RangeModel {
+
+export interface ScaleValueModel {
+    domain: any[];
+    range: RangeModel;
+    type: ScaleValueType;
+}
+
+export interface RangeModel {
     start: number;
     end: number;
 }
 
-interface AxisModel {
-    keyAxis: AxisModelOptions;
-    valueAxis: AxisModelOptions;
-}
 export interface AxisModelOptions {
     orient: Orient;
     translate: TranslateModel;
     class: string;
     maxLabelSize: number;
-}
-interface TranslateModel {
-    translateX: number;
-    translateY: number;
-}
-
-interface TooltipModel {
-    data: TooltipDataModel;
-}
-interface TooltipDataModel {
-    fields: Field[];
-}
-
-export interface TwoDimensionalChartModel {
-    type: TwoDimensionalChartType;
-    orient: ChartOrientation;
-    data: ChartDataModel;
-    legend: LegendModel;
-    tooltip: TooltipModel;
-    cssClasses: string[];
-    elementColors: Color[];
-}
-export interface PolarChartModel {
-    type: 'donut';
-    data: ChartDataModel;
-    appearanceOptions: PolarChartAppearanceModel;
-    legend: LegendModel;
-    tooltip: TooltipModel;
-    cssClasses: string[];
-    elementColors: Color[];
-}
-interface LegendModel {
-    position: LegendPosition;
-}
-export interface Model {
-    blockCanvas: BlockCanvas;
-    chartBlock: ChartBlock;
-    legendBlock: LegendBlockModel;
-    options: TwoDimensionalOptionsModel | PolarOptionsModel;
-    dataSettings: DataSettings;
-    chartSettings: ChartSettings;
-    dataFormat: DataFormat;
 }
 
 export interface DataFormat {
@@ -133,11 +96,35 @@ export interface PolarChartAppearanceModel {
     innerRadius: number;
     padAngle: number
 }
-interface ChartDataModel {
-    dataSource: string;
-    keyField: Field;
-    valueField: Field;
+
+export interface TwoDimensionalChartModel {
+    type: TwoDimensionalChartType;
+    orient: ChartOrientation;
+    data: ChartDataModel;
+    legend: LegendModel;
+    tooltip: TooltipModel;
+    cssClasses: string[];
+    elementColors: Color[];
 }
+export interface PolarChartModel {
+    type: 'donut';
+    data: ChartDataModel;
+    appearanceOptions: PolarChartAppearanceModel;
+    legend: LegendModel;
+    tooltip: TooltipModel;
+    cssClasses: string[];
+    elementColors: Color[];
+}
+export interface Model {
+    blockCanvas: BlockCanvas;
+    chartBlock: ChartBlock;
+    legendBlock: LegendBlockModel;
+    options: TwoDimensionalOptionsModel | PolarOptionsModel;
+    dataSettings: DataSettings;
+    chartSettings: ChartSettings;
+    dataFormat: DataFormat;
+}
+
 export interface Field {
     name: string;
     format: DataType;
@@ -147,16 +134,49 @@ export interface ChartSettings {
     bar: BarChartSettings;
 }
 
-interface BarChartSettings {
-    groupDistance: number;
-    barDistance: number;
-}
-
 export interface LegendBlockModel {
     top: LegendBlockCanvas;
     bottom: LegendBlockCanvas;
     left: LegendBlockCanvas;
     right: LegendBlockCanvas;
+}
+
+interface AxisModel {
+    keyAxis: AxisModelOptions;
+    valueAxis: AxisModelOptions;
+}
+
+interface ScaleModel {
+    scaleKey: ScaleKeyModel;
+    scaleValue: ScaleValueModel;
+}
+
+interface TranslateModel {
+    translateX: number;
+    translateY: number;
+}
+
+interface TooltipModel {
+    data: TooltipDataModel;
+}
+
+interface TooltipDataModel {
+    fields: Field[];
+}
+
+interface LegendModel {
+    position: LegendPosition;
+}
+
+interface ChartDataModel {
+    dataSource: string;
+    keyField: Field;
+    valueField: Field;
+}
+
+interface BarChartSettings {
+    groupDistance: number;
+    barDistance: number;
 }
 
 interface LegendBlockCanvas {

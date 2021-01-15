@@ -284,7 +284,9 @@ function set2DListeners(): void {
     });
     document.querySelector('#chart-orient').addEventListener('change', function() {
         if(config.options.type === '2d') {
-            config.options.charts[0].orientation = this.value;
+            config.options.charts.forEach(chart => {
+                chart.orientation = this.value; 
+            }); 
             updateFull();
         }
     });

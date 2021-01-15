@@ -2,7 +2,8 @@ import * as d3 from "d3";
 import { Color } from "d3";
 import { BlockMargin, DataRow, PolarChartAppearanceModel, Size } from "../../../model/model";
 import { Helper } from "../../helper";
-import { SvgBlock } from "../../svgBlock/svgBlock";
+import { Block } from "../../block/svgBlock";
+import { MarginModel } from "../../../model/marginModel";
 
 interface Aggregator {
     name: string;
@@ -15,18 +16,17 @@ interface Translate {
 
 export class Donut
 {
-    public static render(data: DataRow[], margin: BlockMargin, valueField: string, appearanceOptions: PolarChartAppearanceModel, cssClasses: string[], chartPalette: Color[], blockSize: Size): void {
+    public static render(data: DataRow[], margin: BlockMargin, valueField: string, keyField: string, appearanceOptions: PolarChartAppearanceModel, cssClasses: string[], chartPalette: Color[], blockSize: Size): void {
         const radius = this.getOuterRadius(margin, blockSize);
         const arc = this.getArc(radius, radius * 0.01 * appearanceOptions.innerRadius);
         const pie = this.getPie(valueField, appearanceOptions.padAngle);
     
-        const translateX = (blockSize.width - margin.left - margin.right) / 2 + margin.left;
-        const translateY = (blockSize.height - margin.top - margin.bottom) / 2 + margin.top;
+        const translate = this.getTranslate(margin, blockSize);
     
-        const donutBlock = SvgBlock.getSvg()
+        const donutBlock = Block.getSvg()
             .append('g')
             .attr('class', 'donut-block')
-            .attr('transform', `translate(${translateX}, ${translateY})`);
+            .attr('transform', `translate(${translate.x}, ${translate.y})`);
         
         const items = donutBlock
             .selectAll('.arc')
@@ -41,16 +41,23 @@ export class Donut
     
         Helper.setCssClasses(arcs, cssClasses);
         this.setElementsColor(items, chartPalette, 'donut');
-    
+        this.renderAggregator(data, valueField, radius, appearanceOptions, translate); 
+        this.renderDonutText(arcs, arc, keyField)       
+    }
+
+    private static renderAggregator(data: DataRow[], valueField: string, radius: number, appearanceOptions: PolarChartAppearanceModel, translate: Translate): void {
         const aggregator: Aggregator = {
             name: 'Сумма',
             value: d3.sum(data.map(d => d[valueField]))
         }
-        const translate: Translate = {
-            x: translateX,
-            y: translateY
-        }
         this.renderDonutCenterText(radius * 0.01 * appearanceOptions.innerRadius, aggregator, translate);
+    }
+
+    private static getTranslate(margin: BlockMargin, blockSize: Size): Translate {
+        return {
+            x: (blockSize.width - margin.left - margin.right) / 2 + margin.left,
+            y: (blockSize.height - margin.top - margin.bottom) / 2 + margin.top
+        }
     }
 
     private static getOuterRadius(margin: BlockMargin, blockSize: Size): number {
@@ -74,18 +81,16 @@ export class Donut
     private static renderDonutText(arcItems: d3.Selection<SVGGElement, d3.PieArcDatum<DataRow>, d3.BaseType, unknown>, arc: d3.Arc<any, d3.PieArcDatum<DataRow>>, field: string): void {
         arcItems
             .append('text')
-            .attr('transform', d => `translate(${arc.centroid(d)}) rotate(-90) rotate(${d.endAngle < Math.PI ? 
-                (d.startAngle / 2 + d.endAngle / 2) * 180 / Math.PI : 
-                (d.startAngle / 2  + d.endAngle / 2 + Math.PI) * 180 / Math.PI})`)
-            .attr('font-size', 10)
+            .attr('transform', d => `translate(${arc.centroid(d)})`)
             .attr('class', 'data-label')
+            .style('fill', 'black')
             .text(d => d.data[field])
             .style('text-anchor', 'middle');
     }
     
     private static renderDonutCenterText(innerRadius: number, aggregator: Aggregator, translate: Translate): void {
         if(innerRadius > 100) {
-            const text = SvgBlock.getSvg()
+            const text = Block.getSvg()
                 .append('text')
                 .attr('text-anchor', 'middle')
                 .attr('class', 'donut-aggregator')

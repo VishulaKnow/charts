@@ -20,6 +20,7 @@ export interface TwoDimensionalChart {
     tooltip: Tooltip;
     orientation: ChartOrientation;
 }
+
 export interface PolarChart {
     title: string;
     type: 'donut';
@@ -27,6 +28,28 @@ export interface PolarChart {
     legend: Legend;
     tooltip: Tooltip;
     appearanceOptions: PolarChartAppearanceOptions;
+}
+
+export interface TwoDimensionalOptions {
+    type: '2d';
+    axis: Axis;
+    additionalElements: TwoDimensionalAdditionalElements;
+    charts: TwoDimensionalChart[];
+}
+
+export interface PolarOptions {
+    type: 'polar';
+    charts: PolarChart[];
+}
+
+export interface Domain {
+    start: number;
+    end: number;
+}
+
+export interface Axis {
+    keyAxis: AxisOptions;
+    valueAxis: AxisOptions;
 }
 
 interface PolarChartAppearanceOptions {
@@ -39,62 +62,48 @@ interface ChartData {
     keyField: Field;
     valueField: Field;
 }
+
 interface Field {
     name: string;
     format: DataType;
 }
+
 interface Tooltip {
     data: TooltipData;
 }
+
 interface TooltipData {
     fields: Field[];
 }
+
 interface Legend {
     position: LegendPosition;
 }
+
 interface Size {
     width: number;
     height: number;
 }
 
-
-export interface TwoDimensionalOptions {
-    type: '2d';
-    axis: Axis;
-    additionalElements: TwoDimensionalAdditionalElements;
-    charts: TwoDimensionalChart[];
-}
 interface TwoDimensionalAdditionalElements {
     gridLine: GridLineOptions;
 }
+
 interface GridLineOptions {
     flag: GridLineFlag;
 }
+
 interface GridLineFlag {
     key: boolean;
     value: boolean;
-}
-
-
-
-export interface PolarOptions {
-    type: 'polar';
-    charts: PolarChart[];
 }
 
 interface Canvas {
     size: Size;
     class: string;
 }
-export interface Axis {
-    keyAxis: AxisOptions;
-    valueAxis: AxisOptions;
-}
+
 interface AxisOptions {
     domain: Domain;
     position: 'start' | 'end'; 
-}
-export interface Domain {
-    start: number;
-    end: number;
 }

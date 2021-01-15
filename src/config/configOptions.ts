@@ -1,6 +1,6 @@
 import { Config } from './config';
 
-const config: Config = {
+const configCars: Config = {
     canvas: {
         class: 'svg-chart outline',
         size: {
@@ -37,7 +37,7 @@ const config: Config = {
         charts: [
             {
                 title: 'Car prices',
-                type: 'bar',
+                type: 'line',
                 legend: {
                     position: 'off'
                 },
@@ -70,7 +70,7 @@ const config: Config = {
             },
             {
                 title: 'Car prices',
-                type: 'bar',
+                type: 'line',
                 legend: {
                     position: 'off'
                 },
@@ -96,7 +96,6 @@ const config: Config = {
                                 name: 'price',
                                 format: 'money'
                             }
-
                         ]
                     }
                 },
@@ -114,7 +113,7 @@ const config: Config = {
     //                 position: 'bottom'
     //             },
     //             data: {
-    //                 dataSource: 'dataSet_date',
+    //                 dataSource: 'dataSet_large',
     //                 keyField:  {
     //                     name: 'brand',
     //                     format: 'date'
@@ -148,110 +147,109 @@ const config: Config = {
     // }
 }
 
-// const config: Config = {
-//     canvas: {
-//         class: 'svg-chart border',
-//         size: {
-//             width: 1200,
-//             height: 650
-//         }
-//     },
-//     options: {
-//         type: '2d',
-//         axis: {
-//             keyAxis: {
-//                 domain: {
-//                     start: -1,
-//                     end: -1
-//                 },
-//                 position: 'end'
-//             },
-//             valueAxis: {
-//                 domain: {
-//                     start: -1,
-//                     end: -1
-//                 },
-//                 position: 'start'
-//             }
-//         },
-//         additionalElements: {
-//             gridLine: {
-//                 flag: {
-//                     horizontal: true,
-//                     vertical: false
-//                 }
-//             }
-//         },
-//         charts: [
-//             {
-//                 title: 'Car prices',
-//                 type: 'line',
-//                 legend: {
-//                     position: 'off'
-//                 },
-//                 data: {
-//                     dataSource: 'dataSet_data',
-//                     keyField:  {
-//                         name: 'MonthYear',
-//                         format: 'string'
-//                     },
-//                     valueField: {
-//                         name: 'EventCost',
-//                         format: 'integer'
-//                     }
-//                 },
-//                 tooltip: {
-//                     data: {
-//                         fields: [
-//                             {
-//                                 name: 'MonthYear',
-//                                 format: 'string'
-//                             },
-//                             {
-//                                 name: 'EventCost',
-//                                 format: 'money'
-//                             }
-//                         ]
-//                     }
-//                 },
-//                 orientation: 'vertical'
-//             },
-//             {
-//                 title: 'Car prices',
-//                 type: 'line',
-//                 legend: {
-//                     position: 'off'
-//                 },
-//                 data: {
-//                     dataSource: 'dataSet_data2',
-//                     keyField:  {
-//                         name: 'MonthYear',
-//                         format: 'string'
-//                     },
-//                     valueField: {
-//                         name: 'AlcoholCost',
-//                         format: 'integer'
-//                     }
-//                 },
-//                 tooltip: {
-//                     data: {
-//                         fields: [
-//                             {
-//                                 name: 'MonthYear',
-//                                 format: 'string'
-//                             },
-//                             {
-//                                 name: 'AlcoholCost',
-//                                 format: 'money'
-//                             }
+const configDemo: Config = {
+    canvas: {
+        class: 'svg-chart outline',
+        size: {
+            width: 1200,
+            height: 650
+        }
+    },
+    options: {
+        type: '2d',
+        axis: {
+            keyAxis: {
+                domain: {
+                    start: -1,
+                    end: -1
+                },
+                position: 'end'
+            },
+            valueAxis: {
+                domain: {
+                    start: -1,
+                    end: -1
+                },
+                position: 'start'
+            }
+        },
+        additionalElements: {
+            gridLine: {
+                flag: {
+                    key: false,
+                    value: true
+                }
+            }
+        },
+        charts: [
+            {
+                title: 'Car prices',
+                type: 'line',
+                legend: {
+                    position: 'off'
+                },
+                data: {
+                    dataSource: 'dataSet_data',
+                    keyField:  {
+                        name: 'MonthYear',
+                        format: 'string'
+                    },
+                    valueField: {
+                        name: 'EventCost',
+                        format: 'integer'
+                    }
+                },
+                tooltip: {
+                    data: {
+                        fields: [
+                            {
+                                name: 'MonthYear',
+                                format: 'string'
+                            },
+                            {
+                                name: 'EventCost',
+                                format: 'money'
+                            }
+                        ]
+                    }
+                },
+                orientation: 'vertical'
+            },
+            {
+                title: 'Car prices',
+                type: 'line',
+                legend: {
+                    position: 'off'
+                },
+                data: {
+                    dataSource: 'dataSet_data2',
+                    keyField:  {
+                        name: 'MonthYear',
+                        format: 'string'
+                    },
+                    valueField: {
+                        name: 'AlcoholCost',
+                        format: 'integer'
+                    }
+                },
+                tooltip: {
+                    data: {
+                        fields: [
+                            {
+                                name: 'MonthYear',
+                                format: 'string'
+                            },
+                            {
+                                name: 'AlcoholCost',
+                                format: 'money'
+                            }
+                        ]
+                    }
+                },
+                orientation: 'vertical'
+            }
+        ]
+    }
+}
 
-//                         ]
-//                     }
-//                 },
-//                 orientation: 'vertical'
-//             }
-//         ]
-//     }
-// }
-
-export default config;
+export default configCars;

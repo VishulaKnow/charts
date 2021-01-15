@@ -7,7 +7,7 @@ import { GridLine } from "./twoDimensionalNotation/gridLine/gridLine";
 import { Legend } from "./features/legend/legend";
 import { Line } from "./twoDimensionalNotation/line/line";
 import { Scale, Scales } from "./twoDimensionalNotation/scale/scale";
-import { SvgBlock } from "./svgBlock/svgBlock";
+import { Block } from "./block/svgBlock";
 import { Tooltip } from "./features/tolltip/tooltip";
 import { RecordOverflowAlert } from "./recordOverflowAlert/recordOverflowAlert";
 import config from "../config/configOptions";
@@ -21,10 +21,10 @@ export class ChartRenderer
             options.scale.scaleValue,
             model.chartSettings.bar.groupDistance);
             
-        SvgBlock.render(model.blockCanvas.class, model.blockCanvas.size);
+        Block.render(model.blockCanvas.class, model.blockCanvas.size);
     
-        Axis.render(Scale.scales.scaleValue, options.axis.valueAxis);
-        Axis.render(Scale.scales.scaleKey, options.axis.keyAxis);    
+        Axis.render(Scale.scales.scaleValue, options.scale.scaleValue, options.axis.valueAxis);
+        Axis.render(Scale.scales.scaleKey, options.scale.scaleKey, options.axis.keyAxis);    
     
         GridLine.render(options.additionalElements.gridLine.flag, options.axis.keyAxis, options.axis.valueAxis, model.blockCanvas.size, model.chartBlock.margin);
         
@@ -49,7 +49,7 @@ export class ChartRenderer
     public static renderPolar(model: Model, data: DataSource) {
         const options = <PolarOptionsModel>model.options;
     
-        SvgBlock.render(model.blockCanvas.class, model.blockCanvas.size);
+        Block.render(model.blockCanvas.class, model.blockCanvas.size);
     
         this.renderPolarCharts(options.charts,
             data,
@@ -74,6 +74,7 @@ export class ChartRenderer
             model.chartSettings.bar.groupDistance);
     
         Axis.updateValueAxisDomain(Scale.scales.scaleValue,
+            options.scale.scaleValue,
             options.axis.valueAxis.class,
             options.axis.valueAxis.orient);
 
@@ -91,16 +92,9 @@ export class ChartRenderer
             model.blockCanvas.size);
     }
 
-    private static render2DCharts(charts: TwoDimensionalChartModel[], scales: Scales, data: DataSource, margin: BlockMargin, keyAxisOrient: Orient, barDistance: number, blockSize: Size) {
-        SvgBlock.getSvg()
-            .append('clipPath')
-            .attr('id', 'chart-block')
-            .append('rect')
-            .attr('x', margin.left)
-            .attr('y', margin.top)
-            .attr('width', blockSize.width - margin.left - margin.right)
-            .attr('height', blockSize.height - margin.top - margin.bottom);
-        
+    private static render2DCharts(charts: TwoDimensionalChartModel[], scales: Scales, data: DataSource, margin: BlockMargin, keyAxisOrient: Orient, barDistance: number, blockSize: Size) {      
+        Block.renderClipPath(margin, blockSize);
+        Block.renderChartBlock(blockSize, margin);
         charts.forEach((chart: TwoDimensionalChartModel) => {
             if(chart.type === 'bar')
                 Bar.render(scales,
@@ -134,6 +128,7 @@ export class ChartRenderer
                     chart.elementColors,
                     blockSize);
         });
+        Line.moveChartsToFront();
     }
     
     private static renderPolarCharts(charts: PolarChartModel[], data: DataSource, margin: BlockMargin, blockSize: Size) {
@@ -142,6 +137,7 @@ export class ChartRenderer
                 Donut.render(data[chart.data.dataSource],
                     margin,
                     chart.data.valueField.name,
+                    chart.data.keyField.name,
                     chart.appearanceOptions,
                     chart.cssClasses,
                     chart.elementColors,

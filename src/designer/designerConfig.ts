@@ -4,6 +4,7 @@ export type DataType = 'integer' | 'decimal' | 'date' | 'money' | 'string';
 export type DataOptions = {
     [option: string]: any
 }
+
 export interface Formatter {
     [type: string]: (options: DataOptions, value: any) => string
 }
@@ -14,17 +15,29 @@ export interface DesignerConfig {
     additionalElements: Elements;
     dataFormat: DataFormat;
 }
+
+export interface BarOptionsCanvas {
+    minBarWidth: number;
+    groupDistance: number;
+    barDistance: number;
+}
+
+export interface AxisLabelCanvas {
+    maxSize: AxisLabelSize;
+}
+
 interface Elements {
     gridLine: GridLineOptions;
 }
+
 interface GridLineOptions {
     flag: GridLineFlag;
 }
+
 interface GridLineFlag {
     key: boolean;
     value: boolean;
 }
-
 
 interface BlockMargin {
     top: number;
@@ -39,24 +52,20 @@ interface Canvas {
     legendBlock: LegendBlockCanvas;
     chartOptions: ChartOptionsCanvas;
 }
+
 interface ChartOptionsCanvas {
     bar: BarOptionsCanvas;
     donut: DonutOptionsCanvas;
 }
-export interface BarOptionsCanvas {
-    minBarWidth: number;
-    groupDistance: number;
-    barDistance: number;
-}
+
 interface DonutOptionsCanvas {
     minPartSize: number;
 }
+
 interface LegendBlockCanvas {
     maxWidth: number;
 }
-export interface AxisLabelCanvas {
-    maxSize: AxisLabelSize;
-}
+
 interface AxisLabelSize {
     main: number;
     orthogonal: number;
@@ -65,6 +74,7 @@ interface AxisLabelSize {
 interface ChartOptions {
     style: ChartStyle;
 }
+
 interface ChartStyle {
     palette: Color[];
 }

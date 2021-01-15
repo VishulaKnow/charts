@@ -2,8 +2,8 @@ import * as d3 from "d3";
 import { Color } from "d3";
 import { BlockMargin, DataRow } from "../../../model/model";
 import { Helper } from "../../helper";
-import { Scales } from "../scale/scale";
-import { SvgBlock } from "../../svgBlock/svgBlock";
+import { Scale, Scales } from "../scale/scale";
+import { Block } from "../../block/svgBlock";
 
 interface LineChartCoordinate {
     x: number;
@@ -21,11 +21,11 @@ export class Line
             keyField,
             valueField);    
         
-        const path = SvgBlock.getSvg()
+        const path = Block.getChartBlock()
             .append('path')
             .attr('d', line(lineCoordinate))
             .attr('class', 'line')
-            .style('clip-path', 'url(#chart-block)');
+            .style('clip-path', `url(${Block.getClipPathId()})`);
     
         Helper.setCssClasses(path, cssClasses);
         Helper.setChartColor(path, chartPalette, 'line');
@@ -40,7 +40,7 @@ export class Line
             keyField,
             valueField);
         
-        SvgBlock.getSvg()
+        Block.getChartBlock()
             .select(`.line${Helper.getCssClassesLine(cssClasses)}`)
             .transition()
             .duration(1000)
@@ -52,13 +52,19 @@ export class Line
             .x(d => d.x)
             .y(d => d.y);
     }
+
+    public static moveChartsToFront(): void {
+        Block.getChartBlock()
+            .selectAll('.line')
+            .raise();
+    }
     
     private static getLineCoordinateByKeyOrient(axisOrient: string, data: DataRow[], scales: Scales, margin: BlockMargin, keyField: string, valueField: string): LineChartCoordinate[] {
         const lineCoordinate: LineChartCoordinate[] = [];
         if(axisOrient === 'bottom' || axisOrient === 'top')
             data.forEach(d => {
                 lineCoordinate.push({
-                    x: scales.scaleKey(d[keyField]) + scales.scaleKey.bandwidth() / 2 + margin.left,
+                    x: Scale.getScaleKeyPoint(scales.scaleKey, d[keyField]) + margin.left,
                     y: scales.scaleValue(d[valueField]) + margin.top
                 });
             });
@@ -66,7 +72,7 @@ export class Line
             data.forEach(d => {
                 lineCoordinate.push({
                     x: scales.scaleValue(d[valueField]) + margin.left,
-                    y: scales.scaleKey(d[keyField]) + scales.scaleKey.bandwidth() / 2 + margin.top
+                    y: Scale.getScaleKeyPoint(scales.scaleKey, d[keyField]) + margin.top
                 });
             });
         return lineCoordinate;

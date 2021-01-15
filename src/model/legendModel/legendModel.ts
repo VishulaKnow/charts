@@ -18,7 +18,7 @@ export class LegendModel
             if(text.length > longestText.length) 
                 longestText = text;
         });
-        const maxWidth = LegendCanvasModel.getLegendItemWidth(longestText);
+        const maxWidth = LegendCanvasModel.getLegendItemWidth(longestText + '0'); //Запас на один символ
         return maxWidth > legendMaxWidth ? legendMaxWidth : maxWidth;
     }
 }

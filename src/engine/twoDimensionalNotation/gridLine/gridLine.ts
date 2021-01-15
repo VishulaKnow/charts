@@ -1,10 +1,8 @@
-import { line } from "d3";
-import { AxisModel } from "../../../model/axisModel";
 import { AxisModelOptions, BlockMargin, GridLineFlag, Size } from "../../../model/model";
-import { SvgBlock } from "../../svgBlock/svgBlock";
+import { Block } from "../../block/svgBlock";
 
 type GridLineType = 'key' | 'value';
-interface LineAttributes {
+interface GridLineAttributes {
     x1: number;
     y1: number;
     x2: number;
@@ -31,8 +29,8 @@ export class GridLine
         this.render(gridLineFlag, keyAxis, valueAxis, blockSize, margin);
     }
 
-    private static renderLine(axis: AxisModelOptions, lineAttributes: LineAttributes): void {
-        SvgBlock
+    private static renderLine(axis: AxisModelOptions, lineAttributes: GridLineAttributes): void {
+        Block
             .getSvg()
             .selectAll(`.${axis.class}`)
             .selectAll('g.tick')
@@ -44,8 +42,8 @@ export class GridLine
             .attr('y2', lineAttributes.y2);
     }
 
-    private static getLineAttributes(axis: AxisModelOptions, lineLength: number): LineAttributes {
-        const attributes: LineAttributes = {
+    private static getLineAttributes(axis: AxisModelOptions, lineLength: number): GridLineAttributes {
+        const attributes: GridLineAttributes = {
             x1: 0,
             y1: 0,
             x2: 0,
@@ -59,7 +57,7 @@ export class GridLine
     }
 
     private static clear(keyAxisClass: string, valueAxisClass: string): void {
-        SvgBlock.getSvg()
+        Block.getSvg()
             .select(`.${keyAxisClass}, .${valueAxisClass}`)
             .selectAll('g.tick')
             .selectAll('.grid-line')

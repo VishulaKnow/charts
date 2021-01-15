@@ -1,6 +1,6 @@
 import { AxisPosition, Domain, TwoDimensionalChart } from "../config/config";
 import { DataManagerModel } from "./dataManagerModel";
-import { BlockMargin, DataRow, DataSource, Size } from "./model";
+import { BlockMargin, DataRow, DataSource, ScaleKeyType, ScaleValueType, Size } from "./model";
 import { ModelHelper } from "./modelHelper";
 
 export enum ScaleType {
@@ -39,6 +39,16 @@ export class ScaleModel
             return [domainPeekMin, domainPeekMax];
         else 
             return [domainPeekMax, domainPeekMin];
+    }
+
+    public static getScaleKeyType(charts: TwoDimensionalChart[]): ScaleKeyType {
+        if(charts.findIndex(chart => chart.type === 'bar') === -1)
+            return 'point';
+        return 'band';
+    }
+
+    public static getScaleValueType(charts: TwoDimensionalChart[]): ScaleValueType {
+        return 'linear';
     }
 
     private static getScopedScalesMaxValue(charts: TwoDimensionalChart[], data: DataSource, allowableKeys: string[]): number {

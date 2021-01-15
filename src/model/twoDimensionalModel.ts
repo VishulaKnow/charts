@@ -4,7 +4,7 @@ import { AxisLabelCanvas, DesignerConfig } from "../designer/designerConfig";
 import { AxisModel } from "./axisModel";
 import { ChartStyleModel } from "./chartStyleModel";
 import { GridLineModel } from "./gridLineModel";
-import { BlockMargin, DataScope, DataSource, GridLineOptions, TwoDimensionalAdditionalElementsOptions, TwoDimensionalChartModel, TwoDimensionalOptionsModel } from "./model";
+import { BlockMargin, DataScope, DataSource, TwoDimensionalAdditionalElementsOptions, TwoDimensionalChartModel, TwoDimensionalOptionsModel } from "./model";
 import { AxisType } from "./modelOptions";
 import { ScaleModel, ScaleType } from "./scaleModel";
 
@@ -19,14 +19,16 @@ export class TwoDimensionalModel
                     range: {
                         start: 0,
                         end: ScaleModel.getScaleRangePeek(ScaleType.Key, configOptions.charts[0].orientation, margin, config.canvas.size)
-                    }
+                    },
+                    type: ScaleModel.getScaleKeyType(configOptions.charts)
                 },
                 scaleValue: {
                     domain: ScaleModel.getScaleValueDomain(configOptions.axis.valueAxis.domain, data, configOptions.charts, configOptions.axis.keyAxis.position, dataScope.allowableKeys),
                     range: {
                         start: 0,
                         end: ScaleModel.getScaleRangePeek(ScaleType.Value, configOptions.charts[0].orientation, margin, config.canvas.size)
-                    }
+                    },
+                    type: ScaleModel.getScaleValueType(configOptions.charts)
                 }
             },
             axis: {

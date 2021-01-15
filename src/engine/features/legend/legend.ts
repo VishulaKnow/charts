@@ -1,6 +1,6 @@
 import { Color } from "d3";
 import { DataRow, DataSource, LegendBlockModel, Orient, PolarOptionsModel, Size, TwoDimensionalOptionsModel } from "../../../model/model";
-import { SvgBlock } from "../../svgBlock/svgBlock";
+import { Block } from "../../block/svgBlock";
 
 export class Legend
 {
@@ -30,7 +30,7 @@ export class Legend
     }
     
     private static renderLegendBlock(items: string[], legendPosition: string, legendSize: number, colorPalette: Color[], blockSize: Size): void {
-        const legendBlock = SvgBlock.getSvg()
+        const legendBlock = Block.getSvg()
             .append('foreignObject')
                 .attr('class', 'legend');
         
