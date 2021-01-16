@@ -1,4 +1,4 @@
-import { Config, PolarChart, TwoDimensionalChart, IntervalOptions } from "../config/config";
+import { Config, PolarChart, TwoDimensionalChart, IntervalOptions, IntervalChart } from "../config/config";
 import { BarOptionsCanvas, DesignerConfig } from "../designer/designerConfig";
 import { AxisModel } from "./axisModel";
 import { BlockMargin, DataRow, DataScope, DataSource, IntervalChartModel, Model, PolarChartModel, TwoDimensionalChartModel } from "./model";
@@ -70,15 +70,16 @@ export class DataManagerModel
                 allowableKeys,
                 hidedRecordsAmount: dataset.length - allowableKeys.length 
             }
+        } else if(config.options.type === 'interval') {
+            return {
+                allowableKeys: this.getDataValuesByKeyField(data, config.options.charts[0]),
+                hidedRecordsAmount: 0   
+            }
         }
     }
 
-    public static getDataValuesByKeyField(data: DataSource, chart: TwoDimensionalChart | PolarChart): string[] {
+    public static getDataValuesByKeyField(data: DataSource, chart: TwoDimensionalChart | PolarChart | IntervalChart): string[] {
         return data[chart.data.dataSource].map(dataRow => dataRow[chart.data.keyField.name]);
-    }
-
-    public static getDataValuesByValueField(data: DataSource, chart: TwoDimensionalChart | PolarChart): number[] {
-        return data[chart.data.dataSource].map(dataRow => dataRow[chart.data.valueField.name]);
     }
 
     private static getDataLimitByBarSize(chartsAmount: number, dataLength: number, axisLength: number, barOptions: BarOptionsCanvas): number {

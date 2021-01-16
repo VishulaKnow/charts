@@ -9,7 +9,7 @@ import { AxisType } from "./modelOptions";
 import { ScaleModel, ScaleType } from "./scaleModel";
 
 export class IntervalModel {
-    public static getOptions(config: Config, designerConfig: DesignerConfig, axisLabelDesignerOptions: AxisLabelCanvas, chartPalette: Color[], margin: BlockMargin, dataScope: DataScope, data: DataSource): IntervalOptionsModel {
+    public static getOptions(config: Config, designerConfig: DesignerConfig, margin: BlockMargin, dataScope: DataScope, data: DataSource): IntervalOptionsModel {
         const configOptions = <IntervalOptions>config.options
         return {
             scale: {
@@ -38,7 +38,7 @@ export class IntervalModel {
                         translateY: AxisModel.getAxisTranslateY(AxisType.Key, configOptions.charts[0].orientation, configOptions.axis.keyAxis.position, margin, config.canvas.size.height)
                     },
                     class: 'key-axis',
-                    maxLabelSize: axisLabelDesignerOptions.maxSize.main
+                    maxLabelSize: designerConfig.canvas.axisLabel.maxSize.main
                 },
                 valueAxis: {
                     orient: AxisModel.getAxisOrient(AxisType.Value, configOptions.charts[0].orientation, configOptions.axis.valueAxis.position),
@@ -47,11 +47,11 @@ export class IntervalModel {
                         translateY: AxisModel.getAxisTranslateY(AxisType.Value, configOptions.charts[0].orientation, configOptions.axis.valueAxis.position, margin, config.canvas.size.height)
                     },          
                     class: 'value-axis',
-                    maxLabelSize: axisLabelDesignerOptions.maxSize.main
+                    maxLabelSize: designerConfig.canvas.axisLabel.maxSize.main
                 }
             },
             type: configOptions.type,
-            charts: this.getChartsModel(configOptions.charts, chartPalette),
+            charts: this.getChartsModel(configOptions.charts, designerConfig.chart.style.palette),
             additionalElements: this.getAdditionalElements(configOptions, designerConfig)
         }
     }

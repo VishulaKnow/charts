@@ -9,6 +9,7 @@ import config from '../config/configOptions';
 import designerConfig from '../designer/designerConfigOptions';
 import { DataManagerModel } from './dataManagerModel';
 import { DesignerConfig } from '../designer/designerConfig';
+import { IntervalModel } from './intervalModel';
 
 
 export enum AxisType {
@@ -42,9 +43,11 @@ function getChartBlock(margin: BlockMargin): ChartBlock {
 
 function getOptions(config: Config, designerConfig: DesignerConfig, margin: BlockMargin, dataScope: DataScope, data: DataSource): TwoDimensionalOptionsModel | PolarOptionsModel | IntervalOptionsModel {
     if(config.options.type === '2d') {
-        return TwoDimensionalModel.getOptions(config, designerConfig, designerConfig.canvas.axisLabel, designerConfig.chart.style.palette, margin, dataScope, data);
+        return TwoDimensionalModel.getOptions(config, designerConfig, margin, dataScope, data);
     } else if(config.options.type === 'polar') {
         return PolarModel.getOptions(config.options, designerConfig.chart.style.palette, data, dataScope);
+    } else if(config.options.type === 'interval') {
+        return IntervalModel.getOptions(config, designerConfig, margin, dataScope, data)
     }
 } 
 

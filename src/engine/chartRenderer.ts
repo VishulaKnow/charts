@@ -16,8 +16,6 @@ export class ChartRenderer
 {
     public static render2D(model: Model, data: DataSource): void {
         const options = <TwoDimensionalOptionsModel>model.options;
-
-        console.log(model);
     
         Scale.fillScales(options.scale.scaleKey,
             options.scale.scaleValue,

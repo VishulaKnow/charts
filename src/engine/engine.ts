@@ -12,6 +12,7 @@ function clearBlock(): void {
 
 export default {
     render(model: Model, data: any) {
+        console.log(model);
         ValueFormatter.format = model.dataFormat.formatters;
         if(model.options.type === '2d')
             ChartRenderer.render2D(model, data);
