@@ -1,10 +1,10 @@
 import { Color } from "d3";
-import { ChartOrientation, LegendPosition, TwoDimensionalChartType } from "../config/config";
+import { ChartOrientation, IntervalChartType, LegendPosition, PolarChartType, TwoDimensionalChartType } from "../config/config";
 import { DataType, Formatter } from "../designer/designerConfig";
 
 export type Orient = 'top' | 'bottom' | 'left' | 'right';
 export type ScaleKeyType = 'band' | 'point';
-export type ScaleValueType = 'linear';
+export type ScaleValueType = 'linear' | 'datetime';
 export type DataOptions = {
     [option: string]: any
 }
@@ -76,9 +76,16 @@ export interface TwoDimensionalOptionsModel {
     scale: ScaleModel;
     axis: AxisModel;
     charts: TwoDimensionalChartModel[];
-    additionalElements: TwoDimensionalAdditionalElementsOptions
+    additionalElements: AdditionalElementsOptions;
 }
-export interface TwoDimensionalAdditionalElementsOptions {
+export interface IntervalOptionsModel {
+    type: 'interval';
+    scale: ScaleModel;
+    axis: AxisModel;
+    charts: IntervalChartModel[];
+    additionalElements: AdditionalElementsOptions;
+}
+export interface AdditionalElementsOptions {
     gridLine: GridLineOptions;
 }
 export interface GridLineOptions {
@@ -106,8 +113,17 @@ export interface TwoDimensionalChartModel {
     cssClasses: string[];
     elementColors: Color[];
 }
+export interface IntervalChartModel {
+    type: IntervalChartType;
+    orient: ChartOrientation;
+    data: IntervalChartDataModel;
+    legend: LegendModel;
+    tooltip: TooltipModel;
+    cssClasses: string[];
+    elementColors: Color[];
+}
 export interface PolarChartModel {
-    type: 'donut';
+    type: PolarChartType;
     data: ChartDataModel;
     appearanceOptions: PolarChartAppearanceModel;
     legend: LegendModel;
@@ -119,7 +135,7 @@ export interface Model {
     blockCanvas: BlockCanvas;
     chartBlock: ChartBlock;
     legendBlock: LegendBlockModel;
-    options: TwoDimensionalOptionsModel | PolarOptionsModel;
+    options: TwoDimensionalOptionsModel | PolarOptionsModel | IntervalOptionsModel;
     dataSettings: DataSettings;
     chartSettings: ChartSettings;
     dataFormat: DataFormat;
@@ -172,6 +188,13 @@ interface ChartDataModel {
     dataSource: string;
     keyField: Field;
     valueField: Field;
+}
+
+interface IntervalChartDataModel {
+    dataSource: string;
+    keyField: Field;
+    valueField1: Field;
+    valueField2: Field;
 }
 
 interface BarChartSettings {

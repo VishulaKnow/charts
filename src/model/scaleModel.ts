@@ -1,4 +1,4 @@
-import { AxisPosition, Domain, TwoDimensionalChart } from "../config/config";
+import { AxisPosition, NumberDomain, IntervalChart, TwoDimensionalChart } from "../config/config";
 import { DataManagerModel } from "./dataManagerModel";
 import { BlockMargin, DataRow, DataSource, ScaleKeyType, ScaleValueType, Size } from "./model";
 import { ModelHelper } from "./modelHelper";
@@ -19,11 +19,15 @@ export class ScaleModel
             : blockSize.width - margin.left - margin.right;
     }
 
-    public static getScaleKeyDomain(allowableKeys: string[]): any[] {
+    public static getScaleKeyDomain(allowableKeys: string[]): string[] {
         return allowableKeys;
     }
+
+    public static getScaleDateValueDomain(data: DataSource, charts: TwoDimensionalChart[] | IntervalChart[], keyAxisPosition: AxisPosition, allowableKeys: string[]): [Date, Date] {
+        return [new Date('2020-12-01'), new Date('2020-12-31')];
+    }
     
-    public static getScaleValueDomain(configDomain: Domain, data: DataSource, charts: TwoDimensionalChart[], keyAxisPosition: AxisPosition, allowableKeys: string[]): any[] {
+    public static getScaleLinearValueDomain(configDomain: NumberDomain, data: DataSource, charts: TwoDimensionalChart[], keyAxisPosition: AxisPosition, allowableKeys: string[]): [number, number] {
         let domainPeekMin: number;
         let domainPeekMax: number;
         if(configDomain.start === -1)
@@ -41,13 +45,15 @@ export class ScaleModel
             return [domainPeekMax, domainPeekMin];
     }
 
-    public static getScaleKeyType(charts: TwoDimensionalChart[]): ScaleKeyType {
-        if(charts.findIndex(chart => chart.type === 'bar') === -1)
+    public static getScaleKeyType(charts: TwoDimensionalChart[] | IntervalChart[]): ScaleKeyType {
+        if(charts.findIndex((chart: TwoDimensionalChart | IntervalChart) => chart.type === 'bar' || chart.type === 'gantt') === -1)
             return 'point';
         return 'band';
     }
 
-    public static getScaleValueType(charts: TwoDimensionalChart[]): ScaleValueType {
+    public static getScaleValueType(charts: TwoDimensionalChart[] | IntervalChart[]): ScaleValueType {
+        if(charts.findIndex((chart: TwoDimensionalChart | IntervalChart) => chart.type === 'gantt') !== -1)
+            return 'datetime';
         return 'linear';
     }
 

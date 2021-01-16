@@ -1,7 +1,7 @@
-import { Config, PolarChart, TwoDimensionalChart } from "../config/config";
+import { Config, PolarChart, TwoDimensionalChart, IntervalOptions } from "../config/config";
 import { BarOptionsCanvas, DesignerConfig } from "../designer/designerConfig";
 import { AxisModel } from "./axisModel";
-import { BlockMargin, DataRow, DataScope, DataSource, Model, PolarChartModel, TwoDimensionalChartModel } from "./model";
+import { BlockMargin, DataRow, DataScope, DataSource, IntervalChartModel, Model, PolarChartModel, TwoDimensionalChartModel } from "./model";
 import { ModelHelper } from "./modelHelper";
 
 export class DataManagerModel
@@ -16,7 +16,7 @@ export class DataManagerModel
 
     public static getScopedData(data: DataSource, model: Model): DataSource {
         const allowableKeys = model.dataSettings.scope.allowableKeys;
-        model.options.charts.forEach((chart: TwoDimensionalChartModel | PolarChartModel) => {
+        model.options.charts.forEach((chart: TwoDimensionalChartModel | PolarChartModel | IntervalChartModel) => {
             data[chart.data.dataSource] = this.getScopedChartData(data[chart.data.dataSource], allowableKeys, chart.data.keyField.name);
         });
         return data;
@@ -40,7 +40,7 @@ export class DataManagerModel
                 allowableKeys: this.getDataValuesByKeyField(data, config.options.charts[0]),
                 hidedRecordsAmount: 0   
             }
-        } else {
+        } else if(config.options.type === 'polar') {
             const dataset = data[config.options.charts[0].data.dataSource];
             const valueField = config.options.charts[0].data.valueField.name;
             const keyField = config.options.charts[0].data.keyField.name;

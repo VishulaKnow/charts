@@ -12,10 +12,6 @@ const configCars: Config = {
         type: '2d',
         axis: {
             keyAxis: {
-                domain: {
-                    start: -1,
-                    end: -1
-                },
                 position: 'end'
             },
             valueAxis: {
@@ -104,44 +100,51 @@ const configCars: Config = {
         ]
     }
     // options: {
-    //     type: 'polar',
+    //     type: 'interval',
+    //     additionalElements: {
+    //         gridLine: {
+    //             flag: {
+    //                 value: true,
+    //                 key: false
+    //             }
+    //         }
+    //     },
+    //     axis: {
+    //         keyAxis: {
+    //             position: 'start'
+    //         },
+    //         valueAxis: {
+    //             position: 'end'
+    //         }
+    //     },
     //     charts: [
     //         {
-    //             type: 'donut',
+    //             type: 'gantt',
     //             title: 'Car prices',
     //             legend: {
-    //                 position: 'bottom'
+    //                 position: 'off'
     //             },
     //             data: {
-    //                 dataSource: 'dataSet_large',
+    //                 dataSource: 'dataSet_gantt',
     //                 keyField:  {
-    //                     name: 'brand',
+    //                     name: 'task',
+    //                     format: 'string'
+    //                 },
+    //                 valueField1: {
+    //                     name: 'start',
     //                     format: 'date'
     //                 },
-    //                 valueField: {
-    //                     name: 'price',
-    //                     format: 'integer'
+    //                 valueField2: {
+    //                     name: 'end',
+    //                     format: 'date'
     //                 }
     //             },
     //             tooltip: {
     //                 data: {
-    //                     fields: [
-    //                         {
-    //                             name: 'brand',
-    //                             format: 'date'
-    //                         },
-    //                         {
-    //                             name: 'price',
-    //                             format: 'money'
-    //                         }
-
-    //                     ]
+    //                     fields: []
     //                 }
     //             },
-    //             appearanceOptions: {
-    //                 innerRadius: 10,
-    //                 padAngle: 0.005
-    //             }
+    //             orientation: 'horizontal'
     //         }
     //     ]
     // }
@@ -159,10 +162,6 @@ const configDemo: Config = {
         type: '2d',
         axis: {
             keyAxis: {
-                domain: {
-                    start: -1,
-                    end: -1
-                },
                 position: 'end'
             },
             valueAxis: {

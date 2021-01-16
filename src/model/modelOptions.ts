@@ -1,5 +1,5 @@
 import { Config } from '../config/config';
-import { Model, BlockCanvas, ChartBlock, TwoDimensionalOptionsModel, PolarOptionsModel, BlockMargin, LegendBlockModel, DataSettings, ChartSettings, DataFormat, DataScope, DataSource } from './model';
+import { Model, BlockCanvas, ChartBlock, TwoDimensionalOptionsModel, PolarOptionsModel, BlockMargin, LegendBlockModel, DataSettings, ChartSettings, DataFormat, DataScope, DataSource, IntervalOptionsModel } from './model';
 import { MarginModel } from './marginModel';
 import { TwoDimensionalModel } from './twoDimensionalModel';
 import { PolarModel } from './polarModel';
@@ -40,11 +40,11 @@ function getChartBlock(margin: BlockMargin): ChartBlock {
     }
 }
 
-function getOptions(config: Config, designerConfig: DesignerConfig, margin: BlockMargin, dataScope: DataScope, data: DataSource): TwoDimensionalOptionsModel | PolarOptionsModel {
+function getOptions(config: Config, designerConfig: DesignerConfig, margin: BlockMargin, dataScope: DataScope, data: DataSource): TwoDimensionalOptionsModel | PolarOptionsModel | IntervalOptionsModel {
     if(config.options.type === '2d') {
-        return TwoDimensionalModel.get2DOptions(config, designerConfig, designerConfig.canvas.axisLabel, designerConfig.chart.style.palette, margin, dataScope, data);
-    } else {
-        return PolarModel.getPolarOptions(config.options, designerConfig.chart.style.palette, data, dataScope);
+        return TwoDimensionalModel.getOptions(config, designerConfig, designerConfig.canvas.axisLabel, designerConfig.chart.style.palette, margin, dataScope, data);
+    } else if(config.options.type === 'polar') {
+        return PolarModel.getOptions(config.options, designerConfig.chart.style.palette, data, dataScope);
     }
 } 
 

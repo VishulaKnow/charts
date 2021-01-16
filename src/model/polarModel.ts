@@ -6,7 +6,7 @@ import { DataScope, DataSource, PolarChartModel, PolarOptionsModel } from "./mod
 
 export class PolarModel
 {
-    public static getPolarChartsModel(charts: PolarChart[], chartPalette: Color[], data: DataSource, dataScope: DataScope): PolarChartModel[] {
+    public static getChartsModel(charts: PolarChart[], chartPalette: Color[], data: DataSource, dataScope: DataScope): PolarChartModel[] {
         const chartsModel: PolarChartModel[] = [];
         charts.forEach((chart, index) => {
             chartsModel.push({
@@ -22,10 +22,10 @@ export class PolarModel
         return chartsModel;
     }
 
-    public static getPolarOptions(configOptions: PolarOptions, chartPalette: Color[], data: DataSource, dataScope: DataScope): PolarOptionsModel {
+    public static getOptions(configOptions: PolarOptions, chartPalette: Color[], data: DataSource, dataScope: DataScope): PolarOptionsModel {
         return {
             type: configOptions.type,
-            charts: this.getPolarChartsModel(configOptions.charts, chartPalette, data, dataScope),
+            charts: this.getChartsModel(configOptions.charts, chartPalette, data, dataScope),
         }
     }
 }

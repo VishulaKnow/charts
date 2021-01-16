@@ -1,4 +1,4 @@
-import { Axis, Config, PolarChart, PolarOptions, TwoDimensionalChart, TwoDimensionalOptions } from "../config/config";
+import { TwoDimensionalAxis, Config, PolarChart, TwoDimensionalChart,  } from "../config/config";
 import { DesignerConfig } from "../designer/designerConfig";
 import { AxisModel } from "./axisModel";
 import { DataManagerModel } from "./dataManagerModel";
@@ -33,7 +33,7 @@ export class MarginModel
         }    
     }
 
-    public static recalcMarginWithAxisLabelWidth(margin: BlockMargin, charts: TwoDimensionalChart[], labelsMaxWidth: number, axis: Axis, data: DataSource): void {
+    public static recalcMarginWithAxisLabelWidth(margin: BlockMargin, charts: TwoDimensionalChart[], labelsMaxWidth: number, axis: TwoDimensionalAxis, data: DataSource): void {
         const keyAxisOrient = AxisModel.getAxisOrient(AxisType.Key, charts[0].orientation, axis.keyAxis.position);
         const valueAxisOrient = AxisModel.getAxisOrient(AxisType.Value, charts[0].orientation, axis.valueAxis.position);
         if(keyAxisOrient === 'left' || keyAxisOrient === 'right') {
@@ -60,7 +60,7 @@ export class MarginModel
                 if(charts.length !== 0) {
                     legendSize = LegendModel.getLegendSize(position, charts.map(chart => chart.data.dataSource), legendMaxWidth, config.canvas.size);
                 }
-            } else {
+            } else if(config.options.type === 'polar') {
                 const charts = config.options.charts.filter((chart: PolarChart) => chart.legend.position === position);
                 if(charts.length !== 0) {
                     legendSize = LegendModel.getLegendSize(position, charts.map(chart => DataManagerModel.getDataValuesByKeyField(data, chart))[0], legendMaxWidth, config.canvas.size);

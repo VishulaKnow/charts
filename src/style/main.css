@@ -95,7 +95,7 @@ label {
     stroke-dasharray: 0;
 }
 
-.key-axis .domain, .key-axis .tick line {
+/* .key-axis .domain, .key-axis .tick line {
     stroke: #e0e0e0;
     stroke-width: 1;
 }
@@ -104,7 +104,7 @@ label {
 }
 .value-axis .tick line:first-of-type {
     stroke: none;
-}
+} */
 
 .record-overflow-alert {
     font-family: "Roboto", sans-serif;

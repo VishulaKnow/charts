@@ -2,14 +2,44 @@ type DataType = 'integer' | 'decimal' | 'date' | 'money' | 'string';
 
 export type AxisPosition = 'start' | 'end';
 export type ChartOrientation = 'vertical' | 'horizontal';
-export type ChartNotation = '2d' | 'polar';
-export type ChartType = 'bar' | 'line' | 'area' | 'donut';
+export type ChartNotation = '2d' | 'polar' | 'interval';
+export type ChartType = 'bar' | 'line' | 'area' | 'donut' | 'gantt';
 export type TwoDimensionalChartType = 'line' | 'bar' | 'area';
+export type PolarChartType = 'donut';
+export type IntervalChartType = 'gantt';
 export type LegendPosition = 'off' | 'top' | 'bottom' | 'left' | 'right';
 
 export interface Config {
     canvas: Canvas;
-    options: PolarOptions | TwoDimensionalOptions;
+    options: PolarOptions | TwoDimensionalOptions | IntervalOptions;
+}
+
+export interface TwoDimensionalOptions {
+    type: '2d';
+    axis: TwoDimensionalAxis;
+    additionalElements: TwoDimensionalAdditionalElements;
+    charts: TwoDimensionalChart[];
+}
+
+export interface PolarOptions {
+    type: 'polar';
+    charts: PolarChart[];
+}
+
+export interface IntervalOptions {
+    type: 'interval';
+    axis: IntervalAxis;
+    charts: IntervalChart[];
+    additionalElements: TwoDimensionalAdditionalElements;
+}
+
+export interface IntervalChart {
+    title: string;
+    type: IntervalChartType;
+    data: IntervalChartData;
+    legend: Legend;
+    tooltip: Tooltip;
+    orientation: ChartOrientation;
 }
 
 export interface TwoDimensionalChart {
@@ -23,33 +53,31 @@ export interface TwoDimensionalChart {
 
 export interface PolarChart {
     title: string;
-    type: 'donut';
+    type: PolarChartType;
     data: ChartData;
     legend: Legend;
     tooltip: Tooltip;
     appearanceOptions: PolarChartAppearanceOptions;
 }
 
-export interface TwoDimensionalOptions {
-    type: '2d';
-    axis: Axis;
-    additionalElements: TwoDimensionalAdditionalElements;
-    charts: TwoDimensionalChart[];
-}
-
-export interface PolarOptions {
-    type: 'polar';
-    charts: PolarChart[];
-}
-
-export interface Domain {
+export interface NumberDomain {
     start: number;
     end: number;
 }
 
-export interface Axis {
-    keyAxis: AxisOptions;
-    valueAxis: AxisOptions;
+export interface DateDomain {
+    start: Date;
+    end: Date;
+}
+
+export interface TwoDimensionalAxis {
+    keyAxis: DiscreteAxisOptions;
+    valueAxis: NumberAxisOptions;
+}
+
+export interface IntervalAxis {
+    keyAxis: DiscreteAxisOptions;
+    valueAxis: DateAxisOptions;
 }
 
 interface PolarChartAppearanceOptions {
@@ -61,6 +89,13 @@ interface ChartData {
     dataSource: string;
     keyField: Field;
     valueField: Field;
+}
+
+interface IntervalChartData {
+    dataSource: string;
+    keyField: Field;
+    valueField1: Field;
+    valueField2: Field;
 }
 
 interface Field {
@@ -103,7 +138,15 @@ interface Canvas {
     class: string;
 }
 
-interface AxisOptions {
-    domain: Domain;
-    position: 'start' | 'end'; 
+interface NumberAxisOptions {
+    domain: NumberDomain;
+    position: AxisPosition; 
+}
+
+interface DiscreteAxisOptions {
+    position: AxisPosition;
+}
+
+interface DateAxisOptions {
+    position: AxisPosition;
 }

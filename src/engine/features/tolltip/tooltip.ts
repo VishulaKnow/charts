@@ -1,5 +1,5 @@
 import * as d3 from "d3";
-import { BlockMargin, DataRow, DataSource, Field, Model, PolarChartModel, ScaleKeyModel, ScaleKeyType, Size, TwoDimensionalChartModel } from "../../../model/model";
+import { BlockMargin, DataRow, DataSource, Field, IntervalChartModel, Model, PolarChartModel, ScaleKeyModel, ScaleKeyType, Size, TwoDimensionalChartModel } from "../../../model/model";
 import { Helper } from "../../helper";
 import { Scale, Scales } from "../../twoDimensionalNotation/scale/scale";
 import { Block } from "../../block/svgBlock";
@@ -9,7 +9,7 @@ export class Tooltip
 {
     public static renderTooltips(model: Model, data: DataSource, scales: Scales) {
         this.renderTooltipWrapper();
-        const chartsWithTooltipIndex = model.options.charts.findIndex((chart: TwoDimensionalChartModel | PolarChartModel) => chart.tooltip.data.fields.length !== 0);
+        const chartsWithTooltipIndex = model.options.charts.findIndex((chart: TwoDimensionalChartModel | PolarChartModel | IntervalChartModel) => chart.tooltip.data.fields.length !== 0);
         if(chartsWithTooltipIndex !== -1) {
             if(model.options.type === '2d') {
                 if(model.options.charts.findIndex(chart => chart.type === 'area' || chart.type === 'line') === -1) {
@@ -17,7 +17,7 @@ export class Tooltip
                 } else {
                     this.renderLineTooltip(scales.scaleKey, model.chartBlock.margin, model.blockCanvas.size, model.options.charts, data, model.options.scale.scaleKey);
                 }
-            } else {
+            } else if(model.options.type === 'polar') {
                 this.renderTooltipsForDonut(model.options.charts, data, model.blockCanvas.size);
             }
         }

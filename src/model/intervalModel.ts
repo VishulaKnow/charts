@@ -1,17 +1,16 @@
 import { Color } from "d3";
-import { Config, TwoDimensionalChart, TwoDimensionalOptions } from "../config/config";
+import { Config, IntervalChart, IntervalOptions } from "../config/config";
 import { AxisLabelCanvas, DesignerConfig } from "../designer/designerConfig";
 import { AxisModel } from "./axisModel";
 import { ChartStyleModel } from "./chartStyleModel";
 import { GridLineModel } from "./gridLineModel";
-import { BlockMargin, DataScope, DataSource, AdditionalElementsOptions, TwoDimensionalChartModel, TwoDimensionalOptionsModel } from "./model";
+import { AdditionalElementsOptions, BlockMargin, DataScope, DataSource, IntervalChartModel, IntervalOptionsModel } from "./model";
 import { AxisType } from "./modelOptions";
 import { ScaleModel, ScaleType } from "./scaleModel";
 
-export class TwoDimensionalModel
-{
-    public static getOptions(config: Config, designerConfig: DesignerConfig, axisLabelDesignerOptions: AxisLabelCanvas, chartPalette: Color[], margin: BlockMargin, dataScope: DataScope, data: DataSource): TwoDimensionalOptionsModel {
-        const configOptions = <TwoDimensionalOptions>config.options
+export class IntervalModel {
+    public static getOptions(config: Config, designerConfig: DesignerConfig, axisLabelDesignerOptions: AxisLabelCanvas, chartPalette: Color[], margin: BlockMargin, dataScope: DataScope, data: DataSource): IntervalOptionsModel {
+        const configOptions = <IntervalOptions>config.options
         return {
             scale: {
                 scaleKey: {
@@ -23,7 +22,7 @@ export class TwoDimensionalModel
                     type: ScaleModel.getScaleKeyType(configOptions.charts)
                 },
                 scaleValue: {
-                    domain: ScaleModel.getScaleLinearValueDomain(configOptions.axis.valueAxis.domain, data, configOptions.charts, configOptions.axis.keyAxis.position, dataScope.allowableKeys),
+                    domain: ScaleModel.getScaleDateValueDomain(data, configOptions.charts, configOptions.axis.keyAxis.position, dataScope.allowableKeys),
                     range: {
                         start: 0,
                         end: ScaleModel.getScaleRangePeek(ScaleType.Value, configOptions.charts[0].orientation, margin, config.canvas.size)
@@ -57,8 +56,14 @@ export class TwoDimensionalModel
         }
     }
 
-    private static getChartsModel(charts: TwoDimensionalChart[], chartPalette: Color[]): TwoDimensionalChartModel[] {
-        const chartsModel: TwoDimensionalChartModel[] = [];
+    public static getAdditionalElements(options: IntervalOptions, designerConfig: DesignerConfig): AdditionalElementsOptions {
+        return {
+            gridLine: GridLineModel.getGridLineOptions(options, designerConfig)
+        }
+    }
+
+    private static getChartsModel(charts: IntervalChart[], chartPalette: Color[]): IntervalChartModel[] {
+        const chartsModel: IntervalChartModel[] = [];
         charts.forEach((chart, index) => {
             chartsModel.push({
                 type: chart.type,
@@ -67,15 +72,9 @@ export class TwoDimensionalModel
                 legend: chart.legend,
                 tooltip: chart.tooltip,
                 cssClasses: ChartStyleModel.getCssClasses(chart.type, index),
-                elementColors: ChartStyleModel.getElementColorPallete(chartPalette, '2d', charts.length, index)
+                elementColors: ChartStyleModel.getElementColorPallete(chartPalette, 'interval', charts.length, index)
             });
         });
         return chartsModel;
-    }
-
-    private static getAdditionalElements(options: TwoDimensionalOptions, designerConfig: DesignerConfig): AdditionalElementsOptions {
-        return {
-            gridLine: GridLineModel.getGridLineOptions(options, designerConfig)
-        }
     }
 }

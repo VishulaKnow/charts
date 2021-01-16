@@ -79,6 +79,12 @@
         {"SortOrder":202101,"EventCost":3000.00,"AlcoholCost":0.00,"MonthYear":"Jan 21"},
         {"SortOrder":202102,"EventCost":2000.00,"AlcoholCost":0.00,"MonthYear":"Feb 21"}
     ],
+    "dataSet_gantt": [
+        { "task": "task1", "start": "2020-12-12", "end": "2020-12-30" },
+        { "task": "task2", "start": "2020-12-10", "end": "2020-12-20" },
+        { "task": "task3", "start": "2020-12-01", "end": "2020-12-11" },
+        { "task": "task4", "start": "2020-12-20", "end": "2020-12-31" }
+    ],
     "dataSet_72": [
         { "brand": "BMW", "price": 120, "count": 12 },
         { "brand": "LADA", "price": 50, "count": 10 },

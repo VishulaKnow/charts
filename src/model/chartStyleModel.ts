@@ -6,19 +6,12 @@ export class ChartStyleModel
 {
     public static getCssClasses(chartType: ChartType, chartIndex: number): string[] {
         const cssClasses = [`chart-${chartIndex}`];
-        if(chartType === 'line')
-            cssClasses.concat(['line']);
-        if(chartType === 'bar')
-            cssClasses.concat(['bar']);
-        if(chartType === 'area')
-            cssClasses.concat(['area']);
-        if(chartType === 'donut')
-            cssClasses.concat(['donut']);
+        cssClasses.concat([chartType]);
         return cssClasses
     }
     
     public static getElementColorPallete(palette: Color[], notation: ChartNotation, elementsAmount: number, chartIndex: number = 0): Color[] {
-        if(notation === '2d') {
+        if(notation === '2d' || notation === 'interval') {
             const generatedPalette = this.generatePalette(palette, elementsAmount);
             return [generatedPalette[chartIndex % palette.length]];
         }  
