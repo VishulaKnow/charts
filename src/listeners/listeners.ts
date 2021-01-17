@@ -53,7 +53,7 @@ function setCheckboxValue(selector: string, value: boolean): void {
 function updateFull(): void {
     dropAxisDomain(config);
     const model = getUpdatedModel();
-    const preparedData = getPreparedData(model, getCopy(data));
+    const preparedData = getPreparedData(model, data);
     engine.updateFullBlock(model, preparedData);
 }
 function dropAxisDomain(config: Config) {
@@ -307,7 +307,7 @@ function set2DListeners(): void {
             const end = getInputValue('#domain-end');
             config.options.axis.valueAxis.domain.start = parseInt(start) || -1;
             config.options.axis.valueAxis.domain.end = parseInt(end) || -1;
-            engine.updateValueAxis(getUpdatedModel(), getCopy(data));
+            engine.updateValueAxis(getUpdatedModel(), data);
         }
     });
     document.querySelector('#domain-start').addEventListener('keydown', function(e: KeyboardEvent) {
@@ -317,7 +317,7 @@ function set2DListeners(): void {
                 const end = getInputValue('#domain-end');
                 config.options.axis.valueAxis.domain.start = parseInt(start) || -1;
                 config.options.axis.valueAxis.domain.end = parseInt(end) || -1;
-                engine.updateValueAxis(getUpdatedModel(), getCopy(data));
+                engine.updateValueAxis(getUpdatedModel(), data);
             }
         }
     });
@@ -328,7 +328,7 @@ function set2DListeners(): void {
                 const end = getInputValue('#domain-end');
                 config.options.axis.valueAxis.domain.start = parseInt(start) || -1;
                 config.options.axis.valueAxis.domain.end = parseInt(end) || -1;
-                engine.updateValueAxis(getUpdatedModel(), getCopy(data));
+                engine.updateValueAxis(getUpdatedModel(), data);
             }
         }
     });

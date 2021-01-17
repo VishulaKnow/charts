@@ -16,10 +16,11 @@ export class DataManagerModel
 
     public static getScopedData(data: DataSource, model: Model): DataSource {
         const allowableKeys = model.dataSettings.scope.allowableKeys;
+        const newData: DataSource = {};
         model.options.charts.forEach((chart: TwoDimensionalChartModel | PolarChartModel | IntervalChartModel) => {
-            data[chart.data.dataSource] = this.getScopedChartData(data[chart.data.dataSource], allowableKeys, chart.data.keyField.name);
+            newData[chart.data.dataSource] = this.getScopedChartData(data[chart.data.dataSource], allowableKeys, chart.data.keyField.name);
         });
-        return data;
+        return newData;
     }
 
     public static getDataScope(config: Config, margin: BlockMargin, data: DataSource, designerConfig: DesignerConfig): DataScope {
