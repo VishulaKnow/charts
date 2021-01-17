@@ -12,12 +12,14 @@ function clearBlock(): void {
 
 export default {
     render(model: Model, data: any) {
-        console.log(model);
         ValueFormatter.format = model.dataFormat.formatters;
         if(model.options.type === '2d')
             ChartRenderer.render2D(model, data);
-        else
+        else if(model.options.type === 'polar')
             ChartRenderer.renderPolar(model, data);
+        else if(model.options.type === 'interval')
+            ChartRenderer.renderInterval(model, data);
+
     },
     updateFullBlock(model: Model, data: any) {
         clearBlock();

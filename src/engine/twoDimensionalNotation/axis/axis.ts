@@ -20,7 +20,7 @@ export class Axis
         this.cropLabels(scale, scaleOptions, axisOptions);
     }
 
-    public static updateValueAxisDomain(scaleValue: d3.ScaleLinear<number, number>, scaleOptions: ScaleValueModel, axisClass: string, axisOrient: Orient) {
+    public static updateValueAxisDomain(scaleValue: d3.AxisScale<any>, scaleOptions: ScaleValueModel, axisClass: string, axisOrient: Orient) {
         const axis = this.getAxisByOrient(axisOrient, scaleValue);
 
         this.setAxisFormat(scaleValue, scaleOptions, axis);

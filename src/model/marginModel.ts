@@ -1,4 +1,4 @@
-import { TwoDimensionalAxis, Config, PolarChart, TwoDimensionalChart,  } from "../config/config";
+import { TwoDimensionalAxis, Config, PolarChart, TwoDimensionalChart, IntervalChart, IntervalAxis,  } from "../config/config";
 import { DesignerConfig } from "../designer/designerConfig";
 import { AxisModel } from "./axisModel";
 import { DataManagerModel } from "./dataManagerModel";
@@ -13,7 +13,7 @@ export class MarginModel
     public static getMargin(designerConfig: DesignerConfig, config: Config, legendBlockModel: LegendBlockModel, data: DataSource): BlockMargin {
         const margin: BlockMargin = { ...designerConfig.canvas.chartBlockMargin }
         this.recalcMarginWithLegend(margin, config, designerConfig.canvas.legendBlock.maxWidth, legendBlockModel, data);
-        if(config.options.type === '2d') {
+        if(config.options.type === '2d' || config.options.type === 'interval') {
             this.recalcMarginWithAxisLabelWidth(margin, config.options.charts, designerConfig.canvas.axisLabel.maxSize.main, config.options.axis, data);
             // this.recalcMarginWithAxisLabelHeight(margin, config.options.charts, config.options.axis);
         }
@@ -33,7 +33,7 @@ export class MarginModel
         }    
     }
 
-    public static recalcMarginWithAxisLabelWidth(margin: BlockMargin, charts: TwoDimensionalChart[], labelsMaxWidth: number, axis: TwoDimensionalAxis, data: DataSource): void {
+    public static recalcMarginWithAxisLabelWidth(margin: BlockMargin, charts: TwoDimensionalChart[] | IntervalChart[], labelsMaxWidth: number, axis: TwoDimensionalAxis | IntervalAxis, data: DataSource): void {
         const keyAxisOrient = AxisModel.getAxisOrient(AxisType.Key, charts[0].orientation, axis.keyAxis.position);
         const valueAxisOrient = AxisModel.getAxisOrient(AxisType.Value, charts[0].orientation, axis.valueAxis.position);
         if(keyAxisOrient === 'left' || keyAxisOrient === 'right') {

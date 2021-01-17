@@ -1,4 +1,4 @@
-import { BlockMargin, DataSource, Model, Orient, PolarChartModel, PolarOptionsModel, Size, TwoDimensionalChartModel, TwoDimensionalOptionsModel } from "../model/model";
+import { BlockMargin, DataSource, IntervalOptionsModel, Model, Orient, PolarChartModel, PolarOptionsModel, Size, TwoDimensionalChartModel, TwoDimensionalOptionsModel } from "../model/model";
 import { Area } from "./twoDimensionalNotation/area/area";
 import { Axis } from "./twoDimensionalNotation/axis/axis";
 import { Bar } from "./twoDimensionalNotation/bar/bar";
@@ -64,6 +64,23 @@ export class ChartRenderer
         Tooltip.renderTooltips(model, data, Scale.scales);
         if(model.dataSettings.scope.hidedRecordsAmount !== 0)
             RecordOverflowAlert.render(model.dataSettings.scope.hidedRecordsAmount);
+    }
+
+    public static renderInterval(model: Model, data: DataSource): void {
+        const options = <IntervalOptionsModel>model.options;
+        console.log(model);
+        
+        Block.render(model.blockCanvas.class, model.blockCanvas.size);
+
+        Scale.fillScales(options.scale.scaleKey,
+            options.scale.scaleValue,
+            model.chartSettings.bar.groupDistance);
+
+        console.log(Scale.scales.scaleValue.domain());
+        
+
+        Axis.render(Scale.scales.scaleValue, options.scale.scaleValue, options.axis.valueAxis);
+        Axis.render(Scale.scales.scaleKey, options.scale.scaleKey, options.axis.keyAxis);
     }
 
     public static updateByValueAxis(model: Model, data: DataSource) {

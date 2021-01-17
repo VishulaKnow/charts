@@ -63,6 +63,7 @@ label {
     height: 12px;
     background-color: red;
     border-radius: 50%;
+    margin-right: 5px;
 }
 .tooltip {
     pointer-events: none;

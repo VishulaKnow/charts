@@ -113,7 +113,7 @@ export class Bar
             .attr('width', d => barAttrs.width(d));   
     }
     
-    private static fillBarAttrsByKeyOrientWithTransition(bars: d3.Selection<SVGRectElement, DataRow, d3.BaseType, unknown>, axisOrient: string, scaleValue: d3.ScaleLinear<number, number>, margin: BlockMargin, valueField: string, blockSize: Size, transitionDuration: number): void {
+    private static fillBarAttrsByKeyOrientWithTransition(bars: d3.Selection<SVGRectElement, DataRow, d3.BaseType, unknown>, axisOrient: string, scaleValue: d3.AxisScale<any>, margin: BlockMargin, valueField: string, blockSize: Size, transitionDuration: number): void {
         const barsTran = bars.transition().duration(transitionDuration);
         if(axisOrient === 'top')
             barsTran

@@ -3,7 +3,7 @@ import { RangeModel, ScaleKeyModel, ScaleValueModel } from '../../../model/model
 
 export interface Scales {
     scaleKey: d3.AxisScale<any>;
-    scaleValue: d3.ScaleLinear<number, number>;
+    scaleValue: d3.AxisScale<any>;
 }
 
 export class Scale 
@@ -25,6 +25,8 @@ export class Scale
         if(scaleValue.type === 'linear')
             this.scales.scaleValue = this.getScaleLinear(scaleValue.domain,
                 scaleValue.range);
+        else if(scaleValue.type === 'datetime')
+                this.scales.scaleValue = this.getScaleTime(scaleValue.domain, scaleValue.range);
     }
 
     public static getScaleWidth(scale: d3.AxisScale<any>): number {
@@ -77,14 +79,9 @@ export class Scale
             .range([range.start, range.end]);
     }
 
-    private static getScaleTime(domain: string[], range: RangeModel): d3.ScaleTime<number, number, never> {
+    private static getScaleTime(domain: any, range: RangeModel): d3.ScaleTime<number, number, never> {
         return d3.scaleTime()
-            .domain(this.getTimeDomain(domain))
+            .domain(domain)
             .range([range.start, range.end]);
-    }
-
-    private static getTimeDomain(domain: string[]): any {
-        domain.sort((a, b) => d3.timeParse('%b %y')(a) > d3.timeParse('%b %y')(b) ? 1 : -1);
-        return [d3.timeParse('%b %y')(domain[0]), d3.timeParse('%b %y')(domain[domain.length - 1])];
     }
 }
