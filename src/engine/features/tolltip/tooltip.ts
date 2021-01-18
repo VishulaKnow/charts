@@ -19,6 +19,8 @@ export class Tooltip
                 }
             } else if(model.options.type === 'polar') {
                 this.renderTooltipsForDonut(model.options.charts, data, model.blockCanvas.size);
+            } else if(model.options.type === 'interval') {
+                this.renderTooltipsForGantt(model.options.charts, data, model.blockCanvas.size);
             }
         }
     }
@@ -28,9 +30,9 @@ export class Tooltip
             if(chart.tooltip.data.fields.length !== 0) {
                 const bars = Block.getSvg()
                     .selectAll(`rect${Helper.getCssClassesLine(chart.cssClasses)}`);
-                this.renderTooltipForSingleElements(bars, chart.tooltip.data.fields, data[chart.data.dataSource], blockSize);
+                this.renderTooltipForSingleElements(bars, chart.tooltip.data.fields, data[chart.data.dataSource], blockSize, charts);
             }
-        })
+        });
     }
 
     private static renderTooltipsForDonut(charts: PolarChartModel[], data: DataSource, blockSize: Size): void {
@@ -42,8 +44,18 @@ export class Tooltip
     
             const items = Block.getSvg()
                 .selectAll(`path${Helper.getCssClassesLine(chart.cssClasses)}`);
-            this.renderTooltipForSingleElements(items, chart.tooltip.data.fields, data[chart.data.dataSource], blockSize, translateX, translateY);
+            this.renderTooltipForSingleElements(items, chart.tooltip.data.fields, data[chart.data.dataSource], blockSize, charts, translateX, translateY);
         })
+    }
+
+    private static renderTooltipsForGantt(charts: IntervalChartModel[], data: DataSource, blockSize: Size): void {
+        charts.forEach(chart => {
+            if(chart.tooltip.data.fields.length !== 0) {
+                const bars = Block.getSvg()
+                    .selectAll(`rect${Helper.getCssClassesLine(chart.cssClasses)}`);
+                this.renderTooltipForSingleElements(bars, chart.tooltip.data.fields, data[chart.data.dataSource], blockSize, charts);
+            }
+        });
     }
     
     private static renderLineTooltip(scaleKey: d3.AxisScale<any>, margin: BlockMargin, blockSize: Size, charts: TwoDimensionalChartModel[], data: DataSource, scaleKeyModel: ScaleKeyModel): void {
@@ -62,7 +74,7 @@ export class Tooltip
             .on('mousemove', function(event) {
                 const index = TooltipHelper.getKeyIndex(d3.pointer(event, this), charts[0].orient, margin, bandSize, scaleKeyModel.type);        
                 const key = scaleKey.domain()[index];
-                tooltip.html(`${TooltipHelper.getTooltipMultyText(charts, data, key)}`);
+                tooltip.html(`${TooltipHelper.getTooltipTextForMultyCharts(charts, data, key)}`);
                 
                 const tooltipCoordinate = TooltipHelper.getTooltipCoordinate(d3.pointer(event, this), tooltip, blockSize);
                 thisClass.setTooltipCoordinate(tooltip, tooltipCoordinate);
@@ -77,14 +89,14 @@ export class Tooltip
             });
     }
 
-    private static renderTooltipForSingleElements(elemets: d3.Selection<d3.BaseType, unknown, d3.BaseType, unknown>, fields: Field[], data: DataRow[], blockSize: Size, translateX: number = 0, translateY: number = 0): void {
+    private static renderTooltipForSingleElements(elemets: d3.Selection<d3.BaseType, unknown, d3.BaseType, unknown>, fields: Field[], data: DataRow[], blockSize: Size, charts: TwoDimensionalChartModel[] | PolarChartModel[] | IntervalChartModel[], translateX: number = 0, translateY: number = 0): void {
         const tooltip = this.renderTooltipBlock(translateX, translateY);
         const thisClass = this;
     
         elemets
             .data(data)
             .on('mouseover', function(event, d) {
-                tooltip.html(TooltipHelper.getTooltipText(fields, d));
+                tooltip.html(TooltipHelper.getTooltipTextForSingleChart(fields, d, charts[0].data.keyField.name));
                 tooltip.style('display', 'block');
             });
     

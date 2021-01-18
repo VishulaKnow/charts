@@ -23,11 +23,18 @@ export class ScaleModel
         return allowableKeys;
     }
 
-    public static getScaleDateValueDomain(data: DataSource, charts: TwoDimensionalChart[] | IntervalChart[], keyAxisPosition: AxisPosition, allowableKeys: string[]): [Date, Date] {
-        return [new Date('2020-12-01'), new Date('2020-12-31')];
+    public static getScaleDateValueDomain(data: DataSource, charts: IntervalChart[], keyAxisPosition: AxisPosition, allowableKeys: string[]): [Date, Date] {
+        const minMax = ModelHelper.getMinAndMaxOfIntervalData(data, charts);
+        let domainPeekMin = minMax[0];
+        let domainPeekMax = minMax[1];
+
+        if(keyAxisPosition === 'start')
+            return [domainPeekMin, domainPeekMax];
+        else 
+            return [domainPeekMax, domainPeekMin];
     }
     
-    public static getScaleLinearValueDomain(configDomain: NumberDomain, data: DataSource, charts: TwoDimensionalChart[], keyAxisPosition: AxisPosition, allowableKeys: string[]): [number, number] {
+    public static getScaleLinearValueDomain(configDomain: NumberDomain, data: DataSource, charts: TwoDimensionalChart[], keyAxisPosition: AxisPosition): [number, number] {
         let domainPeekMin: number;
         let domainPeekMax: number;
         if(configDomain.start === -1)
@@ -35,7 +42,7 @@ export class ScaleModel
         else
             domainPeekMin = configDomain.start;
         if(configDomain.end === -1)
-            domainPeekMax = this.getScopedScalesMaxValue(charts, data, allowableKeys);
+            domainPeekMax = this.getScopedScalesMaxValue(charts, data);
         else
             domainPeekMax = configDomain.end;
             
@@ -57,11 +64,10 @@ export class ScaleModel
         return 'linear';
     }
 
-    private static getScopedScalesMaxValue(charts: TwoDimensionalChart[], data: DataSource, allowableKeys: string[]): number {
+    private static getScopedScalesMaxValue(charts: TwoDimensionalChart[], data: DataSource): number {
         let max: number = 0;
         charts.forEach(chart => {
-            const scopedData = DataManagerModel.getScopedChartData(data[chart.data.dataSource], allowableKeys, chart.data.keyField.name);
-            const chartMaxValue = this.getChartMaxValue(chart, scopedData);
+            const chartMaxValue = this.getChartMaxValue(chart, data[chart.data.dataSource]);
             if(max < chartMaxValue)
                 max = chartMaxValue;
         });
@@ -69,6 +75,6 @@ export class ScaleModel
     }
 
     private static getChartMaxValue(chart: TwoDimensionalChart, data: DataRow[]): number {
-        return ModelHelper.getMaxValue(data.map(d => d[chart.data.valueField.name]));
+        return ModelHelper.getMaxNumberValue(data.map(d => d[chart.data.valueField.name]));
     }
 }

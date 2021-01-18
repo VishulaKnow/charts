@@ -37,7 +37,7 @@ export class Bar
         this.fillBarAttrsByKeyOrient(bars, barAttrs);
         
         Helper.setCssClasses(bars, cssClasses);
-        Helper.setChartColor(bars, chartPalette, 'bar');
+        Helper.setChartElementColor(bars, chartPalette, 'fill');
     }
 
     public static updateBarChartByValueAxis(scales: Scales, margin: BlockMargin, valueField: string, keyAxisOrient: string, blockSize: Size, cssClasses: string[]): void {

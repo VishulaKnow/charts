@@ -84,8 +84,9 @@
                 <label for="">Тип исчисления</label>
                 <br>
                 <select name="" id="notation">
-                    <option value="2d" selected>2D</option>
+                    <option value="2d">2D</option>
                     <option value="polar">Polar</option>
+                    <option value="interval">Interval</option>
                 </select>
             </div>
             <div class="form-group">
@@ -145,6 +146,18 @@
                 </select>
             </div>
             <div class="form-group">
+                <label for="">Интервал оси значений</label>
+                <br>
+                <input type="number" placeholder="start" id="domain-start">
+                <input type="number" placeholder="end" id="domain-end">
+                <button class="btn-domain">Apply</button>
+            </div>
+        </div>
+    </div>
+    <div class="controls-block block-axis">
+        <h2>Настройки осей</h2>
+        <div class="form controls-2d">
+            <div class="form-group">
                 <label for="">Ориентация</label>
                 <br>
                 <select name="" id="chart-orient">
@@ -169,13 +182,6 @@
                 </select>
             </div>
             <div class="form-group">
-                <label for="">Интервал оси значений</label>
-                <br>
-                <input type="number" placeholder="start" id="domain-start">
-                <input type="number" placeholder="end" id="domain-end">
-                <button class="btn-domain">Apply</button>
-            </div>
-            <div class="form-group">
                 <br>
                 <input type="checkbox" id="config-key-grid">
                 <label for="config-key-grid">Грид оси ключей</label>
@@ -184,6 +190,16 @@
                 <br>
                 <input type="checkbox" id="config-value-grid">
                 <label for="config-value-grid">Грид оси значений</label>
+            </div>
+            <div class="form-group">
+                <br>
+                <input type="checkbox" id="config-tick-key">
+                <label for="config-tick-key">Черточки оси ключей</label>
+            </div>
+            <div class="form-group">
+                <br>
+                <input type="checkbox" id="config-tick-value">
+                <label for="config-tick-value">Черточки оси значений</label>
             </div>
         </div>
     </div>
@@ -213,5 +229,5 @@
     
     <div class="main-wrapper"></div>
 
-<script src="vendors-node_modules_css-loader_dist_runtime_api_js-node_modules_d3_index_js-node_modules_sty-ef83b8.d50c56cae1d66d725495.js"></script><script src="src_engine_engine_ts-src_model_modelOptions_ts.6487f7eb5659d9a6423d.js"></script><script src="main.6f9697217a9efe5f7bb0.js"></script><script src="listeners.a70ace0f7154381095c0.js"></script></body>
+<script src="vendors-node_modules_css-loader_dist_runtime_api_js-node_modules_d3_index_js-node_modules_sty-ef83b8.d50c56cae1d66d725495.js"></script><script src="src_engine_engine_ts-src_model_modelOptions_ts.7b71095776d9094c03b5.js"></script><script src="main.6f9697217a9efe5f7bb0.js"></script><script src="listeners.c4e5ae5af1273b7287a6.js"></script></body>
 </html>

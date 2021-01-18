@@ -23,29 +23,40 @@ export interface TooltipCoordinate {
 }
 
 export class TooltipHelper
-{
-    public static getTooltipText(fields: Field[], dataRow: DataRow): string {
-        let text = '';    
-        fields.forEach(field => {
-            text += `<span class="tooltip-field">${field.name}:</span> <span class="tooltip-value">${ValueFormatter.formatValue(field.format, dataRow[field.name])}</span><br>`;
-        });
-        return text;
-    }
-    
-    public static getTooltipMultyText(charts: TwoDimensionalChartModel[], data: DataSource, key: string): string {
-        let text = '';
+{ 
+    public static getTooltipTextForMultyCharts(charts: TwoDimensionalChartModel[], data: DataSource, keyValue: string): string {
+        let text = this.getTooltipKeyHeader(keyValue);
         charts.forEach((chart: TwoDimensionalChartModel) => {
             if(chart.tooltip.data.fields.length !== 0) {
                 text += `<div class="tooltip-chart-item"><span class="legend-circle" style="background-color: ${chart.elementColors[0]}"></span><br>`;
                 if(chart.tooltip.data.fields.length !== 0)
-                    text += this.getTooltipText(chart.tooltip.data.fields, data[chart.data.dataSource].find((d: DataRow) => d[chart.data.keyField.name] === key));
+                    text += this.getTooltipText(chart.tooltip.data.fields, data[chart.data.dataSource].find((d: DataRow) => d[chart.data.keyField.name] === keyValue));
                 text += '</div>'
             }
         });
         return text;
     }
 
+    public static getTooltipTextForSingleChart(fields: Field[], dataRow: DataRow, keyField: string): string {
+        let text = this.getTooltipKeyHeader(dataRow[keyField]);
+        text += this.getTooltipText(fields, dataRow);
+        return text;
+    }
+
+    private static getTooltipKeyHeader(keyValue: string): string {
+        return `<div class="tooltip-header">${keyValue}</div>`
+    }
+
+    private static getTooltipText(fields: Field[], dataRow: DataRow): string {
+        let text = '';    
+        fields.forEach(field => {
+            text += `<span class="tooltip-field">${field.name}:</span> <span class="tooltip-value">${ValueFormatter.formatValue(field.format, dataRow[field.name])}</span><br>`;
+        });
+        return text;
+    }
+
     public static getTooltipCoordinate(pointer: [number, number], tooltip: d3.Selection<d3.BaseType, unknown, HTMLElement, any>, blockSize: Size): TooltipCoordinate {
+        const tooltipCursorMargin = 10;
         const coordinate: TooltipCoordinate = {
             left: null,
             top: null,
@@ -56,15 +67,15 @@ export class TooltipHelper
         let top = pointer[1];
         const width = (tooltip.node() as any).getBoundingClientRect().width;
         const height = (tooltip.node() as any).getBoundingClientRect().height;
-        if(left + width >= blockSize.width) {
+        if(left + width + tooltipCursorMargin >= blockSize.width) {
             coordinate.right = '0px';
         } else {
-            coordinate.left = left + 'px';
+            coordinate.left = left + tooltipCursorMargin + 'px';
         }   
-        if(top + height >= blockSize.height) {
+        if(top + height + tooltipCursorMargin >= blockSize.height) {
             coordinate.bottom = '0px';
         } else {
-            coordinate.top = top + 'px';
+            coordinate.top = top + tooltipCursorMargin + 'px';
         }
         return coordinate;
     }

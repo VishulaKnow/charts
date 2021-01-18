@@ -1,6 +1,8 @@
 import { Color } from "d3";
 import { TwoDimensionalChartType } from "../config/config";
 
+type StyleColorType = 'fill' | 'stroke';
+
 export class Helper
 {
     public static setCssClasses(elem: d3.Selection<d3.BaseType, unknown, any, unknown>, cssClasses: string[]): void {
@@ -13,12 +15,8 @@ export class Helper
         return '.' + cssClasses.join('.');
     }
 
-    public static setChartColor(elements: d3.Selection<d3.BaseType, unknown, d3.BaseType, unknown>, colorPalette: Color[], chartType: TwoDimensionalChartType): void {
-        if(chartType === 'line') {
-            elements.style('stroke', colorPalette[0].toString())
-        } else {
-            elements.style('fill', colorPalette[0].toString())
-        }
+    public static setChartElementColor(elements: d3.Selection<d3.BaseType, unknown, d3.BaseType, unknown>, colorPalette: Color[], styleType: StyleColorType): void {
+        elements.style(styleType, colorPalette[0].toString());
     }
 
     public static cropLabels(labelBlocks: d3.Selection<SVGGraphicsElement, unknown, HTMLElement, unknown>, maxWidth: number): void {

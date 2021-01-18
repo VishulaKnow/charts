@@ -1,9 +1,9 @@
-import { BlockMargin, DataSource, IntervalOptionsModel, Model, Orient, PolarChartModel, PolarOptionsModel, Size, TwoDimensionalChartModel, TwoDimensionalOptionsModel } from "../model/model";
+import { BlockMargin, DataSource, IntervalChartModel, IntervalOptionsModel, Model, Orient, PolarChartModel, PolarOptionsModel, Size, TwoDimensionalChartModel, TwoDimensionalOptionsModel } from "../model/model";
 import { Area } from "./twoDimensionalNotation/area/area";
-import { Axis } from "./twoDimensionalNotation/axis/axis";
+import { Axis } from "./features/axis/axis";
 import { Bar } from "./twoDimensionalNotation/bar/bar";
 import { Donut } from "./polarNotation/donut/donut";
-import { GridLine } from "./twoDimensionalNotation/gridLine/gridLine";
+import { GridLine } from "./features/gridLine/gridLine";
 import { Legend } from "./features/legend/legend";
 import { Line } from "./twoDimensionalNotation/line/line";
 import { Scale, Scales } from "./twoDimensionalNotation/scale/scale";
@@ -11,6 +11,8 @@ import { Block } from "./block/svgBlock";
 import { Tooltip } from "./features/tolltip/tooltip";
 import { RecordOverflowAlert } from "./recordOverflowAlert/recordOverflowAlert";
 import config from "../config/configOptions";
+import { Gantt } from "./intervalNotation/gantt";
+import { median } from "d3";
 
 export class ChartRenderer
 {
@@ -56,10 +58,7 @@ export class ChartRenderer
             model.chartBlock.margin,
             model.blockCanvas.size);
     
-        Legend.render(data,
-            options,
-            model.legendBlock,
-            model.blockCanvas.size);
+        Legend.render(data, options, model.legendBlock, model.blockCanvas.size);
     
         Tooltip.renderTooltips(model, data, Scale.scales);
         if(model.dataSettings.scope.hidedRecordsAmount !== 0)
@@ -68,19 +67,26 @@ export class ChartRenderer
 
     public static renderInterval(model: Model, data: DataSource): void {
         const options = <IntervalOptionsModel>model.options;
-        console.log(model);
         
         Block.render(model.blockCanvas.class, model.blockCanvas.size);
 
         Scale.fillScales(options.scale.scaleKey,
             options.scale.scaleValue,
-            model.chartSettings.bar.groupDistance);
-
-        console.log(Scale.scales.scaleValue.domain());
-        
+            model.chartSettings.bar.groupDistance);    
 
         Axis.render(Scale.scales.scaleValue, options.scale.scaleValue, options.axis.valueAxis);
         Axis.render(Scale.scales.scaleKey, options.scale.scaleKey, options.axis.keyAxis);
+
+        GridLine.render(options.additionalElements.gridLine.flag, options.axis.keyAxis, options.axis.valueAxis, model.blockCanvas.size, model.chartBlock.margin);
+
+        this.renderIntervalCharts(options.charts,
+            data,
+            model.chartBlock.margin,
+            model.blockCanvas.size,
+            options.axis.keyAxis.orient);
+
+        Legend.render(data, options, model.legendBlock, model.blockCanvas.size);
+        Tooltip.renderTooltips(model, data, Scale.scales);
     }
 
     public static updateByValueAxis(model: Model, data: DataSource) {
@@ -145,7 +151,7 @@ export class ChartRenderer
                     chart.elementColors,
                     blockSize);
         });
-        Line.moveChartsToFront();
+        // Line.moveChartsToFront();
     }
     
     private static renderPolarCharts(charts: PolarChartModel[], data: DataSource, margin: BlockMargin, blockSize: Size) {
@@ -160,6 +166,23 @@ export class ChartRenderer
                     chart.elementColors,
                     blockSize);
         });
+    }
+
+    private static renderIntervalCharts(charts: IntervalChartModel[], data: DataSource, margin: BlockMargin, blockSize: Size, keyAxisOrient: Orient): void {
+        Block.renderChartBlock(blockSize, margin);
+        charts.forEach(chart => {
+            if(chart.type === 'gantt')
+                Gantt.render(data[chart.data.dataSource],
+                    Scale.scales,
+                    margin,
+                    chart.data.keyField.name,
+                    chart.data.valueField1.name,
+                    chart.data.valueField2.name,
+                    keyAxisOrient,
+                    chart.cssClasses,
+                    chart.elementColors,
+                    blockSize);
+        })
     }
 
     private static updateChartsByValueAxis(charts: TwoDimensionalChartModel[], scales: Scales, data: DataSource, margin: BlockMargin, keyAxisOrient: string, blockSize: Size): void {

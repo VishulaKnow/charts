@@ -84,12 +84,14 @@ function assembleModel(data: any = null): Model {
     }
     const margin = MarginModel.getMargin(designerConfig, config, legendBlock, data);
     const dataScope = DataManagerModel.getDataScope(config, margin, data, designerConfig);
+    const preparedData = DataManagerModel.getPreparedData(data, dataScope.allowableKeys, config); 
+    
     if(config.options.type === 'polar')
-        MarginModel.recalcPolarMarginWithScopedData(margin, designerConfig, config, legendBlock, dataScope);
+        MarginModel.recalcPolarMarginWithScopedData(margin, designerConfig, config, legendBlock, dataScope);  
 
     const blockCanvas = getBlockCanvas(config);
     const chartBlock = getChartBlock(margin);
-    const options = getOptions(config, designerConfig, margin, dataScope, data);
+    const options = getOptions(config, designerConfig, margin, dataScope, preparedData);
     const dataSettings = getDataSettings(dataScope);
     const chartSettings = getChartSettings(designerConfig);
     const dataFormat = getDataFormat(designerConfig);
@@ -108,7 +110,7 @@ function assembleModel(data: any = null): Model {
 export const model = assembleModel();
 
 export function getPreparedData(model: Model, data: DataSource): DataSource {
-    const preparedData = DataManagerModel.getScopedData(data, model);
+    const preparedData = DataManagerModel.getPreparedData(data, model.dataSettings.scope.allowableKeys, config);
     return preparedData;
 }
 

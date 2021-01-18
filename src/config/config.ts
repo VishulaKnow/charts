@@ -33,30 +33,27 @@ export interface IntervalOptions {
     additionalElements: TwoDimensionalAdditionalElements;
 }
 
-export interface IntervalChart {
+interface Chart {
     title: string;
+    legend: Legend;
+    tooltip: Tooltip;
+}
+
+export interface IntervalChart extends Chart { 
     type: IntervalChartType;
     data: IntervalChartData;
-    legend: Legend;
-    tooltip: Tooltip;
     orientation: ChartOrientation;
 }
 
-export interface TwoDimensionalChart {
-    title: string;
+export interface TwoDimensionalChart extends Chart {
     type: TwoDimensionalChartType;
-    data: ChartData;
-    legend: Legend;
-    tooltip: Tooltip;
+    data: TwoDimensionalChartData;
     orientation: ChartOrientation;
 }
 
-export interface PolarChart {
-    title: string;
+export interface PolarChart extends Chart {
     type: PolarChartType;
-    data: ChartData;
-    legend: Legend;
-    tooltip: Tooltip;
+    data: TwoDimensionalChartData;
     appearanceOptions: PolarChartAppearanceOptions;
 }
 
@@ -85,7 +82,7 @@ interface PolarChartAppearanceOptions {
     padAngle: number;
 }
 
-interface ChartData {
+interface TwoDimensionalChartData {
     dataSource: string;
     keyField: Field;
     valueField: Field;
@@ -138,15 +135,19 @@ interface Canvas {
     class: string;
 }
 
-interface NumberAxisOptions {
+interface AxisOptions {
+    position: AxisPosition;
+    ticks: AxisTicks;
+}
+
+interface NumberAxisOptions extends AxisOptions {
     domain: NumberDomain;
-    position: AxisPosition; 
 }
 
-interface DiscreteAxisOptions {
-    position: AxisPosition;
-}
+interface DiscreteAxisOptions extends AxisOptions {}
 
-interface DateAxisOptions {
-    position: AxisPosition;
+interface DateAxisOptions extends AxisOptions {}
+
+interface AxisTicks {
+    flag: boolean;
 }

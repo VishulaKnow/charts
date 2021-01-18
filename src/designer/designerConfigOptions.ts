@@ -51,7 +51,7 @@ const designerConfig: DesignerConfig = {
             'integer': (options: DataOptions, value: any) => Intl.NumberFormat().format(value),
             'decimal': (options: DataOptions, value: any) => Intl.NumberFormat().format(value),
             'money': (options: DataOptions, value: any) => Intl.NumberFormat('ru-RU', { style: 'currency', currency: 'RUB' }).format(value),
-            'date': (options: DataOptions, value: any) => value,
+            'date': (options: DataOptions, value: any) => value.toISOString().slice(0, 10),
             'string': (options: DataOptions, value: any) => value
         }
     },

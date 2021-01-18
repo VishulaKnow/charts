@@ -2,7 +2,7 @@ import engine from '../engine/engine';
 import config from '../config/configOptions';
 import designerConfig from '../designer/designerConfigOptions';
 import { getPreparedData, getUpdatedModel } from '../model/modelOptions';
-import { Config, PolarChart, PolarOptions, TwoDimensionalChart, TwoDimensionalOptions } from '../config/config'
+import { Config, IntervalChart, IntervalOptions, PolarChart, PolarOptions, TwoDimensionalChart, TwoDimensionalOptions } from '../config/config'
 import { color } from 'd3';
 const data = require('../assets/dataSet.json');
 
@@ -67,76 +67,185 @@ function showControlsForNotation(notationType: '2d' | 'polar' | 'interval'): voi
     if(notationType === '2d') {
         (document.querySelector('.block-polar') as HTMLElement).style.display = 'none';
         (document.querySelector('.block-2d') as HTMLElement).style.display = 'block';
+        (document.querySelector('.block-axis') as HTMLElement).style.display = 'block';
     }
-    else {
+    else if(notationType === 'polar') {
         (document.querySelector('.block-2d') as HTMLElement).style.display = 'none';
         (document.querySelector('.block-polar') as HTMLElement).style.display = 'block';
+        (document.querySelector('.block-axis') as HTMLElement).style.display = 'none';
+    } else if(notationType === 'interval') {
+        (document.querySelector('.block-polar') as HTMLElement).style.display = 'none';
+        (document.querySelector('.block-2d') as HTMLElement).style.display = 'none';
+        (document.querySelector('.block-axis') as HTMLElement).style.display = 'block';
     }
 }
 
-function changeConfigOptions(notationType: '2d' | 'polar'): void {
-    if(config.options.type === '2d' || config.options.type === 'polar') {
-        if(notationType === '2d') {
-            const options: TwoDimensionalOptions = {
-                type: notationType,
-                charts: [
-                    {
-                        data: config.options.charts[0].data,
-                        legend: config.options.charts[0].legend,
-                        title: config.options.charts[0].title,
-                        tooltip: config.options.charts[0].tooltip,
-                        orientation: getInputValue('#chart-orient') as 'horizontal' | 'vertical',
-                        type: getInputValue('#chart-2d-type') as "area" | "line" | "bar"
-                    }
-                ],
-                axis: {
-                    keyAxis: {
-                        position: getInputValue('#key-axis-orient') as "start" | "end"
-                    },
-                    valueAxis: {
-                        domain: {
-                            start: -1,
-                            end: -1
-                        },
-                        position: getInputValue('#value-axis-orient') as "start" | "end"
-                    }
-                },
-                additionalElements: {
-                    gridLine: {
-                        flag: {
-                            value: true,
-                            key: false
-                        }
-                    }
-                }
+function getDataConfig(notationType: '2d' | 'polar' | 'interval'): any {
+    if(notationType === '2d' || notationType === 'polar') {
+        return {
+            dataSource: getInputValue('#data-size') === 'normal' ? 'dataSet' : 'dataSet_large',
+            keyField: {
+                name: 'brand',
+                format: 'string'
+            },
+            valueField: {
+                name: 'price',
+                format: 'money'
             }
-            if((options.charts[0].type === 'line' || options.charts[0].type === 'bar') && options.charts.length === 1) {
-                options.charts.push(getCopy(options.charts[0]));
-                options.charts[1].data.dataSource = options.charts[0].data.dataSource + '2';
-            } else if((options.charts[0].type === 'line' || options.charts[0].type === 'bar') && options.charts.length === 2) {
-                options.charts[1] = getCopy(options.charts[0]);
-                options.charts[1].data.dataSource = options.charts[0].data.dataSource + '2';
+        }
+    } else {
+        return {
+            dataSource: 'dataSet_gantt',
+            keyField: {
+                name: 'task',
+                format: 'string'
+            },
+            valueField1: {
+                name: 'start',
+                format: 'date'
+            },
+            valueField2: {
+                name: 'end',
+                format: 'date'
             }
-            config.options = options;
-        } else {
-            const options: PolarOptions = {
-                type: notationType,
-                charts: [
+        }
+    }
+}
+
+function getTooltipConfig(notationType: '2d' | 'polar' | 'interval'): any {
+    if(notationType === '2d' || notationType === 'polar') {
+        return {
+            data: {
+                fields: [
                     {
-                        data: config.options.charts[0].data,
-                        legend: config.options.charts[0].legend,
-                        title: config.options.charts[0].title,
-                        tooltip: config.options.charts[0].tooltip,
-                        type: 'donut',
-                        appearanceOptions: {
-                            innerRadius: parseFloat(getInputValue('#inner-radius')) || 0,
-                            padAngle: parseFloat(getInputValue('#pad-angle')) || 0
-                        }
+                        name: 'price',
+                        format: 'money'
                     }
                 ]
             }
-            config.options = options;
         }
+    } else if(notationType === 'interval') {
+        return {
+            data: {
+                fields: [
+                    {
+                        format: 'date',
+                        name: 'start'
+                    },
+                    {
+                        format: 'date',
+                        name: 'end'
+                    }
+                ]
+            }
+        }
+    }
+}
+
+function changeConfigOptions(notationType: '2d' | 'polar' | 'interval'): void {
+    if(notationType === '2d') {
+        const options: TwoDimensionalOptions = {
+            type: notationType,
+            charts: [
+                {
+                    data: getDataConfig(notationType),
+                    legend: config.options.charts[0].legend,
+                    title: config.options.charts[0].title,
+                    tooltip: getTooltipConfig(notationType),
+                    orientation: getInputValue('#chart-orient') as 'horizontal' | 'vertical',
+                    type: getInputValue('#chart-2d-type') as "area" | "line" | "bar"
+                }
+            ],
+            axis: {
+                keyAxis: {
+                    position: getInputValue('#key-axis-orient') as "start" | "end",
+                    ticks: {
+                        flag: true
+                    }
+                },
+                valueAxis: {
+                    domain: {
+                        start: -1,
+                        end: -1
+                    },
+                    position: getInputValue('#value-axis-orient') as "start" | "end",
+                    ticks: {
+                        flag: true
+                    }
+                }
+            },
+            additionalElements: {
+                gridLine: {
+                    flag: {
+                        value: true,
+                        key: false
+                    }
+                }
+            }
+        }
+        if((options.charts[0].type === 'line' || options.charts[0].type === 'bar') && options.charts.length === 1) {
+            options.charts.push(getCopy(options.charts[0]));
+            options.charts[1].data.dataSource = options.charts[0].data.dataSource + '2';
+        } else if((options.charts[0].type === 'line' || options.charts[0].type === 'bar') && options.charts.length === 2) {
+            options.charts[1] = getCopy(options.charts[0]);
+            options.charts[1].data.dataSource = options.charts[0].data.dataSource + '2';
+        }
+        config.options = options;
+    } else if(notationType === 'polar') {
+        const options: PolarOptions = {
+            type: notationType,
+            charts: [
+                {
+                    data: getDataConfig(notationType),
+                    legend: config.options.charts[0].legend,
+                    title: config.options.charts[0].title,
+                    tooltip: getTooltipConfig(notationType),
+                    type: 'donut',
+                    appearanceOptions: {
+                        innerRadius: parseFloat(getInputValue('#inner-radius')) || 0,
+                        padAngle: parseFloat(getInputValue('#pad-angle')) || 0
+                    }
+                }
+            ]
+        }
+        config.options = options;
+    } else if(notationType === 'interval') {
+        const options: IntervalOptions = {
+            type: notationType,
+            charts: [
+                {
+                    data: getDataConfig(notationType),
+                    legend: config.options.charts[0].legend,
+                    title: config.options.charts[0].title,
+                    tooltip: getTooltipConfig(notationType),
+                    orientation: getInputValue('#chart-orient') as 'horizontal' | 'vertical',
+                    type: 'gantt'
+                }
+            ],
+            axis: {
+                keyAxis: {
+                    position: getInputValue('#key-axis-orient') as "start" | "end",
+                    ticks: {
+                        flag: true
+                    }
+                },
+                valueAxis: {
+                    position: getInputValue('#value-axis-orient') as "start" | "end",
+                    ticks: {
+                        flag: true
+                    }
+                }
+            },
+            additionalElements: {
+                gridLine: {
+                    flag: {
+                        value: true,
+                        key: false
+                    }
+                }
+            }
+        }
+        config.options = options;
     }
     updateFull();
 }
@@ -151,7 +260,6 @@ function change2DChartConfig(chartType: 'bar' | 'line' | 'area'): void {
         config.options.charts.forEach((chart: any) => chart.type = chartType);
         config.options.charts[1].data.dataSource = config.options.charts[0].data.dataSource + '2';
     } else if((chartType === 'bar' || chartType === 'line') && config.options.charts.length === 2) {
-        // config.options.charts[1] = getCopy(config.options.charts[0]);
         config.options.charts.forEach((chart: any) => chart.type = chartType);
         config.options.charts[1].data.dataSource = config.options.charts[0].data.dataSource + '2';
     }
@@ -231,73 +339,55 @@ function setDesignerListeners(): void {
     });
 }
 
-// function setCommonListeners(): void {
-//     document.querySelector('#data-size').addEventListener('change', function() {
-//         config.options.charts.forEach((chart: TwoDimensionalChart | PolarChart, index: number) => {
-//             chart.data.dataSource = this.value === 'normal' 
-//                 ? 'dataSet' + (index === 0 ? '' : `${index + 1}`)
-//                 : 'dataSet_large' + (index === 0 ? '' : `${index + 1}`);
-//         });
-//         updateFull();
-//     });
-//     document.querySelector('#legend').addEventListener('change', function() {
-//         config.options.charts.forEach((chart: TwoDimensionalChart | PolarChart) => {
-//             chart.legend.position = this.value;
-//         });
-//         updateFull();
-//     });
-//     document.querySelector('.btn-random').addEventListener('click', function() {
-//         const max = parseInt(getInputValue('#max-random-value')) || 120;
-//         const copy = getCopy(data);
-//         const newData = getDataWithRandomValues(copy, max);
-//         if(config.options.type === '2d') {
-//             config.options.axis.valueAxis.domain.start = -1;
-//             config.options.axis.valueAxis.domain.end = max;
-//         }
-//         const model = getUpdatedModel(newData);
-//         const preparedData = getPreparedData(model, newData);
-//         engine.updateFullBlock(model, preparedData);
-//     });
-//     document.querySelector('#max-random-value').addEventListener('keydown', function(e: KeyboardEvent) {
-//         if(e.code === 'Enter') {
-//             const max = parseInt(getInputValue('#max-random-value')) || 120;
-//             const copy = getCopy(data);
-//             const newData = getDataWithRandomValues(copy, max);
-//             if(config.options.type === '2d') {
-//                 config.options.axis.valueAxis.domain.start = -1;
-//                 config.options.axis.valueAxis.domain.end = max;
-//             }
-//             const model = getUpdatedModel(newData);
-//             const preparedData = getPreparedData(model, newData);
-//             engine.updateFullBlock(model, preparedData);
-//         }
-//     });
-// }
+function setCommonListeners(): void {
+    document.querySelector('#data-size').addEventListener('change', function() {
+        if(config.options.type === '2d' || config.options.type === 'polar') {
+            config.options.charts.forEach((chart: TwoDimensionalChart | PolarChart, index: number) => {
+                chart.data.dataSource = this.value === 'normal' 
+                    ? 'dataSet' + (index === 0 ? '' : `${index + 1}`)
+                    : 'dataSet_large' + (index === 0 ? '' : `${index + 1}`);
+            });
+            updateFull();
+        }
+    });
+    document.querySelector('#legend').addEventListener('change', function() {
+        config.options.charts.forEach((chart: TwoDimensionalChart | PolarChart | IntervalChart) => {
+            chart.legend.position = this.value;
+        });
+        updateFull();
+    });
+    document.querySelector('.btn-random').addEventListener('click', function() {
+        const max = parseInt(getInputValue('#max-random-value')) || 120;
+        const copy = getCopy(data);
+        const newData = getDataWithRandomValues(copy, max);
+        if(config.options.type === '2d') {
+            config.options.axis.valueAxis.domain.start = -1;
+            config.options.axis.valueAxis.domain.end = max;
+        }
+        const model = getUpdatedModel(newData);
+        const preparedData = getPreparedData(model, newData);
+        engine.updateFullBlock(model, preparedData);
+    });
+    document.querySelector('#max-random-value').addEventListener('keydown', function(e: KeyboardEvent) {
+        if(e.code === 'Enter') {
+            const max = parseInt(getInputValue('#max-random-value')) || 120;
+            const copy = getCopy(data);
+            const newData = getDataWithRandomValues(copy, max);
+            if(config.options.type === '2d') {
+                config.options.axis.valueAxis.domain.start = -1;
+                config.options.axis.valueAxis.domain.end = max;
+            }
+            const model = getUpdatedModel(newData);
+            const preparedData = getPreparedData(model, newData);
+            engine.updateFullBlock(model, preparedData);
+        }
+    });
+}
 
 function set2DListeners(): void {
     document.querySelector('#chart-2d-type').addEventListener('change', function() {
         if(config.options.type === '2d') {
             change2DChartConfig(this.value);
-            updateFull();
-        }
-    });
-    document.querySelector('#chart-orient').addEventListener('change', function() {
-        if(config.options.type === '2d') {
-            config.options.charts.forEach(chart => {
-                chart.orientation = this.value; 
-            }); 
-            updateFull();
-        }
-    });
-    document.querySelector('#key-axis-orient').addEventListener('change', function() {
-        if(config.options.type === '2d') {
-            config.options.axis.keyAxis.position = this.value;
-            updateFull();
-        }
-    });
-    document.querySelector('#value-axis-orient').addEventListener('change', function() {
-        if(config.options.type === '2d') {
-            config.options.axis.valueAxis.position = this.value;
             updateFull();
         }
     });
@@ -332,15 +422,50 @@ function set2DListeners(): void {
             }
         }
     });
+}
+
+function setAxisListeners(): void {
+    document.querySelector('#chart-orient').addEventListener('change', function() {
+        if(config.options.type === '2d' || config.options.type === 'interval') {
+            config.options.charts.forEach((chart: TwoDimensionalChart | IntervalChart) => {
+                chart.orientation = this.value; 
+            }); 
+            updateFull();
+        }
+    });
+    document.querySelector('#key-axis-orient').addEventListener('change', function() {
+        if(config.options.type === '2d' || config.options.type === 'interval') {
+            config.options.axis.keyAxis.position = this.value;
+            updateFull();
+        }
+    });
+    document.querySelector('#value-axis-orient').addEventListener('change', function() {
+        if(config.options.type === '2d' || config.options.type === 'interval') {
+            config.options.axis.valueAxis.position = this.value;
+            updateFull();
+        }
+    });
     document.querySelector('#config-key-grid').addEventListener('change', function() {
-        if(config.options.type === '2d') {
+        if(config.options.type === '2d' || config.options.type === 'interval') {
             config.options.additionalElements.gridLine.flag.key = this.checked;
             updateFull();
         }
     });
     document.querySelector('#config-value-grid').addEventListener('change', function() {
-        if(config.options.type === '2d') {
+        if(config.options.type === '2d' || config.options.type === 'interval') {
             config.options.additionalElements.gridLine.flag.value = this.checked;
+            updateFull();
+        }
+    });
+    document.querySelector('#config-tick-key').addEventListener('change', function() {
+        if(config.options.type === '2d' || config.options.type === 'interval') {
+            config.options.axis.keyAxis.ticks.flag = this.checked;
+            updateFull();
+        }
+    });
+    document.querySelector('#config-tick-value').addEventListener('change', function() {
+        if(config.options.type === '2d' || config.options.type === 'interval') {
+            config.options.axis.valueAxis.ticks.flag = this.checked;
             updateFull();
         }
     });
@@ -392,6 +517,8 @@ function setControlsValues(): void {
         setInputValue('#value-axis-orient', config.options.axis.valueAxis.position);
         setCheckboxValue('#config-key-grid', config.options.additionalElements.gridLine.flag.key);
         setCheckboxValue('#config-value-grid', config.options.additionalElements.gridLine.flag.value);
+        setCheckboxValue('#config-tick-key', config.options.axis.keyAxis.ticks.flag);
+        setCheckboxValue('#config-tick-value', config.options.axis.valueAxis.ticks.flag);
     } else if(config.options.type === 'polar') {
         setInputValue('#chart-polar-type', config.options.charts[0].type);
         setInputValue('#inner-radius', config.options.charts[0].appearanceOptions.innerRadius.toString());
@@ -404,6 +531,7 @@ setControlsValues();
 showControlsForNotation(config.options.type);
 setMainListeners();
 setDesignerListeners();
-// setCommonListeners();
+setCommonListeners();
+setAxisListeners();
 set2DListeners();
 setPolarListeners();

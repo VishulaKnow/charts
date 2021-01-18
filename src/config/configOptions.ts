@@ -12,14 +12,20 @@ const configCars: Config = {
         type: '2d',
         axis: {
             keyAxis: {
-                position: 'start'
+                position: 'end',
+                ticks: {
+                    flag: true
+                }
             },
             valueAxis: {
                 domain: {
                     start: -1,
                     end: -1
                 },
-                position: 'start'
+                position: 'start',
+                ticks: {
+                    flag: true
+                }
             }
         },
         additionalElements: {
@@ -52,17 +58,17 @@ const configCars: Config = {
                     data: {
                         fields: [
                             {
-                                name: 'brand',
-                                format: 'string'
-                            },
-                            {
                                 name: 'price',
                                 format: 'money'
+                            },
+                            {
+                                name: 'count',
+                                format: 'integer'
                             }
                         ]
                     }
                 },
-                orientation: 'horizontal'
+                orientation: 'vertical'
             },
             {
                 title: 'Car prices',
@@ -85,17 +91,13 @@ const configCars: Config = {
                     data: {
                         fields: [
                             {
-                                name: 'brand',
-                                format: 'string'
-                            },
-                            {
                                 name: 'price',
                                 format: 'money'
                             }
                         ]
                     }
                 },
-                orientation: 'horizontal'
+                orientation: 'vertical'
             }
         ]
     }
@@ -111,10 +113,16 @@ const configCars: Config = {
     //     },
     //     axis: {
     //         keyAxis: {
-    //             position: 'start'
+    //             position: 'start',
+    //             ticks: {
+    //                 flag: true
+    //             }
     //         },
     //         valueAxis: {
-    //             position: 'end'
+    //             position: 'start',
+    //             ticks: {
+    //                 flag: false
+    //             }
     //         }
     //     },
     //     charts: [
@@ -122,7 +130,7 @@ const configCars: Config = {
     //             type: 'gantt',
     //             title: 'Car prices',
     //             legend: {
-    //                 position: 'off'
+    //                 position: 'left'
     //             },
     //             data: {
     //                 dataSource: 'dataSet_gantt',
@@ -141,7 +149,16 @@ const configCars: Config = {
     //             },
     //             tooltip: {
     //                 data: {
-    //                     fields: []
+    //                     fields: [
+    //                         {
+    //                             format: 'date',
+    //                             name: 'start'
+    //                         },
+    //                         {
+    //                             format: 'date',
+    //                             name: 'end'
+    //                         }
+    //                     ]
     //                 }
     //             },
     //             orientation: 'horizontal'
@@ -162,14 +179,20 @@ const configDemo: Config = {
         type: '2d',
         axis: {
             keyAxis: {
-                position: 'end'
+                position: 'end',
+                ticks: {
+                    flag: true
+                }
             },
             valueAxis: {
                 domain: {
                     start: -1,
                     end: -1
                 },
-                position: 'start'
+                position: 'start',
+                ticks: {
+                    flag: false
+                }
             }
         },
         additionalElements: {

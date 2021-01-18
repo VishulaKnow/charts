@@ -47,8 +47,10 @@ label {
     outline: 1px solid black;
 }
 .data-label {
+    font-family: "Roboto" sans-serif;
+    font-style: normal;
+    font-weight: 300;
     font-size: 12px;
-    font-family: "Roboto", sans-serif;
 }
 .legend-item {
     margin: 5px;
@@ -63,7 +65,7 @@ label {
     height: 12px;
     background-color: red;
     border-radius: 50%;
-    margin-right: 5px;
+    margin-right: 9px;
 }
 .tooltip {
     pointer-events: none;
@@ -77,6 +79,7 @@ label {
     border-radius: 2px;
     z-index: 999;
     min-width: 100px;
+    filter: drop-shadow(0px 4px 10px rgba(0, 0, 0, 0.1));
 }
 .tooltip-chart-item {
     margin: 5px 0;
@@ -92,8 +95,8 @@ label {
 }
 
 .grid-line {
-    stroke: #e0e0e0;
-    stroke-dasharray: 0;
+    stroke: #D2D2D2;
+    /* stroke-dasharray: 3; */
 }
 
 /* .key-axis .domain, .key-axis .tick line {
@@ -106,6 +109,10 @@ label {
 .value-axis .tick line:first-of-type {
     stroke: none;
 } */
+
+.axis .domain {
+    stroke: gray;
+}
 
 .record-overflow-alert {
     font-family: "Roboto", sans-serif;

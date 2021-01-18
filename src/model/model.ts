@@ -59,6 +59,11 @@ export interface AxisModelOptions {
     translate: TranslateModel;
     class: string;
     maxLabelSize: number;
+    ticks: AxisTicksModel;
+}
+
+interface AxisTicksModel {
+    flag: boolean;
 }
 
 export interface DataFormat {

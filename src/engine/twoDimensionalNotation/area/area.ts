@@ -31,7 +31,7 @@ export class Area
             .style('clip-path', `url(${Block.getClipPathId()})`);
     
         Helper.setCssClasses(path, cssClasses);
-        Helper.setChartColor(path, chartPalette, 'area');
+        Helper.setChartElementColor(path, chartPalette, 'fill');
     }
 
     public static updateAreaChartByValueAxis(scales: Scales, data: DataRow[], margin: BlockMargin, keyField: string, valueField: string, keyAxisOrient: string, blockSize: Size, cssClasses: string[]): void {

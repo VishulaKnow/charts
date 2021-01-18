@@ -1,10 +1,10 @@
-import { TwoDimensionalAxis, Config, PolarChart, TwoDimensionalChart, IntervalChart, IntervalAxis,  } from "../config/config";
+import { TwoDimensionalAxis, Config, PolarChart, TwoDimensionalChart, IntervalChart, IntervalAxis } from "../config/config";
 import { DesignerConfig } from "../designer/designerConfig";
 import { AxisModel } from "./axisModel";
 import { DataManagerModel } from "./dataManagerModel";
 import { LegendModel } from "./legendModel/legendModel";
-import { BlockMargin, DataRow, DataScope, DataSource, LegendBlockModel, Orient } from "./model";
-import { AxisType, CLASSES } from "./modelOptions";
+import { BlockMargin, DataScope, DataSource, LegendBlockModel, Orient } from "./model";
+import { AxisType } from "./modelOptions";
 
 const AXIS_LABEL_PADDING = 9;
 
@@ -15,7 +15,6 @@ export class MarginModel
         this.recalcMarginWithLegend(margin, config, designerConfig.canvas.legendBlock.maxWidth, legendBlockModel, data);
         if(config.options.type === '2d' || config.options.type === 'interval') {
             this.recalcMarginWithAxisLabelWidth(margin, config.options.charts, designerConfig.canvas.axisLabel.maxSize.main, config.options.axis, data);
-            // this.recalcMarginWithAxisLabelHeight(margin, config.options.charts, config.options.axis);
         }
         return margin;
     }
@@ -64,6 +63,11 @@ export class MarginModel
                 const charts = config.options.charts.filter((chart: PolarChart) => chart.legend.position === position);
                 if(charts.length !== 0) {
                     legendSize = LegendModel.getLegendSize(position, charts.map(chart => DataManagerModel.getDataValuesByKeyField(data, chart))[0], legendMaxWidth, config.canvas.size);
+                }
+            } else if(config.options.type === 'interval') {
+                const charts = config.options.charts.filter((chart: IntervalChart) => chart.legend.position === position);
+                if(charts.length !== 0) {
+                    legendSize = LegendModel.getLegendSize(position, charts.map(chart => chart.data.dataSource), legendMaxWidth, config.canvas.size);
                 }
             }
 

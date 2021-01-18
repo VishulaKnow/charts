@@ -1,6 +1,6 @@
 import { Color } from "d3";
 import { Config, TwoDimensionalChart, TwoDimensionalOptions } from "../config/config";
-import { AxisLabelCanvas, DesignerConfig } from "../designer/designerConfig";
+import { DesignerConfig } from "../designer/designerConfig";
 import { AxisModel } from "./axisModel";
 import { ChartStyleModel } from "./chartStyleModel";
 import { GridLineModel } from "./gridLineModel";
@@ -23,7 +23,7 @@ export class TwoDimensionalModel
                     type: ScaleModel.getScaleKeyType(configOptions.charts)
                 },
                 scaleValue: {
-                    domain: ScaleModel.getScaleLinearValueDomain(configOptions.axis.valueAxis.domain, data, configOptions.charts, configOptions.axis.keyAxis.position, dataScope.allowableKeys),
+                    domain: ScaleModel.getScaleLinearValueDomain(configOptions.axis.valueAxis.domain, data, configOptions.charts, configOptions.axis.keyAxis.position),
                     range: {
                         start: 0,
                         end: ScaleModel.getScaleRangePeek(ScaleType.Value, configOptions.charts[0].orientation, margin, config.canvas.size)
@@ -39,7 +39,8 @@ export class TwoDimensionalModel
                         translateY: AxisModel.getAxisTranslateY(AxisType.Key, configOptions.charts[0].orientation, configOptions.axis.keyAxis.position, margin, config.canvas.size.height)
                     },
                     class: 'key-axis',
-                    maxLabelSize: designerConfig.canvas.axisLabel.maxSize.main
+                    maxLabelSize: designerConfig.canvas.axisLabel.maxSize.main,
+                    ticks: configOptions.axis.keyAxis.ticks
                 },
                 valueAxis: {
                     orient: AxisModel.getAxisOrient(AxisType.Value, configOptions.charts[0].orientation, configOptions.axis.valueAxis.position),
@@ -48,7 +49,8 @@ export class TwoDimensionalModel
                         translateY: AxisModel.getAxisTranslateY(AxisType.Value, configOptions.charts[0].orientation, configOptions.axis.valueAxis.position, margin, config.canvas.size.height)
                     },          
                     class: 'value-axis',
-                    maxLabelSize: designerConfig.canvas.axisLabel.maxSize.main
+                    maxLabelSize: designerConfig.canvas.axisLabel.maxSize.main,
+                    ticks: configOptions.axis.valueAxis.ticks
                 }
             },
             type: configOptions.type,

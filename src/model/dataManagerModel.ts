@@ -1,5 +1,5 @@
 import { Config, PolarChart, TwoDimensionalChart, IntervalOptions, IntervalChart } from "../config/config";
-import { BarOptionsCanvas, DesignerConfig } from "../designer/designerConfig";
+import { BarOptionsCanvas, DataType, DesignerConfig } from "../designer/designerConfig";
 import { AxisModel } from "./axisModel";
 import { BlockMargin, DataRow, DataScope, DataSource, IntervalChartModel, Model, PolarChartModel, TwoDimensionalChartModel } from "./model";
 import { ModelHelper } from "./modelHelper";
@@ -14,10 +14,15 @@ export class DataManagerModel
         return data.filter(d => allowableKeys.includes(d[keyFieldName]));
     }
 
-    public static getScopedData(data: DataSource, model: Model): DataSource {
-        const allowableKeys = model.dataSettings.scope.allowableKeys;
+    public static getPreparedData(data: DataSource, allowableKeys: string[], config: Config): DataSource {
+        const scopedData = this.getScopedData(data, allowableKeys, config);
+        this.setDataType(scopedData, config);
+        return scopedData;
+    }
+
+    public static getScopedData(data: DataSource, allowableKeys: string[], config: Config): DataSource {
         const newData: DataSource = {};
-        model.options.charts.forEach((chart: TwoDimensionalChartModel | PolarChartModel | IntervalChartModel) => {
+        config.options.charts.forEach((chart: TwoDimensionalChart | PolarChart | IntervalChart) => {
             newData[chart.data.dataSource] = this.getScopedChartData(data[chart.data.dataSource], allowableKeys, chart.data.keyField.name);
         });
         return newData;
@@ -81,6 +86,33 @@ export class DataManagerModel
 
     public static getDataValuesByKeyField(data: DataSource, chart: TwoDimensionalChart | PolarChart | IntervalChart): string[] {
         return data[chart.data.dataSource].map(dataRow => dataRow[chart.data.keyField.name]);
+    }
+
+    private static setDataType(data: DataSource, config: Config): void {
+        if(config.options.type === 'polar' || config.options.type === '2d') {
+            config.options.charts.forEach((chart: PolarChart | TwoDimensionalChart) => {
+                if(chart.data.keyField.format === 'date') {
+                    data[chart.data.dataSource] = this.getTypedData(data[chart.data.dataSource], chart.data.keyField.name, chart.data.keyField.format);
+                }
+            });
+        } else if(config.options.type === 'interval') {
+            config.options.charts.forEach((chart: IntervalChart) => {
+                if(chart.data.valueField1.format === 'date') {
+                    data[chart.data.dataSource] = this.getTypedData(data[chart.data.dataSource], chart.data.valueField1.name, chart.data.valueField1.format);
+                }
+                if(chart.data.valueField2.format === 'date') {
+                    data[chart.data.dataSource] = this.getTypedData(data[chart.data.dataSource], chart.data.valueField2.name, chart.data.valueField2.format);
+                }
+            });
+        }
+    }
+
+    private static getTypedData(data: DataRow[], fieldName: string, type: DataType): DataRow[] {
+        if(type === 'date')
+            data.forEach(d => {
+                d[fieldName] = new Date(d[fieldName]);
+            });
+        return data;
     }
 
     private static getDataLimitByBarSize(chartsAmount: number, dataLength: number, axisLength: number, barOptions: BarOptionsCanvas): number {

@@ -1,5 +1,5 @@
 import * as d3 from "d3";
-import { Color } from "d3";
+import { color, Color } from "d3";
 import { BlockMargin, DataRow } from "../../../model/model";
 import { Helper } from "../../helper";
 import { Scale, Scales } from "../scale/scale";
@@ -28,7 +28,8 @@ export class Line
             .style('clip-path', `url(${Block.getClipPathId()})`);
     
         Helper.setCssClasses(path, cssClasses);
-        Helper.setChartColor(path, chartPalette, 'line');
+        Helper.setChartElementColor(path, chartPalette, 'stroke');
+        // this.renderDots(lineCoordinate, cssClasses, chartPalette);
     }
 
     public static updateLineChartByValueAxis(scales: Scales, data: DataRow[], margin: BlockMargin, keyField: string, valueField: string, keyAxisOrient: string, cssClasses: string[]): void {
@@ -76,5 +77,20 @@ export class Line
                 });
             });
         return lineCoordinate;
+    }
+
+    private static renderDots(coordinates: LineChartCoordinate[], cssClasses: string[], colorPalette: Color[]): void {
+        const dots = Block.getChartBlock()
+            .selectAll(`.dot${Helper.getCssClassesLine(cssClasses)}`)
+            .data(coordinates)
+            .enter()
+            .append('circle')
+            .attr('class', 'dot')
+            .attr('cx', d => d.x)
+            .attr('cy', d => d.y)
+            .attr('r', 5.5);
+
+        Helper.setCssClasses(dots, cssClasses);
+        Helper.setChartElementColor(dots, colorPalette, 'fill');
     }
 }
