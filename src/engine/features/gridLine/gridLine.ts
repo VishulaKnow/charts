@@ -1,5 +1,5 @@
 import { AxisModelOptions, BlockMargin, GridLineFlag, Size } from "../../../model/model";
-import { Block } from "../../block/svgBlock";
+import { Block } from "../../block/block";
 
 type GridLineType = 'key' | 'value';
 interface GridLineAttributes {
@@ -11,31 +11,33 @@ interface GridLineAttributes {
 
 export class GridLine
 {
-    public static render(gridLineFlag: GridLineFlag, keyAxis: AxisModelOptions, valueAxis: AxisModelOptions, blockSize: Size, margin: BlockMargin): void {
+    private static gridLineClass = 'grid-line';
+
+    public static render(block: Block, gridLineFlag: GridLineFlag, keyAxis: AxisModelOptions, valueAxis: AxisModelOptions, blockSize: Size, margin: BlockMargin): void {
         if(gridLineFlag.value) {
             const lineLength = this.getGridLineLength('value', keyAxis, valueAxis, blockSize, margin);
             const lineAttributes = this.getLineAttributes(valueAxis, lineLength);
-            this.renderLine(valueAxis, lineAttributes);
+            this.renderLine(block, valueAxis, lineAttributes);
         } 
         if(gridLineFlag.key) {
             const lineLength = this.getGridLineLength('key', keyAxis, valueAxis, blockSize, margin);
             const lineAttributes = this.getLineAttributes(keyAxis, lineLength);
-            this.renderLine(keyAxis, lineAttributes);
+            this.renderLine(block, keyAxis, lineAttributes);
         }
     }
 
-    public static rerender(gridLineFlag: GridLineFlag, keyAxis: AxisModelOptions, valueAxis: AxisModelOptions, blockSize: Size, margin: BlockMargin): void {
-        this.clear(keyAxis.class, valueAxis.class);
-        this.render(gridLineFlag, keyAxis, valueAxis, blockSize, margin);
+    public static rerender(block: Block, gridLineFlag: GridLineFlag, keyAxis: AxisModelOptions, valueAxis: AxisModelOptions, blockSize: Size, margin: BlockMargin): void {
+        this.clear(block, keyAxis.class, valueAxis.class);
+        this.render(block, gridLineFlag, keyAxis, valueAxis, blockSize, margin);
     }
 
-    private static renderLine(axis: AxisModelOptions, lineAttributes: GridLineAttributes): void {
-        Block
+    private static renderLine(block: Block, axis: AxisModelOptions, lineAttributes: GridLineAttributes): void {
+        block
             .getSvg()
             .selectAll(`.${axis.class}`)
             .selectAll('g.tick')
             .append('line')
-            .attr('class', 'grid-line')
+            .attr('class', this.gridLineClass)
             .attr('x1', lineAttributes.x1)
             .attr('y1', lineAttributes.y1)
             .attr('x2', lineAttributes.x2)
@@ -56,11 +58,11 @@ export class GridLine
         return attributes;
     }
 
-    private static clear(keyAxisClass: string, valueAxisClass: string): void {
-        Block.getSvg()
+    private static clear(block: Block, keyAxisClass: string, valueAxisClass: string): void {
+        block.getSvg()
             .select(`.${keyAxisClass}, .${valueAxisClass}`)
             .selectAll('g.tick')
-            .selectAll('.grid-line')
+            .selectAll(`.${this.gridLineClass}`)
             .remove();
     }
     

@@ -1,6 +1,7 @@
 .main-wrapper  {
     display: flex;
-    justify-content: center;
+    flex-direction: column;
+    align-items: center;
 }
 
 
@@ -32,7 +33,10 @@ label {
 .wrapper {
     margin: 0 auto;
     position: relative;
-    margin-bottom: 100px;
+}
+h3.title {
+    font-size: 18px;
+    font-weight: 500;
 }
 .bar, .area, .donut {
     fill: steelblue;
@@ -67,7 +71,10 @@ label {
     border-radius: 50%;
     margin-right: 9px;
 }
-.tooltip {
+.tooltip-block {
+    pointer-events: none;
+}
+.tooltip-content {
     pointer-events: none;
     font-size: 14px;
     font-family: "Roboto", sans-serif;
@@ -80,6 +87,13 @@ label {
     z-index: 999;
     min-width: 100px;
     filter: drop-shadow(0px 4px 10px rgba(0, 0, 0, 0.1));
+}
+.tooltip-arrow {
+    z-index: 0;
+    background-color: white;
+    width: 20px;
+    height: 20px;
+    transform: rotate(-45deg);
 }
 .tooltip-chart-item {
     margin: 5px 0;

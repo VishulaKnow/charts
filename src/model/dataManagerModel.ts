@@ -1,31 +1,16 @@
 import { Config, PolarChart, TwoDimensionalChart, IntervalOptions, IntervalChart } from "../config/config";
 import { BarOptionsCanvas, DataType, DesignerConfig } from "../designer/designerConfig";
 import { AxisModel } from "./axisModel";
-import { BlockMargin, DataRow, DataScope, DataSource, IntervalChartModel, Model, PolarChartModel, TwoDimensionalChartModel } from "./model";
+import { BlockMargin, DataRow, DataScope, DataSource } from "./model";
 import { ModelHelper } from "./modelHelper";
 
 export class DataManagerModel
 {
-    public static getScopedDataLength(data: DataSource, dataSource: string, hidedRecordsAmount: number): number {
-        return data[dataSource].length - hidedRecordsAmount;
-    }
-
-    public static getScopedChartData(data: DataRow[], allowableKeys: string[], keyFieldName: string): DataRow[] {
-        return data.filter(d => allowableKeys.includes(d[keyFieldName]));
-    }
-
     public static getPreparedData(data: DataSource, allowableKeys: string[], config: Config): DataSource {
         const scopedData = this.getScopedData(data, allowableKeys, config);
         this.setDataType(scopedData, config);
+        
         return scopedData;
-    }
-
-    public static getScopedData(data: DataSource, allowableKeys: string[], config: Config): DataSource {
-        const newData: DataSource = {};
-        config.options.charts.forEach((chart: TwoDimensionalChart | PolarChart | IntervalChart) => {
-            newData[chart.data.dataSource] = this.getScopedChartData(data[chart.data.dataSource], allowableKeys, chart.data.keyField.name);
-        });
-        return newData;
     }
 
     public static getDataScope(config: Config, margin: BlockMargin, data: DataSource, designerConfig: DesignerConfig): DataScope {
@@ -41,10 +26,6 @@ export class DataManagerModel
                     allowableKeys,
                     hidedRecordsAmount: dataLength - allowableKeys.length
                 }
-            }
-            return {
-                allowableKeys: this.getDataValuesByKeyField(data, config.options.charts[0]),
-                hidedRecordsAmount: 0   
             }
         } else if(config.options.type === 'polar') {
             const dataset = data[config.options.charts[0].data.dataSource];
@@ -77,15 +58,48 @@ export class DataManagerModel
                 hidedRecordsAmount: dataset.length - allowableKeys.length 
             }
         } else if(config.options.type === 'interval') {
-            return {
-                allowableKeys: this.getDataValuesByKeyField(data, config.options.charts[0]),
-                hidedRecordsAmount: 0   
+            const ganttCharts = config.options.charts.filter(chart => chart.type === 'gantt');
+            if(ganttCharts.length !== 0) {
+                const axisLength = AxisModel.getAxisLength(ganttCharts[0].orientation, margin, config.canvas.size);
+                const uniqueKeys = ModelHelper.getUniqueValues(data[ganttCharts[0].data.dataSource].map(d => d[ganttCharts[0].data.keyField.name]));
+                const dataLength = uniqueKeys.length;
+                const limit = this.getDataLimitByBarSize(ganttCharts.length, dataLength, axisLength, designerConfig.canvas.chartOptions.bar);
+                const allowableKeys = uniqueKeys.slice(0, limit);
+                
+                return {
+                    allowableKeys,
+                    hidedRecordsAmount: dataLength - allowableKeys.length
+                }
             }
+        }
+
+        return {
+            allowableKeys: this.getDataValuesByKeyField(data, config.options.charts[0]),
+            hidedRecordsAmount: 0   
         }
     }
 
     public static getDataValuesByKeyField(data: DataSource, chart: TwoDimensionalChart | PolarChart | IntervalChart): string[] {
         return data[chart.data.dataSource].map(dataRow => dataRow[chart.data.keyField.name]);
+    }
+
+    private static getDataLengthWithUnique(keyField: string, dataSourceName: string, data: DataSource): number {
+        const keys = data[dataSourceName].map(row => row[keyField]);
+        const uniqueKeys = keys.filter((keyValue, index, self) => self.indexOf(keyValue) === index);
+       
+        return uniqueKeys.length;
+    }
+
+    private static getScopedData(data: DataSource, allowableKeys: string[], config: Config): DataSource {
+        const newData: DataSource = {};
+        config.options.charts.forEach((chart: TwoDimensionalChart | PolarChart | IntervalChart) => {
+            newData[chart.data.dataSource] = this.getScopedChartData(data[chart.data.dataSource], allowableKeys, chart.data.keyField.name);
+        });
+        return newData;
+    }
+
+    private static getScopedChartData(data: DataRow[], allowableKeys: string[], keyFieldName: string): DataRow[] {
+        return data.filter(d => allowableKeys.includes(d[keyFieldName]));
     }
 
     private static setDataType(data: DataSource, config: Config): void {

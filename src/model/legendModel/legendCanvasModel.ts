@@ -2,12 +2,12 @@ import { CLASSES } from "../modelOptions";
 
 export class LegendCanvasModel
 {
-    public static getLegendHeight(texts: string[], blockWidth: number): number {
+    public static getLegendHeight(texts: string[], blockWidth: number, marginLeft: number, marginRight: number): number {
         const legendWrapper = document.createElement('div');
         legendWrapper.style.display = 'flex';
         legendWrapper.style.position = 'absolute';
         legendWrapper.style.flexWrap = 'wrap';
-        legendWrapper.style.width = blockWidth + 'px';
+        legendWrapper.style.width = blockWidth - marginLeft - marginRight + 'px';
         texts.forEach(text => {
             const itemWrapper = document.createElement('div');
             const colorBlock = document.createElement('span');

@@ -22,6 +22,7 @@ const designerConfig: DesignerConfig = {
             bar: {
                 groupDistance: 10,
                 minBarWidth: 30,
+                maxBarWidth: 100,
                 barDistance: 0
             },
             donut: {
@@ -51,7 +52,7 @@ const designerConfig: DesignerConfig = {
             'integer': (options: DataOptions, value: any) => Intl.NumberFormat().format(value),
             'decimal': (options: DataOptions, value: any) => Intl.NumberFormat().format(value),
             'money': (options: DataOptions, value: any) => Intl.NumberFormat('ru-RU', { style: 'currency', currency: 'RUB' }).format(value),
-            'date': (options: DataOptions, value: any) => value.toISOString().slice(0, 10),
+            'date': (options: DataOptions, value: Date) => value.getFullYear() + '-' + (value.getMonth() + 1) + '-' + value.getDate() + ' ' + value.getHours() + ':' + value.getMinutes(),
             'string': (options: DataOptions, value: any) => value
         }
     },

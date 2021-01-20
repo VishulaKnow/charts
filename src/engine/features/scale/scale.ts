@@ -67,12 +67,6 @@ export class Scale
             .range([range.start, range.end]);
     }
 
-    private static getScaleOrdinal(domain: string[], range: RangeModel): any {
-        return d3.scaleOrdinal()
-            .domain(domain)
-            .range([0, 200, 400, 600, 800, 1000, 1100]);
-    }
-
     private static getScalePoint(domain: string[], range: RangeModel): d3.ScalePoint<string> {
         return d3.scalePoint()
             .domain(domain)
@@ -82,6 +76,7 @@ export class Scale
     private static getScaleTime(domain: any, range: RangeModel): d3.ScaleTime<number, number, never> {
         return d3.scaleTime()
             .domain(domain)
-            .range([range.start, range.end]);
+            .range([range.start, range.end])
+            .nice();
     }
 }

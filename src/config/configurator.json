@@ -1,0 +1,106 @@
+{
+  "canvas": {
+    "class": "svg-chart-2 outline",
+    "size": {
+      "width": 1200,
+      "height": 650
+    }
+  },
+  "options": {
+    "type": "2d",
+    "axis": {
+      "keyAxis": {
+        "position": "end",
+        "ticks": {
+          "flag": true
+        }
+      },
+      "valueAxis": {
+        "domain": {
+          "start": -1,
+          "end": -1
+        },
+        "position": "start",
+        "ticks": {
+          "flag": false
+        }
+      }
+    },
+    "additionalElements": {
+      "gridLine": {
+        "flag": {
+          "key": false,
+          "value": true
+        }
+      }
+    },
+    "charts": [
+      {
+        "title": "Car prices",
+        "type": "line",
+        "legend": {
+          "position": "off"
+        },
+        "data": {
+          "dataSource": "dataSet_data",
+          "keyField": {
+            "name": "MonthYear",
+            "format": "string"
+          },
+          "valueField": {
+            "name": "EventCost",
+            "format": "integer"
+          }
+        },
+        "tooltip": {
+          "data": {
+            "fields": [
+              {
+                "name": "MonthYear",
+                "format": "string"
+              },
+              {
+                "name": "EventCost",
+                "format": "money"
+              }
+            ]
+          }
+        },
+        "orientation": "vertical"
+      },
+      {
+        "title": "Car prices",
+        "type": "line",
+        "legend": {
+          "position": "off"
+        },
+        "data": {
+          "dataSource": "dataSet_data2",
+          "keyField": {
+            "name": "MonthYear",
+            "format": "string"
+          },
+          "valueField": {
+            "name": "AlcoholCost",
+            "format": "integer"
+          }
+        },
+        "tooltip": {
+          "data": {
+            "fields": [
+              {
+                "name": "MonthYear",
+                "format": "string"
+              },
+              {
+                "name": "AlcoholCost",
+                "format": "money"
+              }
+            ]
+          }
+        },
+        "orientation": "vertical"
+      }
+    ]
+  }
+}

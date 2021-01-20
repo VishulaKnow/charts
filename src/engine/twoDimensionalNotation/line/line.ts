@@ -2,8 +2,8 @@ import * as d3 from "d3";
 import { color, Color } from "d3";
 import { BlockMargin, DataRow } from "../../../model/model";
 import { Helper } from "../../helper";
-import { Scale, Scales } from "../scale/scale";
-import { Block } from "../../block/svgBlock";
+import { Scale, Scales } from "../../features/scale/scale";
+import { Block } from "../../block/block";
 
 interface LineChartCoordinate {
     x: number;
@@ -12,7 +12,7 @@ interface LineChartCoordinate {
 
 export class Line
 {
-    public static render(scales: Scales, data: DataRow[], margin: BlockMargin, keyField: string, valueField: string, keyAxisOrient: string, cssClasses: string[], chartPalette: Color[]): void {
+    public static render(block: Block, scales: Scales, data: DataRow[], margin: BlockMargin, keyField: string, valueField: string, keyAxisOrient: string, cssClasses: string[], chartPalette: Color[]): void {
         const line = this.getLineGenerator();
         const lineCoordinate: LineChartCoordinate[] = this.getLineCoordinateByKeyOrient(keyAxisOrient,
             data,
@@ -21,18 +21,19 @@ export class Line
             keyField,
             valueField);    
         
-        const path = Block.getChartBlock()
+        
+        const path = block.getChartBlock()
             .append('path')
             .attr('d', line(lineCoordinate))
             .attr('class', 'line')
-            .style('clip-path', `url(${Block.getClipPathId()})`);
+            .style('clip-path', `url(${block.getClipPathId()})`);
     
         Helper.setCssClasses(path, cssClasses);
         Helper.setChartElementColor(path, chartPalette, 'stroke');
         // this.renderDots(lineCoordinate, cssClasses, chartPalette);
     }
 
-    public static updateLineChartByValueAxis(scales: Scales, data: DataRow[], margin: BlockMargin, keyField: string, valueField: string, keyAxisOrient: string, cssClasses: string[]): void {
+    public static updateLineChartByValueAxis(block: Block, scales: Scales, data: DataRow[], margin: BlockMargin, keyField: string, valueField: string, keyAxisOrient: string, cssClasses: string[]): void {
         const line = this.getLineGenerator();
         const lineCoordinate: LineChartCoordinate[] = this.getLineCoordinateByKeyOrient(keyAxisOrient,
             data,
@@ -41,7 +42,7 @@ export class Line
             keyField,
             valueField);
         
-        Block.getChartBlock()
+        block.getChartBlock()
             .select(`.line${Helper.getCssClassesLine(cssClasses)}`)
             .transition()
             .duration(1000)
@@ -54,8 +55,8 @@ export class Line
             .y(d => d.y);
     }
 
-    public static moveChartsToFront(): void {
-        Block.getChartBlock()
+    public static moveChartsToFront(block: Block): void {
+        block.getChartBlock()
             .selectAll('.line')
             .raise();
     }
@@ -79,8 +80,8 @@ export class Line
         return lineCoordinate;
     }
 
-    private static renderDots(coordinates: LineChartCoordinate[], cssClasses: string[], colorPalette: Color[]): void {
-        const dots = Block.getChartBlock()
+    private static renderDots(block: Block, coordinates: LineChartCoordinate[], cssClasses: string[], colorPalette: Color[]): void {
+        const dots = block.getChartBlock()
             .selectAll(`.dot${Helper.getCssClassesLine(cssClasses)}`)
             .data(coordinates)
             .enter()

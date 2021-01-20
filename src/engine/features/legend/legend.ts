@@ -1,96 +1,105 @@
 import { Color } from "d3";
 import { DataRow, DataSource, IntervalChartModel, IntervalOptionsModel, LegendBlockModel, Orient, PolarChartModel, PolarOptionsModel, Size, TwoDimensionalChartModel, TwoDimensionalOptionsModel } from "../../../model/model";
-import { Block } from "../../block/svgBlock";
+import { Block } from "../../block/block";
+
+interface LegendCoordinate {
+    x: number;
+    y: number;
+    height: number;
+    width: number;
+}
 
 export class Legend
 {
-    public static render(data: DataSource, options: TwoDimensionalOptionsModel | PolarOptionsModel | IntervalOptionsModel, legendsSize: LegendBlockModel, blockSize: Size): void {
+    public static render(block: Block, data: DataSource, options: TwoDimensionalOptionsModel | PolarOptionsModel | IntervalOptionsModel, legendBlockModel: LegendBlockModel, blockSize: Size): void {
         const positions: Orient[] = ['left', 'right', 'top', 'bottom'];
         positions.forEach(position => {
-            if(options.type === '2d') {
-                const charts = options.charts.filter((chart) => chart.legend.position === position);
-                if(charts.length !== 0) {
-                    this.renderLegendBlock(charts.map(chart => chart.data.dataSource),
-                        position,
-                        legendsSize[position].size,
-                        charts.map(chart => chart.elementColors[0]),
-                        blockSize);
-                }
-            } else if(options.type === 'polar') {
-                const charts = options.charts.filter((chart) => chart.legend.position === position);
-                if(charts.length !== 0) {
-                    this.renderLegendBlock(charts.map(chart => data[chart.data.dataSource].map((record: DataRow) => record[chart.data.keyField.name]))[0], 
-                        position, 
-                        legendsSize[position].size,
-                        charts.map(chart => chart.elementColors)[0],
-                        blockSize);
-                }
-            } else if(options.type === 'interval') {
-                const charts = options.charts.filter((chart) => chart.legend.position === position);
-                console.log(charts.length);
+            const charts = this.getChartsWithLegend(options, position);
+            if(charts.length !== 0) {
+                const legendItemsContent = this.getLegendItemsContent(options, charts, data);
+                const chartElementsColor = this.getChartElementsColor(options, charts);
                 
-                if(charts.length !== 0) {
-                    this.renderLegendBlock(charts.map(chart => chart.data.dataSource),
-                        position,
-                        legendsSize[position].size,
-                        charts.map(chart => chart.elementColors[0]),
-                        blockSize);
-                }
+                this.renderLegendBlock(block, 
+                    legendItemsContent,
+                    position,
+                    legendBlockModel,
+                    chartElementsColor,
+                    blockSize);
             }
         });
     }
-
-    // private static getChartsWithLegend(legendPosition: Orient, options: TwoDimensionalOptionsModel | PolarOptionsModel | IntervalOptionsModel): TwoDimensionalChartModel[] | PolarChartModel[] | IntervalChartModel[] {
-    //     if(options.type === '2d')
-    //         return options.charts.filter((chart) => chart.legend.position === legendPosition);
-    //     if(options.type === 'polar')
-    //         return options.charts.filter((chart) => chart.legend.position === legendPosition);
-    //     if(options.type === 'interval')
-    //         return options.charts.filter((chart) => chart.legend.position === legendPosition);
-    // }
     
-    private static renderLegendBlock(items: string[], legendPosition: string, legendSize: number, colorPalette: Color[], blockSize: Size): void {
-        const legendBlock = Block.getSvg()
+    private static renderLegendBlock(block: Block, items: string[], legendPosition: Orient, legendBlockModel: LegendBlockModel, colorPalette: Color[], blockSize: Size): void {
+        const legendBlock = block.getSvg()
             .append('foreignObject')
-                .attr('class', 'legend');
-        
-        this.fillLegendCoordinateByPosition(legendBlock,
-            legendPosition,
-            legendSize,
-            blockSize);  
+                .attr('class', 'legend')
+                // .style('outline', '1px solid red');
+
+        const legendCoordinate = this.getLegendCoordinateByPosition(legendPosition, legendBlockModel, blockSize) 
+        this.fillLegendCoordinate(legendBlock, legendCoordinate);  
             
         this.fillLegend(legendBlock,
             items,
             legendPosition,
             colorPalette);
     }
-    
-    private static fillLegendCoordinateByPosition(legendBlock: d3.Selection<SVGForeignObjectElement, unknown, HTMLElement, any>, legendPosition: string, legendSize: number, blockSize: Size): void {
-        if(legendPosition === 'left') {
-            legendBlock
-                .attr('y', 0)
-                .attr('x', 0)
-                .attr('width', legendSize)
-                .attr('height', blockSize.height);
-        } else if(legendPosition === 'right') {
-            legendBlock
-                .attr('y', 0)
-                .attr('x', Math.ceil(blockSize.width - legendSize))
-                .attr('width', Math.ceil(legendSize))
-                .attr('height', blockSize.height);
-        } else if(legendPosition === 'top') {
-            legendBlock
-                .attr('y', 0)
-                .attr('x', 0)
-                .attr('width', blockSize.width)
-                .attr('height', legendSize);
-        } else if(legendPosition === 'bottom') {
-            legendBlock
-                .attr('y', blockSize.height - legendSize)
-                .attr('x', 0)
-                .attr('width', blockSize.width)
-                .attr('height', legendSize);
+
+    private static getChartsWithLegend(options: TwoDimensionalOptionsModel | PolarOptionsModel | IntervalOptionsModel, legendPosition: Orient): Array<TwoDimensionalChartModel | PolarChartModel | IntervalChartModel> {
+        return (options.charts as Array<TwoDimensionalChartModel | IntervalChartModel | PolarChartModel>).filter((chart: TwoDimensionalChartModel | IntervalChartModel | PolarChartModel) => chart.legend.position === legendPosition);
+    }
+
+    private static getLegendItemsContent(options: TwoDimensionalOptionsModel | PolarOptionsModel | IntervalOptionsModel, charts: Array<TwoDimensionalChartModel | IntervalChartModel | PolarChartModel>, data: DataSource): string[] {
+        if(options.type === '2d' || options.type === 'interval') {
+            return (charts as Array<TwoDimensionalChartModel | IntervalChartModel>).map((chart: TwoDimensionalChartModel | IntervalChartModel) => chart.title)
+        } else {
+            return (charts as PolarChartModel[]).map(chart => data[chart.data.dataSource].map((record: DataRow) => record[chart.data.keyField.name]))[0]
         }
+    }
+
+    private static getChartElementsColor(options: TwoDimensionalOptionsModel | PolarOptionsModel | IntervalOptionsModel, charts: Array<TwoDimensionalChartModel | IntervalChartModel | PolarChartModel>): Color[] {
+        if(options.type === '2d' || options.type === 'interval') {
+            return (charts as Array<TwoDimensionalChartModel | IntervalChartModel>).map((chart: TwoDimensionalChartModel | IntervalChartModel) => chart.elementColors[0])
+        } else {
+            return (charts as PolarChartModel[]).map(chart => chart.elementColors)[0]
+        }
+    }
+
+    private static getLegendCoordinateByPosition(legendPosition: Orient, legendBlockModel: LegendBlockModel, blockSize: Size): LegendCoordinate {
+        const legendModel = legendBlockModel[legendPosition];
+        const coordinate: LegendCoordinate = {
+            x: 0,
+            y: 0,
+            width: 0,
+            height: 0
+        }
+        
+        if(legendPosition === 'left' || legendPosition === 'right') {
+            coordinate.y = legendModel.margin.top;
+            coordinate.width = legendModel.size;
+            coordinate.height = blockSize.height - legendModel.margin.top - legendModel.margin.bottom
+        } else if(legendPosition === 'bottom' || legendPosition === 'top') {
+            coordinate.x = legendModel.margin.left;
+            coordinate.width = blockSize.width - legendModel.margin.left - legendModel.margin.right;
+            coordinate.height = legendModel.size;
+        }
+        if(legendPosition === 'left') 
+            coordinate.x = legendModel.margin.left;
+        else if(legendPosition === 'right')
+            coordinate.x = blockSize.width - legendModel.size - legendModel.margin.right;
+        else if(legendPosition === 'top')
+            coordinate.y = legendModel.margin.top;
+        else if(legendPosition === 'bottom')
+            coordinate.y = blockSize.height - legendModel.size - legendModel.margin.bottom;
+        
+        return coordinate
+    }
+    
+    private static fillLegendCoordinate(legendBlock: d3.Selection<SVGForeignObjectElement, unknown, HTMLElement, any>, coordinate: LegendCoordinate): void {
+        legendBlock
+            .attr('x', coordinate.x)
+            .attr('y', coordinate.y)
+            .attr('width', coordinate.width)
+            .attr('height', coordinate.height);
     }
     
     private static fillLegend(legendBlock: d3.Selection<SVGForeignObjectElement, unknown, HTMLElement, any>, items: string[], legendPosition: string, colorPalette: Color[]): void {

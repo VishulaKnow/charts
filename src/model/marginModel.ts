@@ -1,9 +1,9 @@
-import { TwoDimensionalAxis, Config, PolarChart, TwoDimensionalChart, IntervalChart, IntervalAxis } from "../config/config";
+import { TwoDimensionalAxis, Config, PolarChart, TwoDimensionalChart, IntervalChart, IntervalAxis, TwoDimensionalOptions, PolarOptions, IntervalOptions } from "../config/config";
 import { DesignerConfig } from "../designer/designerConfig";
 import { AxisModel } from "./axisModel";
 import { DataManagerModel } from "./dataManagerModel";
 import { LegendModel } from "./legendModel/legendModel";
-import { BlockMargin, DataScope, DataSource, LegendBlockModel, Orient } from "./model";
+import { BlockMargin, DataScope, DataSource, IntervalChartModel, IntervalOptionsModel, LegendBlockModel, Orient, PolarChartModel, PolarOptionsModel, TwoDimensionalChartModel, TwoDimensionalOptionsModel } from "./model";
 import { AxisType } from "./modelOptions";
 
 const AXIS_LABEL_PADDING = 9;
@@ -24,15 +24,16 @@ export class MarginModel
         margin.bottom -= legendBlockModel.bottom.size;
         margin.left -= legendBlockModel.left.size;
         margin.right -= legendBlockModel.right.size;
+
         if(config.options.charts[0].legend.position !== 'off' && config.options.type === 'polar') {
             const position = config.options.charts[0].legend.position
-            const legendSize = LegendModel.getLegendSize(position, dataScope.allowableKeys, designerConfig.canvas.legendBlock.maxWidth, config.canvas.size);
+            const legendSize = LegendModel.getLegendSize(position, dataScope.allowableKeys, designerConfig.canvas.legendBlock.maxWidth, config.canvas.size, legendBlockModel);
             margin[position] += legendSize
             legendBlockModel[config.options.charts[0].legend.position].size = legendSize;
         }    
     }
 
-    public static recalcMarginWithAxisLabelWidth(margin: BlockMargin, charts: TwoDimensionalChart[] | IntervalChart[], labelsMaxWidth: number, axis: TwoDimensionalAxis | IntervalAxis, data: DataSource): void {
+    private static recalcMarginWithAxisLabelWidth(margin: BlockMargin, charts: TwoDimensionalChart[] | IntervalChart[], labelsMaxWidth: number, axis: TwoDimensionalAxis | IntervalAxis, data: DataSource): void {
         const keyAxisOrient = AxisModel.getAxisOrient(AxisType.Key, charts[0].orientation, axis.keyAxis.position);
         const valueAxisOrient = AxisModel.getAxisOrient(AxisType.Value, charts[0].orientation, axis.valueAxis.position);
         if(keyAxisOrient === 'left' || keyAxisOrient === 'right') {
@@ -41,7 +42,6 @@ export class MarginModel
             margin[keyAxisOrient] += axisLabelSize.width + AXIS_LABEL_PADDING;
             margin[valueAxisOrient] += axisLabelSize.height + AXIS_LABEL_PADDING;
         } else {
-            // const labelTexts = DataManagerModel.getDataValuesByValueField(data, charts[0]);
             const labelTexts = ['0000'];
             const axisLabelSize = AxisModel.getLabelSize(labelsMaxWidth, labelTexts);
             margin[valueAxisOrient] += axisLabelSize.width + AXIS_LABEL_PADDING;
@@ -53,26 +53,36 @@ export class MarginModel
         const positions: Orient[] = ['left', 'right', 'top', 'bottom'];
         positions.forEach(position => {
             let legendSize = 0;
+            const charts = this.getChartsWithLegend(config.options, position);
             
-            if(config.options.type === '2d') {
-                const charts = config.options.charts.filter((chart: TwoDimensionalChart) => chart.legend.position === position);
-                if(charts.length !== 0) {
-                    legendSize = LegendModel.getLegendSize(position, charts.map(chart => chart.data.dataSource), legendMaxWidth, config.canvas.size);
-                }
-            } else if(config.options.type === 'polar') {
-                const charts = config.options.charts.filter((chart: PolarChart) => chart.legend.position === position);
-                if(charts.length !== 0) {
-                    legendSize = LegendModel.getLegendSize(position, charts.map(chart => DataManagerModel.getDataValuesByKeyField(data, chart))[0], legendMaxWidth, config.canvas.size);
-                }
-            } else if(config.options.type === 'interval') {
-                const charts = config.options.charts.filter((chart: IntervalChart) => chart.legend.position === position);
-                if(charts.length !== 0) {
-                    legendSize = LegendModel.getLegendSize(position, charts.map(chart => chart.data.dataSource), legendMaxWidth, config.canvas.size);
-                }
+            if(charts.length !== 0) {
+                const legendItemsContent = this.getLegendItemsContent(charts, config.options, data);
+                legendSize = LegendModel.getLegendSize(position, legendItemsContent, legendMaxWidth, config.canvas.size, legendBlockModel);
             }
 
             margin[position] += legendSize;
+            if(legendSize !== 0)
+                this.appendGlobalMarginByLegendMargin(margin, position, legendBlockModel);
             legendBlockModel[position].size = legendSize;
         });
+    }
+
+    private static getChartsWithLegend(options: TwoDimensionalOptions | PolarOptions | IntervalOptions, legendPosition: Orient): Array<TwoDimensionalChart | PolarChart | IntervalChart> {
+        return (options.charts as Array<TwoDimensionalChart | IntervalChart | PolarChart>).filter((chart: TwoDimensionalChart | IntervalChart | PolarChart) => chart.legend.position === legendPosition);
+    }
+
+    private static getLegendItemsContent(charts: Array<TwoDimensionalChart | IntervalChart | PolarChart>, options: TwoDimensionalOptions | PolarOptions | IntervalOptions, data: DataSource): string[] {
+        if(options.type === '2d' || options.type === 'interval') {
+            return charts.map(chart => chart.title);
+        } else {
+            return charts.map(chart => DataManagerModel.getDataValuesByKeyField(data, chart))[0]
+        }
+    }
+
+    private static appendGlobalMarginByLegendMargin(margin: BlockMargin, position: Orient, legendBlockModel: LegendBlockModel): void {
+        if(position === 'left' || position === 'right')
+            margin[position] += legendBlockModel[position].margin.left + legendBlockModel[position].margin.right;
+        else
+            margin[position] += legendBlockModel[position].margin.top + legendBlockModel[position].margin.bottom;
     }
 }

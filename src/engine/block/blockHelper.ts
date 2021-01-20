@@ -17,4 +17,13 @@ export class BlockHelper
             height: blockSize.height - margin.top - margin.bottom
         }
     }
+
+    public static getFormattedCssClassesForWrapper(cssClasses: string[]): string[] {
+        const wrapperClasses: string[] = [];
+        cssClasses.forEach(cssClass =>{
+            wrapperClasses.push(cssClass + '-wrapper');
+        });
+        
+        return wrapperClasses
+    }
 }

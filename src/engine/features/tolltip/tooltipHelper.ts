@@ -1,6 +1,6 @@
 import { ChartOrientation } from "../../../config/config";
 import { BlockMargin, DataRow, DataSource, Field, ScaleKeyType, Size, TwoDimensionalChartModel } from "../../../model/model";
-import { Scale } from "../../twoDimensionalNotation/scale/scale";
+import { Scale } from "../scale/scale";
 import { ValueFormatter, } from "../../valueFormatter";
 
 export interface TooltipLineAttributes {

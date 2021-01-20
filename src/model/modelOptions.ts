@@ -5,11 +5,11 @@ import { TwoDimensionalModel } from './twoDimensionalModel';
 import { PolarModel } from './polarModel';
 import '../style/main.css'
 
-import config from '../config/configOptions';
 import designerConfig from '../designer/designerConfigOptions';
 import { DataManagerModel } from './dataManagerModel';
 import { DesignerConfig } from '../designer/designerConfig';
 import { IntervalModel } from './intervalModel';
+import { LegendModel } from './legendModel/legendModel';
 
 
 export enum AxisType {
@@ -61,7 +61,8 @@ function getChartSettings(designerConfig: DesignerConfig): ChartSettings {
     return {
         bar: {
             groupDistance: designerConfig.canvas.chartOptions.bar.groupDistance,
-            barDistance: designerConfig.canvas.chartOptions.bar.barDistance
+            barDistance: designerConfig.canvas.chartOptions.bar.barDistance,
+            barMaxSize: designerConfig.canvas.chartOptions.bar.maxBarWidth
         }
     }
 }
@@ -72,19 +73,14 @@ function getDataFormat(designerConfig: DesignerConfig): DataFormat {
     }
 }
 
-function assembleModel(data: any = null): Model {
+export function assembleModel(config: Config, data: DataSource = null): Model {
     if(!data)
         data = require('../assets/dataSet.json');
 
-    const legendBlock: LegendBlockModel = {
-        bottom: { size: 0 },
-        left: { size: 0 },
-        right: { size: 0 },
-        top: { size: 0 }
-    }
+    const legendBlock: LegendBlockModel = LegendModel.getBaseLegendBlockModel();
     const margin = MarginModel.getMargin(designerConfig, config, legendBlock, data);
     const dataScope = DataManagerModel.getDataScope(config, margin, data, designerConfig);
-    const preparedData = DataManagerModel.getPreparedData(data, dataScope.allowableKeys, config); 
+    const preparedData = DataManagerModel.getPreparedData(data, dataScope.allowableKeys, config);    
     
     if(config.options.type === 'polar')
         MarginModel.recalcPolarMarginWithScopedData(margin, designerConfig, config, legendBlock, dataScope);  
@@ -107,13 +103,11 @@ function assembleModel(data: any = null): Model {
     }
 }
 
-export const model = assembleModel();
-
-export function getPreparedData(model: Model, data: DataSource): DataSource {
+export function getPreparedData(model: Model, data: DataSource, config: Config): DataSource {
     const preparedData = DataManagerModel.getPreparedData(data, model.dataSettings.scope.allowableKeys, config);
     return preparedData;
 }
 
-export function getUpdatedModel(data: any = null): Model {
-    return assembleModel(data);
+export function getUpdatedModel(config: Config, data: any = null): Model {
+    return assembleModel(config, data);
 }

@@ -64,6 +64,7 @@ export class TwoDimensionalModel
         charts.forEach((chart, index) => {
             chartsModel.push({
                 type: chart.type,
+                title: chart.title,
                 data: { ...chart.data },
                 orient: chart.orientation,
                 legend: chart.legend,
