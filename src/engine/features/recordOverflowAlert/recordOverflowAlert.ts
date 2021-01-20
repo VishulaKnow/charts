@@ -1,9 +1,10 @@
 import * as d3 from "d3";
+import { Block } from "../../block/block";
 
 export class RecordOverflowAlert
 {
-    public static render(hidedRecordsAmount: number): void {
-        const alertBlock = d3.select('.wrapper')
+    public static render(block: Block, hidedRecordsAmount: number): void {
+        const alertBlock = block.getWrapper()
             .append('div')
             .attr('class', 'record-overflow-alert');
         alertBlock

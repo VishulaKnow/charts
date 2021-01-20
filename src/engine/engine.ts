@@ -1,31 +1,35 @@
 import * as d3 from 'd3'
 
-import { Block } from './block/svgBlock';
+import { Block } from './block/block';
 import { ValueFormatter } from './valueFormatter';
 import { ChartRenderer } from './chartRenderer';
 import { Model } from '../model/model';
 
-function clearBlock(): void {
-    Block.getSvg().remove();
-    d3.select('.wrapper').remove();
-}
+export default class Engine {
+    private block: Block;
 
-export default {
-    render(model: Model, data: any) {
+    public render(model: Model, data: any): void {       
         ValueFormatter.format = model.dataFormat.formatters;
+        this.block = new Block(model.blockCanvas.class, '.main-wrapper');
+        this.block.renderWrapper(model.blockCanvas.size);
         if(model.options.type === '2d')
-            ChartRenderer.render2D(model, data);
+            ChartRenderer.render2D(this.block, model, data);
         else if(model.options.type === 'polar')
-            ChartRenderer.renderPolar(model, data);
+            ChartRenderer.renderPolar(this.block, model, data);
         else if(model.options.type === 'interval')
-            ChartRenderer.renderInterval(model, data);
+            ChartRenderer.renderInterval(this.block, model, data);
+    }
 
-    },
-    updateFullBlock(model: Model, data: any) {
-        clearBlock();
+    public updateFullBlock(model: Model, data: any): void {
+        this.clearBlock();
         this.render(model, data);
-    },
-    updateValueAxis(model: Model, data: any) {
-        ChartRenderer.updateByValueAxis(model, data);
+    }
+
+    public updateValueAxis(model: Model, data: any): void {
+        ChartRenderer.updateByValueAxis(this.block, model, data);
+    }
+
+    private clearBlock(): void {
+        this.block.getWrapper().remove();
     }
 }

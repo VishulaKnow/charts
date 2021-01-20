@@ -109,32 +109,28 @@ export interface PolarChartAppearanceModel {
     padAngle: number
 }
 
-export interface TwoDimensionalChartModel {
+interface ChartModel {
+    legend: LegendModel;
+    tooltip: TooltipModel;
+    cssClasses: string[];
+    elementColors: Color[];
+    title: string;
+}
+
+export interface TwoDimensionalChartModel extends ChartModel {
     type: TwoDimensionalChartType;
     orient: ChartOrientation;
     data: ChartDataModel;
-    legend: LegendModel;
-    tooltip: TooltipModel;
-    cssClasses: string[];
-    elementColors: Color[];
 }
-export interface IntervalChartModel {
+export interface IntervalChartModel extends ChartModel {
     type: IntervalChartType;
     orient: ChartOrientation;
     data: IntervalChartDataModel;
-    legend: LegendModel;
-    tooltip: TooltipModel;
-    cssClasses: string[];
-    elementColors: Color[];
 }
-export interface PolarChartModel {
+export interface PolarChartModel extends ChartModel {
     type: PolarChartType;
     data: ChartDataModel;
     appearanceOptions: PolarChartAppearanceModel;
-    legend: LegendModel;
-    tooltip: TooltipModel;
-    cssClasses: string[];
-    elementColors: Color[];
 }
 export interface Model {
     blockCanvas: BlockCanvas;
@@ -202,11 +198,13 @@ interface IntervalChartDataModel {
     valueField2: Field;
 }
 
-interface BarChartSettings {
+export interface BarChartSettings {
     groupDistance: number;
     barDistance: number;
+    barMaxSize: number;
 }
 
 interface LegendBlockCanvas {
     size: number;
+    margin: BlockMargin;
 }

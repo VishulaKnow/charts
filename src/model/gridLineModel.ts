@@ -1,6 +1,6 @@
 import { IntervalOptions, TwoDimensionalOptions } from "../config/config";
 import { DesignerConfig } from "../designer/designerConfig";
-import { GridLineOptions, IntervalChartModel } from "./model";
+import { GridLineOptions } from "./model";
 
 export class GridLineModel
 {

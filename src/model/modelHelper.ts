@@ -55,4 +55,10 @@ export class ModelHelper
     public static getMinAngleByLength(minLength: number, radius: number): number {
         return minLength * 360 / (2 * Math.PI * radius);
     }
+
+    public static getUniqueValues(values: string[]): string[] {
+        const uniqueValues = values.filter((keyValue, index, self) => self.indexOf(keyValue) === index);
+       
+        return uniqueValues;
+    }
 }

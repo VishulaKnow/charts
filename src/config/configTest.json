@@ -1,0 +1,106 @@
+{
+    "canvas": {
+      "class": "svg-chart-3",
+      "size": {
+        "width": 700,
+        "height": 400
+      }
+    },
+    "options": {
+      "type": "2d",
+      "axis": {
+        "keyAxis": {
+          "position": "end",
+          "ticks": {
+            "flag": true
+          }
+        },
+        "valueAxis": {
+          "domain": {
+            "start": -1,
+            "end": -1
+          },
+          "position": "start",
+          "ticks": {
+            "flag": false
+          }
+        }
+      },
+      "additionalElements": {
+        "gridLine": {
+          "flag": {
+            "key": false,
+            "value": true
+          }
+        }
+      },
+      "charts": [
+        {
+          "title": "2020",
+          "type": "bar",
+          "legend": {
+            "position": "right"
+          },
+          "data": {
+            "dataSource": "dataSet_data",
+            "keyField": {
+              "name": "MonthYear",
+              "format": "string"
+            },
+            "valueField": {
+              "name": "EventCost",
+              "format": "integer"
+            }
+          },
+          "tooltip": {
+            "data": {
+              "fields": [
+                {
+                  "name": "MonthYear",
+                  "format": "string"
+                },
+                {
+                  "name": "EventCost",
+                  "format": "money"
+                }
+              ]
+            }
+          },
+          "orientation": "vertical"
+        },
+        {
+          "title": "2021",
+          "type": "bar",
+          "legend": {
+            "position": "right"
+          },
+          "data": {
+            "dataSource": "dataSet_data2",
+            "keyField": {
+              "name": "MonthYear",
+              "format": "string"
+            },
+            "valueField": {
+              "name": "AlcoholCost",
+              "format": "integer"
+            }
+          },
+          "tooltip": {
+            "data": {
+              "fields": [
+                {
+                  "name": "MonthYear",
+                  "format": "string"
+                },
+                {
+                  "name": "AlcoholCost",
+                  "format": "money"
+                }
+              ]
+            }
+          },
+          "orientation": "vertical"
+        }
+      ]
+    }
+  }

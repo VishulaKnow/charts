@@ -1,5 +1,4 @@
 import { Color } from "d3";
-import { TwoDimensionalChartType } from "../config/config";
 
 type StyleColorType = 'fill' | 'stroke';
 
@@ -31,5 +30,9 @@ export class Helper
                     labelBlocks.nodes()[i].textContent = '';
             }
         }
+    }
+
+    public static getCssClassesArray(cssClass: string): string[] {
+        return cssClass.split(' ');
     }
 }

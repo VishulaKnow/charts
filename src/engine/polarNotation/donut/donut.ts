@@ -2,7 +2,7 @@ import * as d3 from "d3";
 import { Color } from "d3";
 import { BlockMargin, DataRow, PolarChartAppearanceModel, Size } from "../../../model/model";
 import { Helper } from "../../helper";
-import { Block } from "../../block/svgBlock";
+import { Block } from "../../block/block";
 import { MarginModel } from "../../../model/marginModel";
 
 interface Aggregator {
@@ -16,14 +16,14 @@ interface Translate {
 
 export class Donut
 {
-    public static render(data: DataRow[], margin: BlockMargin, valueField: string, keyField: string, appearanceOptions: PolarChartAppearanceModel, cssClasses: string[], chartPalette: Color[], blockSize: Size): void {
+    public static render(block: Block, data: DataRow[], margin: BlockMargin, valueField: string, keyField: string, appearanceOptions: PolarChartAppearanceModel, cssClasses: string[], chartPalette: Color[], blockSize: Size): void {
         const radius = this.getOuterRadius(margin, blockSize);
         const arc = this.getArc(radius, radius * 0.01 * appearanceOptions.innerRadius);
         const pie = this.getPie(valueField, appearanceOptions.padAngle);
     
         const translate = this.getTranslate(margin, blockSize);
     
-        const donutBlock = Block.getSvg()
+        const donutBlock = block.getSvg()
             .append('g')
             .attr('class', 'donut-block')
             .attr('transform', `translate(${translate.x}, ${translate.y})`);
@@ -41,16 +41,16 @@ export class Donut
     
         Helper.setCssClasses(arcs, cssClasses);
         this.setElementsColor(items, chartPalette, 'donut');
-        this.renderAggregator(data, valueField, radius, appearanceOptions, translate); 
+        this.renderAggregator(block, data, valueField, radius, appearanceOptions, translate); 
         this.renderDonutText(arcs, arc, keyField)       
     }
 
-    private static renderAggregator(data: DataRow[], valueField: string, radius: number, appearanceOptions: PolarChartAppearanceModel, translate: Translate): void {
+    private static renderAggregator(block: Block, data: DataRow[], valueField: string, radius: number, appearanceOptions: PolarChartAppearanceModel, translate: Translate): void {
         const aggregator: Aggregator = {
             name: 'Сумма',
             value: d3.sum(data.map(d => d[valueField]))
         }
-        this.renderDonutCenterText(radius * 0.01 * appearanceOptions.innerRadius, aggregator, translate);
+        this.renderDonutCenterText(block, radius * 0.01 * appearanceOptions.innerRadius, aggregator, translate);
     }
 
     private static getTranslate(margin: BlockMargin, blockSize: Size): Translate {
@@ -88,9 +88,9 @@ export class Donut
             .style('text-anchor', 'middle');
     }
     
-    private static renderDonutCenterText(innerRadius: number, aggregator: Aggregator, translate: Translate): void {
+    private static renderDonutCenterText(block: Block, innerRadius: number, aggregator: Aggregator, translate: Translate): void {
         if(innerRadius > 100) {
-            const text = Block.getSvg()
+            const text = block.getSvg()
                 .append('text')
                 .attr('text-anchor', 'middle')
                 .attr('class', 'donut-aggregator')

@@ -2,7 +2,7 @@ import { Config } from './config';
 
 const configCars: Config = {
     canvas: {
-        class: 'svg-chart outline',
+        class: 'outline svg-chart',
         size: {
             width: 1200,
             height: 650
@@ -38,7 +38,7 @@ const configCars: Config = {
         },
         charts: [
             {
-                title: 'Car prices',
+                title: 'Car prices (year 2021) very very long title of chart',
                 type: 'line',
                 legend: {
                     position: 'top'
@@ -71,7 +71,7 @@ const configCars: Config = {
                 orientation: 'vertical'
             },
             {
-                title: 'Car prices',
+                title: 'Car prices (year2020)',
                 type: 'line',
                 legend: {
                     position: 'top'

@@ -1,7 +1,6 @@
 import { Color } from "d3";
 import { PolarChart, PolarOptions } from "../config/config";
 import { ChartStyleModel } from "./chartStyleModel";
-import { DataManagerModel } from "./dataManagerModel";
 import { DataScope, DataSource, PolarChartModel, PolarOptionsModel } from "./model";
 
 export class PolarModel
@@ -11,12 +10,13 @@ export class PolarModel
         charts.forEach((chart, index) => {
             chartsModel.push({
                 type: chart.type,
+                title: chart.title,
                 data: { ...chart.data },
                 appearanceOptions: { ...chart.appearanceOptions },
                 legend: chart.legend,
                 tooltip: chart.tooltip,
                 cssClasses: ChartStyleModel.getCssClasses(chart.type, index),
-                elementColors: ChartStyleModel.getElementColorPallete(chartPalette, 'polar', DataManagerModel.getScopedDataLength(data, chart.data.dataSource, dataScope.hidedRecordsAmount))
+                elementColors: ChartStyleModel.getElementColorPallete(chartPalette, 'polar', data[chart.data.dataSource].length)
             });
         });
         return chartsModel;

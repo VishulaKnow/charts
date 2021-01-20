@@ -17,7 +17,7 @@
         { "brand": "AUDI", "price": 16, "count": 4 },
         { "brand": "VOLKSWAGEN", "price": 85, "count": 3 },
         { "brand": "DODGE", "price": 100, "count": 4 },
-        { "brand": "SAAB", "price": 101, "count": 11 },
+        { "brand": "SAAB", "price": 100, "count": 11 },
         { "brand": "HONDA", "price": 15, "count": 11 },
         { "brand": "TOYOTA", "price": 60, "count": 0 }
     ],
@@ -48,16 +48,16 @@
         { "brand": "AUDI", "price": 16, "count": 4 },
         { "brand": "VOLKSWAGEN", "price": 85, "count": 3 },
         { "brand": "DODGE", "price": 100, "count": 4 },
-        { "brand": "SAAB", "price": 101, "count": 11 },
+        { "brand": "SAAB", "price": 100, "count": 11 },
         { "brand": "HONDA", "price": 15, "count": 11 },
-        { "brand": "TOYOTA", "price": 60, "count": 0 },
+        { "brand": "TOYOTA", "price": 34, "count": 0 },
         { "brand": "BMW2", "price": 100, "count": 5 },
         { "brand": "LADA2", "price": 25, "count": 2 },
         { "brand": "MERCEDES2", "price": 28, "count": 0 },
         { "brand": "AUDI2", "price": 16, "count": 4 },
         { "brand": "VOLKSWAGEN2", "price": 85, "count": 3 },
         { "brand": "DODGE2", "price": 150, "count": 4 },
-        { "brand": "SAAB2", "price": 101, "count": 11 },
+        { "brand": "SAAB2", "price": 100, "count": 11 },
         { "brand": "HONDA2", "price": 15, "count": 11 },
         { "brand": "TOYOTA2", "price": 165, "count": 0 }
     ],
@@ -79,13 +79,29 @@
         {"SortOrder":202101,"EventCost":3000.00,"AlcoholCost":0.00,"MonthYear":"Jan 21"},
         {"SortOrder":202102,"EventCost":2000.00,"AlcoholCost":0.00,"MonthYear":"Feb 21"}
     ],
+    "dataSet_gantt2": [
+        { "task": "task1", "start": "2020-12-12 06:30", "end": "2020-12-12 18:00" },
+        { "task": "task1", "start": "2020-12-11 12:00", "end": "2020-12-11 18:30" },
+        { "task": "task4", "start": "2020-12-13 11:00", "end": "2020-12-13 23:40" },
+        { "task": "task4", "start": "2020-12-14 12:20", "end": "2020-12-14 19:40" }
+    ],
     "dataSet_gantt": [
-        { "task": "task1", "start": "2020-12-12", "end": "2020-12-30" },
-        { "task": "task1", "start": "2020-12-03", "end": "2020-12-05" },
-        { "task": "task2", "start": "2020-12-10", "end": "2020-12-20" },
-        { "task": "task3", "start": "2020-12-01", "end": "2020-12-11" },
-        { "task": "task4", "start": "2020-12-20", "end": "2020-12-31" },
-        { "task": "task4", "start": "2020-12-12", "end": "2020-12-16" }
+        { "id": 2, "task": "task2", "start": "2020-12-03", "end": "2020-12-05", "next_task_id": 2 },
+        { "id": 3, "task": "task3", "start": "2020-12-10", "end": "2020-12-20", "next_task_id": 3 },
+        { "id": 4, "task": "task4", "start": "2020-12-01", "end": "2020-12-11", "next_task_id": 4 },
+        { "id": 1, "task": "task1", "start": "2020-12-12", "end": "2020-12-30", "next_task_id": 5 },
+        { "id": 5, "task": "task5", "start": "2020-12-20", "end": "2020-12-31", "next_task_id": 6 },
+        { "id": 6, "task": "task6", "start": "2020-12-12", "end": "2020-12-16", "next_task_id": 1 }
+    ],
+    "dataSet_poor": [
+        { "brand": "BMW", "price": 120, "count": 12 },
+        { "brand": "LADA", "price": 50, "count": 10 },
+        { "brand": "MERCEDES", "price": 15, "count": 12 }
+    ],
+    "dataSet_poor2": [
+        { "brand": "BMW", "price": 120, "count": 12 },
+        { "brand": "LADA", "price": 50, "count": 10 },
+        { "brand": "MERCEDES", "price": 15, "count": 12 }
     ],
     "dataSet_72": [
         { "brand": "BMW", "price": 120, "count": 12 },

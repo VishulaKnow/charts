@@ -1,7 +1,7 @@
 import * as d3 from "d3";
 import { AxisModelOptions, Orient, ScaleKeyModel, ScaleValueModel } from "../../../model/model";
 import { Helper } from "../../helper";
-import { Block } from "../../block/svgBlock";
+import { Block } from "../../block/block";
 
 interface AxisLabelCoordinate {
     x: number;
@@ -10,7 +10,7 @@ interface AxisLabelCoordinate {
 
 export class Axis
 {
-    public static render(scale: d3.AxisScale<any>, scaleOptions: ScaleKeyModel | ScaleValueModel, axisOptions: AxisModelOptions): void {
+    public static render(block: Block, scale: d3.AxisScale<any>, scaleOptions: ScaleKeyModel | ScaleValueModel, axisOptions: AxisModelOptions): void {
         const axis = this.getAxisByOrient(axisOptions.orient, scale);
 
         this.setAxisFormat(scale, scaleOptions, axis);
@@ -18,23 +18,23 @@ export class Axis
         if(!axisOptions.ticks.flag)
             this.removeTicks(axis);
     
-        const axisElement = Block.getSvg()
+        const axisElement = block.getSvg()
             .append('g')
             .attr('transform', `translate(${axisOptions.translate.translateX}, ${axisOptions.translate.translateY})`)
             .attr('class', `axis ${axisOptions.class} data-label`)
             .call(axis);
 
         this.setAxisLabelMargin(axisElement, axisOptions.orient, 9);
-        this.cropLabels(scale, scaleOptions, axisOptions);
+        this.cropLabels(block, scale, scaleOptions, axisOptions);
     }
 
-    public static updateValueAxisDomain(scaleValue: d3.AxisScale<any>, scaleOptions: ScaleValueModel, axisClass: string, axisOrient: Orient) {
+    public static updateValueAxisDomain(block: Block, scaleValue: d3.AxisScale<any>, scaleOptions: ScaleValueModel, axisClass: string, axisOrient: Orient) {
         const axis = this.getAxisByOrient(axisOrient, scaleValue);
 
         this.setAxisFormat(scaleValue, scaleOptions, axis);
         this.removeTicks(axis);
         
-        Block.getSvg()
+        block.getSvg()
             .select(`.${axisClass}`)
             .transition()
             .duration(1000)
@@ -91,13 +91,15 @@ export class Axis
         }
     }
 
-    private static cropLabels(scale: d3.AxisScale<any>, scaleOptions: ScaleKeyModel | ScaleValueModel, axisOptions: AxisModelOptions): void {
+    private static cropLabels(block: Block, scale: d3.AxisScale<any>, scaleOptions: ScaleKeyModel | ScaleValueModel, axisOptions: AxisModelOptions): void {
         if(scaleOptions.type === 'point' || scaleOptions.type === 'band') {
-            const axisTextBlocks = d3.select(`.${axisOptions.class}`).selectAll('text') as d3.Selection<SVGGraphicsElement, unknown, HTMLElement, unknown>;
+            const axisTextBlocks = block.getSvg().select(`.${axisOptions.class}`).selectAll('text') as d3.Selection<SVGGraphicsElement, unknown, HTMLElement, unknown>;
+            let labelSize: number;
             if(axisOptions.orient === 'left' || axisOptions.orient === 'right')
-                Helper.cropLabels(axisTextBlocks, axisOptions.maxLabelSize);
-            if(axisOptions.orient === 'bottom' || axisOptions.orient === 'top')
-                Helper.cropLabels(axisTextBlocks, (scale as d3.ScaleBand<string>).step());
+                labelSize = axisOptions.maxLabelSize;
+            else
+                labelSize = (scale as d3.ScaleBand<string>).step();
+            Helper.cropLabels(axisTextBlocks, labelSize);
         }
     }
 }
