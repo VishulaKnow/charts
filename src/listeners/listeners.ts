@@ -67,8 +67,6 @@ export class Listeners
     public updateFull(): void {
         this.dropAxisDomain(this.config);
         const model = getUpdatedModel(this.config);
-        console.log(model);
-        
         const preparedData = getPreparedData(model, data, this.config);
         this.engine.updateFullBlock(model, preparedData);
     }
@@ -300,10 +298,7 @@ export class Listeners
             thisClass.setControlsValues();
         });
         document.querySelector('#block-width').addEventListener('input', function(e: KeyboardEvent) {
-            console.log(thisClass.config.canvas);
-            
             thisClass.config.canvas.size.width = parseFloat(ListenersHelper.getInputValue('#block-width')) || 0;
-            console.log(thisClass.config.canvas);
             thisClass.updateFull()
         });
         document.querySelector('#block-height').addEventListener('input', function(e: KeyboardEvent) {

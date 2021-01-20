@@ -86,18 +86,12 @@
         { "task": "task4", "start": "2020-12-14 12:20", "end": "2020-12-14 19:40" }
     ],
     "dataSet_gantt": [
-        { "task": "task1", "start": "2020-12-12", "end": "2020-12-30" },
-        { "task": "task1", "start": "2020-12-03", "end": "2020-12-05" },
-        { "task": "task2", "start": "2020-12-10", "end": "2020-12-20" },
-        { "task": "task3", "start": "2020-12-01", "end": "2020-12-11" },
-        { "task": "task4", "start": "2020-12-20", "end": "2020-12-31" },
-        { "task": "task4", "start": "2020-12-12", "end": "2020-12-16" },
-        { "task": "task5", "start": "2020-12-12", "end": "2020-12-30" },
-        { "task": "task6", "start": "2020-12-03", "end": "2020-12-05" },
-        { "task": "task6", "start": "2020-12-10", "end": "2020-12-20" },
-        { "task": "task1", "start": "2020-12-01", "end": "2020-12-11" },
-        { "task": "task5", "start": "2020-12-20", "end": "2020-12-31" },
-        { "task": "task5", "start": "2020-12-12", "end": "2020-12-16" }
+        { "id": 2, "task": "task2", "start": "2020-12-03", "end": "2020-12-05", "next_task_id": 2 },
+        { "id": 3, "task": "task3", "start": "2020-12-10", "end": "2020-12-20", "next_task_id": 3 },
+        { "id": 4, "task": "task4", "start": "2020-12-01", "end": "2020-12-11", "next_task_id": 4 },
+        { "id": 1, "task": "task1", "start": "2020-12-12", "end": "2020-12-30", "next_task_id": 5 },
+        { "id": 5, "task": "task5", "start": "2020-12-20", "end": "2020-12-31", "next_task_id": 6 },
+        { "id": 6, "task": "task6", "start": "2020-12-12", "end": "2020-12-16", "next_task_id": 1 }
     ],
     "dataSet_poor": [
         { "brand": "BMW", "price": 120, "count": 12 },

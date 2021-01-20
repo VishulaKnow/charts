@@ -38,13 +38,15 @@ export class Block
 
     public renderChartBlock(blockSize: Size, margin: BlockMargin): void {
         const attributes = BlockHelper.getChartBlockAttributes(blockSize, margin);
+        attributes.width = 200;
         this.getSvg()
             .append('g')
             .attr('class', this.chartBlockClass)
             .attr('x', attributes.x)
             .attr('y', attributes.y)
             .attr('width', attributes.width)
-            .attr('height', attributes.height);
+            .attr('height', attributes.height)
+            .style('overflow-x', 'hidden');
     }
 
     public getSvg(): d3.Selection<d3.BaseType, unknown, HTMLElement, any> {

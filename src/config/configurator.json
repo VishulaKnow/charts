@@ -1,9 +1,9 @@
 {
   "canvas": {
-    "class": "svg-chart-2 outline",
+    "class": "svg-chart-2",
     "size": {
-      "width": 1200,
-      "height": 650
+      "width": 1000,
+      "height": 400
     }
   },
   "options": {
@@ -36,10 +36,10 @@
     },
     "charts": [
       {
-        "title": "Car prices",
+        "title": "2020",
         "type": "line",
         "legend": {
-          "position": "off"
+          "position": "bottom"
         },
         "data": {
           "dataSource": "dataSet_data",
@@ -69,10 +69,10 @@
         "orientation": "vertical"
       },
       {
-        "title": "Car prices",
+        "title": "2021",
         "type": "line",
         "legend": {
-          "position": "off"
+          "position": "bottom"
         },
         "data": {
           "dataSource": "dataSet_data2",

@@ -14,13 +14,17 @@ interface GanttItemsAttrs {
 
 export class Gantt 
 {
+    private static ganttItemClass = 'gantt-item';
+
     public static render(block: Block, data: DataRow[], scales: Scales, margin: BlockMargin, keyField: string, valueField1: string, valueField2: string, keyAxisOrient: Orient, cssClasses: string[], chartPalette: Color[], blockSize: Size, barSettings: BarChartSettings): void {
         const groups = this.renderGanttGroups(block, scales, data, keyField, margin, blockSize);
         
-        const ganttItems = groups
+        const ganttItems = block.getChartBlock()
+            .selectAll(`.${this.ganttItemClass}`)
             .data(data)
             .enter()
                 .append('rect')
+                .attr('class', this.ganttItemClass)
                 .style('clip-path', `url(${block.getClipPathId()})`);
         
         const itemsAttrs = this.getItemsAttrsByKeyOrient(keyAxisOrient,
@@ -35,6 +39,8 @@ export class Gantt
 
         Helper.setCssClasses(ganttItems, cssClasses);
         Helper.setChartElementColor(ganttItems, chartPalette, 'fill');
+
+        this.renderArrows(ganttItems, keyField, 'task1');
     }
 
     private static fillItemsAttrs(ganttItems: d3.Selection<SVGRectElement, DataRow, d3.BaseType, unknown>, attrs: GanttItemsAttrs): void {
@@ -42,7 +48,7 @@ export class Gantt
             .attr('x', d => attrs.x(d))
             .attr('y', d => attrs.y(d))
             .attr('width', d => attrs.width(d))
-            .attr('height', d => attrs.height(d))
+            .attr('height', d => attrs.height(d));
     }
 
     private static renderGanttGroups(block: Block, scales: Scales, data: DataRow[], keyField: string, margin: BlockMargin, blockSize: Size): d3.Selection<d3.BaseType, unknown, SVGGElement, unknown> {
@@ -72,10 +78,7 @@ export class Gantt
             height: null
         }
         const itemSize = Scale.getScaleWidth(scales.scaleKey) > barSettings.barMaxSize ? barSettings.barMaxSize : Scale.getScaleWidth(scales.scaleKey);
-        const sizeDiff = (Scale.getScaleWidth(scales.scaleKey) - itemSize) / 2;
-
-        console.log(Scale.getScaleWidth(scales.scaleKey), barSettings.barMaxSize);
-        
+        const sizeDiff = (Scale.getScaleWidth(scales.scaleKey) - itemSize) / 2;       
 
         if(axisOrient === 'top' || axisOrient === 'bottom') {
             attrs.x = d => scales.scaleKey(d[keyField]) + margin.left + sizeDiff;
@@ -102,5 +105,12 @@ export class Gantt
             attrs.width = d => scales.scaleValue(d[valueField1]) - scales.scaleValue(d[valueField2]);
         }
         return attrs;
+    }
+
+    private static renderArrows(ganttItems: d3.Selection<SVGRectElement, DataRow, SVGGElement, any>, keyField: string, keyValue: string): void {
+        const filteredItems = ganttItems
+            .filter(d => d[keyField] === keyValue);
+
+        console.log(filteredItems.size());
     }
 }
