@@ -33,6 +33,20 @@ export class MarginModel
         }    
     }
 
+    public static recalcMargnWitVerticalAxisLabel(margin: BlockMargin, data: DataSource, config: Config, designerConfig: DesignerConfig): void {
+        if(config.options.type === '2d' || config.options.type === 'interval') {
+            if(config.options.charts[0].orientation === 'vertical') {
+                let marginOrient: Orient = 'top';
+                if(config.options.axis.keyAxis.position === 'end')
+                    marginOrient = 'bottom';
+                const labelTexts = DataManagerModel.getDataValuesByKeyField(data, config.options.charts[0]);
+                const axisLabelSize = AxisModel.getLabelSize(designerConfig.canvas.axisLabel.maxSize.main, labelTexts).width;
+
+                margin[marginOrient] += axisLabelSize;
+            }
+        }
+    }
+
     private static recalcMarginWithAxisLabelWidth(margin: BlockMargin, charts: TwoDimensionalChart[] | IntervalChart[], labelsMaxWidth: number, axis: TwoDimensionalAxis | IntervalAxis, data: DataSource): void {
         const keyAxisOrient = AxisModel.getAxisOrient(AxisType.Key, charts[0].orientation, axis.keyAxis.position);
         const valueAxisOrient = AxisModel.getAxisOrient(AxisType.Value, charts[0].orientation, axis.valueAxis.position);

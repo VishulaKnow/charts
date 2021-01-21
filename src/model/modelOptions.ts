@@ -31,7 +31,7 @@ function getBlockCanvas(config: Config): BlockCanvas {
             width: config.canvas.size.width,
             height: config.canvas.size.height
         },
-        class: config.canvas.class
+        cssClass: config.canvas.class
     }
 }
 
@@ -73,17 +73,15 @@ function getDataFormat(designerConfig: DesignerConfig): DataFormat {
     }
 }
 
-export function assembleModel(config: Config, data: DataSource = null): Model {
-    if(!data)
-        data = require('../assets/dataSet.json');
-
+export function assembleModel(config: Config, data: DataSource): Model {
     const legendBlock: LegendBlockModel = LegendModel.getBaseLegendBlockModel();
     const margin = MarginModel.getMargin(designerConfig, config, legendBlock, data);
     const dataScope = DataManagerModel.getDataScope(config, margin, data, designerConfig);
     const preparedData = DataManagerModel.getPreparedData(data, dataScope.allowableKeys, config);    
     
     if(config.options.type === 'polar')
-        MarginModel.recalcPolarMarginWithScopedData(margin, designerConfig, config, legendBlock, dataScope);  
+        MarginModel.recalcPolarMarginWithScopedData(margin, designerConfig, config, legendBlock, dataScope); 
+    // MarginModel.recalcMargnWitVerticalAxisLabel(margin, data, config, designerConfig);
 
     const blockCanvas = getBlockCanvas(config);
     const chartBlock = getChartBlock(margin);
@@ -108,6 +106,6 @@ export function getPreparedData(model: Model, data: DataSource, config: Config):
     return preparedData;
 }
 
-export function getUpdatedModel(config: Config, data: any = null): Model {
+export function getUpdatedModel(config: Config, data: DataSource): Model {
     return assembleModel(config, data);
 }

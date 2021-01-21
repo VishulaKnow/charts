@@ -57,9 +57,9 @@
         { "brand": "AUDI2", "price": 16, "count": 4 },
         { "brand": "VOLKSWAGEN2", "price": 85, "count": 3 },
         { "brand": "DODGE2", "price": 150, "count": 4 },
-        { "brand": "SAAB2", "price": 100, "count": 11 },
+        { "brand": "SAAB2", "price": 150, "count": 11 },
         { "brand": "HONDA2", "price": 15, "count": 11 },
-        { "brand": "TOYOTA2", "price": 165, "count": 0 }
+        { "brand": "TOYOTA2", "price": 180, "count": 0 }
     ],
     "dataSet_data": [
         {"SortOrder":202007,"EventCost":19000.00,"AlcoholCost":8000.00,"MonthYear":"Jul 20"},

@@ -3,7 +3,7 @@ import { getPreparedData, getUpdatedModel } from '../model/modelOptions';
 import { Config, IntervalChart, IntervalOptions, PolarChart, PolarOptions, TwoDimensionalChart, TwoDimensionalOptions } from '../config/config'
 import { color } from 'd3';
 import { DesignerConfig } from '../designer/designerConfig';
-const data = require('../assets/dataSet.json');
+import { DataSource } from '../model/model';
 
 class ListenersHelper
 {
@@ -43,19 +43,21 @@ class ListenersHelper
     }
 }
 
-export class Listeners
+export default class Listeners
 {
     private engine: Engine;
     private config: Config;
     private designerConfig: DesignerConfig;
+    private data: DataSource
 
-    constructor(engine: Engine, config: Config, designerConfig: DesignerConfig) {
+    constructor(engine: Engine, config: Config, designerConfig: DesignerConfig, data: DataSource) {
         this.engine = engine;
         this.config = config;
         this.designerConfig = designerConfig;
+        this.data = data;
 
         this.setControlsValues();
-        this.showControlsForNotation(config.options.type);
+        this.showControlsForNotation(this.config.options.type);
         this.setMainListeners();
         this.setDesignerListeners();
         this.setCommonListeners();
@@ -64,20 +66,20 @@ export class Listeners
         this.setPolarListeners();
     }
 
-    public updateFull(): void {
+    private updateFull(): void {
         this.dropAxisDomain(this.config);
-        const model = getUpdatedModel(this.config);
-        const preparedData = getPreparedData(model, data, this.config);
+        const model = getUpdatedModel(this.config, this.data);
+        const preparedData = getPreparedData(model, this.data, this.config);
         this.engine.updateFullBlock(model, preparedData);
     }
-    public dropAxisDomain(config: Config) {
+    private dropAxisDomain(config: Config) {
         if(config.options.type === '2d') {
             config.options.axis.valueAxis.domain.end = -1;
             config.options.axis.valueAxis.domain.start = -1;
         }
     }
     
-    public showControlsForNotation(notationType: '2d' | 'polar' | 'interval'): void {
+    private showControlsForNotation(notationType: '2d' | 'polar' | 'interval'): void {
         if(notationType === '2d') {
             (document.querySelector('.block-polar') as HTMLElement).style.display = 'none';
             (document.querySelector('.block-2d') as HTMLElement).style.display = 'block';
@@ -94,7 +96,7 @@ export class Listeners
         }
     }
 
-    public getDataWithRandomValues(data: any, maxRand: number) {
+    private getDataWithRandomValues(data: any, maxRand: number) {
         if(this.config.options.type === 'polar' || this.config.options.type === '2d')
             this.config.options.charts.forEach((chart: TwoDimensionalChart | PolarChart) => {
                 data[chart.data.dataSource].forEach((row: any) => {
@@ -104,7 +106,7 @@ export class Listeners
         return data;
     }
     
-    public getDataConfig(notationType: '2d' | 'polar' | 'interval'): any {
+    private getDataConfig(notationType: '2d' | 'polar' | 'interval'): any {
         if(notationType === '2d' || notationType === 'polar') {
             return {
                 dataSource: ListenersHelper.getInputValue('#data-size') === 'normal' ? 'dataSet' : 'dataSet_large',
@@ -136,7 +138,7 @@ export class Listeners
         }
     }
     
-    public getTooltipConfig(notationType: '2d' | 'polar' | 'interval'): any {
+    private getTooltipConfig(notationType: '2d' | 'polar' | 'interval'): any {
         if(notationType === '2d' || notationType === 'polar') {
             return {
                 data: {
@@ -166,7 +168,7 @@ export class Listeners
         }
     }
     
-    public changeConfigOptions(notationType: '2d' | 'polar' | 'interval'): void {
+    private changeConfigOptions(notationType: '2d' | 'polar' | 'interval'): void {
         if(notationType === '2d') {
             const options: TwoDimensionalOptions = {
                 type: notationType,
@@ -177,12 +179,12 @@ export class Listeners
                         title: this.config.options.charts[0].title,
                         tooltip: this.getTooltipConfig(notationType),
                         orientation: ListenersHelper.getInputValue('#chart-orient') as 'horizontal' | 'vertical',
-                        type: ListenersHelper.getInputValue('#chart-2d-type') as "area" | "line" | "bar"
+                        type: ListenersHelper.getInputValue('#chart-2d-type') === 'barLine' ? 'bar' : ListenersHelper.getInputValue('#chart-2d-type') as 'line' | 'bar' | 'area'
                     }
                 ],
                 axis: {
                     keyAxis: {
-                        position: ListenersHelper.getInputValue('#key-axis-orient') as "start" | "end",
+                        position: ListenersHelper.getInputValue('#key-axis-orient') as 'start' | 'end',
                         ticks: {
                             flag: true
                         }
@@ -271,10 +273,10 @@ export class Listeners
             }
             this.config.options = options;
         }
-        this.updateFull()
+        this.updateFull();
     }
     
-    public change2DChartConfig(chartType: 'bar' | 'line' | 'area'): void {
+    private change2DChartConfig(chartType: 'bar' | 'line' | 'area' | 'barLine'): void {
         const config = this.config;
         if(chartType === 'area') {
             if(config.options.charts.length !== 1)
@@ -287,10 +289,19 @@ export class Listeners
         } else if((chartType === 'bar' || chartType === 'line') && config.options.charts.length === 2) {
             config.options.charts.forEach((chart: any) => chart.type = chartType);
             config.options.charts[1].data.dataSource = config.options.charts[0].data.dataSource + '2';
+        } else if(chartType === 'barLine' && config.options.charts.length === 1) {
+            config.options.charts.push(ListenersHelper.getCopy(config.options.charts[0]));
+            config.options.charts[0].type = 'bar';
+            config.options.charts[1].type = 'line';
+            config.options.charts[1].data.dataSource = config.options.charts[0].data.dataSource + '2';
+        } else if(chartType === 'barLine' && config.options.charts.length === 2) {
+            config.options.charts[0].type = 'bar';
+            config.options.charts[1].type = 'line';
+            config.options.charts[1].data.dataSource = config.options.charts[0].data.dataSource + '2';
         }
     }
     
-    public setMainListeners(): void {
+    private setMainListeners(): void {
         const thisClass = this;
         document.querySelector('#notation').addEventListener('change', function() {
             thisClass.showControlsForNotation(this.value);
@@ -299,22 +310,23 @@ export class Listeners
         });
         document.querySelector('#block-width').addEventListener('input', function(e: KeyboardEvent) {
             thisClass.config.canvas.size.width = parseFloat(ListenersHelper.getInputValue('#block-width')) || 0;
-            thisClass.updateFull()
+            thisClass.updateFull();
         });
         document.querySelector('#block-height').addEventListener('input', function(e: KeyboardEvent) {
             thisClass.config.canvas.size.height = parseFloat(ListenersHelper.getInputValue('#block-height')) || 0;
-            thisClass.updateFull()
+            thisClass.updateFull();
         });
-        // document.querySelector('#wrapper-border').addEventListener('change', function() {
-        //     if(this.checked)
-        //         thisClass.config.canvas.class = 'svg-chart outline';
-        //     else 
-        //         thisClass.config.canvas.class = 'svg-chart';
-        //     thisClass.updateFull()
-        // });
+        document.querySelector('#wrapper-border').addEventListener('change', function() {
+            if(this.checked) {
+                thisClass.config.canvas.class += ' outline';
+            } else {
+                thisClass.config.canvas.class = thisClass.config.canvas.class.replace('outline', '');
+            } 
+            thisClass.updateFull();
+        });
     }
     
-    public setDesignerListeners(): void {
+    private setDesignerListeners(): void {
         const thisClass = this;
         document.querySelector('#axis-label-width').addEventListener('input', function() {
             thisClass.designerConfig.canvas.axisLabel.maxSize.main = parseFloat(ListenersHelper.getInputValue('#axis-label-width'));
@@ -370,60 +382,62 @@ export class Listeners
         });
     }
     
-    public setCommonListeners(): void {
+    private setCommonListeners(): void {
         const thisClass = this;
         const config = this.config
         document.querySelector('#data-size').addEventListener('change', function() {
             if(config.options.type === '2d' || config.options.type === 'polar') {
                 config.options.charts.forEach((chart: TwoDimensionalChart | PolarChart, index: number) => {
                     chart.data.dataSource = this.value === 'normal' 
-                        ? 'dataSet' + (index === 0 ? '' : `${index + 1}`)
-                        : 'dataSet_large' + (index === 0 ? '' : `${index + 1}`);
+                        ? 'dataSet' + (index === 0 ? '' : index + 1)
+                        : 'dataSet_large' + (index === 0 ? '' : index + 1);
                 });
-                thisClass.updateFull()
+                thisClass.updateFull();
             }
         });
         document.querySelector('#legend').addEventListener('change', function() {
             config.options.charts.forEach((chart: TwoDimensionalChart | PolarChart | IntervalChart) => {
                 chart.legend.position = this.value;
             });
-            thisClass.updateFull()
+            thisClass.updateFull();
         });
         document.querySelector('.btn-random').addEventListener('click', function() {
-            const max = parseInt(ListenersHelper.getInputValue('#max-random-value')) || 120;
-            const copy = ListenersHelper.getCopy(data);
-            const newData = thisClass.getDataWithRandomValues(copy, max);
-            if(config.options.type === '2d') {
-                config.options.axis.valueAxis.domain.start = -1;
-                config.options.axis.valueAxis.domain.end = max;
-            }
-            const model = getUpdatedModel(newData);
-            const preparedData = getPreparedData(model, newData, config);
-            thisClass.engine.updateFullBlock(model, preparedData);
-        });
-        document.querySelector('#max-random-value').addEventListener('keydown', function(e: KeyboardEvent) {
-            if(e.code === 'Enter') {
+            if(config.options.type === '2d' || config.options.type === 'polar') {
                 const max = parseInt(ListenersHelper.getInputValue('#max-random-value')) || 120;
-                const copy = ListenersHelper.getCopy(data);
+                const copy = ListenersHelper.getCopy(thisClass.data);
                 const newData = thisClass.getDataWithRandomValues(copy, max);
                 if(config.options.type === '2d') {
                     config.options.axis.valueAxis.domain.start = -1;
                     config.options.axis.valueAxis.domain.end = max;
                 }
-                const model = getUpdatedModel(newData);
+                const model = getUpdatedModel(thisClass.config, newData);
+                const preparedData = getPreparedData(model, newData, config);
+                thisClass.engine.updateFullBlock(model, preparedData);
+            }
+        });
+        document.querySelector('#max-random-value').addEventListener('keydown', function(e: KeyboardEvent) {
+            if(e.code === 'Enter' && (config.options.type === '2d' || config.options.type === 'polar')) {
+                const max = parseInt(ListenersHelper.getInputValue('#max-random-value')) || 120;
+                const copy = ListenersHelper.getCopy(thisClass.data);
+                const newData = thisClass.getDataWithRandomValues(copy, max);
+                if(config.options.type === '2d') {
+                    config.options.axis.valueAxis.domain.start = -1;
+                    config.options.axis.valueAxis.domain.end = max;
+                }
+                const model = getUpdatedModel(thisClass.config, newData);
                 const preparedData = getPreparedData(model, newData, config);
                 thisClass.engine.updateFullBlock(model, preparedData);
             }
         });
     }
     
-    public set2DListeners(): void {
+    private set2DListeners(): void {
         const thisClass = this;
         const config = this.config;
         document.querySelector('#chart-2d-type').addEventListener('change', function() {
             if(config.options.type === '2d') {
                 thisClass.change2DChartConfig(this.value);
-                thisClass.updateFull()
+                thisClass.updateFull();
             }
         });
         document.querySelector('.btn-domain').addEventListener('click', function() {
@@ -432,7 +446,7 @@ export class Listeners
                 const end = ListenersHelper.getInputValue('#domain-end');
                 config.options.axis.valueAxis.domain.start = parseInt(start) || -1;
                 config.options.axis.valueAxis.domain.end = parseInt(end) || -1;
-                thisClass.engine.updateValueAxis(getUpdatedModel(thisClass.config), data);
+                thisClass.engine.updateValueAxis(getUpdatedModel(thisClass.config, thisClass.data), thisClass.data);
             }
         });
         document.querySelector('#domain-start').addEventListener('keydown', function(e: KeyboardEvent) {
@@ -442,7 +456,7 @@ export class Listeners
                     const end = ListenersHelper.getInputValue('#domain-end');
                     config.options.axis.valueAxis.domain.start = parseInt(start) || -1;
                     config.options.axis.valueAxis.domain.end = parseInt(end) || -1;
-                    thisClass.engine.updateValueAxis(getUpdatedModel(thisClass.config), data);
+                    thisClass.engine.updateValueAxis(getUpdatedModel(thisClass.config, thisClass.data), thisClass.data);
                 }
             }
         });
@@ -453,13 +467,13 @@ export class Listeners
                     const end = ListenersHelper.getInputValue('#domain-end');
                     config.options.axis.valueAxis.domain.start = parseInt(start) || -1;
                     config.options.axis.valueAxis.domain.end = parseInt(end) || -1;
-                    thisClass.engine.updateValueAxis(getUpdatedModel(thisClass.config), data);
+                    thisClass.engine.updateValueAxis(getUpdatedModel(thisClass.config, thisClass.data), thisClass.data);
                 }
             }
         });
     }
     
-    public setAxisListeners(): void {
+    private setAxisListeners(): void {
         const thisClass = this;
         const config = this.config;
         document.querySelector('#chart-orient').addEventListener('change', function() {
@@ -508,7 +522,7 @@ export class Listeners
         });
     }
     
-    public setPolarListeners(): void {
+    private setPolarListeners(): void {
         const thisClass = this;
         const config = this.config;
         document.querySelector('#inner-radius').addEventListener('input', function() {
@@ -527,14 +541,14 @@ export class Listeners
         });
     }
     
-    public setControlsValues(): void {
+    private setControlsValues(): void {
         const config = this.config;
         const designerConfig = this.designerConfig;
 
         ListenersHelper.setInputValue('#notation', config.options.type);
         ListenersHelper.setInputValue('#block-width', config.canvas.size.width);
         ListenersHelper.setInputValue('#block-height', config.canvas.size.height);
-        ListenersHelper.setCheckboxValue('#wrapper-border', config.canvas.class === 'svg-chart outline');
+        ListenersHelper.setCheckboxValue('#wrapper-border', config.canvas.class.includes('outline'));
     
         ListenersHelper.setInputValue('#legend', config.options.charts[0].legend.position);
         ListenersHelper.setInputValue('#data-size', config.options.charts[0].data.dataSource.includes('large') ? 'large' : 'normal');

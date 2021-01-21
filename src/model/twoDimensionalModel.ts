@@ -38,7 +38,7 @@ export class TwoDimensionalModel
                         translateX: AxisModel.getAxisTranslateX(AxisType.Key, configOptions.charts[0].orientation, configOptions.axis.keyAxis.position, margin, config.canvas.size.width),
                         translateY: AxisModel.getAxisTranslateY(AxisType.Key, configOptions.charts[0].orientation, configOptions.axis.keyAxis.position, margin, config.canvas.size.height)
                     },
-                    class: 'key-axis',
+                    cssClass: 'key-axis',
                     maxLabelSize: designerConfig.canvas.axisLabel.maxSize.main,
                     ticks: configOptions.axis.keyAxis.ticks
                 },
@@ -48,7 +48,7 @@ export class TwoDimensionalModel
                         translateX: AxisModel.getAxisTranslateX(AxisType.Value, configOptions.charts[0].orientation, configOptions.axis.valueAxis.position, margin, config.canvas.size.width),
                         translateY: AxisModel.getAxisTranslateY(AxisType.Value, configOptions.charts[0].orientation, configOptions.axis.valueAxis.position, margin, config.canvas.size.height)
                     },          
-                    class: 'value-axis',
+                    cssClass: 'value-axis',
                     maxLabelSize: designerConfig.canvas.axisLabel.maxSize.main,
                     ticks: configOptions.axis.valueAxis.ticks
                 }

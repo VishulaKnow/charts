@@ -24,7 +24,7 @@ export interface TooltipCoordinate {
 
 export class TooltipHelper
 { 
-    public static getTooltipTextForMultyCharts(charts: TwoDimensionalChartModel[], data: DataSource, keyValue: string): string {
+    public static getTooltipHtmlForMultyCharts(charts: TwoDimensionalChartModel[], data: DataSource, keyValue: string): string {
         let text = this.getTooltipKeyHeader(keyValue);
         charts.forEach((chart: TwoDimensionalChartModel) => {
             if(chart.tooltip.data.fields.length !== 0) {
@@ -63,10 +63,12 @@ export class TooltipHelper
             right: null,
             bottom: null
         }
+        
         let left = pointer[0];
         let top = pointer[1];
         const width = (tooltip.node() as any).getBoundingClientRect().width;
         const height = (tooltip.node() as any).getBoundingClientRect().height;
+
         if(left + width + tooltipCursorMargin >= blockSize.width) {
             coordinate.right = '0px';
         } else {
@@ -97,8 +99,8 @@ export class TooltipHelper
             x1: 0, x2: 0, y1: 0, y2: 0
         }
         if(chartOrientation === 'vertical') {
-            attributes.x1 = Scale.getScaleKeyPoint(scaleKey, key) + margin.left;
-            attributes.x2 = Scale.getScaleKeyPoint(scaleKey, key) + margin.left;
+            attributes.x1 = Math.ceil(Scale.getScaleKeyPoint(scaleKey, key) + margin.left);
+            attributes.x2 = Math.ceil(Scale.getScaleKeyPoint(scaleKey, key) + margin.left);
             attributes.y1 = margin.top;
             attributes.y2 = blockSize.height - margin.bottom;
         }  else {
@@ -107,6 +109,7 @@ export class TooltipHelper
             attributes.y1 = Scale.getScaleKeyPoint(scaleKey, key) + margin.top;
             attributes.y2 = Scale.getScaleKeyPoint(scaleKey, key) + margin.top;
         }
+        
         return attributes;
     }
 

@@ -1,6 +1,6 @@
 import * as d3 from "d3";
 import { Color } from "d3";
-import { BlockMargin, DataRow, Size } from "../../../model/model";
+import { BlockMargin, DataRow, Size, TwoDimensionalChartModel } from "../../../model/model";
 import { Helper } from "../../helper";
 import { Scale, Scales } from "../../features/scale/scale";
 import { Block } from "../../block/block";
@@ -14,26 +14,26 @@ interface AreaChartCoordinate {
 
 export class Area
 {
-    private static areaClass = 'area';
+    private static areaChartClass = 'area';
 
-    public static render(block: Block, scales: Scales, data: DataRow[], margin: BlockMargin, keyField: string, valueField: string, keyAxisOrient: string, cssClasses: string[], chartPalette: Color[], blockSize: Size): void {
+    public static render(block: Block, scales: Scales, data: DataRow[], margin: BlockMargin, keyAxisOrient: string, chart: TwoDimensionalChartModel, blockSize: Size): void {
         const area = this.getAreaGenerator(keyAxisOrient);
         const areaCoordinate: AreaChartCoordinate[] = this.getAreaCoordinateByKeyOrient(keyAxisOrient,
             data,
             scales,
             margin,
-            keyField,
-            valueField,
+            chart.data.keyField.name,
+            chart.data.valueField.name,
             blockSize);
     
         const path = block.getChartBlock()
             .append('path')
             .attr('d', area(areaCoordinate))
-            .attr('class', this.areaClass)
+            .attr('class', this.areaChartClass)
             .style('clip-path', `url(${block.getClipPathId()})`);
     
-        Helper.setCssClasses(path, cssClasses);
-        Helper.setChartElementColor(path, chartPalette, 'fill');
+        Helper.setCssClasses(path, chart.cssClasses);
+        Helper.setChartElementColor(path, chart.elementColors, 'fill');
     }
 
     public static updateAreaChartByValueAxis(block: Block, scales: Scales, data: DataRow[], margin: BlockMargin, keyField: string, valueField: string, keyAxisOrient: string, blockSize: Size, cssClasses: string[]): void {
@@ -47,7 +47,7 @@ export class Area
             blockSize);
     
         block.getChartBlock()
-            .select(`.${this.areaClass}${Helper.getCssClassesLine(cssClasses)}`)
+            .select(`.${this.areaChartClass}${Helper.getCssClassesLine(cssClasses)}`)
             .transition()
             .duration(1000)
                 .attr('d', area(areaCoordinate));

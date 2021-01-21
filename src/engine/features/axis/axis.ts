@@ -21,21 +21,22 @@ export class Axis
         const axisElement = block.getSvg()
             .append('g')
             .attr('transform', `translate(${axisOptions.translate.translateX}, ${axisOptions.translate.translateY})`)
-            .attr('class', `axis ${axisOptions.class} data-label`)
+            .attr('class', `axis ${axisOptions.cssClass} data-label`)
             .call(axis);
 
         this.setAxisLabelMargin(axisElement, axisOptions.orient, 9);
         this.cropLabels(block, scale, scaleOptions, axisOptions);
     }
 
-    public static updateValueAxisDomain(block: Block, scaleValue: d3.AxisScale<any>, scaleOptions: ScaleValueModel, axisClass: string, axisOrient: Orient) {
-        const axis = this.getAxisByOrient(axisOrient, scaleValue);
+    public static updateValueAxisDomain(block: Block, scaleValue: d3.AxisScale<any>, scaleOptions: ScaleValueModel, axisOptions: AxisModelOptions) {
+        const axis = this.getAxisByOrient(axisOptions.orient, scaleValue);
 
         this.setAxisFormat(scaleValue, scaleOptions, axis);
-        this.removeTicks(axis);
+        if(!axisOptions.ticks.flag)
+            this.removeTicks(axis);
         
         block.getSvg()
-            .select(`.${axisClass}`)
+            .select(`.${axisOptions.cssClass}`)
             .transition()
             .duration(1000)
                 .call(axis.bind(this));
@@ -93,7 +94,7 @@ export class Axis
 
     private static cropLabels(block: Block, scale: d3.AxisScale<any>, scaleOptions: ScaleKeyModel | ScaleValueModel, axisOptions: AxisModelOptions): void {
         if(scaleOptions.type === 'point' || scaleOptions.type === 'band') {
-            const axisTextBlocks = block.getSvg().select(`.${axisOptions.class}`).selectAll('text') as d3.Selection<SVGGraphicsElement, unknown, HTMLElement, unknown>;
+            const axisTextBlocks = block.getSvg().select(`.${axisOptions.cssClass}`).selectAll('text') as d3.Selection<SVGGraphicsElement, unknown, HTMLElement, unknown>;
             let labelSize: number;
             if(axisOptions.orient === 'left' || axisOptions.orient === 'right')
                 labelSize = axisOptions.maxLabelSize;

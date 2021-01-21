@@ -27,14 +27,14 @@ export class GridLine
     }
 
     public static rerender(block: Block, gridLineFlag: GridLineFlag, keyAxis: AxisModelOptions, valueAxis: AxisModelOptions, blockSize: Size, margin: BlockMargin): void {
-        this.clear(block, keyAxis.class, valueAxis.class);
+        this.clear(block, keyAxis.cssClass, valueAxis.cssClass);
         this.render(block, gridLineFlag, keyAxis, valueAxis, blockSize, margin);
     }
 
     private static renderLine(block: Block, axis: AxisModelOptions, lineAttributes: GridLineAttributes): void {
         block
             .getSvg()
-            .selectAll(`.${axis.class}`)
+            .selectAll(`.${axis.cssClass}`)
             .selectAll('g.tick')
             .append('line')
             .attr('class', this.gridLineClass)

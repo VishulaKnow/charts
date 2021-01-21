@@ -2,7 +2,7 @@ import { BarChartSettings, BlockMargin, ChartSettings, DataSource, IntervalChart
 import { Area } from "./twoDimensionalNotation/area/area";
 import { Axis } from "./features/axis/axis";
 import { Bar } from "./twoDimensionalNotation/bar/bar";
-import { Donut } from "./polarNotation/donut/donut";
+import { Donut } from "./polarNotation/donut";
 import { GridLine } from "./features/gridLine/gridLine";
 import { Legend } from "./features/legend/legend";
 import { Line } from "./twoDimensionalNotation/line/line";
@@ -21,7 +21,7 @@ export class ChartRenderer
             options.scale.scaleValue,
             model.chartSettings.bar.groupDistance);        
             
-        block.renderSvg(model.blockCanvas.class, model.blockCanvas.size);
+        block.renderSvg(model.blockCanvas.cssClass, model.blockCanvas.size);
     
         Axis.render(block, Scale.scales.scaleValue, options.scale.scaleValue, options.axis.valueAxis);
         Axis.render(block, Scale.scales.scaleKey, options.scale.scaleKey, options.axis.keyAxis);    
@@ -51,7 +51,7 @@ export class ChartRenderer
     public static renderPolar(block: Block, model: Model, data: DataSource) {
         const options = <PolarOptionsModel>model.options;
     
-        block.renderSvg(model.blockCanvas.class, model.blockCanvas.size);
+        block.renderSvg(model.blockCanvas.cssClass, model.blockCanvas.size);
     
         this.renderPolarCharts(block, options.charts,
             data,
@@ -68,7 +68,7 @@ export class ChartRenderer
     public static renderInterval(block: Block, model: Model, data: DataSource): void {
         const options = <IntervalOptionsModel>model.options;
         
-        block.renderSvg(model.blockCanvas.class, model.blockCanvas.size);
+        block.renderSvg(model.blockCanvas.cssClass, model.blockCanvas.size);
 
         Scale.fillScales(options.scale.scaleKey,
             options.scale.scaleValue,
@@ -102,8 +102,7 @@ export class ChartRenderer
         Axis.updateValueAxisDomain(block, 
             Scale.scales.scaleValue,
             options.scale.scaleValue,
-            options.axis.valueAxis.class,
-            options.axis.valueAxis.orient);
+            options.axis.valueAxis);
 
         GridLine.rerender(block, 
             options.additionalElements.gridLine.flag,
@@ -130,11 +129,8 @@ export class ChartRenderer
                     scales,
                     data[chart.data.dataSource],
                     margin,
-                    chart.data.keyField.name,
-                    chart.data.valueField.name,
                     keyAxisOrient,
-                    chart.cssClasses,
-                    chart.elementColors,
+                    chart,
                     blockSize,
                     charts.filter(ch => ch.type === 'bar').length,
                     barSettings);
@@ -143,21 +139,15 @@ export class ChartRenderer
                     scales,
                     data[chart.data.dataSource],
                     margin,
-                    chart.data.keyField.name,
-                    chart.data.valueField.name,
                     keyAxisOrient,
-                    chart.cssClasses,
-                    chart.elementColors);  
+                    chart);  
             else if(chart.type === 'area')
                 Area.render(block,
                     scales,
                     data[chart.data.dataSource],
                     margin,
-                    chart.data.keyField.name,
-                    chart.data.valueField.name,
                     keyAxisOrient,
-                    chart.cssClasses,
-                    chart.elementColors,
+                    chart,
                     blockSize);
         });
         // Line.moveChartsToFront();
@@ -168,11 +158,7 @@ export class ChartRenderer
             if(chart.type === 'donut')
                 Donut.render(block, data[chart.data.dataSource],
                     margin,
-                    chart.data.valueField.name,
-                    chart.data.keyField.name,
-                    chart.appearanceOptions,
-                    chart.cssClasses,
-                    chart.elementColors,
+                    chart,
                     blockSize);
         });
     }
@@ -185,13 +171,8 @@ export class ChartRenderer
                     data[chart.data.dataSource],
                     Scale.scales,
                     margin,
-                    chart.data.keyField.name,
-                    chart.data.valueField1.name,
-                    chart.data.valueField2.name,
                     keyAxisOrient,
-                    chart.cssClasses,
-                    chart.elementColors,
-                    blockSize,
+                    chart,
                     chartSettings.bar);
         })
     }

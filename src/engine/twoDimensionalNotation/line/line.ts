@@ -1,9 +1,9 @@
 import * as d3 from "d3";
-import { color, Color } from "d3";
-import { BlockMargin, DataRow } from "../../../model/model";
+import { BlockMargin, DataRow, TwoDimensionalChartModel } from "../../../model/model";
 import { Helper } from "../../helper";
 import { Scale, Scales } from "../../features/scale/scale";
 import { Block } from "../../block/block";
+import { Color } from "d3";
 
 interface LineChartCoordinate {
     x: number;
@@ -12,25 +12,26 @@ interface LineChartCoordinate {
 
 export class Line
 {
-    public static render(block: Block, scales: Scales, data: DataRow[], margin: BlockMargin, keyField: string, valueField: string, keyAxisOrient: string, cssClasses: string[], chartPalette: Color[]): void {
+    private static lineChartClass = 'line';
+
+    public static render(block: Block, scales: Scales, data: DataRow[], margin: BlockMargin, keyAxisOrient: string, chart: TwoDimensionalChartModel): void {
         const line = this.getLineGenerator();
         const lineCoordinate: LineChartCoordinate[] = this.getLineCoordinateByKeyOrient(keyAxisOrient,
             data,
             scales,
             margin,
-            keyField,
-            valueField);    
-        
+            chart.data.keyField.name,
+            chart.data.valueField.name);
         
         const path = block.getChartBlock()
             .append('path')
             .attr('d', line(lineCoordinate))
-            .attr('class', 'line')
+            .attr('class', this.lineChartClass)
             .style('clip-path', `url(${block.getClipPathId()})`);
     
-        Helper.setCssClasses(path, cssClasses);
-        Helper.setChartElementColor(path, chartPalette, 'stroke');
-        // this.renderDots(lineCoordinate, cssClasses, chartPalette);
+        Helper.setCssClasses(path, chart.cssClasses);
+        Helper.setChartElementColor(path, chart.elementColors, 'stroke');
+        // this.renderDots(block, lineCoordinate, cssClasses, chartPalette);
     }
 
     public static updateLineChartByValueAxis(block: Block, scales: Scales, data: DataRow[], margin: BlockMargin, keyField: string, valueField: string, keyAxisOrient: string, cssClasses: string[]): void {
@@ -43,7 +44,7 @@ export class Line
             valueField);
         
         block.getChartBlock()
-            .select(`.line${Helper.getCssClassesLine(cssClasses)}`)
+            .select(`.${this.lineChartClass}${Helper.getCssClassesLine(cssClasses)}`)
             .transition()
             .duration(1000)
                 .attr('d', line(lineCoordinate));
@@ -85,11 +86,11 @@ export class Line
             .selectAll(`.dot${Helper.getCssClassesLine(cssClasses)}`)
             .data(coordinates)
             .enter()
-            .append('circle')
-            .attr('class', 'dot')
-            .attr('cx', d => d.x)
-            .attr('cy', d => d.y)
-            .attr('r', 5.5);
+                .append('circle')
+                .attr('class', 'dot')
+                .attr('cx', d => d.x)
+                .attr('cy', d => d.y)
+                .attr('r', 5.5);
 
         Helper.setCssClasses(dots, cssClasses);
         Helper.setChartElementColor(dots, colorPalette, 'fill');

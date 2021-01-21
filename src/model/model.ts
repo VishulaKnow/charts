@@ -18,7 +18,7 @@ export interface DataSource {
 
 export interface BlockCanvas {
     size: Size;
-    class: string;
+    cssClass: string;
 }
 
 export interface Size {
@@ -57,7 +57,7 @@ export interface RangeModel {
 export interface AxisModelOptions {
     orient: Orient;
     translate: TranslateModel;
-    class: string;
+    cssClass: string;
     maxLabelSize: number;
     ticks: AxisTicksModel;
 }

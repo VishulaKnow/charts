@@ -1,6 +1,6 @@
 import * as d3 from "d3";
 import { Color } from "d3";
-import { BarChartSettings, BlockMargin, DataRow, Orient, Size } from "../../model/model";
+import { BarChartSettings, BlockMargin, DataRow, IntervalChartModel, Orient, Size } from "../../model/model";
 import { Block } from "../block/block";
 import { Helper } from "../helper";
 import { Scale, Scales } from "../features/scale/scale";
@@ -16,9 +16,7 @@ export class Gantt
 {
     private static ganttItemClass = 'gantt-item';
 
-    public static render(block: Block, data: DataRow[], scales: Scales, margin: BlockMargin, keyField: string, valueField1: string, valueField2: string, keyAxisOrient: Orient, cssClasses: string[], chartPalette: Color[], blockSize: Size, barSettings: BarChartSettings): void {
-        const groups = this.renderGanttGroups(block, scales, data, keyField, margin, blockSize);
-        
+    public static render(block: Block, data: DataRow[], scales: Scales, margin: BlockMargin, keyAxisOrient: Orient, chart: IntervalChartModel, barSettings: BarChartSettings): void {
         const ganttItems = block.getChartBlock()
             .selectAll(`.${this.ganttItemClass}`)
             .data(data)
@@ -30,17 +28,17 @@ export class Gantt
         const itemsAttrs = this.getItemsAttrsByKeyOrient(keyAxisOrient,
                 scales,
                 margin,
-                keyField,
-                valueField1,
-                valueField2,
+                chart.data.keyField.name,
+                chart.data.valueField1.name,
+                chart.data.valueField2.name,
                 barSettings);
 
         this.fillItemsAttrs(ganttItems, itemsAttrs);
 
-        Helper.setCssClasses(ganttItems, cssClasses);
-        Helper.setChartElementColor(ganttItems, chartPalette, 'fill');
+        Helper.setCssClasses(ganttItems, chart.cssClasses);
+        Helper.setChartElementColor(ganttItems, chart.elementColors, 'fill');
 
-        this.renderArrows(ganttItems, keyField, 'task1');
+        this.renderArrows(ganttItems, chart.data.keyField.name, 'task1');
     }
 
     private static fillItemsAttrs(ganttItems: d3.Selection<SVGRectElement, DataRow, d3.BaseType, unknown>, attrs: GanttItemsAttrs): void {
@@ -49,25 +47,6 @@ export class Gantt
             .attr('y', d => attrs.y(d))
             .attr('width', d => attrs.width(d))
             .attr('height', d => attrs.height(d));
-    }
-
-    private static renderGanttGroups(block: Block, scales: Scales, data: DataRow[], keyField: string, margin: BlockMargin, blockSize: Size): d3.Selection<d3.BaseType, unknown, SVGGElement, unknown> {
-        let ganttGroups = block.getChartBlock()
-            .selectAll('.gantt-group');
-
-        if(ganttGroups.size() === 0)
-            block.getChartBlock()
-                .selectAll('.gantt-group')
-                .data(data)
-                .enter()
-                    .append('g')
-                    .attr('class', 'gantt-group')
-                    .attr('x', d => scales.scaleKey(d[keyField]) + margin.left)
-                    .attr('y', margin.top)
-                    .attr('width', Scale.getScaleWidth(scales.scaleKey))
-                    .attr('height', blockSize.height - margin.top - margin.bottom);
-
-        return ganttGroups;
     }
 
     private static getItemsAttrsByKeyOrient(axisOrient: Orient, scales: Scales, margin: BlockMargin, keyField: string, valueField1: string, valueField2: string, barSettings: BarChartSettings): GanttItemsAttrs {
@@ -112,5 +91,24 @@ export class Gantt
             .filter(d => d[keyField] === keyValue);
 
         console.log(filteredItems.size());
+    }
+
+    private static renderGanttGroups(block: Block, scales: Scales, data: DataRow[], keyField: string, margin: BlockMargin, blockSize: Size): d3.Selection<d3.BaseType, unknown, SVGGElement, unknown> {
+        let ganttGroups = block.getChartBlock()
+            .selectAll('.gantt-group');
+
+        if(ganttGroups.size() === 0)
+            block.getChartBlock()
+                .selectAll('.gantt-group')
+                .data(data)
+                .enter()
+                    .append('g')
+                    .attr('class', 'gantt-group')
+                    .attr('x', d => scales.scaleKey(d[keyField]) + margin.left)
+                    .attr('y', margin.top)
+                    .attr('width', Scale.getScaleWidth(scales.scaleKey))
+                    .attr('height', blockSize.height - margin.top - margin.bottom);
+
+        return ganttGroups;
     }
 }

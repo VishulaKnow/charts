@@ -1,6 +1,6 @@
 import * as d3 from "d3";
 import { Color } from "d3";
-import { BarChartSettings, BlockMargin, DataRow, Orient, Size } from "../../../model/model";
+import { BarChartSettings, BlockMargin, DataRow, Orient, Size, TwoDimensionalChartModel } from "../../../model/model";
 import { ValueFormatter } from "../../valueFormatter";
 import { Helper } from "../../helper";
 import { Scale, Scales } from "../../features/scale/scale";
@@ -15,34 +15,37 @@ interface BarAttrs {
 
 export class Bar
 {
-    public static render(block: Block, scales: Scales, data: DataRow[], margin: BlockMargin, keyField: string, valueField: string, keyAxisOrient: Orient, cssClasses: string[], chartPalette: Color[], blockSize: Size, barChartsAmount: number, barSettings: BarChartSettings): void {
+    private static barItemClass  = 'bar-item'
+
+    public static render(block: Block, scales: Scales, data: DataRow[], margin: BlockMargin, keyAxisOrient: Orient, chart: TwoDimensionalChartModel, blockSize: Size, barChartsAmount: number, barSettings: BarChartSettings): void {
         this.renderBarGroups(block, data);
         
         const bars = block.getChartBlock()
             .selectAll('.bar-group')
             .data(data)
                 .append('rect')
-                .attr('class', 'bar-item')
+                .attr('class', this.barItemClass)
                 .style('clip-path', `url(${block.getClipPathId()})`);
 
-        const barAttrs = this.getBarAttrsByKeyOrient(block, keyAxisOrient,
+        const barAttrs = this.getBarAttrsByKeyOrient(block,
+            keyAxisOrient,
             scales,
             margin,
-            keyField,
-            valueField,
+            chart.data.keyField.name,
+            chart.data.valueField.name,
             blockSize,
             barChartsAmount,
             barSettings);
     
         this.fillBarAttrsByKeyOrient(bars, barAttrs);
         
-        Helper.setCssClasses(bars, cssClasses);
-        Helper.setChartElementColor(bars, chartPalette, 'fill');
+        Helper.setCssClasses(bars, chart.cssClasses);
+        Helper.setChartElementColor(bars, chart.elementColors, 'fill');
     }
 
     public static updateBarChartByValueAxis(block: Block, scales: Scales, margin: BlockMargin, valueField: string, keyAxisOrient: string, blockSize: Size, cssClasses: string[]): void {
         const bars = block.getChartBlock()
-            .selectAll(`.bar-item${Helper.getCssClassesLine(cssClasses)}`) as d3.Selection<SVGRectElement, DataRow, d3.BaseType, unknown>;
+            .selectAll(`.${this.barItemClass}${Helper.getCssClassesLine(cssClasses)}`) as d3.Selection<SVGRectElement, DataRow, d3.BaseType, unknown>;
     
         this.fillBarAttrsByKeyOrientWithTransition(bars,
             keyAxisOrient,
@@ -51,6 +54,13 @@ export class Bar
             valueField,
             blockSize,
             1000);
+    }
+
+    public static getAllBarItems(block: Block): d3.Selection<d3.BaseType, DataRow, d3.BaseType, unknown> {
+        const items = block.getSvg()
+            .selectAll(`rect.${this.barItemClass}`);
+
+        return items;
     }
 
     private static renderBarGroups(block: Block, data: DataRow[]): void {
@@ -67,7 +77,7 @@ export class Bar
     }
 
     private static getBarAttrsByKeyOrient(block: Block, axisOrient: Orient, scales: Scales, margin: BlockMargin, keyField: string, valueField: string, blockSize: Size, barChartsAmount: number, barSettings: BarChartSettings): BarAttrs {
-        const chartIndex = block.getSvg().select('.bar-group').selectAll('.bar-item').size() - 1;
+        const chartIndex = block.getSvg().select('.bar-group').selectAll(`.${this.barItemClass}`).size() - 1;
         const barDistance = barSettings.barDistance;
         const barStep = (Scale.getScaleWidth(scales.scaleKey) - barDistance * (barChartsAmount - 1)) / barChartsAmount;
         const barSize = barStep > barSettings.barMaxSize ? barSettings.barMaxSize : barStep;

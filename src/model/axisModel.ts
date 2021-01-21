@@ -9,7 +9,7 @@ interface LabelSize {
 
 export class AxisModel
 {
-    public static getLabelSize(legendMaxWidth: number, labelTexts: any[]): LabelSize {
+    public static getLabelSize(labelMaxWidth: number, labelTexts: any[]): LabelSize {
         const labelSize = {
             width: 0,
             height: 0
@@ -27,7 +27,7 @@ export class AxisModel
         document.querySelector(`.${CLASSES.mainWrapper}`).append(textBlock);
         maxWidth = textBlock.getBoundingClientRect().width;
         labelSize.height = textBlock.getBoundingClientRect().height;
-        labelSize.width = maxWidth > legendMaxWidth ? legendMaxWidth : maxWidth;
+        labelSize.width = maxWidth > labelMaxWidth ? labelMaxWidth : maxWidth;
         textBlock.remove();
         return labelSize;
     }

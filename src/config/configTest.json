@@ -37,9 +37,9 @@
       "charts": [
         {
           "title": "2020",
-          "type": "bar",
+          "type": "line",
           "legend": {
-            "position": "right"
+            "position": "bottom"
           },
           "data": {
             "dataSource": "dataSet_data",
@@ -70,9 +70,9 @@
         },
         {
           "title": "2021",
-          "type": "bar",
+          "type": "line",
           "legend": {
-            "position": "right"
+            "position": "bottom"
           },
           "data": {
             "dataSource": "dataSet_data2",

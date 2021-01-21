@@ -14,13 +14,14 @@ export class DataManagerModel
     }
 
     public static getDataScope(config: Config, margin: BlockMargin, data: DataSource, designerConfig: DesignerConfig): DataScope {
-        if(config.options.type === '2d') {
-            const barCharts = config.options.charts.filter((chart: TwoDimensionalChart) => chart.type === 'bar');
-            if(barCharts.length !== 0) {
-                const axisLength = AxisModel.getAxisLength(barCharts[0].orientation, margin, config.canvas.size);
-                const dataLength = data[barCharts[0].data.dataSource].length;
-                const limit = this.getDataLimitByBarSize(barCharts.length, dataLength, axisLength, designerConfig.canvas.chartOptions.bar);
-                const allowableKeys = this.getDataValuesByKeyField(data, barCharts[0]).slice(0, limit);
+        if(config.options.type === '2d' || config.options.type === 'interval') {
+            const charts = (config.options.charts as Array<TwoDimensionalChart | IntervalChart>).filter((chart: TwoDimensionalChart | IntervalChart) => chart.type === 'bar' || chart.type === 'gantt');
+            if(charts.length !== 0) {
+                const axisLength = AxisModel.getAxisLength(charts[0].orientation, margin, config.canvas.size);
+                const uniqueKeys = ModelHelper.getUniqueValues(data[charts[0].data.dataSource].map(d => d[charts[0].data.keyField.name]));
+                const dataLength = uniqueKeys.length;
+                const limit = this.getDataLimitByBarSize(charts.length, dataLength, axisLength, designerConfig.canvas.chartOptions.bar);
+                const allowableKeys = uniqueKeys.slice(0, limit);
                 
                 return {
                     allowableKeys,
@@ -36,17 +37,16 @@ export class DataManagerModel
             const radius = ModelHelper.getDonutRadius(margin, config.canvas.size);
             let sum = ModelHelper.getValuesSum(values);
 
-            const allowableKeys: string[] = [];
-
             if(radius <= 0) {
                 return {
-                    allowableKeys,
+                    allowableKeys: [],
                     hidedRecordsAmount: dataset.length
                 }
             }   
 
-            const minAngle = ModelHelper.getMinAngleByLength(designerConfig.canvas.chartOptions.donut.minPartSize, radius);
-                        
+            const allowableKeys: string[] = [];
+
+            const minAngle = ModelHelper.getMinAngleByLength(designerConfig.canvas.chartOptions.donut.minPartSize, radius);            
             dataset.forEach((dataRow: DataRow) => {
                 const angle = ModelHelper.getAngleByValue(dataRow[valueField], sum);
                 if(angle > minAngle)
@@ -56,20 +56,6 @@ export class DataManagerModel
             return {
                 allowableKeys,
                 hidedRecordsAmount: dataset.length - allowableKeys.length 
-            }
-        } else if(config.options.type === 'interval') {
-            const ganttCharts = config.options.charts.filter(chart => chart.type === 'gantt');
-            if(ganttCharts.length !== 0) {
-                const axisLength = AxisModel.getAxisLength(ganttCharts[0].orientation, margin, config.canvas.size);
-                const uniqueKeys = ModelHelper.getUniqueValues(data[ganttCharts[0].data.dataSource].map(d => d[ganttCharts[0].data.keyField.name]));
-                const dataLength = uniqueKeys.length;
-                const limit = this.getDataLimitByBarSize(ganttCharts.length, dataLength, axisLength, designerConfig.canvas.chartOptions.bar);
-                const allowableKeys = uniqueKeys.slice(0, limit);
-                
-                return {
-                    allowableKeys,
-                    hidedRecordsAmount: dataLength - allowableKeys.length
-                }
             }
         }
 
@@ -81,13 +67,6 @@ export class DataManagerModel
 
     public static getDataValuesByKeyField(data: DataSource, chart: TwoDimensionalChart | PolarChart | IntervalChart): string[] {
         return data[chart.data.dataSource].map(dataRow => dataRow[chart.data.keyField.name]);
-    }
-
-    private static getDataLengthWithUnique(keyField: string, dataSourceName: string, data: DataSource): number {
-        const keys = data[dataSourceName].map(row => row[keyField]);
-        const uniqueKeys = keys.filter((keyValue, index, self) => self.indexOf(keyValue) === index);
-       
-        return uniqueKeys.length;
     }
 
     private static getScopedData(data: DataSource, allowableKeys: string[], config: Config): DataSource {

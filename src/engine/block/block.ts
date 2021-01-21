@@ -12,11 +12,14 @@ export class Block
 
     private chartBlockClass = 'chart-block';
 
+    public parentElementSelector: string;
+
     constructor(cssClass: string, parentElementSelector: string) {
         this.wrapperCssClasses = Helper.getCssClassesArray(cssClass);
         this.svgCssClasses = Helper.getCssClassesArray(cssClass);
         this.wrapperCssClasses = BlockHelper.getFormattedCssClassesForWrapper(this.wrapperCssClasses);
         this.parentElement = d3.select(parentElementSelector);
+        this.parentElementSelector = parentElementSelector;
     }
 
     public renderSvg(cssClass: string, blockSize: Size): void {
@@ -28,11 +31,11 @@ export class Block
     }
 
     public renderWrapper(blockSize: Size): void {
-        this.wrapper = d3.select('.main-wrapper')
+        this.wrapper = this.parentElement
             .append('div')
             .attr('class', this.wrapperCssClasses.join(' '))
-            .attr('width', blockSize.width)
-            .attr('height', blockSize.height)
+            .style('width', blockSize.width + 'px')
+            .style('height', blockSize.height + 'px')
             .style('position', 'relative');
     }
 

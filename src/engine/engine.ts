@@ -8,9 +8,9 @@ import { Model } from '../model/model';
 export default class Engine {
     private block: Block;
 
-    public render(model: Model, data: any): void {       
+    public render(model: Model, data: any, parentSelector: string): void {       
         ValueFormatter.format = model.dataFormat.formatters;
-        this.block = new Block(model.blockCanvas.class, '.main-wrapper');
+        this.block = new Block(model.blockCanvas.cssClass, parentSelector);
         this.block.renderWrapper(model.blockCanvas.size);
         if(model.options.type === '2d')
             ChartRenderer.render2D(this.block, model, data);
@@ -22,7 +22,7 @@ export default class Engine {
 
     public updateFullBlock(model: Model, data: any): void {
         this.clearBlock();
-        this.render(model, data);
+        this.render(model, data, this.block.parentElementSelector);
     }
 
     public updateValueAxis(model: Model, data: any): void {
