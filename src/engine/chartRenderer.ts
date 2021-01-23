@@ -174,7 +174,7 @@ export class ChartRenderer
                     keyAxisOrient,
                     chart,
                     chartSettings.bar);
-        })
+        });
     }
 
     private static updateChartsByValueAxis(block: Block, charts: TwoDimensionalChartModel[], scales: Scales, data: DataSource, margin: BlockMargin, keyAxisOrient: string, blockSize: Size): void {

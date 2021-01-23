@@ -69,6 +69,7 @@ export class Block
     public renderClipPath(margin: BlockMargin, blockSize: Size): void {
         const attributes = BlockHelper.getChartBlockAttributes(blockSize, margin);
         this.getSvg()
+            .append('defs')
             .append('clipPath')
             .attr('id', `chart-block-${this.svgCssClasses.join('-')}`)
             .append('rect')

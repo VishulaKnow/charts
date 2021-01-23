@@ -25,7 +25,12 @@ export class Bar
             .data(data)
                 .append('rect')
                 .attr('class', this.barItemClass)
-                .style('clip-path', `url(${block.getClipPathId()})`);
+                .style('clip-path', `url(${block.getClipPathId()})`)
+                
+        // bars.on('click', function(event, barData) {
+        //         console.log((block.getChartBlock().selectAll('.bar-item') as d3.Selection<SVGRectElement, DataRow, SVGGElement, unknown>)
+        //             .filter(d => d[chart.data.keyField.name] === barData[chart.data.keyField.name]).nodes());
+        //     });
 
         const barAttrs = this.getBarAttrsByKeyOrient(block,
             keyAxisOrient,

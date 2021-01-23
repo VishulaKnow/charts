@@ -17,8 +17,6 @@ export enum AxisType {
 }
 
 export const CLASSES = {
-    mainWrapper: 'main-wrapper',
-
     dataLabel: 'data-label',
     legendLabel: 'legend-label',
     legendColor: 'legend-circle',

@@ -23,6 +23,7 @@ export class GridLine
             const lineLength = this.getGridLineLength('key', keyAxis, valueAxis, blockSize, margin);
             const lineAttributes = this.getLineAttributes(keyAxis, lineLength);
             this.renderLine(block, keyAxis, lineAttributes);
+            this.removeGridLineOnValueAxis(block, keyAxis, valueAxis);
         }
     }
 
@@ -80,5 +81,21 @@ export class GridLine
         if(axis.orient === 'right' || axis.orient === 'bottom')
             axisLength = -axisLength;
         return axisLength;
+    }
+
+    private static removeGridLineOnValueAxis(block: Block, keyAxis: AxisModelOptions, valueAxis: AxisModelOptions): void {
+        if(valueAxis.orient === 'left') {           
+            block.getSvg()
+                .select(`.${keyAxis.cssClass}`)
+                .select('g.tick')
+                .select(`.${this.gridLineClass}`)
+                .remove();
+        } else if(valueAxis.orient === 'right') {
+            block.getSvg()
+                .select(`.${keyAxis.cssClass}`)
+                .select('g.tick:last-of-type')
+                .select(`.${this.gridLineClass}`)
+                .remove();
+        }
     }
 }

@@ -19,7 +19,7 @@ export class LegendCanvasModel
             itemWrapper.append(colorBlock, textBlock);
             legendWrapper.append(itemWrapper)
         });
-        document.querySelector(`.${CLASSES.mainWrapper}`).append(legendWrapper);
+        document.body.append(legendWrapper);
         const height = legendWrapper.offsetHeight;
         legendWrapper.remove();
         return height;
@@ -35,7 +35,7 @@ export class LegendCanvasModel
         textBlock.classList.add(CLASSES.legendLabel);
         textBlock.textContent = text;
         itemWrapper.append(colorBlock, textBlock);
-        document.querySelector(`.${CLASSES.mainWrapper}`).append(itemWrapper);
+        document.body.append(itemWrapper);
         const sumWidth = itemWrapper.getBoundingClientRect().width 
             + parseFloat(window.getComputedStyle(itemWrapper, null).getPropertyValue('margin-left'))
             + parseFloat(window.getComputedStyle(itemWrapper, null).getPropertyValue('margin-right'));

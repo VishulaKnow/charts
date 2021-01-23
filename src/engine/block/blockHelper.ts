@@ -1,4 +1,5 @@
 import { BlockMargin, Size } from "../../model/model";
+import { ValueFormatter } from "../valueFormatter";
 
 export interface GAttributes {
     x: number;
@@ -13,8 +14,8 @@ export class BlockHelper
         return {
             x: margin.left,
             y: margin.top,
-            width: blockSize.width - margin.left - margin.right,
-            height: blockSize.height - margin.top - margin.bottom
+            width: ValueFormatter.getValueOrZero(blockSize.width - margin.left - margin.right),
+            height: ValueFormatter.getValueOrZero(blockSize.height - margin.top - margin.bottom)
         }
     }
 

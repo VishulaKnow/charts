@@ -24,7 +24,7 @@ export class AxisModel
                 maxLabel = text;
         });
         textBlock.textContent = maxLabel;
-        document.querySelector(`.${CLASSES.mainWrapper}`).append(textBlock);
+        document.body.append(textBlock);
         maxWidth = textBlock.getBoundingClientRect().width;
         labelSize.height = textBlock.getBoundingClientRect().height;
         labelSize.width = maxWidth > labelMaxWidth ? labelMaxWidth : maxWidth;
