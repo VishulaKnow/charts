@@ -15,12 +15,30 @@ engine.render(model, getPreparedData(model, data, config), '.main-wrapper');
 new Listeners(engine, config, designerConfig, data);
 
 
-// const config2 = require('./config/configurator.json');
-// const model2 = assembleModel(config2, data);
-// const engine2 = new Engine();
-// engine2.render(model2, getPreparedData(model2, data, config2), '.main-wrapper2');
+
 
 // const config3 = require('./config/configTest.json');
 // const model3 = assembleModel(config3, data);
 // const engine3 = new Engine();
 // engine3.render(model3, getPreparedData(model3, data, config3), '.main-wrapper2');
+
+
+// async function sendRequest(url: string) {
+//     const response = await fetch(url);
+//     const json  = await response.json();
+
+//     return json;
+// }
+
+// async function render() {
+//     console.log(await sendRequest('http://flight-pool-api/api/config'));
+//     const config2 = await sendRequest('http://flight-pool-api/api/config');
+//     const data2 = await sendRequest('http://flight-pool-api/api/data'); 
+//     const model2 = assembleModel(config2, data2);
+//     const engine2 = new Engine();
+//     engine2.render(model2, getPreparedData(model2, data2, config2), '.main-wrapper2');
+// }
+
+// render();
+
+
