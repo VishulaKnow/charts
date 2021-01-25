@@ -52,13 +52,11 @@ export class Scale
         const bandSize = scale.bandwidth();
         if(bandSettings.groupDistance < bandSize) {
             scale.paddingInner(bandSettings.groupDistance / bandSize);
+            scale.paddingOuter(bandSettings.groupDistance / bandSize / 2);
         }
-        if(scale.bandwidth() > bandSettings.barMaxSize) {
-            scale.paddingOuter((scale.bandwidth() - bandSettings.barMaxSize) / scale.bandwidth());
-        }
-        console.log(bandSettings);
-        console.log(scale.bandwidth(), scale.paddingInner(), scale.paddingOuter());
-        
+        // if(scale.bandwidth() > bandSettings.barMaxSize) {
+        //     scale.paddingOuter((scale.bandwidth() - bandSettings.barMaxSize) / scale.bandwidth());
+        // }
 
         return scale;
     }

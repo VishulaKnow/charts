@@ -48,15 +48,15 @@ export class Bar
         Helper.setChartElementColor(bars, chart.elementColors, 'fill');
     }
 
-    public static updateBarChartByValueAxis(block: Block, scales: Scales, margin: BlockMargin, valueField: string, keyAxisOrient: string, blockSize: Size, cssClasses: string[]): void {
+    public static updateBarChartByValueAxis(block: Block, scales: Scales, margin: BlockMargin, keyAxisOrient: string, chart: TwoDimensionalChartModel, blockSize: Size): void {
         const bars = block.getChartBlock()
-            .selectAll(`.${this.barItemClass}${Helper.getCssClassesLine(cssClasses)}`) as d3.Selection<SVGRectElement, DataRow, d3.BaseType, unknown>;
+            .selectAll(`.${this.barItemClass}${Helper.getCssClassesLine(chart.cssClasses)}`) as d3.Selection<SVGRectElement, DataRow, d3.BaseType, unknown>;
     
         this.fillBarAttrsByKeyOrientWithTransition(bars,
             keyAxisOrient,
             scales.scaleValue,
             margin,
-            valueField,
+            chart.data.valueField.name,
             blockSize,
             1000);
     }

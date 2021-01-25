@@ -34,17 +34,17 @@ export class Line
         // this.renderDots(block, lineCoordinate, cssClasses, chartPalette);
     }
 
-    public static updateLineChartByValueAxis(block: Block, scales: Scales, data: DataRow[], margin: BlockMargin, keyField: string, valueField: string, keyAxisOrient: string, cssClasses: string[]): void {
+    public static updateLineChartByValueAxis(block: Block, scales: Scales, data: DataRow[], margin: BlockMargin, keyAxisOrient: string, chart: TwoDimensionalChartModel): void {
         const line = this.getLineGenerator();
         const lineCoordinate: LineChartCoordinate[] = this.getLineCoordinateByKeyOrient(keyAxisOrient,
             data,
             scales,
             margin,
-            keyField,
-            valueField);
+            chart.data.keyField.name,
+            chart.data.valueField.name);
         
         block.getChartBlock()
-            .select(`.${this.lineChartClass}${Helper.getCssClassesLine(cssClasses)}`)
+            .select(`.${this.lineChartClass}${Helper.getCssClassesLine(chart.cssClasses)}`)
             .transition()
             .duration(1000)
                 .attr('d', line(lineCoordinate));

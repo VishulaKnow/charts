@@ -92,34 +92,6 @@ export class ChartRenderer
             RecordOverflowAlert.render(block, model.dataSettings.scope.hidedRecordsAmount);
     }
 
-    public static updateByValueAxis(block: Block, model: Model, data: DataSource) {
-        const options = <TwoDimensionalOptionsModel>model.options;
-    
-        Scale.fillScales(options.scale.scaleKey,
-            options.scale.scaleValue,
-            model.chartSettings.bar);
-    
-        Axis.updateValueAxisDomain(block, 
-            Scale.scales.scaleValue,
-            options.scale.scaleValue,
-            options.axis.valueAxis);
-
-        GridLine.rerender(block, 
-            options.additionalElements.gridLine.flag,
-            options.axis.keyAxis, 
-            options.axis.valueAxis, 
-            model.blockCanvas.size, 
-            model.chartBlock.margin);
-        
-        this.updateChartsByValueAxis(block, 
-            options.charts,
-            Scale.scales,
-            data,
-            model.chartBlock.margin,
-            options.axis.keyAxis.orient,
-            model.blockCanvas.size);
-    }
-
     private static render2DCharts(block: Block, charts: TwoDimensionalChartModel[], scales: Scales, data: DataSource, margin: BlockMargin, keyAxisOrient: Orient, barSettings: BarChartSettings, blockSize: Size) {      
         block.renderClipPath(margin, blockSize);
         block.renderChartBlock(blockSize, margin);
@@ -177,25 +149,50 @@ export class ChartRenderer
         });
     }
 
+    public static updateByValueAxis(block: Block, model: Model, data: DataSource) {
+        const options = <TwoDimensionalOptionsModel>model.options;
+    
+        Scale.fillScales(options.scale.scaleKey,
+            options.scale.scaleValue,
+            model.chartSettings.bar);
+    
+        Axis.updateValueAxisDomain(block, 
+            Scale.scales.scaleValue,
+            options.scale.scaleValue,
+            options.axis.valueAxis);
+
+        GridLine.rerender(block, 
+            options.additionalElements.gridLine.flag,
+            options.axis.keyAxis, 
+            options.axis.valueAxis, 
+            model.blockCanvas.size, 
+            model.chartBlock.margin);
+        
+        this.updateChartsByValueAxis(block, 
+            options.charts,
+            Scale.scales,
+            data,
+            model.chartBlock.margin,
+            options.axis.keyAxis.orient,
+            model.blockCanvas.size);
+    }
+
     private static updateChartsByValueAxis(block: Block, charts: TwoDimensionalChartModel[], scales: Scales, data: DataSource, margin: BlockMargin, keyAxisOrient: string, blockSize: Size): void {
         charts.forEach((chart: TwoDimensionalChartModel) => {
             if(chart.type === 'bar')
                 Bar.updateBarChartByValueAxis(block, 
                     scales,
                     margin,
-                    chart.data.valueField.name,
                     keyAxisOrient,
-                    blockSize,
-                    chart.cssClasses);
+                    chart,
+                    blockSize);
             else if(chart.type === 'line') {
                 Line.updateLineChartByValueAxis(block,
                     scales,
                     data[chart.data.dataSource],
                     margin,
-                    chart.data.keyField.name,
-                    chart.data.valueField.name,
                     keyAxisOrient,
-                    chart.cssClasses);
+                    chart);
             }   
             else if(chart.type === 'area')
                 Area.updateAreaChartByValueAxis(block, 
