@@ -55,8 +55,8 @@ export class Scale
             scale.paddingOuter(bandSettings.groupDistance / bandSize / 2);
         }
         // if(scale.bandwidth() > bandSettings.barMaxSize) {
-        //     scale.paddingOuter((scale.bandwidth() - bandSettings.barMaxSize) / scale.bandwidth());
-        // }
+        //     scale.paddingOuter(5);
+        // }       
 
         return scale;
     }

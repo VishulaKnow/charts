@@ -48,8 +48,7 @@ export class Block
             .attr('x', attributes.x)
             .attr('y', attributes.y)
             .attr('width', attributes.width)
-            .attr('height', attributes.height)
-            .style('overflow-x', 'hidden');
+            .attr('height', attributes.height);
     }
 
     public getSvg(): d3.Selection<d3.BaseType, unknown, HTMLElement, any> {
@@ -57,7 +56,6 @@ export class Block
     }
 
     public getWrapper(): d3.Selection<d3.BaseType, unknown, HTMLElement, any> {
-        // return this.parentElement.select(Helper.getCssClassesLine(this.wrapperCssClasses));
         return this.wrapper;
     }
 
@@ -71,7 +69,7 @@ export class Block
         this.getSvg()
             .append('defs')
             .append('clipPath')
-            .attr('id', `chart-block-${this.svgCssClasses.join('-')}`)
+            .attr('id', `chart-block-clippath-${this.svgCssClasses.join('-')}`)
             .append('rect')
             .attr('x', attributes.x)
             .attr('y', attributes.y)
@@ -80,6 +78,6 @@ export class Block
     }
 
     public getClipPathId(): string {
-        return `#chart-block-${this.svgCssClasses.join('-')}`;
+        return `#chart-block-clippath-${this.svgCssClasses.join('-')}`;
     }
 }

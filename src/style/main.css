@@ -40,7 +40,7 @@ h3.title {
 }
 .bar, .area, .donut {
     fill: steelblue;
-    stroke: none
+    stroke: none;
 }
 .line {
     fill: none;

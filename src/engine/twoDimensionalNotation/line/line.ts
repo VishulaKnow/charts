@@ -78,6 +78,7 @@ export class Line
                     y: Scale.getScaleKeyPoint(scales.scaleKey, d[keyField]) + margin.top
                 });
             });
+            
         return lineCoordinate;
     }
 

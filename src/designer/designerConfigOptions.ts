@@ -6,7 +6,7 @@ const designerConfig: DesignerConfig = {
         axisLabel: {
             maxSize: {
                 orthogonal: 20,
-                main: 50
+                main: 70
             }
         },
         chartBlockMargin: {

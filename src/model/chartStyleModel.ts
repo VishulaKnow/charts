@@ -6,8 +6,9 @@ export class ChartStyleModel
 {
     public static getCssClasses(chartType: ChartType, chartIndex: number): string[] {
         const cssClasses = [`chart-${chartIndex}`];
-        cssClasses.concat([chartType]);
-        return cssClasses
+        cssClasses.push(chartType);
+
+        return cssClasses;
     }
     
     public static getElementColorPallete(palette: Color[], notation: ChartNotation, elementsAmount: number, chartIndex: number = 0): Color[] {

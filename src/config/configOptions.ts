@@ -39,7 +39,7 @@ const configCars: Config = {
         charts: [
             {
                 title: 'Car prices (year 2021) very very long title of chart',
-                type: 'line',
+                type: 'bar',
                 legend: {
                     position: 'top'
                 },
@@ -72,7 +72,7 @@ const configCars: Config = {
             },
             {
                 title: 'Car prices (year2020)',
-                type: 'line',
+                type: 'bar',
                 legend: {
                     position: 'top'
                 },
