@@ -1,5 +1,5 @@
 import * as d3 from 'd3'
-import { RangeModel, ScaleKeyModel, ScaleValueModel } from '../../../model/model';
+import { BarChartSettings, RangeModel, ScaleKeyModel, ScaleValueModel } from '../../../model/model';
 
 export interface Scales {
     scaleKey: d3.AxisScale<any>;
@@ -13,20 +13,16 @@ export class Scale
         scaleValue: null
     }
 
-    public static fillScales(scaleKey: ScaleKeyModel, scaleValue: ScaleValueModel, scaleKeyPadding: number): void {
+    public static fillScales(scaleKey: ScaleKeyModel, scaleValue: ScaleValueModel, bandSettings: BarChartSettings): void {
         if(scaleKey.type === 'band')
-            this.scales.scaleKey = this.getScaleBand(scaleKey.domain,
-                scaleKey.range,
-                scaleKeyPadding);
+            this.scales.scaleKey = this.getScaleBand(scaleKey.domain, scaleKey.range, bandSettings);
         else if(scaleKey.type === 'point')
-            this.scales.scaleKey = this.getScalePoint(scaleKey.domain,
-                scaleKey.range);
+            this.scales.scaleKey = this.getScalePoint(scaleKey.domain,  scaleKey.range);
 
         if(scaleValue.type === 'linear')
-            this.scales.scaleValue = this.getScaleLinear(scaleValue.domain,
-                scaleValue.range);
+            this.scales.scaleValue = this.getScaleLinear(scaleValue.domain, scaleValue.range);
         else if(scaleValue.type === 'datetime')
-                this.scales.scaleValue = this.getScaleTime(scaleValue.domain, scaleValue.range);
+            this.scales.scaleValue = this.getScaleTime(scaleValue.domain, scaleValue.range);
     }
 
     public static getScaleWidth(scale: d3.AxisScale<any>): number {
@@ -48,16 +44,22 @@ export class Scale
         return scale(value);
     }
 
-    private static getScaleBand(domain: string[], range: RangeModel, scalePadding: number): d3.ScaleBand<string> {
+    private static getScaleBand(domain: string[], range: RangeModel, bandSettings: BarChartSettings): d3.ScaleBand<string> {
         const scale = d3.scaleBand()
             .domain(domain)
             .range([range.start, range.end]);
                 
         const bandSize = scale.bandwidth();
-        if(scalePadding < bandSize) {
-            scale.paddingInner(scalePadding / bandSize);
-            scale.paddingOuter(scalePadding / 2 / bandSize);
+        if(bandSettings.groupDistance < bandSize) {
+            scale.paddingInner(bandSettings.groupDistance / bandSize);
         }
+        if(scale.bandwidth() > bandSettings.barMaxSize) {
+            scale.paddingOuter((scale.bandwidth() - bandSettings.barMaxSize) / scale.bandwidth());
+        }
+        console.log(bandSettings);
+        console.log(scale.bandwidth(), scale.paddingInner(), scale.paddingOuter());
+        
+
         return scale;
     }
     

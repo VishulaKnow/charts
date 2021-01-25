@@ -19,7 +19,7 @@ export class ChartRenderer
     
         Scale.fillScales(options.scale.scaleKey,
             options.scale.scaleValue,
-            model.chartSettings.bar.groupDistance);        
+            model.chartSettings.bar);        
             
         block.renderSvg(model.blockCanvas.cssClass, model.blockCanvas.size);
     
@@ -72,7 +72,7 @@ export class ChartRenderer
 
         Scale.fillScales(options.scale.scaleKey,
             options.scale.scaleValue,
-            model.chartSettings.bar.groupDistance);    
+            model.chartSettings.bar);    
 
         Axis.render(block, Scale.scales.scaleValue, options.scale.scaleValue, options.axis.valueAxis);
         Axis.render(block, Scale.scales.scaleKey, options.scale.scaleKey, options.axis.keyAxis);
@@ -97,7 +97,7 @@ export class ChartRenderer
     
         Scale.fillScales(options.scale.scaleKey,
             options.scale.scaleValue,
-            model.chartSettings.bar.groupDistance);
+            model.chartSettings.bar);
     
         Axis.updateValueAxisDomain(block, 
             Scale.scales.scaleValue,
