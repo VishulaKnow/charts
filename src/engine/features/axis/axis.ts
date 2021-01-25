@@ -44,7 +44,7 @@ export class Axis
             .duration(1000)
                 .call(axis.bind(this));
 
-        this.setAxisLabelPaddingByOrient(axisElement, axisOptions);
+        // this.setAxisLabelPaddingByOrient(axisElement, axisOptions);
     }
 
     private static setAxisLabelPaddingByOrient(axisElement: d3.Selection<SVGGElement, unknown, HTMLElement, any>, axisOptions: AxisModelOptions): void {
