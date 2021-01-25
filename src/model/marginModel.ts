@@ -3,10 +3,10 @@ import { DesignerConfig } from "../designer/designerConfig";
 import { AxisModel } from "./axisModel";
 import { DataManagerModel } from "./dataManagerModel";
 import { LegendModel } from "./legendModel/legendModel";
-import { BlockMargin, DataScope, DataSource, IntervalChartModel, IntervalOptionsModel, LegendBlockModel, Orient, PolarChartModel, PolarOptionsModel, TwoDimensionalChartModel, TwoDimensionalOptionsModel } from "./model";
+import { BlockMargin, DataScope, DataSource, LegendBlockModel, Orient } from "./model";
 import { AxisType } from "./modelOptions";
 
-const AXIS_LABEL_PADDING = 9;
+const AXIS_LABEL_PADDING = 15;
 
 export class MarginModel
 {

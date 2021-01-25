@@ -54,21 +54,32 @@ h3.title {
     font-style: normal;
     font-weight: 300;
     font-size: 12px;
+    line-height: 140.62%;
+    color: #444444;
 }
-.legend-item {
-    margin: 5px;
+.legend-item:not(:first-of-type) {
+    margin-left: 20px;
 }
 .legend-label {
     font-size: 12px;
     font-family: "Roboto", sans-serif;
+    font-weight: 300;
+    color: #444444;
+    line-height: 140.62%;
 }
 .legend-circle {
     display: inline-block;
-    width: 12px;
-    height: 12px;
-    background-color: red;
+    width: 11px;
+    height: 11px;
     border-radius: 50%;
-    margin-right: 9px;
+    margin-right: 8px;
+}
+.tooltip-circle {
+    display: inline-block;
+    width: 11px;
+    height: 11px;
+    border-radius: 50%;
+    margin-right: 13px;
 }
 .tooltip-block {
     pointer-events: none;
@@ -82,7 +93,7 @@ h3.title {
     font-family: "Roboto", sans-serif;
     line-height: 1;
     font-weight: bold;
-    padding: 12px;
+    padding: 15px 17px 15px 12px;
     background: white;
     color: black;
     border-radius: 2px;
@@ -96,6 +107,19 @@ h3.title {
     width: 20px;
     height: 20px;
     transform: rotate(45deg);
+}
+.tooltip-group {
+    display: flex;
+}
+.tooltip-color {
+    line-height: 19.69px;
+}
+.tooltip-text-item {
+    font-family: "Roboto" sans-serif;
+    font-weight: 500;
+    font-style: normal;
+    font-size: 14px;
+    line-height: 19.69px;
 }
 .tooltip-chart-item {
     margin: 5px 0;
@@ -113,22 +137,14 @@ h3.title {
 
 .grid-line {
     stroke: #D2D2D2;
-    /* stroke-dasharray: 3; */
+    stroke-dasharray: 3;
 }
-
-/* .key-axis .domain, .key-axis .tick line {
-    stroke: #e0e0e0;
-    stroke-width: 1;
-}
-.value-axis .domain {
-    stroke: none;
-}
-.value-axis .tick line:first-of-type {
-    stroke: none;
-} */
 
 .axis .domain {
-    stroke: gray;
+    stroke: #D2D2D2;
+}
+.axis .tick line:first-of-type {
+    stroke: #D2D2D2;
 }
 
 .record-overflow-alert {

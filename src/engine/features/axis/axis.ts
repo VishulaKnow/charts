@@ -1,5 +1,5 @@
 import * as d3 from "d3";
-import { AxisModelOptions, Orient, ScaleKeyModel, ScaleValueModel } from "../../../model/model";
+import { AxisModelOptions, Orient, ScaleKeyModel, ScaleValueModel, Size } from "../../../model/model";
 import { Helper } from "../../helper";
 import { Block } from "../../block/block";
 
@@ -24,8 +24,11 @@ export class Axis
             .attr('class', `axis ${axisOptions.cssClass} data-label`)
             .call(axis);
 
-        this.setAxisLabelMargin(axisElement, axisOptions.orient, 9);
+        this.setAxisLabelPaddingByOrient(axisElement, axisOptions);
         this.cropLabels(block, scale, scaleOptions, axisOptions);
+
+        // if(axisOptions.orient === 'top' || axisOptions.orient === 'bottom')
+        //     this.rotateLabels(axisElement);
     }
 
     public static updateValueAxisDomain(block: Block, scaleValue: d3.AxisScale<any>, scaleOptions: ScaleValueModel, axisOptions: AxisModelOptions) {
@@ -40,6 +43,20 @@ export class Axis
             .transition()
             .duration(1000)
                 .call(axis.bind(this));
+    }
+
+    private static setAxisLabelPaddingByOrient(axisElement: d3.Selection<SVGGElement, unknown, HTMLElement, any>, axisOptions: AxisModelOptions): void {
+        let axisLabelPadding = 15;
+        if(axisOptions.orient === 'left' || axisOptions.orient === 'right')
+            axisLabelPadding = 10;
+        this.setAxisLabelMargin(axisElement, axisOptions.orient, axisLabelPadding);
+    }
+
+    private static rotateLabels(axisElement: d3.Selection<SVGGElement, unknown, HTMLElement, any>): void {
+        axisElement.selectAll('text')
+            .attr('x', -45)
+            .attr('y', -5)
+            .attr('transform', 'rotate(-90)')
     }
 
     private static removeTicks(axis: d3.Axis<any>): void {
@@ -62,6 +79,7 @@ export class Axis
             x: null,
             y: null
         }
+
         if(axisOrient === 'bottom')
             coordinate.y = labelMargin;
         else if(axisOrient === 'top')
@@ -70,6 +88,7 @@ export class Axis
             coordinate.x = -labelMargin;
         else if(axisOrient === 'right')
             coordinate.x = labelMargin;
+
         return coordinate;
     }
 
@@ -90,6 +109,11 @@ export class Axis
                 axis.tickFormat(d3.format('.2s'));
             }
         }
+    }
+
+    private static setTicksAmount(scale: d3.AxisScale<any>, axisOptions: AxisModelOptions, axis: d3.Axis<any>): void {
+        let axisLength: number = scale.range()[1];
+        axis.ticks(3);
     }
 
     private static cropLabels(block: Block, scale: d3.AxisScale<any>, scaleOptions: ScaleKeyModel | ScaleValueModel, axisOptions: AxisModelOptions): void {

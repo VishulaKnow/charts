@@ -1,5 +1,4 @@
 import * as d3 from "d3";
-import { Color } from "d3";
 import { BarChartSettings, BlockMargin, DataRow, IntervalChartModel, Orient, Size } from "../../model/model";
 import { Block } from "../block/block";
 import { Helper } from "../helper";
@@ -56,7 +55,9 @@ export class Gantt
             width: null,
             height: null
         }
-        const itemSize = Scale.getScaleWidth(scales.scaleKey) > barSettings.barMaxSize ? barSettings.barMaxSize : Scale.getScaleWidth(scales.scaleKey);
+        const itemSize = Scale.getScaleWidth(scales.scaleKey) > barSettings.barMaxSize 
+            ? barSettings.barMaxSize 
+            : Scale.getScaleWidth(scales.scaleKey);
         const sizeDiff = (Scale.getScaleWidth(scales.scaleKey) - itemSize) / 2;       
 
         if(axisOrient === 'top' || axisOrient === 'bottom') {

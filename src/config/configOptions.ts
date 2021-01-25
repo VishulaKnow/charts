@@ -14,7 +14,7 @@ const configCars: Config = {
             keyAxis: {
                 position: 'end',
                 ticks: {
-                    flag: true
+                    flag: false
                 }
             },
             valueAxis: {
@@ -24,7 +24,7 @@ const configCars: Config = {
                 },
                 position: 'start',
                 ticks: {
-                    flag: true
+                    flag: false
                 }
             }
         },
@@ -38,7 +38,7 @@ const configCars: Config = {
         },
         charts: [
             {
-                title: 'Car prices (year 2021) very very long title of chart',
+                title: 'Рост стоимости и длинное название параметра',
                 type: 'bar',
                 legend: {
                     position: 'top'
@@ -71,7 +71,7 @@ const configCars: Config = {
                 orientation: 'vertical'
             },
             {
-                title: 'Car prices (year2020)',
+                title: 'Рост капитализации компании',
                 type: 'bar',
                 legend: {
                     position: 'top'

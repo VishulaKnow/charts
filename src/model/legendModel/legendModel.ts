@@ -13,12 +13,8 @@ export class LegendModel
     }
 
     public static getBaseLegendBlockModel(): LegendBlockModel {
-        const mt = 0, mb = 0, ml = 0, mr = 0;
+        const mt = 20, mb = 20, ml = 20, mr = 20;
         return {
-            bottom: { 
-                size: 0,
-                margin: { top: mt, bottom: mb, left: ml, right: mr }
-            },
             left: { 
                 size: 0,
                 margin: { top: mt, bottom: mb, left: ml, right: mr }
@@ -27,9 +23,13 @@ export class LegendModel
                 size: 0,
                 margin: { top: mt, bottom: mb, left: ml, right: mr }
             },
+            bottom: { 
+                size: 0,
+                margin: { top: 0, bottom: 20, left: 20, right: 20 }
+            },
             top: { 
                 size: 0,
-                margin: { top: mt, bottom: mb, left: ml, right: mr }
+                margin: { top: 20, bottom: 0, left: 20, right: 20 }
             }
         }
     }

@@ -25,16 +25,22 @@ export interface TooltipCoordinate {
 export class TooltipHelper
 { 
     public static getTooltipHtmlForMultyCharts(charts: TwoDimensionalChartModel[], data: DataSource, keyValue: string): string {
-        let text = this.getTooltipKeyHeader(keyValue);
+        // let text = this.getTooltipKeyHeader(keyValue);
+        let text = '';
         charts.forEach((chart: TwoDimensionalChartModel) => {
             if(chart.tooltip.data.fields.length !== 0) {
-                text += `<div class="tooltip-chart-item"><span class="legend-circle" style="background-color: ${chart.elementColors[0]}"></span><br>`;
-                if(chart.tooltip.data.fields.length !== 0)
-                    text += this.getTooltipText(chart.tooltip.data.fields, data[chart.data.dataSource].find((d: DataRow) => d[chart.data.keyField.name] === keyValue));
-                text += '</div>'
+                text += `<div class="tooltip-group"><div class="tooltip-color"><span class="tooltip-circle" style="background-color: ${chart.elementColors[0]};"></span></div>`;
+                text += `<div class="tp-texts">`;
+                text += `<div class="tp-text-item">${this.getTooltipItemText(chart, data, keyValue)}</div>`;
+                text += '</div></div>';
             }
         });
         return text;
+    }
+
+    private static getTooltipItemText(chart: TwoDimensionalChartModel, data: DataSource, keyValue: string): string {
+        const row = data[chart.data.dataSource].find(d => d[chart.data.keyField.name] === keyValue);
+        return `${row[chart.data.keyField.name]} - ${row[chart.data.valueField.name]}`;
     }
 
     public static getTooltipTextForSingleChart(fields: Field[], dataRow: DataRow, keyField: string): string {

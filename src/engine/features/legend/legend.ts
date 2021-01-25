@@ -107,8 +107,7 @@ export class Legend
         wrapper 
             .style('width', '100%')
             .style('height', '100%')
-            .style('display', 'flex')
-            .style('justify-content', 'center');
+            .style('display', 'flex');
     
         if(legendPosition === 'left' || legendPosition === 'right')
             wrapper.style('flex-direction', 'column');

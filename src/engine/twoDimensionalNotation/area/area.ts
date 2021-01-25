@@ -1,5 +1,4 @@
 import * as d3 from "d3";
-import { Color } from "d3";
 import { BlockMargin, DataRow, Size, TwoDimensionalChartModel } from "../../../model/model";
 import { Helper } from "../../helper";
 import { Scale, Scales } from "../../features/scale/scale";

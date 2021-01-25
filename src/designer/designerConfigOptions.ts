@@ -10,7 +10,7 @@ const designerConfig: DesignerConfig = {
             }
         },
         chartBlockMargin: {
-            top: 20,
+            top: 30,
             bottom: 20,
             left: 20,
             right: 20
@@ -23,7 +23,7 @@ const designerConfig: DesignerConfig = {
                 groupDistance: 10,
                 minBarWidth: 3,
                 maxBarWidth: 10,
-                barDistance: 0
+                barDistance: 3
             },
             donut: {
                 minPartSize: 50

@@ -1,3 +1,4 @@
+import { line } from "d3";
 import { AxisModelOptions, BlockMargin, GridLineFlag, Size } from "../../../model/model";
 import { Block } from "../../block/block";
 
@@ -52,10 +53,12 @@ export class GridLine
             x2: 0,
             y2: 0
         }
+
         if(axis.orient === 'left' || axis.orient === 'right')
             attributes.x2 = lineLength;
         else
             attributes.y2 = lineLength;
+            
         return attributes;
     }
 
@@ -70,14 +73,17 @@ export class GridLine
     private static getGridLineLength(gridLineType: GridLineType, keyAxis: AxisModelOptions, valueAxis: AxisModelOptions, blockSize: Size, margin: BlockMargin): number {
         let axis: AxisModelOptions;
         let axisLength: number;
+
         if(gridLineType === 'key')
             axis = keyAxis;
         else    
             axis = valueAxis;
+
         if(axis.orient === 'left' || axis.orient === 'right')
             axisLength = blockSize.width - margin.left - margin.right;
         else
             axisLength = blockSize.height - margin.top - margin.bottom;
+
         if(axis.orient === 'right' || axis.orient === 'bottom')
             axisLength = -axisLength;
         return axisLength;

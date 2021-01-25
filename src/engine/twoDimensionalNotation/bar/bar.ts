@@ -1,5 +1,4 @@
 import * as d3 from "d3";
-import { Color } from "d3";
 import { BarChartSettings, BlockMargin, DataRow, Orient, Size, TwoDimensionalChartModel } from "../../../model/model";
 import { ValueFormatter } from "../../valueFormatter";
 import { Helper } from "../../helper";

@@ -5,6 +5,7 @@ import { Scale, Scales } from "../scale/scale";
 import { Block } from "../../block/block";
 import { TipBoxAttributes, TooltipCoordinate, TooltipHelper, TooltipLineAttributes } from "./tooltipHelper";
 import { Donut } from "../../polarNotation/donut";
+import { Bar } from "../../twoDimensionalNotation/bar/bar";
 
 export class Tooltip
 {
@@ -19,8 +20,8 @@ export class Tooltip
         if(chartsWithTooltipIndex !== -1) {
             if(model.options.type === '2d') {
                 if(model.options.charts.findIndex(chart => chart.type === 'area' || chart.type === 'line') === -1) {
-                    this.renderTooltipsForBar(block, model.options.charts, data, model.blockCanvas.size);
-                    // this.renderMultiTooltipForBar(block, Bar.getAllBarItems(block), data, model.blockCanvas.size, model.options.charts);
+                    // this.renderTooltipsForBar(block, model.options.charts, data, model.blockCanvas.size);
+                    this.renderMultiTooltipForBar(block, Bar.getAllBarItems(block), data, model.blockCanvas.size, model.options.charts);
                 } else {
                     this.renderLineTooltip(block, scales.scaleKey, model.chartBlock.margin, model.blockCanvas.size, model.options.charts, data, model.options.scale.scaleKey);
                 }
@@ -195,7 +196,7 @@ export class Tooltip
                 .append('div')
                 .attr('class', this.tooltipArrowClass)
                 .style('position', 'absolute')
-                .style('left', '14px')
+                .style('left', '23.14px')
                 .style('bottom', '-10px');
         const thisClass = this;
 
