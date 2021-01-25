@@ -36,18 +36,18 @@ export class Area
         Helper.setChartElementColor(path, chart.elementColors, 'fill');
     }
 
-    public static updateAreaChartByValueAxis(block: Block, scales: Scales, data: DataRow[], margin: BlockMargin, keyField: string, valueField: string, keyAxisOrient: string, blockSize: Size, cssClasses: string[]): void {
+    public static updateAreaChartByValueAxis(block: Block, scales: Scales, data: DataRow[], margin: BlockMargin, chart: TwoDimensionalChartModel, keyAxisOrient: string, blockSize: Size): void {
         const area = this.getAreaGenerator(keyAxisOrient);
         const areaCoordinate: AreaChartCoordinate[] = this.getAreaCoordinateByKeyOrient(keyAxisOrient,
             data,
             scales,
             margin,
-            keyField,
-            valueField,
+            chart.data.keyField.name,
+            chart.data.valueField.name,
             blockSize);
     
         block.getChartBlock()
-            .select(`.${this.areaChartClass}${Helper.getCssClassesLine(cssClasses)}`)
+            .select(`.${this.areaChartClass}${Helper.getCssClassesLine(chart.cssClasses)}`)
             .transition()
             .duration(1000)
                 .attr('d', area(areaCoordinate));

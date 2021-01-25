@@ -202,11 +202,9 @@ export class ChartRenderer
                     scales,
                     data[chart.data.dataSource],
                     margin,
-                    chart.data.keyField.name,
-                    chart.data.valueField.name,
+                    chart,
                     keyAxisOrient,
-                    blockSize,
-                    chart.cssClasses);
+                    blockSize);
         });
     }
 }
