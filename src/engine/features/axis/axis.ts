@@ -38,11 +38,13 @@ export class Axis
         if(!axisOptions.ticks.flag)
             this.removeTicks(axis);
         
-        block.getSvg()
-            .select(`.${axisOptions.cssClass}`)
+        const axisElement = block.getSvg()
+            .select(`g.${axisOptions.cssClass}`)
             .transition()
             .duration(1000)
                 .call(axis.bind(this));
+
+        this.setAxisLabelPaddingByOrient(axisElement, axisOptions);
     }
 
     private static setAxisLabelPaddingByOrient(axisElement: d3.Selection<SVGGElement, unknown, HTMLElement, any>, axisOptions: AxisModelOptions): void {

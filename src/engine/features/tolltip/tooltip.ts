@@ -86,7 +86,6 @@ export class Tooltip
                 tooltipContent.html(`${TooltipHelper.getTooltipHtmlForMultyCharts(charts, data, key)}`);
                 
                 const tooltipCoordinate = TooltipHelper.getTooltipCoordinate(d3.pointer(event, this), tooltipBlock, blockSize);
-                // thisClass.setTooltipCoordinate(tooltipBlock, {left: d3.pointer(event, this)[0] + 'px', top: d3.pointer(event, this)[1] + 'px', bottom: null, right: null});
                 thisClass.setTooltipCoordinate(tooltipBlock, tooltipCoordinate);
 
                 tooltipLine.style('display', 'block');
@@ -212,8 +211,8 @@ export class Tooltip
                 thisClass.setTooltipCoordinate(tooltipBlock, tooltipCoordinate);
             });
 
-        // elemets.on('mouseleave', function() {
-        //     tooltipBlock.style('display', 'none');
-        // });
+        elemets.on('mouseleave', function() {
+            tooltipBlock.style('display', 'none');
+        });
     }
 }

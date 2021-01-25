@@ -4,6 +4,7 @@ import { Helper } from "../../helper";
 import { Scale, Scales } from "../../features/scale/scale";
 import { Block } from "../../block/block";
 import { Color } from "d3";
+import { MarginModel } from "../../../model/marginModel";
 
 interface LineChartCoordinate {
     x: number;
@@ -85,11 +86,19 @@ export class Line
     }
 
     private static updateDotsCoordinateByValueAxis(block: Block, coordinates: LineChartCoordinate[], cssClasses: string[]): void {
-        const dotsWrapper = block.getChartBlock()
+        const dots = block.getChartBlock()
             .selectAll(`.dot${Helper.getCssClassesLine(cssClasses)}`)
             .data(coordinates);
 
-        dotsWrapper.select('.dot')
+        dots
+            .transition()
+            .duration(1000)
+                .attr('cx', d => d.x)
+                .attr('cy', d => d.y);
+
+        block.getChartBlock()
+            .selectAll(`.dot-inside${Helper.getCssClassesLine(cssClasses)}`)
+            .data(coordinates)
             .transition()
             .duration(1000)
                 .attr('cx', d => d.x)
@@ -108,7 +117,7 @@ export class Line
             .attr('cy', d => d.y)
             .attr('r', 5.5);
 
-        dotsWrapper.append('circle')
+        const dotsInside = dotsWrapper.append('circle')
             .attr('class', 'dot-inside')
             .attr('cx', d => d.x)
             .attr('cy', d => d.y)
@@ -116,6 +125,7 @@ export class Line
             .style('fill', 'white');
 
         Helper.setCssClasses(dots, cssClasses);
+        Helper.setCssClasses(dotsInside, cssClasses);
         Helper.setChartElementColor(dots, colorPalette, 'fill');
     }
 }
