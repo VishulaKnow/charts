@@ -207,6 +207,7 @@ export class Tooltip
                 tooltipContent.html(`${TooltipHelper.getTooltipHtmlForMultyCharts(charts, data, key)}`);
 
                 const coordinatePointer: [number, number] = [parseFloat(d3.select(this).attr('x') as any), parseFloat(d3.select(this).attr('y')) - (tooltipBlock.nodes()[0] as any).getBoundingClientRect().height];
+                coordinatePointer[0] -= 23; //FIXME 
                 const tooltipCoordinate = TooltipHelper.getTooltipCoordinate(coordinatePointer, tooltipBlock, blockSize);
                 thisClass.setTooltipCoordinate(tooltipBlock, tooltipCoordinate);
             });

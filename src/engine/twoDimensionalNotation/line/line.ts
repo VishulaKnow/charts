@@ -31,7 +31,7 @@ export class Line
     
         Helper.setCssClasses(path, chart.cssClasses);
         Helper.setChartElementColor(path, chart.elementColors, 'stroke');
-        // this.renderDots(block, lineCoordinate, cssClasses, chartPalette);
+        this.renderDots(block, lineCoordinate, chart.cssClasses, chart.elementColors);
     }
 
     public static updateLineChartByValueAxis(block: Block, scales: Scales, data: DataRow[], margin: BlockMargin, keyAxisOrient: string, chart: TwoDimensionalChartModel): void {
@@ -48,6 +48,8 @@ export class Line
             .transition()
             .duration(1000)
                 .attr('d', line(lineCoordinate));
+
+        this.updateDotsCoordinateByValueAxis(block, lineCoordinate, chart.cssClasses);
     }
 
     private static getLineGenerator(): d3.Line<LineChartCoordinate> {
@@ -58,7 +60,7 @@ export class Line
 
     public static moveChartsToFront(block: Block): void {
         block.getChartBlock()
-            .selectAll('.line')
+            .selectAll(`.${this.lineChartClass}`)
             .raise();
     }
     
@@ -82,16 +84,36 @@ export class Line
         return lineCoordinate;
     }
 
+    private static updateDotsCoordinateByValueAxis(block: Block, coordinates: LineChartCoordinate[], cssClasses: string[]): void {
+        const dotsWrapper = block.getChartBlock()
+            .selectAll(`.dot${Helper.getCssClassesLine(cssClasses)}`)
+            .data(coordinates);
+
+        dotsWrapper.select('.dot')
+            .transition()
+            .duration(1000)
+                .attr('cx', d => d.x)
+                .attr('cy', d => d.y);
+    }
+
     private static renderDots(block: Block, coordinates: LineChartCoordinate[], cssClasses: string[], colorPalette: Color[]): void {
-        const dots = block.getChartBlock()
+        const dotsWrapper = block.getChartBlock()
             .selectAll(`.dot${Helper.getCssClassesLine(cssClasses)}`)
             .data(coordinates)
-            .enter()
-                .append('circle')
-                .attr('class', 'dot')
-                .attr('cx', d => d.x)
-                .attr('cy', d => d.y)
-                .attr('r', 5.5);
+            .enter();
+
+        const dots = dotsWrapper.append('circle')
+            .attr('class', 'dot')
+            .attr('cx', d => d.x)
+            .attr('cy', d => d.y)
+            .attr('r', 5.5);
+
+        dotsWrapper.append('circle')
+            .attr('class', 'dot-inside')
+            .attr('cx', d => d.x)
+            .attr('cy', d => d.y)
+            .attr('r', 2.5)
+            .style('fill', 'white');
 
         Helper.setCssClasses(dots, cssClasses);
         Helper.setChartElementColor(dots, colorPalette, 'fill');
