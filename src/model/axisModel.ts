@@ -44,13 +44,11 @@ export class AxisModel
         if(chartOrientation === 'vertical') {
             if(axisPosition === 'start')
                 return axisType === AxisType.Key ? 'top' : 'left';
-            else
-                return axisType === AxisType.Key ? 'bottom' : 'right'
+            return axisType === AxisType.Key ? 'bottom' : 'right'
         } else {
             if(axisPosition === 'start')
                 return axisType === AxisType.Key ? 'left' : 'top';
-            else
-                return axisType === AxisType.Key ? 'right' : 'bottom'
+            return axisType === AxisType.Key ? 'right' : 'bottom'
         }
     }
 
@@ -60,8 +58,7 @@ export class AxisModel
             return margin.left;
         else if(orient === 'bottom') 
             return margin.left;
-        else
-            return blockWidth - margin.right;
+        return blockWidth - margin.right;
     }
     
     public static getAxisTranslateY(axisType: AxisType, chartOrientation: ChartOrientation, axisPosition: AxisPosition, margin: BlockMargin, blockHeight: number): number {
@@ -70,7 +67,6 @@ export class AxisModel
             return margin.top;
         else if(orient === 'bottom') 
             return blockHeight - margin.bottom;
-        else
-            return margin.top;
+        return margin.top;
     }
 }

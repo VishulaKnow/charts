@@ -79,7 +79,8 @@ export class ChartRenderer
 
         GridLine.render(block, options.additionalElements.gridLine.flag, options.axis.keyAxis, options.axis.valueAxis, model.blockCanvas.size, model.chartBlock.margin);
         
-        this.renderIntervalCharts(block, options.charts,
+        this.renderIntervalCharts(block, 
+            options.charts,
             data,
             model.chartBlock.margin,
             model.blockCanvas.size,
@@ -122,7 +123,6 @@ export class ChartRenderer
                     chart,
                     blockSize);
         });
-        // Line.moveChartsToFront();
     }
     
     private static renderPolarCharts(block: Block, charts: PolarChartModel[], data: DataSource, margin: BlockMargin, blockSize: Size) {

@@ -29,9 +29,8 @@ export class ScaleModel
         let domainPeekMax = minMax[1];
 
         if(keyAxisPosition === 'start')
-            return [domainPeekMin, domainPeekMax];
-        else 
-            return [domainPeekMax, domainPeekMin];
+            return [domainPeekMin, domainPeekMax]; 
+        return [domainPeekMax, domainPeekMin];
     }
     
     public static getScaleLinearValueDomain(configDomain: NumberDomain, data: DataSource, charts: TwoDimensionalChart[], keyAxisPosition: AxisPosition): [number, number] {
@@ -48,8 +47,7 @@ export class ScaleModel
             
         if(keyAxisPosition === 'start')
             return [domainPeekMin, domainPeekMax];
-        else 
-            return [domainPeekMax, domainPeekMin];
+        return [domainPeekMax, domainPeekMin];
     }
 
     public static getScaleKeyType(charts: TwoDimensionalChart[] | IntervalChart[]): ScaleKeyType {
