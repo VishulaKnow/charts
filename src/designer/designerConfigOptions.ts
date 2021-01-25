@@ -23,7 +23,7 @@ const designerConfig: DesignerConfig = {
                 groupDistance: 10,
                 minBarWidth: 3,
                 maxBarWidth: 10,
-                barDistance: 3
+                barDistance: 5
             },
             donut: {
                 minPartSize: 50

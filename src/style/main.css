@@ -96,7 +96,6 @@ h3.title {
     padding: 15px 17px 15px 12px;
     background: white;
     color: black;
-    border-radius: 2px;
     z-index: 102;
     min-width: 100px;
 }
@@ -112,17 +111,17 @@ h3.title {
     display: flex;
 }
 .tooltip-color {
-    line-height: 19.69px;
+    /* line-height: 19.69px; */
 }
 .tooltip-text-item {
     font-family: "Roboto" sans-serif;
     font-weight: 500;
     font-style: normal;
     font-size: 14px;
-    line-height: 19.69px;
+    /* line-height: 19.69px; */
 }
-.tooltip-chart-item {
-    margin: 5px 0;
+.tooltip-group:not(:first-of-type) {
+    margin-top: 8px;
 }
 .tooltip-line {
     stroke: #b6b6b6;

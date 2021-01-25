@@ -6,7 +6,8 @@ import { LegendModel } from "./legendModel/legendModel";
 import { BlockMargin, DataScope, DataSource, LegendBlockModel, Orient } from "./model";
 import { AxisType } from "./modelOptions";
 
-const AXIS_LABEL_PADDING = 15;
+const AXIS_HORIZONTAL_LABEL_PADDING = 15;
+const AXIS_VERTICAL_LABEL_PADDING = 10;
 
 export class MarginModel
 {
@@ -53,13 +54,13 @@ export class MarginModel
         if(keyAxisOrient === 'left' || keyAxisOrient === 'right') {
             const labelTexts = DataManagerModel.getDataValuesByKeyField(data, charts[0]);
             const axisLabelSize = AxisModel.getLabelSize(labelsMaxWidth, labelTexts);
-            margin[keyAxisOrient] += axisLabelSize.width + AXIS_LABEL_PADDING;
-            margin[valueAxisOrient] += axisLabelSize.height + AXIS_LABEL_PADDING;
+            margin[keyAxisOrient] += axisLabelSize.width + AXIS_VERTICAL_LABEL_PADDING;
+            margin[valueAxisOrient] += axisLabelSize.height + AXIS_HORIZONTAL_LABEL_PADDING;
         } else {
             const labelTexts = ['0000'];
             const axisLabelSize = AxisModel.getLabelSize(labelsMaxWidth, labelTexts);
-            margin[valueAxisOrient] += axisLabelSize.width + AXIS_LABEL_PADDING;
-            margin[keyAxisOrient] += axisLabelSize.height + AXIS_LABEL_PADDING;
+            margin[valueAxisOrient] += axisLabelSize.width + AXIS_VERTICAL_LABEL_PADDING;
+            margin[keyAxisOrient] += axisLabelSize.height + AXIS_HORIZONTAL_LABEL_PADDING;
         }
     }
 

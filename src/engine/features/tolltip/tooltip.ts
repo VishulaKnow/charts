@@ -196,8 +196,8 @@ export class Tooltip
                 .append('div')
                 .attr('class', this.tooltipArrowClass)
                 .style('position', 'absolute')
-                .style('left', '23.14px')
-                .style('bottom', '-10px');
+                .style('left', '9px')
+                .style('bottom', '-6px');
         const thisClass = this;
 
         elemets
@@ -211,8 +211,8 @@ export class Tooltip
                 thisClass.setTooltipCoordinate(tooltipBlock, tooltipCoordinate);
             });
 
-        elemets.on('mouseleave', function() {
-            tooltipBlock.style('display', 'none');
-        });
+        // elemets.on('mouseleave', function() {
+        //     tooltipBlock.style('display', 'none');
+        // });
     }
 }
