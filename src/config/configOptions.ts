@@ -39,7 +39,7 @@ const configCars: Config = {
         charts: [
             {
                 title: 'Рост стоимости и длинное название параметра',
-                type: 'line',
+                type: 'bar',
                 legend: {
                     position: 'top'
                 },
@@ -72,7 +72,7 @@ const configCars: Config = {
             },
             {
                 title: 'Рост капитализации компании',
-                type: 'line',
+                type: 'bar',
                 legend: {
                     position: 'top'
                 },

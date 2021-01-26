@@ -85,7 +85,7 @@ export class Tooltip
                 const key = scaleKey.domain()[index];
                 tooltipContent.html(`${TooltipHelper.getTooltipHtmlForMultyCharts(charts, data, key)}`);
                 
-                const tooltipCoordinate = TooltipHelper.getTooltipCoordinate(d3.pointer(event, this), tooltipBlock, blockSize);
+                const tooltipCoordinate = TooltipHelper.getTooltipCoordinate(d3.pointer(event, this));
                 thisClass.setTooltipCoordinate(tooltipBlock, tooltipCoordinate);
 
                 tooltipLine.style('display', 'block');
@@ -113,7 +113,7 @@ export class Tooltip
         elemets
             .data(data)
             .on('mousemove', function(event, d) {
-                const tooltipCoordinate = TooltipHelper.getTooltipCoordinate(d3.pointer(event, this), tooltipBlock, blockSize);
+                const tooltipCoordinate = TooltipHelper.getTooltipCoordinate(d3.pointer(event, this));
                 thisClass.setTooltipCoordinate(tooltipBlock, tooltipCoordinate); 
             });
     
@@ -205,9 +205,8 @@ export class Tooltip
                 const key = d[charts[0].data.keyField.name];
                 tooltipContent.html(`${TooltipHelper.getTooltipHtmlForMultyCharts(charts, data, key)}`);
 
-                const coordinatePointer: [number, number] = [parseFloat(d3.select(this).attr('x') as any), parseFloat(d3.select(this).attr('y')) - (tooltipBlock.nodes()[0] as any).getBoundingClientRect().height];
-                coordinatePointer[0] -= 23; //FIXME 
-                const tooltipCoordinate = TooltipHelper.getTooltipCoordinate(coordinatePointer, tooltipBlock, blockSize);
+                const coordinatePointer: [number, number] = TooltipHelper.getBarTooltipCoordinate(d3.select(this), tooltipBlock);
+                const tooltipCoordinate = TooltipHelper.getTooltipCoordinate(coordinatePointer);
                 thisClass.setTooltipCoordinate(tooltipBlock, tooltipCoordinate);
             });
 

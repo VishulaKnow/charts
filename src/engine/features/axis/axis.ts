@@ -17,6 +17,8 @@ export class Axis
         
         if(!axisOptions.ticks.flag)
             this.removeTicks(axis);
+
+        this.setAxisLabelPaddingByOrient(axis, axisOptions);
     
         const axisElement = block.getSvg()
             .append('g')
@@ -24,7 +26,6 @@ export class Axis
             .attr('class', `axis ${axisOptions.cssClass} data-label`)
             .call(axis);
 
-        this.setAxisLabelPaddingByOrient(axisElement, axisOptions);
         this.cropLabels(block, scale, scaleOptions, axisOptions);
 
         // if(axisOptions.orient === 'top' || axisOptions.orient === 'bottom')
@@ -37,21 +38,21 @@ export class Axis
         this.setAxisFormat(scaleValue, scaleOptions, axis);
         if(!axisOptions.ticks.flag)
             this.removeTicks(axis);
-        
-        const axisElement = block.getSvg()
+
+        this.setAxisLabelPaddingByOrient(axis, axisOptions);
+
+        block.getSvg()
             .select(`g.${axisOptions.cssClass}`)
             .transition()
             .duration(1000)
                 .call(axis.bind(this));
-
-        // this.setAxisLabelPaddingByOrient(axisElement, axisOptions);
     }
 
-    private static setAxisLabelPaddingByOrient(axisElement: d3.Selection<SVGGElement, unknown, HTMLElement, any>, axisOptions: AxisModelOptions): void {
+    private static setAxisLabelPaddingByOrient(axis: d3.Axis<any>, axisOptions: AxisModelOptions): void {
         let axisLabelPadding = 15;
         if(axisOptions.orient === 'left' || axisOptions.orient === 'right')
             axisLabelPadding = 10;
-        this.setAxisLabelMargin(axisElement, axisOptions.orient, axisLabelPadding);
+        axis.tickPadding(axisLabelPadding);
     }
 
     private static rotateLabels(axisElement: d3.Selection<SVGGElement, unknown, HTMLElement, any>): void {
@@ -63,17 +64,6 @@ export class Axis
 
     private static removeTicks(axis: d3.Axis<any>): void {
         axis.tickSize(0);
-    }
-    
-    private static setAxisLabelMargin(axisElement: d3.Selection<SVGGElement, unknown, HTMLElement, any>, axisOrient: Orient, labelMargin: number): void {
-        const axisTexts = axisElement
-            .selectAll('.tick')
-            .select('text');
-
-        const coordinate = this.getAxisLabelCoordinate(axisOrient, labelMargin);
-        axisTexts
-            .attr('x', coordinate.x)
-            .attr('y', coordinate.y);
     }
 
     private static getAxisLabelCoordinate(axisOrient: Orient, labelMargin: number): AxisLabelCoordinate {
