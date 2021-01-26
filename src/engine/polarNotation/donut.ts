@@ -66,7 +66,7 @@ export class Donut
             blockSize.height - margin.top - margin.bottom) / 2;
     }
     
-    private static getArc(outerRadius: number, innerRadius: number = 0): d3.Arc<any, d3.PieArcDatum<DataRow>> {
+    private static getArc(outerRadius: number, innerRadius: number): d3.Arc<any, d3.PieArcDatum<DataRow>> {
         return d3.arc<d3.PieArcDatum<DataRow>>()
             .innerRadius(innerRadius)
             .outerRadius(outerRadius);
