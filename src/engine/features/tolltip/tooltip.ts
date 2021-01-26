@@ -6,8 +6,6 @@ import { Block } from "../../block/block";
 import { DotEdgingAttrs, TipBoxAttributes, TooltipCoordinate, TooltipHelper, TooltipLineAttributes } from "./tooltipHelper";
 import { Donut } from "../../polarNotation/donut";
 import { Bar } from "../../twoDimensionalNotation/bar/bar";
-import { Line } from "../../twoDimensionalNotation/line/line";
-import { Color } from "d3";
 import { Dot } from "../lineDots/dot";
 
 export class Tooltip
@@ -25,7 +23,7 @@ export class Tooltip
 
                 if(model.options.charts.findIndex(chart => chart.type === 'area' || chart.type === 'line') === -1)
                     this.renderMultiTooltipForBar(block, Bar.getAllBarItems(block), data, model.options.charts);
-                else if(model.options.charts.findIndex(chart => chart.type === 'line') !== -1)
+                else if(model.options.charts.findIndex(chart => chart.type === 'bar') === -1)
                     this.renderTooltipForLine(block, Dot.getAllDots(block), data, model.options.charts);
                 else 
                     this.renderLineTooltip(block, scales.scaleKey, model.chartBlock.margin, model.blockCanvas.size, model.options.charts, data, model.options.scale.scaleKey);

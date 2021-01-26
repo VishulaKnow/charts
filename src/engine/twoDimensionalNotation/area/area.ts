@@ -1,8 +1,9 @@
 import * as d3 from "d3";
-import { BlockMargin, DataRow, Size, TwoDimensionalChartModel } from "../../../model/model";
+import { BlockMargin, DataRow, Orient, Size, TwoDimensionalChartModel } from "../../../model/model";
 import { Helper } from "../../helper";
 import { Scale, Scales } from "../../features/scale/scale";
 import { Block } from "../../block/block";
+import { Dot } from "../../features/lineDots/dot";
 
 interface AreaChartCoordinate {
     x0: number;
@@ -15,7 +16,7 @@ export class Area
 {
     private static areaChartClass = 'area';
 
-    public static render(block: Block, scales: Scales, data: DataRow[], margin: BlockMargin, keyAxisOrient: string, chart: TwoDimensionalChartModel, blockSize: Size): void {
+    public static render(block: Block, scales: Scales, data: DataRow[], margin: BlockMargin, keyAxisOrient: Orient, chart: TwoDimensionalChartModel, blockSize: Size): void {
         const area = this.getAreaGenerator(keyAxisOrient);
         const areaCoordinate: AreaChartCoordinate[] = this.getAreaCoordinateByKeyOrient(keyAxisOrient,
             data,
@@ -33,9 +34,11 @@ export class Area
     
         Helper.setCssClasses(path, chart.cssClasses);
         Helper.setChartElementColor(path, chart.elementColors, 'fill');
+
+        Dot.render(block, data, keyAxisOrient, scales, margin, chart.data.keyField.name, chart.data.valueField.name, chart.cssClasses, chart.elementColors);
     }
 
-    public static updateAreaChartByValueAxis(block: Block, scales: Scales, data: DataRow[], margin: BlockMargin, chart: TwoDimensionalChartModel, keyAxisOrient: string, blockSize: Size): void {
+    public static updateAreaChartByValueAxis(block: Block, scales: Scales, data: DataRow[], margin: BlockMargin, chart: TwoDimensionalChartModel, keyAxisOrient: Orient, blockSize: Size): void {
         const area = this.getAreaGenerator(keyAxisOrient);
         const areaCoordinate: AreaChartCoordinate[] = this.getAreaCoordinateByKeyOrient(keyAxisOrient,
             data,
@@ -50,6 +53,8 @@ export class Area
             .transition()
             .duration(1000)
                 .attr('d', area(areaCoordinate));
+
+        Dot.updateDotsCoordinateByValueAxis(block, data, keyAxisOrient, scales, margin, chart.data.keyField.name, chart.data.valueField.name, chart.cssClasses);
     }
 
     private static getAreaGenerator(keyAxisOrient: string): d3.Area<AreaChartCoordinate> {

@@ -112,6 +112,7 @@ export class Bar
             attrs.x = d => scales.scaleValue(d[valueField]) + margin.left;
             attrs.width = d => ValueFormatter.getValueOrZero(blockSize.width - margin.left - margin.right - scales.scaleValue(d[valueField]))
         }
+
         return attrs;
     }
 
@@ -124,6 +125,7 @@ export class Bar
     
     private static fillBarAttrsByKeyOrientWithTransition(bars: d3.Selection<SVGRectElement, DataRow, d3.BaseType, unknown>, axisOrient: string, scaleValue: d3.AxisScale<any>, margin: BlockMargin, valueField: string, blockSize: Size, transitionDuration: number): void {
         const barsTran = bars.transition().duration(transitionDuration);
+        
         if(axisOrient === 'top')
             barsTran
                 .attr('y', d => margin.top)

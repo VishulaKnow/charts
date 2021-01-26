@@ -10,6 +10,7 @@ export default class Engine {
         ValueFormatter.setFormatFunction(model.dataFormat.formatters);
         this.block = new Block(model.blockCanvas.cssClass, parentSelector);
         this.block.renderWrapper(model.blockCanvas.size);
+        
         if(model.options.type === '2d')
             ChartRenderer.render2D(this.block, model, data);
         else if(model.options.type === 'polar')
