@@ -1,5 +1,3 @@
-import * as d3 from 'd3'
-
 import { Block } from './block/block';
 import { ValueFormatter } from './valueFormatter';
 import { ChartRenderer } from './chartRenderer';

@@ -249,4 +249,4 @@ const configDemo: Config = {
     }
 }
 
-export default configCars;
+export default configDemo;
