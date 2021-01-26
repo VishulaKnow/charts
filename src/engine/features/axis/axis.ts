@@ -117,6 +117,14 @@ export class Axis
             else
                 labelSize = (scale as d3.ScaleBand<string>).step();
             Helper.cropLabels(axisTextBlocks, labelSize);
+            
+            if(scaleOptions.type === 'point') {
+                const lastTick = block.getSvg().select(`.${axisOptions.cssClass}`).select('.tick:last-of-type') as d3.Selection<SVGGraphicsElement, unknown, HTMLElement, unknown>;
+                const lastLabel = lastTick.select('text') as d3.Selection<SVGGraphicsElement, unknown, HTMLElement, unknown>;
+                const translateX = Helper.getTranslateNumbers(lastTick.attr('transform'))[0];
+                if(translateX + lastLabel.node().getBBox().width + axisOptions.translate.translateX > 1200)                
+                    Helper.cropLabels(lastLabel, labelSize / 2);
+            }
         }
     }
 }

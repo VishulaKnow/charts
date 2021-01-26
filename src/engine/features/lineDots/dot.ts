@@ -17,7 +17,7 @@ export class Dot
     private static innerDotRadius = 2.5;
 
     public static render(block: Block, data: DataRow[], keyAxisOrient: Orient, scales: Scales, margin: BlockMargin, keyField: string, valueField: string, cssClasses: string[], colorPalette: Color[], blockSize: Size): void {
-        this.renderClipPathFormCircles(block, blockSize, margin)
+        this.renderClipPathForCircles(block, blockSize, margin)
         
         const dotsWrapper = block.getChartBlock()
             .selectAll(`.${this.dotClass}${Helper.getCssClassesLine(cssClasses)}`)
@@ -30,7 +30,8 @@ export class Dot
             .attr('class', this.dotClass)
             .attr('cx', d => attrs.cx(d))
             .attr('cy', d => attrs.cy(d))
-            .attr('r', this.dotRadius);
+            .attr('r', this.dotRadius)
+            .style('clip-path', `url(#clipPath-dots-${block.getSvgCssClasses().join('-')})`);
 
         const dotsInside = dotsWrapper.append('circle')
             .attr('class', 'dot-inside')
@@ -86,7 +87,7 @@ export class Dot
         return attrs;
     }
 
-    private static renderClipPathFormCircles(block: Block, blockSize: Size, margin: BlockMargin): void {
+    private static renderClipPathForCircles(block: Block, blockSize: Size, margin: BlockMargin): void {
         const attributes = BlockHelper.getChartBlockAttributes(blockSize, margin);
         block.getSvg()
             .select('defs')
@@ -95,7 +96,7 @@ export class Dot
             .append('rect')
             .attr('x', attributes.x - this.dotRadius)
             .attr('y', attributes.y - this.dotRadius)
-            .attr('width', attributes.width + this.dotRadius)
-            .attr('height', attributes.height + this.dotRadius);
+            .attr('width', attributes.width + this.dotRadius * 2)
+            .attr('height', attributes.height + this.dotRadius * 2);
     }
 }

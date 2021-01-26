@@ -38,19 +38,48 @@ const configCars: Config = {
         },
         charts: [
             {
+                title: 'Рост стоимости',
+                type: 'bar',
+                legend: {
+                    position: 'top'
+                },
+                data: {
+                    dataSource: 'dataSet_large',
+                    keyField:  {
+                        name: 'brand',
+                        format: 'string'
+                    },
+                    valueField: {
+                        name: 'price',
+                        format: 'money'
+                    }
+                },
+                tooltip: {
+                    data: {
+                        fields: [
+                            {
+                                name: 'price',
+                                format: 'money'
+                            },
+                            {
+                                name: 'count',
+                                format: 'integer'
+                            }
+                        ]
+                    }
+                },
+                orientation: 'vertical'
+            },
+            {
                 title: 'Рост стоимости и длинное название параметра',
                 type: 'bar',
                 legend: {
                     position: 'top'
                 },
                 data: {
-                    dataSource: 'dataSet_segmented',
+                    dataSource: 'dataSet_large2',
                     keyField:  {
                         name: 'brand',
-                        format: 'string'
-                    },
-                    subKeyField: {
-                        name: 'model',
                         format: 'string'
                     },
                     valueField: {
@@ -249,4 +278,4 @@ const configDemo: Config = {
     }
 }
 
-export default configDemo;
+export default configCars;

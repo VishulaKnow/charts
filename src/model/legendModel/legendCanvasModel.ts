@@ -6,7 +6,6 @@ export class LegendCanvasModel
         const legendWrapper = document.createElement('div');
         legendWrapper.style.display = 'flex';
         legendWrapper.style.position = 'absolute';
-        legendWrapper.style.flexWrap = 'wrap';
         legendWrapper.style.width = blockWidth - marginLeft - marginRight + 'px';
         texts.forEach(text => {
             const itemWrapper = document.createElement('div');

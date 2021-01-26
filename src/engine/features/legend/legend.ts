@@ -42,6 +42,8 @@ export class Legend
             items,
             legendPosition,
             colorPalette);
+
+        
     }
 
     private static getChartsWithLegend(options: TwoDimensionalOptionsModel | PolarOptionsModel | IntervalOptionsModel, legendPosition: Orient): Array<TwoDimensionalChartModel | PolarChartModel | IntervalChartModel> {
@@ -82,6 +84,7 @@ export class Legend
             coordinate.width = blockSize.width - legendModel.margin.left - legendModel.margin.right;
             coordinate.height = legendModel.size;
         }
+
         if(legendPosition === 'left') 
             coordinate.x = legendModel.margin.left;
         else if(legendPosition === 'right')
@@ -104,22 +107,20 @@ export class Legend
     
     private static fillLegend(legendBlock: d3.Selection<SVGForeignObjectElement, unknown, HTMLElement, any>, items: string[], legendPosition: string, colorPalette: Color[]): void {
         const wrapper = legendBlock.append('xhtml:div');
-        wrapper 
-            .style('width', '100%')
+        wrapper
             .style('height', '100%')
             .style('display', 'flex');
     
         if(legendPosition === 'left' || legendPosition === 'right')
             wrapper.style('flex-direction', 'column');
-        else
-            wrapper.style('flex-wrap', 'wrap');
         
         const itemWrappers = wrapper
             .selectAll('.legend-item')
             .data(items)
             .enter()
             .append('div')
-                .attr('class', 'legend-item');
+                .attr('class', 'legend-item')
+                .style('height', '100%');
     
         itemWrappers
             .append('span')
@@ -131,5 +132,19 @@ export class Legend
             .append('span')
             .attr('class', 'legend-label')
             .text(d => d.toString());
+
+        // this.cropLegendLabels(legendBlock, itemWrappers);
     }
+
+    // private static cropLegendLabels(legendBlock: d3.Selection<SVGForeignObjectElement, unknown, HTMLElement, any>, items: d3.Selection<HTMLDivElement, string, d3.BaseType, unknown>): void {
+    //     const maxWidth = parseFloat(legendBlock.attr('width')) / items.size();
+    //     items.nodes().forEach(node => {
+    //         if(node.getBoundingClientRect().width > maxWidth) {
+    //             while(node.getBoundingClientRect().width > maxWidth) {
+    //                 const text = node.querySelector('.legend-label');
+    //                 text.textContent = text.textContent.substr(0, text.textContent.length - 1);
+    //             }
+    //         }
+    //     });
+    // }
 }

@@ -39,9 +39,9 @@ export class Tooltip
     private static renderTooltipsForDonut(block: Block, charts: PolarChartModel[], data: DataSource, blockSize: Size): void {
         charts.forEach(chart => {
             const attrTransform = block.getSvg().select(`.${Donut.donutBlockClass}`).attr('transform');
-            const translateNumbers = attrTransform.substring(10, attrTransform.length - 1).split(', ');
-            const translateX = parseFloat(translateNumbers[0]);
-            const translateY = parseFloat(translateNumbers[1]);
+            const translateNumbers = Helper.getTranslateNumbers(attrTransform);
+            const translateX = translateNumbers[0];
+            const translateY = translateNumbers[1];
     
             const items = block.getSvg()
                 .selectAll(`path${Helper.getCssClassesLine(chart.cssClasses)}`);
@@ -110,8 +110,6 @@ export class Tooltip
                 tooltipBlock.style('display', 'block');
                 const key = d[charts[0].data.keyField.name];
                 tooltipContent.html(`${TooltipHelper.getTooltipHtmlForMultyCharts(charts, data, key)}`);
-                console.log(tooltipBlock.node());
-                
                 const coordinatePointer: [number, number] = TooltipHelper.getBarTooltipCoordinate(d3.select(this), tooltipBlock, 'circle');
                 
                 const tooltipCoordinate = TooltipHelper.getTooltipCoordinate(coordinatePointer);
@@ -152,9 +150,13 @@ export class Tooltip
                 const tooltipCoordinate = TooltipHelper.getTooltipCoordinate(coordinatePointer);
                 
                 thisClass.setTooltipCoordinate(tooltipBlock, tooltipCoordinate);
+
+                elemets.filter(d => d[charts[0].data.keyField.name] !== key)
+                    .style('opacity', 0.3);
             });
 
         elemets.on('mouseleave', function() {
+            elemets.style('opacity', 1);
             tooltipBlock.style('display', 'none');
         });
     }

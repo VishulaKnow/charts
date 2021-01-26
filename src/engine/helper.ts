@@ -35,4 +35,12 @@ export class Helper
     public static getCssClassesArray(cssClass: string): string[] {
         return cssClass.split(' ');
     }
+
+    public static getTranslateNumbers(transformValue: string): [number, number] {
+        const translateNumbers = transformValue.substring(10, transformValue.length - 1).split(', ');
+        const translateX = parseFloat(translateNumbers[0]);
+        const translateY = parseFloat(translateNumbers[1]);
+
+        return [translateX, translateY];
+    }
 }
