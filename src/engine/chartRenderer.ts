@@ -26,7 +26,7 @@ export class ChartRenderer
         Axis.render(block, Scale.scales.scaleValue, options.scale.scaleValue, options.axis.valueAxis);
         Axis.render(block, Scale.scales.scaleKey, options.scale.scaleKey, options.axis.keyAxis);    
     
-        GridLine.render(block, options.additionalElements.gridLine.flag, options.axis.keyAxis, options.axis.valueAxis, model.blockCanvas.size, model.chartBlock.margin);
+        GridLine.render(block, options.additionalElements.gridLine.flag, options.axis.keyAxis, options.axis.valueAxis, model.blockCanvas.size, model.chartBlock.margin, options.scale.scaleKey);
         
         this.render2DCharts(block, 
             options.charts,
@@ -77,13 +77,12 @@ export class ChartRenderer
         Axis.render(block, Scale.scales.scaleValue, options.scale.scaleValue, options.axis.valueAxis);
         Axis.render(block, Scale.scales.scaleKey, options.scale.scaleKey, options.axis.keyAxis);
 
-        GridLine.render(block, options.additionalElements.gridLine.flag, options.axis.keyAxis, options.axis.valueAxis, model.blockCanvas.size, model.chartBlock.margin);
+        GridLine.render(block, options.additionalElements.gridLine.flag, options.axis.keyAxis, options.axis.valueAxis, model.blockCanvas.size, model.chartBlock.margin, options.scale.scaleKey);
         
         this.renderIntervalCharts(block, 
             options.charts,
             data,
             model.chartBlock.margin,
-            model.blockCanvas.size,
             options.axis.keyAxis.orient,
             model.chartSettings);
 
@@ -95,7 +94,7 @@ export class ChartRenderer
 
     private static render2DCharts(block: Block, charts: TwoDimensionalChartModel[], scales: Scales, data: DataSource, margin: BlockMargin, keyAxisOrient: Orient, barSettings: BarChartSettings, blockSize: Size) {      
         block.renderClipPath(margin, blockSize);
-        block.renderChartBlock(blockSize, margin);
+        block.renderChartBlock();
         charts.forEach((chart: TwoDimensionalChartModel) => {
             if(chart.type === 'bar')
                 Bar.render(block,
@@ -129,15 +128,16 @@ export class ChartRenderer
     private static renderPolarCharts(block: Block, charts: PolarChartModel[], data: DataSource, margin: BlockMargin, blockSize: Size) {
         charts.forEach((chart: PolarChartModel) => {
             if(chart.type === 'donut')
-                Donut.render(block, data[chart.data.dataSource],
+                Donut.render(block, 
+                    data[chart.data.dataSource],
                     margin,
                     chart,
                     blockSize);
         });
     }
 
-    private static renderIntervalCharts(block: Block, charts: IntervalChartModel[], data: DataSource, margin: BlockMargin, blockSize: Size, keyAxisOrient: Orient, chartSettings: ChartSettings): void {
-        block.renderChartBlock(blockSize, margin);
+    private static renderIntervalCharts(block: Block, charts: IntervalChartModel[], data: DataSource, margin: BlockMargin, keyAxisOrient: Orient, chartSettings: ChartSettings): void {
+        block.renderChartBlock();
         charts.forEach(chart => {
             if(chart.type === 'gantt')
                 Gantt.render(block,
@@ -167,7 +167,8 @@ export class ChartRenderer
             options.axis.keyAxis, 
             options.axis.valueAxis, 
             model.blockCanvas.size, 
-            model.chartBlock.margin);
+            model.chartBlock.margin,
+            options.scale.scaleKey);
         
         this.updateChartsByValueAxis(block, 
             options.charts,

@@ -39,7 +39,7 @@ export class Block
             .style('position', 'relative');
     }
 
-    public renderChartBlock(blockSize: Size, margin: BlockMargin): void {
+    public renderChartBlock(): void {
         this.getSvg()
             .append('g')
             .attr('class', this.chartBlockClass);

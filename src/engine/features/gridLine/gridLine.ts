@@ -1,5 +1,5 @@
 import { line } from "d3";
-import { AxisModelOptions, BlockMargin, GridLineFlag, Size } from "../../../model/model";
+import { AxisModelOptions, BlockMargin, GridLineFlag, ScaleKeyModel, Size } from "../../../model/model";
 import { Block } from "../../block/block";
 
 type GridLineType = 'key' | 'value';
@@ -14,7 +14,7 @@ export class GridLine
 {
     private static gridLineClass = 'grid-line';
 
-    public static render(block: Block, gridLineFlag: GridLineFlag, keyAxis: AxisModelOptions, valueAxis: AxisModelOptions, blockSize: Size, margin: BlockMargin): void {
+    public static render(block: Block, gridLineFlag: GridLineFlag, keyAxis: AxisModelOptions, valueAxis: AxisModelOptions, blockSize: Size, margin: BlockMargin, scaleKey: ScaleKeyModel): void {
         if(gridLineFlag.value) {
             const lineLength = this.getGridLineLength('value', keyAxis, valueAxis, blockSize, margin);
             const lineAttributes = this.getLineAttributes(valueAxis, lineLength);
@@ -24,13 +24,14 @@ export class GridLine
             const lineLength = this.getGridLineLength('key', keyAxis, valueAxis, blockSize, margin);
             const lineAttributes = this.getLineAttributes(keyAxis, lineLength);
             this.renderLine(block, keyAxis, lineAttributes);
-            this.removeGridLineOnValueAxis(block, keyAxis, valueAxis);
+            if(scaleKey.type === 'point')
+                this.removeGridLineOnValueAxis(block, keyAxis, valueAxis);
         }
     }
 
-    public static rerender(block: Block, gridLineFlag: GridLineFlag, keyAxis: AxisModelOptions, valueAxis: AxisModelOptions, blockSize: Size, margin: BlockMargin): void {
+    public static rerender(block: Block, gridLineFlag: GridLineFlag, keyAxis: AxisModelOptions, valueAxis: AxisModelOptions, blockSize: Size, margin: BlockMargin, scaleKey: ScaleKeyModel): void {
         this.clear(block, keyAxis.cssClass, valueAxis.cssClass);
-        this.render(block, gridLineFlag, keyAxis, valueAxis, blockSize, margin);
+        this.render(block, gridLineFlag, keyAxis, valueAxis, blockSize, margin, scaleKey);
     }
 
     private static renderLine(block: Block, axis: AxisModelOptions, lineAttributes: GridLineAttributes): void {
