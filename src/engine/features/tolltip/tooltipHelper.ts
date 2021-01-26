@@ -117,6 +117,9 @@ export class TooltipHelper
         if(elementType === 'rect')
             return [parseFloat(element.attr('x')) + parseFloat(element.attr('width')) / 2 - TOOLTIP_ARROW_PADDING_X,
                 parseFloat(element.attr('y')) - (tooltipBlock.node() as HTMLElement).getBoundingClientRect().height - TOOLTIP_ARROW_PADDING_Y];
+        
+        console.log((tooltipBlock.node() as HTMLElement).getBoundingClientRect());
+                
         return [parseFloat(element.attr('cx')) - TOOLTIP_ARROW_PADDING_X, 
             parseFloat(element.attr('cy')) - (tooltipBlock.node() as HTMLElement).getBoundingClientRect().height - TOOLTIP_ARROW_PADDING_Y]
     }

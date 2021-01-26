@@ -1,5 +1,5 @@
 import * as d3 from "d3";
-import { BlockMargin, DataRow, Orient, TwoDimensionalChartModel } from "../../../model/model";
+import { BlockMargin, DataRow, Orient, Size, TwoDimensionalChartModel } from "../../../model/model";
 import { Helper } from "../../helper";
 import { Scale, Scales } from "../../features/scale/scale";
 import { Block } from "../../block/block";
@@ -14,7 +14,7 @@ export class Line
 {
     private static lineChartClass = 'line';
 
-    public static render(block: Block, scales: Scales, data: DataRow[], margin: BlockMargin, keyAxisOrient: Orient, chart: TwoDimensionalChartModel): void {
+    public static render(block: Block, scales: Scales, data: DataRow[], margin: BlockMargin, keyAxisOrient: Orient, chart: TwoDimensionalChartModel, blockSize: Size): void {
         const line = this.getLineGenerator();
         const lineCoordinate: LineChartCoordinate[] = this.getLineCoordinateByKeyOrient(keyAxisOrient,
             data,
@@ -31,7 +31,7 @@ export class Line
     
         Helper.setCssClasses(path, chart.cssClasses);
         Helper.setChartElementColor(path, chart.elementColors, 'stroke');
-        Dot.render(block, data, keyAxisOrient, scales, margin, chart.data.keyField.name, chart.data.valueField.name, chart.cssClasses, chart.elementColors);
+        Dot.render(block, data, keyAxisOrient, scales, margin, chart.data.keyField.name, chart.data.valueField.name, chart.cssClasses, chart.elementColors, blockSize);
     }
 
     public static updateLineChartByValueAxis(block: Block, scales: Scales, data: DataRow[], margin: BlockMargin, keyAxisOrient: Orient, chart: TwoDimensionalChartModel): void {

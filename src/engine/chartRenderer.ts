@@ -113,7 +113,8 @@ export class ChartRenderer
                     data[chart.data.dataSource],
                     margin,
                     keyAxisOrient,
-                    chart);  
+                    chart,
+                    blockSize);  
             else if(chart.type === 'area')
                 Area.render(block,
                     scales,

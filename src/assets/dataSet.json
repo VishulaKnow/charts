@@ -68,7 +68,7 @@
         {"SortOrder":202011,"EventCost":15000.00,"AlcoholCost":0.00,"MonthYear":"Nov 20"},
         {"SortOrder":202012,"EventCost":317007.00,"AlcoholCost":36000.00,"MonthYear":"Dec 20"},
         {"SortOrder":202101,"EventCost":4500.00,"AlcoholCost":0.00,"MonthYear":"Jan 21"},
-        {"SortOrder":202102,"EventCost":7000.00,"AlcoholCost":0.00,"MonthYear":"Feb 21"}
+        {"SortOrder":202102,"EventCost":200000.00,"AlcoholCost":0.00,"MonthYear":"Feb 21"}
     ],
     "dataSet_data2": [
         {"SortOrder":202007,"EventCost":19000.00,"AlcoholCost":8000.00,"MonthYear":"Jul 20"},

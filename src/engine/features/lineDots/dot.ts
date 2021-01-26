@@ -1,6 +1,7 @@
 import { Color } from "d3";
-import { BlockMargin, DataRow, Orient } from "../../../model/model";
+import { BlockMargin, DataRow, Orient, Size } from "../../../model/model";
 import { Block } from "../../block/block";
+import { BlockHelper } from "../../block/blockHelper";
 import { Helper } from "../../helper";
 import { Scale, Scales } from "../scale/scale";
 
@@ -12,8 +13,12 @@ interface DotAttrs {
 export class Dot
 {
     private static dotClass = 'dot';
+    private static dotRadius = 5.5;
+    private static innerDotRadius = 2.5;
 
-    public static render(block: Block, data: DataRow[], keyAxisOrient: Orient, scales: Scales, margin: BlockMargin, keyField: string, valueField: string, cssClasses: string[], colorPalette: Color[]): void {
+    public static render(block: Block, data: DataRow[], keyAxisOrient: Orient, scales: Scales, margin: BlockMargin, keyField: string, valueField: string, cssClasses: string[], colorPalette: Color[], blockSize: Size): void {
+        this.renderClipPathFormCircles(block, blockSize, margin)
+        
         const dotsWrapper = block.getChartBlock()
             .selectAll(`.${this.dotClass}${Helper.getCssClassesLine(cssClasses)}`)
             .data(data)
@@ -25,13 +30,13 @@ export class Dot
             .attr('class', this.dotClass)
             .attr('cx', d => attrs.cx(d))
             .attr('cy', d => attrs.cy(d))
-            .attr('r', 5.5);
+            .attr('r', this.dotRadius);
 
         const dotsInside = dotsWrapper.append('circle')
             .attr('class', 'dot-inside')
             .attr('cx', d => attrs.cx(d))
             .attr('cy', d => attrs.cy(d))
-            .attr('r', 2.5)
+            .attr('r', this.innerDotRadius)
             .style('fill', 'white')
             .style('pointer-events', 'none');
 
@@ -79,5 +84,18 @@ export class Dot
         }
 
         return attrs;
+    }
+
+    private static renderClipPathFormCircles(block: Block, blockSize: Size, margin: BlockMargin): void {
+        const attributes = BlockHelper.getChartBlockAttributes(blockSize, margin);
+        block.getSvg()
+            .select('defs')
+            .append('clipPath')
+            .attr('id', `clipPath-dots-${block.getSvgCssClasses().join('-')}`)
+            .append('rect')
+            .attr('x', attributes.x - this.dotRadius)
+            .attr('y', attributes.y - this.dotRadius)
+            .attr('width', attributes.width + this.dotRadius)
+            .attr('height', attributes.height + this.dotRadius);
     }
 }

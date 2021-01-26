@@ -36,16 +36,6 @@ export class Tooltip
         }
     }
 
-    private static renderTooltipsForBar(block: Block, charts: TwoDimensionalChartModel[], data: DataSource, blockSize: Size): void {
-        charts.forEach(chart => {
-            if(chart.tooltip.data.fields.length !== 0) {
-                const bars = block.getSvg()
-                    .selectAll(`rect${Helper.getCssClassesLine(chart.cssClasses)}`);
-                this.renderTooltipForSingleElements(block, bars, chart.tooltip.data.fields, data[chart.data.dataSource], blockSize, charts);
-            }
-        });
-    }
-
     private static renderTooltipsForDonut(block: Block, charts: PolarChartModel[], data: DataSource, blockSize: Size): void {
         charts.forEach(chart => {
             const attrTransform = block.getSvg().select(`.${Donut.donutBlockClass}`).attr('transform');
@@ -120,11 +110,13 @@ export class Tooltip
                 tooltipBlock.style('display', 'block');
                 const key = d[charts[0].data.keyField.name];
                 tooltipContent.html(`${TooltipHelper.getTooltipHtmlForMultyCharts(charts, data, key)}`);
-
+                console.log(tooltipBlock.node());
+                
                 const coordinatePointer: [number, number] = TooltipHelper.getBarTooltipCoordinate(d3.select(this), tooltipBlock, 'circle');
+                
                 const tooltipCoordinate = TooltipHelper.getTooltipCoordinate(coordinatePointer);
                 thisClass.setTooltipCoordinate(tooltipBlock, tooltipCoordinate);
-
+                
                 const dotsEdgingAttrs = TooltipHelper.getDotEdgingAttrs(d3.select(this));
                 thisClass.renderDotsEdging(block, dotsEdgingAttrs, d3.select(this).style('fill'));
             });
@@ -147,16 +139,18 @@ export class Tooltip
                 .style('position', 'absolute')
                 .style('left', '9px')
                 .style('bottom', '-6px');
+
         const thisClass = this;
 
         elemets
-            .on('mousemove', function(event, d) {
+            .on('mouseover', function(event, d) {
                 tooltipBlock.style('display', 'block');
                 const key = d[charts[0].data.keyField.name];
                 tooltipContent.html(`${TooltipHelper.getTooltipHtmlForMultyCharts(charts, data, key)}`);
 
                 const coordinatePointer: [number, number] = TooltipHelper.getBarTooltipCoordinate(d3.select(this), tooltipBlock, 'rect');
                 const tooltipCoordinate = TooltipHelper.getTooltipCoordinate(coordinatePointer);
+                
                 thisClass.setTooltipCoordinate(tooltipBlock, tooltipCoordinate);
             });
 

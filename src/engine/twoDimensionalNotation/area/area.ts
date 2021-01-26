@@ -35,7 +35,7 @@ export class Area
         Helper.setCssClasses(path, chart.cssClasses);
         Helper.setChartElementColor(path, chart.elementColors, 'fill');
 
-        Dot.render(block, data, keyAxisOrient, scales, margin, chart.data.keyField.name, chart.data.valueField.name, chart.cssClasses, chart.elementColors);
+        Dot.render(block, data, keyAxisOrient, scales, margin, chart.data.keyField.name, chart.data.valueField.name, chart.cssClasses, chart.elementColors, blockSize);
     }
 
     public static updateAreaChartByValueAxis(block: Block, scales: Scales, data: DataRow[], margin: BlockMargin, chart: TwoDimensionalChartModel, keyAxisOrient: Orient, blockSize: Size): void {
