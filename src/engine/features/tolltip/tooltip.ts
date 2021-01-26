@@ -3,9 +3,11 @@ import { BlockMargin, DataRow, DataSource, Field, IntervalChartModel, Model, Pol
 import { Helper } from "../../helper";
 import { Scale, Scales } from "../scale/scale";
 import { Block } from "../../block/block";
-import { TipBoxAttributes, TooltipCoordinate, TooltipHelper, TooltipLineAttributes } from "./tooltipHelper";
+import { DotEdgingAttrs, TipBoxAttributes, TooltipCoordinate, TooltipHelper, TooltipLineAttributes } from "./tooltipHelper";
 import { Donut } from "../../polarNotation/donut";
 import { Bar } from "../../twoDimensionalNotation/bar/bar";
+import { Line } from "../../twoDimensionalNotation/line/line";
+import { Color } from "d3";
 
 export class Tooltip
 {
@@ -19,12 +21,14 @@ export class Tooltip
         const chartsWithTooltipIndex = model.options.charts.findIndex((chart: TwoDimensionalChartModel | PolarChartModel | IntervalChartModel) => chart.tooltip.data.fields.length !== 0);
         if(chartsWithTooltipIndex !== -1) {
             if(model.options.type === '2d') {
-                if(model.options.charts.findIndex(chart => chart.type === 'area' || chart.type === 'line') === -1) {
-                    // this.renderTooltipsForBar(block, model.options.charts, data, model.blockCanvas.size);
-                    this.renderMultiTooltipForBar(block, Bar.getAllBarItems(block), data, model.blockCanvas.size, model.options.charts);
-                } else {
+
+                if(model.options.charts.findIndex(chart => chart.type === 'area' || chart.type === 'line') === -1)
+                    this.renderMultiTooltipForBar(block, Bar.getAllBarItems(block), data, model.options.charts);
+                else if(model.options.charts.findIndex(chart => chart.type === 'line') !== -1)
+                    this.renderTooltipForLine(block, Line.getAllDots(block), data, model.options.charts);
+                else 
                     this.renderLineTooltip(block, scales.scaleKey, model.chartBlock.margin, model.blockCanvas.size, model.options.charts, data, model.options.scale.scaleKey);
-                }
+
             } else if(model.options.type === 'polar') {
                 this.renderTooltipsForDonut(block, model.options.charts, data, model.blockCanvas.size);
             } else if(model.options.type === 'interval') {
@@ -98,6 +102,70 @@ export class Tooltip
             });
     }
 
+    private static renderTooltipForLine(block: Block, elemets: d3.Selection<d3.BaseType, DataRow, d3.BaseType, unknown>, data: DataSource, charts: TwoDimensionalChartModel[]): void {
+        const tooltipBlock = this.renderTooltipBlock(block);
+        const tooltipContent = this.getTooltipContentBlock(tooltipBlock);
+        
+        let tooltipArrow = tooltipBlock.select(`.${this.tooltipArrowClass}`);
+        if(tooltipArrow.size() === 0)
+            tooltipArrow = tooltipBlock
+                .append('div')
+                .attr('class', this.tooltipArrowClass)
+                .style('position', 'absolute')
+                .style('left', '9px')
+                .style('bottom', '-6px');
+        const thisClass = this;
+
+        elemets
+            .on('mouseover', function(event, d) {
+                tooltipBlock.style('display', 'block');
+                const key = d[charts[0].data.keyField.name];
+                tooltipContent.html(`${TooltipHelper.getTooltipHtmlForMultyCharts(charts, data, key)}`);
+
+                const coordinatePointer: [number, number] = TooltipHelper.getBarTooltipCoordinate(d3.select(this), tooltipBlock, 'circle');
+                const tooltipCoordinate = TooltipHelper.getTooltipCoordinate(coordinatePointer);
+                thisClass.setTooltipCoordinate(tooltipBlock, tooltipCoordinate);
+
+                const dotsEdgingAttrs = TooltipHelper.getDotEdgingAttrs(d3.select(this));
+                thisClass.renderDotsEdging(block, dotsEdgingAttrs, d3.select(this).style('fill'));
+            });
+
+        elemets.on('mouseleave', function() {
+            thisClass.removeDotsEdging(block);
+            tooltipBlock.style('display', 'none');
+        });
+    }
+
+    private static renderMultiTooltipForBar(block: Block, elemets: d3.Selection<d3.BaseType, DataRow, d3.BaseType, unknown>, data: DataSource, charts: TwoDimensionalChartModel[]): void {
+        const tooltipBlock = this.renderTooltipBlock(block);
+        const tooltipContent = this.getTooltipContentBlock(tooltipBlock);
+        
+        let tooltipArrow = tooltipBlock.select(`.${this.tooltipArrowClass}`);
+        if(tooltipArrow.size() === 0)
+            tooltipArrow = tooltipBlock
+                .append('div')
+                .attr('class', this.tooltipArrowClass)
+                .style('position', 'absolute')
+                .style('left', '9px')
+                .style('bottom', '-6px');
+        const thisClass = this;
+
+        elemets
+            .on('mouseover', function(event, d) {
+                tooltipBlock.style('display', 'block');
+                const key = d[charts[0].data.keyField.name];
+                tooltipContent.html(`${TooltipHelper.getTooltipHtmlForMultyCharts(charts, data, key)}`);
+
+                const coordinatePointer: [number, number] = TooltipHelper.getBarTooltipCoordinate(d3.select(this), tooltipBlock, 'rect');
+                const tooltipCoordinate = TooltipHelper.getTooltipCoordinate(coordinatePointer);
+                thisClass.setTooltipCoordinate(tooltipBlock, tooltipCoordinate);
+            });
+
+        elemets.on('mouseleave', function() {
+            tooltipBlock.style('display', 'none');
+        });
+    }
+
     private static renderTooltipForSingleElements(block: Block, elemets: d3.Selection<d3.BaseType, unknown, d3.BaseType, unknown>, fields: Field[], data: DataRow[], blockSize: Size, charts: TwoDimensionalChartModel[] | PolarChartModel[] | IntervalChartModel[], translateX: number = 0, translateY: number = 0): void {
         const tooltipBlock = this.renderTooltipBlock(block, translateX, translateY);
         const tooltipContent = this.getTooltipContentBlock(tooltipBlock);
@@ -118,6 +186,36 @@ export class Tooltip
             });
     
         elemets.on('mouseleave', event => tooltipBlock.style('display', 'none'));
+    }
+
+    private static renderDotsEdging(block: Block, attrs: DotEdgingAttrs, color: string): void {
+        block.getChartBlock()
+            .append('circle')
+            .attr('class', 'dot-edging-internal')
+            .attr('cx', attrs.cx)
+            .attr('cy', attrs.cy)
+            .attr('r', 10.5)
+            .style('opacity', 0.4)
+            .style('fill', color)
+            .style('pointer-events', 'none')
+            .lower();
+
+        block.getChartBlock()
+            .append('circle')
+            .attr('class', 'dot-edging-external')
+            .attr('cx', attrs.cx)
+            .attr('cy', attrs.cy)
+            .attr('r', 15.5)
+            .style('opacity', 0.2)
+            .style('fill', color)
+            .style('pointer-events', 'none')
+            .lower();
+    }
+    
+    private static removeDotsEdging(block: Block): void {
+        block.getChartBlock()
+            .selectAll('.dot-edging-external, .dot-edging-internal')
+            .remove();
     }
 
     private static renderTooltipWrapper(block: Block): void {
@@ -183,35 +281,5 @@ export class Tooltip
 
     private static getTooltipContentBlock(tooltipBlock: d3.Selection<d3.BaseType, unknown, HTMLElement, any>): d3.Selection<d3.BaseType, unknown, HTMLElement, any> {
         return tooltipBlock.select(`.${this.tooltipContentClass}`);
-    }
-
-    private static renderMultiTooltipForBar(block: Block, elemets: d3.Selection<d3.BaseType, DataRow, d3.BaseType, unknown>, data: DataSource, blockSize: Size, charts: TwoDimensionalChartModel[], translateX: number = 0, translateY: number = 0): void {
-        const tooltipBlock = this.renderTooltipBlock(block, translateX, translateY);
-        const tooltipContent = this.getTooltipContentBlock(tooltipBlock);
-        
-        let tooltipArrow = tooltipBlock.select(`.${this.tooltipArrowClass}`);
-        if(tooltipArrow.size() === 0)
-            tooltipArrow = tooltipBlock
-                .append('div')
-                .attr('class', this.tooltipArrowClass)
-                .style('position', 'absolute')
-                .style('left', '9px')
-                .style('bottom', '-6px');
-        const thisClass = this;
-
-        elemets
-            .on('mouseover', function(event, d) {
-                tooltipBlock.style('display', 'block');
-                const key = d[charts[0].data.keyField.name];
-                tooltipContent.html(`${TooltipHelper.getTooltipHtmlForMultyCharts(charts, data, key)}`);
-
-                const coordinatePointer: [number, number] = TooltipHelper.getBarTooltipCoordinate(d3.select(this), tooltipBlock);
-                const tooltipCoordinate = TooltipHelper.getTooltipCoordinate(coordinatePointer);
-                thisClass.setTooltipCoordinate(tooltipBlock, tooltipCoordinate);
-            });
-
-        elemets.on('mouseleave', function() {
-            tooltipBlock.style('display', 'none');
-        });
     }
 }

@@ -22,7 +22,7 @@ const designerConfig: DesignerConfig = {
             bar: {
                 groupDistance: 10,
                 minBarWidth: 3,
-                maxBarWidth: 10,
+                maxBarWidth: 20,
                 barDistance: 5
             },
             donut: {

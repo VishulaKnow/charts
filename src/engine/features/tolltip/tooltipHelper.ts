@@ -3,6 +3,8 @@ import { BlockMargin, DataRow, DataSource, Field, ScaleKeyType, Size, TwoDimensi
 import { Scale } from "../scale/scale";
 import { ValueFormatter, } from "../../valueFormatter";
 
+type ElementType = 'circle' | 'rect';
+
 export interface TooltipLineAttributes {
     x1: number;
     x2: number;
@@ -20,6 +22,10 @@ export interface TooltipCoordinate {
     top: string;
     right: string;
     bottom: string;
+}
+export interface DotEdgingAttrs {
+    cx: number,
+    cy: number
 }
 
 
@@ -107,9 +113,19 @@ export class TooltipHelper
         }
     } 
 
-    public static getBarTooltipCoordinate(bar: d3.Selection<d3.BaseType, DataRow, HTMLElement, any>, tooltipBlock: d3.Selection<d3.BaseType, unknown, HTMLElement, any>): [number, number] {
-        return [parseFloat(bar.attr('x')) + parseFloat(bar.attr('width')) / 2 - TOOLTIP_ARROW_PADDING_X,
-            parseFloat(bar.attr('y')) - (tooltipBlock.node() as HTMLElement).getBoundingClientRect().height - TOOLTIP_ARROW_PADDING_Y];
+    public static getBarTooltipCoordinate(element: d3.Selection<d3.BaseType, DataRow, HTMLElement, any>, tooltipBlock: d3.Selection<d3.BaseType, unknown, HTMLElement, any>, elementType: ElementType): [number, number] {
+        if(elementType === 'rect')
+            return [parseFloat(element.attr('x')) + parseFloat(element.attr('width')) / 2 - TOOLTIP_ARROW_PADDING_X,
+                parseFloat(element.attr('y')) - (tooltipBlock.node() as HTMLElement).getBoundingClientRect().height - TOOLTIP_ARROW_PADDING_Y];
+        return [parseFloat(element.attr('cx')) - TOOLTIP_ARROW_PADDING_X, 
+            parseFloat(element.attr('cy')) - (tooltipBlock.node() as HTMLElement).getBoundingClientRect().height - TOOLTIP_ARROW_PADDING_Y]
+    }
+
+    public static getDotEdgingAttrs(element: d3.Selection<d3.BaseType, DataRow, HTMLElement, any>): DotEdgingAttrs {
+        return {
+            cx: parseFloat(element.attr('cx')),
+            cy: parseFloat(element.attr('cy'))
+        }
     }
     
     private static getTooltipItemText(chart: TwoDimensionalChartModel, data: DataSource, keyValue: string): string {

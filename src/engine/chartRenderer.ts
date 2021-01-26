@@ -45,7 +45,7 @@ export class ChartRenderer
         
         Tooltip.renderTooltips(block, model, data, Scale.scales);
         if(model.dataSettings.scope.hidedRecordsAmount !== 0)
-            RecordOverflowAlert.render(block, model.dataSettings.scope.hidedRecordsAmount);
+            RecordOverflowAlert.render(block, model.dataSettings.scope.hidedRecordsAmount, options.charts[0].orient);
     }
     
     public static renderPolar(block: Block, model: Model, data: DataSource) {
@@ -90,7 +90,7 @@ export class ChartRenderer
         Legend.render(block, data, options, model.legendBlock, model.blockCanvas.size);
         Tooltip.renderTooltips(block, model, data, Scale.scales);
         if(model.dataSettings.scope.hidedRecordsAmount !== 0)
-            RecordOverflowAlert.render(block, model.dataSettings.scope.hidedRecordsAmount);
+            RecordOverflowAlert.render(block, model.dataSettings.scope.hidedRecordsAmount, options.charts[0].orient);
     }
 
     private static render2DCharts(block: Block, charts: TwoDimensionalChartModel[], scales: Scales, data: DataSource, margin: BlockMargin, keyAxisOrient: Orient, barSettings: BarChartSettings, blockSize: Size) {      
@@ -177,7 +177,7 @@ export class ChartRenderer
             model.blockCanvas.size);
     }
 
-    private static updateChartsByValueAxis(block: Block, charts: TwoDimensionalChartModel[], scales: Scales, data: DataSource, margin: BlockMargin, keyAxisOrient: string, blockSize: Size): void {
+    private static updateChartsByValueAxis(block: Block, charts: TwoDimensionalChartModel[], scales: Scales, data: DataSource, margin: BlockMargin, keyAxisOrient: Orient, blockSize: Size): void {
         charts.forEach((chart: TwoDimensionalChartModel) => {
             if(chart.type === 'bar')
                 Bar.updateBarChartByValueAxis(block, 
