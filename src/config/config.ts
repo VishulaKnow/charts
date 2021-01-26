@@ -85,6 +85,7 @@ interface PolarChartAppearanceOptions {
 interface TwoDimensionalChartData {
     dataSource: string;
     keyField: Field;
+    subKeyField?: Field;
     valueField: Field;
 }
 

@@ -151,7 +151,7 @@ export class Tooltip
         const thisClass = this;
 
         elemets
-            .on('mouseover', function(event, d) {
+            .on('mousemove', function(event, d) {
                 tooltipBlock.style('display', 'block');
                 const key = d[charts[0].data.keyField.name];
                 tooltipContent.html(`${TooltipHelper.getTooltipHtmlForMultyCharts(charts, data, key)}`);

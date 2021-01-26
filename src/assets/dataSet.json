@@ -103,6 +103,18 @@
         { "brand": "LADA", "price": 50, "count": 10 },
         { "brand": "MERCEDES", "price": 15, "count": 12 }
     ],
+    "dataSet_segmented": [
+        { "model": "M3", "brand": "BMW", "price": 120, "count": 12 },
+        { "model": "M4", "brand": "BMW", "price": 120, "count": 12 },
+        { "model": "V3", "brand": "LADA", "price": 50, "count": 10 },
+        { "model": "V4", "brand": "LADA", "price": 50, "count": 10 },
+        { "model": "M4", "brand": "MERCEDES", "price": 15, "count": 12 },
+        { "model": "M14", "brand": "MERCEDES", "price": 15, "count": 12 },
+        { "model": "A5", "brand": "AUDI", "price": 20, "count": 5 },
+        { "model": "A6", "brand": "AUDI", "price": 20, "count": 5 },
+        { "model": "M7", "brand": "VOLKSWAGEN", "price": 40, "count": 10 },
+        { "model": "M9", "brand": "VOLKSWAGEN", "price": 40, "count": 10 }
+    ],
     "dataSet_72": [
         { "brand": "BMW", "price": 120, "count": 12 },
         { "brand": "LADA", "price": 50, "count": 10 },

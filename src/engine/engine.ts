@@ -9,7 +9,7 @@ export default class Engine {
     private block: Block;
 
     public render(model: Model, data: any, parentSelector: string): void {       
-        ValueFormatter.format = model.dataFormat.formatters;
+        ValueFormatter.setFormatFunction(model.dataFormat.formatters);
         this.block = new Block(model.blockCanvas.cssClass, parentSelector);
         this.block.renderWrapper(model.blockCanvas.size);
         if(model.options.type === '2d')

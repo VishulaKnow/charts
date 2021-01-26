@@ -2,10 +2,14 @@ import { DataType, Formatter } from '../designer/designerConfig';
 
 export class ValueFormatter
 {
-    public static format: Formatter;
+    private static format: Formatter;
 
     public static formatValue(valueType: DataType, value: string): string {
         return this.format[valueType]({}, value);
+    }
+
+    public static setFormatFunction(formatFunction: Formatter): void {
+        this.format = formatFunction;
     }
 
     public static getValueOrZero(value: number): number {

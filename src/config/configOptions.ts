@@ -39,19 +39,23 @@ const configCars: Config = {
         charts: [
             {
                 title: 'Рост стоимости и длинное название параметра',
-                type: 'line',
+                type: 'bar',
                 legend: {
                     position: 'top'
                 },
                 data: {
-                    dataSource: 'dataSet_large',
+                    dataSource: 'dataSet_segmented',
                     keyField:  {
                         name: 'brand',
                         format: 'string'
                     },
+                    subKeyField: {
+                        name: 'model',
+                        format: 'string'
+                    },
                     valueField: {
                         name: 'price',
-                        format: 'integer'
+                        format: 'money'
                     }
                 },
                 tooltip: {
@@ -64,35 +68,6 @@ const configCars: Config = {
                             {
                                 name: 'count',
                                 format: 'integer'
-                            }
-                        ]
-                    }
-                },
-                orientation: 'vertical'
-            },
-            {
-                title: 'Рост капитализации компании',
-                type: 'line',
-                legend: {
-                    position: 'top'
-                },
-                data: {
-                    dataSource: 'dataSet_large2',
-                    keyField:  {
-                        name: 'brand',
-                        format: 'string'
-                    },
-                    valueField: {
-                        name: 'price',
-                        format: 'integer'
-                    }
-                },
-                tooltip: {
-                    data: {
-                        fields: [
-                            {
-                                name: 'price',
-                                format: 'money'
                             }
                         ]
                     }
