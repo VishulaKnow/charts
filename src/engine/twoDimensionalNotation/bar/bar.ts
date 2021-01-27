@@ -15,9 +15,9 @@ interface BarAttrs {
 
 export class Bar
 {
-    private static barItemClass  = 'bar-item'
+    private static barItemClass  = 'bar-item';
 
-    public static render(block: Block, scales: Scales, data: DataRow[], margin: BlockMargin, keyAxisOrient: Orient, chart: TwoDimensionalChartModel, blockSize: Size, barChartsAmount: number, barSettings: BarChartSettings, isSegmented: boolean): void {
+    public static render(block: Block, scales: Scales, data: DataRow[], margin: BlockMargin, keyAxisOrient: Orient, chart: TwoDimensionalChartModel, blockSize: Size, barSettings: BarChartSettings, isSegmented: boolean): void {
         if(isSegmented)
             this.renderSegmented(block, scales, data, margin, keyAxisOrient, chart, blockSize, barSettings);
         else
@@ -70,7 +70,7 @@ export class Bar
     }
 
     private static renderSegmented(block: Block, scales: Scales, data: DataRow[], margin: BlockMargin, keyAxisOrient: Orient, chart: TwoDimensionalChartModel, blockSize: Size, barSettings: BarChartSettings): void {
-        const keys = chart.data.valueField.map(f => f.name);
+        const keys = chart.data.valueField.map(field => field.name);
         const stackedData = d3.stack().keys(keys)(data);
 
         const groups = block.getChartBlock()
@@ -161,7 +161,10 @@ export class Bar
         }
 
         if(axisOrient === 'top' || axisOrient === 'bottom') {
-            attrs.x = d => scales.scaleKey(d.data[keyField]) + margin.left;
+            attrs.x = d => {
+                console.log(d);
+                return scales.scaleKey(d.data[keyField]) + margin.left
+            };
             attrs.width = d => barSize;
         }
         if(axisOrient === 'left' || axisOrient === 'right') {

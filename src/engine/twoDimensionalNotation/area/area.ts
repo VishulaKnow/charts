@@ -4,6 +4,7 @@ import { Helper } from "../../helper";
 import { Scale, Scales } from "../../features/scale/scale";
 import { Block } from "../../block/block";
 import { Dot } from "../../features/lineDots/dot";
+import { Color } from "d3";
 
 interface AreaChartCoordinate {
     x0: number;
@@ -16,7 +17,14 @@ export class Area
 {
     private static areaChartClass = 'area';
 
-    public static render(block: Block, scales: Scales, data: DataRow[], margin: BlockMargin, keyAxisOrient: Orient, chart: TwoDimensionalChartModel, blockSize: Size): void {
+    public static render(block: Block, scales: Scales, data: DataRow[], margin: BlockMargin, keyAxisOrient: Orient, chart: TwoDimensionalChartModel, blockSize: Size, isSegmented: boolean): void {
+        if(isSegmented)
+            this.renderSegmented(block, scales, data, margin, keyAxisOrient, chart, blockSize);
+        else
+            this.renderGrouped(block, scales, data, margin, keyAxisOrient, chart, blockSize);
+    }
+
+    private static renderGrouped(block: Block, scales: Scales, data: DataRow[], margin: BlockMargin, keyAxisOrient: Orient, chart: TwoDimensionalChartModel, blockSize: Size): void {
         const area = this.getAreaGenerator(keyAxisOrient);
         chart.data.valueField.forEach((field, index) => {
             const areaCoordinate: AreaChartCoordinate[] = this.getAreaCoordinateByKeyOrient(keyAxisOrient,
@@ -38,6 +46,30 @@ export class Area
     
             Dot.render(block, data, keyAxisOrient, scales, margin, chart.data.keyField.name, field.name, chart.cssClasses, index, chart.elementColors, blockSize);
         });
+    }
+
+    private static renderSegmented(block: Block, scales: Scales, data: DataRow[], margin: BlockMargin, keyAxisOrient: Orient, chart: TwoDimensionalChartModel, blockSize: Size): void {
+        const keys = chart.data.valueField.map(field => field.name);
+        const stackedData = d3.stack().keys(keys)(data);
+
+        console.log(stackedData);
+        
+
+        const area = d3.area<DataRow>()
+            .x(d => scales.scaleKey(d.data['brand']) + margin.left)
+            .y0(d => scales.scaleValue(d[0]) + margin.top)
+            .y1(d => scales.scaleValue(d[1]) + margin.top);
+
+        const areas = block.getChartBlock()
+            .selectAll('.area')
+            .data(stackedData)
+            .enter()
+                .append('path')
+                .attr('d', d => area(d))
+                .attr('class', this.areaChartClass)
+                .style('clip-path', `url(${block.getClipPathId()})`);
+
+        this.setSegmentColor(areas, chart.elementColors);
     }
 
     public static updateAreaChartByValueAxis(block: Block, scales: Scales, data: DataRow[], margin: BlockMargin, chart: TwoDimensionalChartModel, keyAxisOrient: Orient, blockSize: Size): void {
@@ -71,7 +103,7 @@ export class Area
                 .x1(d => d.x1)
                 .y(d => d.y0);
     }
-    
+
     private static getAreaCoordinateByKeyOrient(axisOrient: string, data: DataRow[], scales: Scales, margin: BlockMargin, keyField: string, valueField: string, blockSize: Size) : AreaChartCoordinate[] {
         const areaCoordinate: AreaChartCoordinate[] = [];
         if(axisOrient === 'bottom' || axisOrient === 'top') {
@@ -101,5 +133,9 @@ export class Area
             });
         }   
         return areaCoordinate;
+    }
+
+    private static setSegmentColor(segments: d3.Selection<SVGGElement, unknown, SVGGElement, unknown>, colorPalette: Color[]): void {
+        segments.style('fill', (d, i) => colorPalette[i % colorPalette.length].toString());
     }
 }

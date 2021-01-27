@@ -105,7 +105,6 @@ export class ChartRenderer
                     keyAxisOrient,
                     chart,
                     blockSize,
-                    charts.filter(ch => ch.type === 'bar').length,
                     barSettings,
                     isSegmented);
             else if(chart.type === 'line')
@@ -123,7 +122,8 @@ export class ChartRenderer
                     margin,
                     keyAxisOrient,
                     chart,
-                    blockSize);
+                    blockSize,
+                    isSegmented);
         });
     }
     

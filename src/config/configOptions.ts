@@ -10,7 +10,7 @@ const configCars: Config = {
     },
     options: {
         type: '2d',
-        isSegmented: false,
+        isSegmented: true,
         axis: {
             keyAxis: {
                 position: 'end',
