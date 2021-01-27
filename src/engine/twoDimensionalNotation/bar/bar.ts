@@ -4,6 +4,7 @@ import { ValueFormatter } from "../../valueFormatter";
 import { Helper } from "../../helper";
 import { Scale, Scales } from "../../features/scale/scale";
 import { Block } from "../../block/block";
+import { Color } from "d3";
 
 interface BarAttrs {
     x: (data: DataRow) => number;
@@ -50,22 +51,29 @@ export class Bar
     private static renderSegmented(block: Block, scales: Scales, data: DataRow[], margin: BlockMargin, keyAxisOrient: Orient, chart: TwoDimensionalChartModel, blockSize: Size, barChartsAmount: number, barSettings: BarChartSettings): void {
         const keys = chart.data.valueField.map(f => f.name);
         const stackedData = d3.stack().keys(keys)(data);
-        console.log(stackedData);
-        block.getChartBlock()
+
+        const groups = block.getChartBlock()
             .selectAll('g')
             .data(stackedData)
             .enter()
-                .append('g')
-                .style('fill', 'steelblue')
-                .selectAll('rect')
-                .data(d => d)
-                .enter()
-                    .append('rect')
-                    .style('stroke', 'black')
-                    .attr('x', d => scales.scaleKey(d.data[chart.data.keyField.name]) + margin.left)
-                    .attr('y', d => scales.scaleValue(d[1]) + margin.top)
-                    .attr('height', d => blockSize.height - margin.top - margin.bottom - scales.scaleValue(d[1] - d[0]))
-                    .attr('width', d => Scale.getScaleWidth(scales.scaleKey));
+                .append('g');
+
+        const bars = groups
+            .selectAll('rect')
+            .data(d => d)
+            .enter()
+                .append('rect')
+                .attr('class', this.barItemClass);
+
+        const barAttrs = this.getStackBarAttrByKeyOrient(block, keyAxisOrient, scales, margin, chart.data.keyField.name, blockSize, barSettings);
+       
+        bars
+            .attr('x', barAttrs.x)
+            .attr('y', barAttrs.y)
+            .attr('width', barAttrs.width)
+            .attr('height', barAttrs.height);
+
+        this.setSegmentColor(groups, chart.elementColors);
     }
 
     public static updateBarChartByValueAxis(block: Block, scales: Scales, margin: BlockMargin, keyAxisOrient: string, chart: TwoDimensionalChartModel, blockSize: Size): void {
@@ -136,7 +144,45 @@ export class Bar
         }    
         else if(axisOrient === 'right') {
             attrs.x = d => scales.scaleValue(d[valueField]) + margin.left;
-            attrs.width = d => ValueFormatter.getValueOrZero(blockSize.width - margin.left - margin.right - scales.scaleValue(d[valueField]))
+            attrs.width = d => ValueFormatter.getValueOrZero(blockSize.width - margin.left - margin.right - scales.scaleValue(d[valueField]));
+        }
+
+        return attrs;
+    }
+
+    private static getStackBarAttrByKeyOrient(block: Block, axisOrient: Orient, scales: Scales, margin: BlockMargin, keyField: string, blockSize: Size, barSettings: BarChartSettings): BarAttrs {
+        const barSize = Scale.getScaleWidth(scales.scaleKey)
+        const attrs: BarAttrs = {
+            x: null,
+            y: null,
+            width: null,
+            height: null
+        }
+
+        if(axisOrient === 'top' || axisOrient === 'bottom') {
+            attrs.x = d => scales.scaleKey(d.data[keyField]) + margin.left;
+            attrs.width = d => barSize;
+        }
+        if(axisOrient === 'left' || axisOrient === 'right') {
+            attrs.y = d => scales.scaleKey(d.data[keyField]) + margin.top;
+            attrs.height = d => barSize;
+        }
+
+        if(axisOrient === 'bottom') {
+            attrs.y = d => scales.scaleValue(d[1]) + margin.top;
+            attrs.height = d => blockSize.height - margin.top - margin.bottom - scales.scaleValue(d[1] - d[0]);
+        }
+        if(axisOrient === 'top') {
+            attrs.y = d => margin.top + scales.scaleValue(d[0]);
+            attrs.height = d => ValueFormatter.getValueOrZero(scales.scaleValue(d[1] - d[0]));
+        }
+        if(axisOrient === 'left') {
+            attrs.x = d => margin.left + scales.scaleValue(d[0]);
+            attrs.width = d => ValueFormatter.getValueOrZero(scales.scaleValue(d[1] - d[0]));
+        }
+        if(axisOrient === 'right') {
+            attrs.x = d => scales.scaleValue(d[1]) + margin.left;
+            attrs.width = d => ValueFormatter.getValueOrZero(blockSize.width - margin.left - margin.right - scales.scaleValue(d[1] - d[0]));
         }
 
         return attrs;
@@ -168,5 +214,9 @@ export class Bar
             barsTran
                 .attr('x', d => scaleValue(d[valueField]) + margin.left)
                 .attr('width', d => ValueFormatter.getValueOrZero(blockSize.width - margin.left - margin.right - scaleValue(d[valueField]))); 
+    }
+
+    private static setSegmentColor(segments: d3.Selection<SVGGElement, unknown, SVGGElement, unknown>, colorPalette: Color[]): void {
+        segments.style('fill', (d, i) => colorPalette[i % colorPalette.length].toString());
     }
 }

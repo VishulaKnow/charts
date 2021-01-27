@@ -44,7 +44,7 @@ h3.title {
 }
 .line {
     fill: none;
-    stroke-width: 5;
+    stroke-width: 4;
 }
 .outline {
     outline: 1px solid black;

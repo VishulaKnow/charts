@@ -71,7 +71,7 @@ export class TwoDimensionalModel
                 data: { ...chart.data },
                 tooltip: chart.tooltip,
                 cssClasses: ChartStyleModel.getCssClasses(chart.type, index),
-                elementColors: ChartStyleModel.getElementColorPallete(chartPalette, '2d', charts.length, index)
+                elementColors: ChartStyleModel.getElementColorPallete(chartPalette, '2d', chart.data.valueField.length, index)
             });
         });
         return chartsModel;
