@@ -1,5 +1,5 @@
 import { ChartOrientation } from "../../../config/config";
-import { BlockMargin, DataRow, DataSource, Field, ScaleKeyType, Size, TwoDimensionalChartModel } from "../../../model/model";
+import { BlockMargin, DataRow, DataSource, Field, PolarChartModel, ScaleKeyType, Size, TwoDimensionalChartModel } from "../../../model/model";
 import { Scale } from "../scale/scale";
 import { ValueFormatter, } from "../../valueFormatter";
 
@@ -34,7 +34,7 @@ const TOOLTIP_ARROW_PADDING_Y = 13;
 
 export class TooltipHelper
 { 
-    public static getTooltipHtmlForMultyCharts(chart: TwoDimensionalChartModel, data: DataSource, keyValue: string): string {
+    public static getTooltipHtmlFor2DCharts(chart: TwoDimensionalChartModel, data: DataSource, keyValue: string): string {
         let text = '';
         chart.data.valueField.forEach((field, index) => {
             text += `<div class="tooltip-group"><div class="tooltip-color"><span class="tooltip-circle" style="background-color: ${chart.elementColors[index % chart.elementColors.length]};"></span></div>`;
@@ -42,6 +42,15 @@ export class TooltipHelper
             text += `<div class="tp-text-item">${this.getTooltipItemText(chart, data, keyValue, field)}</div>`;
             text += '</div></div>';
         });
+        return text;
+    }
+
+    public static getTooltipHtmlForPolarChart(chart: PolarChartModel, data: DataSource, keyValue: string, markColor: string): string {
+        let text = '';
+        text += `<div class="tooltip-group"><div class="tooltip-color"><span class="tooltip-circle" style="background-color: ${markColor};"></span></div>`;
+        text += `<div class="tp-texts">`;
+        text += `<div class="tp-text-item">${this.getTooltipItemText(chart, data, keyValue, chart.data.valueField)}</div>`;
+        text += '</div></div>';
         return text;
     }
 
@@ -111,14 +120,19 @@ export class TooltipHelper
     } 
 
     public static getBarTooltipCoordinate(element: d3.Selection<d3.BaseType, DataRow, HTMLElement, any>, tooltipBlock: d3.Selection<d3.BaseType, unknown, HTMLElement, any>, elementType: ElementType): [number, number] {
-        if(elementType === 'rect')
-            return [parseFloat(element.attr('x')) + parseFloat(element.attr('width')) / 2 - TOOLTIP_ARROW_PADDING_X,
-                parseFloat(element.attr('y')) - (tooltipBlock.node() as HTMLElement).getBoundingClientRect().height - TOOLTIP_ARROW_PADDING_Y];
+        let coordinateTuple: [number, number];
         
-        console.log((tooltipBlock.node() as HTMLElement).getBoundingClientRect());
-                
-        return [parseFloat(element.attr('cx')) - TOOLTIP_ARROW_PADDING_X, 
-            parseFloat(element.attr('cy')) - (tooltipBlock.node() as HTMLElement).getBoundingClientRect().height - TOOLTIP_ARROW_PADDING_Y]
+        if(elementType === 'rect')
+            coordinateTuple = [parseFloat(element.attr('x')) + parseFloat(element.attr('width')) / 2,
+                parseFloat(element.attr('y'))];
+        else
+            coordinateTuple = [parseFloat(element.attr('cx')), 
+                parseFloat(element.attr('cy'))];
+        return this.getRecalcedCoordinateByArrow(coordinateTuple, tooltipBlock);
+    }
+
+    public static getRecalcedCoordinateByArrow(coordinate: [number, number], tooltipBlock: d3.Selection<d3.BaseType, unknown, HTMLElement, any>): [number, number] {
+        return [coordinate[0] - TOOLTIP_ARROW_PADDING_X, coordinate[1] - TOOLTIP_ARROW_PADDING_Y - (tooltipBlock.node() as HTMLElement).getBoundingClientRect().height];
     }
 
     public static getDotEdgingAttrs(element: d3.Selection<d3.BaseType, DataRow, HTMLElement, any>): DotEdgingAttrs {
@@ -128,7 +142,7 @@ export class TooltipHelper
         }
     }
     
-    private static getTooltipItemText(chart: TwoDimensionalChartModel, data: DataSource, keyValue: string, valueField: Field): string {
+    private static getTooltipItemText(chart: TwoDimensionalChartModel | PolarChartModel, data: DataSource, keyValue: string, valueField: Field): string {
         const row = data[chart.data.dataSource].find(d => d[chart.data.keyField.name] === keyValue);
         return `${row[chart.data.keyField.name]} - ${ValueFormatter.formatValue(valueField.format, row[valueField.name])}`;
     }

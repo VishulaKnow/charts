@@ -20,7 +20,7 @@ export class Donut
 
     public static render(block: Block, data: DataRow[], margin: BlockMargin, chart: PolarChartModel, blockSize: Size): void {
         const radius = this.getOuterRadius(margin, blockSize);
-        const arc = this.getArc(radius, radius * 0.01 * chart.appearanceOptions.innerRadius);
+        const arc = this.getArcGenerator(radius, radius * 0.01 * chart.appearanceOptions.innerRadius);
         const pie = this.getPie(chart.data.valueField.name, chart.appearanceOptions.padAngle);
     
         const translate = this.getTranslate(margin, blockSize);
@@ -51,6 +51,13 @@ export class Donut
             .selectAll(`.${this.arcItemClass}`) as d3.Selection<SVGGElement, d3.PieArcDatum<DataRow>, SVGGElement, unknown>;
     }
 
+    public static getArcCentroid(blockSize: Size, margin: BlockMargin, dataItem: d3.PieArcDatum<DataRow>, innerRadius: number): [number, number] {
+        const outerRadius = this.getOuterRadius(margin, blockSize);
+        const arc = this.getArcGenerator(outerRadius, innerRadius * 0.01 * outerRadius);
+
+        return arc.centroid(dataItem);
+    }
+
     private static renderAggregator(block: Block, data: DataRow[], valueField: string, radius: number, appearanceOptions: PolarChartAppearanceModel, translate: Translate): void {
         const aggregator: Aggregator = {
             name: 'Сумма',
@@ -71,7 +78,7 @@ export class Donut
             blockSize.height - margin.top - margin.bottom) / 2;
     }
     
-    private static getArc(outerRadius: number, innerRadius: number): d3.Arc<any, d3.PieArcDatum<DataRow>> {
+    private static getArcGenerator(outerRadius: number, innerRadius: number): d3.Arc<any, d3.PieArcDatum<DataRow>> {
         return d3.arc<d3.PieArcDatum<DataRow>>()
             .innerRadius(innerRadius)
             .outerRadius(outerRadius);

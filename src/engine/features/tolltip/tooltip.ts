@@ -30,22 +30,22 @@ export class Tooltip
                     this.renderLineTooltip(block, scales.scaleKey, model.chartBlock.margin, model.blockCanvas.size, model.options.charts, data, model.options.scale.scaleKey, model.options.orient);
 
             } else if(model.options.type === 'polar') {
-                this.renderTooltipsForDonut(block, model.options.charts, data, model.blockCanvas.size);
+                this.renderTooltipsForDonut(block, model.options.charts, data, model.blockCanvas.size, model.chartBlock.margin);
             } else if(model.options.type === 'interval') {
                 this.renderTooltipsForGantt(block, model.options.charts, data, model.blockCanvas.size);
             }
         }
     }
 
-    private static renderTooltipsForDonut(block: Block, charts: PolarChartModel[], data: DataSource, blockSize: Size): void {
+    private static renderTooltipsForDonut(block: Block, charts: PolarChartModel[], data: DataSource, blockSize: Size, margin: BlockMargin): void {
         charts.forEach(chart => {
             const attrTransform = block.getSvg().select(`.${Donut.donutBlockClass}`).attr('transform');
             const translateNumbers = Helper.getTranslateNumbers(attrTransform);
             const translateX = translateNumbers[0];
             const translateY = translateNumbers[1];
-    
+
             const arcItems = Donut.getAllArcs(block);
-            this.renderTooltipForDonut(block, arcItems, data, charts, translateX, translateY);
+            this.renderTooltipForDonut(block, arcItems, data, charts, blockSize, margin, translateX, translateY);
         });
     }
 
@@ -59,8 +59,8 @@ export class Tooltip
         });
     }
 
-    private static renderTooltipForDonut(block: Block, elemets: d3.Selection<d3.BaseType, DataRow, d3.BaseType, unknown>, data: DataSource, charts: PolarChartModel[], translateX: number = 0, translateY: number = 0): void {
-        const tooltipBlock = this.renderTooltipBlock(block);
+    private static renderTooltipForDonut(block: Block, elemets: d3.Selection<d3.BaseType, d3.PieArcDatum<DataRow>, d3.BaseType, unknown>, data: DataSource, charts: PolarChartModel[], blockSize: Size, margin: BlockMargin, translateX: number = 0, translateY: number = 0): void {
+        const tooltipBlock = this.renderTooltipBlock(block, translateX, translateY);
         const tooltipContent = this.getTooltipContentBlock(tooltipBlock);
         
         let tooltipArrow = tooltipBlock.select(`.${this.tooltipArrowClass}`);
@@ -76,15 +76,13 @@ export class Tooltip
         elemets
             .on('mouseover', function(event, d) {
                 tooltipBlock.style('display', 'block');
-                const key = d[charts[0].data.keyField.name];
-                tooltipContent.html(`asd`);
-                const coordinatePointer: [number, number] = TooltipHelper.getBarTooltipCoordinate(d3.select(this), tooltipBlock, 'circle');
+                const key = d.data[charts[0].data.keyField.name];
+                tooltipContent.html(TooltipHelper.getTooltipHtmlForPolarChart(charts[0], data, key, d3.select(this).select('path').style('fill')));
+                // console.log(Donut.getArcCentroid(blockSize, margin, d, charts[0].appearanceOptions.innerRadius), TooltipHelper.getRecalcedCoordinateByArrow(Donut.getArcCentroid(blockSize, margin, d, charts[0].appearanceOptions.innerRadius)));
                 
+                const coordinatePointer: [number, number] = TooltipHelper.getRecalcedCoordinateByArrow(Donut.getArcCentroid(blockSize, margin, d, charts[0].appearanceOptions.innerRadius), tooltipBlock);
                 const tooltipCoordinate = TooltipHelper.getTooltipCoordinate(coordinatePointer);
                 thisClass.setTooltipCoordinate(tooltipBlock, tooltipCoordinate);
-                
-                const dotsEdgingAttrs = TooltipHelper.getDotEdgingAttrs(d3.select(this));
-                thisClass.renderDotsEdging(block, dotsEdgingAttrs, d3.select(this).style('fill'));
             });
 
         elemets.on('mouseleave', function() {
@@ -109,9 +107,9 @@ export class Tooltip
 
         elemets
             .on('mouseover', function(event, d) {
-                tooltipBlock.style('display', 'block');
+                tooltipBlock.style('display', 'block');                
                 const key = d[charts[0].data.keyField.name];
-                tooltipContent.html(`${TooltipHelper.getTooltipHtmlForMultyCharts(charts[0], data, key)}`);
+                tooltipContent.html(`${TooltipHelper.getTooltipHtmlFor2DCharts(charts[0], data, key)}`);
                 const coordinatePointer: [number, number] = TooltipHelper.getBarTooltipCoordinate(d3.select(this), tooltipBlock, 'circle');
                 
                 const tooltipCoordinate = TooltipHelper.getTooltipCoordinate(coordinatePointer);
@@ -146,7 +144,7 @@ export class Tooltip
             .on('mouseover', function(event, d) {
                 tooltipBlock.style('display', 'block');
                 const key = d[charts[0].data.keyField.name];
-                tooltipContent.html(`${TooltipHelper.getTooltipHtmlForMultyCharts(charts[0], data, key)}`);
+                tooltipContent.html(`${TooltipHelper.getTooltipHtmlFor2DCharts(charts[0], data, key)}`);
 
                 const coordinatePointer: [number, number] = TooltipHelper.getBarTooltipCoordinate(d3.select(this), tooltipBlock, 'rect');
                 const tooltipCoordinate = TooltipHelper.getTooltipCoordinate(coordinatePointer);
@@ -180,7 +178,7 @@ export class Tooltip
             .on('mousemove', function(event) {
                 const index = TooltipHelper.getKeyIndex(d3.pointer(event, this), chartOrientation, margin, bandSize, scaleKeyModel.type);        
                 const key = scaleKey.domain()[index];
-                tooltipContent.html(`${TooltipHelper.getTooltipHtmlForMultyCharts(charts[0], data, key)}`);
+                tooltipContent.html(`${TooltipHelper.getTooltipHtmlFor2DCharts(charts[0], data, key)}`);
                 
                 const tooltipCoordinate = TooltipHelper.getTooltipCoordinate(d3.pointer(event, this));
                 thisClass.setTooltipCoordinate(tooltipBlock, tooltipCoordinate);
