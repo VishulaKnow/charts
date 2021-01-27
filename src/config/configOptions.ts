@@ -44,7 +44,7 @@ const configCars: Config = {
         charts: [
             {
                 title: 'Рост стоимости',
-                type: 'area',
+                type: 'line',
                 data: {
                     dataSource: 'dataSet_large',
                     keyField:  {
@@ -79,70 +79,6 @@ const configCars: Config = {
             }
         ]
     }
-    // options: {
-    //     type: 'interval',
-    //     additionalElements: {
-    //         gridLine: {
-    //             flag: {
-    //                 value: true,
-    //                 key: false
-    //             }
-    //         }
-    //     },
-    //     axis: {
-    //         keyAxis: {
-    //             position: 'start',
-    //             ticks: {
-    //                 flag: true
-    //             }
-    //         },
-    //         valueAxis: {
-    //             position: 'start',
-    //             ticks: {
-    //                 flag: false
-    //             }
-    //         }
-    //     },
-    //     charts: [
-    //         {
-    //             type: 'gantt',
-    //             title: 'Car prices',
-    //             legend: {
-    //                 position: 'left'
-    //             },
-    //             data: {
-    //                 dataSource: 'dataSet_gantt',
-    //                 keyField:  {
-    //                     name: 'task',
-    //                     format: 'string'
-    //                 },
-    //                 valueField1: {
-    //                     name: 'start',
-    //                     format: 'date'
-    //                 },
-    //                 valueField2: {
-    //                     name: 'end',
-    //                     format: 'date'
-    //                 }
-    //             },
-    //             tooltip: {
-    //                 data: {
-    //                     fields: [
-    //                         {
-    //                             format: 'date',
-    //                             name: 'start'
-    //                         },
-    //                         {
-    //                             format: 'date',
-    //                             name: 'end'
-    //                         }
-    //                     ]
-    //                 }
-    //             },
-    //             orientation: 'horizontal'
-    //         }
-    //     ]
-    // }
 }
 
 const configDemo: Config = {

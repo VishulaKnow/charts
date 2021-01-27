@@ -114,19 +114,25 @@ export default class Listeners
     }
     
     private getDataConfig(notationType: '2d' | 'polar' | 'interval'): any {
-        if(notationType === '2d' || notationType === 'polar') {
+        if(notationType === '2d') {
             return {
                 dataSource: ListenersHelper.getInputValue('#data-size') === 'normal' ? 'dataSet' : 'dataSet_large',
                 keyField: {
                     name: 'brand',
                     format: 'string'
                 },
-                valueField: {
-                    name: 'price',
-                    format: 'money'
-                }
+                valueField: [
+                    {
+                        name: 'price',
+                        format: 'money'
+                    },
+                    {
+                        name: 'count',
+                        format: 'integer'
+                    }
+                ]
             }
-        } else {
+        } else if(notationType === 'interval') {
             return {
                 dataSource: 'dataSet_gantt',
                 keyField: {
@@ -141,6 +147,20 @@ export default class Listeners
                     name: 'end',
                     format: 'date'
                 }
+            }
+        } else if(notationType === 'polar') {
+            return {
+                dataSource: ListenersHelper.getInputValue('#data-size') === 'normal' ? 'dataSet' : 'dataSet_large',
+                keyField: {
+                    name: 'brand',
+                    format: 'string'
+                },
+                valueField: [
+                    {
+                        name: 'price',
+                        format: 'money'
+                    }
+                ]
             }
         }
     }
@@ -217,13 +237,6 @@ export default class Listeners
                     }
                 }
             }
-            if((options.charts[0].type === 'line' || options.charts[0].type === 'bar') && options.charts.length === 1) {
-                options.charts.push(ListenersHelper.getCopy(options.charts[0]));
-                options.charts[1].data.dataSource = options.charts[0].data.dataSource + '2';
-            } else if((options.charts[0].type === 'line' || options.charts[0].type === 'bar') && options.charts.length === 2) {
-                options.charts[1] = ListenersHelper.getCopy(options.charts[0]);
-                options.charts[1].data.dataSource = options.charts[0].data.dataSource + '2';
-            }
             this.config.options = options;
         } else if(notationType === 'polar') {
             const options: PolarOptions = {
@@ -286,18 +299,7 @@ export default class Listeners
     
     private change2DChartConfig(chartType: 'bar' | 'line' | 'area' | 'barLine'): void {
         const config = this.config;
-        if(chartType === 'area') {
-            if(config.options.charts.length !== 1)
-                config.options.charts.splice(1, config.options.charts.length - 1);
-            config.options.charts[0].type = chartType;
-        } else if((chartType === 'bar' || chartType === 'line') && config.options.charts.length === 1) {
-            config.options.charts.push(ListenersHelper.getCopy(config.options.charts[0]));
-            config.options.charts.forEach((chart: any) => chart.type = chartType);
-            config.options.charts[1].data.dataSource = config.options.charts[0].data.dataSource + '2';
-        } else if((chartType === 'bar' || chartType === 'line') && config.options.charts.length === 2) {
-            config.options.charts.forEach((chart: any) => chart.type = chartType);
-            config.options.charts[1].data.dataSource = config.options.charts[0].data.dataSource + '2';
-        } else if(chartType === 'barLine' && config.options.charts.length === 1) {
+        if(chartType === 'barLine' && config.options.charts.length === 1) {
             config.options.charts.push(ListenersHelper.getCopy(config.options.charts[0]));
             config.options.charts[0].type = 'bar';
             config.options.charts[1].type = 'line';
@@ -306,6 +308,9 @@ export default class Listeners
             config.options.charts[0].type = 'bar';
             config.options.charts[1].type = 'line';
             config.options.charts[1].data.dataSource = config.options.charts[0].data.dataSource + '2';
+        } else if(chartType !== 'barLine') {
+            config.options.charts.splice(1, 1);
+            config.options.charts[0].type = chartType;
         }
     }
     
