@@ -7,6 +7,7 @@ import { DotEdgingAttrs, TipBoxAttributes, TooltipCoordinate, TooltipHelper, Too
 import { Donut } from "../../polarNotation/donut";
 import { Bar } from "../../twoDimensionalNotation/bar/bar";
 import { Dot } from "../lineDots/dot";
+import { ChartOrientation } from "../../../config/config";
 
 export class Tooltip
 {
@@ -26,7 +27,7 @@ export class Tooltip
                 else if(model.options.charts.findIndex(chart => chart.type === 'bar') === -1)
                     this.renderTooltipForLine(block, Dot.getAllDots(block), data, model.options.charts);
                 else 
-                    this.renderLineTooltip(block, scales.scaleKey, model.chartBlock.margin, model.blockCanvas.size, model.options.charts, data, model.options.scale.scaleKey);
+                    this.renderLineTooltip(block, scales.scaleKey, model.chartBlock.margin, model.blockCanvas.size, model.options.charts, data, model.options.scale.scaleKey, model.options.orient);
 
             } else if(model.options.type === 'polar') {
                 this.renderTooltipsForDonut(block, model.options.charts, data, model.blockCanvas.size);
@@ -59,7 +60,7 @@ export class Tooltip
         });
     }
     
-    private static renderLineTooltip(block: Block, scaleKey: d3.AxisScale<any>, margin: BlockMargin, blockSize: Size, charts: TwoDimensionalChartModel[], data: DataSource, scaleKeyModel: ScaleKeyModel): void {
+    private static renderLineTooltip(block: Block, scaleKey: d3.AxisScale<any>, margin: BlockMargin, blockSize: Size, charts: TwoDimensionalChartModel[], data: DataSource, scaleKeyModel: ScaleKeyModel, chartOrientation: ChartOrientation): void {
         const tooltipBlock = this.renderTooltipBlock(block);
         const tooltipContent = this.getTooltipContentBlock(tooltipBlock);
         const thisClass = this;
@@ -74,7 +75,7 @@ export class Tooltip
                 tooltipBlock.style('display', 'block');
             })
             .on('mousemove', function(event) {
-                const index = TooltipHelper.getKeyIndex(d3.pointer(event, this), charts[0].orient, margin, bandSize, scaleKeyModel.type);        
+                const index = TooltipHelper.getKeyIndex(d3.pointer(event, this), chartOrientation, margin, bandSize, scaleKeyModel.type);        
                 const key = scaleKey.domain()[index];
                 tooltipContent.html(`${TooltipHelper.getTooltipHtmlForMultyCharts(charts, data, key)}`);
                 
@@ -82,7 +83,7 @@ export class Tooltip
                 thisClass.setTooltipCoordinate(tooltipBlock, tooltipCoordinate);
 
                 tooltipLine.style('display', 'block');
-                const tooltipLineAttributes = TooltipHelper.getTooltipLineAttributes(scaleKey, margin, key, charts[0].orient, blockSize);
+                const tooltipLineAttributes = TooltipHelper.getTooltipLineAttributes(scaleKey, margin, key, chartOrientation, blockSize);
                 thisClass.setTooltipLineAttributes(tooltipLine, tooltipLineAttributes);
             })
             .on('mouseleave', function(event) {

@@ -82,6 +82,8 @@ export interface TwoDimensionalOptionsModel {
     axis: AxisModel;
     charts: TwoDimensionalChartModel[];
     additionalElements: AdditionalElementsOptions;
+    legend: LegendModel;
+    orient: ChartOrientation;
 }
 export interface IntervalOptionsModel {
     type: 'interval';
@@ -89,6 +91,8 @@ export interface IntervalOptionsModel {
     axis: AxisModel;
     charts: IntervalChartModel[];
     additionalElements: AdditionalElementsOptions;
+    legend: LegendModel;
+    orient: ChartOrientation;
 }
 export interface AdditionalElementsOptions {
     gridLine: GridLineOptions;
@@ -103,6 +107,7 @@ export interface GridLineFlag {
 export interface PolarOptionsModel {
     type: 'polar';
     charts: PolarChartModel[];
+    legend: LegendModel;
 }
 export interface PolarChartAppearanceModel {
     innerRadius: number;
@@ -110,7 +115,6 @@ export interface PolarChartAppearanceModel {
 }
 
 interface ChartModel {
-    legend: LegendModel;
     tooltip: TooltipModel;
     cssClasses: string[];
     elementColors: Color[];
@@ -119,12 +123,10 @@ interface ChartModel {
 
 export interface TwoDimensionalChartModel extends ChartModel {
     type: TwoDimensionalChartType;
-    orient: ChartOrientation;
     data: ChartDataModel;
 }
 export interface IntervalChartModel extends ChartModel {
     type: IntervalChartType;
-    orient: ChartOrientation;
     data: IntervalChartDataModel;
 }
 export interface PolarChartModel extends ChartModel {

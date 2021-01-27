@@ -19,11 +19,14 @@ export interface TwoDimensionalOptions {
     axis: TwoDimensionalAxis;
     additionalElements: TwoDimensionalAdditionalElements;
     charts: TwoDimensionalChart[];
+    orientation: ChartOrientation;
+    legend: Legend;
 }
 
 export interface PolarOptions {
     type: 'polar';
     charts: PolarChart[];
+    legend: Legend;
 }
 
 export interface IntervalOptions {
@@ -31,24 +34,23 @@ export interface IntervalOptions {
     axis: IntervalAxis;
     charts: IntervalChart[];
     additionalElements: TwoDimensionalAdditionalElements;
+    orientation: ChartOrientation;
+    legend: Legend;
 }
 
 interface Chart {
     title: string;
-    legend: Legend;
     tooltip: Tooltip;
 }
 
 export interface IntervalChart extends Chart { 
     type: IntervalChartType;
     data: IntervalChartData;
-    orientation: ChartOrientation;
 }
 
 export interface TwoDimensionalChart extends Chart {
     type: TwoDimensionalChartType;
     data: TwoDimensionalChartData;
-    orientation: ChartOrientation;
 }
 
 export interface PolarChart extends Chart {

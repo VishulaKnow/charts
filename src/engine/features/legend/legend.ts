@@ -12,21 +12,20 @@ interface LegendCoordinate {
 export class Legend
 {
     public static render(block: Block, data: DataSource, options: TwoDimensionalOptionsModel | PolarOptionsModel | IntervalOptionsModel, legendBlockModel: LegendBlockModel, blockSize: Size): void {
-        const positions: Orient[] = ['left', 'right', 'top', 'bottom'];
-        positions.forEach(position => {
-            const charts = this.getChartsWithLegend(options, position);
+        if(options.legend.position !== 'off') {
+            const charts = options.charts;
             if(charts.length !== 0) {
                 const legendItemsContent = this.getLegendItemsContent(options, charts, data);
                 const chartElementsColor = this.getChartElementsColor(options, charts);
                 
                 this.renderLegendBlock(block, 
                     legendItemsContent,
-                    position,
+                    options.legend.position,
                     legendBlockModel,
                     chartElementsColor,
                     blockSize);
             }
-        });
+        }
     }
     
     private static renderLegendBlock(block: Block, items: string[], legendPosition: Orient, legendBlockModel: LegendBlockModel, colorPalette: Color[], blockSize: Size): void {
@@ -44,10 +43,6 @@ export class Legend
             colorPalette);
 
         
-    }
-
-    private static getChartsWithLegend(options: TwoDimensionalOptionsModel | PolarOptionsModel | IntervalOptionsModel, legendPosition: Orient): Array<TwoDimensionalChartModel | PolarChartModel | IntervalChartModel> {
-        return (options.charts as Array<TwoDimensionalChartModel | IntervalChartModel | PolarChartModel>).filter((chart: TwoDimensionalChartModel | IntervalChartModel | PolarChartModel) => chart.legend.position === legendPosition);
     }
 
     private static getLegendItemsContent(options: TwoDimensionalOptionsModel | PolarOptionsModel | IntervalOptionsModel, charts: Array<TwoDimensionalChartModel | IntervalChartModel | PolarChartModel>, data: DataSource): string[] {

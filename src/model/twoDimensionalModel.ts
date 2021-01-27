@@ -13,12 +13,14 @@ export class TwoDimensionalModel
     public static getOptions(config: Config, designerConfig: DesignerConfig, margin: BlockMargin, dataScope: DataScope, data: DataSource): TwoDimensionalOptionsModel {
         const configOptions = <TwoDimensionalOptions>config.options
         return {
+            legend: configOptions.legend,
+            orient: configOptions.orientation,
             scale: {
                 scaleKey: {
                     domain: ScaleModel.getScaleKeyDomain(dataScope.allowableKeys),
                     range: {
                         start: 0,
-                        end: ScaleModel.getScaleRangePeek(ScaleType.Key, configOptions.charts[0].orientation, margin, config.canvas.size)
+                        end: ScaleModel.getScaleRangePeek(ScaleType.Key, configOptions.orientation, margin, config.canvas.size)
                     },
                     type: ScaleModel.getScaleKeyType(configOptions.charts)
                 },
@@ -26,27 +28,27 @@ export class TwoDimensionalModel
                     domain: ScaleModel.getScaleLinearValueDomain(configOptions.axis.valueAxis.domain, data, configOptions.charts, configOptions.axis.keyAxis.position),
                     range: {
                         start: 0,
-                        end: ScaleModel.getScaleRangePeek(ScaleType.Value, configOptions.charts[0].orientation, margin, config.canvas.size)
+                        end: ScaleModel.getScaleRangePeek(ScaleType.Value, configOptions.orientation, margin, config.canvas.size)
                     },
                     type: ScaleModel.getScaleValueType(configOptions.charts)
                 }
             },
             axis: {
                 keyAxis: {
-                    orient: AxisModel.getAxisOrient(AxisType.Key, configOptions.charts[0].orientation, configOptions.axis.keyAxis.position),
+                    orient: AxisModel.getAxisOrient(AxisType.Key, configOptions.orientation, configOptions.axis.keyAxis.position),
                     translate: {
-                        translateX: AxisModel.getAxisTranslateX(AxisType.Key, configOptions.charts[0].orientation, configOptions.axis.keyAxis.position, margin, config.canvas.size.width),
-                        translateY: AxisModel.getAxisTranslateY(AxisType.Key, configOptions.charts[0].orientation, configOptions.axis.keyAxis.position, margin, config.canvas.size.height)
+                        translateX: AxisModel.getAxisTranslateX(AxisType.Key, configOptions.orientation, configOptions.axis.keyAxis.position, margin, config.canvas.size.width),
+                        translateY: AxisModel.getAxisTranslateY(AxisType.Key, configOptions.orientation, configOptions.axis.keyAxis.position, margin, config.canvas.size.height)
                     },
                     cssClass: 'key-axis',
                     maxLabelSize: designerConfig.canvas.axisLabel.maxSize.main,
                     ticks: configOptions.axis.keyAxis.ticks
                 },
                 valueAxis: {
-                    orient: AxisModel.getAxisOrient(AxisType.Value, configOptions.charts[0].orientation, configOptions.axis.valueAxis.position),
+                    orient: AxisModel.getAxisOrient(AxisType.Value, configOptions.orientation, configOptions.axis.valueAxis.position),
                     translate: {
-                        translateX: AxisModel.getAxisTranslateX(AxisType.Value, configOptions.charts[0].orientation, configOptions.axis.valueAxis.position, margin, config.canvas.size.width),
-                        translateY: AxisModel.getAxisTranslateY(AxisType.Value, configOptions.charts[0].orientation, configOptions.axis.valueAxis.position, margin, config.canvas.size.height)
+                        translateX: AxisModel.getAxisTranslateX(AxisType.Value, configOptions.orientation, configOptions.axis.valueAxis.position, margin, config.canvas.size.width),
+                        translateY: AxisModel.getAxisTranslateY(AxisType.Value, configOptions.orientation, configOptions.axis.valueAxis.position, margin, config.canvas.size.height)
                     },          
                     cssClass: 'value-axis',
                     maxLabelSize: designerConfig.canvas.axisLabel.maxSize.main,
@@ -66,8 +68,6 @@ export class TwoDimensionalModel
                 type: chart.type,
                 title: chart.title,
                 data: { ...chart.data },
-                orient: chart.orientation,
-                legend: chart.legend,
                 tooltip: chart.tooltip,
                 cssClasses: ChartStyleModel.getCssClasses(chart.type, index),
                 elementColors: ChartStyleModel.getElementColorPallete(chartPalette, '2d', charts.length, index)

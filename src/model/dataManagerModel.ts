@@ -17,7 +17,7 @@ export class DataManagerModel
         if(config.options.type === '2d' || config.options.type === 'interval') {
             const charts = (config.options.charts as Array<TwoDimensionalChart | IntervalChart>).filter((chart: TwoDimensionalChart | IntervalChart) => chart.type === 'bar' || chart.type === 'gantt');
             if(charts.length !== 0) {
-                const axisLength = AxisModel.getAxisLength(charts[0].orientation, margin, config.canvas.size);
+                const axisLength = AxisModel.getAxisLength(config.options.orientation, margin, config.canvas.size);
                 const uniqueKeys = ModelHelper.getUniqueValues(data[charts[0].data.dataSource].map(d => d[charts[0].data.keyField.name]));
                 const dataLength = uniqueKeys.length;
                 const limit = this.getDataLimitByBarSize(charts.length, dataLength, axisLength, designerConfig.canvas.chartOptions.bar);

@@ -13,7 +13,6 @@ export class PolarModel
                 title: chart.title,
                 data: { ...chart.data },
                 appearanceOptions: { ...chart.appearanceOptions },
-                legend: chart.legend,
                 tooltip: chart.tooltip,
                 cssClasses: ChartStyleModel.getCssClasses(chart.type, index),
                 elementColors: ChartStyleModel.getElementColorPallete(chartPalette, 'polar', data[chart.data.dataSource].length)
@@ -26,6 +25,7 @@ export class PolarModel
         return {
             type: configOptions.type,
             charts: this.getChartsModel(configOptions.charts, chartPalette, data, dataScope),
+            legend: configOptions.legend
         }
     }
 }

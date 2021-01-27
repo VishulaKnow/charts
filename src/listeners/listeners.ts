@@ -171,14 +171,14 @@ export default class Listeners
     private changeConfigOptions(notationType: '2d' | 'polar' | 'interval'): void {
         if(notationType === '2d') {
             const options: TwoDimensionalOptions = {
+                legend: this.config.options.legend,
+                orientation: ListenersHelper.getInputValue('#chart-orient') as 'horizontal' | 'vertical',
                 type: notationType,
                 charts: [
                     {
                         data: this.getDataConfig(notationType),
-                        legend: this.config.options.charts[0].legend,
                         title: this.config.options.charts[0].title,
                         tooltip: this.getTooltipConfig(notationType),
-                        orientation: ListenersHelper.getInputValue('#chart-orient') as 'horizontal' | 'vertical',
                         type: ListenersHelper.getInputValue('#chart-2d-type') === 'barLine' ? 'bar' : ListenersHelper.getInputValue('#chart-2d-type') as 'line' | 'bar' | 'area'
                     }
                 ],
@@ -219,11 +219,11 @@ export default class Listeners
             this.config.options = options;
         } else if(notationType === 'polar') {
             const options: PolarOptions = {
+                legend: this.config.options.legend,
                 type: notationType,
                 charts: [
                     {
                         data: this.getDataConfig(notationType),
-                        legend: this.config.options.charts[0].legend,
                         title: this.config.options.charts[0].title,
                         tooltip: this.getTooltipConfig(notationType),
                         type: 'donut',
@@ -237,14 +237,14 @@ export default class Listeners
             this.config.options = options;
         } else if(notationType === 'interval') {
             const options: IntervalOptions = {
+                legend: this.config.options.legend,
+                orientation: ListenersHelper.getInputValue('#chart-orient') as 'horizontal' | 'vertical',
                 type: notationType,
                 charts: [
                     {
                         data: this.getDataConfig(notationType),
-                        legend: this.config.options.charts[0].legend,
                         title: this.config.options.charts[0].title,
                         tooltip: this.getTooltipConfig(notationType),
-                        orientation: ListenersHelper.getInputValue('#chart-orient') as 'horizontal' | 'vertical',
                         type: 'gantt'
                     }
                 ],
@@ -396,9 +396,7 @@ export default class Listeners
             }
         });
         document.querySelector('#legend').addEventListener('change', function() {
-            config.options.charts.forEach((chart: TwoDimensionalChart | PolarChart | IntervalChart) => {
-                chart.legend.position = this.value;
-            });
+            config.options.legend.position = this.value;
             thisClass.updateFull();
         });
         document.querySelector('.btn-random').addEventListener('click', function() {
@@ -478,9 +476,7 @@ export default class Listeners
         const config = this.config;
         document.querySelector('#chart-orient').addEventListener('change', function() {
             if(config.options.type === '2d' || config.options.type === 'interval') {
-                config.options.charts.forEach((chart: TwoDimensionalChart | IntervalChart) => {
-                    chart.orientation = this.value; 
-                }); 
+                config.options.orientation = this.value; 
                 thisClass.updateFull();
             }
         });
@@ -550,7 +546,7 @@ export default class Listeners
         ListenersHelper.setInputValue('#block-height', config.canvas.size.height);
         ListenersHelper.setCheckboxValue('#wrapper-border', config.canvas.class.includes('outline'));
     
-        ListenersHelper.setInputValue('#legend', config.options.charts[0].legend.position);
+        ListenersHelper.setInputValue('#legend', config.options.legend.position);
         ListenersHelper.setInputValue('#data-size', config.options.charts[0].data.dataSource.includes('large') ? 'large' : 'normal');
         ListenersHelper.setInputValue('#axis-label-width', designerConfig.canvas.axisLabel.maxSize.main);
         ListenersHelper.setInputValue('#chart-block-margin-top', designerConfig.canvas.chartBlockMargin.top);
@@ -568,7 +564,7 @@ export default class Listeners
         
         if(config.options.type === '2d') {
             ListenersHelper.setInputValue('#chart-2d-type', config.options.charts[0].type);
-            ListenersHelper.setInputValue('#chart-orient', config.options.charts[0].orientation);
+            ListenersHelper.setInputValue('#chart-orient', config.options.orientation);
             ListenersHelper.setInputValue('#key-axis-orient', config.options.axis.keyAxis.position);
             ListenersHelper.setInputValue('#value-axis-orient', config.options.axis.valueAxis.position);
             ListenersHelper.setCheckboxValue('#config-value-grid', config.options.additionalElements.gridLine.flag.value);
