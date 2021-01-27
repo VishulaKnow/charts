@@ -155,12 +155,10 @@ export default class Listeners
                     name: 'brand',
                     format: 'string'
                 },
-                valueField: [
-                    {
-                        name: 'price',
-                        format: 'money'
-                    }
-                ]
+                valueField: {
+                    name: 'price',
+                    format: 'money'
+                }
             }
         }
     }

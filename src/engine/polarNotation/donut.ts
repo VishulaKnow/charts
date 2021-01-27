@@ -45,6 +45,11 @@ export class Donut
         this.setElementsColor(items, chart.elementColors);
         this.renderAggregator(block, data, chart.data.valueField.name, radius, chart.appearanceOptions, translate);      
     }
+    
+    public static getAllArcs(block: Block): d3.Selection<SVGGElement, d3.PieArcDatum<DataRow>, SVGGElement, unknown> {
+        return block.getSvg()
+            .selectAll(`.${this.arcItemClass}`) as d3.Selection<SVGGElement, d3.PieArcDatum<DataRow>, SVGGElement, unknown>;
+    }
 
     private static renderAggregator(block: Block, data: DataRow[], valueField: string, radius: number, appearanceOptions: PolarChartAppearanceModel, translate: Translate): void {
         const aggregator: Aggregator = {
