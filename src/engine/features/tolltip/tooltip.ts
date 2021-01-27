@@ -68,8 +68,8 @@ export class Tooltip
                 tooltipBlock.style('display', 'block');                
                 const key = d[charts[0].data.keyField.name];
                 tooltipContent.html(`${TooltipHelper.getTooltipHtmlFor2DCharts(charts[0], data, key)}`);
-                const coordinatePointer: [number, number] = TooltipHelper.getBarTooltipCoordinate(d3.select(this), tooltipBlock, 'circle');
-                
+
+                const coordinatePointer: [number, number] = TooltipHelper.getTooltipBlockCoordinate(d3.select(this), tooltipBlock, 'circle');
                 const tooltipCoordinate = TooltipHelper.getTooltipCoordinate(coordinatePointer);
                 thisClass.setTooltipCoordinate(tooltipBlock, tooltipCoordinate);
                 
@@ -79,6 +79,32 @@ export class Tooltip
 
         elemets.on('mouseleave', function() {
             thisClass.removeDotsEdging(block);
+            tooltipBlock.style('display', 'none');
+        });
+    }
+
+    private static renderMultiTooltipForBar(block: Block, elemets: d3.Selection<d3.BaseType, DataRow, d3.BaseType, unknown>, data: DataSource, charts: TwoDimensionalChartModel[]): void {
+        const tooltipBlock = this.renderTooltipBlock(block);
+        const tooltipContent = this.getTooltipContentBlock(tooltipBlock);
+        const tooltipArrow = this.renderTooltipArrow(tooltipBlock);
+        const thisClass = this;
+
+        elemets
+            .on('mouseover', function(event, d) {
+                tooltipBlock.style('display', 'block');
+                const key = d[charts[0].data.keyField.name];
+                tooltipContent.html(`${TooltipHelper.getTooltipHtmlFor2DCharts(charts[0], data, key)}`);
+
+                const coordinatePointer: [number, number] = TooltipHelper.getTooltipBlockCoordinate(d3.select(this), tooltipBlock, 'rect');
+                const tooltipCoordinate = TooltipHelper.getTooltipCoordinate(coordinatePointer);
+                thisClass.setTooltipCoordinate(tooltipBlock, tooltipCoordinate);
+
+                elemets.filter(d => d[charts[0].data.keyField.name] !== key)
+                    .style('opacity', 0.3);
+            });
+
+        elemets.on('mouseleave', function() {
+            elemets.style('opacity', 1);
             tooltipBlock.style('display', 'none');
         });
     }
@@ -108,33 +134,6 @@ export class Tooltip
             tooltipBlock.style('display', 'none');
 
             elemets.style('opacity', 1);
-        });
-    }
-
-    private static renderMultiTooltipForBar(block: Block, elemets: d3.Selection<d3.BaseType, DataRow, d3.BaseType, unknown>, data: DataSource, charts: TwoDimensionalChartModel[]): void {
-        const tooltipBlock = this.renderTooltipBlock(block);
-        const tooltipContent = this.getTooltipContentBlock(tooltipBlock);
-        const tooltipArrow = this.renderTooltipArrow(tooltipBlock);
-        const thisClass = this;
-
-        elemets
-            .on('mouseover', function(event, d) {
-                tooltipBlock.style('display', 'block');
-                const key = d[charts[0].data.keyField.name];
-                tooltipContent.html(`${TooltipHelper.getTooltipHtmlFor2DCharts(charts[0], data, key)}`);
-
-                const coordinatePointer: [number, number] = TooltipHelper.getBarTooltipCoordinate(d3.select(this), tooltipBlock, 'rect');
-                const tooltipCoordinate = TooltipHelper.getTooltipCoordinate(coordinatePointer);
-                
-                thisClass.setTooltipCoordinate(tooltipBlock, tooltipCoordinate);
-
-                elemets.filter(d => d[charts[0].data.keyField.name] !== key)
-                    .style('opacity', 0.3);
-            });
-
-        elemets.on('mouseleave', function() {
-            elemets.style('opacity', 1);
-            tooltipBlock.style('display', 'none');
         });
     }
 

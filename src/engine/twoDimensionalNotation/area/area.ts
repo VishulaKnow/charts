@@ -118,6 +118,7 @@ export class Area
 
     private static getAreaCoordinateByKeyOrient(axisOrient: string, data: DataRow[], scales: Scales, margin: BlockMargin, keyField: string, valueField: string, blockSize: Size) : AreaChartCoordinate[] {
         const areaCoordinate: AreaChartCoordinate[] = [];
+        
         if(axisOrient === 'bottom' || axisOrient === 'top') {
             let y0: number = margin.top;
             if(axisOrient === 'bottom')
