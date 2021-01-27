@@ -77,7 +77,7 @@ export class Tooltip
             .on('mousemove', function(event) {
                 const index = TooltipHelper.getKeyIndex(d3.pointer(event, this), chartOrientation, margin, bandSize, scaleKeyModel.type);        
                 const key = scaleKey.domain()[index];
-                tooltipContent.html(`${TooltipHelper.getTooltipHtmlForMultyCharts(charts, data, key)}`);
+                tooltipContent.html(`${TooltipHelper.getTooltipHtmlForMultyCharts(charts[0], data, key)}`);
                 
                 const tooltipCoordinate = TooltipHelper.getTooltipCoordinate(d3.pointer(event, this));
                 thisClass.setTooltipCoordinate(tooltipBlock, tooltipCoordinate);
@@ -110,7 +110,7 @@ export class Tooltip
             .on('mouseover', function(event, d) {
                 tooltipBlock.style('display', 'block');
                 const key = d[charts[0].data.keyField.name];
-                tooltipContent.html(`${TooltipHelper.getTooltipHtmlForMultyCharts(charts, data, key)}`);
+                tooltipContent.html(`${TooltipHelper.getTooltipHtmlForMultyCharts(charts[0], data, key)}`);
                 const coordinatePointer: [number, number] = TooltipHelper.getBarTooltipCoordinate(d3.select(this), tooltipBlock, 'circle');
                 
                 const tooltipCoordinate = TooltipHelper.getTooltipCoordinate(coordinatePointer);
@@ -145,7 +145,7 @@ export class Tooltip
             .on('mouseover', function(event, d) {
                 tooltipBlock.style('display', 'block');
                 const key = d[charts[0].data.keyField.name];
-                tooltipContent.html(`${TooltipHelper.getTooltipHtmlForMultyCharts(charts, data, key)}`);
+                tooltipContent.html(`${TooltipHelper.getTooltipHtmlForMultyCharts(charts[0], data, key)}`);
 
                 const coordinatePointer: [number, number] = TooltipHelper.getBarTooltipCoordinate(d3.select(this), tooltipBlock, 'rect');
                 const tooltipCoordinate = TooltipHelper.getTooltipCoordinate(coordinatePointer);

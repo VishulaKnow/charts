@@ -24,7 +24,7 @@ export class Area
                 scales,
                 margin,
                 chart.data.keyField.name,
-                chart.data.valueField[0].name,
+                field.name,
                 blockSize);
         
             const path = block.getChartBlock()
@@ -36,7 +36,7 @@ export class Area
             Helper.setCssClasses(path, chart.cssClasses);
             Helper.setChartElementColor(path, chart.elementColors, index, 'fill');
     
-            Dot.render(block, data, keyAxisOrient, scales, margin, chart.data.keyField.name, chart.data.valueField[0].name, chart.cssClasses, index, chart.elementColors, blockSize);
+            Dot.render(block, data, keyAxisOrient, scales, margin, chart.data.keyField.name, field.name, chart.cssClasses, index, chart.elementColors, blockSize);
         });
     }
 
