@@ -21,7 +21,7 @@ export class Line
             scales,
             margin,
             chart.data.keyField.name,
-            chart.data.valueField.name);
+            chart.data.valueField[0].name);
         
         const path = block.getChartBlock()
             .append('path')
@@ -31,7 +31,7 @@ export class Line
     
         Helper.setCssClasses(path, chart.cssClasses);
         Helper.setChartElementColor(path, chart.elementColors, 'stroke');
-        Dot.render(block, data, keyAxisOrient, scales, margin, chart.data.keyField.name, chart.data.valueField.name, chart.cssClasses, chart.elementColors, blockSize);
+        Dot.render(block, data, keyAxisOrient, scales, margin, chart.data.keyField.name, chart.data.valueField[0].name, chart.cssClasses, chart.elementColors, blockSize);
     }
 
     public static updateLineChartByValueAxis(block: Block, scales: Scales, data: DataRow[], margin: BlockMargin, keyAxisOrient: Orient, chart: TwoDimensionalChartModel): void {
@@ -41,7 +41,7 @@ export class Line
             scales,
             margin,
             chart.data.keyField.name,
-            chart.data.valueField.name);
+            chart.data.valueField[0].name);
         
         block.getChartBlock()
             .select(`.${this.lineChartClass}${Helper.getCssClassesLine(chart.cssClasses)}`)
@@ -49,7 +49,7 @@ export class Line
             .duration(1000)
                 .attr('d', line(lineCoordinate));
 
-        Dot.updateDotsCoordinateByValueAxis(block, data, keyAxisOrient, scales, margin, chart.data.keyField.name, chart.data.valueField.name, chart.cssClasses);
+        Dot.updateDotsCoordinateByValueAxis(block, data, keyAxisOrient, scales, margin, chart.data.keyField.name, chart.data.valueField[0].name, chart.cssClasses);
     }
 
     private static getLineGenerator(): d3.Line<LineChartCoordinate> {

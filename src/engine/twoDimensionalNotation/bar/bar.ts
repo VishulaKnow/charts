@@ -31,7 +31,7 @@ export class Bar
             scales,
             margin,
             chart.data.keyField.name,
-            chart.data.valueField.name,
+            chart.data.valueField[0].name,
             blockSize,
             barChartsAmount,
             barSettings);
@@ -50,7 +50,7 @@ export class Bar
             keyAxisOrient,
             scales.scaleValue,
             margin,
-            chart.data.valueField.name,
+            chart.data.valueField[0].name,
             blockSize,
             1000);
     }

@@ -23,7 +23,7 @@ export class Area
             scales,
             margin,
             chart.data.keyField.name,
-            chart.data.valueField.name,
+            chart.data.valueField[0].name,
             blockSize);
     
         const path = block.getChartBlock()
@@ -35,7 +35,7 @@ export class Area
         Helper.setCssClasses(path, chart.cssClasses);
         Helper.setChartElementColor(path, chart.elementColors, 'fill');
 
-        Dot.render(block, data, keyAxisOrient, scales, margin, chart.data.keyField.name, chart.data.valueField.name, chart.cssClasses, chart.elementColors, blockSize);
+        Dot.render(block, data, keyAxisOrient, scales, margin, chart.data.keyField.name, chart.data.valueField[0].name, chart.cssClasses, chart.elementColors, blockSize);
     }
 
     public static updateAreaChartByValueAxis(block: Block, scales: Scales, data: DataRow[], margin: BlockMargin, chart: TwoDimensionalChartModel, keyAxisOrient: Orient, blockSize: Size): void {
@@ -45,7 +45,7 @@ export class Area
             scales,
             margin,
             chart.data.keyField.name,
-            chart.data.valueField.name,
+            chart.data.valueField[0].name,
             blockSize);
     
         block.getChartBlock()
@@ -54,7 +54,7 @@ export class Area
             .duration(1000)
                 .attr('d', area(areaCoordinate));
 
-        Dot.updateDotsCoordinateByValueAxis(block, data, keyAxisOrient, scales, margin, chart.data.keyField.name, chart.data.valueField.name, chart.cssClasses);
+        Dot.updateDotsCoordinateByValueAxis(block, data, keyAxisOrient, scales, margin, chart.data.keyField.name, chart.data.valueField[0].name, chart.cssClasses);
     }
 
     private static getAreaGenerator(keyAxisOrient: string): d3.Area<AreaChartCoordinate> {

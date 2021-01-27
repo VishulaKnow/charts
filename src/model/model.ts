@@ -123,7 +123,7 @@ interface ChartModel {
 
 export interface TwoDimensionalChartModel extends ChartModel {
     type: TwoDimensionalChartType;
-    data: ChartDataModel;
+    data: TwoDimensionalChartDataModel;
 }
 export interface IntervalChartModel extends ChartModel {
     type: IntervalChartType;
@@ -131,7 +131,7 @@ export interface IntervalChartModel extends ChartModel {
 }
 export interface PolarChartModel extends ChartModel {
     type: PolarChartType;
-    data: ChartDataModel;
+    data: PolarChartDataModel;
     appearanceOptions: PolarChartAppearanceModel;
 }
 export interface Model {
@@ -187,7 +187,13 @@ interface LegendModel {
     position: LegendPosition;
 }
 
-interface ChartDataModel {
+interface TwoDimensionalChartDataModel {
+    dataSource: string;
+    keyField: Field;
+    valueField: Field[];
+}
+
+interface PolarChartDataModel {
     dataSource: string;
     keyField: Field;
     valueField: Field;

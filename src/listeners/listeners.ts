@@ -1,6 +1,6 @@
 import Engine from '../engine/engine';
 import { getPreparedData, getUpdatedModel } from '../model/modelOptions';
-import { Config, IntervalChart, IntervalOptions, PolarChart, PolarOptions, TwoDimensionalChart, TwoDimensionalOptions } from '../config/config'
+import { Config, IntervalOptions, PolarChart, PolarOptions, TwoDimensionalChart, TwoDimensionalOptions } from '../config/config'
 import { color } from 'd3';
 import { DesignerConfig } from '../designer/designerConfig';
 import { DataSource } from '../model/model';
@@ -97,12 +97,19 @@ export default class Listeners
     }
 
     private getDataWithRandomValues(data: any, maxRand: number) {
-        if(this.config.options.type === 'polar' || this.config.options.type === '2d')
-            this.config.options.charts.forEach((chart: TwoDimensionalChart | PolarChart) => {
+        if(this.config.options.type === '2d')
+            this.config.options.charts.forEach((chart: TwoDimensionalChart) => {
+                data[chart.data.dataSource].forEach((row: any) => {
+                    row[chart.data.valueField[0].name] = ListenersHelper.randInt(0, maxRand);
+                });
+            });
+        else if(this.config.options.type === 'polar') {
+            this.config.options.charts.forEach((chart: PolarChart) => {
                 data[chart.data.dataSource].forEach((row: any) => {
                     row[chart.data.valueField.name] = ListenersHelper.randInt(0, maxRand);
                 });
             });
+        }
         return data;
     }
     
@@ -172,6 +179,7 @@ export default class Listeners
         if(notationType === '2d') {
             const options: TwoDimensionalOptions = {
                 legend: this.config.options.legend,
+                isSegmented: false,
                 orientation: ListenersHelper.getInputValue('#chart-orient') as 'horizontal' | 'vertical',
                 type: notationType,
                 charts: [

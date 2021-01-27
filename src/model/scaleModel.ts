@@ -73,6 +73,12 @@ export class ScaleModel
     }
 
     private static getChartMaxValue(chart: TwoDimensionalChart, data: DataRow[]): number {
-        return ModelHelper.getMaxNumberValue(data.map(d => d[chart.data.valueField.name]));
+        let maxValue: number = data[0][chart.data.valueField[0].name];
+        chart.data.valueField.forEach(value => {
+            const maxOfDim = ModelHelper.getMaxNumberValue(data.map(d => d[value.name]));
+            if(maxOfDim > maxValue)
+                maxValue = maxOfDim;
+        });
+        return maxValue;
     }
 }

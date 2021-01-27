@@ -1,4 +1,4 @@
-import { Config, PolarChart, TwoDimensionalChart, IntervalOptions, IntervalChart } from "../config/config";
+import { Config, PolarChart, TwoDimensionalChart, IntervalOptions, IntervalChart, TwoDimensionalOptions } from "../config/config";
 import { BarOptionsCanvas, DataType, DesignerConfig } from "../designer/designerConfig";
 import { AxisModel } from "./axisModel";
 import { BlockMargin, DataRow, DataScope, DataSource } from "./model";
@@ -15,12 +15,14 @@ export class DataManagerModel
 
     public static getDataScope(config: Config, margin: BlockMargin, data: DataSource, designerConfig: DesignerConfig): DataScope {
         if(config.options.type === '2d' || config.options.type === 'interval') {
-            const charts = (config.options.charts as Array<TwoDimensionalChart | IntervalChart>).filter((chart: TwoDimensionalChart | IntervalChart) => chart.type === 'bar' || chart.type === 'gantt');
+            const charts = (config.options.charts as Array<TwoDimensionalChart | IntervalChart>)
+                .filter((chart: TwoDimensionalChart | IntervalChart) => chart.type === 'bar' || chart.type === 'gantt');
+
             if(charts.length !== 0) {
                 const axisLength = AxisModel.getAxisLength(config.options.orientation, margin, config.canvas.size);
                 const uniqueKeys = ModelHelper.getUniqueValues(data[charts[0].data.dataSource].map(d => d[charts[0].data.keyField.name]));
                 const dataLength = uniqueKeys.length;
-                const limit = this.getDataLimitByBarSize(charts.length, dataLength, axisLength, designerConfig.canvas.chartOptions.bar);
+                const limit = this.getDataLimitByBarSize(this.getElementsInGroupAmount(config.options, charts.length), dataLength, axisLength, designerConfig.canvas.chartOptions.bar);
                 const allowableKeys = uniqueKeys.slice(0, limit);
                 
                 return {
@@ -69,6 +71,21 @@ export class DataManagerModel
         return data[chart.data.dataSource].map(dataRow => dataRow[chart.data.keyField.name]);
     }
 
+    private static getElementsInGroupAmount(configOptions: TwoDimensionalOptions | IntervalOptions, chartsLength: number): number {
+        if(configOptions.type === '2d' && !configOptions.isSegmented) {
+            return this.getBarChartsInGroupAmount(configOptions);
+        }
+        return chartsLength;
+    }
+
+    private static getBarChartsInGroupAmount(configOptions: TwoDimensionalOptions): number {
+        let barAmount = 0;
+        configOptions.charts.forEach(chart => {
+            barAmount += chart.data.valueField.length;
+        });
+        return barAmount;
+    }
+
     private static getScopedData(data: DataSource, allowableKeys: string[], config: Config): DataSource {
         const newData: DataSource = {};
         config.options.charts.forEach((chart: TwoDimensionalChart | PolarChart | IntervalChart) => {
@@ -108,11 +125,11 @@ export class DataManagerModel
         return data;
     }
 
-    private static getDataLimitByBarSize(chartsAmount: number, dataLength: number, axisLength: number, barOptions: BarOptionsCanvas): number {
-        let sumSize = dataLength * (chartsAmount * barOptions.minBarWidth + (chartsAmount - 1) * barOptions.barDistance + barOptions.groupDistance);
+    private static getDataLimitByBarSize(elementsInGroupAmount: number, dataLength: number, axisLength: number, barOptions: BarOptionsCanvas): number {
+        let sumSize = dataLength * (elementsInGroupAmount * barOptions.minBarWidth + (elementsInGroupAmount - 1) * barOptions.barDistance + barOptions.groupDistance);
         while(dataLength !== 0 && axisLength < sumSize) {
             dataLength--;
-            sumSize = dataLength * (chartsAmount * barOptions.minBarWidth + (chartsAmount - 1) * barOptions.barDistance + barOptions.groupDistance);
+            sumSize = dataLength * (elementsInGroupAmount * barOptions.minBarWidth + (elementsInGroupAmount - 1) * barOptions.barDistance + barOptions.groupDistance);
         }
         return dataLength;
     }

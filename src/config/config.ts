@@ -21,6 +21,7 @@ export interface TwoDimensionalOptions {
     charts: TwoDimensionalChart[];
     orientation: ChartOrientation;
     legend: Legend;
+    isSegmented: boolean;
 }
 
 export interface PolarOptions {
@@ -55,7 +56,7 @@ export interface TwoDimensionalChart extends Chart {
 
 export interface PolarChart extends Chart {
     type: PolarChartType;
-    data: TwoDimensionalChartData;
+    data: PolarChartData;
     appearanceOptions: PolarChartAppearanceOptions;
 }
 
@@ -87,7 +88,12 @@ interface PolarChartAppearanceOptions {
 interface TwoDimensionalChartData {
     dataSource: string;
     keyField: Field;
-    subKeyField?: Field;
+    valueField: Field[];
+}
+
+interface PolarChartData {
+    dataSource: string;
+    keyField: Field;
     valueField: Field;
 }
 

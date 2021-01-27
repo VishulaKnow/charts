@@ -133,7 +133,7 @@ export class TooltipHelper
     
     private static getTooltipItemText(chart: TwoDimensionalChartModel, data: DataSource, keyValue: string): string {
         const row = data[chart.data.dataSource].find(d => d[chart.data.keyField.name] === keyValue);
-        return `${row[chart.data.keyField.name]} - ${ValueFormatter.formatValue(chart.data.valueField.format, row[chart.data.valueField.name])}`;
+        return `${row[chart.data.keyField.name]} - ${ValueFormatter.formatValue(chart.data.valueField[0].format, row[chart.data.valueField[0].name])}`;
     }
 
     private static getTooltipKeyHeader(keyValue: string): string {
