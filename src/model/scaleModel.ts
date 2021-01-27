@@ -1,4 +1,4 @@
-import { AxisPosition, NumberDomain, IntervalChart, TwoDimensionalChart } from "../config/config";
+import { AxisPosition, NumberDomain, IntervalChart, TwoDimensionalChart, TwoDimensionalOptions } from "../config/config";
 import { DataManagerModel } from "./dataManagerModel";
 import { BlockMargin, DataRow, DataSource, ScaleKeyType, ScaleValueType, Size } from "./model";
 import { ModelHelper } from "./modelHelper";
@@ -33,7 +33,7 @@ export class ScaleModel
         return [domainPeekMax, domainPeekMin];
     }
     
-    public static getScaleLinearValueDomain(configDomain: NumberDomain, data: DataSource, charts: TwoDimensionalChart[], keyAxisPosition: AxisPosition): [number, number] {
+    public static getScaleLinearValueDomain(configDomain: NumberDomain, data: DataSource, configOptions: TwoDimensionalOptions): [number, number] {
         let domainPeekMin: number;
         let domainPeekMax: number;
         if(configDomain.start === -1)
@@ -41,11 +41,11 @@ export class ScaleModel
         else
             domainPeekMin = configDomain.start;
         if(configDomain.end === -1)
-            domainPeekMax = this.getScopedScalesMaxValue(charts, data);
+            domainPeekMax = this.getScopedScalesMaxValue(configOptions, data);
         else
             domainPeekMax = configDomain.end;
             
-        if(keyAxisPosition === 'start')
+        if(configOptions.axis.keyAxis.position === 'start')
             return [domainPeekMin, domainPeekMax];
         return [domainPeekMax, domainPeekMin];
     }
@@ -62,23 +62,28 @@ export class ScaleModel
         return 'linear';
     }
 
-    private static getScopedScalesMaxValue(charts: TwoDimensionalChart[], data: DataSource): number {
+    private static getScopedScalesMaxValue(configOptions: TwoDimensionalOptions, data: DataSource): number {
         let max: number = 0;
-        charts.forEach(chart => {
-            const chartMaxValue = this.getChartMaxValue(chart, data[chart.data.dataSource]);
-            if(max < chartMaxValue)
-                max = chartMaxValue;
+
+        configOptions.charts.forEach(chart => {
+            chart.data.valueField.forEach(field => {
+                const maxValue = this.getChartMaxValue(field.name, data[chart.data.dataSource]);
+                if(configOptions.isSegmented)
+                    max += maxValue;
+                else
+                    if(maxValue > max)
+                        max = maxValue;
+            });
         });
+
         return max;
     }
 
-    private static getChartMaxValue(chart: TwoDimensionalChart, data: DataRow[]): number {
-        let maxValue: number = data[0][chart.data.valueField[0].name];
-        chart.data.valueField.forEach(value => {
-            const maxOfDim = ModelHelper.getMaxNumberValue(data.map(d => d[value.name]));
-            if(maxOfDim > maxValue)
-                maxValue = maxOfDim;
-        });
+    private static getChartMaxValue(valueField: string, data: DataRow[]): number {
+        let maxValue: number = data[0][valueField];
+        const maxOfDim = ModelHelper.getMaxNumberValue(data.map(d => d[valueField]));
+        if(maxOfDim > maxValue)
+            maxValue = maxOfDim;
         return maxValue;
     }
 }

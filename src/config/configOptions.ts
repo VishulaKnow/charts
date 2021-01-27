@@ -10,7 +10,7 @@ const configCars: Config = {
     },
     options: {
         type: '2d',
-        isSegmented: true,
+        isSegmented: false,
         axis: {
             keyAxis: {
                 position: 'end',
@@ -21,7 +21,7 @@ const configCars: Config = {
             valueAxis: {
                 domain: {
                     start: -1,
-                    end: 150
+                    end: -1
                 },
                 position: 'start',
                 ticks: {
@@ -44,7 +44,7 @@ const configCars: Config = {
         charts: [
             {
                 title: 'Рост стоимости',
-                type: 'bar',
+                type: 'line',
                 data: {
                     dataSource: 'dataSet_large',
                     keyField:  {
