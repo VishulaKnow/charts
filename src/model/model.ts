@@ -84,6 +84,7 @@ export interface TwoDimensionalOptionsModel {
     additionalElements: AdditionalElementsOptions;
     legend: LegendModel;
     orient: ChartOrientation;
+    isSegmented: boolean;
 }
 export interface IntervalOptionsModel {
     type: 'interval';

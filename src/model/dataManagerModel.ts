@@ -22,6 +22,8 @@ export class DataManagerModel
                 const axisLength = AxisModel.getAxisLength(config.options.orientation, margin, config.canvas.size);
                 const uniqueKeys = ModelHelper.getUniqueValues(data[charts[0].data.dataSource].map(d => d[charts[0].data.keyField.name]));
                 const dataLength = uniqueKeys.length;
+                console.log(this.getElementsInGroupAmount(config.options, charts.length));
+                
                 const limit = this.getDataLimitByBarSize(this.getElementsInGroupAmount(config.options, charts.length), dataLength, axisLength, designerConfig.canvas.chartOptions.bar);
                 const allowableKeys = uniqueKeys.slice(0, limit);
                 
@@ -91,6 +93,7 @@ export class DataManagerModel
         config.options.charts.forEach((chart: TwoDimensionalChart | PolarChart | IntervalChart) => {
             newData[chart.data.dataSource] = this.getScopedChartData(data[chart.data.dataSource], allowableKeys, chart.data.keyField.name);
         });
+
         return newData;
     }
 

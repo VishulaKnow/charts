@@ -16,7 +16,12 @@ export class Bar
 {
     private static barItemClass  = 'bar-item'
 
-    public static render(block: Block, scales: Scales, data: DataRow[], margin: BlockMargin, keyAxisOrient: Orient, chart: TwoDimensionalChartModel, blockSize: Size, barChartsAmount: number, barSettings: BarChartSettings): void {
+    public static render(block: Block, scales: Scales, data: DataRow[], margin: BlockMargin, keyAxisOrient: Orient, chart: TwoDimensionalChartModel, blockSize: Size, barChartsAmount: number, barSettings: BarChartSettings, isSegmented: boolean): void {
+        if(isSegmented) {
+            this.renderSegmented(block, scales, data, margin, keyAxisOrient, chart, blockSize, barChartsAmount, barSettings);
+            return;
+        }
+        
         this.renderBarGroups(block, data);
         
         const bars = block.getChartBlock()
@@ -40,6 +45,27 @@ export class Bar
         
         Helper.setCssClasses(bars, chart.cssClasses);
         Helper.setChartElementColor(bars, chart.elementColors, 'fill');
+    }
+
+    private static renderSegmented(block: Block, scales: Scales, data: DataRow[], margin: BlockMargin, keyAxisOrient: Orient, chart: TwoDimensionalChartModel, blockSize: Size, barChartsAmount: number, barSettings: BarChartSettings): void {
+        const keys = chart.data.valueField.map(f => f.name);
+        const stackedData = d3.stack().keys(keys)(data);
+        console.log(stackedData);
+        block.getChartBlock()
+            .selectAll('g')
+            .data(stackedData)
+            .enter()
+                .append('g')
+                .style('fill', 'steelblue')
+                .selectAll('rect')
+                .data(d => d)
+                .enter()
+                    .append('rect')
+                    .style('stroke', 'black')
+                    .attr('x', d => scales.scaleKey(d.data[chart.data.keyField.name]) + margin.left)
+                    .attr('y', d => scales.scaleValue(d[1]) + margin.top)
+                    .attr('height', d => blockSize.height - margin.top - margin.bottom - scales.scaleValue(d[1] - d[0]))
+                    .attr('width', d => Scale.getScaleWidth(scales.scaleKey));
     }
 
     public static updateBarChartByValueAxis(block: Block, scales: Scales, margin: BlockMargin, keyAxisOrient: string, chart: TwoDimensionalChartModel, blockSize: Size): void {

@@ -35,7 +35,8 @@ export class ChartRenderer
             model.chartBlock.margin,
             options.axis.keyAxis.orient,
             model.chartSettings.bar,
-            model.blockCanvas.size);
+            model.blockCanvas.size,
+            options.isSegmented);
     
         Legend.render(block, 
             data,
@@ -92,7 +93,7 @@ export class ChartRenderer
             RecordOverflowAlert.render(block, model.dataSettings.scope.hidedRecordsAmount, options.orient);
     }
 
-    private static render2DCharts(block: Block, charts: TwoDimensionalChartModel[], scales: Scales, data: DataSource, margin: BlockMargin, keyAxisOrient: Orient, barSettings: BarChartSettings, blockSize: Size) {      
+    private static render2DCharts(block: Block, charts: TwoDimensionalChartModel[], scales: Scales, data: DataSource, margin: BlockMargin, keyAxisOrient: Orient, barSettings: BarChartSettings, blockSize: Size, isSegmented: boolean) {      
         block.renderClipPath(margin, blockSize);
         block.renderChartBlock();
         charts.forEach((chart: TwoDimensionalChartModel) => {
@@ -105,7 +106,8 @@ export class ChartRenderer
                     chart,
                     blockSize,
                     charts.filter(ch => ch.type === 'bar').length,
-                    barSettings);
+                    barSettings,
+                    isSegmented);
             else if(chart.type === 'line')
                 Line.render(block,
                     scales,

@@ -10,7 +10,7 @@ const configCars: Config = {
     },
     options: {
         type: '2d',
-        isSegmented: false,
+        isSegmented: true,
         axis: {
             keyAxis: {
                 position: 'end',
@@ -21,7 +21,7 @@ const configCars: Config = {
             valueAxis: {
                 domain: {
                     start: -1,
-                    end: -1
+                    end: 150
                 },
                 position: 'start',
                 ticks: {

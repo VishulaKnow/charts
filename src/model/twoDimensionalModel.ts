@@ -15,6 +15,7 @@ export class TwoDimensionalModel
         return {
             legend: configOptions.legend,
             orient: configOptions.orientation,
+            isSegmented: configOptions.isSegmented,
             scale: {
                 scaleKey: {
                     domain: ScaleModel.getScaleKeyDomain(dataScope.allowableKeys),
