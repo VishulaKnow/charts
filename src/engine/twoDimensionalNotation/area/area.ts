@@ -18,24 +18,26 @@ export class Area
 
     public static render(block: Block, scales: Scales, data: DataRow[], margin: BlockMargin, keyAxisOrient: Orient, chart: TwoDimensionalChartModel, blockSize: Size): void {
         const area = this.getAreaGenerator(keyAxisOrient);
-        const areaCoordinate: AreaChartCoordinate[] = this.getAreaCoordinateByKeyOrient(keyAxisOrient,
-            data,
-            scales,
-            margin,
-            chart.data.keyField.name,
-            chart.data.valueField[0].name,
-            blockSize);
+        chart.data.valueField.forEach((field, index) => {
+            const areaCoordinate: AreaChartCoordinate[] = this.getAreaCoordinateByKeyOrient(keyAxisOrient,
+                data,
+                scales,
+                margin,
+                chart.data.keyField.name,
+                chart.data.valueField[0].name,
+                blockSize);
+        
+            const path = block.getChartBlock()
+                .append('path')
+                .attr('d', area(areaCoordinate))
+                .attr('class', this.areaChartClass)
+                .style('clip-path', `url(${block.getClipPathId()})`);
+        
+            Helper.setCssClasses(path, chart.cssClasses);
+            Helper.setChartElementColor(path, chart.elementColors, index, 'fill');
     
-        const path = block.getChartBlock()
-            .append('path')
-            .attr('d', area(areaCoordinate))
-            .attr('class', this.areaChartClass)
-            .style('clip-path', `url(${block.getClipPathId()})`);
-    
-        Helper.setCssClasses(path, chart.cssClasses);
-        Helper.setChartElementColor(path, chart.elementColors, 'fill');
-
-        Dot.render(block, data, keyAxisOrient, scales, margin, chart.data.keyField.name, chart.data.valueField[0].name, chart.cssClasses, chart.elementColors, blockSize);
+            Dot.render(block, data, keyAxisOrient, scales, margin, chart.data.keyField.name, chart.data.valueField[0].name, chart.cssClasses, index, chart.elementColors, blockSize);
+        });
     }
 
     public static updateAreaChartByValueAxis(block: Block, scales: Scales, data: DataRow[], margin: BlockMargin, chart: TwoDimensionalChartModel, keyAxisOrient: Orient, blockSize: Size): void {

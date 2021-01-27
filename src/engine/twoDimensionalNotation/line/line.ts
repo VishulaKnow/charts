@@ -16,22 +16,24 @@ export class Line
 
     public static render(block: Block, scales: Scales, data: DataRow[], margin: BlockMargin, keyAxisOrient: Orient, chart: TwoDimensionalChartModel, blockSize: Size): void {
         const line = this.getLineGenerator();
-        const lineCoordinate: LineChartCoordinate[] = this.getLineCoordinateByKeyOrient(keyAxisOrient,
-            data,
-            scales,
-            margin,
-            chart.data.keyField.name,
-            chart.data.valueField[0].name);
+        chart.data.valueField.forEach((field, index) => {
+            const lineCoordinate: LineChartCoordinate[] = this.getLineCoordinateByKeyOrient(keyAxisOrient,
+                data,
+                scales,
+                margin,
+                chart.data.keyField.name,
+                field.name);
+            
+            const path = block.getChartBlock()
+                .append('path')
+                .attr('d', line(lineCoordinate))
+                .attr('class', this.lineChartClass)
+                .style('clip-path', `url(${block.getClipPathId()})`);
         
-        const path = block.getChartBlock()
-            .append('path')
-            .attr('d', line(lineCoordinate))
-            .attr('class', this.lineChartClass)
-            .style('clip-path', `url(${block.getClipPathId()})`);
-    
-        Helper.setCssClasses(path, chart.cssClasses);
-        Helper.setChartElementColor(path, chart.elementColors, 'stroke');
-        Dot.render(block, data, keyAxisOrient, scales, margin, chart.data.keyField.name, chart.data.valueField[0].name, chart.cssClasses, chart.elementColors, blockSize);
+            Helper.setCssClasses(path, chart.cssClasses);
+            Helper.setChartElementColor(path, chart.elementColors, index, 'stroke');
+            Dot.render(block, data, keyAxisOrient, scales, margin, chart.data.keyField.name, field.name, chart.cssClasses, index, chart.elementColors, blockSize);
+        });
     }
 
     public static updateLineChartByValueAxis(block: Block, scales: Scales, data: DataRow[], margin: BlockMargin, keyAxisOrient: Orient, chart: TwoDimensionalChartModel): void {

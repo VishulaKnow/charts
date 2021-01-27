@@ -16,11 +16,11 @@ export class Dot
     private static dotRadius = 5.5;
     private static innerDotRadius = 2.5;
 
-    public static render(block: Block, data: DataRow[], keyAxisOrient: Orient, scales: Scales, margin: BlockMargin, keyField: string, valueField: string, cssClasses: string[], colorPalette: Color[], blockSize: Size): void {
+    public static render(block: Block, data: DataRow[], keyAxisOrient: Orient, scales: Scales, margin: BlockMargin, keyField: string, valueField: string, cssClasses: string[], itemIndex: number, colorPalette: Color[], blockSize: Size): void {
         this.renderClipPathForCircles(block, blockSize, margin)
         
         const dotsWrapper = block.getChartBlock()
-            .selectAll(`.${this.dotClass}${Helper.getCssClassesLine(cssClasses)}`)
+            .selectAll(`.${this.dotClass}${Helper.getCssClassesLine(cssClasses)}.chart-index-${itemIndex}`)
             .data(data)
             .enter();
 
@@ -41,9 +41,9 @@ export class Dot
             .style('fill', 'white')
             .style('pointer-events', 'none');
 
-        Helper.setCssClasses(dots, cssClasses);
+        Helper.setCssClasses(dots, cssClasses.concat([`chart-index-${itemIndex}`]));
         Helper.setCssClasses(dotsInside, cssClasses);
-        Helper.setChartElementColor(dots, colorPalette, 'fill');
+        Helper.setChartElementColor(dots, colorPalette, itemIndex, 'fill');
     }
 
     public static getAllDots(block: Block): d3.Selection<d3.BaseType, DataRow, d3.BaseType, unknown> {

@@ -1,4 +1,4 @@
-import { Color } from "d3";
+import { color, Color } from "d3";
 
 type StyleColorType = 'fill' | 'stroke';
 
@@ -14,8 +14,8 @@ export class Helper
         return '.' + cssClasses.join('.');
     }
 
-    public static setChartElementColor(elements: d3.Selection<d3.BaseType, unknown, d3.BaseType, unknown>, colorPalette: Color[], styleType: StyleColorType): void {
-        elements.style(styleType, colorPalette[0].toString());
+    public static setChartElementColor(elements: d3.Selection<d3.BaseType, unknown, d3.BaseType, unknown>, colorPalette: Color[], index: number, styleType: StyleColorType): void {
+        elements.style(styleType, colorPalette[index % colorPalette.length].toString());
     }
 
     public static cropLabels(labelBlocks: d3.Selection<SVGGraphicsElement, unknown, HTMLElement, unknown>, maxWidth: number): void {
