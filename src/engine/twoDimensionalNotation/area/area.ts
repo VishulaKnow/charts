@@ -51,14 +51,10 @@ export class Area
     private static renderSegmented(block: Block, scales: Scales, data: DataRow[], margin: BlockMargin, keyAxisOrient: Orient, chart: TwoDimensionalChartModel, blockSize: Size): void {
         const keys = chart.data.valueField.map(field => field.name);
         const stackedData = d3.stack().keys(keys)(data);
+        const area = this.getSegmentedAreaGenerator(keyAxisOrient, scales, margin, chart.data.keyField.name);
 
-        console.log(stackedData);
+        console.log(area);
         
-
-        const area = d3.area<DataRow>()
-            .x(d => scales.scaleKey(d.data['brand']) + margin.left)
-            .y0(d => scales.scaleValue(d[0]) + margin.top)
-            .y1(d => scales.scaleValue(d[1]) + margin.top);
 
         const areas = block.getChartBlock()
             .selectAll('.area')
@@ -69,6 +65,7 @@ export class Area
                 .attr('class', this.areaChartClass)
                 .style('clip-path', `url(${block.getClipPathId()})`);
 
+        Helper.setCssClasses(areas, chart.cssClasses);
         this.setSegmentColor(areas, chart.elementColors);
     }
 
@@ -91,7 +88,7 @@ export class Area
         Dot.updateDotsCoordinateByValueAxis(block, data, keyAxisOrient, scales, margin, chart.data.keyField.name, chart.data.valueField[0].name, chart.cssClasses);
     }
 
-    private static getAreaGenerator(keyAxisOrient: string): d3.Area<AreaChartCoordinate> {
+    private static getAreaGenerator(keyAxisOrient: Orient): d3.Area<AreaChartCoordinate> {
         if(keyAxisOrient === 'bottom' || keyAxisOrient === 'top')
             return d3.area<AreaChartCoordinate>()
                 .x(d => d.x0)
@@ -102,6 +99,21 @@ export class Area
                 .x0(d => d.x0)
                 .x1(d => d.x1)
                 .y(d => d.y0);
+    }
+
+    private static getSegmentedAreaGenerator(keyAxisOrient: Orient, scales: Scales, margin: BlockMargin, keyField: string): d3.Area<DataRow> {
+        if(keyAxisOrient === 'bottom' || keyAxisOrient === 'top') {
+            return d3.area<DataRow>()
+                .x(d => scales.scaleKey(d.data[keyField]) + margin.left)
+                .y0(d => scales.scaleValue(d[0]) + margin.top)
+                .y1(d => scales.scaleValue(d[1]) + margin.top);
+        }
+        if(keyAxisOrient === 'left' || keyAxisOrient === 'right') {
+            return d3.area<DataRow>()
+                .x0(d => scales.scaleValue(d[0]) + margin.top)
+                .x1(d => scales.scaleValue(d[1]) + margin.top)
+                .y(d => scales.scaleKey(d.data[keyField]) + margin.top);
+        }
     }
 
     private static getAreaCoordinateByKeyOrient(axisOrient: string, data: DataRow[], scales: Scales, margin: BlockMargin, keyField: string, valueField: string, blockSize: Size) : AreaChartCoordinate[] {
@@ -132,6 +144,7 @@ export class Area
                 });
             });
         }   
+
         return areaCoordinate;
     }
 

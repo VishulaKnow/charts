@@ -39,7 +39,6 @@ h3.title {
     font-weight: 500;
 }
 .bar, .area, .donut {
-    fill: steelblue;
     stroke: none;
 }
 .line {

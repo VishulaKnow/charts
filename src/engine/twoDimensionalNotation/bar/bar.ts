@@ -84,7 +84,8 @@ export class Bar
             .data(d => d)
             .enter()
                 .append('rect')
-                .attr('class', this.barItemClass);
+                .attr('class', this.barItemClass)
+                .style('clip-path', `url(${block.getClipPathId()})`);
 
         const barAttrs = this.getStackBarAttrByKeyOrient(block, keyAxisOrient, scales, margin, chart.data.keyField.name, blockSize, barSettings);
        
@@ -94,6 +95,7 @@ export class Bar
             .attr('width', barAttrs.width)
             .attr('height', barAttrs.height);
 
+        Helper.setCssClasses(bars, chart.cssClasses);
         this.setSegmentColor(groups, chart.elementColors);
     }
 
