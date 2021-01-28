@@ -1,3 +1,4 @@
+import { sum } from "d3";
 import { AxisPosition, NumberDomain, IntervalChart, TwoDimensionalChart, TwoDimensionalOptions } from "../config/config";
 import { BlockMargin, DataRow, DataSource, ScaleKeyType, ScaleValueType, Size } from "./model";
 import { ModelHelper } from "./modelHelper";
@@ -53,12 +54,14 @@ export class ScaleModel
     public static getScaleKeyType(charts: TwoDimensionalChart[] | IntervalChart[]): ScaleKeyType {
         if(charts.findIndex((chart: TwoDimensionalChart | IntervalChart) => chart.type === 'bar' || chart.type === 'gantt') === -1)
             return 'point';
+
         return 'band';
     }
 
     public static getScaleValueType(charts: TwoDimensionalChart[] | IntervalChart[]): ScaleValueType {
         if(charts.findIndex((chart: TwoDimensionalChart | IntervalChart) => chart.type === 'gantt') !== -1)
             return 'datetime';
+
         return 'linear';
     }
 
@@ -66,16 +69,21 @@ export class ScaleModel
         let max: number = 0;
 
         configOptions.charts.forEach(chart => {
-            chart.data.valueField.forEach(field => {
-                const maxValue = this.getChartMaxValue(field.name, data[chart.data.dataSource]);
-                if(configOptions.isSegmented)
-                    max += maxValue;
-                else
-                    if(maxValue > max)
-                        max = maxValue;
+            data[chart.data.dataSource].forEach(dataRow => {
+                let sumInRow = 0;
+                chart.data.valueField.forEach(field => {
+                    if(configOptions.isSegmented)
+                        sumInRow += dataRow[field.name];
+                    else
+                        if(dataRow[field.name] > sumInRow)
+                            sumInRow = dataRow[field.name];
+                });
+                if(max < sumInRow)
+                    max = sumInRow;
             });
         });
-
+        console.log(max);
+        
         return max;
     }
 

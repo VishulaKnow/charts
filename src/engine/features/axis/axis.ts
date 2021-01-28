@@ -45,7 +45,7 @@ export class Axis
             this.rotateLabels(axisElement);
     }
 
-    public static updateValueAxisDomain(block: Block, scaleValue: d3.AxisScale<any>, scaleOptions: ScaleValueModel, axisOptions: AxisModelOptions) {
+    public static updateValueAxisDomain(block: Block, scaleValue: d3.AxisScale<any>, scaleOptions: ScaleValueModel, axisOptions: AxisModelOptions): void {
         const axis = this.getAxisByOrient(axisOptions.orient, scaleValue);
 
         this.setAxisFormat(scaleValue, scaleOptions, axis);
@@ -77,8 +77,8 @@ export class Axis
 
     private static alignLabels(axisElement: d3.Selection<SVGGElement, unknown, HTMLElement, any>, anchor: TextAnchor, maxLabelSize: number): void {
         const axisTextBlocks = axisElement.selectAll('text');
-        axisTextBlocks.attr('text-anchor', 'start');
-        axisTextBlocks.attr('x', -maxLabelSize);
+        axisTextBlocks.attr('text-anchor', anchor);
+        axisTextBlocks.attr('x', -(maxLabelSize + AXIS_VERTICAL_LABEL_PADDING));
     }
 
     private static setAxisLabelPaddingByOrient(axis: d3.Axis<any>, axisOptions: AxisModelOptions): void {
