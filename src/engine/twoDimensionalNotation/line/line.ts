@@ -32,7 +32,7 @@ export class Line
         
             Helper.setCssClasses(path, chart.cssClasses);
             Helper.setChartElementColor(path, chart.elementColors, index, 'stroke');
-            Dot.render(block, data, keyAxisOrient, scales, margin, chart.data.keyField.name, field.name, chart.cssClasses, index, chart.elementColors, blockSize);
+            Dot.render(block, data, keyAxisOrient, scales, margin, chart.data.keyField.name, field.name, chart.cssClasses, index, chart.elementColors, blockSize, false);
         });
     }
 

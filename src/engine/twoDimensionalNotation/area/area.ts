@@ -44,7 +44,7 @@ export class Area
             Helper.setCssClasses(path, chart.cssClasses);
             Helper.setChartElementColor(path, chart.elementColors, index, 'fill');
     
-            Dot.render(block, data, keyAxisOrient, scales, margin, chart.data.keyField.name, field.name, chart.cssClasses, index, chart.elementColors, blockSize);
+            Dot.render(block, data, keyAxisOrient, scales, margin, chart.data.keyField.name, field.name, chart.cssClasses, index, chart.elementColors, blockSize, false);
         });
     }
 
@@ -52,9 +52,6 @@ export class Area
         const keys = chart.data.valueField.map(field => field.name);
         const stackedData = d3.stack().keys(keys)(data);
         const area = this.getSegmentedAreaGenerator(keyAxisOrient, scales, margin, chart.data.keyField.name);
-
-        console.log(area);
-        
 
         const areas = block.getChartBlock()
             .selectAll('.area')
@@ -67,6 +64,12 @@ export class Area
 
         Helper.setCssClasses(areas, chart.cssClasses);
         this.setSegmentColor(areas, chart.elementColors);
+
+
+        stackedData.forEach((sd, index) => {
+            Dot.render(block, sd, keyAxisOrient, scales, margin, chart.data.keyField.name, '1', chart.cssClasses, index, chart.elementColors, blockSize, true);
+        }); 
+        
     }
 
     public static updateAreaChartByValueAxis(block: Block, scales: Scales, data: DataRow[], margin: BlockMargin, chart: TwoDimensionalChartModel, keyAxisOrient: Orient, blockSize: Size): void {

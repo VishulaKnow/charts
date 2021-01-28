@@ -16,7 +16,7 @@ export class Dot
     private static dotRadius = 5.5;
     private static innerDotRadius = 2.5;
 
-    public static render(block: Block, data: DataRow[], keyAxisOrient: Orient, scales: Scales, margin: BlockMargin, keyField: string, valueField: string, cssClasses: string[], itemIndex: number, colorPalette: Color[], blockSize: Size): void {
+    public static render(block: Block, data: DataRow[], keyAxisOrient: Orient, scales: Scales, margin: BlockMargin, keyField: string, valueField: string, cssClasses: string[], itemIndex: number, colorPalette: Color[], blockSize: Size, isSegmented: boolean): void {
         this.renderClipPathForCircles(block, blockSize, margin)
         
         const dotsWrapper = block.getChartBlock()
@@ -24,7 +24,7 @@ export class Dot
             .data(data)
             .enter();
 
-        const attrs = this.getDotAttrs(keyAxisOrient, scales, margin, keyField, valueField);
+        const attrs = this.getDotAttrs(keyAxisOrient, scales, margin, keyField, valueField, isSegmented);
 
         const dots = dotsWrapper.append('circle')
             .attr('class', this.dotClass)
@@ -56,7 +56,7 @@ export class Dot
             .selectAll(`.${this.dotClass}${Helper.getCssClassesLine(cssClasses)}`)
             .data(data);
         
-        const attrs = this.getDotAttrs(keyAxisOrient, scales, margin, keyField, valueField);
+        const attrs = this.getDotAttrs(keyAxisOrient, scales, margin, keyField, valueField, false);
 
         dots
             .transition()
@@ -73,18 +73,22 @@ export class Dot
                 .attr('cy', d => attrs.cy(d));
     }
 
-    private static getDotAttrs(keyAxisOrient: Orient, scales: Scales, margin: BlockMargin, keyField: string, valueField: string): DotAttrs {
-        const attrs: DotAttrs = { cx: null, cy: null } 
+    private static getDotAttrs(keyAxisOrient: Orient, scales: Scales, margin: BlockMargin, keyField: string, valueField: string, isSegmented: boolean): DotAttrs {
+        const attrs: DotAttrs = { cx: null, cy: null }
 
         if(keyAxisOrient === 'left' || keyAxisOrient === 'right') {
             attrs.cx = d => scales.scaleValue(d[valueField]) + margin.left;
-            attrs.cy = d => Scale.getScaleKeyPoint(scales.scaleKey, d[keyField]) + margin.top;
+            attrs.cy = d => Scale.getScaleKeyPoint(scales.scaleKey, this.getKeyFieldValue(d, keyField, isSegmented)) + margin.top;
         } else if(keyAxisOrient === 'bottom' || keyAxisOrient === 'top') {
-            attrs.cx = d => Scale.getScaleKeyPoint(scales.scaleKey, d[keyField]) + margin.left,
+            attrs.cx = d => Scale.getScaleKeyPoint(scales.scaleKey, this.getKeyFieldValue(d, keyField, isSegmented)) + margin.left,
             attrs.cy = d => scales.scaleValue(d[valueField]) + margin.top
         }
 
         return attrs;
+    }
+
+    private static getKeyFieldValue(row: DataRow, keyFieldName: string, isSegmented: boolean): string {
+        return isSegmented ? row.data[keyFieldName] : row[keyFieldName];
     }
 
     private static renderClipPathForCircles(block: Block, blockSize: Size, margin: BlockMargin): void {

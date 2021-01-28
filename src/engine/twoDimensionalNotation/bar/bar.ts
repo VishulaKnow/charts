@@ -163,10 +163,7 @@ export class Bar
         }
 
         if(axisOrient === 'top' || axisOrient === 'bottom') {
-            attrs.x = d => {
-                console.log(d);
-                return scales.scaleKey(d.data[keyField]) + margin.left
-            };
+            attrs.x = d => scales.scaleKey(d.data[keyField]) + margin.left;
             attrs.width = d => barSize;
         }
         if(axisOrient === 'left' || axisOrient === 'right') {
