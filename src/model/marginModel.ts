@@ -41,7 +41,7 @@ export class MarginModel
             const axisConfig = AxisModel.getKeyAxisLabelPosition(margin, config.canvas.size, labelTexts.length);
 
             if(axisConfig === 'rotated')
-                margin['bottom'] += (axisLabelSize.width - axisLabelSize.height);
+                margin.bottom += (axisLabelSize.width - axisLabelSize.height);
         }
     }
 

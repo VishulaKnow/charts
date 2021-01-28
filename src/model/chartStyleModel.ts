@@ -13,7 +13,7 @@ export class ChartStyleModel
     
     public static getElementColorPallete(palette: Color[], notation: ChartNotation, elementsAmount: number, chartIndex: number = 0): Color[] {
         if(notation === '2d' || notation === 'interval') {
-            return this.generatePalette(palette, elementsAmount);
+            return palette;
         }  
         else {
             const generatedPalette = this.generatePalette(palette, elementsAmount);
