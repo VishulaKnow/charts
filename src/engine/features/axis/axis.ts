@@ -36,11 +36,10 @@ export class Axis
 
         this.cropLabels(block, scale, scaleOptions, axisOptions);
 
-        if(axisOptions.orient === 'left' && axisOptions.type === 'key') {
+        if(axisOptions.orient === 'left' && axisOptions.type === 'key')
             this.alignLabels(axisElement, 'start', axisOptions.maxLabelSize);
-        }
         
-        if(axisOptions.orient === 'bottom' && axisOptions.type === 'key')
+        if(axisOptions.orient === 'bottom' && axisOptions.type === 'key' && axisOptions.labelPositition === 'rotated')
             this.rotateLabels(axisElement);
     }
 
@@ -75,10 +74,11 @@ export class Axis
 
     private static rotateLabels(axisElement: d3.Selection<SVGGElement, unknown, HTMLElement, any>): void {
         const labelBlocks = axisElement.selectAll('text');
+
         labelBlocks.attr('text-anchor', 'end');
         labelBlocks
             .attr('x', -15)
-            .attr('y', -5)
+            .attr('y', -4)
             .attr('transform', 'rotate(-90)');
     }
 
@@ -132,10 +132,11 @@ export class Axis
         if(scaleOptions.type === 'point' || scaleOptions.type === 'band') {
             const axisTextBlocks = block.getSvg().select(`.${axisOptions.cssClass}`).selectAll('text') as d3.Selection<SVGGraphicsElement, unknown, HTMLElement, unknown>;
             let labelSize: number;
-            if(axisOptions.orient === 'left' || axisOptions.orient === 'right')
+            if((axisOptions.orient === 'left' || axisOptions.orient === 'right') || (axisOptions.type === 'key' && axisOptions.labelPositition === 'rotated'))
                 labelSize = axisOptions.maxLabelSize;
             else
                 labelSize = (scale as d3.ScaleBand<string>).step();
+
             Helper.cropLabels(axisTextBlocks, labelSize);
             
             if(scaleOptions.type === 'point') {

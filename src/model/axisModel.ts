@@ -1,5 +1,5 @@
 import { AxisPosition, ChartOrientation } from "../config/config";
-import { BlockMargin, Orient, Size } from "./model";
+import { AxisLabelPosition, BlockMargin, Orient, Size } from "./model";
 import { AxisType, CLASSES } from "./modelOptions";
 
 interface LabelSize {
@@ -45,11 +45,10 @@ export class AxisModel
             if(axisPosition === 'start')
                 return axisType === AxisType.Key ? 'top' : 'left';
             return axisType === AxisType.Key ? 'bottom' : 'right'
-        } else {
-            if(axisPosition === 'start')
-                return axisType === AxisType.Key ? 'left' : 'top';
-            return axisType === AxisType.Key ? 'right' : 'bottom'
         }
+        if(axisPosition === 'start')
+            return axisType === AxisType.Key ? 'left' : 'top';
+        return axisType === AxisType.Key ? 'right' : 'bottom'
     }
 
     public static getAxisTranslateX(axisType: AxisType, chartOrientation: ChartOrientation, axisPosition: AxisPosition, margin: BlockMargin, blockWidth: number): number {
@@ -68,5 +67,13 @@ export class AxisModel
         else if(orient === 'bottom') 
             return blockHeight - margin.bottom;
         return margin.top;
+    }
+
+    public static getKeyAxisLabelPosition(margin: BlockMargin, blockSize: Size, scopedDataLength: number): AxisLabelPosition {
+        const minBandSize = 50;
+        if((blockSize.width - margin.left - margin.right) / scopedDataLength < minBandSize)
+            return 'rotated';
+
+        return 'straight';
     }
 }

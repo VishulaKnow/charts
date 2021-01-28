@@ -61,4 +61,8 @@ export class ModelHelper
        
         return uniqueValues;
     }
+
+    public static getUniqueValuesLength(values: string[]): number {
+        return this.getUniqueValues(values).length;
+    }
 }

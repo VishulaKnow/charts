@@ -3,14 +3,17 @@ import { Config, IntervalChart, IntervalOptions } from "../config/config";
 import { DesignerConfig } from "../designer/designerConfig";
 import { AxisModel } from "./axisModel";
 import { ChartStyleModel } from "./chartStyleModel";
+import { DataManagerModel } from "./dataManagerModel";
 import { GridLineModel } from "./gridLineModel";
 import { AdditionalElementsOptions, BlockMargin, DataScope, DataSource, IntervalChartModel, IntervalOptionsModel } from "./model";
+import { ModelHelper } from "./modelHelper";
 import { AxisType } from "./modelOptions";
 import { ScaleModel, ScaleType } from "./scaleModel";
 
 export class IntervalModel {
     public static getOptions(config: Config, designerConfig: DesignerConfig, margin: BlockMargin, dataScope: DataScope, data: DataSource): IntervalOptionsModel {
-        const configOptions = <IntervalOptions>config.options
+        const configOptions = <IntervalOptions>config.options;
+        
         return {
             legend: configOptions.legend,
             orient: configOptions.orientation,
@@ -42,7 +45,8 @@ export class IntervalModel {
                     },
                     cssClass: 'key-axis',
                     maxLabelSize: designerConfig.canvas.axisLabel.maxSize.main,
-                    ticks: configOptions.axis.keyAxis.ticks
+                    ticks: configOptions.axis.keyAxis.ticks,
+                    labelPositition: AxisModel.getKeyAxisLabelPosition(margin, config.canvas.size, DataManagerModel.getDataValuesByKeyField(data, configOptions.charts[0]).length)
                 },
                 valueAxis: {
                     type: 'value',
@@ -53,7 +57,8 @@ export class IntervalModel {
                     },          
                     cssClass: 'value-axis',
                     maxLabelSize: designerConfig.canvas.axisLabel.maxSize.main,
-                    ticks: configOptions.axis.valueAxis.ticks
+                    ticks: configOptions.axis.valueAxis.ticks,
+                    labelPositition: 'straight'
                 }
             },
             type: configOptions.type,

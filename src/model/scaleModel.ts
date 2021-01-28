@@ -13,6 +13,7 @@ export class ScaleModel
             return scaleType === ScaleType.Key 
                 ? blockSize.width - margin.left - margin.right
                 : blockSize.height - margin.top - margin.bottom;
+                
         return scaleType === ScaleType.Key 
             ? blockSize.height - margin.top - margin.bottom
             : blockSize.width - margin.left - margin.right;
@@ -40,7 +41,7 @@ export class ScaleModel
         else
             domainPeekMin = configDomain.start;
         if(configDomain.end === -1)
-            domainPeekMax = this.getScopedScalesMaxValue(configOptions, data);
+            domainPeekMax = this.getScaleMaxValue(configOptions, data);
         else
             domainPeekMax = configDomain.end;
             
@@ -61,7 +62,7 @@ export class ScaleModel
         return 'linear';
     }
 
-    private static getScopedScalesMaxValue(configOptions: TwoDimensionalOptions, data: DataSource): number {
+    private static getScaleMaxValue(configOptions: TwoDimensionalOptions, data: DataSource): number {
         let max: number = 0;
 
         configOptions.charts.forEach(chart => {

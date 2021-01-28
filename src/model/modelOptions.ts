@@ -87,7 +87,7 @@ export function assembleModel(config: Config, data: DataSource): Model {
     const dataSettings = getDataSettings(dataScope);
     const chartSettings = getChartSettings(designerConfig);
     const dataFormat = getDataFormat(designerConfig);
-    console.log(margin);
+    console.log(options);
     
     return {
         blockCanvas,

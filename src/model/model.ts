@@ -6,6 +6,7 @@ export type Orient = 'top' | 'bottom' | 'left' | 'right';
 export type ScaleKeyType = 'band' | 'point';
 export type ScaleValueType = 'linear' | 'datetime';
 type AxisType = 'key' | 'value';
+export type AxisLabelPosition = 'straight' | 'rotated';
 export type DataOptions = {
     [option: string]: any
 }
@@ -62,6 +63,7 @@ export interface AxisModelOptions {
     cssClass: string;
     maxLabelSize: number;
     ticks: AxisTicksModel;
+    labelPositition: AxisLabelPosition;
 }
 
 interface AxisTicksModel {

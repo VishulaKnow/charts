@@ -3,15 +3,18 @@ import { Config, TwoDimensionalChart, TwoDimensionalOptions } from "../config/co
 import { DesignerConfig } from "../designer/designerConfig";
 import { AxisModel } from "./axisModel";
 import { ChartStyleModel } from "./chartStyleModel";
+import { DataManagerModel } from "./dataManagerModel";
 import { GridLineModel } from "./gridLineModel";
 import { BlockMargin, DataScope, DataSource, AdditionalElementsOptions, TwoDimensionalChartModel, TwoDimensionalOptionsModel } from "./model";
+import { ModelHelper } from "./modelHelper";
 import { AxisType } from "./modelOptions";
 import { ScaleModel, ScaleType } from "./scaleModel";
 
 export class TwoDimensionalModel
 {
     public static getOptions(config: Config, designerConfig: DesignerConfig, margin: BlockMargin, dataScope: DataScope, data: DataSource): TwoDimensionalOptionsModel {
-        const configOptions = <TwoDimensionalOptions>config.options
+        const configOptions = <TwoDimensionalOptions>config.options;
+
         return {
             legend: configOptions.legend,
             orient: configOptions.orientation,
@@ -44,7 +47,8 @@ export class TwoDimensionalModel
                     },
                     cssClass: 'key-axis',
                     maxLabelSize: designerConfig.canvas.axisLabel.maxSize.main,
-                    ticks: configOptions.axis.keyAxis.ticks
+                    ticks: configOptions.axis.keyAxis.ticks,
+                    labelPositition: AxisModel.getKeyAxisLabelPosition(margin, config.canvas.size, DataManagerModel.getDataValuesByKeyField(data, configOptions.charts[0]).length)
                 },
                 valueAxis: {
                     type: 'value',
@@ -55,7 +59,8 @@ export class TwoDimensionalModel
                     },          
                     cssClass: 'value-axis',
                     maxLabelSize: designerConfig.canvas.axisLabel.maxSize.main,
-                    ticks: configOptions.axis.valueAxis.ticks
+                    ticks: configOptions.axis.valueAxis.ticks,
+                    labelPositition: 'straight'
                 }
             },
             type: configOptions.type,
