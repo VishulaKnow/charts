@@ -193,26 +193,24 @@ export class Tooltip
 
     private static renderDotsEdging(block: Block, attrs: DotEdgingAttrs, color: string): void {
         block.getChartBlock()
-            .append('circle')
+            .insert('circle', '.dot')
             .attr('class', 'dot-edging-internal')
             .attr('cx', attrs.cx)
             .attr('cy', attrs.cy)
             .attr('r', 10.5)
             .style('opacity', 0.4)
             .style('fill', color)
-            .style('pointer-events', 'none')
-            .lower();
+            .style('pointer-events', 'none');
 
         block.getChartBlock()
-            .append('circle')
+            .insert('circle', '.dot')
             .attr('class', 'dot-edging-external')
             .attr('cx', attrs.cx)
             .attr('cy', attrs.cy)
             .attr('r', 15.5)
             .style('opacity', 0.2)
             .style('fill', color)
-            .style('pointer-events', 'none')
-            .lower();
+            .style('pointer-events', 'none');
     }
     
     private static removeDotsEdging(block: Block): void {
