@@ -16,14 +16,16 @@ export class Tooltip
     private static tooltipBlockClass = 'tooltip-block';
     private static tooltipArrowClass = 'tooltip-arrow';
 
-    public static renderTooltips(block: Block, model: Model, data: DataSource, scales: Scales) {
+    public static renderTooltips(block: Block, model: Model, data: DataSource, scales: Scales): void {
         this.renderTooltipWrapper(block);
         const chartsWithTooltipIndex = model.options.charts.findIndex((chart: TwoDimensionalChartModel | PolarChartModel | IntervalChartModel) => chart.tooltip.data.fields.length !== 0);
         if(chartsWithTooltipIndex !== -1) {
             if(model.options.type === '2d') {
                 if(model.options.charts.findIndex(chart => chart.type === 'area' || chart.type === 'line') === -1)
                     this.renderTooltipForBar(block, Bar.getAllBarItems(block), data, model.options.charts, model.options.isSegmented);
-                else if(model.options.charts.findIndex(chart => chart.type === 'bar') === -1)
+                else if(model.options.charts.findIndex(chart => chart.type === 'area' || chart.type === 'bar') === -1)
+                    this.renderTooltipForDots(block, Dot.getAllDots(block), data, model.options.charts, false);
+                else if(model.options.charts.findIndex(chart => chart.type === 'line' || chart.type === 'bar') === -1)
                     this.renderTooltipForDots(block, Dot.getAllDots(block), data, model.options.charts, model.options.isSegmented);
                 else 
                     this.renderLineTooltip(block, scales.scaleKey, model.chartBlock.margin, model.blockCanvas.size, model.options.charts, data, model.options.scale.scaleKey, model.options.orient);
@@ -52,7 +54,7 @@ export class Tooltip
             if(chart.tooltip.data.fields.length !== 0) {
                 const bars = block.getSvg()
                     .selectAll(`rect${Helper.getCssClassesLine(chart.cssClasses)}`);
-                this.renderTooltipForSingleElements(block, bars, chart.tooltip.data.fields, data[chart.data.dataSource], blockSize, charts);
+                this.renderTooltipForSingleElements(block, bars, chart.tooltip.data.fields, data[chart.data.dataSource], charts);
             }
         });
     }
@@ -167,7 +169,7 @@ export class Tooltip
             });
     }
 
-    private static renderTooltipForSingleElements(block: Block, elemets: d3.Selection<d3.BaseType, unknown, d3.BaseType, unknown>, fields: Field[], data: DataRow[], blockSize: Size, charts: TwoDimensionalChartModel[] | PolarChartModel[] | IntervalChartModel[], translateX: number = 0, translateY: number = 0): void {
+    private static renderTooltipForSingleElements(block: Block, elemets: d3.Selection<d3.BaseType, unknown, d3.BaseType, unknown>, fields: Field[], data: DataRow[], charts: TwoDimensionalChartModel[] | PolarChartModel[] | IntervalChartModel[], translateX: number = 0, translateY: number = 0): void {
         const tooltipBlock = this.renderTooltipBlock(block, translateX, translateY);
         const tooltipContent = this.getTooltipContentBlock(tooltipBlock);
         const thisClass = this;
