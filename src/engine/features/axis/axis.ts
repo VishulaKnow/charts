@@ -1,30 +1,32 @@
 import * as d3 from "d3";
-import { AxisModelOptions, IAxisModel, IScaleModel, Orient, ScaleKeyModel, ScaleValueModel } from "../../../model/model";
+import { AxisModelOptions, BlockMargin, IAxisModel, IScaleModel, Orient, ScaleKeyModel, ScaleValueModel, Size } from "../../../model/model";
 import { Helper } from "../../helper";
 import { Block } from "../../block/block";
 import { Scales } from "../scale/scale";
 
-interface AxisLabelCoordinate {
-    x: number;
-    y: number;
-}
-
 type TextAnchor = 'start' | 'end' | 'middle';
+
+const AXIS_VERTICAL_LABEL_PADDING = 10;
+const AXIS_HORIZONTAL_LABEL_PADDING = 15;
+const MINIMAL_STEP_SIZE = 40;
 
 export class Axis
 {
-    public static render(block: Block, scales: Scales, scaleModel: IScaleModel, axisModel: IAxisModel): void {
-        this.renderAxis(block, scales.scaleValue, scaleModel.scaleValue, axisModel.valueAxis);
-        this.renderAxis(block, scales.scaleKey, scaleModel.scaleKey, axisModel.keyAxis);
+    public static render(block: Block, scales: Scales, scaleModel: IScaleModel, axisModel: IAxisModel, margin: BlockMargin, blockSize: Size): void {
+        this.renderAxis(block, scales.scaleValue, scaleModel.scaleValue, axisModel.valueAxis, margin, blockSize);
+        this.renderAxis(block, scales.scaleKey, scaleModel.scaleKey, axisModel.keyAxis, margin, blockSize);
     }
 
-    private static renderAxis(block: Block, scale: d3.AxisScale<any>, scaleOptions: ScaleKeyModel | ScaleValueModel, axisOptions: AxisModelOptions): void {
+    private static renderAxis(block: Block, scale: d3.AxisScale<any>, scaleOptions: ScaleKeyModel | ScaleValueModel, axisOptions: AxisModelOptions, margin: BlockMargin, blockSize: Size): void {
         const axis = this.getAxisByOrient(axisOptions.orient, scale);
 
         this.setAxisFormat(scale, scaleOptions, axis);
         
         if(!axisOptions.ticks.flag)
             this.removeTicks(axis);
+
+        if(axisOptions.type === 'value')
+            this.setStepSize(blockSize, margin, axis, axisOptions, scaleOptions);
 
         this.setAxisLabelPaddingByOrient(axis, axisOptions);
     
@@ -59,6 +61,20 @@ export class Axis
                 .call(axis.bind(this));
     }
 
+    private static setStepSize(blockSize: Size, margin: BlockMargin, axis: d3.Axis<any>, axisOptions: AxisModelOptions, scale: ScaleKeyModel | ScaleValueModel): void {
+        let axisLength = blockSize.width - margin.left - margin.right;
+        if(axisOptions.orient === 'left' || axisOptions.orient === 'right') {
+            axisLength = blockSize.height - margin.top - margin.bottom;
+        }
+        
+        if(axisLength / 10 < MINIMAL_STEP_SIZE) {
+            if(Math.floor(axisLength / MINIMAL_STEP_SIZE) > 2)
+                axis.ticks(Math.floor(axisLength / MINIMAL_STEP_SIZE));
+            else
+                axis.tickValues([0, d3.max(scale.domain)]);
+        }
+    }
+
     private static alignLabels(axisElement: d3.Selection<SVGGElement, unknown, HTMLElement, any>, anchor: TextAnchor, maxLabelSize: number): void {
         const axisTextBlocks = axisElement.selectAll('text');
         axisTextBlocks.attr('text-anchor', 'start');
@@ -66,9 +82,9 @@ export class Axis
     }
 
     private static setAxisLabelPaddingByOrient(axis: d3.Axis<any>, axisOptions: AxisModelOptions): void {
-        let axisLabelPadding = 15;
+        let axisLabelPadding = AXIS_HORIZONTAL_LABEL_PADDING;
         if(axisOptions.orient === 'left' || axisOptions.orient === 'right')
-            axisLabelPadding = 10;
+            axisLabelPadding = AXIS_VERTICAL_LABEL_PADDING;
         axis.tickPadding(axisLabelPadding);
     }
 
@@ -77,31 +93,13 @@ export class Axis
 
         labelBlocks.attr('text-anchor', 'end');
         labelBlocks
-            .attr('x', -15)
+            .attr('x', -AXIS_HORIZONTAL_LABEL_PADDING)
             .attr('y', -4)
             .attr('transform', 'rotate(-90)');
     }
 
     private static removeTicks(axis: d3.Axis<any>): void {
         axis.tickSize(0);
-    }
-
-    private static getAxisLabelCoordinate(axisOrient: Orient, labelMargin: number): AxisLabelCoordinate {
-        const coordinate: AxisLabelCoordinate = {
-            x: null,
-            y: null
-        }
-
-        if(axisOrient === 'bottom')
-            coordinate.y = labelMargin;
-        else if(axisOrient === 'top')
-            coordinate.y = -labelMargin;
-        else if(axisOrient === 'left')
-            coordinate.x = -labelMargin;
-        else if(axisOrient === 'right')
-            coordinate.x = labelMargin;
-
-        return coordinate;
     }
 
     private static getAxisByOrient(orient: Orient, scale: d3.AxisScale<any>): d3.Axis<any> {
@@ -123,11 +121,6 @@ export class Axis
         }
     }
 
-    private static setTicksAmount(scale: d3.AxisScale<any>, axisOptions: AxisModelOptions, axis: d3.Axis<any>): void {
-        let axisLength: number = scale.range()[1];
-        axis.ticks(3);
-    }
-
     private static cropLabels(block: Block, scale: d3.AxisScale<any>, scaleOptions: ScaleKeyModel | ScaleValueModel, axisOptions: AxisModelOptions): void {
         if(scaleOptions.type === 'point' || scaleOptions.type === 'band') {
             const axisTextBlocks = block.getSvg().select(`.${axisOptions.cssClass}`).selectAll('text') as d3.Selection<SVGGraphicsElement, unknown, HTMLElement, unknown>;
@@ -139,13 +132,13 @@ export class Axis
 
             Helper.cropLabels(axisTextBlocks, labelSize);
             
-            if(scaleOptions.type === 'point') {
-                const lastTick = block.getSvg().select(`.${axisOptions.cssClass}`).select('.tick:last-of-type') as d3.Selection<SVGGraphicsElement, unknown, HTMLElement, unknown>;
-                const lastLabel = lastTick.select('text') as d3.Selection<SVGGraphicsElement, unknown, HTMLElement, unknown>;
-                const translateX = Helper.getTranslateNumbers(lastTick.attr('transform'))[0];
-                if(translateX + lastLabel.node().getBBox().width + axisOptions.translate.translateX > 1200)                
-                    Helper.cropLabels(lastLabel, labelSize / 2);
-            }
+            // if(scaleOptions.type === 'point') {
+            //     const lastTick = block.getSvg().select(`.${axisOptions.cssClass}`).select('.tick:last-of-type') as d3.Selection<SVGGraphicsElement, unknown, HTMLElement, unknown>;
+            //     const lastLabel = lastTick.select('text') as d3.Selection<SVGGraphicsElement, unknown, HTMLElement, unknown>;
+            //     const translateX = Helper.getTranslateNumbers(lastTick.attr('transform'))[0];
+            //     if(translateX + lastLabel.node().getBBox().width + axisOptions.translate.translateX > 1200)                
+            //         Helper.cropLabels(lastLabel, labelSize / 2);
+            // }
         }
     }
 }
