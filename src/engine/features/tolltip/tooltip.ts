@@ -1,5 +1,5 @@
 import * as d3 from "d3";
-import { BlockMargin, DataRow, DataSource, Field, IntervalChartModel, Model, PolarChartModel, ScaleKeyModel, Size, TwoDimensionalChartModel } from "../../../model/model";
+import { BlockMargin, DataRow, DataSource, Field, IntervalChartModel, Model, PolarChartModel, ScaleKeyModel, Size, TwoDimensionalChartModel, TwoDimensionalOptionsModel } from "../../../model/model";
 import { Helper } from "../../helper";
 import { Scale, Scales } from "../scale/scale";
 import { Block } from "../../block/block";
@@ -22,7 +22,7 @@ export class Tooltip
         if(chartsWithTooltipIndex !== -1) {
             if(model.options.type === '2d') {
                 if(model.options.charts.findIndex(chart => chart.type === 'area' || chart.type === 'line') === -1)
-                    this.renderMultiTooltipForBar(block, Bar.getAllBarItems(block), data, model.options.charts);
+                    this.renderTooltipForBar(block, Bar.getAllBarItems(block), data, model.options.charts, model.options.isSegmented);
                 else if(model.options.charts.findIndex(chart => chart.type === 'bar') === -1)
                     this.renderTooltipForDots(block, Dot.getAllDots(block), data, model.options.charts);
                 else 
@@ -83,7 +83,7 @@ export class Tooltip
         });
     }
 
-    private static renderMultiTooltipForBar(block: Block, elemets: d3.Selection<d3.BaseType, DataRow, d3.BaseType, unknown>, data: DataSource, charts: TwoDimensionalChartModel[]): void {
+    private static renderTooltipForBar(block: Block, elemets: d3.Selection<d3.BaseType, DataRow, d3.BaseType, unknown>, data: DataSource, charts: TwoDimensionalChartModel[], isSegmented: boolean): void {
         const tooltipBlock = this.renderTooltipBlock(block);
         const tooltipContent = this.getTooltipContentBlock(tooltipBlock);
         const tooltipArrow = this.renderTooltipArrow(tooltipBlock);
@@ -92,14 +92,15 @@ export class Tooltip
         elemets
             .on('mouseover', function(event, d) {
                 tooltipBlock.style('display', 'block');
-                const key = d[charts[0].data.keyField.name];
+                const key = TooltipHelper.getKeyForTooltip(d, charts[0].data.keyField.name, isSegmented);
+                
                 tooltipContent.html(`${TooltipHelper.getTooltipHtmlFor2DCharts(charts[0], data, key)}`);
 
                 const coordinatePointer: [number, number] = TooltipHelper.getTooltipBlockCoordinate(d3.select(this), tooltipBlock, 'rect');
                 const tooltipCoordinate = TooltipHelper.getTooltipCoordinate(coordinatePointer);
                 thisClass.setTooltipCoordinate(tooltipBlock, tooltipCoordinate);
 
-                elemets.filter(d => d[charts[0].data.keyField.name] !== key)
+                TooltipHelper.getFilteredElements(elemets, charts[0].data.keyField.name, key, isSegmented)
                     .style('opacity', 0.3);
             });
 

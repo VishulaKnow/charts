@@ -141,6 +141,16 @@ export class TooltipHelper
             cy: parseFloat(element.attr('cy'))
         }
     }
+
+    public static getKeyForTooltip(row: DataRow, keyFieldName: string, isSegmented: boolean): string {
+        return isSegmented ? row.data[keyFieldName] : row[keyFieldName]; 
+    }
+
+    public static getFilteredElements(elements: d3.Selection<d3.BaseType, DataRow, d3.BaseType, unknown>, keyFieldName: string, keyValue: string, isSegmented: boolean): d3.Selection<d3.BaseType, DataRow, d3.BaseType, unknown> {
+        if(isSegmented)
+            return elements.filter(d => d.data[keyFieldName] !== keyValue);
+        return elements.filter(d => d[keyFieldName] !== keyValue);
+    }
     
     private static getTooltipItemText(chart: TwoDimensionalChartModel | PolarChartModel, data: DataSource, keyValue: string, valueField: Field): string {
         const row = data[chart.data.dataSource].find(d => d[chart.data.keyField.name] === keyValue);
