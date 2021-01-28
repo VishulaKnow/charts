@@ -82,7 +82,6 @@ export class ScaleModel
                     max = sumInRow;
             });
         });
-        console.log(max);
         
         return max;
     }
