@@ -14,7 +14,7 @@ export class Legend
     public static render(block: Block, data: DataSource, options: TwoDimensionalOptionsModel | PolarOptionsModel | IntervalOptionsModel, legendBlockModel: LegendBlockModel, blockSize: Size): void {
         if(options.legend.position !== 'off' && options.charts.length !== 0) {
             const legendItemsContent = this.getLegendItemsContent(options, data);
-            const chartElementsColor = this.getChartElementsColor(options, options.charts);
+            const chartElementsColor = this.getChartElementsColor(options);
             
             this.renderLegendBlock(block, 
                 legendItemsContent,
@@ -28,8 +28,7 @@ export class Legend
     private static renderLegendBlock(block: Block, items: string[], legendPosition: Orient, legendBlockModel: LegendBlockModel, colorPalette: Color[], blockSize: Size): void {
         const legendBlock = block.getSvg()
             .append('foreignObject')
-                .attr('class', 'legend')
-                // .style('outline', '1px solid red');
+                .attr('class', 'legend');
 
         const legendCoordinate = this.getLegendCoordinateByPosition(legendPosition, legendBlockModel, blockSize) 
         this.fillLegendCoordinate(legendBlock, legendCoordinate);  
@@ -54,11 +53,17 @@ export class Legend
         }
     }
 
-    private static getChartElementsColor(options: TwoDimensionalOptionsModel | PolarOptionsModel | IntervalOptionsModel, charts: Array<TwoDimensionalChartModel | IntervalChartModel | PolarChartModel>): Color[] {
-        if(options.type === '2d' || options.type === 'interval') {
-            return (charts as Array<TwoDimensionalChartModel | IntervalChartModel>).map((chart: TwoDimensionalChartModel | IntervalChartModel) => chart.elementColors[0])
-        } else {
-            return (charts as PolarChartModel[]).map(chart => chart.elementColors)[0]
+    private static getChartElementsColor(options: TwoDimensionalOptionsModel | PolarOptionsModel | IntervalOptionsModel): Color[] {
+        if(options.type === '2d') {
+            let colors: Color[] = [];
+            options.charts.forEach(chart => {
+                colors = colors.concat(chart.elementColors);
+            });
+            return colors;
+        } else if(options.type === 'polar') {
+            return options.charts.map(chart => chart.elementColors)[0]
+        } else if(options.type === 'interval') {
+            return options.charts.map(chart => chart.elementColors[0])
         }
     }
 
