@@ -54,11 +54,13 @@ const configCars: Config = {
                     valueField: [
                         {
                             name: 'price',
-                            format: 'money'
+                            format: 'money',
+                            title: 'Car price'
                         },
                         {
                             name: 'count',
-                            format: 'integer'
+                            format: 'integer',
+                            title: 'Car count'
                         }
                     ]
                 },
@@ -135,7 +137,8 @@ const configDemo: Config = {
                     valueField: [
                         {
                             name: 'EventCost',
-                            format: 'integer'
+                            format: 'integer',
+                            title: 'EventCost'
                         }
                     ]
                 },
@@ -166,7 +169,8 @@ const configDemo: Config = {
                     valueField: [
                         {
                             name: 'EventCost',
-                            format: 'integer'
+                            format: 'integer',
+                            title: 'EventCost'
                         }
                     ]
                 },

@@ -88,7 +88,7 @@ interface PolarChartAppearanceOptions {
 interface TwoDimensionalChartData {
     dataSource: string;
     keyField: Field;
-    valueField: Field[];
+    valueField: TwoDimensionalValueField[];
 }
 
 interface PolarChartData {
@@ -107,6 +107,10 @@ interface IntervalChartData {
 interface Field {
     name: string;
     format: DataType;
+}
+
+interface TwoDimensionalValueField extends Field {
+    title: string;
 }
 
 interface Tooltip {

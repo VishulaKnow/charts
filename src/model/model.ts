@@ -154,6 +154,10 @@ export interface Field {
     format: DataType;
 }
 
+export interface TwoDimensionalValueField extends Field {
+    title: string;
+}
+
 export interface ChartSettings {
     bar: BarChartSettings;
 }
@@ -195,7 +199,7 @@ interface LegendModel {
 interface TwoDimensionalChartDataModel {
     dataSource: string;
     keyField: Field;
-    valueField: Field[];
+    valueField: TwoDimensionalValueField[];
 }
 
 interface PolarChartDataModel {

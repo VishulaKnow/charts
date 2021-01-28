@@ -136,7 +136,6 @@ export class Axis
                 const lastTick = block.getSvg().select(`.${axisOptions.cssClass}`).select('.tick:last-of-type') as d3.Selection<SVGGraphicsElement, unknown, HTMLElement, unknown>;
                 const lastLabel = lastTick.select('text') as d3.Selection<SVGGraphicsElement, unknown, HTMLElement, unknown>;
                 const translateX = Helper.getTranslateNumbers(lastTick.attr('transform'))[0];
-                console.log(translateX, lastLabel.node().getBBox().width, axisOptions.translate.translateX, blockSize.width);
                 
                 if(translateX + lastLabel.node().getBBox().width / 2 + axisOptions.translate.translateX > blockSize.width) {
                     Helper.cropLabels(lastLabel, labelSize / 2);

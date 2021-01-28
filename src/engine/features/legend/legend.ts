@@ -1,4 +1,4 @@
-import { Color } from "d3";
+import { Color, text } from "d3";
 import { DataRow, DataSource, IntervalChartModel, IntervalOptionsModel, LegendBlockModel, Orient, PolarChartModel, PolarOptionsModel, Size, TwoDimensionalChartModel, TwoDimensionalOptionsModel } from "../../../model/model";
 import { Block } from "../../block/block";
 
@@ -12,19 +12,16 @@ interface LegendCoordinate {
 export class Legend
 {
     public static render(block: Block, data: DataSource, options: TwoDimensionalOptionsModel | PolarOptionsModel | IntervalOptionsModel, legendBlockModel: LegendBlockModel, blockSize: Size): void {
-        if(options.legend.position !== 'off') {
-            const charts = options.charts;
-            if(charts.length !== 0) {
-                const legendItemsContent = this.getLegendItemsContent(options, charts, data);
-                const chartElementsColor = this.getChartElementsColor(options, charts);
-                
-                this.renderLegendBlock(block, 
-                    legendItemsContent,
-                    options.legend.position,
-                    legendBlockModel,
-                    chartElementsColor,
-                    blockSize);
-            }
+        if(options.legend.position !== 'off' && options.charts.length !== 0) {
+            const legendItemsContent = this.getLegendItemsContent(options, data);
+            const chartElementsColor = this.getChartElementsColor(options, options.charts);
+            
+            this.renderLegendBlock(block, 
+                legendItemsContent,
+                options.legend.position,
+                legendBlockModel,
+                chartElementsColor,
+                blockSize);
         }
     }
     
@@ -41,15 +38,19 @@ export class Legend
             items,
             legendPosition,
             colorPalette);
-
-        
     }
 
-    private static getLegendItemsContent(options: TwoDimensionalOptionsModel | PolarOptionsModel | IntervalOptionsModel, charts: Array<TwoDimensionalChartModel | IntervalChartModel | PolarChartModel>, data: DataSource): string[] {
-        if(options.type === '2d' || options.type === 'interval') {
-            return (charts as Array<TwoDimensionalChartModel | IntervalChartModel>).map((chart: TwoDimensionalChartModel | IntervalChartModel) => chart.title)
-        } else {
-            return (charts as PolarChartModel[]).map(chart => data[chart.data.dataSource].map((record: DataRow) => record[chart.data.keyField.name]))[0]
+    private static getLegendItemsContent(options: TwoDimensionalOptionsModel | PolarOptionsModel | IntervalOptionsModel, data: DataSource): string[] {
+        if(options.type === '2d') {
+            let texts: string[] = [];
+            options.charts.forEach(chart => {
+                texts = texts.concat(chart.data.valueField.map(field => field.title));
+            });            
+            return texts;
+        } else if(options.type === 'polar') {
+            return options.charts.map(chart => data[chart.data.dataSource].map((record: DataRow) => record[chart.data.keyField.name]))[0]
+        } else if(options.type === 'interval') {
+            return options.charts.map(chart => chart.title)
         }
     }
 

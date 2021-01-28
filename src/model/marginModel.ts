@@ -79,10 +79,16 @@ export class MarginModel
     }
 
     private static getLegendItemsContent(charts: Array<TwoDimensionalChart | IntervalChart | PolarChart>, options: TwoDimensionalOptions | PolarOptions | IntervalOptions, data: DataSource): string[] {
-        if(options.type === '2d' || options.type === 'interval') {
-            return charts.map(chart => chart.title);
-        } else {
+        if(options.type === '2d') {
+            let texts: string[] = [];
+            options.charts.forEach(chart => {
+                texts = texts.concat(chart.data.valueField.map(field => field.title))
+            });  
+            return texts;
+        } else if(options.type === 'polar') {
             return charts.map(chart => DataManagerModel.getDataValuesByKeyField(data, chart))[0]
+        } else if(options.type === 'interval') {
+            return charts.map(chart => chart.title);
         }
     }
 
