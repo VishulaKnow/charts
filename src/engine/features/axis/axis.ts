@@ -1,16 +1,24 @@
 import * as d3 from "d3";
-import { AxisModelOptions, Orient, ScaleKeyModel, ScaleValueModel, Size } from "../../../model/model";
+import { AxisModelOptions, IAxisModel, IScaleModel, Orient, ScaleKeyModel, ScaleValueModel } from "../../../model/model";
 import { Helper } from "../../helper";
 import { Block } from "../../block/block";
+import { Scales } from "../scale/scale";
 
 interface AxisLabelCoordinate {
     x: number;
     y: number;
 }
 
+type TextAnchor = 'start' | 'end' | 'middle';
+
 export class Axis
 {
-    public static render(block: Block, scale: d3.AxisScale<any>, scaleOptions: ScaleKeyModel | ScaleValueModel, axisOptions: AxisModelOptions): void {
+    public static render(block: Block, scales: Scales, scaleModel: IScaleModel, axisModel: IAxisModel): void {
+        this.renderAxis(block, scales.scaleValue, scaleModel.scaleValue, axisModel.valueAxis);
+        this.renderAxis(block, scales.scaleKey, scaleModel.scaleKey, axisModel.keyAxis);
+    }
+
+    private static renderAxis(block: Block, scale: d3.AxisScale<any>, scaleOptions: ScaleKeyModel | ScaleValueModel, axisOptions: AxisModelOptions): void {
         const axis = this.getAxisByOrient(axisOptions.orient, scale);
 
         this.setAxisFormat(scale, scaleOptions, axis);
@@ -28,8 +36,12 @@ export class Axis
 
         this.cropLabels(block, scale, scaleOptions, axisOptions);
 
-        // if(axisOptions.orient === 'top' || axisOptions.orient === 'bottom')
-        //     this.rotateLabels(axisElement);
+        if(axisOptions.orient === 'left' && axisOptions.type === 'key') {
+            this.alignLabels(axisElement, 'start', axisOptions.maxLabelSize);
+        }
+        
+        if(axisOptions.orient === 'bottom' && axisOptions.type === 'key')
+            this.rotateLabels(axisElement);
     }
 
     public static updateValueAxisDomain(block: Block, scaleValue: d3.AxisScale<any>, scaleOptions: ScaleValueModel, axisOptions: AxisModelOptions) {
@@ -48,6 +60,12 @@ export class Axis
                 .call(axis.bind(this));
     }
 
+    private static alignLabels(axisElement: d3.Selection<SVGGElement, unknown, HTMLElement, any>, anchor: TextAnchor, maxLabelSize: number): void {
+        const axisTextBlocks = axisElement.selectAll('text');
+        axisTextBlocks.attr('text-anchor', 'start');
+        axisTextBlocks.attr('x', -maxLabelSize);
+    }
+
     private static setAxisLabelPaddingByOrient(axis: d3.Axis<any>, axisOptions: AxisModelOptions): void {
         let axisLabelPadding = 15;
         if(axisOptions.orient === 'left' || axisOptions.orient === 'right')
@@ -56,10 +74,12 @@ export class Axis
     }
 
     private static rotateLabels(axisElement: d3.Selection<SVGGElement, unknown, HTMLElement, any>): void {
-        axisElement.selectAll('text')
-            .attr('x', -45)
+        const labelBlocks = axisElement.selectAll('text');
+        labelBlocks.attr('text-anchor', 'end');
+        labelBlocks
+            .attr('x', -15)
             .attr('y', -5)
-            .attr('transform', 'rotate(-90)')
+            .attr('transform', 'rotate(-90)');
     }
 
     private static removeTicks(axis: d3.Axis<any>): void {

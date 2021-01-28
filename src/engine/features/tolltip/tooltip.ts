@@ -269,7 +269,7 @@ export class Tooltip
             .attr('y', attributes.y)
             .attr('width', attributes.width)
             .attr('height', attributes.height)
-            .style('opacity', '0');
+            .style('opacity', 0);
     }
 
     private static renderTooltipLine(block: Block): d3.Selection<SVGLineElement, unknown, HTMLElement, any> {

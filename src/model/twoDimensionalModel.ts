@@ -36,6 +36,7 @@ export class TwoDimensionalModel
             },
             axis: {
                 keyAxis: {
+                    type: 'key',
                     orient: AxisModel.getAxisOrient(AxisType.Key, configOptions.orientation, configOptions.axis.keyAxis.position),
                     translate: {
                         translateX: AxisModel.getAxisTranslateX(AxisType.Key, configOptions.orientation, configOptions.axis.keyAxis.position, margin, config.canvas.size.width),
@@ -46,6 +47,7 @@ export class TwoDimensionalModel
                     ticks: configOptions.axis.keyAxis.ticks
                 },
                 valueAxis: {
+                    type: 'value',
                     orient: AxisModel.getAxisOrient(AxisType.Value, configOptions.orientation, configOptions.axis.valueAxis.position),
                     translate: {
                         translateX: AxisModel.getAxisTranslateX(AxisType.Value, configOptions.orientation, configOptions.axis.valueAxis.position, margin, config.canvas.size.width),

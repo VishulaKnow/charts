@@ -5,6 +5,7 @@ import { DataType, Formatter } from "../designer/designerConfig";
 export type Orient = 'top' | 'bottom' | 'left' | 'right';
 export type ScaleKeyType = 'band' | 'point';
 export type ScaleValueType = 'linear' | 'datetime';
+type AxisType = 'key' | 'value';
 export type DataOptions = {
     [option: string]: any
 }
@@ -55,6 +56,7 @@ export interface RangeModel {
 }
 
 export interface AxisModelOptions {
+    type: AxisType;
     orient: Orient;
     translate: TranslateModel;
     cssClass: string;
@@ -78,8 +80,8 @@ export interface DataScope {
 }
 export interface TwoDimensionalOptionsModel {
     type: '2d';
-    scale: ScaleModel;
-    axis: AxisModel;
+    scale: IScaleModel;
+    axis: IAxisModel;
     charts: TwoDimensionalChartModel[];
     additionalElements: AdditionalElementsOptions;
     legend: LegendModel;
@@ -88,8 +90,8 @@ export interface TwoDimensionalOptionsModel {
 }
 export interface IntervalOptionsModel {
     type: 'interval';
-    scale: ScaleModel;
-    axis: AxisModel;
+    scale: IScaleModel;
+    axis: IAxisModel;
     charts: IntervalChartModel[];
     additionalElements: AdditionalElementsOptions;
     legend: LegendModel;
@@ -161,12 +163,12 @@ export interface LegendBlockModel {
     right: LegendBlockCanvas;
 }
 
-interface AxisModel {
+export interface IAxisModel {
     keyAxis: AxisModelOptions;
     valueAxis: AxisModelOptions;
 }
 
-interface ScaleModel {
+export interface IScaleModel {
     scaleKey: ScaleKeyModel;
     scaleValue: ScaleValueModel;
 }

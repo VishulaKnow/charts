@@ -79,7 +79,7 @@ export function assembleModel(config: Config, data: DataSource): Model {
     
     if(config.options.type === 'polar')
         MarginModel.recalcPolarMarginWithScopedData(margin, designerConfig, config, legendBlock, dataScope); 
-    // MarginModel.recalcMargnWitVerticalAxisLabel(margin, data, config, designerConfig);
+    MarginModel.recalcMargnWitVerticalAxisLabel(margin, data, config, designerConfig);
 
     const blockCanvas = getBlockCanvas(config);
     const chartBlock = getChartBlock(margin);
@@ -87,6 +87,7 @@ export function assembleModel(config: Config, data: DataSource): Model {
     const dataSettings = getDataSettings(dataScope);
     const chartSettings = getChartSettings(designerConfig);
     const dataFormat = getDataFormat(designerConfig);
+    console.log(margin);
     
     return {
         blockCanvas,

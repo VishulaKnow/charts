@@ -23,8 +23,7 @@ export class ChartRenderer
             
         block.renderSvg(model.blockCanvas.cssClass, model.blockCanvas.size);
     
-        Axis.render(block, Scale.scales.scaleValue, options.scale.scaleValue, options.axis.valueAxis);
-        Axis.render(block, Scale.scales.scaleKey, options.scale.scaleKey, options.axis.keyAxis);    
+        Axis.render(block, Scale.scales, options.scale, options.axis);    
     
         GridLine.render(block, options.additionalElements.gridLine.flag, options.axis.keyAxis, options.axis.valueAxis, model.blockCanvas.size, model.chartBlock.margin, options.scale.scaleKey);
         
@@ -75,8 +74,7 @@ export class ChartRenderer
             options.scale.scaleValue,
             model.chartSettings.bar);    
 
-        Axis.render(block, Scale.scales.scaleValue, options.scale.scaleValue, options.axis.valueAxis);
-        Axis.render(block, Scale.scales.scaleKey, options.scale.scaleKey, options.axis.keyAxis);
+        Axis.render(block, Scale.scales, options.scale, options.axis); 
 
         GridLine.render(block, options.additionalElements.gridLine.flag, options.axis.keyAxis, options.axis.valueAxis, model.blockCanvas.size, model.chartBlock.margin, options.scale.scaleKey);
         
