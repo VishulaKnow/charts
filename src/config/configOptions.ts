@@ -10,7 +10,7 @@ const configCars: Config = {
     },
     options: {
         type: '2d',
-        isSegmented: true,
+        isSegmented: false,
         axis: {
             keyAxis: {
                 position: 'end',
@@ -55,12 +55,12 @@ const configCars: Config = {
                         {
                             name: 'price',
                             format: 'money',
-                            title: 'Car price'
+                            title: 'Цены на автомобили по рынку длинное'
                         },
                         {
                             name: 'count',
                             format: 'integer',
-                            title: 'Car count'
+                            title: 'Количество автомобилей на душу населения'
                         }
                     ]
                 },

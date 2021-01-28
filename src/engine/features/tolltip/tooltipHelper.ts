@@ -95,6 +95,7 @@ export class TooltipHelper
         const attributes: TooltipLineAttributes = {
             x1: 0, x2: 0, y1: 0, y2: 0
         }
+
         if(chartOrientation === 'vertical') {
             attributes.x1 = Math.ceil(Scale.getScaleKeyPoint(scaleKey, key) + margin.left);
             attributes.x2 = Math.ceil(Scale.getScaleKeyPoint(scaleKey, key) + margin.left);
@@ -128,6 +129,7 @@ export class TooltipHelper
         else
             coordinateTuple = [parseFloat(element.attr('cx')), 
                 parseFloat(element.attr('cy'))];
+
         return this.getRecalcedCoordinateByArrow(coordinateTuple, tooltipBlock);
     }
 
@@ -166,6 +168,7 @@ export class TooltipHelper
         fields.forEach(field => {
             text += `<span class="tooltip-field">${field.name}:</span> <span class="tooltip-value">${ValueFormatter.formatValue(field.format, dataRow[field.name])}</span><br>`;
         });
+        
         return text;
     }
 }

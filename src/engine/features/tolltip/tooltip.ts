@@ -32,7 +32,7 @@ export class Tooltip
             } else if(model.options.type === 'polar') {
                 this.renderTooltipsForDonut(block, model.options.charts, data, model.blockCanvas.size, model.chartBlock.margin);
             } else if(model.options.type === 'interval') {
-                this.renderTooltipsForGantt(block, model.options.charts, data, model.blockCanvas.size);
+                this.renderTooltipsForGantt(block, model.options.charts, data);
             }
         }
     }
@@ -49,7 +49,7 @@ export class Tooltip
         });
     }
 
-    private static renderTooltipsForGantt(block: Block, charts: IntervalChartModel[], data: DataSource, blockSize: Size): void {
+    private static renderTooltipsForGantt(block: Block, charts: IntervalChartModel[], data: DataSource): void {
         charts.forEach(chart => {
             if(chart.tooltip.data.fields.length !== 0) {
                 const bars = block.getSvg()
@@ -62,7 +62,7 @@ export class Tooltip
     private static renderTooltipForDots(block: Block, elemets: d3.Selection<d3.BaseType, DataRow, d3.BaseType, unknown>, data: DataSource, charts: TwoDimensionalChartModel[], isSegmented: boolean): void {
         const tooltipBlock = this.renderTooltipBlock(block);
         const tooltipContent = this.getTooltipContentBlock(tooltipBlock);
-        const tooltipArrow = this.renderTooltipArrow(tooltipBlock);
+        this.renderTooltipArrow(tooltipBlock);
         const thisClass = this;
 
         elemets
@@ -88,7 +88,7 @@ export class Tooltip
     private static renderTooltipForBar(block: Block, elemets: d3.Selection<d3.BaseType, DataRow, d3.BaseType, unknown>, data: DataSource, charts: TwoDimensionalChartModel[], isSegmented: boolean): void {
         const tooltipBlock = this.renderTooltipBlock(block);
         const tooltipContent = this.getTooltipContentBlock(tooltipBlock);
-        const tooltipArrow = this.renderTooltipArrow(tooltipBlock);
+        this.renderTooltipArrow(tooltipBlock);
         const thisClass = this;
 
         elemets
@@ -114,7 +114,7 @@ export class Tooltip
     private static renderTooltipForDonut(block: Block, elemets: d3.Selection<d3.BaseType, d3.PieArcDatum<DataRow>, d3.BaseType, unknown>, data: DataSource, charts: PolarChartModel[], blockSize: Size, margin: BlockMargin, translateX: number = 0, translateY: number = 0): void {
         const tooltipBlock = this.renderTooltipBlock(block, translateX, translateY);
         const tooltipContent = this.getTooltipContentBlock(tooltipBlock);
-        const tooltipArrow = this.renderTooltipArrow(tooltipBlock);
+        this.renderTooltipArrow(tooltipBlock);
         const thisClass = this;
 
         elemets
