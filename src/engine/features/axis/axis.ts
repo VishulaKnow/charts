@@ -36,7 +36,7 @@ export class Axis
             .attr('class', `axis ${axisOptions.cssClass} data-label`)
             .call(axis);
 
-        this.cropLabels(block, scale, scaleOptions, axisOptions);
+        this.cropLabels(block, scale, scaleOptions, axisOptions, blockSize);
 
         if(axisOptions.orient === 'left' && axisOptions.type === 'key')
             this.alignLabels(axisElement, 'start', axisOptions.maxLabelSize);
@@ -121,7 +121,7 @@ export class Axis
         }
     }
 
-    private static cropLabels(block: Block, scale: d3.AxisScale<any>, scaleOptions: ScaleKeyModel | ScaleValueModel, axisOptions: AxisModelOptions): void {
+    private static cropLabels(block: Block, scale: d3.AxisScale<any>, scaleOptions: ScaleKeyModel | ScaleValueModel, axisOptions: AxisModelOptions, blockSize: Size): void {
         if(scaleOptions.type === 'point' || scaleOptions.type === 'band') {
             const axisTextBlocks = block.getSvg().select(`.${axisOptions.cssClass}`).selectAll('text') as d3.Selection<SVGGraphicsElement, unknown, HTMLElement, unknown>;
             let labelSize: number;
@@ -132,13 +132,13 @@ export class Axis
 
             Helper.cropLabels(axisTextBlocks, labelSize);
             
-            // if(scaleOptions.type === 'point') {
-            //     const lastTick = block.getSvg().select(`.${axisOptions.cssClass}`).select('.tick:last-of-type') as d3.Selection<SVGGraphicsElement, unknown, HTMLElement, unknown>;
-            //     const lastLabel = lastTick.select('text') as d3.Selection<SVGGraphicsElement, unknown, HTMLElement, unknown>;
-            //     const translateX = Helper.getTranslateNumbers(lastTick.attr('transform'))[0];
-            //     if(translateX + lastLabel.node().getBBox().width + axisOptions.translate.translateX > 1200)                
-            //         Helper.cropLabels(lastLabel, labelSize / 2);
-            // }
+            if(scaleOptions.type === 'point' && axisOptions.labelPositition === 'straight' && (axisOptions.orient === 'top' || axisOptions.orient === 'bottom')) {
+                const lastTick = block.getSvg().select(`.${axisOptions.cssClass}`).select('.tick:last-of-type') as d3.Selection<SVGGraphicsElement, unknown, HTMLElement, unknown>;
+                const lastLabel = lastTick.select('text') as d3.Selection<SVGGraphicsElement, unknown, HTMLElement, unknown>;
+                const translateX = Helper.getTranslateNumbers(lastTick.attr('transform'))[0];
+                if(translateX + lastLabel.node().getBBox().width + axisOptions.translate.translateX > blockSize.width)                
+                    Helper.cropLabels(lastLabel, labelSize / 2);
+            }
         }
     }
 }
