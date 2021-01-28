@@ -38,8 +38,8 @@ export class TooltipHelper
         let text = '';
         chart.data.valueField.forEach((field, index) => {
             text += `<div class="tooltip-group"><div class="tooltip-color"><span class="tooltip-circle" style="background-color: ${chart.elementColors[index % chart.elementColors.length]};"></span></div>`;
-            text += `<div class="tp-texts">`;
-            text += `<div class="tp-text-item">${this.getTooltipItemText(chart, data, keyValue, field)}</div>`;
+            text += `<div class="tooltip-texts">`;
+            text += `<div class="tooltip-text-item">${this.getTooltipItemText(chart, data, keyValue, field)}</div>`;
             text += '</div></div>';
         });
         return text;
@@ -48,7 +48,7 @@ export class TooltipHelper
     public static getTooltipHtmlForPolarChart(chart: PolarChartModel, data: DataSource, keyValue: string, markColor: string): string {
         let text = '';
         text += `<div class="tooltip-group"><div class="tooltip-color"><span class="tooltip-circle" style="background-color: ${markColor};"></span></div>`;
-        text += `<div class="tp-texts">`;
+        text += `<div class="tooltip-texts">`;
         text += `<div class="tp-text-item">${this.getTooltipItemText(chart, data, keyValue, chart.data.valueField)}</div>`;
         text += '</div></div>';
         return text;
