@@ -23,10 +23,10 @@ export class ChartStyleModel
     public static getElementColorPalette(palette: Color[], notation: ChartNotation, elementsAmount: number, chartIndex: number = 0): Color[] {
         if(notation === 'interval') {
             return palette;
-        }  
-        else {
-            const generatedPalette = this.generatePalette(palette, elementsAmount);
-            return generatedPalette;
+        } else if(notation === 'polar') {
+            return palette;
+            // const generatedPalette = this.generatePalette(palette, elementsAmount);
+            // return generatedPalette;
         }    
     }
 
@@ -40,6 +40,7 @@ export class ChartStyleModel
             colors.push(color(hslColor));
             hslColor.h += step;
         }
+
         return colors;
     }
 }

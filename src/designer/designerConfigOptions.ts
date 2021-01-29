@@ -35,7 +35,13 @@ const designerConfig: DesignerConfig = {
             palette: [color('#00BC8B'),
                 color('#3E66F3'),
                 color('#FF7800'),
-                color('#EF3737')]
+                color('#EF3737'),
+                color('#01CC97'),
+                color('#B3EBDD'),
+                color('#5C80FF'),
+                color('#89A3FF'),
+                color('#ADBFFF')
+            ]
         }
     },
     dataFormat: {

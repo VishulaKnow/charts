@@ -56,6 +56,10 @@ h3.title {
     line-height: 140.62%;
     color: #444444;
 }
+
+.legend-item {
+    white-space: nowrap;
+}
 .legend-item:not(:first-of-type) {
     margin-left: 20px;
 }
@@ -65,6 +69,7 @@ h3.title {
     font-weight: 300;
     color: #444444;
     line-height: 140.62%;
+    white-space: nowrap;
 }
 .legend-circle {
     display: inline-block;
@@ -73,6 +78,7 @@ h3.title {
     border-radius: 50%;
     margin-right: 8px;
 }
+
 .tooltip-circle {
     display: inline-block;
     width: 11px;
