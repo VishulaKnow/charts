@@ -14,8 +14,8 @@ export class Helper
         return '.' + cssClasses.join('.');
     }
 
-    public static setChartElementColor(elements: d3.Selection<d3.BaseType, unknown, d3.BaseType, unknown>, colorPalette: Color[], index: number, styleType: StyleColorType): void {
-        elements.style(styleType, colorPalette[index % colorPalette.length].toString());
+    public static setChartElementColor(elements: d3.Selection<d3.BaseType, unknown, d3.BaseType, unknown>, colorPalette: Color[], fieldIndex: number, styleType: StyleColorType): void {
+        elements.style(styleType, colorPalette[fieldIndex % colorPalette.length].toString());
     }
 
     public static cropLabels(labelBlocks: d3.Selection<SVGGraphicsElement, unknown, HTMLElement, unknown>, maxWidth: number): void {

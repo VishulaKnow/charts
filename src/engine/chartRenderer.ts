@@ -21,7 +21,7 @@ export class ChartRenderer
             options.scale.scaleValue,
             model.chartSettings.bar);        
             
-        block.renderSvg(model.blockCanvas.cssClass, model.blockCanvas.size);
+        block.renderSvg(model.blockCanvas.size);
     
         Axis.render(block, Scale.scales, options.scale, options.axis, model.chartBlock.margin, model.blockCanvas.size);    
     
@@ -51,7 +51,7 @@ export class ChartRenderer
     public static renderPolar(block: Block, model: Model, data: DataSource) {
         const options = <PolarOptionsModel>model.options;
     
-        block.renderSvg(model.blockCanvas.cssClass, model.blockCanvas.size);
+        block.renderSvg(model.blockCanvas.size);
     
         this.renderPolarCharts(block, options.charts,
             data,
@@ -68,7 +68,7 @@ export class ChartRenderer
     public static renderInterval(block: Block, model: Model, data: DataSource): void {
         const options = <IntervalOptionsModel>model.options;
         
-        block.renderSvg(model.blockCanvas.cssClass, model.blockCanvas.size);
+        block.renderSvg(model.blockCanvas.size);
 
         Scale.fillScales(options.scale.scaleKey,
             options.scale.scaleValue,

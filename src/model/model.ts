@@ -127,6 +127,7 @@ interface ChartModel {
 }
 
 export interface TwoDimensionalChartModel extends ChartModel {
+    index: number;
     type: TwoDimensionalChartType;
     data: TwoDimensionalChartDataModel;
 }

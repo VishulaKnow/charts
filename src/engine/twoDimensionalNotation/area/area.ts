@@ -26,7 +26,7 @@ export class Area
 
     private static renderGrouped(block: Block, scales: Scales, data: DataRow[], margin: BlockMargin, keyAxisOrient: Orient, chart: TwoDimensionalChartModel, blockSize: Size): void {
         const area = this.getAreaGenerator(keyAxisOrient);
-        chart.data.valueField.forEach((field, index) => {
+        chart.data.valueField.forEach((field, fieldIndex) => {
             const areaCoordinate: AreaChartCoordinate[] = this.getAreaCoordinateByKeyOrient(keyAxisOrient,
                 data,
                 scales,
@@ -42,9 +42,9 @@ export class Area
                 .style('clip-path', `url(${block.getClipPathId()})`);
         
             Helper.setCssClasses(path, chart.cssClasses);
-            Helper.setChartElementColor(path, chart.elementColors, index, 'fill');
+            Helper.setChartElementColor(path, chart.elementColors, fieldIndex, 'fill');
     
-            Dot.render(block, data, keyAxisOrient, scales, margin, chart.data.keyField.name, field.name, chart.cssClasses, index, chart.elementColors, blockSize, false);
+            Dot.render(block, data, keyAxisOrient, scales, margin, chart.data.keyField.name, field.name, chart.cssClasses, fieldIndex, chart.elementColors, blockSize, false);
         });
     }
 

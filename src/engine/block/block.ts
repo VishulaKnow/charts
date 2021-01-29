@@ -22,7 +22,7 @@ export class Block
         this.parentElementSelector = parentElementSelector;
     }
 
-    public renderSvg(cssClass: string, blockSize: Size): void {
+    public renderSvg(blockSize: Size): void {
         this.getWrapper()
             .append('svg')
             .attr('width', blockSize.width)

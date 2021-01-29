@@ -15,7 +15,7 @@ export class PolarModel
                 appearanceOptions: { ...chart.appearanceOptions },
                 tooltip: chart.tooltip,
                 cssClasses: ChartStyleModel.getCssClasses(chart.type, index),
-                elementColors: ChartStyleModel.getElementColorPallete(chartPalette, 'polar', data[chart.data.dataSource].length)
+                elementColors: ChartStyleModel.getElementColorPalette(chartPalette, 'polar', data[chart.data.dataSource].length)
             });
         });
         return chartsModel;
