@@ -17,6 +17,22 @@ export class Axis
         this.renderAxis(block, scales.scaleKey, scaleModel.scaleKey, axisModel.keyAxis, margin, blockSize);
     }
 
+    public static updateValueAxisDomain(block: Block, scaleValue: d3.AxisScale<any>, scaleOptions: ScaleValueModel, axisOptions: AxisModelOptions): void {
+        const axis = this.getAxisByOrient(axisOptions.orient, scaleValue);
+
+        this.setAxisFormat(scaleValue, scaleOptions, axis);
+        if(!axisOptions.ticks.flag)
+            this.removeTicks(axis);
+
+        this.setAxisLabelPaddingByOrient(axis, axisOptions);
+
+        block.getSvg()
+            .select(`g.${axisOptions.cssClass}`)
+            .transition()
+            .duration(1000)
+                .call(axis.bind(this));
+    }
+
     private static renderAxis(block: Block, scale: d3.AxisScale<any>, scaleOptions: ScaleKeyModel | ScaleValueModel, axisOptions: AxisModelOptions, margin: BlockMargin, blockSize: Size): void {
         const axis = this.getAxisByOrient(axisOptions.orient, scale);
 
@@ -45,22 +61,6 @@ export class Axis
             this.rotateLabels(axisElement);
     }
 
-    public static updateValueAxisDomain(block: Block, scaleValue: d3.AxisScale<any>, scaleOptions: ScaleValueModel, axisOptions: AxisModelOptions): void {
-        const axis = this.getAxisByOrient(axisOptions.orient, scaleValue);
-
-        this.setAxisFormat(scaleValue, scaleOptions, axis);
-        if(!axisOptions.ticks.flag)
-            this.removeTicks(axis);
-
-        this.setAxisLabelPaddingByOrient(axis, axisOptions);
-
-        block.getSvg()
-            .select(`g.${axisOptions.cssClass}`)
-            .transition()
-            .duration(1000)
-                .call(axis.bind(this));
-    }
-
     private static setStepSize(blockSize: Size, margin: BlockMargin, axis: d3.Axis<any>, axisOptions: AxisModelOptions, scale: ScaleKeyModel | ScaleValueModel): void {
         let axisLength = blockSize.width - margin.left - margin.right;
         if(axisOptions.orient === 'left' || axisOptions.orient === 'right') {
@@ -71,7 +71,7 @@ export class Axis
             if(Math.floor(axisLength / MINIMAL_STEP_SIZE) > 2)
                 axis.ticks(Math.floor(axisLength / MINIMAL_STEP_SIZE));
             else
-                axis.tickValues([0, d3.max(scale.domain)]);
+                axis.tickValues([d3.min(scale.domain), d3.max(scale.domain)]);
         }
     }
 
