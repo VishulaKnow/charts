@@ -1,6 +1,4 @@
-import { ChartOrientation } from "../../../config/config";
-import { BlockMargin, DataRow, DataSource, Field, PolarChartModel, ScaleKeyType, Size, TwoDimensionalChartModel } from "../../../model/model";
-import { Scale } from "../scale/scale";
+import { DataRow, DataSource, Field, PolarChartModel, TwoDimensionalChartModel } from "../../../model/model";
 import { ValueFormatter, } from "../../valueFormatter";
 
 type ElementType = 'circle' | 'rect';
@@ -77,48 +75,6 @@ export class TooltipHelper
 
         return coordinate;
     }
-
-    public static getKeyIndex(pointer: [number, number], orient: ChartOrientation, margin: BlockMargin, bandSize: number, scaleKeyType: ScaleKeyType): number {
-        const pointerAxis = orient === 'vertical' ? 0 : 1;
-        const marginByOrient = orient === 'vertical' ? margin.left : margin.top;
-        
-        const point = scaleKeyType === 'point' 
-            ? pointer[pointerAxis] - marginByOrient + bandSize / 2 
-            : pointer[pointerAxis] - marginByOrient - 1;
-        if(point < 0)
-            return 0;
-
-        return Math.floor(point / bandSize);
-    }
-
-    public static getTooltipLineAttributes(scaleKey: d3.AxisScale<any>, margin: BlockMargin, key: string, chartOrientation: ChartOrientation,  blockSize: Size): TooltipLineAttributes {
-        const attributes: TooltipLineAttributes = {
-            x1: 0, x2: 0, y1: 0, y2: 0
-        }
-
-        if(chartOrientation === 'vertical') {
-            attributes.x1 = Math.ceil(Scale.getScaleKeyPoint(scaleKey, key) + margin.left);
-            attributes.x2 = Math.ceil(Scale.getScaleKeyPoint(scaleKey, key) + margin.left);
-            attributes.y1 = margin.top;
-            attributes.y2 = blockSize.height - margin.bottom;
-        }  else {
-            attributes.x1 = margin.left;
-            attributes.x2 = blockSize.width - margin.right;
-            attributes.y1 = Scale.getScaleKeyPoint(scaleKey, key) + margin.top;
-            attributes.y2 = Scale.getScaleKeyPoint(scaleKey, key) + margin.top;
-        }
-        
-        return attributes;
-    }
-
-    public static getTipBoxAttributes(margin: BlockMargin, blockSize: Size): TipBoxAttributes {
-        return {
-            x: margin.left,
-            y: margin.top,
-            width: blockSize.width - margin.left - margin.right,
-            height: blockSize.height - margin.top - margin.bottom,
-        }
-    } 
 
     public static getTooltipBlockCoordinate(element: d3.Selection<d3.BaseType, DataRow, HTMLElement, any>, tooltipBlock: d3.Selection<d3.BaseType, unknown, HTMLElement, any>, elementType: ElementType): [number, number] {
         let coordinateTuple: [number, number];

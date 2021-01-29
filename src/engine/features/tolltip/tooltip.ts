@@ -35,9 +35,9 @@ export class Tooltip
             if(chart.type === 'bar') {
                 this.renderTooltipForBar(block, Bar.getAllBarItems(block), data, chart, isSegmented);
             } else if(chart.type === 'line') {
-                this.renderTooltipForDots(block, Dot.getAllDots(block), data, chart, false);
+                this.renderTooltipForDots(block, Dot.getAllDots(block, chart.cssClasses), data, chart, false);
             } else {
-                this.renderTooltipForDots(block, Dot.getAllDots(block), data, chart, isSegmented);
+                this.renderTooltipForDots(block, Dot.getAllDots(block, chart.cssClasses), data, chart, isSegmented);
             }
         });
     }
@@ -232,38 +232,12 @@ export class Tooltip
         return tooltipBlock;
     }
 
-    private static renderTipBox(block: Block, attributes: TipBoxAttributes): d3.Selection<SVGRectElement, unknown, HTMLElement, any> {
-        return block.getSvg()
-            .append('rect')
-            .attr('class', 'tipbox')
-            .attr('x', attributes.x)
-            .attr('y', attributes.y)
-            .attr('width', attributes.width)
-            .attr('height', attributes.height)
-            .style('opacity', 0);
-    }
-
-    private static renderTooltipLine(block: Block): d3.Selection<SVGLineElement, unknown, HTMLElement, any> {
-        return block.getChartBlock()
-            .append('line')
-            .attr('class', 'tooltip-line')
-            .raise();
-    }
-
     private static setTooltipCoordinate(tooltipBlock: d3.Selection<d3.BaseType, unknown, HTMLElement, any>, tooltipCoordinate: TooltipCoordinate): void {
         tooltipBlock
             .style('left', tooltipCoordinate.left)
             .style('top', tooltipCoordinate.top)
             .style('right', tooltipCoordinate.right)
             .style('bottom', tooltipCoordinate.bottom);
-    }
-    
-    private static setTooltipLineAttributes(tooltipLine: d3.Selection<SVGLineElement, unknown, HTMLElement, any>, attributes: TooltipLineAttributes): void {
-        tooltipLine
-            .attr('x1', attributes.x1)
-            .attr('x2', attributes.x2)
-            .attr('y1', attributes.y1)
-            .attr('y2', attributes.y2);
     }
 
     private static getTooltipContentBlock(tooltipBlock: d3.Selection<d3.BaseType, unknown, HTMLElement, any>): d3.Selection<d3.BaseType, unknown, HTMLElement, any> {

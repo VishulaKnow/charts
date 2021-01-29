@@ -46,9 +46,9 @@ export class Dot
         Helper.setChartElementColor(dots, colorPalette, itemIndex, 'fill');
     }
 
-    public static getAllDots(block: Block): d3.Selection<d3.BaseType, DataRow, d3.BaseType, unknown> {
+    public static getAllDots(block: Block, chartCssClasses: string[]): d3.Selection<d3.BaseType, DataRow, d3.BaseType, unknown> {
         return block.getSvg()
-            .selectAll(`.${this.dotClass}`);
+            .selectAll(`.${this.dotClass}${Helper.getCssClassesLine(chartCssClasses)}`);
     }
 
     public static updateDotsCoordinateByValueAxis(block: Block, data: DataRow[], keyAxisOrient: Orient, scales: Scales, margin: BlockMargin, keyField: string, valueField: string, cssClasses: string[]): void {
