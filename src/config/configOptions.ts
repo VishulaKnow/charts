@@ -4,7 +4,7 @@ const configCars: Config = {
     canvas: {
         class: 'outline svg-chart',
         size: {
-            width: 1200,
+            width: 980,
             height: 650
         }
     },

@@ -80,11 +80,9 @@ export class TooltipHelper
         let coordinateTuple: [number, number];
         
         if(elementType === 'rect')
-            coordinateTuple = [parseFloat(element.attr('x')) + parseFloat(element.attr('width')) / 2,
-                parseFloat(element.attr('y'))];
+            coordinateTuple = [parseFloat(element.attr('x')) + parseFloat(element.attr('width')) / 2, parseFloat(element.attr('y'))];
         else
-            coordinateTuple = [parseFloat(element.attr('cx')), 
-                parseFloat(element.attr('cy'))];
+            coordinateTuple = [parseFloat(element.attr('cx')), parseFloat(element.attr('cy'))];
 
         return this.getRecalcedCoordinateByArrow(coordinateTuple, tooltipBlock);
     }
@@ -116,7 +114,7 @@ export class TooltipHelper
     }
 
     private static getTooltipKeyHeader(keyValue: string): string {
-        return `<div class="tooltip-header">${keyValue}</div>`
+        return `<div class="tooltip-header">${keyValue}</div>`;
     }
 
     private static getTooltipText(fields: Field[], dataRow: DataRow): string {

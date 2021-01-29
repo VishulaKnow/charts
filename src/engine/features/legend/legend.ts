@@ -134,18 +134,20 @@ export class Legend
             .attr('class', 'legend-label')
             .text(d => d.toString());
 
-        // this.cropLegendLabels(legendBlock, itemWrappers);
+        this.cropLegendLabels(legendBlock, itemWrappers);
     }
 
-    // private static cropLegendLabels(legendBlock: d3.Selection<SVGForeignObjectElement, unknown, HTMLElement, any>, items: d3.Selection<HTMLDivElement, string, d3.BaseType, unknown>): void {
-    //     const maxWidth = parseFloat(legendBlock.attr('width')) / items.size();
-    //     items.nodes().forEach(node => {
-    //         if(node.getBoundingClientRect().width > maxWidth) {
-    //             while(node.getBoundingClientRect().width > maxWidth) {
-    //                 const text = node.querySelector('.legend-label');
-    //                 text.textContent = text.textContent.substr(0, text.textContent.length - 1);
-    //             }
-    //         }
-    //     });
-    // }
+    private static cropLegendLabels(legendBlock: d3.Selection<SVGForeignObjectElement, unknown, HTMLElement, any>, items: d3.Selection<HTMLDivElement, string, d3.BaseType, unknown>): void {
+        const maxWidth = parseFloat(legendBlock.attr('width')) / items.size();
+        items.nodes().forEach(node => {
+            if(node.getBoundingClientRect().width > maxWidth) {
+                const text = node.querySelector('.legend-label');
+                let labelText = text.textContent;
+                while(node.getBoundingClientRect().width > maxWidth && labelText.length > 3) {
+                    labelText = labelText.substr(0, labelText.length - 1);
+                    text.textContent = labelText + '...';
+                }
+            }
+        });
+    }
 }
