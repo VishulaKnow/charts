@@ -16,25 +16,30 @@ export class Tooltip
     private static tooltipBlockClass = 'tooltip-block';
     private static tooltipArrowClass = 'tooltip-arrow';
 
-    public static renderTooltips(block: Block, model: Model, data: DataSource, scales: Scales): void {
+    public static renderTooltips(block: Block, model: Model, data: DataSource): void {
         this.renderTooltipWrapper(block);
         const chartsWithTooltipIndex = model.options.charts.findIndex((chart: TwoDimensionalChartModel | PolarChartModel | IntervalChartModel) => chart.tooltip.data.fields.length !== 0);
         if(chartsWithTooltipIndex !== -1) {
             if(model.options.type === '2d') {
-                if(model.options.charts.findIndex(chart => chart.type === 'area' || chart.type === 'line') === -1)
-                    this.renderTooltipForBar(block, Bar.getAllBarItems(block), data, model.options.charts, model.options.isSegmented);
-                else if(model.options.charts.findIndex(chart => chart.type === 'area' || chart.type === 'bar') === -1)
-                    this.renderTooltipForDots(block, Dot.getAllDots(block), data, model.options.charts, false);
-                else if(model.options.charts.findIndex(chart => chart.type === 'line' || chart.type === 'bar') === -1)
-                    this.renderTooltipForDots(block, Dot.getAllDots(block), data, model.options.charts, model.options.isSegmented);
-                else 
-                    this.renderLineTooltip(block, scales.scaleKey, model.chartBlock.margin, model.blockCanvas.size, model.options.charts, data, model.options.scale.scaleKey, model.options.orient);
+                this.rednerTooltipFor2DCharts(block, model.options.charts, data, model.options.isSegmented);   
             } else if(model.options.type === 'polar') {
                 this.renderTooltipsForDonut(block, model.options.charts, data, model.blockCanvas.size, model.chartBlock.margin);
             } else if(model.options.type === 'interval') {
                 this.renderTooltipsForGantt(block, model.options.charts, data);
             }
         }
+    }
+
+    private static rednerTooltipFor2DCharts(block: Block, charts: TwoDimensionalChartModel[], data: DataSource, isSegmented: boolean): void {
+        charts.forEach(chart => {
+            if(chart.type === 'bar') {
+                this.renderTooltipForBar(block, Bar.getAllBarItems(block), data, chart, isSegmented);
+            } else if(chart.type === 'line') {
+                this.renderTooltipForDots(block, Dot.getAllDots(block), data, chart, false);
+            } else {
+                this.renderTooltipForDots(block, Dot.getAllDots(block), data, chart, isSegmented);
+            }
+        });
     }
 
     private static renderTooltipsForDonut(block: Block, charts: PolarChartModel[], data: DataSource, blockSize: Size, margin: BlockMargin): void {
@@ -59,7 +64,7 @@ export class Tooltip
         });
     }
 
-    private static renderTooltipForDots(block: Block, elemets: d3.Selection<d3.BaseType, DataRow, d3.BaseType, unknown>, data: DataSource, charts: TwoDimensionalChartModel[], isSegmented: boolean): void {
+    private static renderTooltipForDots(block: Block, elemets: d3.Selection<d3.BaseType, DataRow, d3.BaseType, unknown>, data: DataSource, chart: TwoDimensionalChartModel, isSegmented: boolean): void {
         const tooltipBlock = this.renderTooltipBlock(block);
         const tooltipContent = this.getTooltipContentBlock(tooltipBlock);
         this.renderTooltipArrow(tooltipBlock);
@@ -68,8 +73,8 @@ export class Tooltip
         elemets
             .on('mouseover', function(event, d) {
                 tooltipBlock.style('display', 'block');                
-                const key = TooltipHelper.getKeyForTooltip(d, charts[0].data.keyField.name, isSegmented);
-                tooltipContent.html(`${TooltipHelper.getTooltipHtmlFor2DCharts(charts[0], data, key)}`);
+                const key = TooltipHelper.getKeyForTooltip(d, chart.data.keyField.name, isSegmented);
+                tooltipContent.html(`${TooltipHelper.getTooltipHtmlFor2DCharts(chart, data, key)}`);
 
                 const coordinatePointer: [number, number] = TooltipHelper.getTooltipBlockCoordinate(d3.select(this), tooltipBlock, 'circle');
                 const tooltipCoordinate = TooltipHelper.getTooltipCoordinate(coordinatePointer);
@@ -85,7 +90,7 @@ export class Tooltip
         });
     }
 
-    private static renderTooltipForBar(block: Block, elemets: d3.Selection<d3.BaseType, DataRow, d3.BaseType, unknown>, data: DataSource, charts: TwoDimensionalChartModel[], isSegmented: boolean): void {
+    private static renderTooltipForBar(block: Block, elemets: d3.Selection<d3.BaseType, DataRow, d3.BaseType, unknown>, data: DataSource, chart: TwoDimensionalChartModel, isSegmented: boolean): void {
         const tooltipBlock = this.renderTooltipBlock(block);
         const tooltipContent = this.getTooltipContentBlock(tooltipBlock);
         this.renderTooltipArrow(tooltipBlock);
@@ -94,14 +99,14 @@ export class Tooltip
         elemets
             .on('mouseover', function(event, d) {
                 tooltipBlock.style('display', 'block');
-                const key = TooltipHelper.getKeyForTooltip(d, charts[0].data.keyField.name, isSegmented);
-                tooltipContent.html(`${TooltipHelper.getTooltipHtmlFor2DCharts(charts[0], data, key)}`);
+                const key = TooltipHelper.getKeyForTooltip(d, chart.data.keyField.name, isSegmented);
+                tooltipContent.html(`${TooltipHelper.getTooltipHtmlFor2DCharts(chart, data, key)}`);
 
                 const coordinatePointer: [number, number] = TooltipHelper.getTooltipBlockCoordinate(d3.select(this), tooltipBlock, 'rect');
                 const tooltipCoordinate = TooltipHelper.getTooltipCoordinate(coordinatePointer);
                 thisClass.setTooltipCoordinate(tooltipBlock, tooltipCoordinate);
 
-                TooltipHelper.getFilteredElements(elemets, charts[0].data.keyField.name, key, isSegmented)
+                TooltipHelper.getFilteredElements(elemets, chart.data.keyField.name, key, isSegmented)
                     .style('opacity', 0.3);
             });
 
@@ -135,38 +140,6 @@ export class Tooltip
             tooltipBlock.style('display', 'none');
             elemets.style('opacity', 1);
         });
-    }
-
-    private static renderLineTooltip(block: Block, scaleKey: d3.AxisScale<any>, margin: BlockMargin, blockSize: Size, charts: TwoDimensionalChartModel[], data: DataSource, scaleKeyModel: ScaleKeyModel, chartOrientation: ChartOrientation): void {
-        const tooltipBlock = this.renderTooltipBlock(block);
-        const tooltipContent = this.getTooltipContentBlock(tooltipBlock);
-        const thisClass = this;
-    
-        const tooltipLine = this.renderTooltipLine(block);    
-        const bandSize = Scale.getScaleStep(scaleKey); 
-        const tipBoxAttributes = TooltipHelper.getTipBoxAttributes(margin, blockSize);
-        const tipBox = this.renderTipBox(block, tipBoxAttributes);
-
-        tipBox
-            .on('mouseover', function(event) {
-                tooltipBlock.style('display', 'block');
-            })
-            .on('mousemove', function(event) {
-                const index = TooltipHelper.getKeyIndex(d3.pointer(event, this), chartOrientation, margin, bandSize, scaleKeyModel.type);        
-                const key = scaleKey.domain()[index];
-                tooltipContent.html(`${TooltipHelper.getTooltipHtmlFor2DCharts(charts[0], data, key)}`);
-                
-                const tooltipCoordinate = TooltipHelper.getTooltipCoordinate(d3.pointer(event, this));
-                thisClass.setTooltipCoordinate(tooltipBlock, tooltipCoordinate);
-
-                tooltipLine.style('display', 'block');
-                const tooltipLineAttributes = TooltipHelper.getTooltipLineAttributes(scaleKey, margin, key, chartOrientation, blockSize);
-                thisClass.setTooltipLineAttributes(tooltipLine, tooltipLineAttributes);
-            })
-            .on('mouseleave', function(event) {
-                tooltipBlock.style('display', 'none');
-                tooltipLine.style('display', 'none');
-            });
     }
 
     private static renderTooltipForSingleElements(block: Block, elemets: d3.Selection<d3.BaseType, unknown, d3.BaseType, unknown>, fields: Field[], data: DataRow[], charts: TwoDimensionalChartModel[] | PolarChartModel[] | IntervalChartModel[], translateX: number = 0, translateY: number = 0): void {
