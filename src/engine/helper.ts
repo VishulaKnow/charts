@@ -1,4 +1,4 @@
-import { color, Color } from "d3";
+import { Color } from "d3";
 
 type StyleColorType = 'fill' | 'stroke';
 
