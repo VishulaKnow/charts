@@ -5,6 +5,7 @@ import { AxisModel } from "./axisModel";
 import { ChartStyleModel } from "./chartStyleModel";
 import { DataManagerModel } from "./dataManagerModel";
 import { GridLineModel } from "./gridLineModel";
+import { LegendModel } from "./legendModel/legendModel";
 import { BlockMargin, DataScope, DataSource, AdditionalElementsOptions, TwoDimensionalChartModel, TwoDimensionalOptionsModel } from "./model";
 import { ModelHelper } from "./modelHelper";
 import { AxisType } from "./modelOptions";
@@ -16,7 +17,7 @@ export class TwoDimensionalModel
         const configOptions = <TwoDimensionalOptions>config.options;
 
         return {
-            legend: configOptions.legend,
+            legend: LegendModel.getLegendModel(config.options.type, config.options.legend.position),
             orient: configOptions.orientation,
             isSegmented: configOptions.isSegmented,
             scale: {

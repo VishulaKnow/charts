@@ -86,7 +86,7 @@ export interface TwoDimensionalOptionsModel {
     axis: IAxisModel;
     charts: TwoDimensionalChartModel[];
     additionalElements: AdditionalElementsOptions;
-    legend: LegendModel;
+    legend: ILegendModel;
     orient: ChartOrientation;
     isSegmented: boolean;
 }
@@ -96,7 +96,7 @@ export interface IntervalOptionsModel {
     axis: IAxisModel;
     charts: IntervalChartModel[];
     additionalElements: AdditionalElementsOptions;
-    legend: LegendModel;
+    legend: ILegendModel;
     orient: ChartOrientation;
 }
 export interface AdditionalElementsOptions {
@@ -112,7 +112,7 @@ export interface GridLineFlag {
 export interface PolarOptionsModel {
     type: 'polar';
     charts: PolarChartModel[];
-    legend: LegendModel;
+    legend: ILegendModel;
 }
 export interface PolarChartAppearanceModel {
     innerRadius: number;
@@ -193,7 +193,7 @@ interface TooltipDataModel {
     fields: Field[];
 }
 
-interface LegendModel {
+export interface ILegendModel {
     position: LegendPosition;
 }
 

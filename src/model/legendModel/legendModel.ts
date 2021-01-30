@@ -1,4 +1,5 @@
-import { LegendBlockModel, Orient, Size } from "../model";
+import { ChartNotation, Config, LegendPosition } from "../../config/config";
+import { ILegendModel, LegendBlockModel, Orient, Size } from "../model";
 import { LegendCanvasModel } from "./legendCanvasModel";
 
 export class LegendModel
@@ -31,6 +32,19 @@ export class LegendModel
                 size: 0,
                 margin: { top: 20, bottom: 0, left: 20, right: 20 }
             }
+        }
+    }
+
+    public static getLegendModel(chartNotation: ChartNotation, position: LegendPosition): ILegendModel {
+        let legendPosition: LegendPosition = 'off';
+        if(position !== 'off') {
+            if(chartNotation === '2d' || chartNotation === 'interval')
+                legendPosition = 'top';
+            else
+                legendPosition = 'right';
+        }
+        return {
+            position: legendPosition
         }
     }
     

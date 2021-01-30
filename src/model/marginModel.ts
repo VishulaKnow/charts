@@ -62,19 +62,18 @@ export class MarginModel
     }
 
     private static recalcMarginWithLegend(margin: BlockMargin, config: Config, legendMaxWidth: number, legendBlockModel: LegendBlockModel, data: DataSource): void {
-        if(config.options.legend.position !== 'off') {
+        const legendPosition = LegendModel.getLegendModel(config.options.type, config.options.legend.position);
+        if(legendPosition.position !== 'off') {
             let legendSize = 0;
             const charts = config.options.charts;
-            
-            if(charts.length !== 0) {
-                const legendItemsContent = this.getLegendItemsContent(charts, config.options, data);
-                legendSize = LegendModel.getLegendSize(config.options.legend.position, legendItemsContent, legendMaxWidth, config.canvas.size, legendBlockModel);
-            }
+            const legendItemsContent = this.getLegendItemsContent(charts, config.options, data);
 
-            margin[config.options.legend.position] += legendSize;
+            legendSize = LegendModel.getLegendSize(legendPosition.position, legendItemsContent, legendMaxWidth, config.canvas.size, legendBlockModel);
+            margin[legendPosition.position] += legendSize;
+
             if(legendSize !== 0)
-                this.appendGlobalMarginByLegendMargin(margin, config.options.legend.position, legendBlockModel);
-            legendBlockModel[config.options.legend.position].size = legendSize;
+                this.appendGlobalMarginByLegendMargin(margin, legendPosition.position, legendBlockModel);
+            legendBlockModel[legendPosition.position].size = legendSize;
         }
     }
 

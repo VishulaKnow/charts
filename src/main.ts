@@ -15,8 +15,6 @@ engine.render(model, getPreparedData(model, data, config), '.main-wrapper');
 new Listeners(engine, config, designerConfig, data);
 
 
-
-
 // const config3 = require('./config/configTest.json');
 // const model3 = assembleModel(config3, data);
 // const engine3 = new Engine();

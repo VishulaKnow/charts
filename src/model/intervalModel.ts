@@ -5,8 +5,8 @@ import { AxisModel } from "./axisModel";
 import { ChartStyleModel } from "./chartStyleModel";
 import { DataManagerModel } from "./dataManagerModel";
 import { GridLineModel } from "./gridLineModel";
+import { LegendModel } from "./legendModel/legendModel";
 import { AdditionalElementsOptions, BlockMargin, DataScope, DataSource, IntervalChartModel, IntervalOptionsModel } from "./model";
-import { ModelHelper } from "./modelHelper";
 import { AxisType } from "./modelOptions";
 import { ScaleModel, ScaleType } from "./scaleModel";
 
@@ -15,7 +15,7 @@ export class IntervalModel {
         const configOptions = <IntervalOptions>config.options;
         
         return {
-            legend: configOptions.legend,
+            legend: LegendModel.getLegendModel(config.options.type, config.options.legend.position),
             orient: configOptions.orientation,
             scale: {
                 scaleKey: {
