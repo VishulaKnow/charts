@@ -1,4 +1,5 @@
 import { Color, text } from "d3";
+import { LegendPosition } from "../../../config/config";
 import { DataRow, DataSource, IntervalChartModel, IntervalOptionsModel, LegendBlockModel, Orient, PolarChartModel, PolarOptionsModel, Size, TwoDimensionalChartModel, TwoDimensionalOptionsModel } from "../../../model/model";
 import { Block } from "../../block/block";
 
@@ -28,7 +29,7 @@ export class Legend
     private static renderLegendBlock(block: Block, items: string[], legendPosition: Orient, legendBlockModel: LegendBlockModel, colorPalette: Color[], blockSize: Size): void {
         const legendBlock = block.getSvg()
             .append('foreignObject')
-                .attr('class', 'legend');
+                .attr('class', 'legend-object');
 
         const legendCoordinate = this.getLegendCoordinateByPosition(legendPosition, legendBlockModel, blockSize) 
         this.fillLegendCoordinate(legendBlock, legendCoordinate);  
@@ -106,22 +107,24 @@ export class Legend
             .attr('height', coordinate.height);
     }
     
-    private static fillLegend(legendBlock: d3.Selection<SVGForeignObjectElement, unknown, HTMLElement, any>, items: string[], legendPosition: string, colorPalette: Color[]): void {
-        const wrapper = legendBlock.append('xhtml:div');
+    private static fillLegend(legendBlock: d3.Selection<SVGForeignObjectElement, unknown, HTMLElement, any>, items: string[], legendPosition: LegendPosition, colorPalette: Color[]): void {
+        const wrapper = legendBlock.append('xhtml:div')
+            .attr('class', 'legend-block');
+
         wrapper
             .style('height', '100%')
             .style('display', 'flex');
     
-        if(legendPosition === 'left' || legendPosition === 'right')
+        if(legendPosition === 'left' || legendPosition === 'right') {
             wrapper.style('flex-direction', 'column');
+        }
         
         const itemWrappers = wrapper
             .selectAll('.legend-item')
             .data(items)
             .enter()
             .append('div')
-                .attr('class', 'legend-item')
-                .style('height', '100%');
+                .attr('class', this.getLegendItemClassByPosition(legendPosition));
     
         itemWrappers
             .append('span')
@@ -134,7 +137,8 @@ export class Legend
             .attr('class', 'legend-label')
             .text(d => d.toString());
 
-        this.cropLegendLabels(legendBlock, itemWrappers);
+        if(legendPosition === 'top' || legendPosition === 'bottom')
+            this.cropLegendLabels(legendBlock, itemWrappers);
     }
 
     private static cropLegendLabels(legendBlock: d3.Selection<SVGForeignObjectElement, unknown, HTMLElement, any>, items: d3.Selection<HTMLDivElement, string, d3.BaseType, unknown>): void {
@@ -149,5 +153,11 @@ export class Legend
                 }
             }
         });
+    }
+
+    private static getLegendItemClassByPosition(legendPosition: LegendPosition): string {
+        if(legendPosition === 'top' || legendPosition === 'bottom')
+            return 'legend-item-inline';
+        return 'legend-item-row';
     }
 }

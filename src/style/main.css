@@ -57,11 +57,14 @@ h3.title {
     color: #444444;
 }
 
-.legend-item {
+.legend-item-inline {
     white-space: nowrap;
 }
-.legend-item:not(:first-of-type) {
+.legend-item-inline:not(:first-of-type) {
     margin-left: 20px;
+}
+.legend-item-row:not(:first-of-type) {
+    margin-top: 15px;
 }
 .legend-label {
     font-size: 12px;
