@@ -1,4 +1,4 @@
-import { DataRow, DataSource, Field, PolarChartModel, TwoDimensionalChartModel } from "../../../model/model";
+import { DataRow, DataSource, Field, PolarChartModel, Size, TwoDimensionalChartModel } from "../../../model/model";
 import { ValueFormatter, } from "../../valueFormatter";
 
 type ElementType = 'circle' | 'rect';
@@ -76,7 +76,7 @@ export class TooltipHelper
         return coordinate;
     }
 
-    public static getTooltipBlockCoordinate(element: d3.Selection<d3.BaseType, DataRow, HTMLElement, any>, tooltipBlock: d3.Selection<d3.BaseType, unknown, HTMLElement, any>, elementType: ElementType): [number, number] {
+    public static getTooltipBlockCoordinate(element: d3.Selection<d3.BaseType, DataRow, HTMLElement, any>, tooltipBlock: d3.Selection<d3.BaseType, unknown, HTMLElement, any>, elementType: ElementType, blockSize: Size, tooltipArrow: d3.Selection<d3.BaseType, unknown, HTMLElement, any>): [number, number] {
         let coordinateTuple: [number, number];
         
         if(elementType === 'rect')
@@ -84,11 +84,22 @@ export class TooltipHelper
         else
             coordinateTuple = [parseFloat(element.attr('cx')), parseFloat(element.attr('cy'))];
 
-        return this.getRecalcedCoordinateByArrow(coordinateTuple, tooltipBlock);
+        return this.getRecalcedCoordinateByArrow(coordinateTuple, tooltipBlock, blockSize, tooltipArrow);
     }
 
-    public static getRecalcedCoordinateByArrow(coordinate: [number, number], tooltipBlock: d3.Selection<d3.BaseType, unknown, HTMLElement, any>): [number, number] {
-        return [coordinate[0] - TOOLTIP_ARROW_PADDING_X, coordinate[1] - TOOLTIP_ARROW_PADDING_Y - (tooltipBlock.node() as HTMLElement).getBoundingClientRect().height];
+    public static getRecalcedCoordinateByArrow(coordinate: [number, number], tooltipBlock: d3.Selection<d3.BaseType, unknown, HTMLElement, any>, blockSize: Size, tooltipArrow: d3.Selection<d3.BaseType, unknown, HTMLElement, any>): [number, number] {
+        let pad = 0;
+        if((tooltipBlock.node() as HTMLElement).getBoundingClientRect().width + coordinate[0] - TOOLTIP_ARROW_PADDING_X > blockSize.width)
+            pad = (tooltipBlock.node() as HTMLElement).getBoundingClientRect().width + coordinate[0] - TOOLTIP_ARROW_PADDING_X - blockSize.width;
+        this.setTooltipArrowCoordinate(tooltipArrow, pad);
+        return [coordinate[0] - TOOLTIP_ARROW_PADDING_X - pad, coordinate[1] - TOOLTIP_ARROW_PADDING_Y - (tooltipBlock.node() as HTMLElement).getBoundingClientRect().height];
+    }
+
+    private static setTooltipArrowCoordinate(tooltipArrow: d3.Selection<d3.BaseType, unknown, HTMLElement, any>, pad: number = 0): void {
+        if(pad !== 0)
+            tooltipArrow.style('left', `${9 + Math.floor(pad)}px`);
+        else
+            tooltipArrow.style('left', `9px`);
     }
 
     public static getDotEdgingAttrs(element: d3.Selection<d3.BaseType, DataRow, HTMLElement, any>): DotEdgingAttrs {

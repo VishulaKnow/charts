@@ -1,13 +1,11 @@
 import * as d3 from "d3";
-import { BlockMargin, DataRow, DataSource, Field, IntervalChartModel, Model, PolarChartModel, ScaleKeyModel, Size, TwoDimensionalChartModel, TwoDimensionalOptionsModel } from "../../../model/model";
+import { BlockMargin, DataRow, DataSource, Field, IntervalChartModel, Model, PolarChartModel, Size, TwoDimensionalChartModel } from "../../../model/model";
 import { Helper } from "../../helper";
-import { Scale, Scales } from "../scale/scale";
 import { Block } from "../../block/block";
-import { DotEdgingAttrs, TipBoxAttributes, TooltipCoordinate, TooltipHelper, TooltipLineAttributes } from "./tooltipHelper";
+import { DotEdgingAttrs, TooltipCoordinate, TooltipHelper } from "./tooltipHelper";
 import { Donut } from "../../polarNotation/donut";
 import { Bar } from "../../twoDimensionalNotation/bar/bar";
 import { Dot } from "../lineDots/dot";
-import { ChartOrientation } from "../../../config/config";
 
 export class Tooltip
 {
@@ -21,7 +19,7 @@ export class Tooltip
         const chartsWithTooltipIndex = model.options.charts.findIndex((chart: TwoDimensionalChartModel | PolarChartModel | IntervalChartModel) => chart.tooltip.data.fields.length !== 0);
         if(chartsWithTooltipIndex !== -1) {
             if(model.options.type === '2d') {
-                this.rednerTooltipFor2DCharts(block, model.options.charts, data, model.options.isSegmented);   
+                this.rednerTooltipFor2DCharts(block, model.options.charts, data, model.options.isSegmented, model.blockCanvas.size);   
             } else if(model.options.type === 'polar') {
                 this.renderTooltipsForDonut(block, model.options.charts, data, model.blockCanvas.size, model.chartBlock.margin);
             } else if(model.options.type === 'interval') {
@@ -30,20 +28,20 @@ export class Tooltip
         }
     }
 
-    private static rednerTooltipFor2DCharts(block: Block, charts: TwoDimensionalChartModel[], data: DataSource, isSegmented: boolean): void {
+    private static rednerTooltipFor2DCharts(block: Block, charts: TwoDimensionalChartModel[], data: DataSource, isSegmented: boolean, blockSize: Size): void {
         charts.forEach(chart => {
             if(chart.type === 'bar') {
-                this.renderTooltipForBar(block, Bar.getAllBarItems(block), data, chart, isSegmented);
+                this.renderTooltipForBar(block, Bar.getAllBarItems(block), data, chart, isSegmented, blockSize);
             } else if(chart.type === 'line') {
-                this.renderTooltipForDots(block, Dot.getAllDots(block, chart.cssClasses), data, chart, false);
+                this.renderTooltipForDots(block, Dot.getAllDots(block, chart.cssClasses), data, chart, false, blockSize);
             } else {
-                this.renderTooltipForDots(block, Dot.getAllDots(block, chart.cssClasses), data, chart, isSegmented);
+                this.renderTooltipForDots(block, Dot.getAllDots(block, chart.cssClasses), data, chart, isSegmented, blockSize);
             }
         });
     }
 
     private static renderTooltipsForDonut(block: Block, charts: PolarChartModel[], data: DataSource, blockSize: Size, margin: BlockMargin): void {
-        charts.forEach(chart => {
+        charts.forEach(() => {
             const attrTransform = block.getSvg().select(`.${Donut.donutBlockClass}`).attr('transform');
             const translateNumbers = Helper.getTranslateNumbers(attrTransform);
             const translateX = translateNumbers[0];
@@ -64,10 +62,10 @@ export class Tooltip
         });
     }
 
-    private static renderTooltipForDots(block: Block, elemets: d3.Selection<d3.BaseType, DataRow, d3.BaseType, unknown>, data: DataSource, chart: TwoDimensionalChartModel, isSegmented: boolean): void {
+    private static renderTooltipForDots(block: Block, elemets: d3.Selection<d3.BaseType, DataRow, d3.BaseType, unknown>, data: DataSource, chart: TwoDimensionalChartModel, isSegmented: boolean, blockSize: Size): void {
         const tooltipBlock = this.renderTooltipBlock(block);
         const tooltipContent = this.getTooltipContentBlock(tooltipBlock);
-        this.renderTooltipArrow(tooltipBlock);
+        const tooltipArrow = this.renderTooltipArrow(tooltipBlock);
         const thisClass = this;
 
         elemets
@@ -76,7 +74,7 @@ export class Tooltip
                 const key = TooltipHelper.getKeyForTooltip(d, chart.data.keyField.name, isSegmented);
                 tooltipContent.html(`${TooltipHelper.getTooltipHtmlFor2DCharts(chart, data, key)}`);
 
-                const coordinatePointer: [number, number] = TooltipHelper.getTooltipBlockCoordinate(d3.select(this), tooltipBlock, 'circle');
+                const coordinatePointer: [number, number] = TooltipHelper.getTooltipBlockCoordinate(d3.select(this), tooltipBlock, 'circle', blockSize, tooltipArrow);
                 const tooltipCoordinate = TooltipHelper.getTooltipCoordinate(coordinatePointer);
                 thisClass.setTooltipCoordinate(tooltipBlock, tooltipCoordinate);
                 
@@ -90,10 +88,10 @@ export class Tooltip
         });
     }
 
-    private static renderTooltipForBar(block: Block, elemets: d3.Selection<d3.BaseType, DataRow, d3.BaseType, unknown>, data: DataSource, chart: TwoDimensionalChartModel, isSegmented: boolean): void {
+    private static renderTooltipForBar(block: Block, elemets: d3.Selection<d3.BaseType, DataRow, d3.BaseType, unknown>, data: DataSource, chart: TwoDimensionalChartModel, isSegmented: boolean, blockSize: Size): void {
         const tooltipBlock = this.renderTooltipBlock(block);
         const tooltipContent = this.getTooltipContentBlock(tooltipBlock);
-        this.renderTooltipArrow(tooltipBlock);
+        const tooltipArrow = this.renderTooltipArrow(tooltipBlock);
         const thisClass = this;
 
         elemets
@@ -102,7 +100,7 @@ export class Tooltip
                 const key = TooltipHelper.getKeyForTooltip(d, chart.data.keyField.name, isSegmented);
                 tooltipContent.html(`${TooltipHelper.getTooltipHtmlFor2DCharts(chart, data, key)}`);
 
-                const coordinatePointer: [number, number] = TooltipHelper.getTooltipBlockCoordinate(d3.select(this), tooltipBlock, 'rect');
+                const coordinatePointer: [number, number] = TooltipHelper.getTooltipBlockCoordinate(d3.select(this), tooltipBlock, 'rect', blockSize, tooltipArrow);
                 const tooltipCoordinate = TooltipHelper.getTooltipCoordinate(coordinatePointer);
                 thisClass.setTooltipCoordinate(tooltipBlock, tooltipCoordinate);
 
@@ -119,7 +117,7 @@ export class Tooltip
     private static renderTooltipForDonut(block: Block, elemets: d3.Selection<d3.BaseType, d3.PieArcDatum<DataRow>, d3.BaseType, unknown>, data: DataSource, charts: PolarChartModel[], blockSize: Size, margin: BlockMargin, translateX: number = 0, translateY: number = 0): void {
         const tooltipBlock = this.renderTooltipBlock(block, translateX, translateY);
         const tooltipContent = this.getTooltipContentBlock(tooltipBlock);
-        this.renderTooltipArrow(tooltipBlock);
+        const tooltipArrow = this.renderTooltipArrow(tooltipBlock);
         const thisClass = this;
 
         elemets
@@ -128,7 +126,7 @@ export class Tooltip
                 const key = d.data[charts[0].data.keyField.name];
                 tooltipContent.html(TooltipHelper.getTooltipHtmlForPolarChart(charts[0], data, key, d3.select(this).select('path').style('fill')));
                 
-                const coordinatePointer: [number, number] = TooltipHelper.getRecalcedCoordinateByArrow(Donut.getArcCentroid(blockSize, margin, d, charts[0].appearanceOptions.innerRadius), tooltipBlock);
+                const coordinatePointer: [number, number] = TooltipHelper.getRecalcedCoordinateByArrow(Donut.getArcCentroid(blockSize, margin, d, charts[0].appearanceOptions.innerRadius), tooltipBlock, blockSize, tooltipArrow);
                 const tooltipCoordinate = TooltipHelper.getTooltipCoordinate(coordinatePointer);
                 thisClass.setTooltipCoordinate(tooltipBlock, tooltipCoordinate);
 
@@ -156,12 +154,12 @@ export class Tooltip
     
         elemets
             .data(data)
-            .on('mousemove', function(event, d) {
+            .on('mousemove', function(event) {
                 const tooltipCoordinate = TooltipHelper.getTooltipCoordinate(d3.pointer(event, this));
                 thisClass.setTooltipCoordinate(tooltipBlock, tooltipCoordinate); 
             });
     
-        elemets.on('mouseleave', event => tooltipBlock.style('display', 'none'));
+        elemets.on('mouseleave', () => tooltipBlock.style('display', 'none'));
     }
 
     private static renderDotsEdging(block: Block, attrs: DotEdgingAttrs, color: string): void {
