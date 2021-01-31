@@ -1,10 +1,14 @@
 import { CLASSES } from "../modelOptions";
 
+type LegendItemsPosition = 'row' | 'column'
+
 export class LegendCanvasModel
 {
-    public static getLegendHeight(texts: string[], blockWidth: number, marginLeft: number, marginRight: number): number {
+    public static getLegendHeight(texts: string[], blockWidth: number, marginLeft: number, marginRight: number, itemsPosition: LegendItemsPosition): number {
         const legendWrapper = document.createElement('div');
         legendWrapper.style.display = 'flex';
+        if(itemsPosition === 'column')
+            legendWrapper.style.flexDirection = 'column';
         legendWrapper.style.position = 'absolute';
         legendWrapper.style.width = blockWidth - marginLeft - marginRight + 'px';
         texts.forEach(text => {

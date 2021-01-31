@@ -4,12 +4,16 @@ import { LegendCanvasModel } from "./legendCanvasModel";
 
 export class LegendModel
 {
-    public static getLegendSize(position: Orient, texts: string[], legendMaxWidth: number, blockSize: Size, legendBlockModel: LegendBlockModel): number {
-        if(position === 'left' || position === 'right') {
+    public static getLegendSize(chartNotation: ChartNotation, position: Orient, texts: string[], legendMaxWidth: number, blockSize: Size, legendBlockModel: LegendBlockModel): number {
+        if(position === 'left' || position === 'right')
             return this.getLegendWidth(texts, legendMaxWidth);
-        } else {
-            const legends = LegendCanvasModel.getLegendHeight(texts, blockSize.width, legendBlockModel[position].margin.left, legendBlockModel[position].margin.right);
-            return legends;
+        if(chartNotation === '2d' || chartNotation === 'interval') {
+            return LegendCanvasModel.getLegendHeight(texts, blockSize.width, legendBlockModel[position].margin.left, legendBlockModel[position].margin.right, 'row');
+        } else if(chartNotation === 'polar') {
+            const size = LegendCanvasModel.getLegendHeight(texts, blockSize.width, legendBlockModel[position].margin.left, legendBlockModel[position].margin.right, 'column');
+            console.log(size);
+            
+            return size
         }
     }
 
@@ -35,13 +39,14 @@ export class LegendModel
         }
     }
 
-    public static getLegendModel(chartNotation: ChartNotation, position: LegendPosition): ILegendModel {
+    public static getLegendModel(chartNotation: ChartNotation, position: LegendPosition, blockSize: Size): ILegendModel {
         let legendPosition: LegendPosition = 'off';
         if(position !== 'off') {
             if(chartNotation === '2d' || chartNotation === 'interval')
                 legendPosition = 'top';
-            else
-                legendPosition = 'right';
+            else if(chartNotation === 'polar') {
+                legendPosition = blockSize.width < 400 ? 'bottom' : 'right';
+            }
         }
         
         return {

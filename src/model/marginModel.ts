@@ -28,7 +28,7 @@ export class MarginModel
 
         if(config.options.legend.position !== 'off' && config.options.type === 'polar') {
             const position = config.options.legend.position
-            const legendSize = LegendModel.getLegendSize(position, dataScope.allowableKeys, designerConfig.canvas.legendBlock.maxWidth, config.canvas.size, legendBlockModel);
+            const legendSize = LegendModel.getLegendSize(config.options.type, position, dataScope.allowableKeys, designerConfig.canvas.legendBlock.maxWidth, config.canvas.size, legendBlockModel);
             margin[position] += legendSize
             legendBlockModel[config.options.legend.position].size = legendSize;
         }    
@@ -62,15 +62,13 @@ export class MarginModel
     }
 
     private static recalcMarginWithLegend(margin: BlockMargin, config: Config, legendMaxWidth: number, legendBlockModel: LegendBlockModel, data: DataSource): void {
-        const legendPosition = LegendModel.getLegendModel(config.options.type, config.options.legend.position);
-        console.log(legendPosition);
-        
+        const legendPosition = LegendModel.getLegendModel(config.options.type, config.options.legend.position, config.canvas.size);
         if(legendPosition.position !== 'off') {
             let legendSize = 0;
             const charts = config.options.charts;
             const legendItemsContent = this.getLegendItemsContent(charts, config.options, data);
 
-            legendSize = LegendModel.getLegendSize(legendPosition.position, legendItemsContent, legendMaxWidth, config.canvas.size, legendBlockModel);
+            legendSize = LegendModel.getLegendSize(config.options.type, legendPosition.position, legendItemsContent, legendMaxWidth, config.canvas.size, legendBlockModel);
             margin[legendPosition.position] += legendSize;
 
             if(legendSize !== 0)

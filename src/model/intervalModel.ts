@@ -15,7 +15,7 @@ export class IntervalModel {
         const configOptions = <IntervalOptions>config.options;
         
         return {
-            legend: LegendModel.getLegendModel(config.options.type, config.options.legend.position),
+            legend: LegendModel.getLegendModel(config.options.type, config.options.legend.position, config.canvas.size),
             orient: configOptions.orientation,
             scale: {
                 scaleKey: {
