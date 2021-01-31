@@ -142,7 +142,7 @@ export class Bar
             attrs.height = d => ValueFormatter.getValueOrZero(blockSize.height - margin.top - margin.bottom - scales.scaleValue(d[valueField]));
         }   
         else if(axisOrient === 'left') {
-            attrs.x = d => margin.left;
+            attrs.x = d => margin.left + 1;
             attrs.width = d => ValueFormatter.getValueOrZero(scales.scaleValue(d[valueField]));
         }    
         else if(axisOrient === 'right') {
