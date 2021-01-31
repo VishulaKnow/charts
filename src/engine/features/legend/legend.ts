@@ -1,5 +1,6 @@
 import { Color, text } from "d3";
-import { LegendPosition } from "../../../config/config";
+import { ChartNotation, LegendPosition } from "../../../config/config";
+import { LegendItemsDirection } from "../../../model/legendModel/legendCanvasModel";
 import { DataRow, DataSource, IntervalChartModel, IntervalOptionsModel, LegendBlockModel, Orient, PolarChartModel, PolarOptionsModel, Size, TwoDimensionalChartModel, TwoDimensionalOptionsModel } from "../../../model/model";
 import { Block } from "../../block/block";
 
@@ -13,31 +14,35 @@ interface LegendCoordinate {
 export class Legend
 {
     public static render(block: Block, data: DataSource, options: TwoDimensionalOptionsModel | PolarOptionsModel | IntervalOptionsModel, legendBlockModel: LegendBlockModel, blockSize: Size): void {
-        if(options.legend.position !== 'off' && options.charts.length !== 0) {
+        if(options.legend.position !== 'off') {
             const legendItemsContent = this.getLegendItemsContent(options, data);
             const chartElementsColor = this.getChartElementsColor(options);
-            
+            const legendItemsDirection = this.getLegendItemsDirection(options.type, options.legend.position); 
+
             this.renderLegendBlock(block, 
                 legendItemsContent,
                 options.legend.position,
                 legendBlockModel,
                 chartElementsColor,
-                blockSize);
+                blockSize,
+                legendItemsDirection);
         }
     }
     
-    private static renderLegendBlock(block: Block, items: string[], legendPosition: Orient, legendBlockModel: LegendBlockModel, colorPalette: Color[], blockSize: Size): void {
+    private static renderLegendBlock(block: Block, items: string[], legendPosition: Orient, legendBlockModel: LegendBlockModel, colorPalette: Color[], blockSize: Size, itemsDirection: LegendItemsDirection): void {
         const legendBlock = block.getSvg()
             .append('foreignObject')
                 .attr('class', 'legend-object');
-
+        console.log(legendBlockModel);
+        
         const legendCoordinate = this.getLegendCoordinateByPosition(legendPosition, legendBlockModel, blockSize) 
         this.fillLegendCoordinate(legendBlock, legendCoordinate);  
             
-        this.fillLegend(legendBlock,
+        this.renderLegendContent(legendBlock,
             items,
             legendPosition,
-            colorPalette);
+            colorPalette,
+            itemsDirection);
     }
 
     private static getLegendItemsContent(options: TwoDimensionalOptionsModel | PolarOptionsModel | IntervalOptionsModel, data: DataSource): string[] {
@@ -107,7 +112,7 @@ export class Legend
             .attr('height', coordinate.height);
     }
     
-    private static fillLegend(legendBlock: d3.Selection<SVGForeignObjectElement, unknown, HTMLElement, any>, items: string[], legendPosition: LegendPosition, colorPalette: Color[]): void {
+    private static renderLegendContent(legendBlock: d3.Selection<SVGForeignObjectElement, unknown, HTMLElement, any>, items: string[], legendPosition: LegendPosition, colorPalette: Color[], itemsDirection: LegendItemsDirection): void {
         const wrapper = legendBlock.append('xhtml:div')
             .attr('class', 'legend-block');
 
@@ -115,7 +120,7 @@ export class Legend
             .style('height', '100%')
             .style('display', 'flex');
     
-        if(legendPosition === 'left' || legendPosition === 'right') {
+        if(itemsDirection === 'column') {
             wrapper.style('flex-direction', 'column');
         }
         
@@ -124,7 +129,7 @@ export class Legend
             .data(items)
             .enter()
             .append('div')
-                .attr('class', this.getLegendItemClassByPosition(legendPosition));
+                .attr('class', this.getLegendItemClassByPosition(itemsDirection));
     
         itemWrappers
             .append('span')
@@ -137,7 +142,7 @@ export class Legend
             .attr('class', 'legend-label')
             .text(d => d.toString());
 
-        if(legendPosition === 'top' || legendPosition === 'bottom')
+        if(itemsDirection === 'row')
             this.cropLegendLabels(legendBlock, itemWrappers);
     }
 
@@ -155,9 +160,16 @@ export class Legend
         });
     }
 
-    private static getLegendItemClassByPosition(legendPosition: LegendPosition): string {
-        if(legendPosition === 'top' || legendPosition === 'bottom')
+    private static getLegendItemClassByPosition(itemsDirection: LegendItemsDirection): string {
+        if(itemsDirection === 'row')
             return 'legend-item-inline';
         return 'legend-item-row';
+    }
+
+    private static getLegendItemsDirection(chartNotation: ChartNotation, legendPosition: LegendPosition): LegendItemsDirection {
+        if(legendPosition === 'right' || legendPosition === 'left')
+            return 'column';
+        else
+            return chartNotation === 'polar' ? 'column' : 'row';
     }
 }

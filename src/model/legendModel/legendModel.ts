@@ -1,6 +1,6 @@
-import { ChartNotation, Config, LegendPosition } from "../../config/config";
+import { ChartNotation, LegendPosition } from "../../config/config";
 import { ILegendModel, LegendBlockModel, Orient, Size } from "../model";
-import { LegendCanvasModel } from "./legendCanvasModel";
+import { LegendCanvasModel, LegendItemsDirection } from "./legendCanvasModel";
 
 export class LegendModel
 {
@@ -52,6 +52,10 @@ export class LegendModel
         return {
             position: legendPosition
         }
+    }
+
+    public static getLegendItemClass(itemsPosition: LegendItemsDirection): string {
+        return itemsPosition === 'column' ? 'legend-item-row' : 'legend-item-inline'; 
     }
     
     private static getLegendWidth(texts: string[], legendMaxWidth: number): number {

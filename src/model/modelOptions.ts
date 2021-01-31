@@ -77,8 +77,8 @@ export function assembleModel(config: Config, data: DataSource): Model {
     const dataScope = DataManagerModel.getDataScope(config, margin, data, designerConfig);
     const preparedData = DataManagerModel.getPreparedData(data, dataScope.allowableKeys, config);    
     
-    // if(config.options.type === 'polar')
-    //     MarginModel.recalcPolarMarginWithScopedData(margin, designerConfig, config, legendBlock, dataScope); 
+    if(config.options.type === 'polar')
+        MarginModel.recalcPolarMarginWithScopedData(margin, designerConfig, config, legendBlock, dataScope); 
     MarginModel.recalcMargnWitVerticalAxisLabel(margin, data, config, designerConfig);
 
     const blockCanvas = getBlockCanvas(config);

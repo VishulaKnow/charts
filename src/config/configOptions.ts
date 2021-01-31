@@ -4,106 +4,65 @@ const configCars: Config = {
     canvas: {
         class: 'outline svg-chart',
         size: {
-            width: 980,
+            width: 390,
             height: 650
         }
     },
-    options: {
-        type: '2d',
-        isSegmented: false,
-        axis: {
-            keyAxis: {
-                position: 'end',
-                ticks: {
-                    flag: false
-                }
-            },
-            valueAxis: {
-                domain: {
-                    start: -1,
-                    end: -1
-                },
-                position: 'start',
-                ticks: {
-                    flag: false
-                }
-            }
-        },
-        additionalElements: {
-            gridLine: {
-                flag: {
-                    value: true,
-                    key: true
-                }
-            }
-        },
-        legend: {
-            position: 'top'
-        },
-        orientation: 'vertical',
-        charts: [
-            {
-                title: 'Рост стоимости',
-                type: 'line',
-                data: {
-                    dataSource: 'dataSet_large',
-                    keyField:  {
-                        name: 'brand',
-                        format: 'string'
-                    },
-                    valueField: [
-                        {
-                            name: 'price',
-                            format: 'money',
-                            title: 'Цены на автомобили по рынку длинное'
-                        },
-                        {
-                            name: 'count',
-                            format: 'integer',
-                            title: 'Количество автомобилей на душу населения'
-                        }
-                    ]
-                },
-                tooltip: {
-                    data: {
-                        fields: [
-                            {
-                                name: 'price',
-                                format: 'money'
-                            },
-                            {
-                                name: 'count',
-                                format: 'integer'
-                            }
-                        ]
-                    }
-                },
-            }
-        ]
-    }
     // options: {
-    //     type: 'polar',
+    //     type: '2d',
+    //     isSegmented: false,
+    //     axis: {
+    //         keyAxis: {
+    //             position: 'end',
+    //             ticks: {
+    //                 flag: false
+    //             }
+    //         },
+    //         valueAxis: {
+    //             domain: {
+    //                 start: -1,
+    //                 end: -1
+    //             },
+    //             position: 'start',
+    //             ticks: {
+    //                 flag: false
+    //             }
+    //         }
+    //     },
+    //     additionalElements: {
+    //         gridLine: {
+    //             flag: {
+    //                 value: true,
+    //                 key: true
+    //             }
+    //         }
+    //     },
     //     legend: {
     //         position: 'top'
     //     },
+    //     orientation: 'vertical',
     //     charts: [
     //         {
     //             title: 'Рост стоимости',
-    //             type: 'donut',
+    //             type: 'line',
     //             data: {
     //                 dataSource: 'dataSet_large',
     //                 keyField:  {
     //                     name: 'brand',
     //                     format: 'string'
     //                 },
-    //                 valueField: {
-    //                     name: 'price',
-    //                     format: 'money'
-    //                 },
-    //             },
-    //             appearanceOptions: {
-    //                 innerRadius: 60,
-    //                 padAngle: 0
+    //                 valueField: [
+    //                     {
+    //                         name: 'price',
+    //                         format: 'money',
+    //                         title: 'Цены на автомобили по рынку длинное'
+    //                     },
+    //                     {
+    //                         name: 'count',
+    //                         format: 'integer',
+    //                         title: 'Количество автомобилей на душу населения'
+    //                     }
+    //                 ]
     //             },
     //             tooltip: {
     //                 data: {
@@ -122,6 +81,47 @@ const configCars: Config = {
     //         }
     //     ]
     // }
+    options: {
+        type: 'polar',
+        legend: {
+            position: 'top'
+        },
+        charts: [
+            {
+                title: 'Рост стоимости',
+                type: 'donut',
+                data: {
+                    dataSource: 'dataSet_large',
+                    keyField:  {
+                        name: 'brand',
+                        format: 'string'
+                    },
+                    valueField: {
+                        name: 'price',
+                        format: 'money'
+                    },
+                },
+                appearanceOptions: {
+                    innerRadius: 60,
+                    padAngle: 0
+                },
+                tooltip: {
+                    data: {
+                        fields: [
+                            {
+                                name: 'price',
+                                format: 'money'
+                            },
+                            {
+                                name: 'count',
+                                format: 'integer'
+                            }
+                        ]
+                    }
+                },
+            }
+        ]
+    }
 }
 
 const configDemo: Config = {

@@ -1,10 +1,11 @@
 import { CLASSES } from "../modelOptions";
+import { LegendModel } from "./legendModel";
 
-type LegendItemsPosition = 'row' | 'column'
+export type LegendItemsDirection = 'row' | 'column'
 
 export class LegendCanvasModel
 {
-    public static getLegendHeight(texts: string[], blockWidth: number, marginLeft: number, marginRight: number, itemsPosition: LegendItemsPosition): number {
+    public static getLegendHeight(texts: string[], blockWidth: number, marginLeft: number, marginRight: number, itemsPosition: LegendItemsDirection): number {
         const legendWrapper = document.createElement('div');
         legendWrapper.style.display = 'flex';
         if(itemsPosition === 'column')
@@ -15,7 +16,7 @@ export class LegendCanvasModel
             const itemWrapper = document.createElement('div');
             const colorBlock = document.createElement('span');
             const textBlock = document.createElement('span');
-            itemWrapper.classList.add(CLASSES.legendItem);
+            itemWrapper.classList.add(LegendModel.getLegendItemClass(itemsPosition));
             colorBlock.classList.add(CLASSES.legendColor);
             textBlock.classList.add(CLASSES.legendLabel);
             textBlock.textContent = text;

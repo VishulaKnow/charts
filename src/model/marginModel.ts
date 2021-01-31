@@ -21,16 +21,17 @@ export class MarginModel
     }
 
     public static recalcPolarMarginWithScopedData(margin: BlockMargin, designerConfig: DesignerConfig, config: Config, legendBlockModel: LegendBlockModel, dataScope: DataScope): void {
-        margin.top -= legendBlockModel.top.size;
-        margin.bottom -= legendBlockModel.bottom.size;
-        margin.left -= legendBlockModel.left.size;
-        margin.right -= legendBlockModel.right.size;
+        const position = LegendModel.getLegendModel(config.options.type, config.options.legend.position, config.canvas.size).position;
+        if(position !== 'off') {
+            margin.top -= legendBlockModel.top.size;
+            margin.bottom -= legendBlockModel.bottom.size;
+            margin.left -= legendBlockModel.left.size;
+            margin.right -= legendBlockModel.right.size;
 
-        if(config.options.legend.position !== 'off' && config.options.type === 'polar') {
-            const position = config.options.legend.position
+            
             const legendSize = LegendModel.getLegendSize(config.options.type, position, dataScope.allowableKeys, designerConfig.canvas.legendBlock.maxWidth, config.canvas.size, legendBlockModel);
-            margin[position] += legendSize
-            legendBlockModel[config.options.legend.position].size = legendSize;
+            margin[position] += legendSize;            
+            legendBlockModel[position].size = legendSize;
         }    
     }
 
