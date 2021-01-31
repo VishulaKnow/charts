@@ -63,6 +63,12 @@ h3.title {
 .legend-item-inline:not(:first-of-type) {
     margin-left: 20px;
 }
+.legend-item-row {
+    display: flex;
+}
+.legend-item-row > span {
+    display: block;
+}
 .legend-item-row:not(:first-of-type) {
     margin-top: 15px;
 }
@@ -71,7 +77,10 @@ h3.title {
     font-family: "Roboto", sans-serif;
     font-weight: 300;
     color: #444444;
-    line-height: 140.62%;
+    width: calc(100% - 19px);
+    /* line-height: 140.62%; */
+}
+.legend-item-inline .legend-label {
     white-space: nowrap;
 }
 .legend-circle {

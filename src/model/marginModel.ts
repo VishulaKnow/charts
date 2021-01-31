@@ -63,6 +63,8 @@ export class MarginModel
 
     private static recalcMarginWithLegend(margin: BlockMargin, config: Config, legendMaxWidth: number, legendBlockModel: LegendBlockModel, data: DataSource): void {
         const legendPosition = LegendModel.getLegendModel(config.options.type, config.options.legend.position);
+        console.log(legendPosition);
+        
         if(legendPosition.position !== 'off') {
             let legendSize = 0;
             const charts = config.options.charts;

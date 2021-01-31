@@ -8,61 +8,102 @@ const configCars: Config = {
             height: 650
         }
     },
+    // options: {
+    //     type: '2d',
+    //     isSegmented: false,
+    //     axis: {
+    //         keyAxis: {
+    //             position: 'end',
+    //             ticks: {
+    //                 flag: false
+    //             }
+    //         },
+    //         valueAxis: {
+    //             domain: {
+    //                 start: -1,
+    //                 end: -1
+    //             },
+    //             position: 'start',
+    //             ticks: {
+    //                 flag: false
+    //             }
+    //         }
+    //     },
+    //     additionalElements: {
+    //         gridLine: {
+    //             flag: {
+    //                 value: true,
+    //                 key: true
+    //             }
+    //         }
+    //     },
+    //     legend: {
+    //         position: 'top'
+    //     },
+    //     orientation: 'vertical',
+    //     charts: [
+    //         {
+    //             title: 'Рост стоимости',
+    //             type: 'line',
+    //             data: {
+    //                 dataSource: 'dataSet_large',
+    //                 keyField:  {
+    //                     name: 'brand',
+    //                     format: 'string'
+    //                 },
+    //                 valueField: [
+    //                     {
+    //                         name: 'price',
+    //                         format: 'money',
+    //                         title: 'Цены на автомобили по рынку длинное'
+    //                     },
+    //                     {
+    //                         name: 'count',
+    //                         format: 'integer',
+    //                         title: 'Количество автомобилей на душу населения'
+    //                     }
+    //                 ]
+    //             },
+    //             tooltip: {
+    //                 data: {
+    //                     fields: [
+    //                         {
+    //                             name: 'price',
+    //                             format: 'money'
+    //                         },
+    //                         {
+    //                             name: 'count',
+    //                             format: 'integer'
+    //                         }
+    //                     ]
+    //                 }
+    //             },
+    //         }
+    //     ]
+    // }
     options: {
-        type: '2d',
-        isSegmented: false,
-        axis: {
-            keyAxis: {
-                position: 'end',
-                ticks: {
-                    flag: false
-                }
-            },
-            valueAxis: {
-                domain: {
-                    start: -1,
-                    end: -1
-                },
-                position: 'start',
-                ticks: {
-                    flag: false
-                }
-            }
-        },
-        additionalElements: {
-            gridLine: {
-                flag: {
-                    value: true,
-                    key: true
-                }
-            }
-        },
+        type: 'polar',
         legend: {
             position: 'top'
         },
-        orientation: 'vertical',
         charts: [
             {
                 title: 'Рост стоимости',
-                type: 'line',
+                type: 'donut',
                 data: {
                     dataSource: 'dataSet_large',
                     keyField:  {
                         name: 'brand',
                         format: 'string'
                     },
-                    valueField: [
-                        {
-                            name: 'price',
-                            format: 'money',
-                            title: 'Цены на автомобили по рынку длинное'
-                        },
-                        {
-                            name: 'count',
-                            format: 'integer',
-                            title: 'Количество автомобилей на душу населения'
-                        }
-                    ]
+                    valueField: {
+                        name: 'price',
+                        format: 'money'
+                    },
+                },
+                appearanceOptions: {
+                    innerRadius: 60,
+                    padAngle: 0
                 },
                 tooltip: {
                     data: {

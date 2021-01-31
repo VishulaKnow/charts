@@ -43,6 +43,7 @@ export class LegendModel
             else
                 legendPosition = 'right';
         }
+        
         return {
             position: legendPosition
         }
