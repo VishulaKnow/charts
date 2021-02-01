@@ -45,7 +45,7 @@ export class ChartRenderer
         
         Tooltip.renderTooltips(block, model, data);
         if(model.dataSettings.scope.hidedRecordsAmount !== 0)
-            RecordOverflowAlert.render(block, model.dataSettings.scope.hidedRecordsAmount, options.orient);
+            RecordOverflowAlert.render(block, model.dataSettings.scope.hidedRecordsAmount, 'top', options.orient);
     }
     
     public static renderPolar(block: Block, model: Model, data: DataSource) {
@@ -62,7 +62,7 @@ export class ChartRenderer
     
         Tooltip.renderTooltips(block, model, data);
         if(model.dataSettings.scope.hidedRecordsAmount !== 0)
-            RecordOverflowAlert.render(block, model.dataSettings.scope.hidedRecordsAmount);
+            RecordOverflowAlert.render(block, model.dataSettings.scope.hidedRecordsAmount, 'bottom');
     }
 
     public static renderInterval(block: Block, model: Model, data: DataSource): void {
@@ -88,7 +88,7 @@ export class ChartRenderer
         Legend.render(block, data, options, model.legendBlock, model.blockCanvas.size);
         Tooltip.renderTooltips(block, model, data);
         if(model.dataSettings.scope.hidedRecordsAmount !== 0)
-            RecordOverflowAlert.render(block, model.dataSettings.scope.hidedRecordsAmount, options.orient);
+            RecordOverflowAlert.render(block, model.dataSettings.scope.hidedRecordsAmount, 'top', options.orient);
     }
 
     private static render2DCharts(block: Block, charts: TwoDimensionalChartModel[], scales: Scales, data: DataSource, margin: BlockMargin, keyAxisOrient: Orient, barSettings: BarChartSettings, blockSize: Size, isSegmented: boolean) {      

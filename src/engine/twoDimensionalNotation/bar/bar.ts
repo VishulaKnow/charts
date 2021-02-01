@@ -87,7 +87,7 @@ export class Bar
                 .attr('class', this.barItemClass)
                 .style('clip-path', `url(${block.getClipPathId()})`);
 
-        const barAttrs = this.getStackBarAttrByKeyOrient(block, keyAxisOrient, scales, margin, chart.data.keyField.name, blockSize, barSettings);
+        const barAttrs = this.getStackBarAttrByKeyOrient(keyAxisOrient, scales, margin, chart.data.keyField.name, blockSize, barSettings);
        
         bars
             .attr('x', barAttrs.x)
@@ -153,7 +153,7 @@ export class Bar
         return attrs;
     }
 
-    private static getStackBarAttrByKeyOrient(block: Block, axisOrient: Orient, scales: Scales, margin: BlockMargin, keyField: string, blockSize: Size, barSettings: BarChartSettings): BarAttrs {
+    private static getStackBarAttrByKeyOrient(axisOrient: Orient, scales: Scales, margin: BlockMargin, keyField: string, blockSize: Size, barSettings: BarChartSettings): BarAttrs {
         const barStep = (Scale.getScaleWidth(scales.scaleKey));
         const barSize = barStep > barSettings.barMaxSize ? barSettings.barMaxSize : barStep;
         const barDiff = (barStep - barSize) / 2;
