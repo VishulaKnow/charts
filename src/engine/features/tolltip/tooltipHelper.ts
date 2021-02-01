@@ -1,4 +1,3 @@
-import { IntervalChart } from "../../../config/config";
 import { DataRow, DataSource, Field, IntervalChartModel, PolarChartModel, Size, TwoDimensionalChartModel } from "../../../model/model";
 import { ValueFormatter, } from "../../valueFormatter";
 
@@ -36,30 +35,17 @@ export class TooltipHelper
     public static getTooltipHtmlFor2DCharts(chart: TwoDimensionalChartModel, data: DataSource, keyValue: string): string {
         let text = '';
         chart.data.valueField.forEach((field, index) => {
-            text += `<div class="tooltip-group"><div class="tooltip-color"><span class="tooltip-circle" style="background-color: ${chart.elementColors[index % chart.elementColors.length]};"></span></div>`;
-            text += `<div class="tooltip-texts">`;
-            text += `<div class="tooltip-text-item">${this.getTooltipItemText(chart, data, keyValue, field)}</div>`;
-            text += '</div></div>';
+            text += this.getTooltipHtml(chart, data, keyValue, field, chart.elementColors[index % chart.elementColors.length].toString());
         });
         return text;
     }
 
     public static getTooltipHtmlForPolarChart(chart: PolarChartModel, data: DataSource, keyValue: string, markColor: string): string {
-        let text = '';
-        text += `<div class="tooltip-group"><div class="tooltip-color"><span class="tooltip-circle" style="background-color: ${markColor};"></span></div>`;
-        text += `<div class="tooltip-texts">`;
-        text += `<div class="tp-text-item">${this.getTooltipItemText(chart, data, keyValue, chart.data.valueField)}</div>`;
-        text += '</div></div>';
-        return text;
+        return this.getTooltipHtml(chart, data, keyValue, chart.data.valueField, markColor);
     }
 
     public static getTooltipHtmlForIntervalChart(chart: IntervalChartModel, data: DataSource, keyValue: string, markColor: string): string {
-        let text = '';
-        text += `<div class="tooltip-group"><div class="tooltip-color"><span class="tooltip-circle" style="background-color: ${markColor};"></span></div>`;
-        text += `<div class="tooltip-texts">`;
-        text += `<div class="tp-text-item">${this.getTooltipItemText(chart, data, keyValue, chart.data.valueField1)}</div>`;
-        text += '</div></div>';
-        return text;
+        return this.getTooltipHtml(chart, data, keyValue, chart.data.valueField1, markColor);
     }
 
     public static getTooltipCoordinate(pointer: [number, number]): TooltipCoordinate {
@@ -99,6 +85,15 @@ export class TooltipHelper
         return [coordinate[0] - TOOLTIP_ARROW_PADDING_X - pad, coordinate[1] - TOOLTIP_ARROW_PADDING_Y - (tooltipBlock.node() as HTMLElement).getBoundingClientRect().height];
     }
 
+    private static getTooltipHtml(chart: TwoDimensionalChartModel | PolarChartModel | IntervalChartModel, data: DataSource, keyValue: string, valueField: Field, markColor: string): string {
+        let text = '';
+        text += `<div class="tooltip-group"><div class="tooltip-color"><span class="tooltip-circle" style="background-color: ${markColor};"></span></div>`;
+        text += `<div class="tooltip-texts">`;
+        text += `<div class="tp-text-item">${this.getTooltipItemText(chart, data, keyValue, valueField)}</div>`;
+        text += '</div></div>';
+        return text;
+    }
+
     private static setTooltipArrowCoordinate(tooltipArrow: d3.Selection<d3.BaseType, unknown, HTMLElement, any>, pad: number = 0): void {
         if(pad !== 0)
             tooltipArrow.style('left', `${9 + Math.floor(pad)}px`);
@@ -123,7 +118,7 @@ export class TooltipHelper
         return elements.filter(d => d[keyFieldName] !== keyValue);
     }
     
-    private static getTooltipItemText(chart: TwoDimensionalChartModel | PolarChartModel | IntervalChart, data: DataSource, keyValue: string, valueField: Field): string {
+    private static getTooltipItemText(chart: TwoDimensionalChartModel | PolarChartModel | IntervalChartModel, data: DataSource, keyValue: string, valueField: Field): string {
         const row = data[chart.data.dataSource].find(d => d[chart.data.keyField.name] === keyValue);
         return `${row[chart.data.keyField.name]} - ${ValueFormatter.formatValue(valueField.format, row[valueField.name])}`;
     }
