@@ -26,7 +26,7 @@ const designerConfig: DesignerConfig = {
                 barDistance: 5
             },
             donut: {
-                minPartSize: 50
+                minPartSize: 10
             }
         }
     },

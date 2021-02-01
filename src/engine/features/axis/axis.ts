@@ -2,7 +2,7 @@ import * as d3 from "d3";
 import { AxisModelOptions, BlockMargin, IAxisModel, IScaleModel, Orient, ScaleKeyModel, ScaleValueModel, Size } from "../../../model/model";
 import { Helper } from "../../helper";
 import { Block } from "../../block/block";
-import { Scales } from "../scale/scale";
+import { Scale, Scales } from "../scale/scale";
 
 type TextAnchor = 'start' | 'end' | 'middle';
 
@@ -52,13 +52,16 @@ export class Axis
             .attr('class', `axis ${axisOptions.cssClass} data-label`)
             .call(axis);
 
-        this.cropLabels(block, scale, scaleOptions, axisOptions, blockSize);
-
-        if(axisOptions.orient === 'left' && axisOptions.type === 'key')
-            this.alignLabels(axisElement, 'start', axisOptions.maxLabelSize);
+        // this.cropLabels(block, scale, scaleOptions, axisOptions, blockSize);
         
         if(axisOptions.orient === 'bottom' && axisOptions.type === 'key' && axisOptions.labelPositition === 'rotated')
             this.rotateLabels(axisElement);
+
+        if(axisOptions.type === 'key')
+            axisElement.selectAll('.tick text').call(this.wrap, axisOptions.maxLabelSize, Scale.getScaleWidth(scale));
+
+        if(axisOptions.orient === 'left' && axisOptions.type === 'key')
+            this.alignLabels(axisElement, 'start', axisOptions.maxLabelSize);
     }
 
     private static setStepSize(blockSize: Size, margin: BlockMargin, axis: d3.Axis<any>, axisOptions: AxisModelOptions, scale: ScaleKeyModel | ScaleValueModel): void {
@@ -79,6 +82,10 @@ export class Axis
         const axisTextBlocks = axisElement.selectAll('text');
         axisTextBlocks.attr('text-anchor', anchor);
         axisTextBlocks.attr('x', -(maxLabelSize + AXIS_VERTICAL_LABEL_PADDING));
+
+        const spans = axisElement.selectAll('tspan');
+        spans.attr('text-anchor', anchor);
+        spans.attr('x', -(maxLabelSize + AXIS_VERTICAL_LABEL_PADDING));
     }
 
     private static setAxisLabelPaddingByOrient(axis: d3.Axis<any>, axisOptions: AxisModelOptions): void {
@@ -152,5 +159,35 @@ export class Axis
                 }
             }
         }
+    }
+
+    static wrap(text: d3.Selection<d3.BaseType, unknown, d3.BaseType, any>, width: number, bandWidth: number) {
+        text.each(function() {
+            let text = d3.select(this);
+            if(text.text().split(' ').length > 1) {
+                let words = text.text().split(/\s+/).reverse(),
+                    word,
+                    line: string[] = [],
+                    lineNumber = 0,
+                    y = text.attr("y"),
+                    dy = 1.4,
+                    tspan = text.text(null).append("tspan").attr("x", 0).attr("y", y).attr("dy", dy + "em").attr('text-anchor', 'start');
+                while (word = words.pop()) {
+                    line.push(word);
+                    tspan.text(line.join(" "));
+                    if (tspan.node().getComputedTextLength() > width && line.length > 1) {
+                        line.pop();
+                        tspan.text(line.join(" "));
+                        line = [word];
+                        tspan = text.append("tspan").attr("y", y).attr("dy", dy + "em").attr('text-anchor', 'start').text(word);
+                        lineNumber++;
+                    }
+                    if(lineNumber >= 1)
+                        break;
+                }
+                if(text.selectAll('tspan').size() > 1)
+                    text.attr('y', -(bandWidth / 2));
+            }
+        });
     }
 }
