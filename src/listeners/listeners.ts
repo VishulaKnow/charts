@@ -388,6 +388,18 @@ export default class Listeners
             thisClass.designerConfig.additionalElements.gridLine.flag.value = this.checked;
             thisClass.updateFull();
         });
+        document.querySelector('#pad-angle').addEventListener('input', function() {
+            thisClass.designerConfig.canvas.chartOptions.donut.padAngle = parseFloat(ListenersHelper.getInputValue('#pad-angle'));
+            thisClass.updateFull();
+        });
+        document.querySelector('#donut-min-thickness').addEventListener('input', function() {
+            thisClass.designerConfig.canvas.chartOptions.donut.minThickness = parseFloat(ListenersHelper.getInputValue('#donut-min-thickness'));
+            thisClass.updateFull();
+        });
+        document.querySelector('#donut-max-thickness').addEventListener('input', function() {
+            thisClass.designerConfig.canvas.chartOptions.donut.maxThickness = parseFloat(ListenersHelper.getInputValue('#donut-max-thickness'));
+            thisClass.updateFull();
+        });
     }
     
     private setCommonListeners(): void {
@@ -556,6 +568,9 @@ export default class Listeners
         ListenersHelper.setInputValue('#base-color', designerConfig.chart.style.palette[0].hex());
         ListenersHelper.setCheckboxValue('#designer-key-grid', designerConfig.additionalElements.gridLine.flag.key);
         ListenersHelper.setCheckboxValue('#designer-value-grid', designerConfig.additionalElements.gridLine.flag.value);
+        ListenersHelper.setInputValue('#pad-angle', designerConfig.canvas.chartOptions.donut.padAngle);
+        ListenersHelper.setInputValue('#donut-min-thickness', designerConfig.canvas.chartOptions.donut.minThickness);
+        ListenersHelper.setInputValue('#donut-max-thickness', designerConfig.canvas.chartOptions.donut.maxThickness);
         
         if(config.options.type === '2d') {
             ListenersHelper.setInputValue('#chart-2d-type', config.options.charts[0].type);

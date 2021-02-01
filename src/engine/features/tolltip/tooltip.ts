@@ -21,7 +21,7 @@ export class Tooltip
             if(model.options.type === '2d') {
                 this.rednerTooltipFor2DCharts(block, model.options.charts, data, model.options.isSegmented, model.blockCanvas.size);   
             } else if(model.options.type === 'polar') {
-                this.renderTooltipsForDonut(block, model.options.charts, data, model.blockCanvas.size, model.chartBlock.margin, Donut.getChartThickness());
+                this.renderTooltipsForDonut(block, model.options.charts, data, model.blockCanvas.size, model.chartBlock.margin, Donut.getChartThickness(model.chartSettings.donut));
             } else if(model.options.type === 'interval') {
                 this.renderTooltipsForInterval(block, model.options.charts, data, model.blockCanvas.size);
             }
