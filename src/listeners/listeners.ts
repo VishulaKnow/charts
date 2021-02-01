@@ -484,6 +484,12 @@ export default class Listeners
                 }
             }
         });
+        document.querySelector('#is-segmented').addEventListener('change', function() {
+            if(config.options.type === '2d') {
+                config.options.isSegmented = this.checked;
+                thisClass.updateFull();
+            }
+        });
     }
     
     private setAxisListeners(): void {
@@ -586,6 +592,7 @@ export default class Listeners
             ListenersHelper.setCheckboxValue('#config-key-grid', config.options.additionalElements.gridLine.flag.key);
             ListenersHelper.setCheckboxValue('#config-tick-key', config.options.axis.keyAxis.ticks.flag);
             ListenersHelper.setCheckboxValue('#config-tick-value', config.options.axis.valueAxis.ticks.flag);
+            ListenersHelper.setCheckboxValue('#is-segmented', config.options.isSegmented);
         } else if(config.options.type === 'polar') {
             ListenersHelper.setInputValue('#chart-polar-type', config.options.charts[0].type);
             ListenersHelper.setInputValue('#inner-radius', config.options.charts[0].appearanceOptions.innerRadius.toString());
