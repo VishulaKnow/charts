@@ -117,7 +117,7 @@ export class Bar
         const barDistance = barSettings.barDistance;
         const barStep = (Scale.getScaleWidth(scales.scaleKey) - barDistance * (barsAmount - 1)) / barsAmount;
         const barSize = barStep > barSettings.barMaxSize ? barSettings.barMaxSize : barStep;
-        const barDiff = (barStep - barSize) * barsAmount / 2
+        const barDiff = (barStep - barSize) * barsAmount / 2;
         const attrs: BarAttrs = {
             x: null,
             y: null,
@@ -154,7 +154,9 @@ export class Bar
     }
 
     private static getStackBarAttrByKeyOrient(block: Block, axisOrient: Orient, scales: Scales, margin: BlockMargin, keyField: string, blockSize: Size, barSettings: BarChartSettings): BarAttrs {
-        const barSize = Scale.getScaleWidth(scales.scaleKey)
+        const barStep = (Scale.getScaleWidth(scales.scaleKey));
+        const barSize = barStep > barSettings.barMaxSize ? barSettings.barMaxSize : barStep;
+        const barDiff = (barStep - barSize) / 2;
         const attrs: BarAttrs = {
             x: null,
             y: null,
@@ -163,11 +165,11 @@ export class Bar
         }
 
         if(axisOrient === 'top' || axisOrient === 'bottom') {
-            attrs.x = d => scales.scaleKey(d.data[keyField]) + margin.left;
+            attrs.x = d => scales.scaleKey(d.data[keyField]) + margin.left + barDiff;
             attrs.width = d => barSize;
         }
         if(axisOrient === 'left' || axisOrient === 'right') {
-            attrs.y = d => scales.scaleKey(d.data[keyField]) + margin.top;
+            attrs.y = d => scales.scaleKey(d.data[keyField]) + margin.top + barDiff;
             attrs.height = d => barSize;
         }
 
