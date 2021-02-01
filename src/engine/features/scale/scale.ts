@@ -44,7 +44,7 @@ export class Scale
         return scale(value);
     }
 
-    private static getScaleBand(domain: string[], range: RangeModel, bandSettings: BarChartSettings): d3.ScaleBand<string> {
+    private static getScaleBand(domain: string[], range: RangeModel, bandSettings: BarChartSettings, groupedElementsAmount: number = 2): d3.ScaleBand<string> {
         const scale = d3.scaleBand()
             .domain(domain)
             .range([range.start, range.end]);
@@ -56,15 +56,14 @@ export class Scale
             scale.paddingOuter(bandSettings.groupMinDistance / bandSize / 2);
         }
 
-        const domainLength = range.end - range.start;
-                
-        if(domain.length * bandSize + (domain.length - 1) * bandSettings.groupMaxDistance < domainLength) {
-            const diffSize = (domainLength - (domain.length * bandSize + (bandSize - 1) * bandSettings.groupMaxDistance)) / 2;
-            scale.paddingOuter(diffSize / scale.bandwidth());
-        }
-        // if(scale.bandwidth() > bandSettings.barMaxSize) {
-        //     scale.paddingOuter(5);
-        // }  
+        // const domainLength = range.end - range.start;
+        // const fillingDistance = domain.length * (bandSettings.barMaxSize * groupedElementsAmount + bandSettings.barDistance * (groupedElementsAmount - 1)) 
+        //     + (domain.length - 1) * bandSettings.groupMaxDistance;
+        
+        // if(fillingDistance < domainLength) {
+        //     const diffSize = (domainLength - fillingDistance);
+        //     scale.paddingOuter(diffSize / scale.step());
+        // }
 
         return scale;
     }

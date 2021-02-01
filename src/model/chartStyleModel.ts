@@ -21,7 +21,7 @@ export class ChartStyleModel
     }   
 
     public static getElementColorPalette(palette: Color[], notation: ChartNotation, elementsAmount: number, chartIndex: number = 0): Color[] {
-        return palette;    
+        return this.generatePalette(palette, elementsAmount);    
     }
 
     private static generatePalette(baseColors: Color[], colorAmount: number): Color[] {

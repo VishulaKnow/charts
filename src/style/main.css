@@ -148,6 +148,7 @@ h3.title {
     color: #00BC8B;
     font-family: "Roboto", sans-serif;
     font-weight: bold;
+    text-transform: uppercase;
 }
 
 .grid-line {
