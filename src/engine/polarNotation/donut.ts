@@ -3,12 +3,9 @@ import { Color } from "d3";
 import { BlockMargin, DataRow, PolarChartAppearanceModel, PolarChartModel, Size } from "../../model/model";
 import { Helper } from "../helper";
 import { Block } from "../block/block";
+import { Aggregator } from "./aggregator";
 
-interface Aggregator {
-    name: string;
-    value: number;
-}
-interface Translate {
+export interface Translate {
     x: number;
     y: number;
 }
@@ -43,7 +40,7 @@ export class Donut
     
         Helper.setCssClasses(arcs, chart.cssClasses);
         this.setElementsColor(items, chart.elementColors);
-        this.renderAggregator(block, data, chart.data.valueField.name, radius, chart.appearanceOptions, translate);      
+        Aggregator.render(block, data, chart.data.valueField.name, radius, chart.appearanceOptions, translate);      
     }
     
     public static getAllArcs(block: Block): d3.Selection<SVGGElement, d3.PieArcDatum<DataRow>, SVGGElement, unknown> {
@@ -56,14 +53,6 @@ export class Donut
         const arc = this.getArcGenerator(outerRadius, innerRadius * 0.01 * outerRadius);
 
         return arc.centroid(dataItem);
-    }
-
-    private static renderAggregator(block: Block, data: DataRow[], valueField: string, radius: number, appearanceOptions: PolarChartAppearanceModel, translate: Translate): void {
-        const aggregator: Aggregator = {
-            name: 'Сумма',
-            value: d3.sum(data.map(d => d[valueField]))
-        }
-        this.renderDonutCenterText(block, radius * 0.01 * appearanceOptions.innerRadius, aggregator, translate);
     }
 
     private static getTranslate(margin: BlockMargin, blockSize: Size): Translate {
@@ -89,23 +78,6 @@ export class Donut
             .padAngle(padAngle)
             .sort(null)
             .value(d => d[valueField]);
-    }
-    
-    private static renderDonutCenterText(block: Block, innerRadius: number, aggregator: Aggregator, translate: Translate): void {
-        if(innerRadius > 100) {
-            const text = block.getSvg()
-                .append('text')
-                .attr('text-anchor', 'middle')
-                .attr('class', 'donut-aggregator')
-                .attr('transform', `translate(${translate.x}, ${translate.y})`)
-                .html(`${aggregator.name}: ${aggregator.value}`);
-    
-            let size = 10;
-            while(text.node().getBBox().width < innerRadius) {
-                size++;
-                text.style('font-size', size + 'px');
-            }
-        }
     }
 
     private static setElementsColor(arcItems: d3.Selection<SVGGElement, d3.PieArcDatum<DataRow>, d3.BaseType, unknown>, colorPalette: Color[]): void {

@@ -51,17 +51,16 @@ export class Axis
             .attr('transform', `translate(${axisOptions.translate.translateX}, ${axisOptions.translate.translateY})`)
             .attr('class', `axis ${axisOptions.cssClass} data-label`)
             .call(axis);
-
-        // this.cropLabels(block, scale, scaleOptions, axisOptions, blockSize);
         
         if(axisOptions.orient === 'bottom' && axisOptions.type === 'key' && axisOptions.labelPositition === 'rotated')
             this.rotateLabels(axisElement);
 
-        if(axisOptions.type === 'key')
+        if(axisOptions.orient === 'left' && axisOptions.type === 'key') {
             axisElement.selectAll('.tick text').call(this.wrap, axisOptions.maxLabelSize, Scale.getScaleWidth(scale));
-
-        if(axisOptions.orient === 'left' && axisOptions.type === 'key')
             this.alignLabels(axisElement, 'start', axisOptions.maxLabelSize);
+        } else {
+            this.cropLabels(block, scale, scaleOptions, axisOptions, blockSize);
+        }
     }
 
     private static setStepSize(blockSize: Size, margin: BlockMargin, axis: d3.Axis<any>, axisOptions: AxisModelOptions, scale: ScaleKeyModel | ScaleValueModel): void {
@@ -161,7 +160,7 @@ export class Axis
         }
     }
 
-    static wrap(text: d3.Selection<d3.BaseType, unknown, d3.BaseType, any>, width: number, bandWidth: number) {
+    private static wrap(text: d3.Selection<d3.BaseType, unknown, d3.BaseType, any>, width: number, bandWidth: number) {
         text.each(function() {
             let text = d3.select(this);
             if(text.text().split(' ').length > 1) {
@@ -182,11 +181,15 @@ export class Axis
                         tspan = text.append("tspan").attr("y", y).attr("dy", dy + "em").attr('text-anchor', 'start').text(word);
                         lineNumber++;
                     }
-                    if(lineNumber >= 1)
+                    if(lineNumber >= 1) {
+                        if(words.length > 0)
+                            tspan.text(tspan.text() + '...')
                         break;
+                    }
                 }
-                if(text.selectAll('tspan').size() > 1)
+                if(text.selectAll('tspan').size() > 1) {
                     text.attr('y', -(bandWidth / 2));
+                }
             }
         });
     }
