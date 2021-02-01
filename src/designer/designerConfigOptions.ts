@@ -27,7 +27,10 @@ const designerConfig: DesignerConfig = {
                 groupMaxDistance: 35
             },
             donut: {
-                minPartSize: 10
+                minPartSize: 10,
+                padAngle: 0,
+                minThickness: 40,
+                maxThickness: 60
             }
         }
     },

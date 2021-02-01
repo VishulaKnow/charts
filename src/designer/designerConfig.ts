@@ -24,6 +24,13 @@ export interface BarOptionsCanvas {
     barDistance: number;
 }
 
+export interface DonutOptionsCanvas {
+    minPartSize: number;
+    padAngle: number;
+    minThickness: number;
+    maxThickness: number;
+}
+
 export interface AxisLabelCanvas {
     maxSize: AxisLabelSize;
 }
@@ -58,10 +65,6 @@ interface Canvas {
 interface ChartOptionsCanvas {
     bar: BarOptionsCanvas;
     donut: DonutOptionsCanvas;
-}
-
-interface DonutOptionsCanvas {
-    minPartSize: number;
 }
 
 interface LegendBlockCanvas {

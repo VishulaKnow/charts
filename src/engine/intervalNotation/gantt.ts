@@ -55,8 +55,8 @@ export class Gantt
             width: null,
             height: null
         }
-        const itemSize = Scale.getScaleWidth(scales.scaleKey) > barSettings.barMaxSize 
-            ? barSettings.barMaxSize 
+        const itemSize = Scale.getScaleWidth(scales.scaleKey) > barSettings.maxBarWidth 
+            ? barSettings.maxBarWidth 
             : Scale.getScaleWidth(scales.scaleKey);
         const sizeDiff = (Scale.getScaleWidth(scales.scaleKey) - itemSize) / 2;       
 

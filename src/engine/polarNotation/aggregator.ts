@@ -1,5 +1,5 @@
 import * as d3 from "d3";
-import { DataRow, PolarChartAppearanceModel } from "../../model/model";
+import { DataRow, PolarChartSettings } from "../../model/model";
 import { Block } from "../block/block";
 import { Translate } from "./donut";
 
@@ -10,7 +10,7 @@ export interface IAggregator {
 
 export class Aggregator
 {
-    public static render(block: Block, data: DataRow[], valueField: string, radius: number, appearanceOptions: PolarChartAppearanceModel, translate: Translate): void {
+    public static render(block: Block, data: DataRow[], valueField: string, radius: number, appearanceOptions: PolarChartSettings, translate: Translate): void {
         const aggregator: IAggregator = {
             name: 'Сумма',
             value: d3.sum(data.map(d => d[valueField]))

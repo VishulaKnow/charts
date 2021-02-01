@@ -1,5 +1,5 @@
 import { Config } from '../config/config';
-import { Model, BlockCanvas, ChartBlock, TwoDimensionalOptionsModel, PolarOptionsModel, BlockMargin, LegendBlockModel, DataSettings, ChartSettings, DataFormat, DataScope, DataSource, IntervalOptionsModel } from './model';
+import { Model, BlockCanvas, ChartBlock, TwoDimensionalOptionsModel, PolarOptionsModel, BlockMargin, LegendBlockModel, DataSettings, ChartSettings, DataFormat, DataScope, DataSource, IntervalOptionsModel, BarChartSettings, PolarChartSettings } from './model';
 import { MarginModel } from './marginModel';
 import { TwoDimensionalModel } from './twoDimensionalModel';
 import { PolarModel } from './polarModel';
@@ -7,7 +7,7 @@ import '../style/main.css'
 
 import designerConfig from '../designer/designerConfigOptions';
 import { DataManagerModel } from './dataManagerModel';
-import { DesignerConfig } from '../designer/designerConfig';
+import { BarOptionsCanvas, DesignerConfig, DonutOptionsCanvas } from '../designer/designerConfig';
 import { IntervalModel } from './intervalModel';
 import { LegendModel } from './legendModel/legendModel';
 
@@ -55,14 +55,10 @@ function getDataSettings(dataScope: DataScope): DataSettings {
     }
 }
 
-function getChartSettings(designerConfig: DesignerConfig): ChartSettings {
+function getChartSettings(barSettings: BarOptionsCanvas, donutSettings: DonutOptionsCanvas): ChartSettings {
     return {
-        bar: {
-            groupMinDistance: designerConfig.canvas.chartOptions.bar.groupMinDistance,
-            barDistance: designerConfig.canvas.chartOptions.bar.barDistance,
-            barMaxSize: designerConfig.canvas.chartOptions.bar.maxBarWidth,
-            groupMaxDistance: designerConfig.canvas.chartOptions.bar.groupMaxDistance
-        }
+        bar: {...barSettings},
+        polar: null
     }
 }
 
@@ -86,7 +82,7 @@ export function assembleModel(config: Config, data: DataSource): Model {
     const chartBlock = getChartBlock(margin);
     const options = getOptions(config, designerConfig, margin, dataScope, preparedData);
     const dataSettings = getDataSettings(dataScope);
-    const chartSettings = getChartSettings(designerConfig);
+    const chartSettings = getChartSettings(designerConfig.canvas.chartOptions.bar, designerConfig.canvas.chartOptions.donut);
     const dataFormat = getDataFormat(designerConfig);
     
     return {

@@ -1,6 +1,6 @@
 import * as d3 from "d3";
 import { Color } from "d3";
-import { BlockMargin, DataRow, PolarChartAppearanceModel, PolarChartModel, Size } from "../../model/model";
+import { BlockMargin, DataRow, PolarChartModel, Size } from "../../model/model";
 import { Helper } from "../helper";
 import { Block } from "../block/block";
 import { Aggregator } from "./aggregator";

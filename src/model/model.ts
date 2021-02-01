@@ -115,7 +115,7 @@ export interface PolarOptionsModel {
     charts: PolarChartModel[];
     legend: ILegendModel;
 }
-export interface PolarChartAppearanceModel {
+export interface PolarChartSettings {
     innerRadius: number;
     padAngle: number
 }
@@ -139,7 +139,7 @@ export interface IntervalChartModel extends ChartModel {
 export interface PolarChartModel extends ChartModel {
     type: PolarChartType;
     data: PolarChartDataModel;
-    appearanceOptions: PolarChartAppearanceModel;
+    appearanceOptions: PolarChartSettings;
 }
 export interface Model {
     blockCanvas: BlockCanvas;
@@ -162,6 +162,7 @@ export interface TwoDimensionalValueField extends Field {
 
 export interface ChartSettings {
     bar: BarChartSettings;
+    polar: PolarChartSettings;
 }
 
 export interface LegendBlockModel {
@@ -218,10 +219,11 @@ interface IntervalChartDataModel {
 }
 
 export interface BarChartSettings {
+    groupMaxDistance: number;
     groupMinDistance: number;
     barDistance: number;
-    barMaxSize: number;
-    groupMaxDistance: number;
+    maxBarWidth: number;
+    minBarWidth: number;
 }
 
 interface LegendBlockCanvas {
