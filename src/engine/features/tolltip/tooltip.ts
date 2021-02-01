@@ -1,5 +1,5 @@
 import * as d3 from "d3";
-import { BlockMargin, DataRow, DataSource, Field, IntervalChartModel, Model, PolarChartModel, Size, TwoDimensionalChartModel } from "../../../model/model";
+import { BlockMargin, DataRow, DataSource, IntervalChartModel, Model, PolarChartModel, Size, TwoDimensionalChartModel } from "../../../model/model";
 import { Helper } from "../../helper";
 import { Block } from "../../block/block";
 import { DotEdgingAttrs, TooltipCoordinate, TooltipHelper } from "./tooltipHelper";
@@ -31,7 +31,7 @@ export class Tooltip
     private static rednerTooltipFor2DCharts(block: Block, charts: TwoDimensionalChartModel[], data: DataSource, isSegmented: boolean, blockSize: Size): void {
         charts.forEach(chart => {
             if(chart.type === 'bar') {
-                this.renderTooltipForBar(block, Bar.getAllBarItems(block), data, chart, isSegmented, blockSize);
+                this.renderTooltipForBars(block, Bar.getAllBarItems(block), data, chart, isSegmented, blockSize);
             } else if(chart.type === 'line') {
                 this.renderTooltipForDots(block, Dot.getAllDots(block, chart.cssClasses), data, chart, false, blockSize);
             } else {
@@ -88,16 +88,16 @@ export class Tooltip
         });
     }
 
-    private static renderTooltipForBar(block: Block, elemets: d3.Selection<d3.BaseType, DataRow, d3.BaseType, unknown>, data: DataSource, chart: TwoDimensionalChartModel, isSegmented: boolean, blockSize: Size): void {
+    private static renderTooltipForBars(block: Block, elemets: d3.Selection<d3.BaseType, DataRow, d3.BaseType, unknown>, data: DataSource, chart: TwoDimensionalChartModel, isSegmented: boolean, blockSize: Size): void {
         const tooltipBlock = this.renderTooltipBlock(block);
         const tooltipContent = this.getTooltipContentBlock(tooltipBlock);
         const tooltipArrow = this.renderTooltipArrow(tooltipBlock);
         const thisClass = this;
 
         elemets
-            .on('mouseover', function(event, d) {
+            .on('mouseover', function(event, dataRow) {
                 tooltipBlock.style('display', 'block');
-                const key = TooltipHelper.getKeyForTooltip(d, chart.data.keyField.name, isSegmented);
+                const key = TooltipHelper.getKeyForTooltip(dataRow, chart.data.keyField.name, isSegmented);
                 tooltipContent.html(`${TooltipHelper.getTooltipHtmlFor2DCharts(chart, data, key)}`);
 
                 const coordinatePointer: [number, number] = TooltipHelper.getTooltipBlockCoordinate(d3.select(this), tooltipBlock, 'rect', blockSize, tooltipArrow);
@@ -121,12 +121,12 @@ export class Tooltip
         const thisClass = this;
 
         elemets
-            .on('mouseover', function(event, d) {
+            .on('mouseover', function(event, dataRow) {
                 tooltipBlock.style('display', 'block');
-                const key = d.data[charts[0].data.keyField.name];
+                const key = dataRow.data[charts[0].data.keyField.name];
                 tooltipContent.html(TooltipHelper.getTooltipHtmlForPolarChart(charts[0], data, key, d3.select(this).select('path').style('fill')));
                 
-                const coordinatePointer: [number, number] = TooltipHelper.getRecalcedCoordinateByArrow(Donut.getArcCentroid(blockSize, margin, d, charts[0].appearanceOptions.innerRadius), tooltipBlock, blockSize, tooltipArrow);
+                const coordinatePointer: [number, number] = TooltipHelper.getRecalcedCoordinateByArrow(Donut.getArcCentroid(blockSize, margin, dataRow, charts[0].appearanceOptions.innerRadius), tooltipBlock, blockSize, tooltipArrow);
                 const tooltipCoordinate = TooltipHelper.getTooltipCoordinate(coordinatePointer);
                 thisClass.setTooltipCoordinate(tooltipBlock, tooltipCoordinate);
 
@@ -147,9 +147,9 @@ export class Tooltip
         const thisClass = this;
 
         elemets
-            .on('mouseover', function(event, d) {
+            .on('mouseover', function(event, dataRow) {
                 tooltipBlock.style('display', 'block');
-                const key = TooltipHelper.getKeyForTooltip(d, chart.data.keyField.name, false);
+                const key = TooltipHelper.getKeyForTooltip(dataRow, chart.data.keyField.name, false);
                 tooltipContent.html(`${TooltipHelper.getTooltipHtmlForIntervalChart(chart, data, key, d3.select(this).style('fill'))}`);
 
                 const coordinatePointer: [number, number] = TooltipHelper.getTooltipBlockCoordinate(d3.select(this), tooltipBlock, 'rect', blockSize, tooltipArrow);
@@ -164,34 +164,6 @@ export class Tooltip
             elemets.style('opacity', 1);
             tooltipBlock.style('display', 'none');
         });
-    }
-
-    private static renderDotsEdging(block: Block, attrs: DotEdgingAttrs, color: string): void {
-        block.getChartBlock()
-            .insert('circle', '.dot')
-            .attr('class', 'dot-edging-internal')
-            .attr('cx', attrs.cx)
-            .attr('cy', attrs.cy)
-            .attr('r', 10.5)
-            .style('opacity', 0.4)
-            .style('fill', color)
-            .style('pointer-events', 'none');
-
-        block.getChartBlock()
-            .insert('circle', '.dot')
-            .attr('class', 'dot-edging-external')
-            .attr('cx', attrs.cx)
-            .attr('cy', attrs.cy)
-            .attr('r', 15.5)
-            .style('opacity', 0.2)
-            .style('fill', color)
-            .style('pointer-events', 'none');
-    }
-    
-    private static removeDotsEdging(block: Block): void {
-        block.getChartBlock()
-            .selectAll('.dot-edging-external, .dot-edging-internal')
-            .remove();
     }
 
     private static renderTooltipWrapper(block: Block): void {
@@ -244,5 +216,33 @@ export class Tooltip
 
     private static getTooltipContentBlock(tooltipBlock: d3.Selection<d3.BaseType, unknown, HTMLElement, any>): d3.Selection<d3.BaseType, unknown, HTMLElement, any> {
         return tooltipBlock.select(`.${this.tooltipContentClass}`);
+    }
+
+    private static renderDotsEdging(block: Block, attrs: DotEdgingAttrs, color: string): void {
+        block.getChartBlock()
+            .insert('circle', '.dot')
+            .attr('class', 'dot-edging-internal')
+            .attr('cx', attrs.cx)
+            .attr('cy', attrs.cy)
+            .attr('r', 10.5)
+            .style('opacity', 0.4)
+            .style('fill', color)
+            .style('pointer-events', 'none');
+
+        block.getChartBlock()
+            .insert('circle', '.dot')
+            .attr('class', 'dot-edging-external')
+            .attr('cx', attrs.cx)
+            .attr('cy', attrs.cy)
+            .attr('r', 15.5)
+            .style('opacity', 0.2)
+            .style('fill', color)
+            .style('pointer-events', 'none');
+    }
+    
+    private static removeDotsEdging(block: Block): void {
+        block.getChartBlock()
+            .selectAll('.dot-edging-external, .dot-edging-internal')
+            .remove();
     }
 }

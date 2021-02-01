@@ -82,15 +82,16 @@ export class TooltipHelper
         if((tooltipBlock.node() as HTMLElement).getBoundingClientRect().width + coordinate[0] - TOOLTIP_ARROW_PADDING_X > blockSize.width)
             pad = (tooltipBlock.node() as HTMLElement).getBoundingClientRect().width + coordinate[0] - TOOLTIP_ARROW_PADDING_X - blockSize.width;
         this.setTooltipArrowCoordinate(tooltipArrow, pad);
+
         return [coordinate[0] - TOOLTIP_ARROW_PADDING_X - pad, coordinate[1] - TOOLTIP_ARROW_PADDING_Y - (tooltipBlock.node() as HTMLElement).getBoundingClientRect().height];
     }
 
     private static getTooltipHtml(chart: TwoDimensionalChartModel | PolarChartModel | IntervalChartModel, data: DataSource, keyValue: string, valueField: Field, markColor: string): string {
-        let text = '';
-        text += `<div class="tooltip-group"><div class="tooltip-color"><span class="tooltip-circle" style="background-color: ${markColor};"></span></div>`;
+        let text = `<div class="tooltip-group"><div class="tooltip-color"><span class="tooltip-circle" style="background-color: ${markColor};"></span></div>`;
         text += `<div class="tooltip-texts">`;
         text += `<div class="tp-text-item">${this.getTooltipItemText(chart, data, keyValue, valueField)}</div>`;
         text += '</div></div>';
+        
         return text;
     }
 

@@ -19,7 +19,8 @@ export interface DesignerConfig {
 export interface BarOptionsCanvas {
     minBarWidth: number;
     maxBarWidth: number;
-    groupDistance: number;
+    groupMinDistance: number;
+    groupMaxDistance: number;
     barDistance: number;
 }
 

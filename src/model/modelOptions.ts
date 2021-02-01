@@ -58,9 +58,10 @@ function getDataSettings(dataScope: DataScope): DataSettings {
 function getChartSettings(designerConfig: DesignerConfig): ChartSettings {
     return {
         bar: {
-            groupDistance: designerConfig.canvas.chartOptions.bar.groupDistance,
+            groupMinDistance: designerConfig.canvas.chartOptions.bar.groupMinDistance,
             barDistance: designerConfig.canvas.chartOptions.bar.barDistance,
-            barMaxSize: designerConfig.canvas.chartOptions.bar.maxBarWidth
+            barMaxSize: designerConfig.canvas.chartOptions.bar.maxBarWidth,
+            groupMaxDistance: designerConfig.canvas.chartOptions.bar.groupMaxDistance
         }
     }
 }

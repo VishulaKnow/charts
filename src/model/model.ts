@@ -217,9 +217,10 @@ interface IntervalChartDataModel {
 }
 
 export interface BarChartSettings {
-    groupDistance: number;
+    groupMinDistance: number;
     barDistance: number;
     barMaxSize: number;
+    groupMaxDistance: number;
 }
 
 interface LegendBlockCanvas {

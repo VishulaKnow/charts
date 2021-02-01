@@ -50,13 +50,13 @@ export class Scale
             .range([range.start, range.end]);
                 
         const bandSize = scale.bandwidth();
-        if(bandSettings.groupDistance < bandSize) {
-            scale.paddingInner(bandSettings.groupDistance / bandSize);
-            scale.paddingOuter(bandSettings.groupDistance / bandSize / 2);
-        }
+        // if(bandSettings.groupMinDistance < bandSize) {
+        //     scale.paddingInner(bandSettings.groupMinDistance / bandSize);
+        //     scale.paddingOuter(bandSettings.groupMinDistance / bandSize / 2);
+        // }
         // if(scale.bandwidth() > bandSettings.barMaxSize) {
         //     scale.paddingOuter(5);
-        // }       
+        // }  
 
         return scale;
     }
