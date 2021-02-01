@@ -40,6 +40,8 @@ export class Donut
     
         Helper.setCssClasses(arcs, chart.cssClasses);
         this.setElementsColor(items, chart.elementColors);
+        console.log(radius, chart.appearanceOptions.innerRadius);
+        
         Aggregator.render(block, data, chart.data.valueField.name, radius, chart.appearanceOptions, translate);      
     }
     

@@ -144,7 +144,8 @@ h3.title {
     stroke-width: 1px;
 }
 
-.donut-aggregator {
+.aggregator-value, .aggregator-name {
+    color: #00BC8B;
     font-family: "Roboto", sans-serif;
     font-weight: bold;
 }
