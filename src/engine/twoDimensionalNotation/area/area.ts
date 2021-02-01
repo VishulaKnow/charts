@@ -24,6 +24,10 @@ export class Area
             this.renderGrouped(block, scales, data, margin, keyAxisOrient, chart, blockSize);
     }
 
+    private static setChartOpacity(): void {
+        
+    }
+
     private static renderGrouped(block: Block, scales: Scales, data: DataRow[], margin: BlockMargin, keyAxisOrient: Orient, chart: TwoDimensionalChartModel, blockSize: Size): void {
         const area = this.getAreaGenerator(keyAxisOrient);
         chart.data.valueField.forEach((field, fieldIndex) => {
@@ -68,8 +72,7 @@ export class Area
 
         stackedData.forEach((sd, index) => {
             Dot.render(block, sd, keyAxisOrient, scales, margin, chart.data.keyField.name, '1', chart.cssClasses, index, chart.elementColors, blockSize, true);
-        }); 
-        
+        });
     }
 
     public static updateAreaChartByValueAxis(block: Block, scales: Scales, data: DataRow[], margin: BlockMargin, chart: TwoDimensionalChartModel, keyAxisOrient: Orient, blockSize: Size): void {
