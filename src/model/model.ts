@@ -43,6 +43,7 @@ export interface ScaleKeyModel {
     domain: any[];
     range: RangeModel;
     type: ScaleKeyType;
+    elementsAmount: number;
 }
 
 export interface ScaleValueModel {

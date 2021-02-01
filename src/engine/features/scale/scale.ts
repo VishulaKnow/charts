@@ -50,10 +50,18 @@ export class Scale
             .range([range.start, range.end]);
                 
         const bandSize = scale.bandwidth();
-        // if(bandSettings.groupMinDistance < bandSize) {
-        //     scale.paddingInner(bandSettings.groupMinDistance / bandSize);
-        //     scale.paddingOuter(bandSettings.groupMinDistance / bandSize / 2);
-        // }
+
+        if(bandSettings.groupMinDistance < bandSize) {
+            scale.paddingInner(bandSettings.groupMinDistance / bandSize);
+            scale.paddingOuter(bandSettings.groupMinDistance / bandSize / 2);
+        }
+
+        const domainLength = range.end - range.start;
+                
+        if(domain.length * bandSize + (domain.length - 1) * bandSettings.groupMaxDistance < domainLength) {
+            const diffSize = (domainLength - (domain.length * bandSize + (bandSize - 1) * bandSettings.groupMaxDistance)) / 2;
+            scale.paddingOuter(diffSize / scale.bandwidth());
+        }
         // if(scale.bandwidth() > bandSettings.barMaxSize) {
         //     scale.paddingOuter(5);
         // }  

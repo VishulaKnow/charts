@@ -69,8 +69,6 @@ export default class Listeners
     private updateFull(): void {
         this.dropAxisDomain(this.config);
         const model = getUpdatedModel(this.config, this.data);
-        console.log(this.config);
-        
         const preparedData = getPreparedData(model, this.data, this.config);
         this.engine.updateFullBlock(model, preparedData);
     }

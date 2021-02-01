@@ -7,6 +7,7 @@ import { DataManagerModel } from "./dataManagerModel";
 import { GridLineModel } from "./gridLineModel";
 import { LegendModel } from "./legendModel/legendModel";
 import { AdditionalElementsOptions, BlockMargin, DataScope, DataSource, IntervalChartModel, IntervalOptionsModel } from "./model";
+import { ModelHelper } from "./modelHelper";
 import { AxisType } from "./modelOptions";
 import { ScaleModel, ScaleType } from "./scaleModel";
 
@@ -24,7 +25,8 @@ export class IntervalModel {
                         start: 0,
                         end: ScaleModel.getScaleRangePeek(ScaleType.Key, configOptions.orientation, margin, config.canvas.size)
                     },
-                    type: ScaleModel.getScaleKeyType(configOptions.charts)
+                    type: ScaleModel.getScaleKeyType(configOptions.charts),
+                    elementsAmount: configOptions.charts.length
                 },
                 scaleValue: {
                     domain: ScaleModel.getScaleDateValueDomain(data, configOptions.charts, configOptions.axis.keyAxis.position, dataScope.allowableKeys),

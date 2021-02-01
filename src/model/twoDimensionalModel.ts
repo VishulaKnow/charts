@@ -1,5 +1,5 @@
 import { Color } from "d3";
-import { Config, TwoDimensionalChart, TwoDimensionalOptions } from "../config/config";
+import { Config, TwoDimensionalChart, TwoDimensionalChartType, TwoDimensionalOptions } from "../config/config";
 import { DesignerConfig } from "../designer/designerConfig";
 import { AxisModel } from "./axisModel";
 import { ChartStyleModel } from "./chartStyleModel";
@@ -27,7 +27,8 @@ export class TwoDimensionalModel
                         start: 0,
                         end: ScaleModel.getScaleRangePeek(ScaleType.Key, configOptions.orientation, margin, config.canvas.size)
                     },
-                    type: ScaleModel.getScaleKeyType(configOptions.charts)
+                    type: ScaleModel.getScaleKeyType(configOptions.charts),
+                    elementsAmount: ModelHelper.getMaxNumberValue(this.getChartsByType(configOptions.charts, 'bar').map(chart => chart.data.valueField.length)) || 1
                 },
                 scaleValue: {
                     domain: ScaleModel.getScaleLinearValueDomain(configOptions.axis.valueAxis.domain, data, configOptions),
@@ -91,5 +92,9 @@ export class TwoDimensionalModel
         return {
             gridLine: GridLineModel.getGridLineOptions(options, designerConfig)
         }
+    }
+
+    private static getChartsByType(charts: TwoDimensionalChart[], type: TwoDimensionalChartType): TwoDimensionalChart[] {
+        return charts.filter(chart => chart.type === type);
     }
 }
