@@ -115,9 +115,10 @@ export interface PolarOptionsModel {
     charts: PolarChartModel[];
     legend: ILegendModel;
 }
-export interface PolarChartSettings {
-    innerRadius: number;
-    padAngle: number
+export interface DonutChartSettings {
+    maxThickness: number;
+    minThickness: number;
+    padAngle: number;
 }
 
 interface ChartModel {
@@ -139,7 +140,6 @@ export interface IntervalChartModel extends ChartModel {
 export interface PolarChartModel extends ChartModel {
     type: PolarChartType;
     data: PolarChartDataModel;
-    appearanceOptions: PolarChartSettings;
 }
 export interface Model {
     blockCanvas: BlockCanvas;
@@ -162,7 +162,7 @@ export interface TwoDimensionalValueField extends Field {
 
 export interface ChartSettings {
     bar: BarChartSettings;
-    polar: PolarChartSettings;
+    donut: DonutChartSettings;
 }
 
 export interface LegendBlockModel {

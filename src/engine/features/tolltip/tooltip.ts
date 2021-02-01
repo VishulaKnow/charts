@@ -21,7 +21,7 @@ export class Tooltip
             if(model.options.type === '2d') {
                 this.rednerTooltipFor2DCharts(block, model.options.charts, data, model.options.isSegmented, model.blockCanvas.size);   
             } else if(model.options.type === 'polar') {
-                this.renderTooltipsForDonut(block, model.options.charts, data, model.blockCanvas.size, model.chartBlock.margin);
+                this.renderTooltipsForDonut(block, model.options.charts, data, model.blockCanvas.size, model.chartBlock.margin, Donut.getChartThickness());
             } else if(model.options.type === 'interval') {
                 this.renderTooltipsForInterval(block, model.options.charts, data, model.blockCanvas.size);
             }
@@ -40,15 +40,15 @@ export class Tooltip
         });
     }
 
-    private static renderTooltipsForDonut(block: Block, charts: PolarChartModel[], data: DataSource, blockSize: Size, margin: BlockMargin): void {
-        charts.forEach(() => {
+    private static renderTooltipsForDonut(block: Block, charts: PolarChartModel[], data: DataSource, blockSize: Size, margin: BlockMargin, chartThickness: number): void {
+        charts.forEach(chart => {
             const attrTransform = block.getSvg().select(`.${Donut.donutBlockClass}`).attr('transform');
             const translateNumbers = Helper.getTranslateNumbers(attrTransform);
             const translateX = translateNumbers[0];
             const translateY = translateNumbers[1];
 
             const arcItems = Donut.getAllArcs(block);
-            this.renderTooltipForDonut(block, arcItems, data, charts, blockSize, margin, translateX, translateY);
+            this.renderTooltipForDonut(block, arcItems, data, chart, blockSize, margin, chartThickness, translateX, translateY);
         });
     }
 
@@ -114,7 +114,7 @@ export class Tooltip
         });
     }
 
-    private static renderTooltipForDonut(block: Block, elemets: d3.Selection<d3.BaseType, d3.PieArcDatum<DataRow>, d3.BaseType, unknown>, data: DataSource, charts: PolarChartModel[], blockSize: Size, margin: BlockMargin, translateX: number = 0, translateY: number = 0): void {
+    private static renderTooltipForDonut(block: Block, elemets: d3.Selection<d3.BaseType, d3.PieArcDatum<DataRow>, d3.BaseType, unknown>, data: DataSource, chart: PolarChartModel, blockSize: Size, margin: BlockMargin, donutThickness: number, translateX: number = 0, translateY: number = 0): void {
         const tooltipBlock = this.renderTooltipBlock(block, translateX, translateY);
         const tooltipContent = this.getTooltipContentBlock(tooltipBlock);
         const tooltipArrow = this.renderTooltipArrow(tooltipBlock);
@@ -123,14 +123,14 @@ export class Tooltip
         elemets
             .on('mouseover', function(event, dataRow) {
                 tooltipBlock.style('display', 'block');
-                const key = dataRow.data[charts[0].data.keyField.name];
-                tooltipContent.html(TooltipHelper.getTooltipHtmlForPolarChart(charts[0], data, key, d3.select(this).select('path').style('fill')));
+                const key = dataRow.data[chart.data.keyField.name];
+                tooltipContent.html(TooltipHelper.getTooltipHtmlForPolarChart(chart, data, key, d3.select(this).select('path').style('fill')));
                 
-                const coordinatePointer: [number, number] = TooltipHelper.getRecalcedCoordinateByArrow(Donut.getArcCentroid(blockSize, margin, dataRow, charts[0].appearanceOptions.innerRadius), tooltipBlock, blockSize, tooltipArrow);
+                const coordinatePointer: [number, number] = TooltipHelper.getRecalcedCoordinateByArrow(Donut.getArcCentroid(blockSize, margin, dataRow, donutThickness), tooltipBlock, blockSize, tooltipArrow);
                 const tooltipCoordinate = TooltipHelper.getTooltipCoordinate(coordinatePointer);
                 thisClass.setTooltipCoordinate(tooltipBlock, tooltipCoordinate);
 
-                elemets.filter(d => d.data[charts[0].data.keyField.name] !== key)
+                elemets.filter(d => d.data[chart.data.keyField.name] !== key)
                     .style('opacity', 0.3);
             });
 

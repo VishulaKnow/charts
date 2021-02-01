@@ -57,7 +57,6 @@ export interface TwoDimensionalChart extends Chart {
 export interface PolarChart extends Chart {
     type: PolarChartType;
     data: PolarChartData;
-    appearanceOptions: PolarChartAppearanceOptions;
 }
 
 export interface NumberDomain {
@@ -78,11 +77,6 @@ export interface TwoDimensionalAxis {
 export interface IntervalAxis {
     keyAxis: DiscreteAxisOptions;
     valueAxis: DateAxisOptions;
-}
-
-interface PolarChartAppearanceOptions {
-    innerRadius: number;
-    padAngle: number;
 }
 
 interface TwoDimensionalChartData {

@@ -1,5 +1,5 @@
 import * as d3 from "d3";
-import { DataRow, PolarChartSettings } from "../../model/model";
+import { DataRow, DonutChartSettings } from "../../model/model";
 import { Block } from "../block/block";
 import { Translate } from "./donut";
 
@@ -10,12 +10,12 @@ export interface IAggregator {
 
 export class Aggregator
 {
-    public static render(block: Block, data: DataRow[], valueField: string, radius: number, appearanceOptions: PolarChartSettings, translate: Translate): void {
+    public static render(block: Block, data: DataRow[], valueField: string, innerRadius: number, translate: Translate): void {
         const aggregator: IAggregator = {
             name: 'Сумма',
             value: d3.sum(data.map(d => d[valueField]))
         }
-        this.renderAggregatorText(block, radius * 0.01 * appearanceOptions.innerRadius, aggregator, translate);
+        this.renderAggregatorText(block, innerRadius, aggregator, translate);
     }
 
     private static renderAggregatorText(block: Block, innerRadius: number, aggregator: IAggregator, translate: Translate): void {      
@@ -36,12 +36,6 @@ export class Aggregator
                 .style('text-align', 'center')
                 .style('font-size', '18px')
                 .text(aggregator.name);
-    
-            // let size = 10;
-            // while(text.node().getBoundingClientRect().width < innerRadius) {
-            //     size++;
-            //     text.style('font-size', size + 'px');
-            // }
         }
     }
 

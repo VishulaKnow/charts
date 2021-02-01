@@ -23,7 +23,6 @@ export class PolarModel
                 type: chart.type,
                 title: chart.title,
                 data: { ...chart.data },
-                appearanceOptions: { ...chart.appearanceOptions },
                 tooltip: chart.tooltip,
                 cssClasses: ChartStyleModel.getCssClasses(chart.type, index),
                 elementColors: ChartStyleModel.getElementColorPalette(chartPalette, 'polar', data[chart.data.dataSource].length)

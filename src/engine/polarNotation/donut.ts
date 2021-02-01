@@ -1,6 +1,6 @@
 import * as d3 from "d3";
 import { Color } from "d3";
-import { BlockMargin, DataRow, PolarChartModel, Size } from "../../model/model";
+import { BlockMargin, DataRow, DonutChartSettings, PolarChartModel, Size } from "../../model/model";
 import { Helper } from "../helper";
 import { Block } from "../block/block";
 import { Aggregator } from "./aggregator";
@@ -15,10 +15,11 @@ export class Donut
     public static donutBlockClass = 'donut-block';
     private static arcItemClass = 'arc';
 
-    public static render(block: Block, data: DataRow[], margin: BlockMargin, chart: PolarChartModel, blockSize: Size): void {
-        const radius = this.getOuterRadius(margin, blockSize);
-        const arc = this.getArcGenerator(radius, radius * 0.01 * chart.appearanceOptions.innerRadius);
-        const pie = this.getPie(chart.data.valueField.name, chart.appearanceOptions.padAngle);
+    public static render(block: Block, data: DataRow[], margin: BlockMargin, chart: PolarChartModel, blockSize: Size, donutSettings: DonutChartSettings): void {
+        const outerRadius = this.getOuterRadius(margin, blockSize);
+        const innerRadius = this.getInnerRadius(outerRadius, donutSettings.maxThickness);
+        const arc = this.getArcGenerator(outerRadius, innerRadius);
+        const pie = this.getPie(chart.data.valueField.name, donutSettings.padAngle);
     
         const translate = this.getTranslate(margin, blockSize);
     
@@ -41,7 +42,7 @@ export class Donut
         Helper.setCssClasses(arcs, chart.cssClasses);
         this.setElementsColor(items, chart.elementColors);
         
-        Aggregator.render(block, data, chart.data.valueField.name, radius, chart.appearanceOptions, translate);      
+        Aggregator.render(block, data, chart.data.valueField.name, innerRadius, translate);      
     }
     
     public static getAllArcs(block: Block): d3.Selection<SVGGElement, d3.PieArcDatum<DataRow>, SVGGElement, unknown> {
@@ -49,11 +50,19 @@ export class Donut
             .selectAll(`.${this.arcItemClass}`) as d3.Selection<SVGGElement, d3.PieArcDatum<DataRow>, SVGGElement, unknown>;
     }
 
-    public static getArcCentroid(blockSize: Size, margin: BlockMargin, dataItem: d3.PieArcDatum<DataRow>, innerRadius: number): [number, number] {
+    public static getChartThickness(): number {
+        return 60;
+    }
+
+    public static getArcCentroid(blockSize: Size, margin: BlockMargin, dataItem: d3.PieArcDatum<DataRow>, donutThickness: number): [number, number] {
         const outerRadius = this.getOuterRadius(margin, blockSize);
-        const arc = this.getArcGenerator(outerRadius, innerRadius * 0.01 * outerRadius);
+        const arc = this.getArcGenerator(outerRadius, outerRadius - donutThickness);
 
         return arc.centroid(dataItem);
+    }
+
+    private static getInnerRadius(outerRadius: number, thickness: number): number {
+        return outerRadius - thickness;
     }
 
     private static getTranslate(margin: BlockMargin, blockSize: Size): Translate {

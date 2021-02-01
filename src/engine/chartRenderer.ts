@@ -1,4 +1,4 @@
-import { BarChartSettings, BlockMargin, ChartSettings, DataSource, IntervalChartModel, IntervalOptionsModel, Model, Orient, PolarChartModel, PolarOptionsModel, Size, TwoDimensionalChartModel, TwoDimensionalOptionsModel } from "../model/model";
+import { BarChartSettings, BlockMargin, ChartSettings, DataSource, DonutChartSettings, IntervalChartModel, IntervalOptionsModel, Model, Orient, PolarChartModel, PolarOptionsModel, Size, TwoDimensionalChartModel, TwoDimensionalOptionsModel } from "../model/model";
 import { Area } from "./twoDimensionalNotation/area/area";
 import { Axis } from "./features/axis/axis";
 import { Bar } from "./twoDimensionalNotation/bar/bar";
@@ -56,7 +56,8 @@ export class ChartRenderer
         this.renderPolarCharts(block, options.charts,
             data,
             model.chartBlock.margin,
-            model.blockCanvas.size);
+            model.blockCanvas.size,
+            model.chartSettings.donut);
     
         Legend.render(block, data, options, model.legendBlock, model.blockCanvas.size);
     
@@ -125,14 +126,15 @@ export class ChartRenderer
         });
     }
     
-    private static renderPolarCharts(block: Block, charts: PolarChartModel[], data: DataSource, margin: BlockMargin, blockSize: Size) {
+    private static renderPolarCharts(block: Block, charts: PolarChartModel[], data: DataSource, margin: BlockMargin, blockSize: Size, donutSettings: DonutChartSettings) {
         charts.forEach((chart: PolarChartModel) => {
             if(chart.type === 'donut')
                 Donut.render(block, 
                     data[chart.data.dataSource],
                     margin,
                     chart,
-                    blockSize);
+                    blockSize,
+                    donutSettings);
         });
     }
 

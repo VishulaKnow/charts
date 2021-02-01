@@ -1,5 +1,5 @@
 import { Config } from '../config/config';
-import { Model, BlockCanvas, ChartBlock, TwoDimensionalOptionsModel, PolarOptionsModel, BlockMargin, LegendBlockModel, DataSettings, ChartSettings, DataFormat, DataScope, DataSource, IntervalOptionsModel, BarChartSettings, PolarChartSettings } from './model';
+import { Model, BlockCanvas, ChartBlock, TwoDimensionalOptionsModel, PolarOptionsModel, BlockMargin, LegendBlockModel, DataSettings, ChartSettings, DataFormat, DataScope, DataSource, IntervalOptionsModel } from './model';
 import { MarginModel } from './marginModel';
 import { TwoDimensionalModel } from './twoDimensionalModel';
 import { PolarModel } from './polarModel';
@@ -58,7 +58,11 @@ function getDataSettings(dataScope: DataScope): DataSettings {
 function getChartSettings(barSettings: BarOptionsCanvas, donutSettings: DonutOptionsCanvas): ChartSettings {
     return {
         bar: {...barSettings},
-        polar: null
+        donut: {
+            padAngle: donutSettings.padAngle,
+            maxThickness: donutSettings.maxThickness,
+            minThickness: donutSettings.minThickness,
+        }
     }
 }
 

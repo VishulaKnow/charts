@@ -63,7 +63,6 @@ export default class Listeners
         this.setCommonListeners();
         this.setAxisListeners();
         this.set2DListeners();
-        this.setPolarListeners();
     }
 
     private updateFull(): void {
@@ -247,11 +246,7 @@ export default class Listeners
                         data: this.getDataConfig(notationType),
                         title: this.config.options.charts[0].title,
                         tooltip: this.getTooltipConfig(notationType),
-                        type: 'donut',
-                        appearanceOptions: {
-                            innerRadius: parseFloat(ListenersHelper.getInputValue('#inner-radius')) || 0,
-                            padAngle: parseFloat(ListenersHelper.getInputValue('#pad-angle')) || 0
-                        }
+                        type: 'donut'
                     }
                 ]
             }
@@ -537,25 +532,6 @@ export default class Listeners
         });
     }
     
-    private setPolarListeners(): void {
-        const thisClass = this;
-        const config = this.config;
-        document.querySelector('#inner-radius').addEventListener('input', function() {
-            if(config.options.type === 'polar') {
-                const innerRadius = ListenersHelper.getInputValue('#inner-radius');
-                config.options.charts[0].appearanceOptions.innerRadius = parseInt(innerRadius) || 0;
-                thisClass.updateFull();
-            }
-        });
-        document.querySelector('#pad-angle').addEventListener('input', function() {
-            if(config.options.type === 'polar') {
-                const padAngle = ListenersHelper.getInputValue('#pad-angle');
-                config.options.charts[0].appearanceOptions.padAngle = parseFloat(padAngle) || 0;
-                thisClass.updateFull();
-            }
-        });
-    }
-    
     private setControlsValues(): void {
         const config = this.config;
         const designerConfig = this.designerConfig;
@@ -593,8 +569,6 @@ export default class Listeners
             ListenersHelper.setCheckboxValue('#is-segmented', config.options.isSegmented);
         } else if(config.options.type === 'polar') {
             ListenersHelper.setInputValue('#chart-polar-type', config.options.charts[0].type);
-            ListenersHelper.setInputValue('#inner-radius', config.options.charts[0].appearanceOptions.innerRadius.toString());
-            ListenersHelper.setInputValue('#pad-angle', config.options.charts[0].appearanceOptions.padAngle.toString());
         }
     }
 }
