@@ -1,4 +1,5 @@
-import { DataRow, DataSource, Field, PolarChartModel, Size, TwoDimensionalChartModel } from "../../../model/model";
+import { IntervalChart } from "../../../config/config";
+import { DataRow, DataSource, Field, IntervalChartModel, PolarChartModel, Size, TwoDimensionalChartModel } from "../../../model/model";
 import { ValueFormatter, } from "../../valueFormatter";
 
 type ElementType = 'circle' | 'rect';
@@ -52,9 +53,12 @@ export class TooltipHelper
         return text;
     }
 
-    public static getTooltipTextForSingleChart(fields: Field[], dataRow: DataRow, keyField: string): string {
-        let text = this.getTooltipKeyHeader(dataRow[keyField]);
-        text += this.getTooltipText(fields, dataRow);
+    public static getTooltipHtmlForIntervalChart(chart: IntervalChartModel, data: DataSource, keyValue: string, markColor: string): string {
+        let text = '';
+        text += `<div class="tooltip-group"><div class="tooltip-color"><span class="tooltip-circle" style="background-color: ${markColor};"></span></div>`;
+        text += `<div class="tooltip-texts">`;
+        text += `<div class="tp-text-item">${this.getTooltipItemText(chart, data, keyValue, chart.data.valueField1)}</div>`;
+        text += '</div></div>';
         return text;
     }
 
@@ -119,21 +123,8 @@ export class TooltipHelper
         return elements.filter(d => d[keyFieldName] !== keyValue);
     }
     
-    private static getTooltipItemText(chart: TwoDimensionalChartModel | PolarChartModel, data: DataSource, keyValue: string, valueField: Field): string {
+    private static getTooltipItemText(chart: TwoDimensionalChartModel | PolarChartModel | IntervalChart, data: DataSource, keyValue: string, valueField: Field): string {
         const row = data[chart.data.dataSource].find(d => d[chart.data.keyField.name] === keyValue);
         return `${row[chart.data.keyField.name]} - ${ValueFormatter.formatValue(valueField.format, row[valueField.name])}`;
-    }
-
-    private static getTooltipKeyHeader(keyValue: string): string {
-        return `<div class="tooltip-header">${keyValue}</div>`;
-    }
-
-    private static getTooltipText(fields: Field[], dataRow: DataRow): string {
-        let text = '';    
-        fields.forEach(field => {
-            text += `<span class="tooltip-field">${field.name}:</span> <span class="tooltip-value">${ValueFormatter.formatValue(field.format, dataRow[field.name])}</span><br>`;
-        });
-        
-        return text;
     }
 }
