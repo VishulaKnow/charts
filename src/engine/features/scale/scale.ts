@@ -8,21 +8,22 @@ export interface Scales {
 
 export class Scale 
 {
-    public static scales: Scales = {
-        scaleKey: null,
-        scaleValue: null
-    }
-
-    public static fillScales(scaleKey: ScaleKeyModel, scaleValue: ScaleValueModel, bandSettings: BarChartSettings): void {
+    public static getScales(scaleKey: ScaleKeyModel, scaleValue: ScaleValueModel, bandSettings: BarChartSettings): Scales {
+        const scales: Scales = {
+            scaleKey: null,
+            scaleValue: null
+        }
         if(scaleKey.type === 'band')
-            this.scales.scaleKey = this.getScaleBand(scaleKey.domain, scaleKey.range, bandSettings);
+            scales.scaleKey = this.getScaleBand(scaleKey.domain, scaleKey.range, bandSettings);
         else if(scaleKey.type === 'point')
-            this.scales.scaleKey = this.getScalePoint(scaleKey.domain,  scaleKey.range);
+            scales.scaleKey = this.getScalePoint(scaleKey.domain,  scaleKey.range);
 
         if(scaleValue.type === 'linear')
-            this.scales.scaleValue = this.getScaleLinear(scaleValue.domain, scaleValue.range);
+            scales.scaleValue = this.getScaleLinear(scaleValue.domain, scaleValue.range);
         else if(scaleValue.type === 'datetime')
-            this.scales.scaleValue = this.getScaleTime(scaleValue.domain, scaleValue.range);
+            scales.scaleValue = this.getScaleTime(scaleValue.domain, scaleValue.range);
+
+        return scales;
     }
 
     public static getScaleWidth(scale: d3.AxisScale<any>): number {

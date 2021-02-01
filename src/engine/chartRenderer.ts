@@ -17,19 +17,19 @@ export class ChartRenderer
     public static render2D(block: Block, model: Model, data: DataSource): void {
         const options = <TwoDimensionalOptionsModel>model.options;
     
-        Scale.fillScales(options.scale.scaleKey,
+        const scales = Scale.getScales(options.scale.scaleKey,
             options.scale.scaleValue,
             model.chartSettings.bar);        
             
         block.renderSvg(model.blockCanvas.size);
     
-        Axis.render(block, Scale.scales, options.scale, options.axis, model.chartBlock.margin, model.blockCanvas.size);    
+        Axis.render(block, scales, options.scale, options.axis, model.chartBlock.margin, model.blockCanvas.size);    
     
         GridLine.render(block, options.additionalElements.gridLine.flag, options.axis.keyAxis, options.axis.valueAxis, model.blockCanvas.size, model.chartBlock.margin, options.scale.scaleKey);
         
         this.render2DCharts(block, 
             options.charts,
-            Scale.scales,
+            scales,
             data,
             model.chartBlock.margin,
             options.axis.keyAxis.orient,
@@ -71,16 +71,17 @@ export class ChartRenderer
         
         block.renderSvg(model.blockCanvas.size);
 
-        Scale.fillScales(options.scale.scaleKey,
+        const scales = Scale.getScales(options.scale.scaleKey,
             options.scale.scaleValue,
             model.chartSettings.bar);    
 
-        Axis.render(block, Scale.scales, options.scale, options.axis, model.chartBlock.margin, model.blockCanvas.size); 
+        Axis.render(block, scales, options.scale, options.axis, model.chartBlock.margin, model.blockCanvas.size); 
 
         GridLine.render(block, options.additionalElements.gridLine.flag, options.axis.keyAxis, options.axis.valueAxis, model.blockCanvas.size, model.chartBlock.margin, options.scale.scaleKey);
         
         this.renderIntervalCharts(block, 
             options.charts,
+            scales,
             data,
             model.chartBlock.margin,
             options.axis.keyAxis.orient,
@@ -138,13 +139,13 @@ export class ChartRenderer
         });
     }
 
-    private static renderIntervalCharts(block: Block, charts: IntervalChartModel[], data: DataSource, margin: BlockMargin, keyAxisOrient: Orient, chartSettings: ChartSettings): void {
+    private static renderIntervalCharts(block: Block, charts: IntervalChartModel[], scales: Scales, data: DataSource, margin: BlockMargin, keyAxisOrient: Orient, chartSettings: ChartSettings): void {
         block.renderChartBlock();
         charts.forEach(chart => {
             if(chart.type === 'gantt')
                 Gantt.render(block,
                     data[chart.data.dataSource],
-                    Scale.scales,
+                    scales,
                     margin,
                     keyAxisOrient,
                     chart,
@@ -155,12 +156,12 @@ export class ChartRenderer
     public static updateByValueAxis(block: Block, model: Model, data: DataSource) {
         const options = <TwoDimensionalOptionsModel>model.options;
     
-        Scale.fillScales(options.scale.scaleKey,
+        const scales = Scale.getScales(options.scale.scaleKey,
             options.scale.scaleValue,
             model.chartSettings.bar);
     
         Axis.updateValueAxisDomain(block, 
-            Scale.scales.scaleValue,
+            scales.scaleValue,
             options.scale.scaleValue,
             options.axis.valueAxis);
 
@@ -174,7 +175,7 @@ export class ChartRenderer
         
         this.updateChartsByValueAxis(block, 
             options.charts,
-            Scale.scales,
+            scales,
             data,
             model.chartBlock.margin,
             options.axis.keyAxis.orient,
