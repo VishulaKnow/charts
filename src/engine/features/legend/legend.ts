@@ -16,7 +16,7 @@ export class Legend
     public static render(block: Block, data: DataSource, options: TwoDimensionalOptionsModel | PolarOptionsModel | IntervalOptionsModel, legendBlockModel: LegendBlockModel, blockSize: Size): void {
         if(options.legend.position !== 'off') {
             const legendItemsContent = this.getLegendItemsContent(options, data);
-            const chartElementsColor = this.getChartElementsColor(options);
+            const chartElementsColor = this.getMarksColor(options);
             const legendItemsDirection = this.getLegendItemsDirection(options.type, options.legend.position); 
 
             this.renderLegendBlock(block, 
@@ -33,9 +33,8 @@ export class Legend
         const legendBlock = block.getSvg()
             .append('foreignObject')
                 .attr('class', 'legend-object');
-        console.log(legendBlockModel);
         
-        const legendCoordinate = this.getLegendCoordinateByPosition(legendPosition, legendBlockModel, blockSize) 
+        const legendCoordinate = this.getLegendCoordinateByPosition(legendPosition, legendBlockModel, blockSize);
         this.fillLegendCoordinate(legendBlock, legendCoordinate);  
             
         this.renderLegendContent(legendBlock,
@@ -53,13 +52,13 @@ export class Legend
             });            
             return texts;
         } else if(options.type === 'polar') {
-            return options.charts.map(chart => data[chart.data.dataSource].map((record: DataRow) => record[chart.data.keyField.name]))[0]
+            return options.charts.map(chart => data[chart.data.dataSource].map((record: DataRow) => record[chart.data.keyField.name]))[0];
         } else if(options.type === 'interval') {
-            return options.charts.map(chart => chart.title)
+            return options.charts.map(chart => chart.title);
         }
     }
 
-    private static getChartElementsColor(options: TwoDimensionalOptionsModel | PolarOptionsModel | IntervalOptionsModel): Color[] {
+    private static getMarksColor(options: TwoDimensionalOptionsModel | PolarOptionsModel | IntervalOptionsModel): Color[] {
         if(options.type === '2d') {
             let colors: Color[] = [];
             options.charts.forEach(chart => {
@@ -67,9 +66,9 @@ export class Legend
             });
             return colors;
         } else if(options.type === 'polar') {
-            return options.charts.map(chart => chart.elementColors)[0]
+            return options.charts.map(chart => chart.elementColors)[0];
         } else if(options.type === 'interval') {
-            return options.charts.map(chart => chart.elementColors[0])
+            return options.charts.map(chart => chart.elementColors[0]);
         }
     }
 
@@ -85,7 +84,7 @@ export class Legend
         if(legendPosition === 'left' || legendPosition === 'right') {
             coordinate.y = legendModel.margin.top;
             coordinate.width = legendModel.size;
-            coordinate.height = blockSize.height - legendModel.margin.top - legendModel.margin.bottom
+            coordinate.height = blockSize.height - legendModel.margin.top - legendModel.margin.bottom;
         } else if(legendPosition === 'bottom' || legendPosition === 'top') {
             coordinate.x = legendModel.margin.left;
             coordinate.width = blockSize.width - legendModel.margin.left - legendModel.margin.right;
@@ -101,7 +100,7 @@ export class Legend
         else if(legendPosition === 'bottom')
             coordinate.y = blockSize.height - legendModel.size - legendModel.margin.bottom;
         
-        return coordinate
+        return coordinate;
     }
     
     private static fillLegendCoordinate(legendBlock: d3.Selection<SVGForeignObjectElement, unknown, HTMLElement, any>, coordinate: LegendCoordinate): void {

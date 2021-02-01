@@ -69,6 +69,8 @@ export default class Listeners
     private updateFull(): void {
         this.dropAxisDomain(this.config);
         const model = getUpdatedModel(this.config, this.data);
+        console.log(this.config);
+        
         const preparedData = getPreparedData(model, this.data, this.config);
         this.engine.updateFullBlock(model, preparedData);
     }
@@ -124,11 +126,13 @@ export default class Listeners
                 valueField: [
                     {
                         name: 'price',
-                        format: 'money'
+                        format: 'money',
+                        title: 'Цена автомобилей на рынке'
                     },
                     {
                         name: 'count',
-                        format: 'integer'
+                        format: 'integer',
+                        title: 'Количество автомобилей на душу населения'
                     }
                 ]
             }
@@ -212,7 +216,7 @@ export default class Listeners
                     keyAxis: {
                         position: ListenersHelper.getInputValue('#key-axis-orient') as 'start' | 'end',
                         ticks: {
-                            flag: true
+                            flag: false
                         }
                     },
                     valueAxis: {
@@ -222,7 +226,7 @@ export default class Listeners
                         },
                         position: ListenersHelper.getInputValue('#value-axis-orient') as "start" | "end",
                         ticks: {
-                            flag: true
+                            flag: false
                         }
                     }
                 },
@@ -271,13 +275,13 @@ export default class Listeners
                     keyAxis: {
                         position: ListenersHelper.getInputValue('#key-axis-orient') as "start" | "end",
                         ticks: {
-                            flag: true
+                            flag: false
                         }
                     },
                     valueAxis: {
                         position: ListenersHelper.getInputValue('#value-axis-orient') as "start" | "end",
                         ticks: {
-                            flag: true
+                            flag: false
                         }
                     }
                 },

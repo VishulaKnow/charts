@@ -180,7 +180,7 @@ export class Bar
             attrs.height = d => ValueFormatter.getValueOrZero(scales.scaleValue(d[1] - d[0]));
         }
         if(axisOrient === 'left') {
-            attrs.x = d => margin.left + scales.scaleValue(d[0]);
+            attrs.x = d => margin.left + scales.scaleValue(d[0]) + 1;
             attrs.width = d => ValueFormatter.getValueOrZero(scales.scaleValue(d[1] - d[0]));
         }
         if(axisOrient === 'right') {
