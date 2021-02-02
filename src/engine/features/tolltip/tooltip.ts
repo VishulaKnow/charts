@@ -95,12 +95,13 @@ export class Tooltip
         const tooltipArrow = this.renderTooltipArrow(tooltipBlock);
         const thisClass = this;
 
-        const isGrouped = parseFloat(elemets.attr('width')) <= 10 // Если бары достатчно широки, то они не группируются по тултипу 
+        const isGrouped = parseFloat(elemets.attr('width')) < 10; // Если бары достатчно широки, то они не группируются по тултипу 
 
         elemets
             .on('mouseover', function(event, dataRow) {
                 tooltipBlock.style('display', 'block');
                 const keyValue = TooltipHelper.getKeyForTooltip(dataRow, chart.data.keyField.name, isSegmented);
+                
                 if(isGrouped) {
                     tooltipContent.html(TooltipHelper.getMultyTooltipHtmlFor2DChart(chart, data, keyValue));
                 } else {
