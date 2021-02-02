@@ -75,21 +75,23 @@ export class Area
 
     public static updateAreaChartByValueAxis(block: Block, scales: Scales, data: DataRow[], margin: BlockMargin, chart: TwoDimensionalChartModel, keyAxisOrient: Orient, blockSize: Size): void {
         const area = this.getAreaGenerator(keyAxisOrient);
-        const areaCoordinate: AreaChartCoordinate[] = this.getAreaCoordinateByKeyOrient(keyAxisOrient,
-            data,
-            scales,
-            margin,
-            chart.data.keyField.name,
-            chart.data.valueField[0].name,
-            blockSize);
+        chart.data.valueField.forEach((field, index) => {
+            const areaCoordinate: AreaChartCoordinate[] = this.getAreaCoordinateByKeyOrient(keyAxisOrient,
+                data,
+                scales,
+                margin,
+                chart.data.keyField.name,
+                field.name,
+                blockSize);
+        
+            block.getChartBlock()
+                .select(`.${this.areaChartClass}${Helper.getCssClassesLine(chart.cssClasses)}.chart-element-${index}`)
+                .transition()
+                .duration(1000)
+                    .attr('d', area(areaCoordinate));
     
-        block.getChartBlock()
-            .select(`.${this.areaChartClass}${Helper.getCssClassesLine(chart.cssClasses)}`)
-            .transition()
-            .duration(1000)
-                .attr('d', area(areaCoordinate));
-
-        Dot.updateDotsCoordinateByValueAxis(block, data, keyAxisOrient, scales, margin, chart.data.keyField.name, chart.data.valueField[0].name, chart.cssClasses);
+            Dot.updateDotsCoordinateByValueAxis(block, data, keyAxisOrient, scales, margin, chart.data.keyField.name, field.name, chart.cssClasses, index);
+        });
     }
 
     private static getAreaGenerator(keyAxisOrient: Orient): d3.Area<AreaChartCoordinate> {

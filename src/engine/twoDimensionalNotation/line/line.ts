@@ -38,20 +38,22 @@ export class Line
 
     public static updateLineChartByValueAxis(block: Block, scales: Scales, data: DataRow[], margin: BlockMargin, keyAxisOrient: Orient, chart: TwoDimensionalChartModel): void {
         const line = this.getLineGenerator();
-        const lineCoordinate: LineChartCoordinate[] = this.getLineCoordinateByKeyOrient(keyAxisOrient,
-            data,
-            scales,
-            margin,
-            chart.data.keyField.name,
-            chart.data.valueField[0].name);
-        
-        block.getChartBlock()
-            .select(`.${this.lineChartClass}${Helper.getCssClassesLine(chart.cssClasses)}`)
-            .transition()
-            .duration(1000)
-                .attr('d', line(lineCoordinate));
-
-        Dot.updateDotsCoordinateByValueAxis(block, data, keyAxisOrient, scales, margin, chart.data.keyField.name, chart.data.valueField[0].name, chart.cssClasses);
+        chart.data.valueField.forEach((field, index) => {
+            const lineCoordinate: LineChartCoordinate[] = this.getLineCoordinateByKeyOrient(keyAxisOrient,
+                data,
+                scales,
+                margin,
+                chart.data.keyField.name,
+                field.name);
+            
+            block.getChartBlock()
+                .select(`.${this.lineChartClass}${Helper.getCssClassesLine(chart.cssClasses)}.chart-element-${index}`)
+                .transition()
+                .duration(1000)
+                    .attr('d', line(lineCoordinate));
+    
+            Dot.updateDotsCoordinateByValueAxis(block, data, keyAxisOrient, scales, margin, chart.data.keyField.name, field.name, chart.cssClasses, index);
+        });
     }
 
     private static getLineGenerator(): d3.Line<LineChartCoordinate> {
@@ -68,6 +70,7 @@ export class Line
     
     private static getLineCoordinateByKeyOrient(axisOrient: string, data: DataRow[], scales: Scales, margin: BlockMargin, keyField: string, valueField: string): LineChartCoordinate[] {
         const lineCoordinate: LineChartCoordinate[] = [];
+
         if(axisOrient === 'bottom' || axisOrient === 'top')
             data.forEach(d => {
                 lineCoordinate.push({

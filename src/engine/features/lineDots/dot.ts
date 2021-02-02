@@ -51,7 +51,7 @@ export class Dot
 
         // Helper.setCssClasses(dotsHover, cssClasses);
         Helper.setCssClasses(dots, Helper.getCssClassesWithElementIndex(cssClasses, itemIndex));
-        Helper.setCssClasses(dotsInside, cssClasses);
+        Helper.setCssClasses(dotsInside, Helper.getCssClassesWithElementIndex(cssClasses, itemIndex));
         Helper.setChartElementColor(dots, colorPalette, itemIndex, 'fill');
     }
 
@@ -62,9 +62,9 @@ export class Dot
             .selectAll(`.${this.dotClass}${Helper.getCssClassesLine(chartCssClasses)}`);
     }
 
-    public static updateDotsCoordinateByValueAxis(block: Block, data: DataRow[], keyAxisOrient: Orient, scales: Scales, margin: BlockMargin, keyField: string, valueField: string, cssClasses: string[]): void {
+    public static updateDotsCoordinateByValueAxis(block: Block, data: DataRow[], keyAxisOrient: Orient, scales: Scales, margin: BlockMargin, keyField: string, valueField: string, cssClasses: string[], index: number): void {
         const dots = block.getChartBlock()
-            .selectAll(`.${this.dotClass}${Helper.getCssClassesLine(cssClasses)}`)
+            .selectAll(`.${this.dotClass}${Helper.getCssClassesLine(cssClasses)}.chart-element-${index}`)
             .data(data);
         
         const attrs = this.getDotAttrs(keyAxisOrient, scales, margin, keyField, valueField, false);
@@ -76,7 +76,7 @@ export class Dot
                 .attr('cy', d => attrs.cy(d));
 
         block.getChartBlock()
-            .selectAll(`.dot-inside${Helper.getCssClassesLine(cssClasses)}`)
+            .selectAll(`.dot-inside${Helper.getCssClassesLine(cssClasses)}.chart-element-${index}`)
             .data(data)
             .transition()
             .duration(1000)
