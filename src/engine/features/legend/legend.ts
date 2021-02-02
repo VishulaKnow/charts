@@ -142,14 +142,35 @@ export class Legend
             .attr('class', this.getLegendLabelClassByPosition(position))
             .text(d => d.toString());
 
-        if(itemsDirection === 'row' || (itemsDirection === 'column' && position === 'bottom'))
-            this.cropLegendLabels(legendBlock, itemWrappers, itemsDirection);
+        if(itemsDirection === 'column' && position === 'bottom')
+            this.cropColumnLabels(legendBlock, itemWrappers, itemsDirection);
+        if(itemsDirection === 'row')
+            this.cropRowLabels(legendBlock, itemWrappers);
     }
 
-    private static cropLegendLabels(legendBlock: d3.Selection<SVGForeignObjectElement, unknown, HTMLElement, any>, items: d3.Selection<HTMLDivElement, string, d3.BaseType, unknown>, itemsDirection: LegendItemsDirection): void {
+    private static cropRowLabels(legendBlock: d3.Selection<SVGForeignObjectElement, unknown, HTMLElement, any>, items: d3.Selection<HTMLDivElement, string, d3.BaseType, unknown>): void {
+        const maxWidth = legendBlock.node().getBoundingClientRect().width;
+        let sumOfItemsWidth = this.getSumOfItemsWidths(items);
+        const maxItemWidth = this.getMaxItemWidth(legendBlock, items, 'row');
+
+        let index = 0;
+        while(sumOfItemsWidth > maxWidth) {
+            items.nodes().forEach(node => {
+                if(node.getBoundingClientRect().width > maxItemWidth) {
+                    const text = node.querySelector('.legend-label');
+                    let labelText = index > 0 ? text.textContent.substr(0, text.textContent.length - 3) : text.textContent;
+                    labelText = labelText.substr(0, labelText.length - 1);
+                    text.textContent = labelText + '...';
+                    sumOfItemsWidth = this.getSumOfItemsWidths(items);
+                }
+            });
+            index++;
+        }
+    }
+
+    private static cropColumnLabels(legendBlock: d3.Selection<SVGForeignObjectElement, unknown, HTMLElement, any>, items: d3.Selection<HTMLDivElement, string, d3.BaseType, unknown>, itemsDirection: LegendItemsDirection): void {
         const maxItemWidth = this.getMaxItemWidth(legendBlock, items, itemsDirection);
-        console.log(maxItemWidth);
-        
+
         items.nodes().forEach(node => {
             if(node.getBoundingClientRect().width > maxItemWidth) {
                 const text = node.querySelector('.legend-label');
@@ -197,5 +218,11 @@ export class Legend
             return 'column';
         else
             return chartNotation === 'polar' ? 'column' : 'row';
+    }
+
+    private static getSumOfItemsWidths(items: d3.Selection<HTMLDivElement, string, d3.BaseType, unknown>): number {
+        let sumOfItemsWidth = Helper.getSumOfNumbers(items.nodes().map(node => node.getBoundingClientRect().width));
+        sumOfItemsWidth += Helper.getSumOfNumbers(items.nodes().map(node => Helper.getPXpropertyValue(Helper.getPropertyValue(node, 'margin-left'))));
+        return sumOfItemsWidth;
     }
 }
