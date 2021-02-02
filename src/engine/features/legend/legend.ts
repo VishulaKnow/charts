@@ -41,7 +41,8 @@ export class Legend
         this.renderLegendContent(legendBlock,
             items,
             colorPalette,
-            itemsDirection);
+            itemsDirection,
+            legendPosition);
     }
 
     private static getLegendItemsContent(options: TwoDimensionalOptionsModel | PolarOptionsModel | IntervalOptionsModel, data: DataSource): string[] {
@@ -111,7 +112,7 @@ export class Legend
             .attr('height', coordinate.height);
     }
     
-    private static renderLegendContent(legendBlock: d3.Selection<SVGForeignObjectElement, unknown, HTMLElement, any>, items: string[], colorPalette: Color[], itemsDirection: LegendItemsDirection): void {
+    private static renderLegendContent(legendBlock: d3.Selection<SVGForeignObjectElement, unknown, HTMLElement, any>, items: string[], colorPalette: Color[], itemsDirection: LegendItemsDirection, position: LegendPosition): void {
         const wrapper = legendBlock.append('xhtml:div')
             .attr('class', 'legend-block');
 
@@ -128,7 +129,7 @@ export class Legend
             .data(items)
             .enter()
             .append('div')
-                .attr('class', this.getLegendItemClassByPosition(itemsDirection));
+                .attr('class', this.getItemClasses(itemsDirection, position));
     
         itemWrappers
             .append('span')
@@ -162,10 +163,19 @@ export class Legend
         });
     }
 
-    private static getLegendItemClassByPosition(itemsDirection: LegendItemsDirection): string {
-        if(itemsDirection === 'row')
-            return 'legend-item-inline';
-        return 'legend-item-row';
+    private static getItemClasses(itemsDirection: LegendItemsDirection, position: LegendPosition): string {
+        let cssClasses = this.getLegendItemClassByDirection(itemsDirection);
+        if(itemsDirection === 'column')
+            cssClasses += ` ${this.getLegendItemsMarginClass(position)}`;
+        return cssClasses;
+    }
+
+    private static getLegendItemClassByDirection(itemsDirection: LegendItemsDirection): string {
+        return itemsDirection === 'column' ? 'legend-item-row' : 'legend-item-inline';
+    }
+
+    private static getLegendItemsMarginClass(legendPosition: LegendPosition): string {
+        return legendPosition === 'right' ? 'mt-15' : 'mt-10';
     }
 
     private static getLegendItemsDirection(chartNotation: ChartNotation, legendPosition: LegendPosition): LegendItemsDirection {

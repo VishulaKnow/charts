@@ -44,46 +44,9 @@ const configCars: Config = {
         charts: [
             {
                 title: 'Рост стоимости',
-                type: 'area',
+                type: 'bar',
                 data: {
                     dataSource: 'dataSet',
-                    keyField:  {
-                        name: 'brand',
-                        format: 'string'
-                    },
-                    valueField: [
-                        {
-                            name: 'price',
-                            format: 'money',
-                            title: 'Цены на автомобили по рынку длинное'
-                        },
-                        {
-                            name: 'count',
-                            format: 'integer',
-                            title: 'Количество автомобилей на душу населения'
-                        }
-                    ]
-                },
-                tooltip: {
-                    data: {
-                        fields: [
-                            {
-                                name: 'price',
-                                format: 'money'
-                            },
-                            {
-                                name: 'count',
-                                format: 'integer'
-                            }
-                        ]
-                    }
-                },
-            },
-            {
-                title: 'Рост стоимости',
-                type: 'line',
-                data: {
-                    dataSource: 'dataSet2',
                     keyField:  {
                         name: 'brand',
                         format: 'string'
@@ -128,7 +91,7 @@ const configCars: Config = {
     //             title: 'Рост стоимости',
     //             type: 'donut',
     //             data: {
-    //                 dataSource: 'dataSet_large',
+    //                 dataSource: 'dataSet',
     //                 keyField:  {
     //                     name: 'brand',
     //                     format: 'string'
@@ -137,10 +100,6 @@ const configCars: Config = {
     //                     name: 'price',
     //                     format: 'money'
     //                 },
-    //             },
-    //             appearanceOptions: {
-    //                 innerRadius: 60,
-    //                 padAngle: 0
     //             },
     //             tooltip: {
     //                 data: {

@@ -8,11 +8,9 @@ export class LegendModel
         if(position === 'left' || position === 'right')
             return this.getLegendWidth(texts, legendMaxWidth);
         if(chartNotation === '2d' || chartNotation === 'interval') {
-            return LegendCanvasModel.getLegendHeight(texts, blockSize.width, legendBlockModel[position].margin.left, legendBlockModel[position].margin.right, 'row');
+            return LegendCanvasModel.getLegendHeight(texts, blockSize.width, legendBlockModel[position].margin.left, legendBlockModel[position].margin.right, 'row', position);
         } else if(chartNotation === 'polar') {
-            const size = LegendCanvasModel.getLegendHeight(texts, blockSize.width, legendBlockModel[position].margin.left, legendBlockModel[position].margin.right, 'column');
-            console.log(size);
-            
+            const size = LegendCanvasModel.getLegendHeight(texts, blockSize.width, legendBlockModel[position].margin.left, legendBlockModel[position].margin.right, 'column', position);
             return size
         }
     }
@@ -56,6 +54,10 @@ export class LegendModel
 
     public static getLegendItemClass(itemsPosition: LegendItemsDirection): string {
         return itemsPosition === 'column' ? 'legend-item-row' : 'legend-item-inline'; 
+    }
+
+    public static getMarginClass(legendPosition: LegendPosition): string {
+        return legendPosition === 'right' ? 'mt-15' : 'mt-10';
     }
     
     private static getLegendWidth(texts: string[], legendMaxWidth: number): number {
