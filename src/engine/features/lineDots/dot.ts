@@ -47,7 +47,6 @@ export class Dot
         //     .attr('r', 40)
         //     .attr('class', 'dot-hover')
         //     .style('fill', 'none')
-        //     // .style('stroke', 'red')
         //     .style('pointer-events', 'visibleFill');
 
         Helper.setCssClasses(dots, cssClasses.concat([`chart-index-${itemIndex}`]));

@@ -72,7 +72,7 @@ export class Tooltip
             .on('mouseover', function(event, d) {
                 tooltipBlock.style('display', 'block');                               
                 const keyValue = TooltipHelper.getKeyForTooltip(d, chart.data.keyField.name, isSegmented);
-                const index = thisClass.getElementIndex(elemets, this, keyValue, chart.data.keyField.name)
+                const index = thisClass.getElementIndex(elemets, this, keyValue, chart.data.keyField.name, isSegmented)
                 tooltipContent.html(`${TooltipHelper.getTooltipHtmlFor2DChart(chart, data, keyValue, index)}`);
 
                 const coordinatePointer: [number, number] = TooltipHelper.getTooltipBlockCoordinate(d3.select(this), tooltipBlock, 'circle', blockSize, tooltipArrow);
@@ -99,8 +99,12 @@ export class Tooltip
             .on('mouseover', function(event, dataRow) {
                 tooltipBlock.style('display', 'block');
                 const keyValue = TooltipHelper.getKeyForTooltip(dataRow, chart.data.keyField.name, isSegmented);
-                const index = thisClass.getElementIndex(elemets, this, keyValue, chart.data.keyField.name)
-                tooltipContent.html(`${TooltipHelper.getTooltipHtmlFor2DChart(chart, data, keyValue, index)}`);
+                if(parseFloat(d3.select(this).attr('width')) > 10) {
+                    const index = thisClass.getElementIndex(elemets, this, keyValue, chart.data.keyField.name, isSegmented)
+                    tooltipContent.html(TooltipHelper.getTooltipHtmlFor2DChart(chart, data, keyValue, index));
+                } else {
+                    tooltipContent.html(TooltipHelper.getMultyTooltipHtmlFor2DChart(chart, data, keyValue));
+                }
 
                 const coordinatePointer: [number, number] = TooltipHelper.getTooltipBlockCoordinate(d3.select(this), tooltipBlock, 'rect', blockSize, tooltipArrow);
                 const tooltipCoordinate = TooltipHelper.getTooltipCoordinate(coordinatePointer);
@@ -248,9 +252,9 @@ export class Tooltip
             .remove();
     }
 
-    private static getElementIndex(elemets: d3.Selection<d3.BaseType, DataRow, d3.BaseType, unknown>, dot: d3.BaseType, keyValue: string, keyName: string): number {
+    private static getElementIndex(elemets: d3.Selection<d3.BaseType, DataRow, d3.BaseType, unknown>, dot: d3.BaseType, keyValue: string, keyName: string, isSegmented: boolean): number {
         let index = -1;
-        const filtered = elemets.filter(d => d[keyName] === keyValue);
+        const filtered = isSegmented ? elemets.filter(d => d.data[keyName] === keyValue) : elemets.filter(d => d[keyName] === keyValue);
         filtered.each(function(d, i) {
             if(d3.select(this).node() === d3.select(dot).node()) {
                 index = i;
