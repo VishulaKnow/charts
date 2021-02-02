@@ -68,7 +68,8 @@ export class Dot
             .data(data);
         
         const attrs = this.getDotAttrs(keyAxisOrient, scales, margin, keyField, valueField, false);
-
+        console.log(attrs);
+        
         dots
             .transition()
             .duration(1000)

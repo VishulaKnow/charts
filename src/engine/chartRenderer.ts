@@ -208,7 +208,8 @@ export class ChartRenderer
                     margin,
                     chart,
                     keyAxisOrient,
-                    blockSize);
+                    blockSize,
+                    isSegmented);
         });
     }
 }

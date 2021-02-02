@@ -27,7 +27,7 @@ export class Bar
     public static updateBarChartByValueAxis(block: Block, scales: Scales, margin: BlockMargin, keyAxisOrient: string, chart: TwoDimensionalChartModel, blockSize: Size, isSegmented: boolean): void {
         if(isSegmented) {
             const bars = block.getChartBlock()
-            .selectAll(`.${this.barItemClass}${Helper.getCssClassesLine(chart.cssClasses)}`) as d3.Selection<SVGRectElement, DataRow, d3.BaseType, unknown>;
+                .selectAll(`.${this.barItemClass}${Helper.getCssClassesLine(chart.cssClasses)}`) as d3.Selection<SVGRectElement, DataRow, d3.BaseType, unknown>;
 
             this.fillStackedBarAttrsByKeyOrientWithTransition(bars,
                 keyAxisOrient,
@@ -244,19 +244,23 @@ export class Bar
         const barsTran = bars.transition().duration(transitionDuration);
         
         if(axisOrient === 'bottom') {
-            barsTran.attr('y', d => scaleValue(d[1]) + margin.top)
+            barsTran
+                .attr('y', d => scaleValue(d[1]) + margin.top)
                 .attr('height', d => blockSize.height - margin.top - margin.bottom - scaleValue(d[1] - d[0]));
         }
         if(axisOrient === 'left') {
-            barsTran.attr('x', d => margin.left + scaleValue(d[0]) + 1)
+            barsTran
+                .attr('x', d => margin.left + scaleValue(d[0]) + 1)
                 .attr('width', d => ValueFormatter.getValueOrZero(scaleValue(d[1] - d[0])));
         }
         if(axisOrient === 'right') {
-            barsTran.attr('x', d => scaleValue(d[1]) + margin.left)
+            barsTran
+                .attr('x', d => scaleValue(d[1]) + margin.left)
                 .attr('width', d => ValueFormatter.getValueOrZero(blockSize.width - margin.left - margin.right - scaleValue(d[1] - d[0])));
         } 
         if(axisOrient === 'top') {
-            barsTran.attr('y', d => margin.top + scaleValue(d[0]))
+            barsTran
+                .attr('y', d => margin.top + scaleValue(d[0]))
                 .attr('height', d => ValueFormatter.getValueOrZero(scaleValue(d[1] - d[0])));
         }
     } 

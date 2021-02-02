@@ -73,25 +73,39 @@ export class Area
         });
     }
 
-    public static updateAreaChartByValueAxis(block: Block, scales: Scales, data: DataRow[], margin: BlockMargin, chart: TwoDimensionalChartModel, keyAxisOrient: Orient, blockSize: Size): void {
-        const area = this.getAreaGenerator(keyAxisOrient);
-        chart.data.valueField.forEach((field, index) => {
-            const areaCoordinate: AreaChartCoordinate[] = this.getAreaCoordinateByKeyOrient(keyAxisOrient,
-                data,
-                scales,
-                margin,
-                chart.data.keyField.name,
-                field.name,
-                blockSize);
-        
-            block.getChartBlock()
-                .select(`.${this.areaChartClass}${Helper.getCssClassesLine(chart.cssClasses)}.chart-element-${index}`)
+    public static updateAreaChartByValueAxis(block: Block, scales: Scales, data: DataRow[], margin: BlockMargin, chart: TwoDimensionalChartModel, keyAxisOrient: Orient, blockSize: Size, isSegmented: boolean): void {
+        if(isSegmented) {
+            const area = this.getSegmentedAreaGenerator(keyAxisOrient, scales, margin, chart.data.keyField.name);
+            const areas = block.getChartBlock()
+                .selectAll(`path.${this.areaChartClass}${Helper.getCssClassesLine(chart.cssClasses)}`) as d3.Selection<SVGRectElement, DataRow, d3.BaseType, unknown>;
+            areas
                 .transition()
                 .duration(1000)
-                    .attr('d', area(areaCoordinate));
-    
-            Dot.updateDotsCoordinateByValueAxis(block, data, keyAxisOrient, scales, margin, chart.data.keyField.name, field.name, chart.cssClasses, index);
-        });
+                    .attr('d', d => area(d as DataRow[]));
+
+            areas.each((d, i) => {
+                Dot.updateDotsCoordinateByValueAxis(block, data, keyAxisOrient, scales, margin, chart.data.keyField.name, '1', chart.cssClasses, i);
+            })
+        } else {
+            const area = this.getAreaGenerator(keyAxisOrient);
+            chart.data.valueField.forEach((field, index) => {
+                const areaCoordinate: AreaChartCoordinate[] = this.getAreaCoordinateByKeyOrient(keyAxisOrient,
+                    data,
+                    scales,
+                    margin,
+                    chart.data.keyField.name,
+                    field.name,
+                    blockSize);
+            
+                block.getChartBlock()
+                    .select(`.${this.areaChartClass}${Helper.getCssClassesLine(chart.cssClasses)}.chart-element-${index}`)
+                    .transition()
+                    .duration(1000)
+                        .attr('d', area(areaCoordinate));
+        
+                Dot.updateDotsCoordinateByValueAxis(block, data, keyAxisOrient, scales, margin, chart.data.keyField.name, field.name, chart.cssClasses, index);
+            });
+        }
     }
 
     private static getAreaGenerator(keyAxisOrient: Orient): d3.Area<AreaChartCoordinate> {
