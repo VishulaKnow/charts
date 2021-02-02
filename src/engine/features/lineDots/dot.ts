@@ -41,8 +41,18 @@ export class Dot
             .style('fill', 'white')
             .style('pointer-events', 'none');
 
+        // const dotsHover = dotsWrapper.append('circle')
+        //     .attr('cx', d => attrs.cx(d))
+        //     .attr('cy', d => attrs.cy(d))
+        //     .attr('r', 40)
+        //     .attr('class', 'dot-hover')
+        //     .style('fill', 'none')
+        //     // .style('stroke', 'red')
+        //     .style('pointer-events', 'visibleFill');
+
         Helper.setCssClasses(dots, cssClasses.concat([`chart-index-${itemIndex}`]));
         Helper.setCssClasses(dotsInside, cssClasses);
+        // Helper.setCssClasses(dotsHover, cssClasses);
         Helper.setChartElementColor(dots, colorPalette, itemIndex, 'fill');
     }
 
