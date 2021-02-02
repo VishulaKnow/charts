@@ -50,6 +50,24 @@ export class Helper
         return [translateX, translateY];
     }
 
+    /**
+     * get number from value format: '[number]px'
+     * @param propertyValue 
+     */
+    public static getPXpropertyValue(propertyValue: string): number {
+        return parseFloat(propertyValue.substr(0, propertyValue.length - 2));
+    }
+
+    public static getSumOfNumbers(numbers: number[]): number {
+        let sum = 0;
+        numbers.forEach(num => sum += num);
+        return sum;
+    }
+
+    public static getPropertyValue(node: HTMLElement, propertyName: string): string {
+        return window.getComputedStyle(node).getPropertyValue(propertyName);
+    }
+
     private static setChartOpacity(elements: d3.Selection<d3.BaseType, unknown, d3.BaseType, unknown>, opacity: number): void {
         elements.attr('opacity', opacity);
     }

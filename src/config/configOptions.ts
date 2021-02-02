@@ -83,7 +83,7 @@ const configCars: Config = {
                 title: 'Рост стоимости',
                 type: 'line',
                 data: {
-                    dataSource: 'dataSet',
+                    dataSource: 'dataSet2',
                     keyField:  {
                         name: 'brand',
                         format: 'string'

@@ -3,6 +3,7 @@ import { ChartNotation, LegendPosition } from "../../../config/config";
 import { LegendItemsDirection } from "../../../model/legendModel/legendCanvasModel";
 import { DataRow, DataSource, IntervalChartModel, IntervalOptionsModel, LegendBlockModel, Orient, PolarChartModel, PolarOptionsModel, Size, TwoDimensionalChartModel, TwoDimensionalOptionsModel } from "../../../model/model";
 import { Block } from "../../block/block";
+import { Helper } from "../../helper";
 
 interface LegendCoordinate {
     x: number;
@@ -39,7 +40,6 @@ export class Legend
             
         this.renderLegendContent(legendBlock,
             items,
-            legendPosition,
             colorPalette,
             itemsDirection);
     }
@@ -111,7 +111,7 @@ export class Legend
             .attr('height', coordinate.height);
     }
     
-    private static renderLegendContent(legendBlock: d3.Selection<SVGForeignObjectElement, unknown, HTMLElement, any>, items: string[], legendPosition: LegendPosition, colorPalette: Color[], itemsDirection: LegendItemsDirection): void {
+    private static renderLegendContent(legendBlock: d3.Selection<SVGForeignObjectElement, unknown, HTMLElement, any>, items: string[], colorPalette: Color[], itemsDirection: LegendItemsDirection): void {
         const wrapper = legendBlock.append('xhtml:div')
             .attr('class', 'legend-block');
 
@@ -146,12 +146,15 @@ export class Legend
     }
 
     private static cropLegendLabels(legendBlock: d3.Selection<SVGForeignObjectElement, unknown, HTMLElement, any>, items: d3.Selection<HTMLDivElement, string, d3.BaseType, unknown>): void {
-        const maxWidth = parseFloat(legendBlock.attr('width')) / items.size();
+        const margins = items.nodes().map(node => Helper.getPXpropertyValue(Helper.getPropertyValue(node, 'margin-left')));
+        const sumOfMargins = Helper.getSumOfNumbers(margins);
+        const maxItemWidth = (parseFloat(legendBlock.attr('width')) - sumOfMargins) / items.size();
+
         items.nodes().forEach(node => {
-            if(node.getBoundingClientRect().width > maxWidth) {
+            if(node.getBoundingClientRect().width > maxItemWidth) {
                 const text = node.querySelector('.legend-label');
                 let labelText = text.textContent;
-                while(node.getBoundingClientRect().width > maxWidth && labelText.length > 3) {
+                while(node.getBoundingClientRect().width > maxItemWidth && labelText.length > 3) {
                     labelText = labelText.substr(0, labelText.length - 1);
                     text.textContent = labelText + '...';
                 }
