@@ -139,18 +139,17 @@ export class Legend
         itemWrappers
             .data(items)
             .append('span')
-            .attr('class', 'legend-label')
+            .attr('class', this.getLegendLabelClassByPosition(position))
             .text(d => d.toString());
 
-        if(itemsDirection === 'row')
-            this.cropLegendLabels(legendBlock, itemWrappers);
+        if(itemsDirection === 'row' || (itemsDirection === 'column' && position === 'bottom'))
+            this.cropLegendLabels(legendBlock, itemWrappers, itemsDirection);
     }
 
-    private static cropLegendLabels(legendBlock: d3.Selection<SVGForeignObjectElement, unknown, HTMLElement, any>, items: d3.Selection<HTMLDivElement, string, d3.BaseType, unknown>): void {
-        const margins = items.nodes().map(node => Helper.getPXpropertyValue(Helper.getPropertyValue(node, 'margin-left')));
-        const sumOfMargins = Helper.getSumOfNumbers(margins);
-        const maxItemWidth = (parseFloat(legendBlock.attr('width')) - sumOfMargins) / items.size();
-
+    private static cropLegendLabels(legendBlock: d3.Selection<SVGForeignObjectElement, unknown, HTMLElement, any>, items: d3.Selection<HTMLDivElement, string, d3.BaseType, unknown>, itemsDirection: LegendItemsDirection): void {
+        const maxItemWidth = this.getMaxItemWidth(legendBlock, items, itemsDirection);
+        console.log(maxItemWidth);
+        
         items.nodes().forEach(node => {
             if(node.getBoundingClientRect().width > maxItemWidth) {
                 const text = node.querySelector('.legend-label');
@@ -161,6 +160,15 @@ export class Legend
                 }
             }
         });
+    }
+
+    private static getMaxItemWidth(legendBlock: d3.Selection<SVGForeignObjectElement, unknown, HTMLElement, any>, items: d3.Selection<HTMLDivElement, string, d3.BaseType, unknown>, itemsDirection: LegendItemsDirection): number {
+        if(itemsDirection === 'row') {
+            const margins = items.nodes().map(node => Helper.getPXpropertyValue(Helper.getPropertyValue(node, 'margin-left')));
+            const sumOfMargins = Helper.getSumOfNumbers(margins);
+            return (parseFloat(legendBlock.attr('width')) - sumOfMargins) / items.size();
+        }
+        return parseFloat(legendBlock.attr('width'));
     }
 
     private static getItemClasses(itemsDirection: LegendItemsDirection, position: LegendPosition): string {
@@ -176,6 +184,12 @@ export class Legend
 
     private static getLegendItemsMarginClass(legendPosition: LegendPosition): string {
         return legendPosition === 'right' ? 'mt-15' : 'mt-10';
+    }
+
+    private static getLegendLabelClassByPosition(position: LegendPosition): string {
+        if(position === 'top' || position === 'bottom')
+            return 'legend-label legend-label-nowrap';
+        return 'legend-label';
     }
 
     private static getLegendItemsDirection(chartNotation: ChartNotation, legendPosition: LegendPosition): LegendItemsDirection {

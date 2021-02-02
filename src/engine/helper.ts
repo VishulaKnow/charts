@@ -25,17 +25,17 @@ export class Helper
     }
 
     public static cropLabels(labelBlocks: d3.Selection<SVGGraphicsElement, unknown, HTMLElement, unknown>, maxWidth: number): void {
-        for(let i = 0; i < labelBlocks.nodes().length; i++) {
-            if(labelBlocks.nodes()[i].getBBox().width > maxWidth) {
-                const text = labelBlocks.nodes()[i].textContent;
+        labelBlocks.nodes().forEach(node => {
+            if(node.getBBox().width > maxWidth) {
+                const text = node.textContent;
                 let textLength = text.length;
-                while(labelBlocks.nodes()[i].getBBox().width > maxWidth && textLength > 0) {
-                    labelBlocks.nodes()[i].textContent = text.substring(0, --textLength) + '...';
+                while(node.getBBox().width > maxWidth && textLength > 0) {
+                    node.textContent = text.substring(0, --textLength) + '...';
                 }
                 if(textLength === 0)
-                    labelBlocks.nodes()[i].textContent = '';
+                    node.textContent = '';
             }
-        }
+        });
     }
 
     public static getCssClassesArray(cssClass: string): string[] {
