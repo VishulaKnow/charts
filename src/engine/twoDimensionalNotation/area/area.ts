@@ -24,13 +24,9 @@ export class Area
             this.renderGrouped(block, scales, data, margin, keyAxisOrient, chart, blockSize);
     }
 
-    private static setChartOpacity(): void {
-        
-    }
-
     private static renderGrouped(block: Block, scales: Scales, data: DataRow[], margin: BlockMargin, keyAxisOrient: Orient, chart: TwoDimensionalChartModel, blockSize: Size): void {
         const area = this.getAreaGenerator(keyAxisOrient);
-        chart.data.valueField.forEach((field, fieldIndex) => {
+        chart.data.valueField.forEach((field, index) => {
             const areaCoordinate: AreaChartCoordinate[] = this.getAreaCoordinateByKeyOrient(keyAxisOrient,
                 data,
                 scales,
@@ -45,10 +41,10 @@ export class Area
                 .attr('class', this.areaChartClass)
                 .style('clip-path', `url(${block.getClipPathId()})`);
         
-            Helper.setCssClasses(path, chart.cssClasses);
-            Helper.setChartStyle(path, chart.style, fieldIndex, 'fill');
+            Helper.setCssClasses(path, Helper.getCssClassesWithElementIndex(chart.cssClasses, index));
+            Helper.setChartStyle(path, chart.style, index, 'fill');
     
-            Dot.render(block, data, keyAxisOrient, scales, margin, chart.data.keyField.name, field.name, chart.cssClasses, fieldIndex, chart.style.elementColors, blockSize, false);
+            Dot.render(block, data, keyAxisOrient, scales, margin, chart.data.keyField.name, field.name, chart.cssClasses, index, chart.style.elementColors, blockSize, false);
         });
     }
 
@@ -66,7 +62,9 @@ export class Area
                 .attr('class', this.areaChartClass)
                 .style('clip-path', `url(${block.getClipPathId()})`);
 
-        Helper.setCssClasses(areas, chart.cssClasses);
+        areas.each(function(d, i) {
+            Helper.setCssClasses(d3.select(this), Helper.getCssClassesWithElementIndex(chart.cssClasses, i));
+        });
         this.setSegmentColor(areas, chart.style.elementColors);
 
 

@@ -68,6 +68,10 @@ export class Helper
         return window.getComputedStyle(node).getPropertyValue(propertyName);
     }
 
+    public static getCssClassesWithElementIndex(cssClasses: string[], index: number): string[] {
+        return cssClasses.concat([`chart-element-${index}`]);
+    }
+
     private static setChartOpacity(elements: d3.Selection<d3.BaseType, unknown, d3.BaseType, unknown>, opacity: number): void {
         elements.attr('opacity', opacity);
     }

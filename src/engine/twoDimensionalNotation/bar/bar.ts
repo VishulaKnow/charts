@@ -64,7 +64,7 @@ export class Bar
         
             this.fillBarAttrsByKeyOrient(bars, barAttrs);
             
-            Helper.setCssClasses(bars, chart.cssClasses);
+            Helper.setCssClasses(bars, Helper.getCssClassesWithElementIndex(chart.cssClasses, index));
             this.setBarGroupColor(bars, chart.style.elementColors, index);
         });
     }
@@ -95,7 +95,9 @@ export class Bar
             .attr('width', barAttrs.width)
             .attr('height', barAttrs.height);
 
-        Helper.setCssClasses(bars, chart.cssClasses);
+        groups.each(function(d, i) {
+            Helper.setCssClasses(d3.select(this).selectAll('rect'), Helper.getCssClassesWithElementIndex(chart.cssClasses, i));
+        });
         this.setSegmentColor(groups, chart.style.elementColors);
     }
 
@@ -118,6 +120,7 @@ export class Bar
         const barStep = (Scale.getScaleWidth(scales.scaleKey) - barDistance * (barsAmount - 1)) / barsAmount;
         const barSize = barStep > barSettings.maxBarWidth ? barSettings.maxBarWidth : barStep;
         const barDiff = (barStep - barSize) * barsAmount / 2;
+
         const attrs: BarAttrs = {
             x: null,
             y: null,
@@ -157,6 +160,7 @@ export class Bar
         const barStep = (Scale.getScaleWidth(scales.scaleKey));
         const barSize = barStep > barSettings.maxBarWidth ? barSettings.maxBarWidth : barStep;
         const barDiff = (barStep - barSize) / 2;
+
         const attrs: BarAttrs = {
             x: null,
             y: null,

@@ -30,7 +30,7 @@ export class Line
                 .attr('class', this.lineChartClass)
                 .style('clip-path', `url(${block.getClipPathId()})`);
         
-            Helper.setCssClasses(path, chart.cssClasses);
+            Helper.setCssClasses(path, Helper.getCssClassesWithElementIndex(chart.cssClasses, index));
             Helper.setChartStyle(path, chart.style, index, 'stroke');
             Dot.render(block, data, keyAxisOrient, scales, margin, chart.data.keyField.name, field.name, chart.cssClasses, index, chart.style.elementColors, blockSize, false);
         });

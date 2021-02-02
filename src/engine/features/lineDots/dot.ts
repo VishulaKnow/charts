@@ -49,9 +49,9 @@ export class Dot
         //     .style('fill', 'none')
         //     .style('pointer-events', 'visibleFill');
 
-        Helper.setCssClasses(dots, cssClasses.concat([`chart-index-${itemIndex}`]));
-        Helper.setCssClasses(dotsInside, cssClasses);
         // Helper.setCssClasses(dotsHover, cssClasses);
+        Helper.setCssClasses(dots, Helper.getCssClassesWithElementIndex(cssClasses, itemIndex));
+        Helper.setCssClasses(dotsInside, cssClasses);
         Helper.setChartElementColor(dots, colorPalette, itemIndex, 'fill');
     }
 
