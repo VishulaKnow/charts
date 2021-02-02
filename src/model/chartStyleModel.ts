@@ -8,7 +8,7 @@ export class ChartStyleModel
     public static get2DChartStyle(palette: Color[], charts: TwoDimensionalChart[], chartIndex: number): ChartStyle {
         return {
             elementColors: this.get2DElementColorPalette(palette, charts, chartIndex),
-            opacity: 1
+            opacity: this.getChartOpacity(charts, chartIndex)
         }
     }
 
@@ -26,6 +26,12 @@ export class ChartStyleModel
         return cssClasses;
     }
 
+    private static getChartOpacity(charts: TwoDimensionalChart[], chartIndex: number): number {
+        if(charts.length > 1 && charts[chartIndex].type === 'area')
+            return 0.5;
+        return 1;
+    }
+
     private static get2DElementColorPalette(palette: Color[], charts: TwoDimensionalChart[], chartIndex: number): Color[] {
         let startIndex = 0;
         for(let i = 0; i < chartIndex; i++) {
@@ -35,7 +41,7 @@ export class ChartStyleModel
         return palette.slice(startIndex, startIndex + charts[chartIndex].data.valueField.length);
     }   
 
-    public static getElementColorPalette(palette: Color[], elementsAmount: number): Color[] {
+    private static getElementColorPalette(palette: Color[], elementsAmount: number): Color[] {
         return this.generatePalette(palette, elementsAmount);    
     }
 

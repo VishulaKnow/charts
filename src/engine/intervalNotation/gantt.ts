@@ -35,7 +35,7 @@ export class Gantt
         this.fillItemsAttrs(ganttItems, itemsAttrs);
 
         Helper.setCssClasses(ganttItems, chart.cssClasses);
-        Helper.setChartElementColor(ganttItems, chart.style.elementColors, 0, 'fill');
+        Helper.setChartStyle(ganttItems, chart.style, 0, 'fill');
 
         this.renderArrows(ganttItems, chart.data.keyField.name, 'task1');
     }

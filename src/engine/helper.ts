@@ -1,4 +1,5 @@
 import { Color } from "d3";
+import { ChartStyle } from "../model/model";
 
 type StyleColorType = 'fill' | 'stroke';
 
@@ -12,6 +13,11 @@ export class Helper
 
     public static getCssClassesLine(cssClasses: string[]): string {
         return '.' + cssClasses.join('.');
+    }
+
+    public static setChartStyle(elements: d3.Selection<d3.BaseType, unknown, d3.BaseType, unknown>, chartStyle: ChartStyle, fieldIndex: number, styleType: StyleColorType): void {
+        this.setChartElementColor(elements, chartStyle.elementColors, fieldIndex, styleType);
+        this.setChartOpacity(elements, chartStyle.opacity);
     }
 
     public static setChartElementColor(elements: d3.Selection<d3.BaseType, unknown, d3.BaseType, unknown>, colorPalette: Color[], fieldIndex: number, styleType: StyleColorType): void {
@@ -42,5 +48,9 @@ export class Helper
         const translateY = parseFloat(translateNumbers[1]);
 
         return [translateX, translateY];
+    }
+
+    private static setChartOpacity(elements: d3.Selection<d3.BaseType, unknown, d3.BaseType, unknown>, opacity: number): void {
+        elements.attr('opacity', opacity);
     }
 }
