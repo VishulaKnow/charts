@@ -80,7 +80,7 @@ export class Tooltip
                 thisClass.setTooltipCoordinate(tooltipBlock, tooltipCoordinate);
                 
                 const dotsEdgingAttrs = TooltipHelper.getDotEdgingAttrs(d3.select(this));
-                thisClass.renderDotsEdging(block, dotsEdgingAttrs, d3.select(this).style('fill')); 
+                thisClass.renderDotsEdging(block, dotsEdgingAttrs, chart.style.elementColors[index].toString()); 
             });
 
         elemets.on('mouseleave', function() {
@@ -95,25 +95,30 @@ export class Tooltip
         const tooltipArrow = this.renderTooltipArrow(tooltipBlock);
         const thisClass = this;
 
+        const isGrouped = parseFloat(elemets.attr('width')) <= 10 // Если бары достатчно широки, то они не группируются по тултипу 
+
         elemets
             .on('mouseover', function(event, dataRow) {
                 tooltipBlock.style('display', 'block');
                 const keyValue = TooltipHelper.getKeyForTooltip(dataRow, chart.data.keyField.name, isSegmented);
-                if(parseFloat(d3.select(this).attr('width')) > 10) {
+                if(isGrouped) {
+                    tooltipContent.html(TooltipHelper.getMultyTooltipHtmlFor2DChart(chart, data, keyValue));
+                } else {
                     const index = thisClass.getElementIndex(elemets, this, keyValue, chart.data.keyField.name, isSegmented)
                     tooltipContent.html(TooltipHelper.getTooltipHtmlFor2DChart(chart, data, keyValue, index));
-                } else {
-                    tooltipContent.html(TooltipHelper.getMultyTooltipHtmlFor2DChart(chart, data, keyValue));
                 }
 
                 const coordinatePointer: [number, number] = TooltipHelper.getTooltipBlockCoordinate(d3.select(this), tooltipBlock, 'rect', blockSize, tooltipArrow);
                 const tooltipCoordinate = TooltipHelper.getTooltipCoordinate(coordinatePointer);
                 thisClass.setTooltipCoordinate(tooltipBlock, tooltipCoordinate);
 
-                // TooltipHelper.getFilteredElements(elemets, chart.data.keyField.name, keyValue, isSegmented)
-                //     .style('opacity', 0.3);
-                elemets.style('opacity', 0.3);
-                d3.select(this).style('opacity', 1);
+                if(isGrouped) {
+                    TooltipHelper.getFilteredElements(elemets, chart.data.keyField.name, keyValue, isSegmented)
+                        .style('opacity', 0.3);
+                } else {
+                    elemets.style('opacity', 0.3);
+                    d3.select(this).style('opacity', 1);
+                }
             });
 
         elemets.on('mouseleave', function() {
