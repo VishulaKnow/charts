@@ -32,7 +32,7 @@ const TOOLTIP_ARROW_PADDING_Y = 13;
 
 export class TooltipHelper
 { 
-    public static getTooltipHtmlFor2DCharts(chart: TwoDimensionalChartModel, data: DataSource, keyValue: string): string {
+    public static getMultyTooltipHtmlFor2DCharts(chart: TwoDimensionalChartModel, data: DataSource, keyValue: string): string {
         let text = '';
         chart.data.valueField.forEach((field, index) => {
             text += this.getTooltipHtml(chart, data, keyValue, field, chart.style.elementColors[index % chart.style.elementColors.length].toString());
@@ -49,7 +49,6 @@ export class TooltipHelper
     }
 
     public static getTooltipCoordinate(pointer: [number, number]): TooltipCoordinate {
-        const tooltipCursorMargin = 0;
         const coordinate: TooltipCoordinate = {
             left: null,
             top: null,
@@ -60,8 +59,8 @@ export class TooltipHelper
         let left = pointer[0];
         let top = pointer[1];
 
-        coordinate.left = left + tooltipCursorMargin + 'px';
-        coordinate.top = top + tooltipCursorMargin + 'px';
+        coordinate.left = left + 'px';
+        coordinate.top = top + 'px';
 
         return coordinate;
     }

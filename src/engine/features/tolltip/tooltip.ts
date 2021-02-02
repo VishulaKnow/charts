@@ -70,16 +70,16 @@ export class Tooltip
 
         elemets
             .on('mouseover', function(event, d) {
-                tooltipBlock.style('display', 'block');                
-                const key = TooltipHelper.getKeyForTooltip(d, chart.data.keyField.name, isSegmented);
-                tooltipContent.html(`${TooltipHelper.getTooltipHtmlFor2DCharts(chart, data, key)}`);
+                tooltipBlock.style('display', 'block');                               
+                const keyValue = TooltipHelper.getKeyForTooltip(d, chart.data.keyField.name, isSegmented);
+                tooltipContent.html(`${TooltipHelper.getMultyTooltipHtmlFor2DCharts(chart, data, keyValue)}`);
 
                 const coordinatePointer: [number, number] = TooltipHelper.getTooltipBlockCoordinate(d3.select(this), tooltipBlock, 'circle', blockSize, tooltipArrow);
                 const tooltipCoordinate = TooltipHelper.getTooltipCoordinate(coordinatePointer);
                 thisClass.setTooltipCoordinate(tooltipBlock, tooltipCoordinate);
                 
                 const dotsEdgingAttrs = TooltipHelper.getDotEdgingAttrs(d3.select(this));
-                thisClass.renderDotsEdging(block, dotsEdgingAttrs, d3.select(this).style('fill'));
+                thisClass.renderDotsEdging(block, dotsEdgingAttrs, d3.select(this).style('fill')); 
             });
 
         elemets.on('mouseleave', function() {
@@ -98,7 +98,7 @@ export class Tooltip
             .on('mouseover', function(event, dataRow) {
                 tooltipBlock.style('display', 'block');
                 const key = TooltipHelper.getKeyForTooltip(dataRow, chart.data.keyField.name, isSegmented);
-                tooltipContent.html(`${TooltipHelper.getTooltipHtmlFor2DCharts(chart, data, key)}`);
+                tooltipContent.html(`${TooltipHelper.getMultyTooltipHtmlFor2DCharts(chart, data, key)}`);
 
                 const coordinatePointer: [number, number] = TooltipHelper.getTooltipBlockCoordinate(d3.select(this), tooltipBlock, 'rect', blockSize, tooltipArrow);
                 const tooltipCoordinate = TooltipHelper.getTooltipCoordinate(coordinatePointer);
@@ -244,5 +244,17 @@ export class Tooltip
         block.getChartBlock()
             .selectAll('.dot-edging-external, .dot-edging-internal')
             .remove();
+    }
+
+    private static getElementIndex(elemets: d3.Selection<d3.BaseType, DataRow, d3.BaseType, unknown>, dot: d3.BaseType, keyValue: string, keyName: string): number {
+        let index = -1;
+        const filtered = elemets.filter(d => d[keyName] === keyValue);
+        filtered.each(function(d, i) {
+            if(d3.select(this).node() === d3.select(dot).node()) {
+                index = i;
+            }
+        });
+
+        return index;
     }
 }
