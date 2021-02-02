@@ -26,8 +26,8 @@ export interface DotEdgingAttrs {
     cy: number
 }
 
-
-const TOOLTIP_ARROW_PADDING_X = 9 - 4.14 + 13.3;
+export const ARROW_DEFAULT_POSITION = 50;
+const TOOLTIP_ARROW_PADDING_X = ARROW_DEFAULT_POSITION - 4.14 + 13.3;
 const TOOLTIP_ARROW_PADDING_Y = 13;
 
 export class TooltipHelper
@@ -100,9 +100,9 @@ export class TooltipHelper
 
     private static setTooltipArrowCoordinate(tooltipArrow: d3.Selection<d3.BaseType, unknown, HTMLElement, any>, pad: number = 0): void {
         if(pad !== 0)
-            tooltipArrow.style('left', `${9 + Math.floor(pad)}px`);
+            tooltipArrow.style('left', `${ARROW_DEFAULT_POSITION + Math.floor(pad)}px`);
         else
-            tooltipArrow.style('left', `9px`);
+            tooltipArrow.style('left', `${ARROW_DEFAULT_POSITION}px`);
     }
 
     public static getDotEdgingAttrs(element: d3.Selection<d3.BaseType, DataRow, HTMLElement, any>): DotEdgingAttrs {

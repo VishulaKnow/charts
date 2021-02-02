@@ -2,7 +2,7 @@ import * as d3 from "d3";
 import { BlockMargin, DataRow, DataSource, IntervalChartModel, Model, PolarChartModel, Size, TwoDimensionalChartModel } from "../../../model/model";
 import { Helper } from "../../helper";
 import { Block } from "../../block/block";
-import { DotEdgingAttrs, TooltipCoordinate, TooltipHelper } from "./tooltipHelper";
+import { ARROW_DEFAULT_POSITION, DotEdgingAttrs, TooltipCoordinate, TooltipHelper } from "./tooltipHelper";
 import { Donut } from "../../polarNotation/donut";
 import { Bar } from "../../twoDimensionalNotation/bar/bar";
 import { Dot } from "../lineDots/dot";
@@ -110,8 +110,10 @@ export class Tooltip
                 const tooltipCoordinate = TooltipHelper.getTooltipCoordinate(coordinatePointer);
                 thisClass.setTooltipCoordinate(tooltipBlock, tooltipCoordinate);
 
-                TooltipHelper.getFilteredElements(elemets, chart.data.keyField.name, keyValue, isSegmented)
-                    .style('opacity', 0.3);
+                // TooltipHelper.getFilteredElements(elemets, chart.data.keyField.name, keyValue, isSegmented)
+                //     .style('opacity', 0.3);
+                elemets.style('opacity', 0.3);
+                d3.select(this).style('opacity', 1);
             });
 
         elemets.on('mouseleave', function() {
@@ -185,7 +187,7 @@ export class Tooltip
                 .append('div')
                 .attr('class', this.tooltipArrowClass)
                 .style('position', 'absolute')
-                .style('left', '9px')
+                .style('left', `${ARROW_DEFAULT_POSITION}px`)
                 .style('bottom', '-6px');
         
         return tooltipArrow;
