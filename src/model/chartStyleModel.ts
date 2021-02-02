@@ -1,9 +1,24 @@
 import * as d3 from "d3";
 import { color, Color } from "d3";
-import { ChartNotation, ChartType, TwoDimensionalChart } from "../config/config";
+import { ChartType, TwoDimensionalChart } from "../config/config";
+import { ChartStyle } from "./model";
 
 export class ChartStyleModel
 {
+    public static get2DChartStyle(palette: Color[], charts: TwoDimensionalChart[], chartIndex: number): ChartStyle {
+        return {
+            elementColors: this.get2DElementColorPalette(palette, charts, chartIndex),
+            opacity: 1
+        }
+    }
+
+    public static getChartStyle(palette: Color[], elementsAmount: number): ChartStyle {
+        return {
+            elementColors: this.getElementColorPalette(palette, elementsAmount),
+            opacity: 1
+        }
+    }
+
     public static getCssClasses(chartType: ChartType, chartIndex: number): string[] {
         const cssClasses = [`chart-${chartIndex}`];
         cssClasses.push(chartType);
@@ -11,7 +26,7 @@ export class ChartStyleModel
         return cssClasses;
     }
 
-    public static get2DElementColorPalette(palette: Color[], charts: TwoDimensionalChart[], chartIndex: number): Color[] {
+    private static get2DElementColorPalette(palette: Color[], charts: TwoDimensionalChart[], chartIndex: number): Color[] {
         let startIndex = 0;
         for(let i = 0; i < chartIndex; i++) {
             startIndex += charts[i].data.valueField.length
@@ -20,7 +35,7 @@ export class ChartStyleModel
         return palette.slice(startIndex, startIndex + charts[chartIndex].data.valueField.length);
     }   
 
-    public static getElementColorPalette(palette: Color[], notation: ChartNotation, elementsAmount: number, chartIndex: number = 0): Color[] {
+    public static getElementColorPalette(palette: Color[], elementsAmount: number): Color[] {
         return this.generatePalette(palette, elementsAmount);    
     }
 

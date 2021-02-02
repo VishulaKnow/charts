@@ -62,13 +62,13 @@ export class Legend
         if(options.type === '2d') {
             let colors: Color[] = [];
             options.charts.forEach(chart => {
-                colors = colors.concat(chart.elementColors);
+                colors = colors.concat(chart.style.elementColors);
             });
             return colors;
         } else if(options.type === 'polar') {
-            return options.charts.map(chart => chart.elementColors)[0];
+            return options.charts.map(chart => chart.style.elementColors)[0];
         } else if(options.type === 'interval') {
-            return options.charts.map(chart => chart.elementColors[0]);
+            return options.charts.map(chart => chart.style.elementColors[0]);
         }
     }
 

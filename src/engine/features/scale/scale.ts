@@ -13,6 +13,7 @@ export class Scale
             scaleKey: null,
             scaleValue: null
         }
+        
         if(scaleKey.type === 'band')
             scales.scaleKey = this.getScaleBand(scaleKey.domain, scaleKey.range, bandSettings);
         else if(scaleKey.type === 'point')

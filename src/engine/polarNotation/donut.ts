@@ -40,7 +40,7 @@ export class Donut
             .attr('d', arc);
     
         Helper.setCssClasses(arcs, chart.cssClasses);
-        this.setElementsColor(items, chart.elementColors);
+        this.setElementsColor(items, chart.style.elementColors);
         
         Aggregator.render(block, data, chart.data.valueField.name, innerRadius, translate);      
     }

@@ -80,7 +80,7 @@ export class TwoDimensionalModel
                 data: { ...chart.data },
                 tooltip: chart.tooltip,
                 cssClasses: ChartStyleModel.getCssClasses(chart.type, index),
-                elementColors: ChartStyleModel.get2DElementColorPalette(chartPalette, charts, index),
+                style: ChartStyleModel.get2DChartStyle(chartPalette, charts, index),
                 index
             });
         });

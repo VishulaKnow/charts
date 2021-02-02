@@ -124,8 +124,13 @@ export interface DonutChartSettings {
 interface ChartModel {
     tooltip: TooltipModel;
     cssClasses: string[];
-    elementColors: Color[];
+    style: ChartStyle;
     title: string;
+}
+
+export interface ChartStyle {
+    elementColors: Color[];
+    opacity: number;
 }
 
 export interface TwoDimensionalChartModel extends ChartModel {

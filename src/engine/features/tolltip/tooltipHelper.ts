@@ -35,7 +35,7 @@ export class TooltipHelper
     public static getTooltipHtmlFor2DCharts(chart: TwoDimensionalChartModel, data: DataSource, keyValue: string): string {
         let text = '';
         chart.data.valueField.forEach((field, index) => {
-            text += this.getTooltipHtml(chart, data, keyValue, field, chart.elementColors[index % chart.elementColors.length].toString());
+            text += this.getTooltipHtml(chart, data, keyValue, field, chart.style.elementColors[index % chart.style.elementColors.length].toString());
         });
         return text;
     }

@@ -46,9 +46,9 @@ export class Area
                 .style('clip-path', `url(${block.getClipPathId()})`);
         
             Helper.setCssClasses(path, chart.cssClasses);
-            Helper.setChartElementColor(path, chart.elementColors, fieldIndex, 'fill');
+            Helper.setChartElementColor(path, chart.style.elementColors, fieldIndex, 'fill');
     
-            Dot.render(block, data, keyAxisOrient, scales, margin, chart.data.keyField.name, field.name, chart.cssClasses, fieldIndex, chart.elementColors, blockSize, false);
+            Dot.render(block, data, keyAxisOrient, scales, margin, chart.data.keyField.name, field.name, chart.cssClasses, fieldIndex, chart.style.elementColors, blockSize, false);
         });
     }
 
@@ -67,11 +67,11 @@ export class Area
                 .style('clip-path', `url(${block.getClipPathId()})`);
 
         Helper.setCssClasses(areas, chart.cssClasses);
-        this.setSegmentColor(areas, chart.elementColors);
+        this.setSegmentColor(areas, chart.style.elementColors);
 
 
         stackedData.forEach((sd, index) => {
-            Dot.render(block, sd, keyAxisOrient, scales, margin, chart.data.keyField.name, '1', chart.cssClasses, index, chart.elementColors, blockSize, true);
+            Dot.render(block, sd, keyAxisOrient, scales, margin, chart.data.keyField.name, '1', chart.cssClasses, index, chart.style.elementColors, blockSize, true);
         });
     }
 

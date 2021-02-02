@@ -65,7 +65,7 @@ export class Bar
             this.fillBarAttrsByKeyOrient(bars, barAttrs);
             
             Helper.setCssClasses(bars, chart.cssClasses);
-            this.setBarGroupColor(bars, chart.elementColors, index);
+            this.setBarGroupColor(bars, chart.style.elementColors, index);
         });
     }
 
@@ -96,7 +96,7 @@ export class Bar
             .attr('height', barAttrs.height);
 
         Helper.setCssClasses(bars, chart.cssClasses);
-        this.setSegmentColor(groups, chart.elementColors);
+        this.setSegmentColor(groups, chart.style.elementColors);
     }
 
     private static renderBarGroups(block: Block, data: DataRow[]): void {
