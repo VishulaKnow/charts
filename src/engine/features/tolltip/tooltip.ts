@@ -72,7 +72,8 @@ export class Tooltip
             .on('mouseover', function(event, d) {
                 tooltipBlock.style('display', 'block');                               
                 const keyValue = TooltipHelper.getKeyForTooltip(d, chart.data.keyField.name, isSegmented);
-                tooltipContent.html(`${TooltipHelper.getMultyTooltipHtmlFor2DCharts(chart, data, keyValue)}`);
+                const index = thisClass.getElementIndex(elemets, this, keyValue, chart.data.keyField.name)
+                tooltipContent.html(`${TooltipHelper.getTooltipHtmlFor2DChart(chart, data, keyValue, index)}`);
 
                 const coordinatePointer: [number, number] = TooltipHelper.getTooltipBlockCoordinate(d3.select(this), tooltipBlock, 'circle', blockSize, tooltipArrow);
                 const tooltipCoordinate = TooltipHelper.getTooltipCoordinate(coordinatePointer);
@@ -98,7 +99,7 @@ export class Tooltip
             .on('mouseover', function(event, dataRow) {
                 tooltipBlock.style('display', 'block');
                 const key = TooltipHelper.getKeyForTooltip(dataRow, chart.data.keyField.name, isSegmented);
-                tooltipContent.html(`${TooltipHelper.getMultyTooltipHtmlFor2DCharts(chart, data, key)}`);
+                tooltipContent.html(`${TooltipHelper.getMultyTooltipHtmlFor2DChart(chart, data, key)}`);
 
                 const coordinatePointer: [number, number] = TooltipHelper.getTooltipBlockCoordinate(d3.select(this), tooltipBlock, 'rect', blockSize, tooltipArrow);
                 const tooltipCoordinate = TooltipHelper.getTooltipCoordinate(coordinatePointer);

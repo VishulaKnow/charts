@@ -32,12 +32,16 @@ const TOOLTIP_ARROW_PADDING_Y = 13;
 
 export class TooltipHelper
 { 
-    public static getMultyTooltipHtmlFor2DCharts(chart: TwoDimensionalChartModel, data: DataSource, keyValue: string): string {
+    public static getMultyTooltipHtmlFor2DChart(chart: TwoDimensionalChartModel, data: DataSource, keyValue: string): string {
         let text = '';
         chart.data.valueField.forEach((field, index) => {
             text += this.getTooltipHtml(chart, data, keyValue, field, chart.style.elementColors[index % chart.style.elementColors.length].toString());
         });
         return text;
+    }
+
+    public static getTooltipHtmlFor2DChart(chart: TwoDimensionalChartModel, data: DataSource, keyValue: string, index: number): string {
+        return this.getTooltipHtml(chart, data, keyValue, chart.data.valueField[index], chart.style.elementColors[index % chart.style.elementColors.length].toString());
     }
 
     public static getTooltipHtmlForPolarChart(chart: PolarChartModel, data: DataSource, keyValue: string, markColor: string): string {
