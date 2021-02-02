@@ -95,7 +95,7 @@ export class Tooltip
         const tooltipArrow = this.renderTooltipArrow(tooltipBlock);
         const thisClass = this;
 
-        const isGrouped = parseFloat(elemets.attr('width')) < 10; // groupping bar by one bar width
+        const isGrouped = parseFloat(elemets.attr('width')) < 10; // grouping bar by one bar width
 
         elemets
             .on('mouseover', function(event, dataRow) {
