@@ -25,16 +25,18 @@ export class Bar
     }
 
     public static updateBarChartByValueAxis(block: Block, scales: Scales, margin: BlockMargin, keyAxisOrient: string, chart: TwoDimensionalChartModel, blockSize: Size): void {
-        const bars = block.getChartBlock()
-            .selectAll(`.${this.barItemClass}${Helper.getCssClassesLine(chart.cssClasses)}`) as d3.Selection<SVGRectElement, DataRow, d3.BaseType, unknown>;
+        chart.data.valueField.forEach((field, index) => {
+            const bars = block.getChartBlock()
+                .selectAll(`.${this.barItemClass}${Helper.getCssClassesLine(chart.cssClasses)}.chart-element-${index}`) as d3.Selection<SVGRectElement, DataRow, d3.BaseType, unknown>;
     
-        this.fillBarAttrsByKeyOrientWithTransition(bars,
-            keyAxisOrient,
-            scales.scaleValue,
-            margin,
-            chart.data.valueField[0].name,
-            blockSize,
-            1000);
+            this.fillBarAttrsByKeyOrientWithTransition(bars,
+                keyAxisOrient,
+                scales.scaleValue,
+                margin,
+                field.name,
+                blockSize,
+                1000);
+        })
     }
 
     public static getAllBarItems(block: Block): d3.Selection<d3.BaseType, DataRow, d3.BaseType, unknown> {
