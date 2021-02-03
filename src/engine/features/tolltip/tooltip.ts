@@ -24,7 +24,7 @@ export class Tooltip
             } else if(model.options.type === 'polar') {
                 this.renderTooltipsForDonut(block, model.options.charts, data, model.blockCanvas.size, model.chartBlock.margin, Donut.getChartThickness(model.chartSettings.donut, model.blockCanvas.size, model.chartBlock.margin));
             } else if(model.options.type === 'interval') {
-                this.renderTooltipsForInterval(block, model.options.charts, data, model.blockCanvas.size);
+                this.renderTooltipsForInterval(block, model.options.charts, data, model.blockCanvas.size, model.options.orient);
             }
         }
     }
@@ -53,12 +53,12 @@ export class Tooltip
         });
     }
 
-    private static renderTooltipsForInterval(block: Block, charts: IntervalChartModel[], data: DataSource, blockSize: Size): void {
+    private static renderTooltipsForInterval(block: Block, charts: IntervalChartModel[], data: DataSource, blockSize: Size, chartOrientation: ChartOrientation): void {
         charts.forEach(chart => {
             if(chart.tooltip.data.fields.length !== 0) {
                 const bars = block.getSvg()
                     .selectAll(`rect${Helper.getCssClassesLine(chart.cssClasses)}`);
-                this.renderTooltipForGantt(block, bars, data, chart, blockSize);
+                this.renderTooltipForGantt(block, bars, data, chart, chartOrientation, blockSize);
             }
         });
     }
@@ -76,7 +76,7 @@ export class Tooltip
                 const index = thisClass.getElementIndex(elemets, this, keyValue, chart.data.keyField.name, isSegmented)
                 tooltipContent.html(`${TooltipHelper.getTooltipHtmlFor2DChart(chart, data, keyValue, index)}`);
 
-                const coordinatePointer: [number, number] = TooltipHelper.getTooltipBlockCoordinate(d3.select(this), tooltipBlock, 'circle', blockSize, tooltipArrow);
+                const coordinatePointer: [number, number] = TooltipHelper.getTooltipBlockCoordinateByDot(d3.select(this), tooltipBlock, blockSize, tooltipArrow);
                 const tooltipCoordinate = TooltipHelper.getTooltipCoordinate(coordinatePointer);
                 thisClass.setTooltipCoordinate(tooltipBlock, tooltipCoordinate);
                 
@@ -114,7 +114,7 @@ export class Tooltip
                     tooltipContent.html(TooltipHelper.getTooltipHtmlFor2DChart(chart, data, keyValue, index));
                 }
 
-                const coordinatePointer: [number, number] = TooltipHelper.getTooltipBlockCoordinate(d3.select(this), tooltipBlock, 'rect', blockSize, tooltipArrow);
+                const coordinatePointer: [number, number] = TooltipHelper.getTooltipBlockCoordinateByRect(d3.select(this), tooltipBlock, blockSize, tooltipArrow, chartOrientation);
                 const tooltipCoordinate = TooltipHelper.getTooltipCoordinate(coordinatePointer);
                 thisClass.setTooltipCoordinate(tooltipBlock, tooltipCoordinate);
 
@@ -159,7 +159,7 @@ export class Tooltip
         });
     }
 
-    private static renderTooltipForGantt(block: Block, elemets: d3.Selection<d3.BaseType, DataRow, d3.BaseType, unknown>, data: DataSource, chart: IntervalChartModel, blockSize: Size): void {
+    private static renderTooltipForGantt(block: Block, elemets: d3.Selection<d3.BaseType, DataRow, d3.BaseType, unknown>, data: DataSource, chart: IntervalChartModel, chartOrientation: ChartOrientation, blockSize: Size): void {
         const tooltipBlock = this.renderTooltipBlock(block);
         const tooltipContent = this.getTooltipContentBlock(tooltipBlock);
         const tooltipArrow = this.renderTooltipArrow(tooltipBlock);
@@ -171,7 +171,7 @@ export class Tooltip
                 const key = TooltipHelper.getKeyForTooltip(dataRow, chart.data.keyField.name, false);
                 tooltipContent.html(`${TooltipHelper.getTooltipHtmlForIntervalChart(chart, data, key, d3.select(this).style('fill'))}`);
 
-                const coordinatePointer: [number, number] = TooltipHelper.getTooltipBlockCoordinate(d3.select(this), tooltipBlock, 'rect', blockSize, tooltipArrow);
+                const coordinatePointer: [number, number] = TooltipHelper.getTooltipBlockCoordinateByRect(d3.select(this), tooltipBlock, blockSize, tooltipArrow, chartOrientation);
                 const tooltipCoordinate = TooltipHelper.getTooltipCoordinate(coordinatePointer);
                 thisClass.setTooltipCoordinate(tooltipBlock, tooltipCoordinate);
 
