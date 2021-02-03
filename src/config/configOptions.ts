@@ -44,7 +44,7 @@ const configCars: Config = {
         charts: [
             {
                 title: 'Рост стоимости',
-                type: 'area',
+                type: 'bar',
                 data: {
                     dataSource: 'dataSet',
                     keyField:  {
