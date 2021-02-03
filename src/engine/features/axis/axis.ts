@@ -176,11 +176,13 @@ export class Axis
                     tspan.text(line.join(''));
                     if (tspan.node().getComputedTextLength() > maxWidth && line.length > 1) {
                         line.pop();
-                        tspan.text(line.join('') + '-');
+                        tspan.text(line.join(''));
+                        if(lineNumber === 0)
+                            tspan.text(tspan.text() + '-');
                         line = [letter];
                         if(lineNumber >= 1) {
                             if(letters.length > 0)
-                                tspan.text(tspan.text() + '...')
+                                tspan.text(tspan.text().substring(0, tspan.text().length - 1) + '...')
                             break;
                         }
                         tspan = textBlock.append("tspan").attr("y", y).attr("dy", dy + "em").attr('text-anchor', 'start').text(letter);
