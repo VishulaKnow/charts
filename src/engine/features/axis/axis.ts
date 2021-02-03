@@ -164,27 +164,27 @@ export class Axis
         text.each(function() {
             let textBlock = d3.select(this);
             if(textBlock.text().split(' ').length > 1) {
-                let words = textBlock.text().split(/\s+/).reverse(),
-                    word,
+                let letters = textBlock.text().split('').reverse(),
+                    letter,
                     line: string[] = [],
                     lineNumber = 0,
                     y = textBlock.attr("y"),
                     dy = 1.4,
                     tspan = textBlock.text(null).append("tspan").attr("x", 0).attr("y", y).attr("dy", dy + "em").attr('text-anchor', 'start');
-                while (word = words.pop()) {
-                    line.push(word);
-                    tspan.text(line.join(" "));
+                while (letter = letters.pop()) {
+                    line.push(letter);
+                    tspan.text(line.join(''));
                     if (tspan.node().getComputedTextLength() > width && line.length > 1) {
                         line.pop();
-                        tspan.text(line.join(" "));
-                        line = [word];
-                        tspan = textBlock.append("tspan").attr("y", y).attr("dy", dy + "em").attr('text-anchor', 'start').text(word);
+                        tspan.text(line.join('') + '-');
+                        line = [letter];
+                        if(lineNumber >= 1) {
+                            if(letters.length > 0)
+                                tspan.text(tspan.text() + '...')
+                            break;
+                        }
+                        tspan = textBlock.append("tspan").attr("y", y).attr("dy", dy + "em").attr('text-anchor', 'start').text(letter);
                         lineNumber++;
-                    }
-                    if(lineNumber >= 1) {
-                        if(words.length > 0)
-                            tspan.text(tspan.text() + '...')
-                        break;
                     }
                 }
                 if(textBlock.selectAll('tspan').size() > 1) {
