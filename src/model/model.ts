@@ -63,9 +63,13 @@ export interface AxisModelOptions {
     orient: Orient;
     translate: TranslateModel;
     cssClass: string;
-    maxLabelSize: number;
     ticks: AxisTicksModel;
-    labelPositition: AxisLabelPosition;
+    labels: AxisLabelModel;
+}
+
+export interface AxisLabelModel {
+    maxSize: number;
+    positition: AxisLabelPosition;
 }
 
 interface AxisTicksModel {

@@ -78,7 +78,7 @@ const configCars: Config = {
                         ]
                     }
                 },
-                embeddedLabels: 'value'
+                embeddedLabels: 'none'
             }
         ]
     }

@@ -1,4 +1,4 @@
-import { Color } from "d3";
+import { Color, lab } from "d3";
 import { Config, IntervalChart, IntervalOptions } from "../config/config";
 import { DesignerConfig } from "../designer/designerConfig";
 import { AxisModel } from "./axisModel";
@@ -46,9 +46,11 @@ export class IntervalModel {
                         translateY: AxisModel.getAxisTranslateY(AxisType.Key, configOptions.orientation, configOptions.axis.keyAxis.position, margin, config.canvas.size.height)
                     },
                     cssClass: 'key-axis',
-                    maxLabelSize: designerConfig.canvas.axisLabel.maxSize.main,
                     ticks: configOptions.axis.keyAxis.ticks,
-                    labelPositition: AxisModel.getKeyAxisLabelPosition(margin, config.canvas.size, DataManagerModel.getDataValuesByKeyField(data, configOptions.charts[0]).length)
+                    labels: {
+                        maxSize: designerConfig.canvas.axisLabel.maxSize.main,
+                        positition: AxisModel.getKeyAxisLabelPosition(margin, config.canvas.size, DataManagerModel.getDataValuesByKeyField(data, configOptions.charts[0]).length)
+                    }
                 },
                 valueAxis: {
                     type: 'value',
@@ -57,10 +59,12 @@ export class IntervalModel {
                         translateX: AxisModel.getAxisTranslateX(AxisType.Value, configOptions.orientation, configOptions.axis.valueAxis.position, margin, config.canvas.size.width),
                         translateY: AxisModel.getAxisTranslateY(AxisType.Value, configOptions.orientation, configOptions.axis.valueAxis.position, margin, config.canvas.size.height)
                     },          
-                    cssClass: 'value-axis',
-                    maxLabelSize: designerConfig.canvas.axisLabel.maxSize.main,
+                    cssClass: 'value-axis',                    
                     ticks: configOptions.axis.valueAxis.ticks,
-                    labelPositition: 'straight'
+                    labels: {
+                        maxSize: designerConfig.canvas.axisLabel.maxSize.main,
+                        positition: 'straight'
+                    }
                 }
             },
             type: configOptions.type,

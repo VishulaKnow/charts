@@ -52,17 +52,17 @@ export class Axis
             .attr('class', `axis ${axisOptions.cssClass} data-label`)
             .call(axis);
         
-        if(axisOptions.orient === 'bottom' && axisOptions.type === 'key' && axisOptions.labelPositition === 'rotated')
+        if(axisOptions.orient === 'bottom' && axisOptions.type === 'key' && axisOptions.labels.positition === 'rotated')
             this.rotateLabels(axisElement);
             
         if(axisOptions.orient === 'left' && axisOptions.type === 'key' && Scale.getScaleWidth(scale) >= 38) {
-            (axisElement.selectAll('.tick text') as d3.Selection<SVGGElement, unknown, d3.BaseType, any>).call(this.wrap, axisOptions.maxLabelSize);
+            (axisElement.selectAll('.tick text') as d3.Selection<SVGGElement, unknown, d3.BaseType, any>).call(this.wrap, axisOptions.labels.maxSize);
         } else {
             this.cropLabels(block, scale, scaleOptions, axisOptions, blockSize);
         }
 
         if(axisOptions.type === 'key' && axisOptions.orient === 'left') {
-            this.alignLabels(axisElement, 'start', axisOptions.maxLabelSize);
+            this.alignLabels(axisElement, 'start', axisOptions.labels.maxSize);
         }
     }
 
@@ -134,14 +134,14 @@ export class Axis
         if(scaleOptions.type === 'point' || scaleOptions.type === 'band') {
             const axisTextBlocks = block.getSvg().select(`.${axisOptions.cssClass}`).selectAll('text') as d3.Selection<SVGGraphicsElement, unknown, HTMLElement, unknown>;
             let labelSize: number;
-            if((axisOptions.orient === 'left' || axisOptions.orient === 'right') || (axisOptions.type === 'key' && axisOptions.labelPositition === 'rotated'))
-                labelSize = axisOptions.maxLabelSize;
+            if((axisOptions.orient === 'left' || axisOptions.orient === 'right') || (axisOptions.type === 'key' && axisOptions.labels.positition === 'rotated'))
+                labelSize = axisOptions.labels.maxSize;
             else
                 labelSize = (scale as d3.ScaleBand<string>).step();
 
             Helper.cropLabels(axisTextBlocks, labelSize);
             
-            if(scaleOptions.type === 'point' && axisOptions.labelPositition === 'straight' && (axisOptions.orient === 'top' || axisOptions.orient === 'bottom')) {
+            if(scaleOptions.type === 'point' && axisOptions.labels.positition === 'straight' && (axisOptions.orient === 'top' || axisOptions.orient === 'bottom')) {
                 const lastTick = block.getSvg().select(`.${axisOptions.cssClass}`).select('.tick:last-of-type') as d3.Selection<SVGGraphicsElement, unknown, HTMLElement, unknown>;
                 const lastLabel = lastTick.select('text') as d3.Selection<SVGGraphicsElement, unknown, HTMLElement, unknown>;
                 const translateX = Helper.getTranslateNumbers(lastTick.attr('transform'))[0];
