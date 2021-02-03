@@ -55,12 +55,12 @@ export class RecordOverflowAlert
             return 'строк';
         } else {
             if(hidedRecordsAmount >= 10 && hidedRecordsAmount <= 20)
-                return 'элементов'; 
+                return 'категорий'; 
             if(digit === 1)
-                return 'элемент';
+                return 'категория';
             if(digit >= 2 && digit <= 4)
-                return 'элемента';
-            return 'элементов';
+                return 'категории';
+            return 'категорий';
         }
     }
 
