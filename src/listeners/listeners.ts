@@ -589,6 +589,7 @@ export default class Listeners
             ListenersHelper.setCheckboxValue('#config-tick-key', config.options.axis.keyAxis.ticks.flag);
             ListenersHelper.setCheckboxValue('#config-tick-value', config.options.axis.valueAxis.ticks.flag);
             ListenersHelper.setCheckboxValue('#is-segmented', config.options.isSegmented);
+            ListenersHelper.setInputValue('#embedded-labels', config.options.charts[0].embeddedLabels);
         } else if(config.options.type === 'polar') {
             ListenersHelper.setInputValue('#chart-polar-type', config.options.charts[0].type);
         }
