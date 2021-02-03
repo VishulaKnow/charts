@@ -28,8 +28,10 @@ export class Scale
     }
 
     public static getScaleWidth(scale: d3.AxisScale<any>): number {
-        if((scale as d3.ScaleBand<string>).bandwidth) {
+        if((scale as d3.ScaleBand<string>).bandwidth && scale.bandwidth() !== 0) {
             return scale.bandwidth();
+        } else if((scale as d3.ScalePoint<string>).step) {
+            return (scale as d3.ScalePoint<string>).step();
         }
     }
 

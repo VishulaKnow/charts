@@ -54,9 +54,9 @@ export class Axis
         
         if(axisOptions.orient === 'bottom' && axisOptions.type === 'key' && axisOptions.labelPositition === 'rotated')
             this.rotateLabels(axisElement);
-
-        if(axisOptions.orient === 'left' && axisOptions.type === 'key') {
-            axisElement.selectAll('.tick text').call(this.wrap, axisOptions.maxLabelSize, Scale.getScaleWidth(scale));
+            
+        if(axisOptions.orient === 'left' && axisOptions.type === 'key' && Scale.getScaleWidth(scale) >= 38) {
+            (axisElement.selectAll('.tick text') as d3.Selection<SVGGElement, unknown, d3.BaseType, any>).call(this.wrap, axisOptions.maxLabelSize, Scale.getScaleWidth(scale));
             this.alignLabels(axisElement, 'start', axisOptions.maxLabelSize);
         } else {
             this.cropLabels(block, scale, scaleOptions, axisOptions, blockSize);
@@ -160,7 +160,7 @@ export class Axis
         }
     }
 
-    private static wrap(text: d3.Selection<d3.BaseType, unknown, d3.BaseType, any>, width: number, bandWidth: number) {
+    private static wrap(text: d3.Selection<SVGGElement, unknown, d3.BaseType, any>, width: number, bandWidth: number) {
         text.each(function() {
             let textBlock = d3.select(this);
             if(textBlock.text().split(' ').length > 1) {
@@ -188,7 +188,8 @@ export class Axis
                     }
                 }
                 if(textBlock.selectAll('tspan').size() > 1) {
-                    textBlock.attr('y', -(bandWidth / 2));
+                    textBlock.attr('y', -(textBlock.node().getBBox().height / 2));
+                    // textBlock.attr('dy', null);
                 }
             }
         });
