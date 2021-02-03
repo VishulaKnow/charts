@@ -4,10 +4,10 @@
         { "brand": "LADA", "price": 50, "count": 10 },
         { "brand": "MERCEDES", "price": 15, "count": 12 },
         { "brand": "AUDI", "price": 20, "count": 5 },
-        { "brand": "VOLKSWAGEN VOLKSWAGEN VOLKSWAGEN VOLKSWAGEN VOLKSWAGEN VOLKSWAGEN VOLKSWAGEN VOLKSWAGEN VOLKSWAGEN VOLKSWAGEN VOLKSWAGEN VOLKSWAGEN", "price": 40, "count": 6 },
+        { "brand": "VOLKSWAGEN VOLKSWAGEN", "price": 40, "count": 6 },
         { "brand": "DODGE", "price": 70, "count": 4 },
         { "brand": "SAAB", "price": 50, "count": 11 },
-        { "brand": "HONDA", "price": 20, "count": 2 },
+        { "brand": "HONDAHONDAHONDAHONDA", "price": 20, "count": 2 },
         { "brand": "TOYOTAS TOYOTAS", "price": 115, "count": 1 }
     ],
     "dataSet2": [
