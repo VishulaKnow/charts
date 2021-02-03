@@ -188,8 +188,7 @@ export class Axis
                     }
                 }
                 if(textBlock.selectAll('tspan').size() > 1) {
-                    textBlock.attr('y', -(textBlock.node().getBBox().height / 2));
-                    // textBlock.attr('dy', null);
+                    textBlock.attr('y', -(textBlock.node().getBBox().height / 2 + 4.8));
                 }
             }
         });

@@ -42,7 +42,7 @@ export class Scale
     }
 
     public static getScaleKeyPoint(scale: d3.AxisScale<any>, value: any): number {
-        if((scale as d3.ScaleBand<string>).bandwidth) {
+        if((scale as d3.ScaleBand<string>).bandwidth && (scale as d3.ScaleBand<string>).bandwidth() !== 0) {
             return scale(value) + this.getScaleWidth(scale) / 2;
         }
         return scale(value);

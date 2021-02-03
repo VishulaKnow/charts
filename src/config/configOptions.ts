@@ -5,7 +5,7 @@ const configCars: Config = {
         class: 'outline svg-chart',
         size: {
             width: 960,
-            height: 650
+            height: 567
         }
     },
     options: {
@@ -56,6 +56,11 @@ const configCars: Config = {
                             name: 'price',
                             format: 'money',
                             title: 'Цены на автомобили по рынку длинное Цены на автомобили по рынку'
+                        },
+                        {
+                            name: 'count',
+                            format: 'integer',
+                            title: 'Количество автомобилей на душу населения'
                         }
                     ]
                 },
