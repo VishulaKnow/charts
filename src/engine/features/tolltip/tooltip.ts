@@ -6,6 +6,7 @@ import { ARROW_DEFAULT_POSITION, DotEdgingAttrs, TooltipCoordinate, TooltipHelpe
 import { Donut } from "../../polarNotation/donut";
 import { Bar } from "../../twoDimensionalNotation/bar/bar";
 import { Dot } from "../lineDots/dot";
+import { ChartOrientation } from "../../../config/config";
 
 export class Tooltip
 {
@@ -19,7 +20,7 @@ export class Tooltip
         const chartsWithTooltipIndex = model.options.charts.findIndex((chart: TwoDimensionalChartModel | PolarChartModel | IntervalChartModel) => chart.tooltip.data.fields.length !== 0);
         if(chartsWithTooltipIndex !== -1) {
             if(model.options.type === '2d') {
-                this.rednerTooltipFor2DCharts(block, model.options.charts, data, model.options.isSegmented, model.blockCanvas.size);   
+                this.rednerTooltipFor2DCharts(block, model.options.charts, data, model.options.isSegmented, model.blockCanvas.size, model.options.orient);   
             } else if(model.options.type === 'polar') {
                 this.renderTooltipsForDonut(block, model.options.charts, data, model.blockCanvas.size, model.chartBlock.margin, Donut.getChartThickness(model.chartSettings.donut, model.blockCanvas.size, model.chartBlock.margin));
             } else if(model.options.type === 'interval') {
@@ -28,10 +29,10 @@ export class Tooltip
         }
     }
 
-    private static rednerTooltipFor2DCharts(block: Block, charts: TwoDimensionalChartModel[], data: DataSource, isSegmented: boolean, blockSize: Size): void {
+    private static rednerTooltipFor2DCharts(block: Block, charts: TwoDimensionalChartModel[], data: DataSource, isSegmented: boolean, blockSize: Size, chartOrientation: ChartOrientation): void {
         charts.forEach(chart => {
             if(chart.type === 'bar') {
-                this.renderTooltipForBars(block, Bar.getAllBarItems(block), data, chart, isSegmented, blockSize);
+                this.renderTooltipForBars(block, Bar.getAllBarItems(block), data, chart, isSegmented, chartOrientation, blockSize);
             } else if(chart.type === 'line') {
                 this.renderTooltipForDots(block, Dot.getAllDots(block, chart.cssClasses), data, chart, false, blockSize);
             } else {
@@ -89,13 +90,17 @@ export class Tooltip
         });
     }
 
-    private static renderTooltipForBars(block: Block, elemets: d3.Selection<d3.BaseType, DataRow, d3.BaseType, unknown>, data: DataSource, chart: TwoDimensionalChartModel, isSegmented: boolean, blockSize: Size): void {
+    private static renderTooltipForBars(block: Block, elemets: d3.Selection<d3.BaseType, DataRow, d3.BaseType, unknown>, data: DataSource, chart: TwoDimensionalChartModel, isSegmented: boolean, chartOrientation: ChartOrientation, blockSize: Size): void {
         const tooltipBlock = this.renderTooltipBlock(block);
         const tooltipContent = this.getTooltipContentBlock(tooltipBlock);
         const tooltipArrow = this.renderTooltipArrow(tooltipBlock);
         const thisClass = this;
 
-        const isGrouped = parseFloat(elemets.attr('width')) < 10; // grouping bar by one bar width
+        let isGrouped: boolean;
+        if(chartOrientation === 'vertical')
+            isGrouped = parseFloat(elemets.attr('width')) < 10; // grouping bar by one bar width
+        else
+            isGrouped = parseFloat(elemets.attr('height')) < 10;
 
         elemets
             .on('mouseover', function(event, dataRow) {

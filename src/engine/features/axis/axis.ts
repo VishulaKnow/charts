@@ -56,7 +56,7 @@ export class Axis
             this.rotateLabels(axisElement);
             
         if(axisOptions.orient === 'left' && axisOptions.type === 'key' && Scale.getScaleWidth(scale) >= 38) {
-            (axisElement.selectAll('.tick text') as d3.Selection<SVGGElement, unknown, d3.BaseType, any>).call(this.wrap, axisOptions.maxLabelSize, Scale.getScaleWidth(scale));
+            (axisElement.selectAll('.tick text') as d3.Selection<SVGGElement, unknown, d3.BaseType, any>).call(this.wrap, axisOptions.maxLabelSize);
             this.alignLabels(axisElement, 'start', axisOptions.maxLabelSize);
         } else {
             this.cropLabels(block, scale, scaleOptions, axisOptions, blockSize);
@@ -160,10 +160,10 @@ export class Axis
         }
     }
 
-    private static wrap(text: d3.Selection<SVGGElement, unknown, d3.BaseType, any>, width: number, bandWidth: number) {
+    private static wrap(text: d3.Selection<SVGGElement, unknown, d3.BaseType, any>, maxWidth: number) {
         text.each(function() {
             let textBlock = d3.select(this);
-            if(textBlock.text().split(' ').length > 1) {
+            if(textBlock.node().getBBox().width > maxWidth) {
                 let letters = textBlock.text().split('').reverse(),
                     letter,
                     line: string[] = [],
@@ -174,7 +174,7 @@ export class Axis
                 while (letter = letters.pop()) {
                     line.push(letter);
                     tspan.text(line.join(''));
-                    if (tspan.node().getComputedTextLength() > width && line.length > 1) {
+                    if (tspan.node().getComputedTextLength() > maxWidth && line.length > 1) {
                         line.pop();
                         tspan.text(line.join('') + '-');
                         line = [letter];
