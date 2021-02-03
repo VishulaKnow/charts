@@ -146,25 +146,29 @@ export class Axis
             Helper.cropLabels(axisTextBlocks, labelSize);
             
             if(scaleOptions.type === 'point' && axisOptions.labels.positition === 'straight' && (axisOptions.orient === 'top' || axisOptions.orient === 'bottom')) {
-                const lastTick = block.getSvg().select(`.${axisOptions.cssClass}`).select('.tick:last-of-type') as d3.Selection<SVGGraphicsElement, unknown, HTMLElement, unknown>;
-                const lastLabel = lastTick.select('text') as d3.Selection<SVGGraphicsElement, unknown, HTMLElement, unknown>;
-                const translateX = Helper.getTranslateNumbers(lastTick.attr('transform'))[0];
-                
-                if(translateX + lastLabel.node().getBBox().width + axisOptions.translate.translateX > blockSize.width) {
-                    lastLabel.attr('text-anchor', 'end');
-                    Helper.cropLabels(lastLabel, labelSize / 2);
-                }    
-
-                const firtsLabel = block.getSvg()
-                    .select(`.${axisOptions.cssClass}`)
-                    .select('.tick:first-of-type')
-                    .select('text') as d3.Selection<SVGGraphicsElement, unknown, HTMLElement, unknown>;
-
-                if(axisOptions.translate.translateX - firtsLabel.node().getBBox().width < 0) {
-                    firtsLabel.attr('text-anchor', 'start');
-                    Helper.cropLabels(firtsLabel, labelSize / 2);
-                }
+                this.cropAndAlignExtremeLabels(block, labelSize, axisOptions, blockSize);
             }
+        }
+    }
+
+    private static cropAndAlignExtremeLabels(block: Block, labelSize: number, axisOptions: AxisModelOptions, blockSize: Size): void {
+        const lastTick = block.getSvg().select(`.${axisOptions.cssClass}`).select('.tick:last-of-type') as d3.Selection<SVGGraphicsElement, unknown, HTMLElement, unknown>;
+        const lastLabel = lastTick.select('text') as d3.Selection<SVGGraphicsElement, unknown, HTMLElement, unknown>;
+        const translateX = Helper.getTranslateNumbers(lastTick.attr('transform'))[0];
+        
+        if(translateX + lastLabel.node().getBBox().width + axisOptions.translate.translateX > blockSize.width) {
+            lastLabel.attr('text-anchor', 'end');
+            Helper.cropLabels(lastLabel, labelSize / 2);
+        }    
+
+        const firtsLabel = block.getSvg()
+            .select(`.${axisOptions.cssClass}`)
+            .select('.tick:first-of-type')
+            .select('text') as d3.Selection<SVGGraphicsElement, unknown, HTMLElement, unknown>;
+
+        if(axisOptions.translate.translateX - firtsLabel.node().getBBox().width < 0) {
+            firtsLabel.attr('text-anchor', 'start');
+            Helper.cropLabels(firtsLabel, labelSize / 2);
         }
     }
 

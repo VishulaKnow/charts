@@ -459,6 +459,12 @@ export default class Listeners
                 thisClass.updateFull();
             }
         });
+        document.querySelector('#embedded-labels').addEventListener('change', function() {
+            if(config.options.type === '2d') {
+                config.options.charts.forEach(chart => chart.embeddedLabels = this.value);
+                thisClass.updateFull();
+            }
+        });
         document.querySelector('.btn-domain').addEventListener('click', function() {
             if(config.options.type === '2d') {
                 const start = ListenersHelper.getInputValue('#domain-start');

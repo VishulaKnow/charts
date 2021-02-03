@@ -15,8 +15,10 @@ export class MarginModel
     public static getMargin(designerConfig: DesignerConfig, config: Config, legendBlockModel: LegendBlockModel, data: DataSource): BlockMargin {
         const margin: BlockMargin = { ...designerConfig.canvas.chartBlockMargin }
         this.recalcMarginWithLegend(margin, config, designerConfig.canvas.legendBlock.maxWidth, legendBlockModel, data);
-        if((config.options.type === '2d' && !TwoDimensionalModel.getChartsEmbeddedLabelsFlag(config.options.charts, config.options.orientation)) || config.options.type === 'interval') {
-            this.recalcXMarginWithAxisLabelWidth(margin, config.options.charts, designerConfig.canvas.axisLabel.maxSize.main, config.options.axis, data, config.options);
+        if(config.options.type === '2d') {
+            this.recalcMarginWithAxisLabelWidth(margin, config.options.charts, designerConfig.canvas.axisLabel.maxSize.main, config.options.axis, data, config.options, !TwoDimensionalModel.getChartsEmbeddedLabelsFlag(config.options.charts, config.options.orientation));
+        } else if(config.options.type === 'interval') {
+            this.recalcMarginWithAxisLabelWidth(margin, config.options.charts, designerConfig.canvas.axisLabel.maxSize.main, config.options.axis, data, config.options, true);
         }
 
         return margin;
@@ -47,13 +49,14 @@ export class MarginModel
         }
     }
 
-    private static recalcXMarginWithAxisLabelWidth(margin: BlockMargin, charts: TwoDimensionalChart[] | IntervalChart[], labelsMaxWidth: number, axis: TwoDimensionalAxis | IntervalAxis, data: DataSource, options: TwoDimensionalOptions | IntervalOptions): void {
+    private static recalcMarginWithAxisLabelWidth(margin: BlockMargin, charts: TwoDimensionalChart[] | IntervalChart[], labelsMaxWidth: number, axis: TwoDimensionalAxis | IntervalAxis, data: DataSource, options: TwoDimensionalOptions | IntervalOptions, isShow: boolean): void {
         const keyAxisOrient = AxisModel.getAxisOrient(AxisType.Key, options.orientation, axis.keyAxis.position);
         const valueAxisOrient = AxisModel.getAxisOrient(AxisType.Value, options.orientation, axis.valueAxis.position);
         if(keyAxisOrient === 'left' || keyAxisOrient === 'right') {
             const labelTexts = DataManagerModel.getDataValuesByKeyField(data, charts[0]);
             const axisLabelSize = AxisModel.getLabelSize(labelsMaxWidth, labelTexts);
-            margin[keyAxisOrient] += axisLabelSize.width + AXIS_VERTICAL_LABEL_PADDING;
+            if(isShow)
+                margin[keyAxisOrient] += axisLabelSize.width + AXIS_VERTICAL_LABEL_PADDING;
             margin[valueAxisOrient] += axisLabelSize.height + AXIS_HORIZONTAL_LABEL_PADDING;
         } else {
             const labelTexts = ['0000'];
