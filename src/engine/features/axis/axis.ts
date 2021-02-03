@@ -57,9 +57,12 @@ export class Axis
             
         if(axisOptions.orient === 'left' && axisOptions.type === 'key' && Scale.getScaleWidth(scale) >= 38) {
             (axisElement.selectAll('.tick text') as d3.Selection<SVGGElement, unknown, d3.BaseType, any>).call(this.wrap, axisOptions.maxLabelSize);
-            this.alignLabels(axisElement, 'start', axisOptions.maxLabelSize);
         } else {
             this.cropLabels(block, scale, scaleOptions, axisOptions, blockSize);
+        }
+
+        if(axisOptions.type === 'key' && axisOptions.orient === 'left') {
+            this.alignLabels(axisElement, 'start', axisOptions.maxLabelSize);
         }
     }
 
@@ -177,12 +180,12 @@ export class Axis
                     if (tspan.node().getComputedTextLength() > maxWidth && line.length > 1) {
                         line.pop();
                         tspan.text(line.join(''));
-                        if(lineNumber === 0)
+                        if(lineNumber === 0 && line[line.length - 1] !== ' ')
                             tspan.text(tspan.text() + '-');
                         line = [letter];
                         if(lineNumber >= 1) {
                             if(letters.length > 0)
-                                tspan.text(tspan.text().substring(0, tspan.text().length - 1) + '...')
+                                tspan.text(tspan.text().substr(0, tspan.text().length - 1) + '...')
                             break;
                         }
                         tspan = textBlock.append("tspan").attr("y", y).attr("dy", dy + "em").attr('text-anchor', 'start').text(letter);
