@@ -206,7 +206,7 @@ export interface ILegendModel {
     position: LegendPosition;
 }
 
-interface TwoDimensionalChartDataModel {
+export interface TwoDimensionalChartDataModel {
     dataSource: string;
     keyField: Field;
     valueField: TwoDimensionalValueField[];
