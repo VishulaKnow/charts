@@ -8,6 +8,7 @@ export type TwoDimensionalChartType = 'line' | 'bar' | 'area';
 export type PolarChartType = 'donut';
 export type IntervalChartType = 'gantt';
 export type LegendPosition = 'off' | 'top' | 'bottom' | 'left' | 'right';
+export type EmbededLabelType = 'none' | 'key' | 'value';
 
 export interface Config {
     canvas: Canvas;
@@ -52,6 +53,7 @@ export interface IntervalChart extends Chart {
 export interface TwoDimensionalChart extends Chart {
     type: TwoDimensionalChartType;
     data: TwoDimensionalChartData;
+    embededLabels: EmbededLabelType;
 }
 
 export interface PolarChart extends Chart {

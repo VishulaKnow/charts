@@ -50,12 +50,8 @@ export class Helper
         return [translateX, translateY];
     }
 
-    /**
-     * get number from value format: '[number]px'
-     * @param propertyValue 
-     */
     public static getPXpropertyValue(propertyValue: string): number {
-        return parseFloat(propertyValue.substr(0, propertyValue.length - 2));
+        return parseFloat(propertyValue);
     }
 
     public static getSumOfNumbers(numbers: number[]): number {

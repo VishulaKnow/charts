@@ -5,6 +5,7 @@ import { DataManagerModel } from "./dataManagerModel";
 import { LegendModel } from "./legendModel/legendModel";
 import { BlockMargin, DataScope, DataSource, LegendBlockModel, Orient } from "./model";
 import { AxisType } from "./modelOptions";
+import { TwoDimensionalModel } from "./twoDimensionalModel";
 
 const AXIS_HORIZONTAL_LABEL_PADDING = 15;
 const AXIS_VERTICAL_LABEL_PADDING = 10;
@@ -14,9 +15,10 @@ export class MarginModel
     public static getMargin(designerConfig: DesignerConfig, config: Config, legendBlockModel: LegendBlockModel, data: DataSource): BlockMargin {
         const margin: BlockMargin = { ...designerConfig.canvas.chartBlockMargin }
         this.recalcMarginWithLegend(margin, config, designerConfig.canvas.legendBlock.maxWidth, legendBlockModel, data);
-        if(config.options.type === '2d' || config.options.type === 'interval') {
-            this.recalcMarginWithAxisLabelWidth(margin, config.options.charts, designerConfig.canvas.axisLabel.maxSize.main, config.options.axis, data, config.options);
+        if((config.options.type === '2d' && !TwoDimensionalModel.getChartsEmbededLabelsFlag(config.options.charts, config.options.orientation)) || config.options.type === 'interval') {
+            this.recalcXMarginWithAxisLabelWidth(margin, config.options.charts, designerConfig.canvas.axisLabel.maxSize.main, config.options.axis, data, config.options);
         }
+
         return margin;
     }
 
@@ -27,7 +29,6 @@ export class MarginModel
             margin.bottom -= legendBlockModel.bottom.size;
             margin.left -= legendBlockModel.left.size;
             margin.right -= legendBlockModel.right.size;
-
             
             const legendSize = LegendModel.getLegendSize(config.options.type, position, dataScope.allowableKeys, designerConfig.canvas.legendBlock.maxWidth, config.canvas.size, legendBlockModel);
             margin[position] += legendSize;            
@@ -46,7 +47,7 @@ export class MarginModel
         }
     }
 
-    private static recalcMarginWithAxisLabelWidth(margin: BlockMargin, charts: TwoDimensionalChart[] | IntervalChart[], labelsMaxWidth: number, axis: TwoDimensionalAxis | IntervalAxis, data: DataSource, options: TwoDimensionalOptions | IntervalOptions): void {
+    private static recalcXMarginWithAxisLabelWidth(margin: BlockMargin, charts: TwoDimensionalChart[] | IntervalChart[], labelsMaxWidth: number, axis: TwoDimensionalAxis | IntervalAxis, data: DataSource, options: TwoDimensionalOptions | IntervalOptions): void {
         const keyAxisOrient = AxisModel.getAxisOrient(AxisType.Key, options.orientation, axis.keyAxis.position);
         const valueAxisOrient = AxisModel.getAxisOrient(AxisType.Value, options.orientation, axis.valueAxis.position);
         if(keyAxisOrient === 'left' || keyAxisOrient === 'right') {

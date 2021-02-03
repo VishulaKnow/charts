@@ -206,7 +206,8 @@ export default class Listeners
                         data: this.getDataConfig(notationType),
                         title: this.config.options.charts[0].title,
                         tooltip: this.getTooltipConfig(notationType),
-                        type: ListenersHelper.getInputValue('#chart-2d-type') === 'barLine' ? 'bar' : ListenersHelper.getInputValue('#chart-2d-type') as 'line' | 'bar' | 'area'
+                        type: ListenersHelper.getInputValue('#chart-2d-type') === 'barLine' ? 'bar' : ListenersHelper.getInputValue('#chart-2d-type') as 'line' | 'bar' | 'area',
+                        embededLabels: 'none'
                     }
                 ],
                 axis: {

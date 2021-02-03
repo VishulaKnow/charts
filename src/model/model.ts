@@ -5,7 +5,6 @@ import { DataType, Formatter } from "../designer/designerConfig";
 export type Orient = 'top' | 'bottom' | 'left' | 'right';
 export type ScaleKeyType = 'band' | 'point';
 export type ScaleValueType = 'linear' | 'datetime';
-type AxisType = 'key' | 'value';
 export type AxisLabelPosition = 'straight' | 'rotated';
 export type DataOptions = {
     [option: string]: any
@@ -13,6 +12,8 @@ export type DataOptions = {
 export type DataRow = {
     [field: string]: any
 }
+export type EmbededLabelTypeModel = 'none' | 'key' | 'value';
+type AxisType = 'key' | 'value';
 
 export interface DataSource {
     [source: string]: DataRow[];
@@ -122,10 +123,10 @@ export interface DonutChartSettings {
 }
 
 interface ChartModel {
+    title: string;
     tooltip: TooltipModel;
     cssClasses: string[];
     style: ChartStyle;
-    title: string;
 }
 
 export interface ChartStyle {
@@ -137,6 +138,7 @@ export interface TwoDimensionalChartModel extends ChartModel {
     index: number;
     type: TwoDimensionalChartType;
     data: TwoDimensionalChartDataModel;
+    embededLabels: EmbededLabelTypeModel;
 }
 export interface IntervalChartModel extends ChartModel {
     type: IntervalChartType;

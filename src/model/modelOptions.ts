@@ -89,6 +89,9 @@ export function assembleModel(config: Config, data: DataSource): Model {
     const chartSettings = getChartSettings(designerConfig.canvas.chartOptions.bar, designerConfig.canvas.chartOptions.donut);
     const dataFormat = getDataFormat(designerConfig);
     
+    console.log(chartBlock);
+    console.log(options);
+    
     return {
         blockCanvas,
         chartBlock,
