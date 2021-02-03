@@ -12,7 +12,7 @@ export type DataOptions = {
 export type DataRow = {
     [field: string]: any
 }
-export type EmbededLabelTypeModel = 'none' | 'key' | 'value';
+export type EmbeddedLabelTypeModel = 'none' | 'key' | 'value';
 type AxisType = 'key' | 'value';
 
 export interface DataSource {
@@ -138,7 +138,7 @@ export interface TwoDimensionalChartModel extends ChartModel {
     index: number;
     type: TwoDimensionalChartType;
     data: TwoDimensionalChartDataModel;
-    embededLabels: EmbededLabelTypeModel;
+    embeddedLabels: EmbeddedLabelTypeModel;
 }
 export interface IntervalChartModel extends ChartModel {
     type: IntervalChartType;

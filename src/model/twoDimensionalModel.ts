@@ -6,7 +6,7 @@ import { ChartStyleModel } from "./chartStyleModel";
 import { DataManagerModel } from "./dataManagerModel";
 import { GridLineModel } from "./gridLineModel";
 import { LegendModel } from "./legendModel/legendModel";
-import { BlockMargin, DataScope, DataSource, AdditionalElementsOptions, TwoDimensionalChartModel, TwoDimensionalOptionsModel, EmbededLabelTypeModel } from "./model";
+import { BlockMargin, DataScope, DataSource, AdditionalElementsOptions, TwoDimensionalChartModel, TwoDimensionalOptionsModel, EmbeddedLabelTypeModel } from "./model";
 import { ModelHelper } from "./modelHelper";
 import { AxisType } from "./modelOptions";
 import { ScaleModel, ScaleType } from "./scaleModel";
@@ -71,8 +71,8 @@ export class TwoDimensionalModel
         }
     }
 
-    public static getChartsEmbededLabelsFlag(charts: TwoDimensionalChart[], chartOrientation: ChartOrientation): boolean {
-        return chartOrientation === 'horizontal' && charts.length === this.findChartsWithEmbededKeyLabels(charts).length;
+    public static getChartsEmbeddedLabelsFlag(charts: TwoDimensionalChart[], chartOrientation: ChartOrientation): boolean {
+        return chartOrientation === 'horizontal' && charts.length === this.findChartsWithEmbeddedKeyLabels(charts).length;
     }
 
     private static getChartsModel(charts: TwoDimensionalChart[], chartPalette: Color[], chartOrientation: ChartOrientation): TwoDimensionalChartModel[] {
@@ -85,7 +85,7 @@ export class TwoDimensionalModel
                 tooltip: chart.tooltip,
                 cssClasses: ChartStyleModel.getCssClasses(chart.type, index),
                 style: ChartStyleModel.get2DChartStyle(chartPalette, charts, index),
-                embededLabels: this.getEmbededLabelType(chart, chartOrientation),
+                embeddedLabels: this.getEmbeddedLabelType(chart, chartOrientation),
                 index
             });
         });
@@ -93,20 +93,20 @@ export class TwoDimensionalModel
         return chartsModel;
     }
 
-    private static findChartsWithEmbededKeyLabels(charts: TwoDimensionalChart[]): TwoDimensionalChart[] {
-        const chartsWithEmbededLabels: TwoDimensionalChart[] = [];
+    private static findChartsWithEmbeddedKeyLabels(charts: TwoDimensionalChart[]): TwoDimensionalChart[] {
+        const chartsWithEmbeddedLabels: TwoDimensionalChart[] = [];
 
         charts.forEach(chart => {
-            if(chart.type === 'bar' && chart.embededLabels === 'key')
-                chartsWithEmbededLabels.push(chart);
+            if(chart.type === 'bar' && chart.embeddedLabels === 'key')
+                chartsWithEmbeddedLabels.push(chart);
         });
 
-        return chartsWithEmbededLabels;
+        return chartsWithEmbeddedLabels;
     }
 
-    private static getEmbededLabelType(currentChart: TwoDimensionalChart, chartOrientation: ChartOrientation): EmbededLabelTypeModel {
+    private static getEmbeddedLabelType(currentChart: TwoDimensionalChart, chartOrientation: ChartOrientation): EmbeddedLabelTypeModel {
         if(chartOrientation === 'horizontal' && currentChart.type === 'bar')
-            return currentChart.embededLabels;
+            return currentChart.embeddedLabels;
         return 'none';
     }
 

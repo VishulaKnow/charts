@@ -193,3 +193,12 @@ h3.title {
 .chart-block {
     stroke-width: 1px !important;
 }
+
+.embedded-label {
+    color: #444444;
+    font-family: "Roboto", sans-serif;
+    font-style: normal;
+    font-weight: 500;
+    font-size: 12px;
+    line-height: 140.62%;
+}

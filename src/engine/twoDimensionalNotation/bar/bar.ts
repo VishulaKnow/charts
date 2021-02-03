@@ -5,7 +5,7 @@ import { Helper } from "../../helper";
 import { Scale, Scales } from "../../features/scale/scale";
 import { Block } from "../../block/block";
 import { Color } from "d3";
-import { EmbeddedLabels } from "../../features/embededLabels/embeddedLabels";
+import { EmbeddedLabels } from "../../features/embeddedLabels/embeddedLabels";
 
 interface BarAttrs {
     x: (data: DataRow) => number;
@@ -83,8 +83,8 @@ export class Bar
             this.setBarGroupColor(bars, chart.style.elementColors, index);
 
 
-            if(chart.embededLabels !== 'none')
-                EmbeddedLabels.render(block, bars, EmbeddedLabels.getLabelField(chart.embededLabels, chart.data, index), chart.embededLabels, blockSize, margin);
+            if(chart.embeddedLabels !== 'none' && parseFloat(bars.attr('height')) >= 20)
+                EmbeddedLabels.render(block, bars, EmbeddedLabels.getLabelField(chart.embeddedLabels, chart.data, index), chart.embeddedLabels, blockSize, margin);
         });
     }
 

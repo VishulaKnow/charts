@@ -15,7 +15,7 @@ export class MarginModel
     public static getMargin(designerConfig: DesignerConfig, config: Config, legendBlockModel: LegendBlockModel, data: DataSource): BlockMargin {
         const margin: BlockMargin = { ...designerConfig.canvas.chartBlockMargin }
         this.recalcMarginWithLegend(margin, config, designerConfig.canvas.legendBlock.maxWidth, legendBlockModel, data);
-        if((config.options.type === '2d' && !TwoDimensionalModel.getChartsEmbededLabelsFlag(config.options.charts, config.options.orientation)) || config.options.type === 'interval') {
+        if((config.options.type === '2d' && !TwoDimensionalModel.getChartsEmbeddedLabelsFlag(config.options.charts, config.options.orientation)) || config.options.type === 'interval') {
             this.recalcXMarginWithAxisLabelWidth(margin, config.options.charts, designerConfig.canvas.axisLabel.maxSize.main, config.options.axis, data, config.options);
         }
 
