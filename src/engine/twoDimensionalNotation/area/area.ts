@@ -85,7 +85,7 @@ export class Area
 
             areas.each((d, i) => {
                 Dot.updateDotsCoordinateByValueAxis(block, data, keyAxisOrient, scales, margin, chart.data.keyField.name, '1', chart.cssClasses, i);
-            })
+            });
         } else {
             const area = this.getAreaGenerator(keyAxisOrient);
             chart.data.valueField.forEach((field, index) => {

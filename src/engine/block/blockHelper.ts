@@ -12,10 +12,10 @@ export class BlockHelper
 {
     public static getChartBlockAttributes(blockSize: Size, margin: BlockMargin): GAttributes {
         return {
-            x: margin.left,
-            y: margin.top,
-            width: ValueFormatter.getValueOrZero(blockSize.width - margin.left - margin.right),
-            height: ValueFormatter.getValueOrZero(blockSize.height - margin.top - margin.bottom)
+            x: margin.left - 2,
+            y: margin.top - 2,
+            width: ValueFormatter.getValueOrZero(blockSize.width - margin.left - margin.right) + 4,
+            height: ValueFormatter.getValueOrZero(blockSize.height - margin.top - margin.bottom) + 4
         }
     }
 

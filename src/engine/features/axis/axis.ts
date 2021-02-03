@@ -162,15 +162,15 @@ export class Axis
 
     private static wrap(text: d3.Selection<d3.BaseType, unknown, d3.BaseType, any>, width: number, bandWidth: number) {
         text.each(function() {
-            let text = d3.select(this);
-            if(text.text().split(' ').length > 1) {
-                let words = text.text().split(/\s+/).reverse(),
+            let textBlock = d3.select(this);
+            if(textBlock.text().split(' ').length > 1) {
+                let words = textBlock.text().split(/\s+/).reverse(),
                     word,
                     line: string[] = [],
                     lineNumber = 0,
-                    y = text.attr("y"),
+                    y = textBlock.attr("y"),
                     dy = 1.4,
-                    tspan = text.text(null).append("tspan").attr("x", 0).attr("y", y).attr("dy", dy + "em").attr('text-anchor', 'start');
+                    tspan = textBlock.text(null).append("tspan").attr("x", 0).attr("y", y).attr("dy", dy + "em").attr('text-anchor', 'start');
                 while (word = words.pop()) {
                     line.push(word);
                     tspan.text(line.join(" "));
@@ -178,7 +178,7 @@ export class Axis
                         line.pop();
                         tspan.text(line.join(" "));
                         line = [word];
-                        tspan = text.append("tspan").attr("y", y).attr("dy", dy + "em").attr('text-anchor', 'start').text(word);
+                        tspan = textBlock.append("tspan").attr("y", y).attr("dy", dy + "em").attr('text-anchor', 'start').text(word);
                         lineNumber++;
                     }
                     if(lineNumber >= 1) {
@@ -187,8 +187,8 @@ export class Axis
                         break;
                     }
                 }
-                if(text.selectAll('tspan').size() > 1) {
-                    text.attr('y', -(bandWidth / 2));
+                if(textBlock.selectAll('tspan').size() > 1) {
+                    textBlock.attr('y', -(bandWidth / 2));
                 }
             }
         });
