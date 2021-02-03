@@ -70,6 +70,7 @@ export interface AxisModelOptions {
 export interface AxisLabelModel {
     maxSize: number;
     positition: AxisLabelPosition;
+    visible: boolean;
 }
 
 interface AxisTicksModel {

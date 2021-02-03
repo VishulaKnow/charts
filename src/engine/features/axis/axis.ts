@@ -52,17 +52,21 @@ export class Axis
             .attr('class', `axis ${axisOptions.cssClass} data-label`)
             .call(axis);
         
-        if(axisOptions.orient === 'bottom' && axisOptions.type === 'key' && axisOptions.labels.positition === 'rotated')
+        if(axisOptions.labels.visible) {
+            if(axisOptions.orient === 'bottom' && axisOptions.type === 'key' && axisOptions.labels.positition === 'rotated')
             this.rotateLabels(axisElement);
-            
-        if(axisOptions.orient === 'left' && axisOptions.type === 'key' && Scale.getScaleWidth(scale) >= 38) {
-            (axisElement.selectAll('.tick text') as d3.Selection<SVGGElement, unknown, d3.BaseType, any>).call(this.wrap, axisOptions.labels.maxSize);
-        } else {
-            this.cropLabels(block, scale, scaleOptions, axisOptions, blockSize);
-        }
+                
+            if(axisOptions.orient === 'left' && axisOptions.type === 'key' && Scale.getScaleWidth(scale) >= 38) {
+                (axisElement.selectAll('.tick text') as d3.Selection<SVGGElement, unknown, d3.BaseType, any>).call(this.wrap, axisOptions.labels.maxSize);
+            } else {
+                this.cropLabels(block, scale, scaleOptions, axisOptions, blockSize);
+            }
 
-        if(axisOptions.type === 'key' && axisOptions.orient === 'left') {
-            this.alignLabels(axisElement, 'start', axisOptions.labels.maxSize);
+            if(axisOptions.type === 'key' && axisOptions.orient === 'left') {
+                this.alignLabels(axisElement, 'start', axisOptions.labels.maxSize);
+            }
+        } else {
+            this.hideLabels(axisElement);
         }
     }
 
@@ -161,6 +165,11 @@ export class Axis
                 }
             }
         }
+    }
+
+    private static hideLabels(axisElement: d3.Selection<SVGGElement, unknown, d3.BaseType, unknown>): void {
+        axisElement.selectAll('.tick text')
+            .style('display', 'none');
     }
 
     private static wrap(text: d3.Selection<SVGGElement, unknown, d3.BaseType, any>, maxWidth: number) {

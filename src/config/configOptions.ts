@@ -53,11 +53,6 @@ const configCars: Config = {
                     },
                     valueField: [
                         {
-                            name: 'price',
-                            format: 'money',
-                            title: 'Цены на автомобили по рынку длинное Цены на автомобили по рынку'
-                        },
-                        {
                             name: 'count',
                             format: 'integer',
                             title: 'Количество автомобилей на душу населения'
@@ -78,7 +73,7 @@ const configCars: Config = {
                         ]
                     }
                 },
-                embeddedLabels: 'none'
+                embeddedLabels: 'key'
             }
         ]
     }

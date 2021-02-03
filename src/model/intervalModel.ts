@@ -49,7 +49,8 @@ export class IntervalModel {
                     ticks: configOptions.axis.keyAxis.ticks,
                     labels: {
                         maxSize: designerConfig.canvas.axisLabel.maxSize.main,
-                        positition: AxisModel.getKeyAxisLabelPosition(margin, config.canvas.size, DataManagerModel.getDataValuesByKeyField(data, configOptions.charts[0]).length)
+                        positition: AxisModel.getKeyAxisLabelPosition(margin, config.canvas.size, DataManagerModel.getDataValuesByKeyField(data, configOptions.charts[0]).length),
+                        visible: true
                     }
                 },
                 valueAxis: {
@@ -63,7 +64,8 @@ export class IntervalModel {
                     ticks: configOptions.axis.valueAxis.ticks,
                     labels: {
                         maxSize: designerConfig.canvas.axisLabel.maxSize.main,
-                        positition: 'straight'
+                        positition: 'straight',
+                        visible: true
                     }
                 }
             },
