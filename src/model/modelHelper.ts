@@ -26,18 +26,18 @@ export class ModelHelper
 
         charts.forEach(chart => {
             const chartData = data[chart.data.dataSource];
-            const value1 = chart.data.valueField1.name;
-            const value2 = chart.data.valueField2.name;
+            const valueField1 = chart.data.valueField1.name;
+            const valueField2 = chart.data.valueField2.name;
             chartData.forEach(dataRow => {
-                if(dataRow[value1] > max)
-                    max = dataRow[value1];
-                if(dataRow[value1] < min)
-                    min = dataRow[value1];
+                if(dataRow[valueField1] > max)
+                    max = dataRow[valueField1];
+                if(dataRow[valueField1] < min)
+                    min = dataRow[valueField1];
 
-                if(dataRow[value2] > max)
-                    max = dataRow[value2];
-                if(dataRow[value2] < min)
-                    min = dataRow[value2];
+                if(dataRow[valueField2] > max)
+                    max = dataRow[valueField2];
+                if(dataRow[valueField2] < min)
+                    min = dataRow[valueField2];
             });
         });
 

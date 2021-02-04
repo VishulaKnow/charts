@@ -30,7 +30,7 @@ export class TwoDimensionalModel
                         end: ScaleModel.getScaleRangePeek(ScaleType.Key, configOptions.orientation, margin, config.canvas.size)
                     },
                     type: ScaleModel.getScaleKeyType(configOptions.charts),
-                    elementsAmount: ModelHelper.getMaxNumberValue(this.getChartsByType(configOptions.charts, 'bar').map(chart => chart.data.valueFields.length)) || 1
+                    elementsAmount: ScaleModel.getScaleElementsAmount(this.getChartsByType(configOptions.charts, 'bar'), configOptions.isSegmented)
                 },
                 scaleValue: {
                     domain: ScaleModel.getScaleLinearValueDomain(configOptions.axis.valueAxis.domain, data, configOptions),

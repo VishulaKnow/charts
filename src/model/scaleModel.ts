@@ -1,6 +1,5 @@
-import { sum } from "d3";
 import { AxisPosition, NumberDomain, IntervalChart, TwoDimensionalChart, TwoDimensionalOptions } from "../config/config";
-import { BlockMargin, DataRow, DataSource, ScaleKeyType, ScaleValueType, Size } from "./model";
+import { BlockMargin, DataSource, ScaleKeyType, ScaleValueType, Size } from "./model";
 import { ModelHelper } from "./modelHelper";
 
 export enum ScaleType {
@@ -65,6 +64,15 @@ export class ScaleModel
         return 'linear';
     }
 
+    public static getScaleElementsAmount(barCharts: TwoDimensionalChart[], isSegmented: boolean): number {
+        if(barCharts.length === 0)
+            return 1;
+
+        return isSegmented 
+            ? barCharts.length 
+            : ModelHelper.getMaxNumberValue(barCharts.map(chart => chart.data.valueFields.length));
+    }
+
     private static getScaleMaxValue(configOptions: TwoDimensionalOptions, data: DataSource): number {
         let max: number = 0;
 
@@ -84,13 +92,5 @@ export class ScaleModel
         });
         
         return max;
-    }
-
-    private static getChartMaxValue(valueField: string, data: DataRow[]): number {
-        let maxValue: number = data[0][valueField];
-        const maxOfDim = ModelHelper.getMaxNumberValue(data.map(d => d[valueField]));
-        if(maxOfDim > maxValue)
-            maxValue = maxOfDim;
-        return maxValue;
     }
 }

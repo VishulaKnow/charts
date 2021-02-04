@@ -13,9 +13,12 @@ export class Scale
             scaleKey: null,
             scaleValue: null
         }
+
+        console.log(scaleKey);
+        
         
         if(scaleKey.type === 'band')
-            scales.scaleKey = this.getScaleBand(scaleKey.domain, scaleKey.range, bandSettings);
+            scales.scaleKey = this.getScaleBand(scaleKey.domain, scaleKey.range, bandSettings, scaleKey.elementsAmount);
         else if(scaleKey.type === 'point')
             scales.scaleKey = this.getScalePoint(scaleKey.domain,  scaleKey.range);
 
@@ -48,7 +51,7 @@ export class Scale
         return scale(value);
     }
 
-    private static getScaleBand(domain: string[], range: RangeModel, bandSettings: BarChartSettings): d3.ScaleBand<string> {
+    private static getScaleBand(domain: string[], range: RangeModel, bandSettings: BarChartSettings, elementsInGroupAmount: number): d3.ScaleBand<string> {
         const scale = d3.scaleBand()
             .domain(domain)
             .range([range.start, range.end]);
@@ -57,11 +60,12 @@ export class Scale
 
         if(bandSettings.groupMinDistance < bandSize) {
             scale.paddingInner(bandSettings.groupMinDistance / bandSize);
-            scale.paddingOuter(bandSettings.groupMinDistance / bandSize / 2);
+            // scale.paddingOuter(bandSettings.groupMinDistance / bandSize / 2);
         }
 
-        while(scale.bandwidth() > bandSettings.maxBarWidth * 2 + bandSettings.groupMaxDistance)
+        while(scale.bandwidth() > bandSettings.maxBarWidth * elementsInGroupAmount + bandSettings.groupMaxDistance){
             scale.paddingOuter(scale.paddingOuter() + 0.05);        
+        }
 
         return scale;
     }
