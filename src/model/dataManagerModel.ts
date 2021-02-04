@@ -1,7 +1,7 @@
-import { Config, PolarChart, TwoDimensionalChart, IntervalOptions, IntervalChart, TwoDimensionalOptions } from "../config/config";
+import { Config, PolarChart, TwoDimensionalChart, IntervalOptions, IntervalChart, TwoDimensionalOptions, PolarOptions } from "../config/config";
 import { BarOptionsCanvas, DataType, DesignerConfig } from "../designer/designerConfig";
 import { AxisModel } from "./axisModel";
-import { BlockMargin, DataRow, DataScope, DataSource } from "./model";
+import { BlockMargin, DataRow, DataScope, DataSource, Size } from "./model";
 import { ModelHelper } from "./modelHelper";
 
 export class DataManagerModel
@@ -15,61 +15,69 @@ export class DataManagerModel
 
     public static getDataScope(config: Config, margin: BlockMargin, data: DataSource, designerConfig: DesignerConfig): DataScope {
         if(config.options.type === '2d' || config.options.type === 'interval') {
-            const charts = (config.options.charts as Array<TwoDimensionalChart | IntervalChart>)
-                .filter((chart: TwoDimensionalChart | IntervalChart) => chart.type === 'bar' || chart.type === 'gantt');
-
-            if(charts.length !== 0) {
-                const axisLength = AxisModel.getAxisLength(config.options.orientation, margin, config.canvas.size);
-                const uniqueKeys = ModelHelper.getUniqueValues(data[charts[0].data.dataSource].map(d => d[charts[0].data.keyField.name]));
-                const dataLength = uniqueKeys.length;
-                
-                const limit = this.getDataLimitByBarSize(this.getElementsInGroupAmount(config.options, charts.length), dataLength, axisLength, designerConfig.canvas.chartOptions.bar);
-                const allowableKeys = uniqueKeys.slice(0, limit);
-                
-                return {
-                    allowableKeys,
-                    hidedRecordsAmount: dataLength - allowableKeys.length
-                }
-            }
+            return this.getDataScopeFor2D(config.options, config.canvas.size, margin, data, designerConfig);
         } else if(config.options.type === 'polar') {
-            const dataset = data[config.options.charts[0].data.dataSource];
-            const valueField = config.options.charts[0].data.valueField.name;
-            const keyField = config.options.charts[0].data.keyField.name;
-            
-            const values = dataset.map((dataRow: DataRow) => dataRow[valueField]);
-            const radius = ModelHelper.getDonutRadius(margin, config.canvas.size);
-            let sum = ModelHelper.getValuesSum(values);
-
-            if(radius <= 0) {
-                return {
-                    allowableKeys: [],
-                    hidedRecordsAmount: dataset.length
-                }
-            }   
-
-            const allowableKeys: string[] = [];
-
-            const minAngle = ModelHelper.getMinAngleByLength(designerConfig.canvas.chartOptions.donut.minPartSize, radius);            
-            dataset.forEach((dataRow: DataRow) => {
-                const angle = ModelHelper.getAngleByValue(dataRow[valueField], sum);
-                if(angle > minAngle)
-                    allowableKeys.push(dataRow[keyField]);
-            });
-            
-            return {
-                allowableKeys,
-                hidedRecordsAmount: dataset.length - allowableKeys.length 
-            }
-        }
-
-        return {
-            allowableKeys: this.getDataValuesByKeyField(data, config.options.charts[0]),
-            hidedRecordsAmount: 0   
+            return this.getDataScopeForPolar(config.options, config.canvas.size, margin, data, designerConfig);
         }
     }
 
     public static getDataValuesByKeyField(data: DataSource, chart: TwoDimensionalChart | PolarChart | IntervalChart): string[] {
         return data[chart.data.dataSource].map(dataRow => dataRow[chart.data.keyField.name]);
+    }
+
+    private static getDataScopeFor2D(configOptions: TwoDimensionalOptions | IntervalOptions, blockSize: Size, margin: BlockMargin, data: DataSource, designerConfig: DesignerConfig): DataScope {
+        const charts = (configOptions.charts as Array<TwoDimensionalChart | IntervalChart>)
+            .filter((chart: TwoDimensionalChart | IntervalChart) => chart.type === 'bar' || chart.type === 'gantt');
+
+        if(charts.length !== 0) {
+            const axisLength = AxisModel.getAxisLength(configOptions.orientation, margin, blockSize);
+            const uniqueKeys = ModelHelper.getUniqueValues(data[charts[0].data.dataSource].map(d => d[charts[0].data.keyField.name]));
+            const dataLength = uniqueKeys.length;
+            
+            const limit = this.getDataLimitByBarSize(this.getElementsInGroupAmount(configOptions, charts.length), dataLength, axisLength, designerConfig.canvas.chartOptions.bar);
+            const allowableKeys = uniqueKeys.slice(0, limit);
+            
+            return {
+                allowableKeys,
+                hidedRecordsAmount: dataLength - allowableKeys.length
+            }
+        }
+
+        return {
+            allowableKeys: this.getDataValuesByKeyField(data, configOptions.charts[0]),
+            hidedRecordsAmount: 0   
+        }
+    }
+
+    private static getDataScopeForPolar(configOptions: PolarOptions, blockSize: Size, margin: BlockMargin, data: DataSource, designerConfig: DesignerConfig): DataScope {
+        const dataset = data[configOptions.charts[0].data.dataSource];
+        const valueField = configOptions.charts[0].data.valueField.name;
+        const keyField = configOptions.charts[0].data.keyField.name;
+        
+        const values = dataset.map((dataRow: DataRow) => dataRow[valueField]);
+        const radius = ModelHelper.getDonutRadius(margin, blockSize);
+        let sum = ModelHelper.getValuesSum(values);
+
+        if(radius <= 0) {
+            return {
+                allowableKeys: [],
+                hidedRecordsAmount: dataset.length
+            }
+        }   
+
+        const allowableKeys: string[] = [];
+
+        const minAngle = ModelHelper.getMinAngleByLength(designerConfig.canvas.chartOptions.donut.minPartSize, radius);            
+        dataset.forEach((dataRow: DataRow) => {
+            const angle = ModelHelper.getAngleByValue(dataRow[valueField], sum);
+            if(angle > minAngle)
+                allowableKeys.push(dataRow[keyField]);
+        });
+        
+        return {
+            allowableKeys,
+            hidedRecordsAmount: dataset.length - allowableKeys.length 
+        }
     }
 
     private static getElementsInGroupAmount(configOptions: TwoDimensionalOptions | IntervalOptions, chartsLength: number): number {
