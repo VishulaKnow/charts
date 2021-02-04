@@ -140,9 +140,9 @@ export class TooltipHelper
 
     private static getVerticalPad(coordinate: [number, number], tooltipBlockNode: HTMLElement): number {
         let pad = 0;
-        if(coordinate[1] - TOOLTIP_ARROW_PADDING_Y - tooltipBlockNode.getBoundingClientRect().height < 0)
+        if(coordinate[1] - TOOLTIP_ARROW_PADDING_Y - tooltipBlockNode.getBoundingClientRect().height < -tooltipBlockNode.getBoundingClientRect().height - TOOLTIP_ARROW_PADDING_Y)
             pad = coordinate[1] - TOOLTIP_ARROW_PADDING_Y - tooltipBlockNode.getBoundingClientRect().height;
 
-        return pad;
+        return pad; // return zero or sub zero
     }
 }
