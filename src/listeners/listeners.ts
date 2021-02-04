@@ -361,8 +361,12 @@ export default class Listeners
             thisClass.designerConfig.canvas.chartOptions.bar.barDistance = parseFloat(ListenersHelper.getInputValue('#bar-distance')) || 0;
             thisClass.updateFull();
         });
-        document.querySelector('#bar-group-distance').addEventListener('input', function() {
-            thisClass.designerConfig.canvas.chartOptions.bar.groupMinDistance = parseFloat(ListenersHelper.getInputValue('#bar-group-distance'));        
+        document.querySelector('#min-bar-group-distance').addEventListener('input', function() {
+            thisClass.designerConfig.canvas.chartOptions.bar.groupMinDistance = parseFloat(ListenersHelper.getInputValue('#min-bar-group-distance'));        
+            thisClass.updateFull();
+        });
+        document.querySelector('#max-bar-group-distance').addEventListener('input', function() {
+            thisClass.designerConfig.canvas.chartOptions.bar.groupMaxDistance = parseFloat(ListenersHelper.getInputValue('#max-bar-group-distance'));        
             thisClass.updateFull();
         });
         document.querySelector('#min-bar-size').addEventListener('input', function() {
@@ -567,7 +571,8 @@ export default class Listeners
         ListenersHelper.setInputValue('#chart-block-margin-bottom', designerConfig.canvas.chartBlockMargin.bottom);
         ListenersHelper.setInputValue('#chart-block-margin-left', designerConfig.canvas.chartBlockMargin.left);
         ListenersHelper.setInputValue('#chart-block-margin-right', designerConfig.canvas.chartBlockMargin.right);
-        ListenersHelper.setInputValue('#bar-group-distance', designerConfig.canvas.chartOptions.bar.groupMinDistance);
+        ListenersHelper.setInputValue('#min-bar-group-distance', designerConfig.canvas.chartOptions.bar.groupMinDistance);
+        ListenersHelper.setInputValue('#max-bar-group-distance', designerConfig.canvas.chartOptions.bar.groupMaxDistance);
         ListenersHelper.setInputValue('#bar-distance', designerConfig.canvas.chartOptions.bar.barDistance);
         ListenersHelper.setInputValue('#min-bar-size', designerConfig.canvas.chartOptions.bar.minBarWidth);
         ListenersHelper.setInputValue('#max-bar-size', designerConfig.canvas.chartOptions.bar.maxBarWidth);
