@@ -129,10 +129,11 @@ export class Area
                 .y0(d => scales.scaleValue(d[0]) + margin.top)
                 .y1(d => scales.scaleValue(d[1]) + margin.top);
         }
+        
         if(keyAxisOrient === 'left' || keyAxisOrient === 'right') {
             return d3.area<DataRow>()
-                .x0(d => scales.scaleValue(d[0]) + margin.top)
-                .x1(d => scales.scaleValue(d[1]) + margin.top)
+                .x0(d => scales.scaleValue(d[0]) + margin.left)
+                .x1(d => scales.scaleValue(d[1]) + margin.left)
                 .y(d => scales.scaleKey(d.data[keyField]) + margin.top);
         }
     }
