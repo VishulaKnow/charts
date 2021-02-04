@@ -15,13 +15,14 @@ export class MarginModel
     public static getMargin(designerConfig: DesignerConfig, config: Config, legendBlockModel: LegendBlockModel, data: DataSource): BlockMargin {
         const margin: BlockMargin = { ...designerConfig.canvas.chartBlockMargin }
         this.recalcMarginWithLegend(margin, config, designerConfig.canvas.legendBlock.maxWidth, legendBlockModel, data);
+
         if(config.options.type === '2d' || config.options.type === 'interval') {
             const labelSize = this.getMarginValuesByAxisLabels(config.options.charts, designerConfig.canvas.axisLabel.maxSize.main, config.options.axis, data, config.options);
             this.recalcMarginWithAxisLabelHeight(labelSize, margin, config.options, config.options.axis);
 
             const showingFlag = config.options.type === '2d' 
                 ? !TwoDimensionalModel.getChartsEmbeddedLabelsFlag(config.options.charts, config.options, data, config.options.orientation, config.canvas.size, margin, designerConfig.canvas.chartOptions.bar)
-                : true; // If embedded labels displays axis key label doesn't show
+                : true; // If embedded labels displays, axis key labels doesn't show
             this.recalcMarginWithAxisLabelWidth(labelSize, margin, config.options, config.options.axis, showingFlag);
         }
 
@@ -89,17 +90,17 @@ export class MarginModel
     }
 
     private static recalcMarginWithLegend(margin: BlockMargin, config: Config, legendMaxWidth: number, legendBlockModel: LegendBlockModel, data: DataSource): void {
-        const legendPosition = LegendModel.getLegendModel(config.options.type, config.options.legend.position, config.canvas.size);
-        if(legendPosition.position !== 'off') {
-            let legendSize = 0;
+        const legend = LegendModel.getLegendModel(config.options.type, config.options.legend.position, config.canvas.size);
+        if(legend.position !== 'off') {
             const legendItemsContent = this.getLegendItemsContent(config.options.charts, config.options, data);
-
-            legendSize = LegendModel.getLegendSize(config.options.type, legendPosition.position, legendItemsContent, legendMaxWidth, config.canvas.size, legendBlockModel);
-            margin[legendPosition.position] += legendSize;
+            const legendSize = LegendModel.getLegendSize(config.options.type, legend.position, legendItemsContent, legendMaxWidth, config.canvas.size, legendBlockModel);
+            
+            margin[legend.position] += legendSize;
 
             if(legendSize !== 0)
-                this.appendGlobalMarginByLegendMargin(margin, legendPosition.position, legendBlockModel);
-            legendBlockModel[legendPosition.position].size = legendSize;
+                this.appendToGlobalMarginValuesLegendMargin(margin, legend.position, legendBlockModel);
+
+            legendBlockModel[legend.position].size = legendSize;
         }
     }
 
@@ -118,7 +119,7 @@ export class MarginModel
         }
     }
 
-    private static appendGlobalMarginByLegendMargin(margin: BlockMargin, position: Orient, legendBlockModel: LegendBlockModel): void {
+    private static appendToGlobalMarginValuesLegendMargin(margin: BlockMargin, position: Orient, legendBlockModel: LegendBlockModel): void {
         if(position === 'left' || position === 'right')
             margin[position] += legendBlockModel[position].margin.left + legendBlockModel[position].margin.right;
         else

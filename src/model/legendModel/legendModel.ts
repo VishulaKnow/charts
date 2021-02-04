@@ -43,7 +43,7 @@ export class LegendModel
             if(chartNotation === '2d' || chartNotation === 'interval')
                 legendPosition = 'top';
             else if(chartNotation === 'polar') {
-                legendPosition = blockSize.width < 400 ? 'bottom' : 'right';
+                legendPosition = blockSize.width < 600 ? 'bottom' : 'right';
             }
         }
         

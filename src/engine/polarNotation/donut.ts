@@ -17,7 +17,7 @@ export class Donut
 
     public static render(block: Block, data: DataRow[], margin: BlockMargin, chart: PolarChartModel, blockSize: Size, donutSettings: DonutChartSettings): void {
         const outerRadius = this.getOuterRadius(margin, blockSize);
-        const innerRadius = this.getInnerRadius(outerRadius, this.getChartThickness(donutSettings, blockSize, margin));
+        const innerRadius = this.getInnerRadius(outerRadius, this.getThickness(donutSettings, blockSize, margin));
         const arc = this.getArcGenerator(outerRadius, innerRadius);
         const pie = this.getPie(chart.data.valueField.name, donutSettings.padAngle);
     
@@ -50,9 +50,9 @@ export class Donut
             .selectAll(`.${this.arcItemClass}`) as d3.Selection<SVGGElement, d3.PieArcDatum<DataRow>, SVGGElement, unknown>;
     }
 
-    public static getChartThickness(donutSettings: DonutChartSettings, blockSize: Size, margin: BlockMargin): number {
-        const donutBlockMinWidthForMaxThickness = 400;
-        if((blockSize.width - margin.left - margin.right) > donutBlockMinWidthForMaxThickness)
+    public static getThickness(donutSettings: DonutChartSettings, blockSize: Size, margin: BlockMargin): number {
+        const donutBlockMinWidthForMaxThickness = 600;
+        if(blockSize.width >= donutBlockMinWidthForMaxThickness)
             return donutSettings.maxThickness;
         return donutSettings.minThickness;
     }
