@@ -57,7 +57,7 @@ export class Scale
 
         if(bandSettings.groupMinDistance < bandSize) {
             scale.paddingInner(bandSettings.groupMinDistance / bandSize);
-            // scale.paddingOuter(bandSettings.groupMinDistance / bandSize / 2);
+            scale.paddingOuter(bandSettings.groupMinDistance / bandSize / 2);
         }
 
         while(scale.bandwidth() > bandSettings.maxBarWidth * elementsInGroupAmount + bandSettings.groupMaxDistance){
