@@ -11,11 +11,12 @@ export interface GAttributes {
 export class BlockHelper
 {
     public static getChartBlockAttributes(blockSize: Size, margin: BlockMargin): GAttributes {
+        const outSize = 5.5;
         return {
-            x: margin.left - 2,
-            y: margin.top - 2,
-            width: ValueFormatter.getValueOrZero(blockSize.width - margin.left - margin.right) + 4,
-            height: ValueFormatter.getValueOrZero(blockSize.height - margin.top - margin.bottom) + 4
+            x: margin.left - outSize,
+            y: margin.top - outSize,
+            width: ValueFormatter.getValueOrZero(blockSize.width - margin.left - margin.right) + outSize * 2,
+            height: ValueFormatter.getValueOrZero(blockSize.height - margin.top - margin.bottom) + outSize * 2
         }
     }
 
