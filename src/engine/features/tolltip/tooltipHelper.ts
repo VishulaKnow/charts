@@ -71,7 +71,7 @@ export class TooltipHelper
     }
 
     public static getTooltipBlockCoordinateByRect(element: d3.Selection<d3.BaseType, DataRow, HTMLElement, any>, tooltipBlock: d3.Selection<d3.BaseType, unknown, HTMLElement, any>, blockSize: Size, tooltipArrow: d3.Selection<d3.BaseType, unknown, HTMLElement, any>, chartOrientation: ChartOrientation): [number, number] {
-        const blockPositionRatio = chartOrientation === 'vertical' ? 2 : 1;
+        const blockPositionRatio = chartOrientation === 'vertical' ? 2 : 1; // If chart has horizontal orientation, block takes coordinte of end of bar, if chart vertical, block takes center of bar.
         const coordinateTuple: [number, number] = [parseFloat(element.attr('x')) + parseFloat(element.attr('width')) / blockPositionRatio, parseFloat(element.attr('y'))];
         return this.getRecalcedCoordinateByArrow(coordinateTuple, tooltipBlock, blockSize, tooltipArrow);
     }
@@ -82,12 +82,14 @@ export class TooltipHelper
     }
 
     public static getRecalcedCoordinateByArrow(coordinate: [number, number], tooltipBlock: d3.Selection<d3.BaseType, unknown, HTMLElement, any>, blockSize: Size, tooltipArrow: d3.Selection<d3.BaseType, unknown, HTMLElement, any>): [number, number] {
-        let pad = 0;
-        if((tooltipBlock.node() as HTMLElement).getBoundingClientRect().width + coordinate[0] - TOOLTIP_ARROW_PADDING_X > blockSize.width)
-            pad = (tooltipBlock.node() as HTMLElement).getBoundingClientRect().width + coordinate[0] - TOOLTIP_ARROW_PADDING_X - blockSize.width;
-        this.setTooltipArrowCoordinate(tooltipArrow, pad);
+        const tooltipBlockNode = tooltipBlock.node() as HTMLElement;
+        const horizontalPad = this.getHorizontalPad(coordinate, tooltipBlockNode, blockSize);
+        const verticalPad = this.getVerticalPad(coordinate, tooltipBlockNode);
+        
+        this.setTooltipArrowCoordinate(tooltipArrow, horizontalPad);        
 
-        return [coordinate[0] - TOOLTIP_ARROW_PADDING_X - pad, coordinate[1] - TOOLTIP_ARROW_PADDING_Y - (tooltipBlock.node() as HTMLElement).getBoundingClientRect().height];
+        return [coordinate[0] - TOOLTIP_ARROW_PADDING_X - horizontalPad,
+            coordinate[1] - TOOLTIP_ARROW_PADDING_Y - tooltipBlockNode.getBoundingClientRect().height - verticalPad];
     }
 
     private static getTooltipHtml(chart: TwoDimensionalChartModel | PolarChartModel | IntervalChartModel, data: DataSource, keyValue: string, valueField: Field, markColor: string): string {
@@ -99,9 +101,9 @@ export class TooltipHelper
         return text;
     }
 
-    private static setTooltipArrowCoordinate(tooltipArrow: d3.Selection<d3.BaseType, unknown, HTMLElement, any>, pad: number = 0): void {
-        if(pad !== 0)
-            tooltipArrow.style('left', `${ARROW_DEFAULT_POSITION + Math.floor(pad)}px`);
+    private static setTooltipArrowCoordinate(tooltipArrow: d3.Selection<d3.BaseType, unknown, HTMLElement, any>, horizontalPad: number): void {
+        if(horizontalPad !== 0)
+            tooltipArrow.style('left', `${ARROW_DEFAULT_POSITION + Math.floor(horizontalPad)}px`);
         else
             tooltipArrow.style('left', `${ARROW_DEFAULT_POSITION}px`);
     }
@@ -126,5 +128,21 @@ export class TooltipHelper
     private static getTooltipItemText(chart: TwoDimensionalChartModel | PolarChartModel | IntervalChartModel, data: DataSource, keyValue: string, valueField: Field): string {
         const row = data[chart.data.dataSource].find(d => d[chart.data.keyField.name] === keyValue);
         return `${row[chart.data.keyField.name]} - ${ValueFormatter.formatValue(valueField.format, row[valueField.name])}`;
+    }
+
+    private static getHorizontalPad(coordinate: [number, number], tooltipBlockNode: HTMLElement, blockSize: Size): number {
+        let pad = 0;
+        if(tooltipBlockNode.getBoundingClientRect().width + coordinate[0] - TOOLTIP_ARROW_PADDING_X > blockSize.width)
+            pad = tooltipBlockNode.getBoundingClientRect().width + coordinate[0] - TOOLTIP_ARROW_PADDING_X - blockSize.width;
+        
+        return pad;
+    }
+
+    private static getVerticalPad(coordinate: [number, number], tooltipBlockNode: HTMLElement): number {
+        let pad = 0;
+        if(coordinate[1] - TOOLTIP_ARROW_PADDING_Y - tooltipBlockNode.getBoundingClientRect().height < 0)
+            pad = coordinate[1] - TOOLTIP_ARROW_PADDING_Y - tooltipBlockNode.getBoundingClientRect().height;
+
+        return pad;
     }
 }
