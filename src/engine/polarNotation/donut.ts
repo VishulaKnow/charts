@@ -26,6 +26,8 @@ export class Donut
         const donutBlock = block.getSvg()
             .append('g')
             .attr('class', this.donutBlockClass)
+            .attr('x', translate.x)
+            .attr('y', translate.y)
             .attr('transform', `translate(${translate.x}, ${translate.y})`);
         
         const items = donutBlock
