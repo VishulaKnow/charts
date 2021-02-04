@@ -93,7 +93,7 @@ export class TooltipHelper
     private static getTooltipHtml(chart: TwoDimensionalChartModel | PolarChartModel | IntervalChartModel, data: DataSource, keyValue: string, valueField: Field, markColor: string): string {
         let text = `<div class="tooltip-group"><div class="tooltip-color"><span class="tooltip-circle" style="background-color: ${markColor};"></span></div>`;
         text += `<div class="tooltip-texts">`;
-        text += `<div class="tp-text-item">${this.getTooltipItemText(chart, data, keyValue, valueField)}</div>`;
+        text += `<div class="tp-text-item" style="white-space: nowrap">${this.getTooltipItemText(chart, data, keyValue, valueField)}</div>`;
         text += '</div></div>';
         
         return text;

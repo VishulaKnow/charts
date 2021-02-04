@@ -65,7 +65,7 @@ export class Tooltip
 
     private static renderTooltipForDots(block: Block, elemets: d3.Selection<d3.BaseType, DataRow, d3.BaseType, unknown>, data: DataSource, chart: TwoDimensionalChartModel, isSegmented: boolean, blockSize: Size): void {
         const tooltipBlock = this.renderTooltipBlock(block);
-        const tooltipContent = this.getTooltipContentBlock(tooltipBlock);
+        const tooltipContent = this.renderTooltipContentBlock(tooltipBlock);
         const tooltipArrow = this.renderTooltipArrow(tooltipBlock);
         const thisClass = this;
 
@@ -92,7 +92,7 @@ export class Tooltip
 
     private static renderTooltipForBars(block: Block, elemets: d3.Selection<d3.BaseType, DataRow, d3.BaseType, unknown>, data: DataSource, chart: TwoDimensionalChartModel, isSegmented: boolean, chartOrientation: ChartOrientation, blockSize: Size): void {
         const tooltipBlock = this.renderTooltipBlock(block);
-        const tooltipContent = this.getTooltipContentBlock(tooltipBlock);
+        const tooltipContent = this.renderTooltipContentBlock(tooltipBlock);
         const tooltipArrow = this.renderTooltipArrow(tooltipBlock);
         const thisClass = this;
 
@@ -135,7 +135,7 @@ export class Tooltip
 
     private static renderTooltipForDonut(block: Block, elemets: d3.Selection<d3.BaseType, d3.PieArcDatum<DataRow>, d3.BaseType, unknown>, data: DataSource, chart: PolarChartModel, blockSize: Size, margin: BlockMargin, donutThickness: number, translateX: number = 0, translateY: number = 0): void {
         const tooltipBlock = this.renderTooltipBlock(block, translateX, translateY);
-        const tooltipContent = this.getTooltipContentBlock(tooltipBlock);
+        const tooltipContent = this.renderTooltipContentBlock(tooltipBlock);
         const tooltipArrow = this.renderTooltipArrow(tooltipBlock);
         const thisClass = this;
 
@@ -161,7 +161,7 @@ export class Tooltip
 
     private static renderTooltipForGantt(block: Block, elemets: d3.Selection<d3.BaseType, DataRow, d3.BaseType, unknown>, data: DataSource, chart: IntervalChartModel, chartOrientation: ChartOrientation, blockSize: Size): void {
         const tooltipBlock = this.renderTooltipBlock(block);
-        const tooltipContent = this.getTooltipContentBlock(tooltipBlock);
+        const tooltipContent = this.renderTooltipContentBlock(tooltipBlock);
         const tooltipArrow = this.renderTooltipArrow(tooltipBlock);
         const thisClass = this;
 
@@ -214,9 +214,6 @@ export class Tooltip
                 .attr('class', this.tooltipBlockClass)
                 .style('position', 'absolute')
                 .style('display', 'none');
-
-            tooltipBlock.append('div')
-                .attr('class', this.tooltipContentClass);
         }    
 
         if(translateX !== 0 || translateY !== 0)
@@ -225,16 +222,17 @@ export class Tooltip
         return tooltipBlock;
     }
 
+    private static renderTooltipContentBlock(tooltipBlock: d3.Selection<d3.BaseType, unknown, HTMLElement, any>): d3.Selection<HTMLDivElement, unknown, HTMLElement, any> {
+        return tooltipBlock.append('div')
+            .attr('class', this.tooltipContentClass);
+    }
+
     private static setTooltipCoordinate(tooltipBlock: d3.Selection<d3.BaseType, unknown, HTMLElement, any>, tooltipCoordinate: TooltipCoordinate): void {
         tooltipBlock
             .style('left', tooltipCoordinate.left)
             .style('top', tooltipCoordinate.top)
             .style('right', tooltipCoordinate.right)
             .style('bottom', tooltipCoordinate.bottom);
-    }
-
-    private static getTooltipContentBlock(tooltipBlock: d3.Selection<d3.BaseType, unknown, HTMLElement, any>): d3.Selection<d3.BaseType, unknown, HTMLElement, any> {
-        return tooltipBlock.select(`.${this.tooltipContentClass}`);
     }
 
     private static renderDotsEdging(block: Block, attrs: DotEdgingAttrs, color: string): void {
