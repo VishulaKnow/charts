@@ -141,7 +141,7 @@ export class TooltipHelper
     private static getVerticalPad(coordinate: [number, number], tooltipBlockNode: HTMLElement): number {
         let pad = 0;
         if(coordinate[1] - TOOLTIP_ARROW_PADDING_Y - tooltipBlockNode.getBoundingClientRect().height < -tooltipBlockNode.getBoundingClientRect().height - TOOLTIP_ARROW_PADDING_Y)
-            pad = coordinate[1] - TOOLTIP_ARROW_PADDING_Y - tooltipBlockNode.getBoundingClientRect().height;
+            pad = coordinate[1];
 
         return pad; // return zero or sub zero
     }
@@ -149,6 +149,6 @@ export class TooltipHelper
     private static getTooltipArrowPadding(tooltipBlockNode: HTMLElement, horizontalPad: number): number {
         return horizontalPad > tooltipBlockNode.getBoundingClientRect().width 
             ? tooltipBlockNode.getBoundingClientRect().width - ARROW_DEFAULT_POSITION - 20 * Math.sqrt(2) 
-            : horizontalPad;
+            : horizontalPad; // If tooltip arrow has coordinate outside svg, it take X position in end of tooltip block
     }
 }
