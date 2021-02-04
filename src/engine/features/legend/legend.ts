@@ -49,7 +49,7 @@ export class Legend
         if(options.type === '2d') {
             let texts: string[] = [];
             options.charts.forEach(chart => {
-                texts = texts.concat(chart.data.valueField.map(field => field.title));
+                texts = texts.concat(chart.data.valueFields.map(field => field.title));
             });            
             return texts;
         } else if(options.type === 'polar') {

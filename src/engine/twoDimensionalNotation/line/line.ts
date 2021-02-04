@@ -16,7 +16,7 @@ export class Line
 
     public static render(block: Block, scales: Scales, data: DataRow[], margin: BlockMargin, keyAxisOrient: Orient, chart: TwoDimensionalChartModel, blockSize: Size): void {
         const line = this.getLineGenerator();
-        chart.data.valueField.forEach((field, index) => {
+        chart.data.valueFields.forEach((field, index) => {
             const lineCoordinate: LineChartCoordinate[] = this.getLineCoordinateByKeyOrient(keyAxisOrient,
                 data,
                 scales,
@@ -38,7 +38,7 @@ export class Line
 
     public static updateLineChartByValueAxis(block: Block, scales: Scales, data: DataRow[], margin: BlockMargin, keyAxisOrient: Orient, chart: TwoDimensionalChartModel): void {
         const line = this.getLineGenerator();
-        chart.data.valueField.forEach((field, index) => {
+        chart.data.valueFields.forEach((field, index) => {
             const lineCoordinate: LineChartCoordinate[] = this.getLineCoordinateByKeyOrient(keyAxisOrient,
                 data,
                 scales,

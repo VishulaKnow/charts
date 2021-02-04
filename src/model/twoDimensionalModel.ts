@@ -11,7 +11,7 @@ import { ModelHelper } from "./modelHelper";
 import { AxisType } from "./modelOptions";
 import { ScaleModel, ScaleType } from "./scaleModel";
 
-export const MIN_BAR_SIZE_FOR_EMBEDDED_LABELS_DISPLAY = 20;
+export const MIN_BAR_SIZE_FOR_EMBEDDED_LABELS_DISPLAY = 20; // If bar has width less than this size embedded labels doesn't show
 
 export class TwoDimensionalModel
 {
@@ -30,7 +30,7 @@ export class TwoDimensionalModel
                         end: ScaleModel.getScaleRangePeek(ScaleType.Key, configOptions.orientation, margin, config.canvas.size)
                     },
                     type: ScaleModel.getScaleKeyType(configOptions.charts),
-                    elementsAmount: ModelHelper.getMaxNumberValue(this.getChartsByType(configOptions.charts, 'bar').map(chart => chart.data.valueField.length)) || 1
+                    elementsAmount: ModelHelper.getMaxNumberValue(this.getChartsByType(configOptions.charts, 'bar').map(chart => chart.data.valueFields.length)) || 1
                 },
                 scaleValue: {
                     domain: ScaleModel.getScaleLinearValueDomain(configOptions.axis.valueAxis.domain, data, configOptions),

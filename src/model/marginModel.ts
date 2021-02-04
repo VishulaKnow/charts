@@ -21,7 +21,7 @@ export class MarginModel
 
             const showingFlag = config.options.type === '2d' 
                 ? !TwoDimensionalModel.getChartsEmbeddedLabelsFlag(config.options.charts, config.options, data, config.options.orientation, config.canvas.size, margin, designerConfig.canvas.chartOptions.bar)
-                : true;
+                : true; // If embedded labels displays axis key label doesn't show
             this.recalcMarginWithAxisLabelWidth(labelSize, margin, config.options, config.options.axis, showingFlag);
         }
 
@@ -39,7 +39,7 @@ export class MarginModel
             const legendSize = LegendModel.getLegendSize(config.options.type, position, dataScope.allowableKeys, designerConfig.canvas.legendBlock.maxWidth, config.canvas.size, legendBlockModel);
             margin[position] += legendSize;            
             legendBlockModel[position].size = legendSize;
-        }    
+        }
     }
 
     public static recalcMargnWitVerticalAxisLabel(margin: BlockMargin, data: DataSource, config: Config, designerConfig: DesignerConfig): void {
@@ -56,13 +56,14 @@ export class MarginModel
     private static getMarginValuesByAxisLabels(charts: TwoDimensionalChart[] | IntervalChart[], labelsMaxWidth: number, axis: TwoDimensionalAxis | IntervalAxis, data: DataSource, options: TwoDimensionalOptions | IntervalOptions): LabelSize {
         const keyAxisOrient = AxisModel.getAxisOrient(AxisType.Key, options.orientation, axis.keyAxis.position);
         let labelsTexts: string[];
+
         if(keyAxisOrient === 'left' || keyAxisOrient === 'right') {
             labelsTexts = DataManagerModel.getDataValuesByKeyField(data, charts[0]);
         } else {
             labelsTexts = ['0000'];
         }
-        const axisLabelSize = AxisModel.getLabelSize(labelsMaxWidth, labelsTexts);
-        return axisLabelSize;
+
+        return AxisModel.getLabelSize(labelsMaxWidth, labelsTexts);
     }
 
     private static recalcMarginWithAxisLabelHeight(labelSize: LabelSize, margin: BlockMargin, options: TwoDimensionalOptions | IntervalOptions, axis: TwoDimensionalAxis | IntervalAxis): void {
@@ -91,8 +92,7 @@ export class MarginModel
         const legendPosition = LegendModel.getLegendModel(config.options.type, config.options.legend.position, config.canvas.size);
         if(legendPosition.position !== 'off') {
             let legendSize = 0;
-            const charts = config.options.charts;
-            const legendItemsContent = this.getLegendItemsContent(charts, config.options, data);
+            const legendItemsContent = this.getLegendItemsContent(config.options.charts, config.options, data);
 
             legendSize = LegendModel.getLegendSize(config.options.type, legendPosition.position, legendItemsContent, legendMaxWidth, config.canvas.size, legendBlockModel);
             margin[legendPosition.position] += legendSize;
@@ -107,9 +107,10 @@ export class MarginModel
         if(options.type === '2d') {
             let texts: string[] = [];
             options.charts.forEach(chart => {
-                texts = texts.concat(chart.data.valueField.map(field => field.title))
+                texts = texts.concat(chart.data.valueFields.map(field => field.title))
             });  
             return texts;
+
         } else if(options.type === 'polar') {
             return charts.map(chart => DataManagerModel.getDataValuesByKeyField(data, chart))[0]
         } else if(options.type === 'interval') {

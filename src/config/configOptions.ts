@@ -51,7 +51,7 @@ const configCars: Config = {
                         name: 'brand',
                         format: 'string'
                     },
-                    valueField: [
+                    valueFields: [
                         {
                             name: 'price',
                             format: 'money',

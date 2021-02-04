@@ -72,7 +72,7 @@ export class DataManagerModel
             }
         }   
 
-        const allowableKeys: string[] = [];
+        const allowableKeys: string[] = [];     // Only records with these keys will show
 
         const minAngle = ModelHelper.getMinAngleByLength(designerConfig.canvas.chartOptions.donut.minPartSize, radius);            
         dataset.forEach((dataRow: DataRow) => {
@@ -91,7 +91,7 @@ export class DataManagerModel
         let barAmount = 0;
         configOptions.charts.forEach(chart => {
             if(chart.type === 'bar')
-                barAmount += chart.data.valueField.length;
+                barAmount += chart.data.valueFields.length;
         });
         return barAmount;
     }

@@ -11,7 +11,7 @@ export class LegendModel
             return LegendCanvasModel.getLegendHeight(texts, blockSize.width, legendBlockModel[position].margin.left, legendBlockModel[position].margin.right, 'row', position);
         } else if(chartNotation === 'polar') {
             const size = LegendCanvasModel.getLegendHeight(texts, blockSize.width, legendBlockModel[position].margin.left, legendBlockModel[position].margin.right, 'column', position);
-            return size
+            return size;
         }
     }
 

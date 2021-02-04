@@ -214,7 +214,7 @@ export interface ILegendModel {
 export interface TwoDimensionalChartDataModel {
     dataSource: string;
     keyField: Field;
-    valueField: TwoDimensionalValueField[];
+    valueFields: TwoDimensionalValueField[];
 }
 
 interface PolarChartDataModel {

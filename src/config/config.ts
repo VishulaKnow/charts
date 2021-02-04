@@ -84,7 +84,7 @@ export interface IntervalAxis {
 interface TwoDimensionalChartData {
     dataSource: string;
     keyField: Field;
-    valueField: TwoDimensionalValueField[];
+    valueFields: TwoDimensionalValueField[];
 }
 
 interface PolarChartData {

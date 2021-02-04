@@ -35,14 +35,14 @@ export class TooltipHelper
 { 
     public static getMultyTooltipHtmlFor2DChart(chart: TwoDimensionalChartModel, data: DataSource, keyValue: string): string {
         let text = '';
-        chart.data.valueField.forEach((field, index) => {
+        chart.data.valueFields.forEach((field, index) => {
             text += this.getTooltipHtml(chart, data, keyValue, field, chart.style.elementColors[index % chart.style.elementColors.length].toString());
         });
         return text;
     }
 
     public static getTooltipHtmlFor2DChart(chart: TwoDimensionalChartModel, data: DataSource, keyValue: string, index: number): string {
-        return this.getTooltipHtml(chart, data, keyValue, chart.data.valueField[index], chart.style.elementColors[index % chart.style.elementColors.length].toString());
+        return this.getTooltipHtml(chart, data, keyValue, chart.data.valueFields[index], chart.style.elementColors[index % chart.style.elementColors.length].toString());
     }
 
     public static getTooltipHtmlForPolarChart(chart: PolarChartModel, data: DataSource, keyValue: string, markColor: string): string {

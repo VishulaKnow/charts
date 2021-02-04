@@ -35,30 +35,30 @@ export class RecordOverflowAlert
     }
 
     private static getWordTextEndingByAmount(hidedRecordsAmount: number, chartOrientation: ChartOrientation): string {
-        const digit = hidedRecordsAmount % 10;
+        const lastDigit = hidedRecordsAmount % 10;
         if(chartOrientation === 'vertical') {
             if(hidedRecordsAmount >= 10 && hidedRecordsAmount <= 20)
                 return 'столбцов'; 
-            if(digit === 1)
+            if(lastDigit === 1)
                 return 'столбец';
-            if(digit >= 2 && digit <= 4)
+            if(lastDigit >= 2 && lastDigit <= 4)
                 return 'столбца';
             return 'столбцов';
         }
         else if (chartOrientation === 'horizontal') {
             if(hidedRecordsAmount >= 10 && hidedRecordsAmount <= 20)
                 return 'строк'; 
-            if(digit === 1)
+            if(lastDigit === 1)
                 return 'строка';
-            if(digit >= 2 && digit <= 4)
+            if(lastDigit >= 2 && lastDigit <= 4)
                 return 'строки';
             return 'строк';
         } else {
             if(hidedRecordsAmount >= 10 && hidedRecordsAmount <= 20)
                 return 'категорий'; 
-            if(digit === 1)
+            if(lastDigit === 1)
                 return 'категория';
-            if(digit >= 2 && digit <= 4)
+            if(lastDigit >= 2 && lastDigit <= 4)
                 return 'категории';
             return 'категорий';
         }
@@ -70,6 +70,7 @@ export class RecordOverflowAlert
             top: null,
             right: null
         }
+        
         attrs.right = '17px';
         if(position === 'bottom')
             attrs.bottom = '28px';

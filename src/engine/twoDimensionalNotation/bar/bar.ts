@@ -38,7 +38,7 @@ export class Bar
                 blockSize,
                 1000);
         } else {
-            chart.data.valueField.forEach((field, index) => {
+            chart.data.valueFields.forEach((field, index) => {
                 const bars = block.getChartBlock()
                     .selectAll(`.${this.barItemClass}${Helper.getCssClassesLine(chart.cssClasses)}.chart-element-${index}`) as d3.Selection<SVGRectElement, DataRow, d3.BaseType, unknown>;
         
@@ -60,7 +60,7 @@ export class Bar
     private static renderGrouped(block: Block, scales: Scales, data: DataRow[], margin: BlockMargin, keyAxisOrient: Orient, chart: TwoDimensionalChartModel, blockSize: Size, barSettings: BarChartSettings): void {
         this.renderBarGroups(block, data);
         
-        chart.data.valueField.forEach((field, index) => {
+        chart.data.valueFields.forEach((field, index) => {
             const bars = block.getChartBlock()
                 .selectAll('.bar-group')
                 .data(data)
@@ -75,7 +75,7 @@ export class Bar
                 chart.data.keyField.name,
                 field.name,
                 blockSize,
-                chart.data.valueField.length,
+                chart.data.valueFields.length,
                 barSettings);
         
             this.fillBarAttrsByKeyOrient(bars, barAttrs);
@@ -90,7 +90,7 @@ export class Bar
     }
 
     private static renderSegmented(block: Block, scales: Scales, data: DataRow[], margin: BlockMargin, keyAxisOrient: Orient, chart: TwoDimensionalChartModel, blockSize: Size, barSettings: BarChartSettings): void {
-        const keys = chart.data.valueField.map(field => field.name);
+        const keys = chart.data.valueFields.map(field => field.name);
         const stackedData = d3.stack().keys(keys)(data);
 
         const groups = block.getChartBlock()

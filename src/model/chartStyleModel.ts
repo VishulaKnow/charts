@@ -35,10 +35,10 @@ export class ChartStyleModel
     private static get2DElementColorPalette(palette: Color[], charts: TwoDimensionalChart[], chartIndex: number): Color[] {
         let startIndex = 0;
         for(let i = 0; i < chartIndex; i++) {
-            startIndex += charts[i].data.valueField.length
+            startIndex += charts[i].data.valueFields.length
         }
         
-        return palette.slice(startIndex, startIndex + charts[chartIndex].data.valueField.length);
+        return palette.slice(startIndex, startIndex + charts[chartIndex].data.valueFields.length);
     }   
 
     private static getElementColorPalette(palette: Color[], elementsAmount: number): Color[] {

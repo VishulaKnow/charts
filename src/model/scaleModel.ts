@@ -71,7 +71,7 @@ export class ScaleModel
         configOptions.charts.forEach(chart => {
             data[chart.data.dataSource].forEach(dataRow => {
                 let sumInRow = 0;
-                chart.data.valueField.forEach(field => {
+                chart.data.valueFields.forEach(field => {
                     if(configOptions.isSegmented)
                         sumInRow += dataRow[field.name];
                     else

@@ -29,7 +29,7 @@ export class EmbeddedLabels
         if(type === 'key')
             return chartData.keyField;
         else if(type === 'value')
-            return chartData.valueField[index];
+            return chartData.valueFields[index];
 
         return null;
     }

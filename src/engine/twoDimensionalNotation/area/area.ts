@@ -26,7 +26,7 @@ export class Area
 
     private static renderGrouped(block: Block, scales: Scales, data: DataRow[], margin: BlockMargin, keyAxisOrient: Orient, chart: TwoDimensionalChartModel, blockSize: Size): void {
         const area = this.getAreaGenerator(keyAxisOrient);
-        chart.data.valueField.forEach((field, index) => {
+        chart.data.valueFields.forEach((field, index) => {
             const areaCoordinate: AreaChartCoordinate[] = this.getAreaCoordinateByKeyOrient(keyAxisOrient,
                 data,
                 scales,
@@ -49,7 +49,7 @@ export class Area
     }
 
     private static renderSegmented(block: Block, scales: Scales, data: DataRow[], margin: BlockMargin, keyAxisOrient: Orient, chart: TwoDimensionalChartModel, blockSize: Size): void {
-        const keys = chart.data.valueField.map(field => field.name);
+        const keys = chart.data.valueFields.map(field => field.name);
         const stackedData = d3.stack().keys(keys)(data);
         const area = this.getSegmentedAreaGenerator(keyAxisOrient, scales, margin, chart.data.keyField.name);
 
@@ -88,7 +88,7 @@ export class Area
             });
         } else {
             const area = this.getAreaGenerator(keyAxisOrient);
-            chart.data.valueField.forEach((field, index) => {
+            chart.data.valueFields.forEach((field, index) => {
                 const areaCoordinate: AreaChartCoordinate[] = this.getAreaCoordinateByKeyOrient(keyAxisOrient,
                     data,
                     scales,

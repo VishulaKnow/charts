@@ -99,7 +99,7 @@ export default class Listeners
         if(this.config.options.type === '2d')
             this.config.options.charts.forEach((chart: TwoDimensionalChart) => {
                 data[chart.data.dataSource].forEach((row: any) => {
-                    row[chart.data.valueField[0].name] = ListenersHelper.randInt(0, maxRand);
+                    row[chart.data.valueFields[0].name] = ListenersHelper.randInt(0, maxRand);
                 });
             });
         else if(this.config.options.type === 'polar') {
@@ -120,7 +120,7 @@ export default class Listeners
                     name: 'brand',
                     format: 'string'
                 },
-                valueField: [
+                valueFields: [
                     {
                         name: 'price',
                         format: 'money',
