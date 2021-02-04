@@ -12,7 +12,7 @@ export class Scale
         const scales: Scales = {
             scaleKey: null,
             scaleValue: null
-        }        
+        }
         
         if(scaleKey.type === 'band')
             scales.scaleKey = this.getScaleBand(scaleKey.domain, scaleKey.range, bandSettings, scaleKey.elementsAmount);
@@ -60,7 +60,7 @@ export class Scale
             scale.paddingOuter(bandSettings.groupMinDistance / bandSize / 2);
         }
 
-        while(scale.bandwidth() > bandSettings.maxBarWidth * elementsInGroupAmount + bandSettings.groupMaxDistance){
+        while(scale.bandwidth() > bandSettings.maxBarWidth * elementsInGroupAmount + bandSettings.groupMaxDistance + bandSettings.barDistance * (elementsInGroupAmount - 1)){
             scale.paddingOuter(scale.paddingOuter() + 0.05);        
         }
 
