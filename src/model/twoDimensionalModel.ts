@@ -1,12 +1,12 @@
 import { Color } from "d3";
 import { ChartOrientation, Config, TwoDimensionalChart, TwoDimensionalChartType, TwoDimensionalOptions } from "../config/config";
-import { DesignerConfig } from "../designer/designerConfig";
+import { BarOptionsCanvas, DesignerConfig } from "../designer/designerConfig";
 import { AxisModel } from "./axisModel";
 import { ChartStyleModel } from "./chartStyleModel";
 import { DataManagerModel } from "./dataManagerModel";
 import { GridLineModel } from "./gridLineModel";
 import { LegendModel } from "./legendModel/legendModel";
-import { BlockMargin, DataScope, DataSource, AdditionalElementsOptions, TwoDimensionalChartModel, TwoDimensionalOptionsModel, EmbeddedLabelTypeModel } from "./model";
+import { BlockMargin, DataScope, DataSource, AdditionalElementsOptions, TwoDimensionalChartModel, TwoDimensionalOptionsModel, EmbeddedLabelTypeModel, Size } from "./model";
 import { ModelHelper } from "./modelHelper";
 import { AxisType } from "./modelOptions";
 import { ScaleModel, ScaleType } from "./scaleModel";
@@ -52,7 +52,7 @@ export class TwoDimensionalModel
                     labels: {
                         maxSize: designerConfig.canvas.axisLabel.maxSize.main,
                         positition: AxisModel.getKeyAxisLabelPosition(margin, config.canvas.size, DataManagerModel.getDataValuesByKeyField(data, configOptions.charts[0]).length),
-                        visible: !this.getChartsEmbeddedLabelsFlag(configOptions.charts, configOptions.orientation)
+                        visible: !TwoDimensionalModel.getChartsEmbeddedLabelsFlag(configOptions.charts, configOptions, data, configOptions.orientation, config.canvas.size, margin, designerConfig.canvas.chartOptions.bar)
                     }
                 },
                 valueAxis: {
@@ -77,8 +77,18 @@ export class TwoDimensionalModel
         }
     }
 
-    public static getChartsEmbeddedLabelsFlag(charts: TwoDimensionalChart[], chartOrientation: ChartOrientation): boolean {
-        return chartOrientation === 'horizontal' && charts.length === this.findChartsWithEmbeddedKeyLabels(charts).length;
+    public static getChartsEmbeddedLabelsFlag(charts: TwoDimensionalChart[], configOptions: TwoDimensionalOptions, data: DataSource, chartOrientation: ChartOrientation, blockSize: Size, margin: BlockMargin, barOptions: BarOptionsCanvas): boolean {
+        console.log(this.getBarSize(DataManagerModel.getElementsInGroupAmount(configOptions, charts.length), data[charts[0].data.dataSource].length, chartOrientation, blockSize, margin, barOptions));
+        
+        
+        return chartOrientation === 'horizontal' 
+            && charts.length === this.findChartsWithEmbeddedKeyLabels(charts).length
+            && this.getBarSize(DataManagerModel.getElementsInGroupAmount(configOptions, charts.length), data[charts[0].data.dataSource].length, chartOrientation, blockSize, margin, barOptions) >= 20;
+    }
+
+    private static getBarSize(elementsInGroupAmount: number, keysAmount: number, chartOrientation: ChartOrientation, blockSize: Size, margin: BlockMargin, barOptions: BarOptionsCanvas): number {
+        const axisSize = AxisModel.getAxisLength(chartOrientation, margin, blockSize);
+        return (axisSize / keysAmount - (elementsInGroupAmount - 1) * barOptions.barDistance - barOptions.groupMinDistance) / elementsInGroupAmount;
     }
 
     private static getChartsModel(charts: TwoDimensionalChart[], chartPalette: Color[], chartOrientation: ChartOrientation): TwoDimensionalChartModel[] {

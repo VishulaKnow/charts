@@ -2,7 +2,7 @@ import { AxisPosition, ChartOrientation } from "../config/config";
 import { AxisLabelPosition, BlockMargin, Orient, Size } from "./model";
 import { AxisType, CLASSES } from "./modelOptions";
 
-interface LabelSize {
+export interface LabelSize {
     width: number;
     height: number
 }

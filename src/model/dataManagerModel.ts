@@ -25,6 +25,13 @@ export class DataManagerModel
         return data[chart.data.dataSource].map(dataRow => dataRow[chart.data.keyField.name]);
     }
 
+    public static getElementsInGroupAmount(configOptions: TwoDimensionalOptions | IntervalOptions, chartsLength: number): number {
+        if(configOptions.type === '2d' && !configOptions.isSegmented) {
+            return this.getBarChartsInGroupAmount(configOptions);
+        }
+        return chartsLength;
+    }
+
     private static getDataScopeFor2D(configOptions: TwoDimensionalOptions | IntervalOptions, blockSize: Size, margin: BlockMargin, data: DataSource, designerConfig: DesignerConfig): DataScope {
         const charts = (configOptions.charts as Array<TwoDimensionalChart | IntervalChart>)
             .filter((chart: TwoDimensionalChart | IntervalChart) => chart.type === 'bar' || chart.type === 'gantt');
@@ -80,17 +87,11 @@ export class DataManagerModel
         }
     }
 
-    private static getElementsInGroupAmount(configOptions: TwoDimensionalOptions | IntervalOptions, chartsLength: number): number {
-        if(configOptions.type === '2d' && !configOptions.isSegmented) {
-            return this.getBarChartsInGroupAmount(configOptions);
-        }
-        return chartsLength;
-    }
-
     private static getBarChartsInGroupAmount(configOptions: TwoDimensionalOptions): number {
         let barAmount = 0;
         configOptions.charts.forEach(chart => {
-            barAmount += chart.data.valueField.length;
+            if(chart.type === 'bar')
+                barAmount += chart.data.valueField.length;
         });
         return barAmount;
     }
@@ -141,6 +142,7 @@ export class DataManagerModel
             dataLength--;
             sumSize = dataLength * (elementsInGroupAmount * barOptions.minBarWidth + (elementsInGroupAmount - 1) * barOptions.barDistance + barOptions.groupMinDistance);
         }
+        
         return dataLength;
     }
 }

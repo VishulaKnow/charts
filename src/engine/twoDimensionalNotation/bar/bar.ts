@@ -136,9 +136,9 @@ export class Bar
     private static getBarAttrsByKeyOrient(block: Block, axisOrient: Orient, scales: Scales, margin: BlockMargin, keyField: string, valueField: string, blockSize: Size, barsAmount: number, barSettings: BarChartSettings): BarAttrs {
         const chartIndex = block.getSvg().select('.bar-group').selectAll(`.${this.barItemClass}`).size() - 1;
         const barDistance = barSettings.barDistance;
-        const barStep = (Scale.getScaleWidth(scales.scaleKey) - barDistance * (barsAmount - 1)) / barsAmount;
+        const barStep = (Scale.getScaleWidth(scales.scaleKey) - barDistance * (barsAmount - 1)) / barsAmount; // Space for one bar
         const barSize = barStep > barSettings.maxBarWidth ? barSettings.maxBarWidth : barStep;
-        const barDiff = (barStep - barSize) * barsAmount / 2;
+        const barDiff = (barStep - barSize) * barsAmount / 2; // if bar bigger than maxWidth, diff for x coordinate
 
         const attrs: BarAttrs = {
             x: null,
