@@ -1,6 +1,7 @@
+import { lab } from "d3";
 import { TwoDimensionalAxis, Config, PolarChart, TwoDimensionalChart, IntervalChart, IntervalAxis, TwoDimensionalOptions, PolarOptions, IntervalOptions } from "../config/config";
 import { DesignerConfig } from "../designer/designerConfig";
-import { AxisModel } from "./axisModel";
+import { AxisModel, LabelSize } from "./axisModel";
 import { DataManagerModel } from "./dataManagerModel";
 import { LegendModel } from "./legendModel/legendModel";
 import { BlockMargin, DataScope, DataSource, LegendBlockModel, Orient } from "./model";
@@ -16,10 +17,13 @@ export class MarginModel
         const margin: BlockMargin = { ...designerConfig.canvas.chartBlockMargin }
         this.recalcMarginWithLegend(margin, config, designerConfig.canvas.legendBlock.maxWidth, legendBlockModel, data);
         if(config.options.type === '2d') {
-            this.recalcMarginWithAxisLabelWidth(margin, config.options.charts, designerConfig.canvas.axisLabel.maxSize.main, config.options.axis, data, config.options, !TwoDimensionalModel.getChartsEmbeddedLabelsFlag(config.options.charts, config.options, data, config.options.orientation, config.canvas.size, margin, designerConfig.canvas.chartOptions.bar));
-        } else if(config.options.type === 'interval') {
-            this.recalcMarginWithAxisLabelWidth(margin, config.options.charts, designerConfig.canvas.axisLabel.maxSize.main, config.options.axis, data, config.options, true);
+            const labelSize = this.getMarginValuesByAxisLabels(config.options.charts, designerConfig.canvas.axisLabel.maxSize.main, config.options.axis, data, config.options);
+            this.recalcMarginWithAxisLabelHeight(labelSize, margin, config.options, config.options.axis);
+            this.recalcMarginWithAxisLabelWidth(labelSize, margin, config.options, config.options.axis, !TwoDimensionalModel.getChartsEmbeddedLabelsFlag(config.options.charts, config.options, data, config.options.orientation, config.canvas.size, margin, designerConfig.canvas.chartOptions.bar));
         }
+        //  else if(config.options.type === 'interval') {
+        //     this.getMarginValuesByAxisLabels(margin, config.options.charts, designerConfig.canvas.axisLabel.maxSize.main, config.options.axis, data, config.options, true);
+        // }
 
         return margin;
     }
@@ -49,20 +53,38 @@ export class MarginModel
         }
     }
 
-    private static recalcMarginWithAxisLabelWidth(margin: BlockMargin, charts: TwoDimensionalChart[] | IntervalChart[], labelsMaxWidth: number, axis: TwoDimensionalAxis | IntervalAxis, data: DataSource, options: TwoDimensionalOptions | IntervalOptions, isShow: boolean): void {
+    private static getMarginValuesByAxisLabels(charts: TwoDimensionalChart[] | IntervalChart[], labelsMaxWidth: number, axis: TwoDimensionalAxis | IntervalAxis, data: DataSource, options: TwoDimensionalOptions | IntervalOptions): LabelSize {
+        const keyAxisOrient = AxisModel.getAxisOrient(AxisType.Key, options.orientation, axis.keyAxis.position);
+        let labelsTexts: string[];
+        if(keyAxisOrient === 'left' || keyAxisOrient === 'right') {
+            labelsTexts = DataManagerModel.getDataValuesByKeyField(data, charts[0]);
+        } else {
+            labelsTexts = ['0000'];
+        }
+        const axisLabelSize = AxisModel.getLabelSize(labelsMaxWidth, labelsTexts);
+        return axisLabelSize;
+    }
+
+    private static recalcMarginWithAxisLabelHeight(labelSize: LabelSize, margin: BlockMargin, options: TwoDimensionalOptions | IntervalOptions, axis: TwoDimensionalAxis | IntervalAxis): void {
         const keyAxisOrient = AxisModel.getAxisOrient(AxisType.Key, options.orientation, axis.keyAxis.position);
         const valueAxisOrient = AxisModel.getAxisOrient(AxisType.Value, options.orientation, axis.valueAxis.position);
-        if(keyAxisOrient === 'left' || keyAxisOrient === 'right') {
-            const labelTexts = DataManagerModel.getDataValuesByKeyField(data, charts[0]);
-            const axisLabelSize = AxisModel.getLabelSize(labelsMaxWidth, labelTexts);
-            if(isShow)
-                margin[keyAxisOrient] += axisLabelSize.width + AXIS_VERTICAL_LABEL_PADDING;
-            margin[valueAxisOrient] += axisLabelSize.height + AXIS_HORIZONTAL_LABEL_PADDING;
+
+        if(keyAxisOrient === 'bottom' || keyAxisOrient === 'top') {
+            margin[keyAxisOrient] += labelSize.height + AXIS_HORIZONTAL_LABEL_PADDING;
         } else {
-            const labelTexts = ['0000'];
-            const axisLabelSize = AxisModel.getLabelSize(labelsMaxWidth, labelTexts);
-            margin[valueAxisOrient] += axisLabelSize.width + AXIS_VERTICAL_LABEL_PADDING;
-            margin[keyAxisOrient] += axisLabelSize.height + AXIS_HORIZONTAL_LABEL_PADDING;
+            margin[valueAxisOrient] += labelSize.height + AXIS_HORIZONTAL_LABEL_PADDING;
+        }
+    }
+
+    private static recalcMarginWithAxisLabelWidth(labelSize: LabelSize, margin: BlockMargin, options: TwoDimensionalOptions | IntervalOptions, axis: TwoDimensionalAxis | IntervalAxis, isShow: boolean): void {
+        const keyAxisOrient = AxisModel.getAxisOrient(AxisType.Key, options.orientation, axis.keyAxis.position);
+        const valueAxisOrient = AxisModel.getAxisOrient(AxisType.Value, options.orientation, axis.valueAxis.position);
+
+        if(keyAxisOrient === 'left' || keyAxisOrient === 'right') {
+            if(isShow)
+                margin[keyAxisOrient] += labelSize.width + AXIS_VERTICAL_LABEL_PADDING;
+        } else {
+            margin[valueAxisOrient] += labelSize.width + AXIS_VERTICAL_LABEL_PADDING;
         }
     }
 
