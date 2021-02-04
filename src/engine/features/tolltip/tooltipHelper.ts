@@ -29,7 +29,7 @@ export interface DotEdgingAttrs {
 }
 
 export const ARROW_DEFAULT_POSITION = 9;
-const TOOLTIP_ARROW_PADDING_X = ARROW_DEFAULT_POSITION - 4.14 + 13.3;
+const TOOLTIP_ARROW_PADDING_X = ARROW_DEFAULT_POSITION - (20 * Math.sqrt(2) - 20) / 2 + 13.3;
 const TOOLTIP_ARROW_PADDING_Y = 13;
 
 export class TooltipHelper

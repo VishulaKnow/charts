@@ -21,7 +21,6 @@ export class ChartStyleModel
 
     public static getCssClasses(chartType: ChartType, chartIndex: number): string[] {
         const cssClasses = [`chart-${chartIndex}`];
-        cssClasses.push(chartType);
 
         return cssClasses;
     }
