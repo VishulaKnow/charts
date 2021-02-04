@@ -44,8 +44,8 @@ export class ChartRenderer
             model.blockCanvas.size);
         
         Tooltip.renderTooltips(block, model, data);
-        if(model.dataSettings.scope.hidedRecordsAmount !== 0)
-            RecordOverflowAlert.render(block, model.dataSettings.scope.hidedRecordsAmount, 'top', options.orient);
+        // if(model.dataSettings.scope.hidedRecordsAmount !== 0)
+        //     RecordOverflowAlert.render(block, model.dataSettings.scope.hidedRecordsAmount, 'top', options.orient);
     }
     
     public static renderPolar(block: Block, model: Model, data: DataSource) {
