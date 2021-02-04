@@ -154,8 +154,8 @@ export class Legend
         const maxItemWidth = this.getMaxItemWidth(legendBlock, items, 'row');
 
         let index = 0;
-        let flag = true;
-        while(sumOfItemsWidth > maxWidth && flag) {
+        let loopFlag = true; // if at least one label doesn't has text, loop ends
+        while(sumOfItemsWidth > maxWidth && loopFlag) {
             items.nodes().forEach(node => {
                 const textBlock = node.querySelector('.legend-label');
                 if(node.getBoundingClientRect().width > maxItemWidth && textBlock.textContent) {
@@ -166,22 +166,15 @@ export class Legend
                     labelText = labelText.substr(0, labelText.length - 1);
                     textBlock.textContent = labelText + '...';
                     sumOfItemsWidth = this.getSumOfItemsWidths(items);
+
                     if(labelText.length === 0) {
                         textBlock.textContent = '';
-                        flag = false;
+                        loopFlag = false;
                     }
                 }
             });
             index++;
         }
-    }
-
-    private static findBlockWithText(items: d3.Selection<HTMLDivElement, string, d3.BaseType, unknown>): boolean {
-        items.nodes().forEach(node => {
-            if(node.querySelector('.legend-label').textContent.length < 3)
-                return false;
-        });
-        return true;
     }
 
     private static cropColumnLabels(legendBlock: d3.Selection<SVGForeignObjectElement, unknown, HTMLElement, any>, items: d3.Selection<HTMLDivElement, string, d3.BaseType, unknown>, itemsDirection: LegendItemsDirection): void {

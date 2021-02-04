@@ -77,14 +77,15 @@ export class Area
         if(isSegmented) {
             const area = this.getSegmentedAreaGenerator(keyAxisOrient, scales, margin, chart.data.keyField.name);
             const areas = block.getChartBlock()
-                .selectAll(`path.${this.areaChartClass}${Helper.getCssClassesLine(chart.cssClasses)}`) as d3.Selection<SVGRectElement, DataRow, d3.BaseType, unknown>;
+                .selectAll(`path.${this.areaChartClass}${Helper.getCssClassesLine(chart.cssClasses)}`) as d3.Selection<SVGRectElement, DataRow[], d3.BaseType, unknown>;
+            
             areas
                 .transition()
                 .duration(1000)
                     .attr('d', d => area(d as DataRow[]));
 
             areas.each((d, i) => {
-                Dot.updateDotsCoordinateByValueAxis(block, data, keyAxisOrient, scales, margin, chart.data.keyField.name, '1', chart.cssClasses, i);
+                Dot.updateDotsCoordinateByValueAxis(block, d, keyAxisOrient, scales, margin, chart.data.keyField.name, '1', chart.cssClasses, i, isSegmented);
             });
         } else {
             const area = this.getAreaGenerator(keyAxisOrient);
@@ -103,7 +104,7 @@ export class Area
                     .duration(1000)
                         .attr('d', area(areaCoordinate));
         
-                Dot.updateDotsCoordinateByValueAxis(block, data, keyAxisOrient, scales, margin, chart.data.keyField.name, field.name, chart.cssClasses, index);
+                Dot.updateDotsCoordinateByValueAxis(block, data, keyAxisOrient, scales, margin, chart.data.keyField.name, field.name, chart.cssClasses, index, isSegmented);
             });
         }
     }

@@ -60,13 +60,12 @@ export class Dot
             .selectAll(`.${this.dotClass}${Helper.getCssClassesLine(chartCssClasses)}`);
     }
 
-    public static updateDotsCoordinateByValueAxis(block: Block, data: DataRow[], keyAxisOrient: Orient, scales: Scales, margin: BlockMargin, keyField: string, valueField: string, cssClasses: string[], index: number): void {
+    public static updateDotsCoordinateByValueAxis(block: Block, data: DataRow[], keyAxisOrient: Orient, scales: Scales, margin: BlockMargin, keyField: string, valueField: string, cssClasses: string[], index: number, isSegmented: boolean): void {
         const dots = block.getChartBlock()
             .selectAll(`.${this.dotClass}${Helper.getCssClassesLine(cssClasses)}.chart-element-${index}`)
             .data(data);
         
-        const attrs = this.getDotAttrs(keyAxisOrient, scales, margin, keyField, valueField, false);
-        console.log(attrs);
+        const attrs = this.getDotAttrs(keyAxisOrient, scales, margin, keyField, valueField, isSegmented);
         
         dots
             .transition()

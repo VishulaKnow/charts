@@ -52,7 +52,7 @@ export class Line
                 .duration(1000)
                     .attr('d', line(lineCoordinate));
     
-            Dot.updateDotsCoordinateByValueAxis(block, data, keyAxisOrient, scales, margin, chart.data.keyField.name, field.name, chart.cssClasses, index);
+            Dot.updateDotsCoordinateByValueAxis(block, data, keyAxisOrient, scales, margin, chart.data.keyField.name, field.name, chart.cssClasses, index, false);
         });
     }
 
