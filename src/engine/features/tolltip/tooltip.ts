@@ -223,8 +223,13 @@ export class Tooltip
     }
 
     private static renderTooltipContentBlock(tooltipBlock: d3.Selection<d3.BaseType, unknown, HTMLElement, any>): d3.Selection<HTMLDivElement, unknown, HTMLElement, any> {
-        return tooltipBlock.append('div')
-            .attr('class', this.tooltipContentClass);
+        let tooltipContentBlock = tooltipBlock.select<HTMLDivElement>(`div.${this.tooltipContentClass}`); 
+        
+        if(tooltipContentBlock.size() === 0)
+            tooltipContentBlock = tooltipBlock.append('div')
+                .attr('class', this.tooltipContentClass);
+
+        return tooltipContentBlock;
     }
 
     private static setTooltipCoordinate(tooltipBlock: d3.Selection<d3.BaseType, unknown, HTMLElement, any>, tooltipCoordinate: TooltipCoordinate): void {
