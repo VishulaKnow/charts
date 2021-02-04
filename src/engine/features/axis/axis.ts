@@ -3,11 +3,10 @@ import { AxisModelOptions, BlockMargin, IAxisModel, IScaleModel, Orient, ScaleKe
 import { Helper } from "../../helper";
 import { Block } from "../../block/block";
 import { Scale, Scales } from "../scale/scale";
+import { AXIS_HORIZONTAL_LABEL_PADDING, AXIS_VERTICAL_LABEL_PADDING } from "../../../model/marginModel";
 
 type TextAnchor = 'start' | 'end' | 'middle';
 
-const AXIS_VERTICAL_LABEL_PADDING = 10;
-const AXIS_HORIZONTAL_LABEL_PADDING = 15;
 const MINIMAL_STEP_SIZE = 40;
 
 export class Axis

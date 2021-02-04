@@ -1,4 +1,3 @@
-import { lab } from "d3";
 import { TwoDimensionalAxis, Config, PolarChart, TwoDimensionalChart, IntervalChart, IntervalAxis, TwoDimensionalOptions, PolarOptions, IntervalOptions } from "../config/config";
 import { DesignerConfig } from "../designer/designerConfig";
 import { AxisModel, LabelSize } from "./axisModel";
@@ -8,22 +7,23 @@ import { BlockMargin, DataScope, DataSource, LegendBlockModel, Orient } from "./
 import { AxisType } from "./modelOptions";
 import { TwoDimensionalModel } from "./twoDimensionalModel";
 
-const AXIS_HORIZONTAL_LABEL_PADDING = 15;
-const AXIS_VERTICAL_LABEL_PADDING = 10;
+export const AXIS_HORIZONTAL_LABEL_PADDING = 15;
+export const AXIS_VERTICAL_LABEL_PADDING = 10;
 
 export class MarginModel
 {
     public static getMargin(designerConfig: DesignerConfig, config: Config, legendBlockModel: LegendBlockModel, data: DataSource): BlockMargin {
         const margin: BlockMargin = { ...designerConfig.canvas.chartBlockMargin }
         this.recalcMarginWithLegend(margin, config, designerConfig.canvas.legendBlock.maxWidth, legendBlockModel, data);
-        if(config.options.type === '2d') {
+        if(config.options.type === '2d' || config.options.type === 'interval') {
             const labelSize = this.getMarginValuesByAxisLabels(config.options.charts, designerConfig.canvas.axisLabel.maxSize.main, config.options.axis, data, config.options);
             this.recalcMarginWithAxisLabelHeight(labelSize, margin, config.options, config.options.axis);
-            this.recalcMarginWithAxisLabelWidth(labelSize, margin, config.options, config.options.axis, !TwoDimensionalModel.getChartsEmbeddedLabelsFlag(config.options.charts, config.options, data, config.options.orientation, config.canvas.size, margin, designerConfig.canvas.chartOptions.bar));
+
+            const showingFlag = config.options.type === '2d' 
+                ? !TwoDimensionalModel.getChartsEmbeddedLabelsFlag(config.options.charts, config.options, data, config.options.orientation, config.canvas.size, margin, designerConfig.canvas.chartOptions.bar)
+                : true;
+            this.recalcMarginWithAxisLabelWidth(labelSize, margin, config.options, config.options.axis, showingFlag);
         }
-        //  else if(config.options.type === 'interval') {
-        //     this.getMarginValuesByAxisLabels(margin, config.options.charts, designerConfig.canvas.axisLabel.maxSize.main, config.options.axis, data, config.options, true);
-        // }
 
         return margin;
     }
@@ -80,10 +80,9 @@ export class MarginModel
         const keyAxisOrient = AxisModel.getAxisOrient(AxisType.Key, options.orientation, axis.keyAxis.position);
         const valueAxisOrient = AxisModel.getAxisOrient(AxisType.Value, options.orientation, axis.valueAxis.position);
 
-        if(keyAxisOrient === 'left' || keyAxisOrient === 'right') {
-            if(isShow)
-                margin[keyAxisOrient] += labelSize.width + AXIS_VERTICAL_LABEL_PADDING;
-        } else {
+        if((keyAxisOrient === 'left' || keyAxisOrient === 'right') && isShow) {
+            margin[keyAxisOrient] += labelSize.width + AXIS_VERTICAL_LABEL_PADDING;
+        } else if(valueAxisOrient === 'left' || valueAxisOrient === 'right') {
             margin[valueAxisOrient] += labelSize.width + AXIS_VERTICAL_LABEL_PADDING;
         }
     }

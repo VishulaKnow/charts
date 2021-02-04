@@ -11,6 +11,8 @@ import { ModelHelper } from "./modelHelper";
 import { AxisType } from "./modelOptions";
 import { ScaleModel, ScaleType } from "./scaleModel";
 
+export const MIN_BAR_SIZE_FOR_EMBEDDED_LABELS_DISPLAY = 20;
+
 export class TwoDimensionalModel
 {
     public static getOptions(config: Config, designerConfig: DesignerConfig, margin: BlockMargin, dataScope: DataScope, data: DataSource): TwoDimensionalOptionsModel {
@@ -78,12 +80,9 @@ export class TwoDimensionalModel
     }
 
     public static getChartsEmbeddedLabelsFlag(charts: TwoDimensionalChart[], configOptions: TwoDimensionalOptions, data: DataSource, chartOrientation: ChartOrientation, blockSize: Size, margin: BlockMargin, barOptions: BarOptionsCanvas): boolean {
-        console.log(this.getBarSize(DataManagerModel.getElementsInGroupAmount(configOptions, charts.length), data[charts[0].data.dataSource].length, chartOrientation, blockSize, margin, barOptions));
-        
-        
         return chartOrientation === 'horizontal' 
             && charts.length === this.findChartsWithEmbeddedKeyLabels(charts).length
-            && this.getBarSize(DataManagerModel.getElementsInGroupAmount(configOptions, charts.length), data[charts[0].data.dataSource].length, chartOrientation, blockSize, margin, barOptions) >= 20;
+            && this.getBarSize(DataManagerModel.getElementsInGroupAmount(configOptions, charts.length), data[charts[0].data.dataSource].length, chartOrientation, blockSize, margin, barOptions) >= MIN_BAR_SIZE_FOR_EMBEDDED_LABELS_DISPLAY;
     }
 
     private static getBarSize(elementsInGroupAmount: number, keysAmount: number, chartOrientation: ChartOrientation, blockSize: Size, margin: BlockMargin, barOptions: BarOptionsCanvas): number {
