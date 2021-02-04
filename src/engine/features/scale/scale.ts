@@ -12,10 +12,7 @@ export class Scale
         const scales: Scales = {
             scaleKey: null,
             scaleValue: null
-        }
-
-        console.log(scaleKey);
-        
+        }        
         
         if(scaleKey.type === 'band')
             scales.scaleKey = this.getScaleBand(scaleKey.domain, scaleKey.range, bandSettings, scaleKey.elementsAmount);

@@ -9,10 +9,10 @@ import { EmbeddedLabels } from "../../features/embeddedLabels/embeddedLabels";
 import { MIN_BAR_SIZE_FOR_EMBEDDED_LABELS_DISPLAY } from "../../../model/twoDimensionalModel";
 
 interface BarAttrs {
-    x: (data: DataRow) => number;
-    y: (data: DataRow) => number;
-    width: (data: DataRow) => number;
-    height: (data: DataRow) => number;
+    x: (dataRow: DataRow) => number;
+    y: (dataRow: DataRow) => number;
+    width: (dataRow: DataRow) => number;
+    height: (dataRow: DataRow) => number;
 }
 
 export class Bar
@@ -82,7 +82,6 @@ export class Bar
             
             Helper.setCssClasses(bars, Helper.getCssClassesWithElementIndex(chart.cssClasses, index));
             this.setBarGroupColor(bars, chart.style.elementColors, index);
-
 
             if(chart.embeddedLabels !== 'none' && parseFloat(bars.attr('height')) >= MIN_BAR_SIZE_FOR_EMBEDDED_LABELS_DISPLAY)
                 EmbeddedLabels.render(block, bars, EmbeddedLabels.getLabelField(chart.embeddedLabels, chart.data, index), chart.embeddedLabels, blockSize, margin);

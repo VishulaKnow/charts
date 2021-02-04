@@ -88,10 +88,8 @@ export class Gantt
     }
 
     private static renderArrows(ganttItems: d3.Selection<SVGRectElement, DataRow, SVGGElement, any>, keyField: string, keyValue: string): void {
-        const filteredItems = ganttItems
+        ganttItems
             .filter(d => d[keyField] === keyValue);
-
-        console.log(filteredItems.size());
     }
 
     private static renderGanttGroups(block: Block, scales: Scales, data: DataRow[], keyField: string, margin: BlockMargin, blockSize: Size): d3.Selection<d3.BaseType, unknown, SVGGElement, unknown> {
