@@ -59,49 +59,31 @@ export class Dot
         dotsHover.sort((a, b) => attrs.cx(a[keyField]) > attrs.cx(b[keyField]) ? 1 : -1);
         dotsHover.order();
 
-        dotsHover.each(function(dataRow) {
-            d3.select(this).on('mouseover', function(event) {
-                const xDots = block.getChartBlock().selectAll<SVGCircleElement, DataRow>('.dot').filter((d, i) => d[keyField] === dataRow[keyField]);
-                const attrsCy: number[] = [];
-                xDots.each(function() {
-                    attrsCy.push(parseFloat(d3.select(this).attr('cy')));
-                });
+        const thisClass = this;
 
-                const thisY = d3.pointer(event, this)[1];
-                let minClosing = Math.abs(attrsCy[0] - thisY),
-                    indexOfDot = 0;
-                attrsCy.forEach((attrCy, index) => {
-                    if(Math.abs(attrCy - thisY) < minClosing) {
-                        minClosing = Math.abs(attrCy - thisY);
-                        indexOfDot = index;
-                    }
+        ['mouseover', 'mouseleave'].forEach(eventName => {
+            dotsHover.each(function(dataRow) {
+                d3.select(this).on(eventName, function(event) {
+                    const xDots = block.getChartBlock().selectAll<SVGCircleElement, DataRow>(`.${thisClass.dotClass}`).filter((d, i) => d[keyField] === dataRow[keyField]);
+                    const attrsCy: number[] = [];
+                    xDots.each(function() {
+                        attrsCy.push(parseFloat(d3.select(this).attr('cy')));
+                    });
+    
+                    const thisY = d3.pointer(event, this)[1];
+                    let minClosing = Math.abs(attrsCy[0] - thisY),
+                        indexOfDot = 0;
+                    attrsCy.forEach((attrCy, index) => {
+                        if(Math.abs(attrCy - thisY) < minClosing) {
+                            minClosing = Math.abs(attrCy - thisY);
+                            indexOfDot = index;
+                        }
+                    });
+    
+                    xDots.filter((d, i) => i === indexOfDot).dispatch(eventName);
                 });
-
-                xDots.filter((d, i) => i === indexOfDot).dispatch('mouseover');
             });
-        });
-
-        dotsHover.each(function(dataRow, index) {
-            d3.select(this).on('mouseleave', function() {
-                const xDots = block.getChartBlock().selectAll<SVGCircleElement, DataRow>('.dot').filter((d, i) => d[keyField] === dataRow[keyField]);
-                const attrsCy: number[] = [];
-                xDots.each(function() {
-                    attrsCy.push(parseFloat(d3.select(this).attr('cy')));
-                });
-
-                const thisY = d3.pointer(event, this)[1];
-                let minClosing = Math.abs(attrsCy[0] - thisY),
-                    indexOfDot = 0;
-                attrsCy.forEach((attrCy, index) => {
-                    if(Math.abs(attrCy - thisY) < minClosing) {
-                        minClosing = Math.abs(attrCy - thisY);
-                        indexOfDot = index;
-                    }
-                });
-
-                xDots.filter((d, i) => i === indexOfDot).dispatch('mouseleave');
-            });
-        });
+        })
 
         Helper.setCssClasses(dotsHover, cssClasses);
     }
