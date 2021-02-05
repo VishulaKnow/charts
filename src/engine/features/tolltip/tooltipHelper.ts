@@ -142,6 +142,11 @@ export class TooltipHelper
             elements.style('opacity', 0.3);
     }
 
+    public static setElementsFullOpacity(elements: d3.Selection<d3.BaseType, DataRow, d3.BaseType, unknown>): void {
+        if(elements)
+            elements.style('opacity', 1);
+    }
+
     private static getTooltipHtml(chart: TwoDimensionalChartModel | PolarChartModel | IntervalChartModel, data: DataSource, keyValue: string, valueField: Field, markColor: string): string {
         let text = `<div class="tooltip-group"><div class="tooltip-color"><span class="tooltip-circle" style="background-color: ${markColor};"></span></div>`;
         text += `<div class="tooltip-texts">`;

@@ -91,7 +91,7 @@ export class Tooltip
         elemets.on('mouseleave', function() {
             thisClass.removeDotsEdging(block);
             tooltipBlock.style('display', 'none');
-            otherChartsElements.style('opacity', 1);
+            TooltipHelper.setElementsFullOpacity(otherChartsElements);
         });
     }
 
@@ -136,9 +136,9 @@ export class Tooltip
             });
 
         elemets.on('mouseleave', function() {
-            elemets.style('opacity', 1);
             tooltipBlock.style('display', 'none');
-            otherChartsElements.style('opacity', 1);
+            TooltipHelper.setElementsFullOpacity(elemets);
+            TooltipHelper.setElementsFullOpacity(otherChartsElements);
         });
     }
 
@@ -163,7 +163,7 @@ export class Tooltip
 
         elemets.on('mouseleave', function() {
             tooltipBlock.style('display', 'none');
-            elemets.style('opacity', 1);
+            TooltipHelper.setElementsFullOpacity(elemets);
         });
     }
 
@@ -187,7 +187,7 @@ export class Tooltip
             });
 
         elemets.on('mouseleave', function() {
-            elemets.style('opacity', 1);
+            TooltipHelper.setElementsFullOpacity(elemets);
             tooltipBlock.style('display', 'none');
         });
     }
