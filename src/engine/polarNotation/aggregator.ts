@@ -10,15 +10,15 @@ export interface IAggregator {
 
 export class Aggregator
 {
-    public static render(block: Block, data: DataRow[], valueField: string, innerRadius: number, translate: Translate): void {
+    public static render(block: Block, data: DataRow[], valueField: string, innerRadius: number, translate: Translate, fontSize: number): void {
         const aggregator: IAggregator = {
             name: 'Сумма',
             value: d3.sum(data.map(d => d[valueField]))
         }
-        this.renderAggregatorText(block, innerRadius, aggregator, translate);
+        this.renderAggregatorText(block, innerRadius, aggregator, translate, fontSize);
     }
 
-    private static renderAggregatorText(block: Block, innerRadius: number, aggregator: IAggregator, translate: Translate): void {      
+    private static renderAggregatorText(block: Block, innerRadius: number, aggregator: IAggregator, translate: Translate, fontSize: number): void {      
         if(innerRadius > 90) {
             const aggregatorObject = this.renderAggregatorObject(block, innerRadius, translate);
             const wrapper = this.renderAggregatorWrapper(aggregatorObject);
@@ -27,7 +27,7 @@ export class Aggregator
                 .append('div') 
                 .attr('class', 'aggregator-value')
                 .style('text-align', 'center')
-                .style('font-size', '60px')
+                .style('font-size', `${fontSize}px`)
                 .text(aggregator.value);
 
             wrapper
