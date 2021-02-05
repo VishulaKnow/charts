@@ -44,7 +44,7 @@ const configCars: Config = {
         charts: [
             {
                 title: 'Рост стоимости',
-                type: 'line',
+                type: 'bar',
                 data: {
                     dataSource: 'dataSet',
                     keyField:  {
@@ -61,7 +61,7 @@ const configCars: Config = {
                             name: 'count',
                             format: 'integer',
                             title: 'Количество автомобилей на душу населения'
-                        }                     
+                        }                   
                     ]
                 },
                 tooltip: {

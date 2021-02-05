@@ -81,7 +81,7 @@ export class Bar
             this.fillBarAttrsByKeyOrient(bars, barAttrs);
             
             Helper.setCssClasses(bars, Helper.getCssClassesWithElementIndex(chart.cssClasses, index));
-            this.setBarGroupColor(bars, chart.style.elementColors, index);
+            Helper.setChartStyle(bars, chart.style, index, 'fill');
 
             if(chart.embeddedLabels !== 'none' && parseFloat(bars.attr('height')) >= MIN_BAR_SIZE_FOR_EMBEDDED_LABELS_DISPLAY)
                 EmbeddedLabels.render(block, bars, EmbeddedLabels.getLabelField(chart.embeddedLabels, chart.data, index), chart.embeddedLabels, blockSize, margin);
@@ -272,9 +272,5 @@ export class Bar
 
     private static setSegmentColor(segments: d3.Selection<SVGGElement, unknown, SVGGElement, unknown>, colorPalette: Color[]): void {
         segments.style('fill', (d, i) => colorPalette[i % colorPalette.length].toString());
-    }
-
-    private static setBarGroupColor(bars: d3.Selection<SVGRectElement, unknown, d3.BaseType, unknown>, colorPalette: Color[], index: number): void {
-        bars.style('fill', (d, i) => colorPalette[index % colorPalette.length].toString());
     }
 }
