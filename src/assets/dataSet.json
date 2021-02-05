@@ -1,6 +1,6 @@
 {
     "dataSet": [
-        { "brand": "BMW", "price": 120, "count": 12 },
+        { "brand": "BMW", "price": 10, "count": 12 },
         { "brand": "LADA", "price": 50, "count": 10 },
         { "brand": "MERCEDES", "price": 15, "count": 12 },
         { "brand": "AUDI", "price": 20, "count": 5 },

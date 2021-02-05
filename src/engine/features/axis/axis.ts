@@ -128,7 +128,7 @@ export class Axis
     private static setAxisFormat(scale: d3.AxisScale<any>, scaleOptions: ScaleValueModel | ScaleKeyModel, axis: d3.Axis<any>): void {
         if(scaleOptions.type === 'linear') {
             if(d3.max(scale.domain()) > 1000) {
-                axis.tickFormat(d3.format('.2s'));
+                axis.tickFormat(d3.format('.2s')); // examples: 1.2K, 350, 0 
             }
         }
     }

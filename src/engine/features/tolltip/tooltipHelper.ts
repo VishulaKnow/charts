@@ -85,7 +85,7 @@ export class TooltipHelper
         const tooltipBlockNode = tooltipBlock.node() as HTMLElement;
         const horizontalPad = this.getHorizontalPad(coordinate, tooltipBlockNode, blockSize, translateX);
         const verticalPad = this.getVerticalPad(coordinate, tooltipBlockNode, translateY);        
-        
+
         this.setTooltipArrowCoordinate(tooltipArrow, this.getTooltipArrowPadding(tooltipBlockNode, horizontalPad));        
 
         return [coordinate[0] - TOOLTIP_ARROW_PADDING_X - horizontalPad,
@@ -164,7 +164,7 @@ export class TooltipHelper
     private static getHorizontalPad(coordinate: [number, number], tooltipBlockNode: HTMLElement, blockSize: Size, translateX: number): number {
         let pad = 0;
         if(tooltipBlockNode.getBoundingClientRect().width + coordinate[0] - TOOLTIP_ARROW_PADDING_X + translateX > blockSize.width)
-            pad = tooltipBlockNode.getBoundingClientRect().width + coordinate[0] - TOOLTIP_ARROW_PADDING_X - blockSize.width;
+            pad = tooltipBlockNode.getBoundingClientRect().width + coordinate[0] - TOOLTIP_ARROW_PADDING_X + translateX - blockSize.width;
         
         return pad;
     }
