@@ -1,6 +1,5 @@
 import { Color } from "d3";
 import { Config, PolarChart, PolarOptions } from "../config/config";
-import { Legend } from "../engine/features/legend/legend";
 import { ChartStyleModel } from "./chartStyleModel";
 import { LegendModel } from "./legendModel/legendModel";
 import { DataScope, DataSource, PolarChartModel, PolarOptionsModel } from "./model";

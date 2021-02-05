@@ -10,7 +10,8 @@ import { BlockMargin, DataScope, DataSource, AdditionalElementsOptions, TwoDimen
 import { AxisType } from "./modelOptions";
 import { ScaleModel, ScaleType } from "./scaleModel";
 
-export const MIN_BAR_SIZE_FOR_EMBEDDED_LABELS_DISPLAY = 20; // If bar has width less than this size embedded labels doesn't show
+/** If bar has width less than this size embedded labels doesn't show */
+export const MIN_BAR_SIZE_FOR_EMBEDDED_LABELS_DISPLAY = 20;
 
 export class TwoDimensionalModel
 {
