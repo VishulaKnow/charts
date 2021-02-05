@@ -32,11 +32,11 @@ export class Tooltip
     private static rednerTooltipFor2DCharts(block: Block, charts: TwoDimensionalChartModel[], data: DataSource, isSegmented: boolean, blockSize: Size, chartOrientation: ChartOrientation): void {
         charts.forEach(chart => {
             if(chart.type === 'bar') {
-                this.renderTooltipForBars(block, Bar.getAllBarItems(block), data, chart, isSegmented, chartOrientation, blockSize);
+                this.renderTooltipForBars(block, Bar.getAllBarItems(block), data, chart, isSegmented, chartOrientation, blockSize, charts.map(ch => ch.cssClasses));
             } else if(chart.type === 'line') {
-                this.renderTooltipForDots(block, Dot.getAllDots(block, chart.cssClasses), data, chart, false, blockSize);
+                this.renderTooltipForDots(block, Dot.getAllDots(block, chart.cssClasses), data, chart, false, blockSize, charts.map(ch => ch.cssClasses));
             } else {
-                this.renderTooltipForDots(block, Dot.getAllDots(block, chart.cssClasses), data, chart, isSegmented, blockSize);
+                this.renderTooltipForDots(block, Dot.getAllDots(block, chart.cssClasses), data, chart, isSegmented, blockSize, charts.map(ch => ch.cssClasses));
             }
         });
     }
@@ -63,17 +63,19 @@ export class Tooltip
         });
     }
 
-    private static renderTooltipForDots(block: Block, elemets: d3.Selection<d3.BaseType, DataRow, d3.BaseType, unknown>, data: DataSource, chart: TwoDimensionalChartModel, isSegmented: boolean, blockSize: Size): void {
+    private static renderTooltipForDots(block: Block, elemets: d3.Selection<d3.BaseType, DataRow, d3.BaseType, unknown>, data: DataSource, chart: TwoDimensionalChartModel, isSegmented: boolean, blockSize: Size, chartsCssClasses: string[][]): void {
         const tooltipBlock = this.renderTooltipBlock(block);
         const tooltipContent = this.renderTooltipContentBlock(tooltipBlock);
         const tooltipArrow = this.renderTooltipArrow(tooltipBlock);
         const thisClass = this;
 
+        const otherChartsElements = TooltipHelper.getOtherChartsElements(block, chart.index, chartsCssClasses);
+
         elemets
             .on('mouseover', function(event, d) {
                 tooltipBlock.style('display', 'block');                               
                 const keyValue = TooltipHelper.getKeyForTooltip(d, chart.data.keyField.name, isSegmented);
-                const index = thisClass.getElementIndex(elemets, this, keyValue, chart.data.keyField.name, isSegmented)
+                const index = TooltipHelper.getElementIndex(elemets, this, keyValue, chart.data.keyField.name, isSegmented)
                 tooltipContent.html(`${TooltipHelper.getTooltipHtmlFor2DChart(chart, data, keyValue, index)}`);
 
                 const coordinatePointer: [number, number] = TooltipHelper.getTooltipBlockCoordinateByDot(d3.select(this), tooltipBlock, blockSize, tooltipArrow);
@@ -81,16 +83,19 @@ export class Tooltip
                 thisClass.setTooltipCoordinate(tooltipBlock, tooltipCoordinate);
                 
                 const dotsEdgingAttrs = TooltipHelper.getDotEdgingAttrs(d3.select(this));
-                thisClass.renderDotsEdging(block, dotsEdgingAttrs, chart.style.elementColors[index].toString()); 
+                thisClass.renderDotsEdging(block, dotsEdgingAttrs, chart.style.elementColors[index].toString());
+                
+                TooltipHelper.setElementsSemiOpacity(otherChartsElements);
             });
 
         elemets.on('mouseleave', function() {
             thisClass.removeDotsEdging(block);
             tooltipBlock.style('display', 'none');
+            otherChartsElements.style('opacity', 1);
         });
     }
 
-    private static renderTooltipForBars(block: Block, elemets: d3.Selection<d3.BaseType, DataRow, d3.BaseType, unknown>, data: DataSource, chart: TwoDimensionalChartModel, isSegmented: boolean, chartOrientation: ChartOrientation, blockSize: Size): void {
+    private static renderTooltipForBars(block: Block, elemets: d3.Selection<d3.BaseType, DataRow, d3.BaseType, unknown>, data: DataSource, chart: TwoDimensionalChartModel, isSegmented: boolean, chartOrientation: ChartOrientation, blockSize: Size, chartsCssClasses: string[][]): void {
         const tooltipBlock = this.renderTooltipBlock(block);
         const tooltipContent = this.renderTooltipContentBlock(tooltipBlock);
         const tooltipArrow = this.renderTooltipArrow(tooltipBlock);
@@ -102,6 +107,8 @@ export class Tooltip
         else
             isGrouped = parseFloat(elemets.attr('height')) < 10;
 
+        const otherChartsElements = TooltipHelper.getOtherChartsElements(block, chart.index, chartsCssClasses);
+
         elemets
             .on('mouseover', function(event, dataRow) {
                 tooltipBlock.style('display', 'block');
@@ -110,7 +117,7 @@ export class Tooltip
                 if(isGrouped) {
                     tooltipContent.html(TooltipHelper.getMultyTooltipHtmlFor2DChart(chart, data, keyValue));
                 } else {
-                    const index = thisClass.getElementIndex(elemets, this, keyValue, chart.data.keyField.name, isSegmented)
+                    const index = TooltipHelper.getElementIndex(elemets, this, keyValue, chart.data.keyField.name, isSegmented)
                     tooltipContent.html(TooltipHelper.getTooltipHtmlFor2DChart(chart, data, keyValue, index));
                 }
 
@@ -119,17 +126,19 @@ export class Tooltip
                 thisClass.setTooltipCoordinate(tooltipBlock, tooltipCoordinate);
 
                 if(isGrouped) {
-                    TooltipHelper.getFilteredElements(elemets, chart.data.keyField.name, keyValue, isSegmented)
-                        .style('opacity', 0.3);
+                    TooltipHelper.setElementsSemiOpacity(TooltipHelper.getFilteredElements(elemets, chart.data.keyField.name, keyValue, isSegmented));
                 } else {
-                    elemets.style('opacity', 0.3);
+                    TooltipHelper.setElementsSemiOpacity(elemets);
                     d3.select(this).style('opacity', 1);
                 }
+
+                TooltipHelper.setElementsSemiOpacity(otherChartsElements);
             });
 
         elemets.on('mouseleave', function() {
             elemets.style('opacity', 1);
             tooltipBlock.style('display', 'none');
+            otherChartsElements.style('opacity', 1);
         });
     }
 
@@ -149,8 +158,7 @@ export class Tooltip
                 const tooltipCoordinate = TooltipHelper.getTooltipCoordinate(coordinatePointer);
                 thisClass.setTooltipCoordinate(tooltipBlock, tooltipCoordinate);
 
-                elemets.filter(d => d.data[chart.data.keyField.name] !== key)
-                    .style('opacity', 0.3);
+                TooltipHelper.setElementsSemiOpacity(elemets.filter(d => d.data[chart.data.keyField.name] !== key));
             });
 
         elemets.on('mouseleave', function() {
@@ -175,8 +183,7 @@ export class Tooltip
                 const tooltipCoordinate = TooltipHelper.getTooltipCoordinate(coordinatePointer);
                 thisClass.setTooltipCoordinate(tooltipBlock, tooltipCoordinate);
 
-                TooltipHelper.getFilteredElements(elemets, chart.data.keyField.name, key, false)
-                    .style('opacity', 0.3);
+                TooltipHelper.setElementsSemiOpacity(TooltipHelper.getFilteredElements(elemets, chart.data.keyField.name, key, false));
             });
 
         elemets.on('mouseleave', function() {
@@ -266,17 +273,5 @@ export class Tooltip
         block.getChartBlock()
             .selectAll('.dot-edging-external, .dot-edging-internal')
             .remove();
-    }
-
-    private static getElementIndex(elemets: d3.Selection<d3.BaseType, DataRow, d3.BaseType, unknown>, dot: d3.BaseType, keyValue: string, keyName: string, isSegmented: boolean): number {
-        let index = -1;
-        const filtered = isSegmented ? elemets.filter(d => d.data[keyName] === keyValue) : elemets.filter(d => d[keyName] === keyValue);
-        filtered.each(function(d, i) {
-            if(d3.select(this).node() === d3.select(dot).node()) {
-                index = i;
-            }
-        });
-
-        return index;
     }
 }

@@ -1,6 +1,8 @@
+import * as d3 from "d3";
 import { ChartOrientation } from "../../../config/config";
 import { DataRow, DataSource, Field, IntervalChartModel, PolarChartModel, Size, TwoDimensionalChartModel } from "../../../model/model";
-import { Translate } from "../../polarNotation/donut";
+import { Block } from "../../block/block";
+import { Helper } from "../../helper";
 import { ValueFormatter, } from "../../valueFormatter";
 
 type ElementType = 'circle' | 'rect';
@@ -105,6 +107,39 @@ export class TooltipHelper
         if(isSegmented)
             return elements.filter(d => d.data[keyFieldName] !== keyValue);
         return elements.filter(d => d[keyFieldName] !== keyValue);
+    }
+
+    public static getElementIndex(elemets: d3.Selection<d3.BaseType, DataRow, d3.BaseType, unknown>, dot: d3.BaseType, keyValue: string, keyName: string, isSegmented: boolean): number {
+        let index = -1;
+        const filtered = isSegmented ? elemets.filter(d => d.data[keyName] === keyValue) : elemets.filter(d => d[keyName] === keyValue);
+        filtered.each(function(d, i) {
+            if(d3.select(this).node() === d3.select(dot).node()) {
+                index = i;
+            }
+        });
+
+        return index;
+    }
+
+    public static getOtherChartsElements(block: Block, chartIndex: number, chartsClasses: string[][]): d3.Selection<d3.BaseType, unknown, d3.BaseType, unknown> {
+        let classes = '';
+        chartsClasses.forEach((cssClasses, index) => {
+            if(chartIndex !== index) {
+                if(classes !== '')
+                    classes += ', ';
+                classes += Helper.getCssClassesLine(cssClasses);
+            }
+        });
+
+        if(classes === '')
+            return null;
+        return block.getChartBlock()
+            .selectAll(classes);
+    }
+
+    public static setElementsSemiOpacity(elements: d3.Selection<d3.BaseType, DataRow, d3.BaseType, unknown>): void {
+        if(elements)
+            elements.style('opacity', 0.3);
     }
 
     private static getTooltipHtml(chart: TwoDimensionalChartModel | PolarChartModel | IntervalChartModel, data: DataSource, keyValue: string, valueField: Field, markColor: string): string {
