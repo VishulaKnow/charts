@@ -17,7 +17,7 @@ export class Scale
         if(scaleKey.type === 'band')
             scales.scaleKey = this.getScaleBand(scaleKey.domain, scaleKey.range, bandSettings, scaleKey.elementsAmount);
         else if(scaleKey.type === 'point')
-            scales.scaleKey = this.getScalePoint(scaleKey.domain,  scaleKey.range);
+            scales.scaleKey = this.getScalePoint(scaleKey.domain, scaleKey.range);
 
         if(scaleValue.type === 'linear')
             scales.scaleValue = this.getScaleLinear(scaleValue.domain, scaleValue.range);
@@ -60,8 +60,16 @@ export class Scale
             scale.paddingOuter(bandSettings.groupMinDistance / bandSize / 2);
         }
 
-        while(scale.bandwidth() > bandSettings.maxBarWidth * elementsInGroupAmount + bandSettings.groupMaxDistance + bandSettings.barDistance * (elementsInGroupAmount - 1)){
-            scale.paddingOuter(scale.paddingOuter() + 0.05);        
+        // Padding inner = 10. If bandwidth more than needed, paddingInner is increased to number less than 35 
+        let paddingInner = bandSettings.groupMinDistance;
+        while(scale.bandwidth() > bandSettings.maxBarWidth * elementsInGroupAmount + bandSettings.barDistance * (elementsInGroupAmount - 1) && paddingInner < bandSettings.groupMaxDistance){
+            scale.paddingInner(++paddingInner / bandSize);        
+        }
+
+        // if bandwidth more than all bars widths in group + distance between it + distance between groups
+        let paddingOuter = 1;
+        while(scale.step() > bandSettings.maxBarWidth * elementsInGroupAmount + bandSettings.groupMaxDistance + bandSettings.barDistance * (elementsInGroupAmount - 1)){
+            scale.paddingOuter(++paddingOuter / bandSize);        
         }
 
         return scale;
