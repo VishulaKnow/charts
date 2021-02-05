@@ -1,7 +1,7 @@
-import { Color } from "d3";
+import * as d3 from "d3";
+import { Color, min } from "d3";
 import { BlockMargin, DataRow, Orient, Size } from "../../../model/model";
 import { Block } from "../../block/block";
-import { BlockHelper } from "../../block/blockHelper";
 import { Helper } from "../../helper";
 import { Scale, Scales } from "../scale/scale";
 
@@ -39,18 +39,71 @@ export class Dot
             .style('fill', 'white')
             .style('pointer-events', 'none');
 
-        // const dotsHover = dotsWrapper.append('circle')
-        //     .attr('cx', d => attrs.cx(d))
-        //     .attr('cy', d => attrs.cy(d))
-        //     .attr('r', 40)
-        //     .attr('class', 'dot-hover')
-        //     .style('fill', 'none')
-        //     .style('pointer-events', 'visibleFill');
-
-        // Helper.setCssClasses(dotsHover, cssClasses);
+        this.renderDotsAreas(block, dotsWrapper, attrs, keyField, cssClasses);
+        
         Helper.setCssClasses(dots, Helper.getCssClassesWithElementIndex(cssClasses, itemIndex));
         Helper.setCssClasses(dotsInside, Helper.getCssClassesWithElementIndex(cssClasses, itemIndex));
         Helper.setChartElementColor(dots, colorPalette, itemIndex, 'fill');
+    }
+
+    private static renderDotsAreas(block: Block, dotsWrapper: d3.Selection<d3.EnterElement, DataRow, SVGGElement, unknown>, attrs: DotAttrs, keyField: string, cssClasses: string[]): void {
+        const dotsHover = dotsWrapper.append('circle')
+            .attr('cx', d => attrs.cx(d))
+            .attr('cy', d => attrs.cy(d))
+            .attr('r', 40)
+            .attr('class', 'dot-hover')
+            .style('fill', 'none')
+            .style('pointer-events', 'visibleFill')
+            .lower();
+
+        dotsHover.sort((a, b) => attrs.cx(a[keyField]) > attrs.cx(b[keyField]) ? 1 : -1);
+        dotsHover.order();
+
+        dotsHover.each(function(dataRow) {
+            d3.select(this).on('mouseover', function(event) {
+                const xDots = block.getChartBlock().selectAll<SVGCircleElement, DataRow>('.dot').filter((d, i) => d[keyField] === dataRow[keyField]);
+                const attrsCy: number[] = [];
+                xDots.each(function() {
+                    attrsCy.push(parseFloat(d3.select(this).attr('cy')));
+                });
+
+                const thisY = d3.pointer(event, this)[1];
+                let minClosing = Math.abs(attrsCy[0] - thisY),
+                    indexOfDot = 0;
+                attrsCy.forEach((attrCy, index) => {
+                    if(Math.abs(attrCy - thisY) < minClosing) {
+                        minClosing = Math.abs(attrCy - thisY);
+                        indexOfDot = index;
+                    }
+                });
+
+                xDots.filter((d, i) => i === indexOfDot).dispatch('mouseover');
+            });
+        });
+
+        dotsHover.each(function(dataRow, index) {
+            d3.select(this).on('mouseleave', function() {
+                const xDots = block.getChartBlock().selectAll<SVGCircleElement, DataRow>('.dot').filter((d, i) => d[keyField] === dataRow[keyField]);
+                const attrsCy: number[] = [];
+                xDots.each(function() {
+                    attrsCy.push(parseFloat(d3.select(this).attr('cy')));
+                });
+
+                const thisY = d3.pointer(event, this)[1];
+                let minClosing = Math.abs(attrsCy[0] - thisY),
+                    indexOfDot = 0;
+                attrsCy.forEach((attrCy, index) => {
+                    if(Math.abs(attrCy - thisY) < minClosing) {
+                        minClosing = Math.abs(attrCy - thisY);
+                        indexOfDot = index;
+                    }
+                });
+
+                xDots.filter((d, i) => i === indexOfDot).dispatch('mouseleave');
+            });
+        });
+
+        Helper.setCssClasses(dotsHover, cssClasses);
     }
 
     public static getAllDots(block: Block, chartCssClasses: string[]): d3.Selection<d3.BaseType, DataRow, d3.BaseType, unknown> {

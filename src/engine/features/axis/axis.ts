@@ -53,9 +53,9 @@ export class Axis
         
         if(axisOptions.labels.visible) {
             if(axisOptions.orient === 'bottom' && axisOptions.type === 'key' && axisOptions.labels.positition === 'rotated')
-            this.rotateLabels(axisElement);
+                this.rotateLabels(axisElement);
                 
-            if(axisOptions.orient === 'left' && axisOptions.type === 'key' && Scale.getScaleWidth(scale) >= 38) {
+            if(axisOptions.orient === 'left' && axisOptions.type === 'key' && Scale.getScaleStep(scale) >= 38) {
                 (axisElement.selectAll('.tick text') as d3.Selection<SVGGElement, unknown, d3.BaseType, any>).call(this.wrap, axisOptions.labels.maxSize);
             } else {
                 this.cropLabels(block, scale, scaleOptions, axisOptions, blockSize);
@@ -177,6 +177,7 @@ export class Axis
     }
 
     private static wrap(text: d3.Selection<SVGGElement, unknown, d3.BaseType, any>, maxWidth: number) {
+        const thisClass = this;
         text.each(function() {
             let textBlock = d3.select(this);
             if(textBlock.node().getBBox().width > maxWidth) {
@@ -186,11 +187,11 @@ export class Axis
                     lineNumber = 0,
                     y = textBlock.attr("y"),
                     dy = 1.4,
-                    tspan = textBlock.text(null).append("tspan").attr("x", 0).attr("y", y).attr("dy", dy + "em").attr('text-anchor', 'start');
-                while (letter = letters.pop()) {
+                    tspan = textBlock.text(null).append("tspan").attr("y", y).attr("dy", dy + "em");
+                while(letter = letters.pop()) {
                     line.push(letter);
                     tspan.text(line.join(''));
-                    if (tspan.node().getComputedTextLength() > maxWidth && line.length > 1) {
+                    if(tspan.node().getComputedTextLength() > maxWidth && line.length > 1) {
                         line.pop();
                         tspan.text(line.join(''));
                         if(lineNumber === 0 && line[line.length - 1] !== ' ')
@@ -201,7 +202,7 @@ export class Axis
                                 tspan.text(tspan.text().substr(0, tspan.text().length - 1) + '...')
                             break;
                         }
-                        tspan = textBlock.append("tspan").attr("y", y).attr("dy", dy + "em").attr('text-anchor', 'start').text(letter);
+                        tspan = textBlock.append("tspan").attr("y", y).attr("dy", dy + "em").text(letter);
                         lineNumber++;
                     }
                 }
