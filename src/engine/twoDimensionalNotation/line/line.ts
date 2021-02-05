@@ -5,61 +5,38 @@ import { Scale, Scales } from "../../features/scale/scale";
 import { Block } from "../../block/block";
 import { Dot } from "../../features/lineDots/dot";
 
-interface LineChartCoordinate {
-    x: number;
-    y: number;
-}
-
 export class Line
 {
     private static lineChartClass = 'line';
 
     public static render(block: Block, scales: Scales, data: DataRow[], margin: BlockMargin, keyAxisOrient: Orient, chart: TwoDimensionalChartModel, blockSize: Size): void {
-        const line = this.getLineGenerator();
-        chart.data.valueFields.forEach((field, index) => {
-            const lineCoordinate: LineChartCoordinate[] = this.getLineCoordinateByKeyOrient(keyAxisOrient,
-                data,
-                scales,
-                margin,
-                chart.data.keyField.name,
-                field.name);
+        chart.data.valueFields.forEach((valueField, index) => {
+            const line = this.getLineGenerator(keyAxisOrient, scales, chart.data.keyField.name, valueField.name, margin);
             
             const path = block.getChartBlock()
                 .append('path')
-                .attr('d', line(lineCoordinate))
+                .attr('d', line(data))
                 .attr('class', this.lineChartClass)
                 .style('clip-path', `url(${block.getClipPathId()})`);
         
             Helper.setCssClasses(path, Helper.getCssClassesWithElementIndex(chart.cssClasses, index));
             Helper.setChartStyle(path, chart.style, index, 'stroke');
-            Dot.render(block, data, keyAxisOrient, scales, margin, chart.data.keyField.name, field.name, chart.cssClasses, index, chart.style.elementColors, blockSize, false);
+            Dot.render(block, data, keyAxisOrient, scales, margin, chart.data.keyField.name, valueField.name, chart.cssClasses, index, chart.style.elementColors, blockSize, false);
         });
     }
 
     public static updateLineChartByValueAxis(block: Block, scales: Scales, data: DataRow[], margin: BlockMargin, keyAxisOrient: Orient, chart: TwoDimensionalChartModel): void {
-        const line = this.getLineGenerator();
-        chart.data.valueFields.forEach((field, index) => {
-            const lineCoordinate: LineChartCoordinate[] = this.getLineCoordinateByKeyOrient(keyAxisOrient,
-                data,
-                scales,
-                margin,
-                chart.data.keyField.name,
-                field.name);
+        chart.data.valueFields.forEach((valueField, index) => {
+            const line = this.getLineGenerator(keyAxisOrient, scales, chart.data.keyField.name, valueField.name, margin);
             
             block.getChartBlock()
                 .select(`.${this.lineChartClass}${Helper.getCssClassesLine(chart.cssClasses)}.chart-element-${index}`)
                 .transition()
                 .duration(1000)
-                    .attr('d', line(lineCoordinate));
+                    .attr('d', line(data));
     
-            Dot.updateDotsCoordinateByValueAxis(block, data, keyAxisOrient, scales, margin, chart.data.keyField.name, field.name, chart.cssClasses, index, false);
+            Dot.updateDotsCoordinateByValueAxis(block, data, keyAxisOrient, scales, margin, chart.data.keyField.name, valueField.name, chart.cssClasses, index, false);
         });
-    }
-
-    private static getLineGenerator(): d3.Line<LineChartCoordinate> {
-        return d3.line<LineChartCoordinate>()
-            .x(d => d.x)
-            .y(d => d.y);
     }
 
     public static moveChartsToFront(block: Block): void {
@@ -67,27 +44,18 @@ export class Line
             .selectAll(`.${this.lineChartClass}`)
             .raise();
     }
-    
-    private static getLineCoordinateByKeyOrient(axisOrient: string, data: DataRow[], scales: Scales, margin: BlockMargin, keyField: string, valueField: string): LineChartCoordinate[] {
-        const lineCoordinate: LineChartCoordinate[] = [];
 
-        if(axisOrient === 'bottom' || axisOrient === 'top') {
-            data.forEach(d => {
-                lineCoordinate.push({
-                    x: Scale.getScaleKeyPoint(scales.scaleKey, d[keyField]) + margin.left,
-                    y: scales.scaleValue(d[valueField]) + margin.top
-                });
-            });
+    private static getLineGenerator(keyAxisOrient: Orient, scales: Scales, keyFieldName: string, valueFieldName: string, margin: BlockMargin): d3.Line<DataRow> {
+        if(keyAxisOrient === 'bottom' || keyAxisOrient === 'top') {
+            return d3.line<DataRow>()
+                .x(d => Scale.getScaleKeyPoint(scales.scaleKey, d[keyFieldName]) + margin.left)
+                .y(d => scales.scaleValue(d[valueFieldName]) + margin.top);
         }
-        else if(axisOrient === 'left' || axisOrient === 'right') {
-            data.forEach(d => {
-                lineCoordinate.push({
-                    x: scales.scaleValue(d[valueField]) + margin.left,
-                    y: Scale.getScaleKeyPoint(scales.scaleKey, d[keyField]) + margin.top
-                });
-            });
+
+        if(keyAxisOrient === 'left' || keyAxisOrient === 'right') {
+            return d3.line<DataRow>()
+                .x(d => scales.scaleValue(d[valueFieldName]) + margin.left)
+                .y(d => Scale.getScaleKeyPoint(scales.scaleKey, d[keyFieldName]) + margin.top)
         }
-            
-        return lineCoordinate;
     }
 }
