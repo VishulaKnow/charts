@@ -8,14 +8,14 @@
         { "brand": "DODGE", "price": 70, "count": 4 },
         { "brand": "SAAB", "price": 50, "count": 11 },
         { "brand": "HONDA", "price": 20, "count": 2 },
-        { "brand": "TOYOTA", "price": 120, "count": 1 }
+        { "brand": "TOYOTA", "price": 120, "count": 20 }
     ],
     "dataSet2": [
         { "brand": "BMW", "price": 100, "count": 5 },
         { "brand": "LADA", "price": 25, "count": 2 },
         { "brand": "MERCEDES", "price": 28, "count": 0 },
         { "brand": "AUDI", "price": 16, "count": 4 },
-        { "brand": "VOLKSWAGEN", "price": 85, "count": 3 },
+        { "brand": "VOLKSWAGEN", "price": 85, "count": 13 },
         { "brand": "DODGE", "price": 100, "count": 4 },
         { "brand": "SAAB", "price": 100, "count": 11 },
         { "brand": "HONDA", "price": 15, "count": 11 },

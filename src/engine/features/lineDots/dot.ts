@@ -83,7 +83,7 @@ export class Dot
                     xDots.filter((d, i) => i === indexOfDot).dispatch(eventName);
                 });
             });
-        })
+        });
 
         Helper.setCssClasses(dotsHover, cssClasses);
     }

@@ -154,7 +154,7 @@ export class Legend
         const maxItemWidth = this.getMaxItemWidth(legendBlock, items, 'row');
 
         let index = 0;
-        let loopFlag = true; // if at least one label doesn't has text, loop ends
+        let loopFlag = true; // if at least one label has no text, loop ends
         while(sumOfItemsWidth > maxWidth && loopFlag) {
             items.nodes().forEach(node => {
                 const textBlock = node.querySelector('.legend-label');

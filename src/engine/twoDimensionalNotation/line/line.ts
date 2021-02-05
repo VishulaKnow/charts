@@ -71,20 +71,22 @@ export class Line
     private static getLineCoordinateByKeyOrient(axisOrient: string, data: DataRow[], scales: Scales, margin: BlockMargin, keyField: string, valueField: string): LineChartCoordinate[] {
         const lineCoordinate: LineChartCoordinate[] = [];
 
-        if(axisOrient === 'bottom' || axisOrient === 'top')
+        if(axisOrient === 'bottom' || axisOrient === 'top') {
             data.forEach(d => {
                 lineCoordinate.push({
                     x: Scale.getScaleKeyPoint(scales.scaleKey, d[keyField]) + margin.left,
                     y: scales.scaleValue(d[valueField]) + margin.top
                 });
             });
-        else if(axisOrient === 'left' || axisOrient === 'right')
+        }
+        else if(axisOrient === 'left' || axisOrient === 'right') {
             data.forEach(d => {
                 lineCoordinate.push({
                     x: scales.scaleValue(d[valueField]) + margin.left,
                     y: Scale.getScaleKeyPoint(scales.scaleKey, d[keyField]) + margin.top
                 });
             });
+        }
             
         return lineCoordinate;
     }

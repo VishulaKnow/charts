@@ -185,7 +185,7 @@ export class ChartRenderer
 
     private static updateChartsByValueAxis(block: Block, charts: TwoDimensionalChartModel[], scales: Scales, data: DataSource, margin: BlockMargin, keyAxisOrient: Orient, blockSize: Size, isSegmented: boolean): void {
         charts.forEach((chart: TwoDimensionalChartModel) => {
-            if(chart.type === 'bar')
+            if(chart.type === 'bar') {
                 Bar.updateBarChartByValueAxis(block, 
                     scales,
                     margin,
@@ -193,6 +193,7 @@ export class ChartRenderer
                     chart,
                     blockSize,
                     isSegmented);
+            }
             else if(chart.type === 'line') {
                 Line.updateLineChartByValueAxis(block,
                     scales,
@@ -201,7 +202,7 @@ export class ChartRenderer
                     keyAxisOrient,
                     chart);
             }   
-            else if(chart.type === 'area')
+            else if(chart.type === 'area') {
                 Area.updateAreaChartByValueAxis(block, 
                     scales,
                     data[chart.data.dataSource],
@@ -210,6 +211,7 @@ export class ChartRenderer
                     keyAxisOrient,
                     blockSize,
                     isSegmented);
+            }
         });
     }
 }

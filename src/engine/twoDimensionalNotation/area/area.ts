@@ -6,13 +6,6 @@ import { Block } from "../../block/block";
 import { Dot } from "../../features/lineDots/dot";
 import { Color } from "d3";
 
-interface AreaChartCoordinate {
-    x0: number;
-    x1: number;
-    y0: number;
-    y1: number;
-}
-
 export class Area
 {
     private static areaChartClass = 'area';
@@ -24,20 +17,42 @@ export class Area
             this.renderGrouped(block, scales, data, margin, keyAxisOrient, chart, blockSize);
     }
 
+    public static updateAreaChartByValueAxis(block: Block, scales: Scales, data: DataRow[], margin: BlockMargin, chart: TwoDimensionalChartModel, keyAxisOrient: Orient, blockSize: Size, isSegmented: boolean): void {
+        if(isSegmented) {
+            const area = this.getSegmentedAreaGenerator(keyAxisOrient, scales, margin, chart.data.keyField.name);
+            const areas = block.getChartBlock()
+                .selectAll(`path.${this.areaChartClass}${Helper.getCssClassesLine(chart.cssClasses)}`) as d3.Selection<SVGRectElement, DataRow[], d3.BaseType, unknown>;
+            
+            areas
+                .transition()
+                .duration(1000)
+                    .attr('d', d => area(d as DataRow[]));
+
+            areas.each((d, i) => {
+                Dot.updateDotsCoordinateByValueAxis(block, d, keyAxisOrient, scales, margin, chart.data.keyField.name, '1', chart.cssClasses, i, isSegmented);
+            });
+        } else {
+            chart.data.valueFields.forEach((field, index) => {
+                const area = this.getGroupedAreaGenerator(keyAxisOrient, scales, margin, chart.data.keyField.name, field.name, blockSize);
+            
+                block.getChartBlock()
+                    .select(`.${this.areaChartClass}${Helper.getCssClassesLine(chart.cssClasses)}.chart-element-${index}`)
+                    .transition()
+                    .duration(1000)
+                        .attr('d', area(data));
+        
+                Dot.updateDotsCoordinateByValueAxis(block, data, keyAxisOrient, scales, margin, chart.data.keyField.name, field.name, chart.cssClasses, index, isSegmented);
+            });
+        }
+    }
+
     private static renderGrouped(block: Block, scales: Scales, data: DataRow[], margin: BlockMargin, keyAxisOrient: Orient, chart: TwoDimensionalChartModel, blockSize: Size): void {
-        const area = this.getAreaGenerator(keyAxisOrient);
         chart.data.valueFields.forEach((field, index) => {
-            const areaCoordinate: AreaChartCoordinate[] = this.getAreaCoordinateByKeyOrient(keyAxisOrient,
-                data,
-                scales,
-                margin,
-                chart.data.keyField.name,
-                field.name,
-                blockSize);
+            const area = this.getGroupedAreaGenerator(keyAxisOrient, scales, margin, chart.data.keyField.name, field.name, blockSize);
         
             const path = block.getChartBlock()
                 .append('path')
-                .attr('d', area(areaCoordinate))
+                .attr('d', area(data))
                 .attr('class', this.areaChartClass)
                 .style('clip-path', `url(${block.getClipPathId()})`);
         
@@ -73,53 +88,17 @@ export class Area
         });
     }
 
-    public static updateAreaChartByValueAxis(block: Block, scales: Scales, data: DataRow[], margin: BlockMargin, chart: TwoDimensionalChartModel, keyAxisOrient: Orient, blockSize: Size, isSegmented: boolean): void {
-        if(isSegmented) {
-            const area = this.getSegmentedAreaGenerator(keyAxisOrient, scales, margin, chart.data.keyField.name);
-            const areas = block.getChartBlock()
-                .selectAll(`path.${this.areaChartClass}${Helper.getCssClassesLine(chart.cssClasses)}`) as d3.Selection<SVGRectElement, DataRow[], d3.BaseType, unknown>;
-            
-            areas
-                .transition()
-                .duration(1000)
-                    .attr('d', d => area(d as DataRow[]));
-
-            areas.each((d, i) => {
-                Dot.updateDotsCoordinateByValueAxis(block, d, keyAxisOrient, scales, margin, chart.data.keyField.name, '1', chart.cssClasses, i, isSegmented);
-            });
-        } else {
-            const area = this.getAreaGenerator(keyAxisOrient);
-            chart.data.valueFields.forEach((field, index) => {
-                const areaCoordinate: AreaChartCoordinate[] = this.getAreaCoordinateByKeyOrient(keyAxisOrient,
-                    data,
-                    scales,
-                    margin,
-                    chart.data.keyField.name,
-                    field.name,
-                    blockSize);
-            
-                block.getChartBlock()
-                    .select(`.${this.areaChartClass}${Helper.getCssClassesLine(chart.cssClasses)}.chart-element-${index}`)
-                    .transition()
-                    .duration(1000)
-                        .attr('d', area(areaCoordinate));
-        
-                Dot.updateDotsCoordinateByValueAxis(block, data, keyAxisOrient, scales, margin, chart.data.keyField.name, field.name, chart.cssClasses, index, isSegmented);
-            });
-        }
-    }
-
-    private static getAreaGenerator(keyAxisOrient: Orient): d3.Area<AreaChartCoordinate> {
+    private static getGroupedAreaGenerator(keyAxisOrient: Orient, scales: Scales, margin: BlockMargin, keyFieldName: string, valueFieldName: string, blockSize: Size): d3.Area<DataRow> {
         if(keyAxisOrient === 'bottom' || keyAxisOrient === 'top')
-            return d3.area<AreaChartCoordinate>()
-                .x(d => d.x0)
-                .y0(d => d.y0)
-                .y1(d => d.y1);
+            return d3.area<DataRow>()
+                .x(d => Scale.getScaleKeyPoint(scales.scaleKey, d[keyFieldName]) + margin.left)
+                .y0(d => this.getZeroCoordinate(keyAxisOrient, margin, blockSize))
+                .y1(d => scales.scaleValue(d[valueFieldName]) + margin.top);
         if(keyAxisOrient === 'left' || keyAxisOrient === 'right')
-            return d3.area<AreaChartCoordinate>()
-                .x0(d => d.x0)
-                .x1(d => d.x1)
-                .y(d => d.y0);
+            return d3.area<DataRow>()
+                .x0(d => this.getZeroCoordinate(keyAxisOrient, margin, blockSize))
+                .x1(d => scales.scaleValue(d[valueFieldName]) + margin.left,)
+                .y(d => Scale.getScaleKeyPoint(scales.scaleKey, d[keyFieldName]) + margin.top);
     }
 
     private static getSegmentedAreaGenerator(keyAxisOrient: Orient, scales: Scales, margin: BlockMargin, keyField: string): d3.Area<DataRow> {
@@ -138,37 +117,16 @@ export class Area
         }
     }
 
-    private static getAreaCoordinateByKeyOrient(axisOrient: string, data: DataRow[], scales: Scales, margin: BlockMargin, keyField: string, valueField: string, blockSize: Size) : AreaChartCoordinate[] {
-        const areaCoordinate: AreaChartCoordinate[] = [];
-        
-        if(axisOrient === 'bottom' || axisOrient === 'top') {
-            let y0: number = margin.top;
-            if(axisOrient === 'bottom')
-                y0 = blockSize.height - margin.bottom;
-            data.forEach(d => {
-                areaCoordinate.push({
-                    x0: Scale.getScaleKeyPoint(scales.scaleKey, d[keyField]) + margin.left,
-                    x1: 0,
-                    y0,
-                    y1: scales.scaleValue(d[valueField]) + margin.top
-                });
-            });
-        } 
-        else if(axisOrient === 'left' || axisOrient === 'right') {
-            let x0: number = margin.left;
-            if(axisOrient === 'right')
-                x0 = blockSize.width - margin.right;
-            data.forEach(d => {
-                areaCoordinate.push({
-                    x0,
-                    x1: scales.scaleValue(d[valueField]) + margin.left,
-                    y0: Scale.getScaleKeyPoint(scales.scaleKey, d[keyField]) + margin.top,
-                    y1: 0
-                });
-            });
-        }   
+    private static getZeroCoordinate(axisOrient: Orient, margin: BlockMargin, blockSize: Size): number {
+        if(axisOrient === 'bottom')
+            return blockSize.height - margin.bottom;
+        if(axisOrient === 'top')
+            return margin.top;
 
-        return areaCoordinate;
+        if(axisOrient === 'left')
+            return margin.left;
+        if(axisOrient === 'right')
+            return blockSize.width - margin.right;
     }
 
     private static setSegmentColor(segments: d3.Selection<SVGGElement, unknown, SVGGElement, unknown>, colorPalette: Color[]): void {
