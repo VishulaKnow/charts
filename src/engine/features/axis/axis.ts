@@ -177,13 +177,12 @@ export class Axis
     }
 
     private static wrap(text: d3.Selection<SVGGElement, unknown, d3.BaseType, any>, maxWidth: number) {
-        const thisClass = this;
         text.each(function() {
             let textBlock = d3.select(this);
             if(textBlock.node().getBBox().width > maxWidth) {
-                let letters = textBlock.text().split('').reverse(),
+                let letters = textBlock.text().split('').reverse(), // split text to letters.
                     letter,
-                    line: string[] = [],
+                    line: string[] = [], // one line. letters from this var into tpsans.
                     lineNumber = 0,
                     y = textBlock.attr("y"),
                     dy = 1.4,
@@ -197,7 +196,7 @@ export class Axis
                         if(lineNumber === 0 && line[line.length - 1] !== ' ')
                             tspan.text(tspan.text() + '-');
                         line = [letter];
-                        if(lineNumber >= 1) {
+                        if(lineNumber >= 1) { // If text block has 2 lines, text cropped.
                             if(letters.length > 0)
                                 tspan.text(tspan.text().substr(0, tspan.text().length - 1) + '...')
                             break;
