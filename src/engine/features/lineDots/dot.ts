@@ -39,7 +39,7 @@ export class Dot
             .style('fill', 'white')
             .style('pointer-events', 'none');
 
-        this.renderDotsAreas(block, dotsWrapper, attrs, keyField, cssClasses);
+        // this.renderDotsAreas(block, dotsWrapper, attrs, keyField, cssClasses);
         
         Helper.setCssClasses(dots, Helper.getCssClassesWithElementIndex(cssClasses, itemIndex));
         Helper.setCssClasses(dotsInside, Helper.getCssClassesWithElementIndex(cssClasses, itemIndex));
@@ -64,7 +64,7 @@ export class Dot
         ['mouseover', 'mouseleave'].forEach(eventName => {
             dotsHover.each(function(dataRow) {
                 d3.select(this).on(eventName, function(event) {
-                    const xDots = block.getChartBlock().selectAll<SVGCircleElement, DataRow>(`.${thisClass.dotClass}`).filter((d, i) => d[keyField] === dataRow[keyField]);
+                    const xDots = block.getChartBlock().selectAll<SVGCircleElement, DataRow>(`.${thisClass.dotClass}`).filter((d) => d[keyField] === dataRow[keyField]);
                     const attrsCy: number[] = [];
                     xDots.each(function() {
                         attrsCy.push(parseFloat(d3.select(this).attr('cy')));
@@ -89,8 +89,6 @@ export class Dot
     }
 
     public static getAllDots(block: Block, chartCssClasses: string[]): d3.Selection<d3.BaseType, DataRow, d3.BaseType, unknown> {
-        // return block.getSvg()
-        //     .selectAll(`.dot-hover${Helper.getCssClassesLine(chartCssClasses)}`);
         return block.getSvg()
             .selectAll(`.${this.dotClass}${Helper.getCssClassesLine(chartCssClasses)}`);
     }

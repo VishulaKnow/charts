@@ -9,7 +9,6 @@ export class Block
     private wrapperCssClasses: string[];
     private parentElement: d3.Selection<d3.BaseType, any, HTMLElement, any>;
     private wrapper: d3.Selection<d3.BaseType, any, HTMLElement, any>;
-
     private chartBlockClass = 'chart-block';
 
     public parentElementSelector: string;
