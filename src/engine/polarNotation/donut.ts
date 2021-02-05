@@ -19,8 +19,9 @@ export class Donut
         const outerRadius = this.getOuterRadius(margin, blockSize);
         const thickness = this.getThickness(donutSettings, blockSize, margin)
         const innerRadius = this.getInnerRadius(outerRadius, thickness);
+
         const arc = this.getArcGenerator(outerRadius, innerRadius);
-        const pie = this.getPie(chart.data.valueField.name, donutSettings.padAngle);
+        const pie = this.getPieGenerator(chart.data.valueField.name, donutSettings.padAngle);
     
         const translate = this.getTranslate(margin, blockSize);
     
@@ -89,7 +90,7 @@ export class Donut
             .outerRadius(outerRadius);
     }
     
-    private static getPie(valueField: string, padAngle: number = 0): d3.Pie<any, DataRow> {
+    private static getPieGenerator(valueField: string, padAngle: number): d3.Pie<any, DataRow> {
         return d3.pie<DataRow>()
             .padAngle(padAngle)
             .sort(null)

@@ -68,7 +68,7 @@ export class Bar
                     .attr('class', this.barItemClass)
                     .style('clip-path', `url(${block.getClipPathId()})`);
 
-            const barAttrs = this.getBarAttrsByKeyOrient(block,
+            const barAttrs = this.getGroupedBarAttrsByKeyOrient(block,
                 keyAxisOrient,
                 scales,
                 margin,
@@ -106,7 +106,7 @@ export class Bar
                 .attr('class', this.barItemClass)
                 .style('clip-path', `url(${block.getClipPathId()})`);
 
-        const barAttrs = this.getStackBarAttrByKeyOrient(keyAxisOrient, scales, margin, chart.data.keyField.name, blockSize, barSettings);
+        const barAttrs = this.getStackedBarAttrByKeyOrient(keyAxisOrient, scales, margin, chart.data.keyField.name, blockSize, barSettings);
        
         bars
             .attr('x', barAttrs.x)
@@ -117,6 +117,7 @@ export class Bar
         groups.each(function(d, i) {
             Helper.setCssClasses(d3.select(this).selectAll('rect'), Helper.getCssClassesWithElementIndex(chart.cssClasses, i));
         });
+        
         this.setSegmentColor(groups, chart.style.elementColors);
     }
 
@@ -133,7 +134,7 @@ export class Bar
                     .attr('class', 'bar-group');
     }
 
-    private static getBarAttrsByKeyOrient(block: Block, axisOrient: Orient, scales: Scales, margin: BlockMargin, keyField: string, valueField: string, blockSize: Size, barsAmount: number, barSettings: BarChartSettings): BarAttrs {
+    private static getGroupedBarAttrsByKeyOrient(block: Block, axisOrient: Orient, scales: Scales, margin: BlockMargin, keyField: string, valueField: string, blockSize: Size, barsAmount: number, barSettings: BarChartSettings): BarAttrs {
         const chartIndex = block.getSvg().select('.bar-group').selectAll(`.${this.barItemClass}`).size() - 1;
         const barDistance = barSettings.barDistance;
         const barStep = (Scale.getScaleWidth(scales.scaleKey) - barDistance * (barsAmount - 1)) / barsAmount; // Space for one bar
@@ -176,7 +177,7 @@ export class Bar
         return attrs;
     }
 
-    private static getStackBarAttrByKeyOrient(axisOrient: Orient, scales: Scales, margin: BlockMargin, keyField: string, blockSize: Size, barSettings: BarChartSettings): BarAttrs {
+    private static getStackedBarAttrByKeyOrient(axisOrient: Orient, scales: Scales, margin: BlockMargin, keyField: string, blockSize: Size, barSettings: BarChartSettings): BarAttrs {
         const barStep = (Scale.getScaleWidth(scales.scaleKey));
         const barSize = barStep > barSettings.maxBarWidth ? barSettings.maxBarWidth : barStep;
         const barDiff = (barStep - barSize) / 2;
@@ -196,14 +197,14 @@ export class Bar
             attrs.y = d => scales.scaleKey(d.data[keyField]) + margin.top + barDiff;
             attrs.height = d => barSize;
         }
-
-        if(axisOrient === 'bottom') {
-            attrs.y = d => scales.scaleValue(d[1]) + margin.top;
-            attrs.height = d => blockSize.height - margin.top - margin.bottom - scales.scaleValue(d[1] - d[0]);
-        }
+        
         if(axisOrient === 'top') {
             attrs.y = d => margin.top + scales.scaleValue(d[0]);
             attrs.height = d => ValueFormatter.getValueOrZero(scales.scaleValue(d[1] - d[0]));
+        }
+        if(axisOrient === 'bottom') {
+            attrs.y = d => scales.scaleValue(d[1]) + margin.top;
+            attrs.height = d => blockSize.height - margin.top - margin.bottom - scales.scaleValue(d[1] - d[0]);
         }
         if(axisOrient === 'left') {
             attrs.x = d => margin.left + scales.scaleValue(d[0]) + 1;
