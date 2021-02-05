@@ -124,7 +124,7 @@ export class Bar
         let groups = block.getChartBlock()
             .selectAll('.bar-group');
 
-        if(groups.size() === 0)
+        if(groups.empty())
             groups = block.getChartBlock()
                 .selectAll('.bar-group')
                 .data(data)

@@ -200,7 +200,7 @@ export class Tooltip
 
     private static renderTooltipArrow(tooltipBlock: d3.Selection<d3.BaseType, unknown, HTMLElement, any>): d3.Selection<d3.BaseType, unknown, HTMLElement, any> {
         let tooltipArrow = tooltipBlock.select(`.${this.tooltipArrowClass}`);
-        if(tooltipArrow.size() === 0)
+        if(tooltipArrow.empty())
             tooltipArrow = tooltipBlock
                 .append('div')
                 .attr('class', this.tooltipArrowClass)
@@ -215,7 +215,7 @@ export class Tooltip
         const wrapper = block.getWrapper().select(`.${this.tooltipWrapperClass}`);
 
         let tooltipBlock = wrapper.select(`.${this.tooltipBlockClass}`);
-        if(tooltipBlock.size() === 0) {
+        if(tooltipBlock.empty()) {
             tooltipBlock = wrapper
                 .append('div')
                 .attr('class', this.tooltipBlockClass)
@@ -232,7 +232,7 @@ export class Tooltip
     private static renderTooltipContentBlock(tooltipBlock: d3.Selection<d3.BaseType, unknown, HTMLElement, any>): d3.Selection<HTMLDivElement, unknown, HTMLElement, any> {
         let tooltipContentBlock = tooltipBlock.select<HTMLDivElement>(`div.${this.tooltipContentClass}`); 
         
-        if(tooltipContentBlock.size() === 0)
+        if(tooltipContentBlock.empty())
             tooltipContentBlock = tooltipBlock.append('div')
                 .attr('class', this.tooltipContentClass);
 
