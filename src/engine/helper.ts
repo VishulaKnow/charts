@@ -43,6 +43,9 @@ export class Helper
     }
 
     public static getTranslateNumbers(transformValue: string): [number, number] {
+        if(!transformValue)
+            return [0, 0];
+        
         const translateNumbers = transformValue.substring(10, transformValue.length - 1).split(', ');
         const translateX = parseFloat(translateNumbers[0]);
         const translateY = parseFloat(translateNumbers[1]);
@@ -60,7 +63,7 @@ export class Helper
         return sum;
     }
 
-    public static getPropertyValue(node: HTMLElement, propertyName: string): string {
+    public static getPropertyValue(node: Element, propertyName: string): string {
         return window.getComputedStyle(node).getPropertyValue(propertyName);
     }
 
