@@ -76,7 +76,7 @@ export class IntervalModel {
 
     public static getAdditionalElements(options: IntervalOptions, designerConfig: DesignerConfig): AdditionalElementsOptions {
         return {
-            gridLine: GridLineModel.getGridLineOptions(options, designerConfig)
+            gridLine: GridLineModel.getGridLineOptions(options.additionalElements.gridLine, designerConfig.additionalElements.gridLine)
         }
     }
 

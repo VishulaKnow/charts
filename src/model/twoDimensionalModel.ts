@@ -127,7 +127,7 @@ export class TwoDimensionalModel
 
     private static getAdditionalElements(options: TwoDimensionalOptions, designerConfig: DesignerConfig): AdditionalElementsOptions {
         return {
-            gridLine: GridLineModel.getGridLineOptions(options, designerConfig)
+            gridLine: GridLineModel.getGridLineOptions(options.additionalElements.gridLine, designerConfig.additionalElements.gridLine)
         }
     }
 
