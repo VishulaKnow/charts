@@ -99,7 +99,7 @@ describe('test label coordinates', () => {
             }
             expected = {
                 x: 26,
-                y: 53,
+                y: 50,
                 textAnchor: 'start'
             }
         });
@@ -139,7 +139,7 @@ describe('test label coordinates', () => {
             }
             expected = {
                 x: 114,
-                y: 53,
+                y: 50,
                 textAnchor: 'end'
             }
         });

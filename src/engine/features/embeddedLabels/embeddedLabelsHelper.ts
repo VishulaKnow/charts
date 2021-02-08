@@ -73,8 +73,10 @@ export class EmbeddedLabelsHelper
     }
 
     private static getLabelAttrY(barY: number, barHeight: number, labelBlockHeight: number): number {      
-        const PADDING_OF_TEXT_BLOCK = 2;
-        return barY + barHeight - (barHeight - labelBlockHeight) / 2 - PADDING_OF_TEXT_BLOCK;
+        // const PADDING_OF_TEXT_BLOCK = 2;
+        // return barY + barHeight - (barHeight - labelBlockHeight) / 2 - PADDING_OF_TEXT_BLOCK;
+
+        return barY + barHeight / 2;
     }
 
     private static getTextAnchor(type: EmbeddedLabelTypeModel, position: EmbeddedLabelPosition, keyAxisOrient: Orient): TextAnchor {

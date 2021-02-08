@@ -36,7 +36,8 @@ export class EmbeddedLabels
         labelBlock
             .attr('x', attrs.x)
             .attr('y', attrs.y)
-            .attr('text-anchor', attrs.textAnchor);
+            .attr('text-anchor', attrs.textAnchor)
+            .attr('dominant-baseline', 'middle');
 
         if(position === 'inside')
             labelBlock.style('fill', '#FFFFFF');
