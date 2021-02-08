@@ -88,7 +88,7 @@ export class IntervalModel {
                 title: chart.title,
                 data: { ...chart.data },
                 tooltip: chart.tooltip,
-                cssClasses: ChartStyleModel.getCssClasses(chart.type, index),
+                cssClasses: ChartStyleModel.getCssClasses(index),
                 style: ChartStyleModel.getChartStyle(chartPalette, charts.length)
             });
         });

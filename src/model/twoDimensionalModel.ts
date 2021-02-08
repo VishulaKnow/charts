@@ -98,8 +98,8 @@ export class TwoDimensionalModel
                 title: chart.title,
                 data: { ...chart.data },
                 tooltip: chart.tooltip,
-                cssClasses: ChartStyleModel.getCssClasses(chart.type, index),
-                style: ChartStyleModel.get2DChartStyle(chartPalette, charts, index),
+                cssClasses: ChartStyleModel.getCssClasses(index),
+                style: ChartStyleModel.get2DChartStyle(chartPalette, charts.length, chart.type, this.getChartsValueFieldsAmount(charts), index),
                 embeddedLabels: this.getEmbeddedLabelType(chart, chartOrientation),
                 index
             });
@@ -133,5 +133,9 @@ export class TwoDimensionalModel
 
     private static getChartsByType(charts: TwoDimensionalChart[], type: TwoDimensionalChartType): TwoDimensionalChart[] {
         return charts.filter(chart => chart.type === type);
+    }
+
+    private static getChartsValueFieldsAmount(charts: TwoDimensionalChart[]): number[] {
+        return charts.map(chart => chart.data.valueFields.length);
     }
 }
