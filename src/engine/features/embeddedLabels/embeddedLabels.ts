@@ -1,9 +1,10 @@
 import * as d3 from "d3";
+import { lab } from "d3";
 import { BlockMargin, DataRow, EmbeddedLabelTypeModel, Field, Orient, Size } from "../../../model/model";
 import { Block } from "../../block/block";
 import { Helper } from "../../helper";
 import { ValueFormatter } from "../../valueFormatter";
-import { BarAttrs, EmbeddedLabelsHelper } from "./embeddedLabelsHelper";
+import { BarAttrs, EmbeddedLabelPosition, EmbeddedLabelsHelper } from "./embeddedLabelsHelper";
 
 export class EmbeddedLabels
 {
@@ -23,13 +24,15 @@ export class EmbeddedLabels
             .text(ValueFormatter.formatValue(field.format, dataRow[field.name]));
 
         const barAttrs: BarAttrs = {
-            width: Helper.getSelectionNumericAttr(bar, 'width'),
-            height: Helper.getSelectionNumericAttr(bar, 'height'),
             x: Helper.getSelectionNumericAttr(bar, 'x'),
-            y: Helper.getSelectionNumericAttr(bar, 'y')
+            y: Helper.getSelectionNumericAttr(bar, 'y'),
+            width: Helper.getSelectionNumericAttr(bar, 'width'),
+            height: Helper.getSelectionNumericAttr(bar, 'height')
         }
+
+        const labelUnserveFlag = EmbeddedLabelsHelper.getLabelUnserveFlag(barAttrs.height); // if bar is too small to serve label inside. This flag is needed for set outside postion and change text anchor if bar wide as whole chart block
             
-        const position = EmbeddedLabelsHelper.getLabelPosition(barAttrs, labelBlock.node().getBBox().width, margin, blockSize);
+        const position = EmbeddedLabelsHelper.getLabelPosition(barAttrs, labelBlock.node().getBBox().width, margin, blockSize, labelUnserveFlag);
 
         const attrs = EmbeddedLabelsHelper.getLabelAttrs(barAttrs, type, position, keyAxisOrient);
 
@@ -42,6 +45,25 @@ export class EmbeddedLabels
         if(position === 'inside')
             labelBlock.style('fill', '#FFFFFF');
 
-        Helper.cropLabels(labelBlock, EmbeddedLabelsHelper.getSpaceSizeForType(position, barAttrs.width, margin, blockSize));
+        this.checkLabelsToResetTextAnchor(labelBlock, labelUnserveFlag, margin, blockSize);
+        this.cropText(labelBlock, barAttrs, position, labelUnserveFlag, margin, blockSize);
+    }
+
+    private static checkLabelsToResetTextAnchor(labelBlock: d3.Selection<SVGTextElement, unknown, HTMLElement, unknown>, labelUnserveFlag: boolean, margin: BlockMargin, blockSize: Size): void {
+        if(Helper.getSelectionNumericAttr(labelBlock, 'x') + labelBlock.node().getBBox().width > blockSize.width - margin.right && labelUnserveFlag) {
+            labelBlock.attr('x', blockSize.width - margin.right);
+            labelBlock.attr('text-anchor', 'end');
+        }
+    }
+
+    private static cropText(labelBlock: d3.Selection<SVGTextElement, unknown, HTMLElement, unknown>, barAttrs: BarAttrs, position: EmbeddedLabelPosition, labelUnserveFlag: boolean, margin: BlockMargin, blockSize: Size): void {
+        let labelTextSpace: number;
+
+        if(labelUnserveFlag)
+            labelTextSpace = blockSize.width - margin.left - margin.right;
+        else
+            labelTextSpace = EmbeddedLabelsHelper.getSpaceSizeForType(position, barAttrs.width, margin, blockSize);
+
+        Helper.cropLabels(labelBlock, labelTextSpace);  
     }
 }

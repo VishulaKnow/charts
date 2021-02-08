@@ -44,41 +44,41 @@ describe('test postion and space', () => {
         }
 
         test('should return outside position because barSize < labelWidth', () => {
-            const result = EmbeddedLabelsHelper.getLabelPosition(barAttrs, 200, margin, blockSize);
+            const result = EmbeddedLabelsHelper.getLabelPosition(barAttrs, 200, margin, blockSize, false);
             expect(result).toEqual('outside');
         });
 
         test('should return inside position because barSize > labelWidth', () => {
-            const result = EmbeddedLabelsHelper.getLabelPosition(barAttrs, 50, margin, blockSize);
+            const result = EmbeddedLabelsHelper.getLabelPosition(barAttrs, 50, margin, blockSize, false);
             expect(result).toEqual('inside');
         });
 
         test('should return outside position because space in bar less than outside bar space, but labelwidth more than both spaces', () => {
-            const result = EmbeddedLabelsHelper.getLabelPosition(barAttrs, 500, margin, blockSize);
+            const result = EmbeddedLabelsHelper.getLabelPosition(barAttrs, 500, margin, blockSize, false);
             expect(result).toEqual('outside');
         });
 
         test('should return inside position because space in bar more than outside bar space, but labelwidth more than both spaces', () => {
             barAttrs.width = 300;
-            const result = EmbeddedLabelsHelper.getLabelPosition(barAttrs, 500, margin, blockSize);
+            const result = EmbeddedLabelsHelper.getLabelPosition(barAttrs, 500, margin, blockSize, false);
             expect(result).toEqual('inside');
         });
 
         test('should return outside position because bar height is too small', () => {
             barAttrs.height = 10;
-            const result = EmbeddedLabelsHelper.getLabelPosition(barAttrs, 500, margin, blockSize);
+            const result = EmbeddedLabelsHelper.getLabelPosition(barAttrs, 500, margin, blockSize, false);
             expect(result).toEqual('outside');
         });
 
         test('should return outside position because bar height is too small #2', () => {
             barAttrs.height = 11.9;
-            const result = EmbeddedLabelsHelper.getLabelPosition(barAttrs, 500, margin, blockSize);
+            const result = EmbeddedLabelsHelper.getLabelPosition(barAttrs, 500, margin, blockSize, false);
             expect(result).toEqual('outside');
         });
 
         test('should return inside position because bar height is big enough to serve label inside', () => {
             barAttrs.height = 12;
-            const result = EmbeddedLabelsHelper.getLabelPosition(barAttrs, 500, margin, blockSize);
+            const result = EmbeddedLabelsHelper.getLabelPosition(barAttrs, 500, margin, blockSize, false);
             expect(result).toEqual('inside');
         });
     });

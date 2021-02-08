@@ -20,8 +20,8 @@ const MIN_BAR_HEIGHT_FOR_LABEL_SERVE = 12;
 
 export class EmbeddedLabelsHelper
 {
-    public static getLabelPosition(barAttrs: BarAttrs, labelBlockWidth: number, margin: BlockMargin, blockSize: Size): EmbeddedLabelPosition {
-        if(barAttrs.height < MIN_BAR_HEIGHT_FOR_LABEL_SERVE || this.getSpaceSizeForType('inside', barAttrs.width, margin, blockSize) < labelBlockWidth 
+    public static getLabelPosition(barAttrs: BarAttrs, labelBlockWidth: number, margin: BlockMargin, blockSize: Size, labelUnserveFlag: boolean): EmbeddedLabelPosition {
+        if(labelUnserveFlag || this.getSpaceSizeForType('inside', barAttrs.width, margin, blockSize) < labelBlockWidth 
             && this.getSpaceSizeForType('inside', barAttrs.width, margin, blockSize) < this.getSpaceSizeForType('outside', barAttrs.width, margin, blockSize))
             return 'outside';
 
@@ -50,6 +50,10 @@ export class EmbeddedLabelsHelper
             return chartData.valueFields[index];
 
         return null;
+    }
+
+    public static getLabelUnserveFlag(barHeight: number): boolean {
+        return barHeight < MIN_BAR_HEIGHT_FOR_LABEL_SERVE;
     }
 
     private static getLabelAttrX(barAttrs: BarAttrs, type: EmbeddedLabelTypeModel, position: EmbeddedLabelPosition, keyAxisOrient: Orient): number {
