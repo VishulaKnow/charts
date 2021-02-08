@@ -41,5 +41,24 @@ describe('get2DChartStyle.elementColors', () => {
             const result = ChartStyleModel.get2DChartStyle(chartPalette, 3, 'bar', [1, 1, 5, 1, 1], 4, true).elementColors;
             expect(result).toEqual(['#3F51B5']);
         });
+
+        test('should return colors [5]', () => {
+            const result = ChartStyleModel.get2DChartStyle(chartPalette, 3, 'bar', [6, 8, 5, 1, 1], 4, true).elementColors;
+            expect(result).toEqual(['#3F51B5']);
+        });
     });
-})
+});
+
+describe('should return first N colors for polar chart', () => {
+    const chartPalette = colors.colors;
+
+    test('should return first 4 colors', () => {
+        const result = ChartStyleModel.getChartStyle(chartPalette, 4).elementColors;
+        expect(result).toEqual(["#f44336", "#E91E63", "#9C27B0", "#673AB7"]);
+    });
+
+    test('should return first color', () => {
+        const result = ChartStyleModel.getChartStyle(chartPalette, 1).elementColors;
+        expect(result).toEqual(["#f44336"]);
+    });
+});
