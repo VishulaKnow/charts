@@ -31,7 +31,7 @@ export class EmbeddedLabels
             
         const position = EmbeddedLabelsHelper.getLabelPosition(barAttrs, labelBlock.node().getBBox().width, margin, blockSize);
 
-        const attrs = EmbeddedLabelsHelper.getLabelAttrs(barAttrs, labelBlock.node().getBBox().height, type, position, keyAxisOrient);
+        const attrs = EmbeddedLabelsHelper.getLabelAttrs(barAttrs, type, position, keyAxisOrient);
 
         labelBlock
             .attr('x', attrs.x)

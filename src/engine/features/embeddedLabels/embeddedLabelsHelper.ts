@@ -35,10 +35,10 @@ export class EmbeddedLabelsHelper
         return barWidth - LABEL_BAR_PADDING * 2;
     }
 
-    public static getLabelAttrs(barAttrs: BarAttrs, labelBlockHeight: number, type: EmbeddedLabelTypeModel, position: EmbeddedLabelPosition, keyAxisOrient: Orient): LabelAttrs {
+    public static getLabelAttrs(barAttrs: BarAttrs, type: EmbeddedLabelTypeModel, position: EmbeddedLabelPosition, keyAxisOrient: Orient): LabelAttrs {
         return {
             x: this.getLabelAttrX(barAttrs, type, position, keyAxisOrient),
-            y: this.getLabelAttrY(barAttrs.y, barAttrs.height, labelBlockHeight),
+            y: this.getLabelAttrY(barAttrs.y, barAttrs.height),
             textAnchor: this.getTextAnchor(type, position, keyAxisOrient)
         }
     }
@@ -72,10 +72,7 @@ export class EmbeddedLabelsHelper
         return barAttrs.x + LABEL_BAR_PADDING;
     }
 
-    private static getLabelAttrY(barY: number, barHeight: number, labelBlockHeight: number): number {      
-        // const PADDING_OF_TEXT_BLOCK = 2;
-        // return barY + barHeight - (barHeight - labelBlockHeight) / 2 - PADDING_OF_TEXT_BLOCK;
-
+    private static getLabelAttrY(barY: number, barHeight: number): number {      
         return barY + barHeight / 2;
     }
 
