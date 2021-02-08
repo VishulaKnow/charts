@@ -83,7 +83,7 @@ export class TwoDimensionalModel
         return !isSegmented 
             && chartOrientation === 'horizontal' 
             && charts.length === this.findChartsWithEmbeddedKeyLabels(charts).length
-            && this.getBarSize(DataManagerModel.getElementsInGroupAmount(configOptions, charts.length), data[charts[0].data.dataSource].length, chartOrientation, blockSize, margin, barOptions) >= MIN_BAR_SIZE_FOR_EMBEDDED_LABELS_DISPLAY;
+            // && this.getBarSize(DataManagerModel.getElementsInGroupAmount(configOptions, charts.length), data[charts[0].data.dataSource].length, chartOrientation, blockSize, margin, barOptions) >= MIN_BAR_SIZE_FOR_EMBEDDED_LABELS_DISPLAY;
     }
 
     private static getBarSize(elementsInGroupAmount: number, keysAmount: number, chartOrientation: ChartOrientation, blockSize: Size, margin: BlockMargin, barOptions: BarOptionsCanvas): number {

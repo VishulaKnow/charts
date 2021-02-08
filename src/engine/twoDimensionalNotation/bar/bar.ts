@@ -83,7 +83,7 @@ export class Bar
             Helper.setCssClasses(bars, Helper.getCssClassesWithElementIndex(chart.cssClasses, index));
             Helper.setChartStyle(bars, chart.style, index, 'fill');
 
-            if(chart.embeddedLabels !== 'none' && parseFloat(bars.attr('height')) >= MIN_BAR_SIZE_FOR_EMBEDDED_LABELS_DISPLAY)
+            if(chart.embeddedLabels !== 'none')
                 EmbeddedLabels.render(block, bars, EmbeddedLabels.getLabelField(chart.embeddedLabels, chart.data, index), chart.embeddedLabels, blockSize, margin);
         });
     }

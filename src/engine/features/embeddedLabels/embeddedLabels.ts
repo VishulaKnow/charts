@@ -3,16 +3,7 @@ import { BlockMargin, DataRow, EmbeddedLabelTypeModel, Field, Size, TwoDimension
 import { Block } from "../../block/block";
 import { Helper } from "../../helper";
 import { ValueFormatter } from "../../valueFormatter";
-
-type EmbeddedLabelPosition = 'inside' | 'outside';
-type TextAnchor = 'start' | 'end' | 'center';
-interface LabelAttrs {
-    x: number;
-    y: number;
-    textAnchor: TextAnchor;
-}
-
-const LABEL_BAR_PADDING = 6;
+import { EmbeddedLabelPosition, EmbeddedLabelsHelper, LabelAttrs, LABEL_BAR_PADDING, TextAnchor } from "./embeddedLabelsHelper";
 
 export class EmbeddedLabels
 {
@@ -39,8 +30,10 @@ export class EmbeddedLabels
             .attr('class', 'embedded-label')
             .style('pointer-events', 'none')
             .text(ValueFormatter.formatValue(field.format, dataRow[field.name]));
+
+        const barWidth = Helper.getSelectionNumericAttr(bar, 'width');
             
-        const position = this.getLabelPosition(bar, labelBlock, margin, blockSize);
+        const position = EmbeddedLabelsHelper.getLabelPosition(barWidth, labelBlock.node().getBBox().width, margin, blockSize);
         const attrs = this.getLabelAttrs(bar, labelBlock, type, position);
 
         labelBlock
@@ -51,7 +44,7 @@ export class EmbeddedLabels
         if(position === 'inside')
             labelBlock.style('fill', '#FFFFFF');
 
-        Helper.cropLabels(labelBlock, this.getSpaceSizeForType(position, bar, margin, blockSize));
+        Helper.cropLabels(labelBlock, EmbeddedLabelsHelper.getSpaceSizeForType(position, barWidth, margin, blockSize));
     }
 
     private static getLabelAttrs(bar: d3.Selection<SVGRectElement, DataRow, HTMLElement, any>, labelBlock: d3.Selection<SVGGElement, unknown, HTMLElement, unknown>, type: EmbeddedLabelTypeModel, position: EmbeddedLabelPosition): LabelAttrs {
@@ -90,19 +83,5 @@ export class EmbeddedLabels
         if(type === 'key')
             return 'start';
         return 'end';
-    }
-
-    private static getLabelPosition(bar: d3.Selection<SVGRectElement, DataRow, HTMLElement, any>, labelBlock: d3.Selection<SVGTextElement, unknown, HTMLElement, any>, margin: BlockMargin, blockSize: Size): EmbeddedLabelPosition {
-        if(this.getSpaceSizeForType('inside', bar, margin, blockSize) < labelBlock.node().getBBox().width && this.getSpaceSizeForType('inside', bar, margin, blockSize) < this.getSpaceSizeForType('outside', bar, margin, blockSize))
-            return 'outside';
-
-        return 'inside';
-    }
-
-    private static getSpaceSizeForType(position: EmbeddedLabelPosition, bar: d3.Selection<SVGRectElement, DataRow, HTMLElement, any>, margin: BlockMargin, blockSize: Size): number {
-        if(position === 'outside')
-            return blockSize.width - margin.left - margin.right - parseFloat(bar.attr('width')) - LABEL_BAR_PADDING;
-    
-        return parseFloat(bar.attr('width')) - LABEL_BAR_PADDING * 2;
     }
 }

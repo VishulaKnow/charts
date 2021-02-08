@@ -13,7 +13,7 @@ const configCars: Config = {
         isSegmented: false,
         axis: {
             keyAxis: {
-                position: 'end',
+                position: 'start',
                 ticks: {
                     flag: false
                 }
@@ -40,11 +40,11 @@ const configCars: Config = {
         legend: {
             position: 'top'
         },
-        orientation: 'vertical',
+        orientation: 'horizontal',
         charts: [
             {
                 title: 'Рост стоимости',
-                type: 'line',
+                type: 'bar',
                 data: {
                     dataSource: 'dataSet',
                     keyField:  {

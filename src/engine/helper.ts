@@ -53,18 +53,22 @@ export class Helper
         return [translateX, translateY];
     }
 
-    public static getPXpropertyValue(propertyValue: string): number {
-        return parseFloat(propertyValue);
-    }
-
     public static getSumOfNumbers(numbers: number[]): number {
         let sum = 0;
         numbers.forEach(num => sum += num);
         return sum;
     }
 
-    public static getPropertyValue(node: Element, propertyName: string): string {
+    public static getCssPropertyValue(node: Element, propertyName: string): string {
         return window.getComputedStyle(node).getPropertyValue(propertyName);
+    }
+
+    public static getPXValueFromString(propertyValue: string): number {
+        return parseFloat(propertyValue);
+    }
+
+    public static getSelectionNumericAttr(selection: d3.Selection<d3.BaseType, unknown, d3.BaseType, unknown>, attrName: string): number {
+        return parseFloat(selection.attr(attrName));
     }
 
     public static getCssClassesWithElementIndex(cssClasses: string[], index: number): string[] {

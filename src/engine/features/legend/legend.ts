@@ -194,7 +194,7 @@ export class Legend
 
     private static getMaxItemWidth(legendBlock: d3.Selection<SVGForeignObjectElement, unknown, HTMLElement, any>, items: d3.Selection<HTMLDivElement, string, d3.BaseType, unknown>, itemsDirection: LegendItemsDirection): number {
         if(itemsDirection === 'row') {
-            const margins = items.nodes().map(node => Helper.getPXpropertyValue(Helper.getPropertyValue(node, 'margin-left')));
+            const margins = items.nodes().map(node => Helper.getPXValueFromString(Helper.getCssPropertyValue(node, 'margin-left')));
             const sumOfMargins = Helper.getSumOfNumbers(margins);
             return (parseFloat(legendBlock.attr('width')) - sumOfMargins) / items.size();
         }
@@ -231,7 +231,7 @@ export class Legend
 
     private static getSumOfItemsWidths(items: d3.Selection<HTMLDivElement, string, d3.BaseType, unknown>): number {
         let sumOfItemsWidth = Helper.getSumOfNumbers(items.nodes().map(node => node.getBoundingClientRect().width));
-        sumOfItemsWidth += Helper.getSumOfNumbers(items.nodes().map(node => Helper.getPXpropertyValue(Helper.getPropertyValue(node, 'margin-left'))));
+        sumOfItemsWidth += Helper.getSumOfNumbers(items.nodes().map(node => Helper.getPXValueFromString(Helper.getCssPropertyValue(node, 'margin-left'))));
         return sumOfItemsWidth;
     }
 }
