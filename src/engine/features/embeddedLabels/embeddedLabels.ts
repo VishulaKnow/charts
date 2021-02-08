@@ -22,16 +22,14 @@ export class EmbeddedLabels
             .style('pointer-events', 'none')
             .text(ValueFormatter.formatValue(field.format, dataRow[field.name]));
 
-        const barWidth = Helper.getSelectionNumericAttr(bar, 'width');
-            
-        const position = EmbeddedLabelsHelper.getLabelPosition(barWidth, labelBlock.node().getBBox().width, margin, blockSize);
-
         const barAttrs: BarAttrs = {
             width: Helper.getSelectionNumericAttr(bar, 'width'),
             height: Helper.getSelectionNumericAttr(bar, 'height'),
             x: Helper.getSelectionNumericAttr(bar, 'x'),
             y: Helper.getSelectionNumericAttr(bar, 'y')
         }
+            
+        const position = EmbeddedLabelsHelper.getLabelPosition(barAttrs, labelBlock.node().getBBox().width, margin, blockSize);
 
         const attrs = EmbeddedLabelsHelper.getLabelAttrs(barAttrs, labelBlock.node().getBBox().height, type, position);
 
@@ -43,6 +41,6 @@ export class EmbeddedLabels
         if(position === 'inside')
             labelBlock.style('fill', '#FFFFFF');
 
-        Helper.cropLabels(labelBlock, EmbeddedLabelsHelper.getSpaceSizeForType(position, barWidth, margin, blockSize));
+        Helper.cropLabels(labelBlock, EmbeddedLabelsHelper.getSpaceSizeForType(position, barAttrs.width, margin, blockSize));
     }
 }

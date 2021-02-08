@@ -10,9 +10,6 @@ import { BlockMargin, DataScope, DataSource, AdditionalElementsOptions, TwoDimen
 import { AxisType } from "./modelOptions";
 import { ScaleModel, ScaleType } from "./scaleModel";
 
-/** If bar has width less than this size embedded labels doesn't show */
-export const MIN_BAR_SIZE_FOR_EMBEDDED_LABELS_DISPLAY = 20;
-
 export class TwoDimensionalModel
 {
     public static getOptions(config: Config, designerConfig: DesignerConfig, margin: BlockMargin, dataScope: DataScope, data: DataSource): TwoDimensionalOptionsModel {

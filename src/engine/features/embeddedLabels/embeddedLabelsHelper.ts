@@ -16,12 +16,13 @@ export interface BarAttrs {
 }
 
 export const LABEL_BAR_PADDING = 6;
+const MIN_BAR_HEIGHT_FOR_LABEL_SERVE = 12;
 
 export class EmbeddedLabelsHelper
 {
-    public static getLabelPosition(barWidth: number, labelBlockWidth: number, margin: BlockMargin, blockSize: Size): EmbeddedLabelPosition {
-        if(this.getSpaceSizeForType('inside', barWidth, margin, blockSize) < labelBlockWidth 
-            && this.getSpaceSizeForType('inside', barWidth, margin, blockSize) < this.getSpaceSizeForType('outside', barWidth, margin, blockSize))
+    public static getLabelPosition(barAttrs: BarAttrs, labelBlockWidth: number, margin: BlockMargin, blockSize: Size): EmbeddedLabelPosition {
+        if(barAttrs.height < MIN_BAR_HEIGHT_FOR_LABEL_SERVE || this.getSpaceSizeForType('inside', barAttrs.width, margin, blockSize) < labelBlockWidth 
+            && this.getSpaceSizeForType('inside', barAttrs.width, margin, blockSize) < this.getSpaceSizeForType('outside', barAttrs.width, margin, blockSize))
             return 'outside';
 
         return 'inside';
@@ -62,7 +63,7 @@ export class EmbeddedLabelsHelper
     }
 
     private static getLabelAttrY(barY: number, barHeight: number, labelBlockHeight: number): number {      
-        const PADDING_OF_TEXT_BLOCK = 1;
+        const PADDING_OF_TEXT_BLOCK = 2;
         return barY + barHeight - (barHeight - labelBlockHeight) / 2 - PADDING_OF_TEXT_BLOCK;
     }
 
