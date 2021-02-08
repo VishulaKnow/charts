@@ -17,7 +17,8 @@ export class Line
                 .append('path')
                 .attr('d', line(data))
                 .attr('class', this.lineChartClass)
-                .style('clip-path', `url(${block.getClipPathId()})`);
+                .style('clip-path', `url(${block.getClipPathId()})`)
+                .style('pointer-events', 'none');
         
             Helper.setCssClasses(path, Helper.getCssClassesWithElementIndex(chart.cssClasses, index));
             Helper.setChartStyle(path, chart.style, index, 'stroke');

@@ -93,8 +93,11 @@ export class Dot
 
     private static setDotsAreasListeners(block: Block, dotsHover: d3.Selection<SVGCircleElement, DataRow, SVGGElement, unknown>, keyFieldName: string): void {
         const thisClass = this;
+        let eventIsActive = false;
+        let activeDot: d3.Selection<SVGCircleElement, DataRow, SVGGElement, unknown>;
+
         dotsHover.each(function(dataRow) {
-            d3.select(this).on('mouseover', function(event) {
+            d3.select(this).on('mousemove', function(event) {
                 const xDots = block.getChartBlock().selectAll<SVGCircleElement, DataRow>(`.${thisClass.dotClass}`).filter((d) => d[keyFieldName] === dataRow[keyFieldName]);
                 const attrsCy: number[] = [];
                 xDots.each(function() {
@@ -111,7 +114,16 @@ export class Dot
                     }
                 });
 
-                xDots.filter((d, i) => i === indexOfDot).dispatch('mouseover');
+                const findedDot = xDots.filter((d, i) => i === indexOfDot);
+
+                if(!activeDot || findedDot.node() !== activeDot.node() || !eventIsActive) {
+                    if(activeDot)
+                        activeDot.dispatch('mouseleave');
+
+                    activeDot = findedDot;
+                    eventIsActive = true;
+                    findedDot.dispatch('mouseover');
+                } 
             });
         });
 
@@ -134,6 +146,8 @@ export class Dot
                 });
 
                 xDots.filter((d, i) => i === indexOfDot).dispatch('mouseleave');
+                activeDot = null;
+                eventIsActive = false;
             });
         });
     }
