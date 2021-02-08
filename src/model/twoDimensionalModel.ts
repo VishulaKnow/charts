@@ -54,7 +54,7 @@ export class TwoDimensionalModel
                     labels: {
                         maxSize: designerConfig.canvas.axisLabel.maxSize.main,
                         positition: AxisModel.getKeyAxisLabelPosition(margin, config.canvas.size, DataManagerModel.getDataValuesByKeyField(data, configOptions.charts[0]).length),
-                        visible: !TwoDimensionalModel.getChartsEmbeddedLabelsFlag(configOptions.charts, configOptions, data, configOptions.orientation, config.canvas.size, margin, designerConfig.canvas.chartOptions.bar)
+                        visible: !TwoDimensionalModel.getChartsEmbeddedLabelsFlag(configOptions.charts, configOptions, data, configOptions.orientation, config.canvas.size, margin, designerConfig.canvas.chartOptions.bar, configOptions.isSegmented)
                     }
                 },
                 valueAxis: {
@@ -79,8 +79,9 @@ export class TwoDimensionalModel
         }
     }
 
-    public static getChartsEmbeddedLabelsFlag(charts: TwoDimensionalChart[], configOptions: TwoDimensionalOptions, data: DataSource, chartOrientation: ChartOrientation, blockSize: Size, margin: BlockMargin, barOptions: BarOptionsCanvas): boolean {
-        return chartOrientation === 'horizontal' 
+    public static getChartsEmbeddedLabelsFlag(charts: TwoDimensionalChart[], configOptions: TwoDimensionalOptions, data: DataSource, chartOrientation: ChartOrientation, blockSize: Size, margin: BlockMargin, barOptions: BarOptionsCanvas, isSegmented: boolean): boolean {
+        return !isSegmented 
+            && chartOrientation === 'horizontal' 
             && charts.length === this.findChartsWithEmbeddedKeyLabels(charts).length
             && this.getBarSize(DataManagerModel.getElementsInGroupAmount(configOptions, charts.length), data[charts[0].data.dataSource].length, chartOrientation, blockSize, margin, barOptions) >= MIN_BAR_SIZE_FOR_EMBEDDED_LABELS_DISPLAY;
     }

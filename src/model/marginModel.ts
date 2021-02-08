@@ -21,7 +21,7 @@ export class MarginModel
             this.recalcMarginWithAxisLabelHeight(labelSize, margin, config.options, config.options.axis);
 
             const showingFlag = config.options.type === '2d' 
-                ? !TwoDimensionalModel.getChartsEmbeddedLabelsFlag(config.options.charts, config.options, data, config.options.orientation, config.canvas.size, margin, designerConfig.canvas.chartOptions.bar)
+                ? !TwoDimensionalModel.getChartsEmbeddedLabelsFlag(config.options.charts, config.options, data, config.options.orientation, config.canvas.size, margin, designerConfig.canvas.chartOptions.bar, config.options.isSegmented)
                 : true; // If embedded labels displays, axis key labels doesn't show
             this.recalcMarginWithAxisLabelWidth(labelSize, margin, config.options, config.options.axis, showingFlag);
         }
