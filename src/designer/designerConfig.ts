@@ -35,6 +35,10 @@ export interface AxisLabelCanvas {
     maxSize: AxisLabelSize;
 }
 
+export interface ChartColors {
+    [colorName: string]: string
+}
+
 interface Elements {
     gridLine: GridLineOptions;
 }
@@ -81,7 +85,7 @@ interface ChartOptions {
 }
 
 interface ChartStyle {
-    palette: Color[];
+    palette: ChartColors;
 }
 
 interface DataFormat {

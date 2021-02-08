@@ -83,11 +83,10 @@ h3.title {
     color: #444444;
     width: calc(100% - 19px);
     overflow: hidden;
-    text-overflow: ellipsis;
-    /* line-height: 140.62%; */
 }
 .legend-label-nowrap {
     white-space: nowrap;
+    text-overflow: ellipsis;
 }
 .legend-circle {
     display: inline-block;

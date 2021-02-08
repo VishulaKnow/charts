@@ -4,8 +4,8 @@ const configCars: Config = {
     canvas: {
         class: 'outline svg-chart',
         size: {
-            width: 960,
-            height: 567
+            width: 700,
+            height: 400
         }
     },
     options: {
@@ -61,7 +61,7 @@ const configCars: Config = {
                             name: 'count',
                             format: 'integer',
                             title: 'Количество автомобилей на душу населения'
-                        }                   
+                        }                  
                     ]
                 },
                 tooltip: {

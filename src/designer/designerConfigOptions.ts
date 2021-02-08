@@ -1,6 +1,6 @@
-import { color } from 'd3'
 import { DesignerConfig, DataOptions } from './designerConfig'
-const colors = require('../assets/colors.json');
+
+const colorsJson = require('material-colors-json/colors.json');
 
 const designerConfig: DesignerConfig = {
     canvas: {
@@ -37,7 +37,7 @@ const designerConfig: DesignerConfig = {
     },
     chart: {
         style: {
-            palette: colors.colors
+            palette: colorsJson
         }
     },
     dataFormat: {

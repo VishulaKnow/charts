@@ -1,64 +1,64 @@
+import { Color } from "d3";
 import { ChartStyleModel } from "../../model/chartStyleModel";
-const colors = require('../../assets/colors.json');
+
+const colorsJson = require('material-colors-json/colors.json');
+
+function getColorHex(colors: Color[]): string[] {
+    let hexes: string[] = [];
+    colors.forEach(color => {
+        hexes.push(color.hex());
+    })
+    return hexes;
+}
 
 describe('get2DChartStyle.elementColors', () => {
-    const chartPalette = colors.colors;
+    const chartPalette = colorsJson;
 
     describe('from get2DChartStyle elementColors test for grouped charts', () => {
         test('should return first 3 colors', () => {
             const result = ChartStyleModel.get2DChartStyle(chartPalette, 1, 'bar', [3], 0, false).elementColors;
-            expect(result).toEqual(['#f44336', '#E91E63', '#9C27B0']);
+            expect(getColorHex(result)).toEqual(['#f44336', '#e91e63', '#9c27b0']);
         });
 
-        test('should return second 3 colors', () => {
-            const result = ChartStyleModel.get2DChartStyle(chartPalette, 2, 'bar', [3, 3], 1, false).elementColors;
-            expect(result).toEqual(['#673AB7', '#3F51B5', '#2196F3']);
+        test('should return [4..7] colors', () => {
+            const result = ChartStyleModel.get2DChartStyle(chartPalette, 2, 'bar', [3, 4], 1, false).elementColors;
+            expect(getColorHex(result)).toEqual(['#673ab7', '#3f51b5', '#2196f3', '#03a9f4']);
         });
 
-        test('should return color no. 4', () => {
-            const result = ChartStyleModel.get2DChartStyle(chartPalette, 2, 'bar', [3, 1], 1, false).elementColors;
-            expect(result).toEqual(['#673AB7']);
-        });
-
-        test('should return colors [13..15]', () => {
-            const result = ChartStyleModel.get2DChartStyle(chartPalette, 2, 'bar', [4, 4, 4, 3], 3, false).elementColors;
-            expect(result).toEqual(['#FFEB3B', '#FFC107', '#FF9800']);
+        test('should return [8] colors', () => {
+            const result = ChartStyleModel.get2DChartStyle(chartPalette, 3, 'bar', [3, 4, 1], 2, false).elementColors;
+            expect(getColorHex(result)).toEqual(['#00bcd4']);
         });
     });
 
     describe('from get2DChartStyle elementColors test for segmented charts', () => {
-        test('should return colors [1, 20, 39]', () => {
+        test('should return red-500, red-400, red-300 colors', () => {
             const result = ChartStyleModel.get2DChartStyle(chartPalette, 1, 'bar', [3], 0, true).elementColors;
-            expect(result).toEqual(['#f44336', '#ffebee', '#ffcdd2']);
+            expect(getColorHex(result)).toEqual(['#f44336', '#ef5350', '#e57373']);
         });
 
-        test('should return colors [3, 22, 41]', () => {
-            const result = ChartStyleModel.get2DChartStyle(chartPalette, 3, 'bar', [1, 1, 3], 2, true).elementColors;
-            expect(result).toEqual(['#9C27B0', '#F3E5F5', '#E1BEE7']);
+        test('should return red-500 colors', () => {
+            const result = ChartStyleModel.get2DChartStyle(chartPalette, 3, 'bar', [1, 1, 4], 0, true).elementColors;
+            expect(getColorHex(result)).toEqual(['#f44336']);
         });
 
-        test('should return colors [5]', () => {
-            const result = ChartStyleModel.get2DChartStyle(chartPalette, 3, 'bar', [1, 1, 5, 1, 1], 4, true).elementColors;
-            expect(result).toEqual(['#3F51B5']);
-        });
-
-        test('should return colors [5]', () => {
-            const result = ChartStyleModel.get2DChartStyle(chartPalette, 3, 'bar', [6, 8, 5, 1, 1], 4, true).elementColors;
-            expect(result).toEqual(['#3F51B5']);
+        test('should return purple-500, purple-400, purple-300, purple-200 colors', () => {
+            const result = ChartStyleModel.get2DChartStyle(chartPalette, 3, 'bar', [1, 1, 4], 2, true).elementColors;
+            expect(getColorHex(result)).toEqual(['#9c27b0', '#ab47bc', '#ba68c8', '#ce93d8']);
         });
     });
 });
 
 describe('should return first N colors for polar chart', () => {
-    const chartPalette = colors.colors;
+    const chartPalette = colorsJson;
 
-    test('should return first 4 colors', () => {
-        const result = ChartStyleModel.getChartStyle(chartPalette, 4).elementColors;
-        expect(result).toEqual(["#f44336", "#E91E63", "#9C27B0", "#673AB7"]);
+    test('should return first 3 colors', () => {
+        const result = ChartStyleModel.getChartStyle(chartPalette, 3).elementColors;
+        expect(getColorHex(result)).toEqual(['#f44336', '#e91e63', '#9c27b0']);
     });
 
-    test('should return first color', () => {
-        const result = ChartStyleModel.getChartStyle(chartPalette, 1).elementColors;
-        expect(result).toEqual(["#f44336"]);
+    test('should return first 7 colors', () => {
+        const result = ChartStyleModel.getChartStyle(chartPalette, 7).elementColors;
+        expect(getColorHex(result)).toEqual(['#f44336', '#e91e63', '#9c27b0', '#673ab7', '#3f51b5', '#2196f3', '#03a9f4']);
     });
 });

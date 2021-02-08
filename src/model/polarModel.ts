@@ -1,21 +1,22 @@
 import { Color } from "d3";
 import { Config, PolarChart, PolarOptions } from "../config/config";
+import { ChartColors } from "../designer/designerConfig";
 import { ChartStyleModel } from "./chartStyleModel";
 import { LegendModel } from "./legendModel/legendModel";
 import { DataScope, DataSource, PolarChartModel, PolarOptionsModel } from "./model";
 
 export class PolarModel
 {
-    public static getOptions(config: Config, chartPalette: Color[], data: DataSource, dataScope: DataScope): PolarOptionsModel {
+    public static getOptions(config: Config, chartPalette: ChartColors, data: DataSource): PolarOptionsModel {
         const configOptions = <PolarOptions>config.options;
         return {
             type: configOptions.type,
-            charts: this.getChartsModel(configOptions.charts, chartPalette, data, dataScope),
+            charts: this.getChartsModel(configOptions.charts, chartPalette, data),
             legend: LegendModel.getLegendModel(config.options.type, config.options.legend.position, config.canvas.size)
         }
     }
 
-    private static getChartsModel(charts: PolarChart[], chartPalette: Color[], data: DataSource, dataScope: DataScope): PolarChartModel[] {
+    private static getChartsModel(charts: PolarChart[], chartPalette: ChartColors, data: DataSource): PolarChartModel[] {
         const chartsModel: PolarChartModel[] = [];
         charts.forEach((chart, index) => {
             chartsModel.push({

@@ -46,6 +46,7 @@ export class LegendCanvasModel
         const sumWidth = itemWrapper.getBoundingClientRect().width 
             + parseFloat(window.getComputedStyle(itemWrapper, null).getPropertyValue('margin-left'))
             + parseFloat(window.getComputedStyle(itemWrapper, null).getPropertyValue('margin-right'));
+            console.log(itemWrapper.getBoundingClientRect().width);
         itemWrapper.remove();
         return sumWidth;
     }

@@ -1,6 +1,5 @@
-import { Color } from "d3";
 import { Config, IntervalChart, IntervalOptions } from "../config/config";
-import { DesignerConfig } from "../designer/designerConfig";
+import { ChartColors, DesignerConfig } from "../designer/designerConfig";
 import { AxisModel } from "./axisModel";
 import { ChartStyleModel } from "./chartStyleModel";
 import { DataManagerModel } from "./dataManagerModel";
@@ -80,7 +79,7 @@ export class IntervalModel {
         }
     }
 
-    private static getChartsModel(charts: IntervalChart[], chartPalette: Color[]): IntervalChartModel[] {
+    private static getChartsModel(charts: IntervalChart[], chartPalette: ChartColors): IntervalChartModel[] {
         const chartsModel: IntervalChartModel[] = [];
         charts.forEach((chart, index) => {
             chartsModel.push({

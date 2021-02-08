@@ -1,6 +1,6 @@
 import { Color } from "d3";
 import { ChartOrientation, Config, TwoDimensionalChart, TwoDimensionalChartType, TwoDimensionalOptions } from "../config/config";
-import { BarOptionsCanvas, DesignerConfig } from "../designer/designerConfig";
+import { BarOptionsCanvas, ChartColors, DesignerConfig } from "../designer/designerConfig";
 import { AxisModel } from "./axisModel";
 import { ChartStyleModel } from "./chartStyleModel";
 import { DataManagerModel } from "./dataManagerModel";
@@ -88,7 +88,7 @@ export class TwoDimensionalModel
         return (axisSize / keysAmount - (elementsInGroupAmount - 1) * barOptions.barDistance - barOptions.groupMinDistance) / elementsInGroupAmount;
     }
 
-    private static getChartsModel(charts: TwoDimensionalChart[], chartPalette: Color[], chartOrientation: ChartOrientation, isSegmented: boolean): TwoDimensionalChartModel[] {
+    private static getChartsModel(charts: TwoDimensionalChart[], chartPalette: ChartColors, chartOrientation: ChartOrientation, isSegmented: boolean): TwoDimensionalChartModel[] {
         const chartsModel: TwoDimensionalChartModel[] = [];
         charts.forEach((chart, index) => {
             chartsModel.push({
