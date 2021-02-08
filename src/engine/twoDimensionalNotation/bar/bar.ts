@@ -84,7 +84,7 @@ export class Bar
             Helper.setChartStyle(bars, chart.style, index, 'fill');
 
             if(chart.embeddedLabels !== 'none')
-                EmbeddedLabels.render(block, bars, EmbeddedLabelsHelper.getLabelField(chart.embeddedLabels, chart.data, index), chart.embeddedLabels, blockSize, margin);
+                EmbeddedLabels.render(block, bars, EmbeddedLabelsHelper.getLabelField(chart.embeddedLabels, chart.data, index), chart.embeddedLabels, keyAxisOrient, blockSize, margin);
         });
     }
 

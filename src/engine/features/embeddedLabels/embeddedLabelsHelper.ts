@@ -1,4 +1,4 @@
-import { BlockMargin, DataRow, EmbeddedLabelTypeModel, Field, Size, TwoDimensionalChartDataModel } from "../../../model/model";
+import { BlockMargin, EmbeddedLabelTypeModel, Field, Orient, Size, TwoDimensionalChartDataModel } from "../../../model/model";
 
 export type EmbeddedLabelPosition = 'inside' | 'outside';
 export type TextAnchor = 'start' | 'end' | 'center';
@@ -35,11 +35,11 @@ export class EmbeddedLabelsHelper
         return barWidth - LABEL_BAR_PADDING * 2;
     }
 
-    public static getLabelAttrs(barAttrs: BarAttrs, labelBlockHeight: number, type: EmbeddedLabelTypeModel, position: EmbeddedLabelPosition): LabelAttrs {
+    public static getLabelAttrs(barAttrs: BarAttrs, labelBlockHeight: number, type: EmbeddedLabelTypeModel, position: EmbeddedLabelPosition, keyAxisOrient: Orient): LabelAttrs {
         return {
-            x: this.getLabelAttrX(barAttrs.x, barAttrs.width, type, position),
+            x: this.getLabelAttrX(barAttrs, type, position, keyAxisOrient),
             y: this.getLabelAttrY(barAttrs.y, barAttrs.height, labelBlockHeight),
-            textAnchor: this.getTextAnchor(type, position)
+            textAnchor: this.getTextAnchor(type, position, keyAxisOrient)
         }
     }
 
@@ -52,14 +52,24 @@ export class EmbeddedLabelsHelper
         return null;
     }
 
-    private static getLabelAttrX(barX: number, barWidth: number, type: EmbeddedLabelTypeModel, position: EmbeddedLabelPosition): number {
-        if(position === 'outside')
-            return barX + barWidth + LABEL_BAR_PADDING;
+    private static getLabelAttrX(barAttrs: BarAttrs, type: EmbeddedLabelTypeModel, position: EmbeddedLabelPosition, keyAxisOrient: Orient): number {
+        if(keyAxisOrient === 'left') {
+            if(position === 'outside')
+                return barAttrs.x + barAttrs.width + LABEL_BAR_PADDING;
         
-        if(type === 'key')
-            return barX + LABEL_BAR_PADDING;
+            if(type === 'key')
+                return barAttrs.x + LABEL_BAR_PADDING;
 
-        return barX + barWidth - LABEL_BAR_PADDING;
+            return barAttrs.x + barAttrs.width - LABEL_BAR_PADDING;
+        }
+
+        if(position === 'outside')
+            return barAttrs.x - LABEL_BAR_PADDING;
+            
+        if(type === 'key')
+            return barAttrs.x + barAttrs.width - LABEL_BAR_PADDING;
+
+        return barAttrs.x + LABEL_BAR_PADDING;
     }
 
     private static getLabelAttrY(barY: number, barHeight: number, labelBlockHeight: number): number {      
@@ -67,12 +77,16 @@ export class EmbeddedLabelsHelper
         return barY + barHeight - (barHeight - labelBlockHeight) / 2 - PADDING_OF_TEXT_BLOCK;
     }
 
-    private static getTextAnchor(type: EmbeddedLabelTypeModel, position: EmbeddedLabelPosition): TextAnchor {
-        if(position === 'outside')
-            return 'start';
-        
-        if(type === 'key')
-            return 'start';
-        return 'end';
+    private static getTextAnchor(type: EmbeddedLabelTypeModel, position: EmbeddedLabelPosition, keyAxisOrient: Orient): TextAnchor {
+        if(keyAxisOrient === 'left') {
+            if(position === 'outside' || type === 'key')
+                return 'start';
+            
+            return 'end';
+        }
+
+        if(position === 'outside' || type === 'key')
+            return 'end';
+        return 'start';
     }
 }

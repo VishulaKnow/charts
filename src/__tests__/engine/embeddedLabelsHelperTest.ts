@@ -89,41 +89,82 @@ describe('test label coordinates', () => {
     let barAttrs: BarAttrs;
     let expected: LabelAttrs;
 
-    beforeEach(() => {
-        barAttrs = {
-            x: 20,
-            y: 40,
-            width: 100,
-            height: 20
-        }
-        expected = {
-            x: 26,
-            y: 53,
-            textAnchor: 'start'
-        }
-    })
+    describe('test coordinates with left key axis orient', () => {
+        beforeEach(() => {
+            barAttrs = {
+                x: 20,
+                y: 40,
+                width: 100,
+                height: 20
+            }
+            expected = {
+                x: 26,
+                y: 53,
+                textAnchor: 'start'
+            }
+        });
 
-    test('inside bar with start anchor', () => {
-        const result = EmbeddedLabelsHelper.getLabelAttrs(barAttrs, 10, 'key', 'inside');
-        expect(result).toEqual(expected);
+        test('inside bar with start anchor', () => {
+            const result = EmbeddedLabelsHelper.getLabelAttrs(barAttrs, 10, 'key', 'inside', 'left');
+            expect(result).toEqual(expected);
+        });
+    
+        test('inside bar with end anchor', () => {
+            const result = EmbeddedLabelsHelper.getLabelAttrs(barAttrs, 10, 'value', 'inside', 'left');
+            expected.textAnchor = 'end';
+            expected.x = 114;
+            expect(result).toEqual(expected);
+        });
+    
+        test('outside bar with end anchor', () => {
+            const result = EmbeddedLabelsHelper.getLabelAttrs(barAttrs, 10, 'key', 'outside', 'left');
+            expected.x = 126;
+            expect(result).toEqual(expected);
+        });
+    
+        test('outside bar with end anchor', () => {
+            const result = EmbeddedLabelsHelper.getLabelAttrs(barAttrs, 10, 'value', 'outside', 'left');
+            expected.x = 126;
+            expect(result).toEqual(expected);
+        });
     });
 
-    test('inside bar with end anchor', () => {
-        const result = EmbeddedLabelsHelper.getLabelAttrs(barAttrs, 10, 'value', 'inside');
-        expected.textAnchor = 'end';
-        expected.x = 114;
-        expect(result).toEqual(expected);
-    });
+    describe('test coordinates with right key axis orient', () => {
+        beforeEach(() => {
+            barAttrs = {
+                x: 120,
+                y: 40,
+                width: 80,
+                height: 20
+            }
+            expected = {
+                x: 114,
+                y: 53,
+                textAnchor: 'end'
+            }
+        });
 
-    test('outside bar with end anchor', () => {
-        const result = EmbeddedLabelsHelper.getLabelAttrs(barAttrs, 10, 'key', 'outside');
-        expected.x = 126;
-        expect(result).toEqual(expected);
-    });
+        test('should return value text on left with end text anchor', () => {
+            const result = EmbeddedLabelsHelper.getLabelAttrs(barAttrs, 10, 'value', 'outside', 'right');
+            expect(result).toEqual(expected);
+        });
 
-    test('outside bar with end anchor', () => {
-        const result = EmbeddedLabelsHelper.getLabelAttrs(barAttrs, 10, 'value', 'outside');
-        expected.x = 126;
-        expect(result).toEqual(expected);
+        test('should return key text on left with end text anchor', () => {
+            const result = EmbeddedLabelsHelper.getLabelAttrs(barAttrs, 10, 'key', 'outside', 'right');
+            expect(result).toEqual(expected);
+        });
+
+        test('should return value text inside bar with start text anchor', () => {
+            const result = EmbeddedLabelsHelper.getLabelAttrs(barAttrs, 10, 'value', 'inside', 'right');
+            expected.x = 126;
+            expected.textAnchor = 'start'
+            expect(result).toEqual(expected);
+        });
+
+        test('should return key text inside bar with start text anchor', () => {
+            const result = EmbeddedLabelsHelper.getLabelAttrs(barAttrs, 10, 'key', 'inside', 'right');
+            expected.x = 194;
+            expect(result).toEqual(expected);
+        });
     });
 });
