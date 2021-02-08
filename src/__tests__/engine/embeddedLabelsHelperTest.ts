@@ -1,4 +1,4 @@
-import { EmbeddedLabelsHelper, LABEL_BAR_PADDING } from "../../engine/features/embeddedLabels/embeddedLabelsHelper";
+import { BarAttrs, EmbeddedLabelsHelper, LabelAttrs, LABEL_BAR_PADDING } from "../../engine/features/embeddedLabels/embeddedLabelsHelper";
 import { BlockMargin, Size } from "../../model/model";
 
 describe('test postion and space', () => {
@@ -60,13 +60,44 @@ describe('test postion and space', () => {
 
 
 describe('test label coordinates', () => {
-    test('should return 23 to y', () => {
-        const result = EmbeddedLabelsHelper.getLabelAttrY(100, 50);
-        expect(result).toBe(23);
+    let barAttrs: BarAttrs;
+    let expected: LabelAttrs;
+
+    beforeEach(() => {
+        barAttrs = {
+            x: 20,
+            y: 40,
+            width: 100,
+            height: 20
+        }
+        expected = {
+            x: 26,
+            y: 54,
+            textAnchor: 'start'
+        }
+    })
+
+    test('inside bar with start anchor', () => {
+        const result = EmbeddedLabelsHelper.getLabelAttrs(barAttrs, 10, 'key', 'inside');
+        expect(result).toEqual(expected);
     });
 
-    test('should return 298 to y', () => {
-        const result = EmbeddedLabelsHelper.getLabelAttrY(1000, 400);
-        expect(result).toBe(298);
+    test('inside bar with end anchor', () => {
+        const result = EmbeddedLabelsHelper.getLabelAttrs(barAttrs, 10, 'value', 'inside');
+        expected.textAnchor = 'end';
+        expected.x = 114;
+        expect(result).toEqual(expected);
+    });
+
+    test('outside bar with end anchor', () => {
+        const result = EmbeddedLabelsHelper.getLabelAttrs(barAttrs, 10, 'key', 'outside');
+        expected.x = 126;
+        expect(result).toEqual(expected);
+    });
+
+    test('outside bar with end anchor', () => {
+        const result = EmbeddedLabelsHelper.getLabelAttrs(barAttrs, 10, 'value', 'outside');
+        expected.x = 126;
+        expect(result).toEqual(expected);
     });
 });

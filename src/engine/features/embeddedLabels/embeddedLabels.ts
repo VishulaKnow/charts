@@ -1,9 +1,9 @@
 import * as d3 from "d3";
-import { BlockMargin, DataRow, EmbeddedLabelTypeModel, Field, Size, TwoDimensionalChartDataModel } from "../../../model/model";
+import { BlockMargin, DataRow, EmbeddedLabelTypeModel, Field, Size } from "../../../model/model";
 import { Block } from "../../block/block";
 import { Helper } from "../../helper";
 import { ValueFormatter } from "../../valueFormatter";
-import { EmbeddedLabelPosition, EmbeddedLabelsHelper, LabelAttrs, LABEL_BAR_PADDING, TextAnchor } from "./embeddedLabelsHelper";
+import { BarAttrs, EmbeddedLabelsHelper } from "./embeddedLabelsHelper";
 
 export class EmbeddedLabels
 {
@@ -25,7 +25,15 @@ export class EmbeddedLabels
         const barWidth = Helper.getSelectionNumericAttr(bar, 'width');
             
         const position = EmbeddedLabelsHelper.getLabelPosition(barWidth, labelBlock.node().getBBox().width, margin, blockSize);
-        const attrs = EmbeddedLabelsHelper.getLabelAttrs(bar, labelBlock, type, position);
+
+        const barAttrs: BarAttrs = {
+            width: Helper.getSelectionNumericAttr(bar, 'width'),
+            height: Helper.getSelectionNumericAttr(bar, 'height'),
+            x: Helper.getSelectionNumericAttr(bar, 'x'),
+            y: Helper.getSelectionNumericAttr(bar, 'y')
+        }
+
+        const attrs = EmbeddedLabelsHelper.getLabelAttrs(barAttrs, labelBlock.node().getBBox().height, type, position);
 
         labelBlock
             .attr('x', attrs.x)
