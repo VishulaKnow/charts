@@ -74,7 +74,7 @@ export class TwoDimensionalModel
                 }
             },
             type: configOptions.type,
-            charts: this.getChartsModel(configOptions.charts, designerConfig.chart.style.palette, configOptions.orientation),
+            charts: this.getChartsModel(configOptions.charts, designerConfig.chart.style.palette, configOptions.orientation, configOptions.isSegmented),
             additionalElements: this.getAdditionalElements(configOptions, designerConfig)
         }
     }
@@ -90,7 +90,7 @@ export class TwoDimensionalModel
         return (axisSize / keysAmount - (elementsInGroupAmount - 1) * barOptions.barDistance - barOptions.groupMinDistance) / elementsInGroupAmount;
     }
 
-    private static getChartsModel(charts: TwoDimensionalChart[], chartPalette: Color[], chartOrientation: ChartOrientation): TwoDimensionalChartModel[] {
+    private static getChartsModel(charts: TwoDimensionalChart[], chartPalette: Color[], chartOrientation: ChartOrientation, isSegmented: boolean): TwoDimensionalChartModel[] {
         const chartsModel: TwoDimensionalChartModel[] = [];
         charts.forEach((chart, index) => {
             chartsModel.push({
@@ -99,7 +99,7 @@ export class TwoDimensionalModel
                 data: { ...chart.data },
                 tooltip: chart.tooltip,
                 cssClasses: ChartStyleModel.getCssClasses(index),
-                style: ChartStyleModel.get2DChartStyle(chartPalette, charts.length, chart.type, this.getChartsValueFieldsAmount(charts), index),
+                style: ChartStyleModel.get2DChartStyle(chartPalette, charts.length, chart.type, this.getChartsValueFieldsAmount(charts), index, isSegmented),
                 embeddedLabels: this.getEmbeddedLabelType(chart, chartOrientation),
                 index
             });

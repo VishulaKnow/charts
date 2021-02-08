@@ -1,13 +1,13 @@
 import * as d3 from "d3";
 import { color, Color } from "d3";
-import { TwoDimensionalChart, TwoDimensionalChartType } from "../config/config";
+import { TwoDimensionalChartType } from "../config/config";
 import { ChartStyle } from "./model";
 
 export class ChartStyleModel
 {
-    public static get2DChartStyle(palette: Color[], chartsAmount: number, chartType: TwoDimensionalChartType, chartsValueFieldsAmount: number[], chartIndex: number): ChartStyle {
+    public static get2DChartStyle(palette: Color[], chartsAmount: number, chartType: TwoDimensionalChartType, chartsValueFieldsAmount: number[], chartIndex: number, isSegmented: boolean): ChartStyle {
         return {
-            elementColors: this.get2DElementColorPalette(palette, chartsValueFieldsAmount, chartIndex),
+            elementColors: this.get2DElementColorPalette(palette, chartsValueFieldsAmount, chartIndex, isSegmented),
             opacity: this.getChartOpacity(chartsAmount, chartType)
         }
     }
@@ -31,13 +31,13 @@ export class ChartStyleModel
         return 1;
     }
 
-    private static get2DElementColorPalette(palette: Color[], chartsValueFieldAmount: number[], chartIndex: number): Color[] {
+    private static get2DElementColorPalette(palette: Color[], chartsValueFieldAmount: number[], chartIndex: number, isSegmented: boolean): Color[] {
         let startIndex = 0;
         for(let i = 0; i < chartIndex; i++) {
             startIndex += chartsValueFieldAmount[i]
         }
         
-        return palette.slice(startIndex, startIndex + chartsValueFieldAmount[chartIndex]);
+        return this.getColorsForFields(palette, startIndex, chartsValueFieldAmount[chartIndex], chartIndex, isSegmented);
     }   
 
     private static getElementColorPalette(palette: Color[], elementsAmount: number): Color[] {
@@ -56,6 +56,17 @@ export class ChartStyleModel
             hslColor.h += step;
         }
 
+        return colors;
+    }
+
+    private static getColorsForFields(palette: Color[], startIndex: number, valueFieldsAmount: number, chartIndex: number, isSegmented: boolean): Color[] {
+        if(!isSegmented) {
+            return palette.slice(startIndex, startIndex + valueFieldsAmount);
+        }
+
+        const colors: Color[] = [];
+        for(let i = 0; i < valueFieldsAmount; i++)
+            colors.push(palette[chartIndex + 19 * i]);
         return colors;
     }
 }
