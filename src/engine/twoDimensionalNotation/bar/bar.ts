@@ -6,7 +6,7 @@ import { Scale, Scales } from "../../features/scale/scale";
 import { Block } from "../../block/block";
 import { Color } from "d3";
 import { EmbeddedLabels } from "../../features/embeddedLabels/embeddedLabels";
-import { MIN_BAR_SIZE_FOR_EMBEDDED_LABELS_DISPLAY } from "../../../model/twoDimensionalModel";
+import { EmbeddedLabelsHelper } from "../../features/embeddedLabels/embeddedLabelsHelper";
 
 interface BarAttrs {
     x: (dataRow: DataRow) => number;
@@ -84,7 +84,7 @@ export class Bar
             Helper.setChartStyle(bars, chart.style, index, 'fill');
 
             if(chart.embeddedLabels !== 'none')
-                EmbeddedLabels.render(block, bars, EmbeddedLabels.getLabelField(chart.embeddedLabels, chart.data, index), chart.embeddedLabels, blockSize, margin);
+                EmbeddedLabels.render(block, bars, EmbeddedLabelsHelper.getLabelField(chart.embeddedLabels, chart.data, index), chart.embeddedLabels, blockSize, margin);
         });
     }
 

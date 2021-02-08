@@ -56,4 +56,17 @@ describe('test postion and space', () => {
             expect(result).toEqual('inside');
         });
     });
-})
+});
+
+
+describe('test label coordinates', () => {
+    test('should return 23 to y', () => {
+        const result = EmbeddedLabelsHelper.getLabelAttrY(100, 50);
+        expect(result).toBe(23);
+    });
+
+    test('should return 298 to y', () => {
+        const result = EmbeddedLabelsHelper.getLabelAttrY(1000, 400);
+        expect(result).toBe(298);
+    });
+});
