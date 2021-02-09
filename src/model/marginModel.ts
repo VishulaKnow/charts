@@ -33,10 +33,7 @@ export class MarginModel
         let position = LegendModel.getLegendModel(config.options.type, config.options.legend.position, config.canvas.size, margin).position;
 
         if(position !== 'off') {
-            margin['left'] -= legendBlockModel['left'].size;
-            margin['right'] -= legendBlockModel['right'].size + legendBlockModel['right'].margin.right;
-            margin['bottom'] -= legendBlockModel['bottom'].size;
-            margin['top'] -= legendBlockModel['top'].size;
+            this.clearMarginByLegendBlockPosition(margin, legendBlockModel);
 
             if(position === 'right' && blockSize.width - margin.left - margin.right - legendBlockModel[position].size < MIN_DONUT_BLOCK_SIZE)
                 position = 'bottom';
@@ -95,17 +92,17 @@ export class MarginModel
     }
 
     private static recalcMarginWithLegend(margin: BlockMargin, config: Config, legendMaxWidth: number, legendBlockModel: LegendBlockModel, data: DataSource): void {
-        const legend = LegendModel.getLegendModel(config.options.type, config.options.legend.position, config.canvas.size, margin);
-        if(legend.position !== 'off') {
+        const legendPosition = LegendModel.getLegendModel(config.options.type, config.options.legend.position, config.canvas.size, margin).position;
+        if(legendPosition !== 'off') {
             const legendItemsContent = this.getLegendItemsContent(config.options.charts, config.options, data);
-            const legendSize = LegendModel.getLegendSize(config.options.type, legend.position, legendItemsContent, legendMaxWidth, config.canvas.size, legendBlockModel);
+            const legendSize = LegendModel.getLegendSize(config.options.type, legendPosition, legendItemsContent, legendMaxWidth, config.canvas.size, legendBlockModel);
             
-            margin[legend.position] += legendSize;
+            margin[legendPosition] += legendSize;
 
             if(legendSize !== 0)
-                this.appendToGlobalMarginValuesLegendMargin(margin, legend.position, legendBlockModel);
+                this.appendToGlobalMarginValuesLegendMargin(margin, legendPosition, legendBlockModel);
 
-            legendBlockModel[legend.position].size = legendSize;
+            legendBlockModel[legendPosition].size = legendSize;
         }
     }
 
@@ -129,5 +126,13 @@ export class MarginModel
             margin[position] += legendBlockModel[position].margin.left + legendBlockModel[position].margin.right;
         else
             margin[position] += legendBlockModel[position].margin.top + legendBlockModel[position].margin.bottom;
+    }
+
+    private static clearMarginByLegendBlockPosition(margin: BlockMargin, legendBlockModel: LegendBlockModel): void { 
+        ['left', 'right', 'top', 'bottom'].forEach((position: Orient) => {
+            margin[position] -= legendBlockModel[position].size === 0 
+                ? 0 
+                : legendBlockModel[position].size + legendBlockModel[position].margin[position];
+        });
     }
 }

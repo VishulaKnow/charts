@@ -62,7 +62,6 @@ export class DataManagerModel
     private static getDataScopeForPolar(configOptions: PolarOptions, blockSize: Size, margin: BlockMargin, data: DataSource, designerConfig: DesignerConfig, legendBlock: LegendBlockModel): DataScope {
         const dataset = data[configOptions.charts[0].data.dataSource];
         const keyFieldName = configOptions.charts[0].data.keyField.name;
-        
         const keys = dataset.map(dataRow => dataRow[keyFieldName]);
 
         if(configOptions.legend.position === 'off') {
@@ -81,15 +80,11 @@ export class DataManagerModel
         const size = LegendModel.getLegendSize('polar', position, keys, designerConfig.canvas.legendBlock.maxWidth, blockSize, legendBlock);
 
         if(position === 'right') {
-            console.log(blockSize.width, margin.left, margin.right);
-            if(blockSize.width - margin.left - margin.right < MIN_DONUT_BLOCK_SIZE) {
+            if(blockSize.width - margin.left - margin.right < MIN_DONUT_BLOCK_SIZE)
                 position = 'bottom';
-            }
-                
         }
 
         let maxItemsNumber: number;
-
         if(position === 'right') {
             maxItemsNumber = LegendCanvasModel.findElementsAmountByLegendSize(keys, position, size, blockSize.height - margin.top - margin.bottom);
         } else {

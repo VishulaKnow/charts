@@ -24,11 +24,11 @@ export class LegendModel
         return {
             left: { 
                 size: 0,
-                margin: { top: mt, bottom: mb, left: ml, right: mr }
+                margin: { top: mt, bottom: mb, left: ml, right: 0 }
             },
             right: { 
                 size: 0,
-                margin: { top: mt, bottom: mb, left: ml, right: mr }
+                margin: { top: mt, bottom: mb, left: 0, right: mr }
             },
             bottom: { 
                 size: 0,

@@ -90,7 +90,7 @@ export function assembleModel(config: Config, data: DataSource): Model {
 
     if(options.type === 'polar')
         MarginModel.recalcPolarMarginWithScopedData(margin, config.canvas.size, designerConfig, config, legendBlock, dataScope, options);
-    console.log(margin);
+
     return {
         blockCanvas,
         chartBlock,
