@@ -1,13 +1,15 @@
 import * as d3 from "d3";
 import { ChartOrientation } from "../../../config/config";
 import { Block } from "../../block/block";
+import { Helper } from "../../helper";
 
 interface AlertBlockPositionAttrs {
     top: string;
     bottom: string;
     right: string;
+    left: string;
 }
-type AlertBlockPosition = 'top' | 'bottom';
+type AlertBlockPosition = 'top' | 'bottom' | 'right' | 'left';
 
 export class RecordOverflowAlert
 {
@@ -17,14 +19,15 @@ export class RecordOverflowAlert
             .attr('class', 'record-overflow-alert')
             .text(this.getAlertText(hidedRecordsAmount, chartOrientation));
 
-        const attrs = this.getBlockPositionAttrs(position);
+        const attrs = this.getBlockPositionAttrs(position, block);
 
-        this.setAlertStyle(alertBlock, attrs);
+        this.setAlertPosition(alertBlock, attrs);
     }
 
-    private static setAlertStyle(alertBlock: d3.Selection<HTMLDivElement, unknown, HTMLElement, any>, attrs: AlertBlockPositionAttrs): void {
+    private static setAlertPosition(alertBlock: d3.Selection<HTMLDivElement, unknown, HTMLElement, any>, attrs: AlertBlockPositionAttrs): void {
         alertBlock
             .style('position', 'absolute')
+            .style('left', attrs.left)
             .style('right', attrs.right)
             .style('top', attrs.top)
             .style('bottom', attrs.bottom);
@@ -64,19 +67,37 @@ export class RecordOverflowAlert
         }
     }
 
-    private static getBlockPositionAttrs(position: AlertBlockPosition): AlertBlockPositionAttrs {
+    private static getBlockPositionAttrs(position: AlertBlockPosition, block: Block): AlertBlockPositionAttrs {
         const attrs: AlertBlockPositionAttrs = {
             bottom: null,
             top: null,
-            right: null
+            right: null,
+            left: null
+        }
+
+        if(position === 'top') {
+            attrs.right = '17px';
+            attrs.top = '1rem';
+        }
+
+        if(position === 'right') {
+            attrs.bottom = '20px';
+            attrs.left = this.getLeftAttrForRightBlock(block) + 'px';
         }
         
-        attrs.right = '17px';
-        if(position === 'bottom')
-            attrs.bottom = '28px';
-        else
-            attrs.top = '1rem';
+        if(position === 'bottom') {
+            attrs.left = '20px';
+            attrs.bottom = '20px';
+        }
 
         return attrs;
+    }
+
+    private static getLeftAttrForRightBlock(block: Block): number {
+        const legendBlock = block.getSvg().select('.legend-object');
+        if(legendBlock.empty())
+            return null;
+        
+        return Helper.getSelectionNumericAttr(legendBlock, 'x');
     }
 }

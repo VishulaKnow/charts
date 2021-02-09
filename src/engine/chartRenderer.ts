@@ -62,8 +62,8 @@ export class ChartRenderer
         Legend.render(block, data, options, model.legendBlock, model.blockCanvas.size);
     
         Tooltip.renderTooltips(block, model, data);
-        if(model.dataSettings.scope.hidedRecordsAmount !== 0)
-            RecordOverflowAlert.render(block, model.dataSettings.scope.hidedRecordsAmount, 'bottom');
+        if(model.dataSettings.scope.hidedRecordsAmount !== 0 && model.options.legend.position !== 'off')
+            RecordOverflowAlert.render(block, model.dataSettings.scope.hidedRecordsAmount, model.options.legend.position);
     }
 
     public static renderInterval(block: Block, model: Model, data: DataSource): void {
