@@ -78,7 +78,6 @@ export class DataManagerModel
             position = 'bottom';
 
         const size = LegendModel.getLegendSize('polar', position, keys, designerConfig.canvas.legendBlock.maxWidth, blockSize, legendBlock);
-
         if(position === 'right') {
             if(blockSize.width - margin.left - margin.right < MIN_DONUT_BLOCK_SIZE)
                 position = 'bottom';
