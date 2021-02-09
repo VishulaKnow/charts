@@ -1,4 +1,5 @@
 import { LegendPosition } from "../../config/config";
+import { Legend } from "../../engine/features/legend/legend";
 import { CLASSES } from "../modelOptions";
 import { LegendModel } from "./legendModel";
 
@@ -84,13 +85,16 @@ export class LegendCanvasModel
 
             if(legendWrapper.offsetHeight > legendBlockHeight) {
                 itemWrapper.remove();
-                amount = i;
+                if(legendBlockHeight - legendWrapper.offsetHeight >= 15)
+                    amount = i;
+                else 
+                    amount = i - 1;
                 break;
             }
             amount++;
         }
         legendWrapper.remove();
         
-        return amount;
+        return amount < 0 ? 0 : amount;
     }
 }

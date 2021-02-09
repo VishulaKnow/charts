@@ -4,7 +4,6 @@ import { BlockMargin, DataRow, DonutChartSettings, PolarChartModel, Size } from 
 import { Helper } from "../helper";
 import { Block } from "../block/block";
 import { Aggregator } from "./aggregator";
-import { MIN_DONUT_BLOCK_SIZE } from "../../model/legendModel/legendModel";
 
 export interface Translate {
     x: number;
@@ -56,7 +55,7 @@ export class Donut
     }
 
     public static getThickness(donutSettings: DonutChartSettings, blockSize: Size, margin: BlockMargin): number {
-        if(blockSize.width - margin.left - margin.right > 400)
+        if(Math.min(blockSize.width - margin.left - margin.right, blockSize.height - margin.bottom - margin.top) > 400)
             return donutSettings.maxThickness;
         return donutSettings.minThickness;
     }

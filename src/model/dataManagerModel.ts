@@ -88,7 +88,7 @@ export class DataManagerModel
         if(position === 'right') {
             maxItemsNumber = LegendCanvasModel.findElementsAmountByLegendSize(keys, position, size, blockSize.height - margin.top - margin.bottom);
         } else {
-            maxItemsNumber = LegendCanvasModel.findElementsAmountByLegendSize(keys, position, blockSize.width - margin.left - margin.right, blockSize.height - margin.top - margin.bottom - MIN_DONUT_BLOCK_SIZE);
+            maxItemsNumber = LegendCanvasModel.findElementsAmountByLegendSize(keys, position, blockSize.width - margin.left - margin.right, blockSize.height - margin.top - margin.bottom - legendBlock.bottom.margin.bottom - MIN_DONUT_BLOCK_SIZE);
         }
 
         return {
