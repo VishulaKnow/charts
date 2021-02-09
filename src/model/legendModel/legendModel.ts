@@ -1,6 +1,9 @@
 import { ChartNotation, LegendPosition } from "../../config/config";
-import { ILegendModel, LegendBlockModel, Orient, Size } from "../model";
+import { BlockMargin, ILegendModel, LegendBlockModel, Orient, Size } from "../model";
 import { LegendCanvasModel, LegendItemsDirection } from "./legendCanvasModel";
+
+/** If donut block has width less than this const, legend change postion from "right" to "bottom" */
+export const MIN_DONUT_BLOCK_SIZE = 260;
 
 export class LegendModel
 {
@@ -38,13 +41,13 @@ export class LegendModel
         }
     }
 
-    public static getLegendModel(chartNotation: ChartNotation, position: LegendPosition, blockSize: Size): ILegendModel {
+    public static getLegendModel(chartNotation: ChartNotation, position: LegendPosition, blockSize: Size, margin: BlockMargin): ILegendModel {
         let legendPosition: LegendPosition = 'off';
         if(position !== 'off') {
             if(chartNotation === '2d' || chartNotation === 'interval')
                 legendPosition = 'top';
             else if(chartNotation === 'polar') {
-                legendPosition = blockSize.width < 600 ? 'bottom' : 'right';
+                legendPosition = blockSize.width - margin.left - margin.right < MIN_DONUT_BLOCK_SIZE ? 'bottom' : 'right';
             }
         }
         
@@ -64,7 +67,7 @@ export class LegendModel
     private static getLegendWidth(texts: string[], legendMaxWidth: number): number {
         let longestText = '';
         let biggestScore = 0;
-        
+
         texts.forEach(text => {
             if(this.getStringScore(text) > biggestScore) {
                 longestText = text;
@@ -72,12 +75,13 @@ export class LegendModel
             } 
         });
 
-        const maxWidth = LegendCanvasModel.getLegendItemWidth(longestText + ' '); // One letter reserve
+        const maxWidth = LegendCanvasModel.getLegendItemWidth(longestText + '?'); // One letter reserve
         return maxWidth > legendMaxWidth ? legendMaxWidth : maxWidth;
     }
 
     private static getStringScore(word: string): number {
         // lower case letter width ~ 0.74 from upper case width.
+        // Number width == lower case letter width
 
         let score = 0;
         const upperLetterScore = 1;

@@ -36,17 +36,21 @@ export class LegendCanvasModel
         const itemWrapper = document.createElement('div');
         const colorBlock = document.createElement('span');
         const textBlock = document.createElement('span');
+
         itemWrapper.style.display = 'inline-block';
         itemWrapper.classList.add(CLASSES.legendItem);
         colorBlock.classList.add(CLASSES.legendColor);
         textBlock.classList.add(CLASSES.legendLabel);
+
         textBlock.textContent = text;
         itemWrapper.append(colorBlock, textBlock);
+
         document.body.append(itemWrapper);
+
         const sumWidth = itemWrapper.getBoundingClientRect().width 
             + parseFloat(window.getComputedStyle(itemWrapper, null).getPropertyValue('margin-left'))
             + parseFloat(window.getComputedStyle(itemWrapper, null).getPropertyValue('margin-right'));
-            console.log(itemWrapper.getBoundingClientRect().width);
+            
         itemWrapper.remove();
         return sumWidth;
     }

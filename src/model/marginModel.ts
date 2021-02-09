@@ -30,7 +30,8 @@ export class MarginModel
     }
 
     public static recalcPolarMarginWithScopedData(margin: BlockMargin, designerConfig: DesignerConfig, config: Config, legendBlockModel: LegendBlockModel, dataScope: DataScope): void {
-        const position = LegendModel.getLegendModel(config.options.type, config.options.legend.position, config.canvas.size).position;
+        const position = LegendModel.getLegendModel(config.options.type, config.options.legend.position, config.canvas.size, margin).position;
+
         if(position !== 'off') {
             margin.top -= legendBlockModel.top.size;
             margin.bottom -= legendBlockModel.bottom.size;
@@ -90,7 +91,7 @@ export class MarginModel
     }
 
     private static recalcMarginWithLegend(margin: BlockMargin, config: Config, legendMaxWidth: number, legendBlockModel: LegendBlockModel, data: DataSource): void {
-        const legend = LegendModel.getLegendModel(config.options.type, config.options.legend.position, config.canvas.size);
+        const legend = LegendModel.getLegendModel(config.options.type, config.options.legend.position, config.canvas.size, margin);
         if(legend.position !== 'off') {
             const legendItemsContent = this.getLegendItemsContent(config.options.charts, config.options, data);
             const legendSize = LegendModel.getLegendSize(config.options.type, legend.position, legendItemsContent, legendMaxWidth, config.canvas.size, legendBlockModel);
