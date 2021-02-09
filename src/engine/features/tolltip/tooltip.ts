@@ -20,7 +20,7 @@ export class Tooltip
         const chartsWithTooltipIndex = model.options.charts.findIndex((chart: TwoDimensionalChartModel | PolarChartModel | IntervalChartModel) => chart.tooltip.data.fields.length !== 0);
         if(chartsWithTooltipIndex !== -1) {
             if(model.options.type === '2d') {
-                this.rednerTooltipFor2DCharts(block, model.options.charts, data, model.options.isSegmented, model.blockCanvas.size, model.options.orient);   
+                this.rednerTooltipFor2DCharts(block, model.chartBlock.margin, model.options.charts, data, model.options.isSegmented, model.blockCanvas.size, model.options.orient);   
             } else if(model.options.type === 'polar') {
                 this.renderTooltipsForDonut(block, model.options.charts, data, model.blockCanvas.size, model.chartBlock.margin, Donut.getThickness(model.chartSettings.donut, model.blockCanvas.size, model.chartBlock.margin));
             } else if(model.options.type === 'interval') {
@@ -29,10 +29,10 @@ export class Tooltip
         }
     }
 
-    private static rednerTooltipFor2DCharts(block: Block, charts: TwoDimensionalChartModel[], data: DataSource, isSegmented: boolean, blockSize: Size, chartOrientation: ChartOrientation): void {
+    private static rednerTooltipFor2DCharts(block: Block, margin: BlockMargin, charts: TwoDimensionalChartModel[], data: DataSource, isSegmented: boolean, blockSize: Size, chartOrientation: ChartOrientation): void {
         charts.forEach(chart => {
             if(chart.type === 'bar') {
-                this.renderTooltipForBars(block, Bar.getAllBarItems(block), data, chart, isSegmented, chartOrientation, blockSize, charts.map(ch => ch.cssClasses));
+                this.renderTooltipForBars(block, Bar.getAllBarItems(block), data, chart, isSegmented, chartOrientation, blockSize, margin, charts.map(ch => ch.cssClasses));
             } else if(chart.type === 'line' || chart.type === 'area') {
                 this.renderTooltipForDots(block, Dot.getAllDots(block, chart.cssClasses), data, chart, isSegmented, blockSize, charts.map(ch => ch.cssClasses));
             }
@@ -93,7 +93,7 @@ export class Tooltip
         });
     }
 
-    private static renderTooltipForBars(block: Block, elemets: d3.Selection<d3.BaseType, DataRow, d3.BaseType, unknown>, data: DataSource, chart: TwoDimensionalChartModel, isSegmented: boolean, chartOrientation: ChartOrientation, blockSize: Size, chartsCssClasses: string[][]): void {
+    private static renderTooltipForBars(block: Block, elemets: d3.Selection<d3.BaseType, DataRow, d3.BaseType, unknown>, data: DataSource, chart: TwoDimensionalChartModel, isSegmented: boolean, chartOrientation: ChartOrientation, blockSize: Size, margin: BlockMargin, chartsCssClasses: string[][]): void {
         const tooltipBlock = this.renderTooltipBlock(block);
         const tooltipContent = this.renderTooltipContentBlock(tooltipBlock);
         const tooltipArrow = this.renderTooltipArrow(tooltipBlock);
@@ -127,15 +127,15 @@ export class Tooltip
                 thisClass.setTooltipCoordinate(tooltipBlock, tooltipCoordinate);
 
                 if(isGrouped) {
-                    TooltipHelper.setElementsSemiOpacity(TooltipHelper.getFilteredElements(elemets, chart.data.keyField.name, keyValue, isSegmented));
+                    // TooltipHelper.setElementsSemiOpacity(TooltipHelper.getFilteredElements(elemets, chart.data.keyField.name, keyValue, isSegmented));
                 } else {
-                    TooltipHelper.setElementsSemiOpacity(elemets);
+                    // TooltipHelper.setElementsSemiOpacity(elemets);
                     d3.select(this).style('opacity', 1);
                 }
 
-                TooltipHelper.setElementsSemiOpacity(otherChartsElements);
+                // TooltipHelper.setElementsSemiOpacity(otherChartsElements);
 
-                const highlighterAttrs = TooltipHelper.getBarHighlighterAttrs(d3.select(this));
+                const highlighterAttrs = TooltipHelper.getBarHighlighterAttrs(d3.select(this), chartOrientation, blockSize, margin);
                 barHighlighter = thisClass.renderBarHighlighter(block, highlighterAttrs);
             });
 
@@ -290,8 +290,9 @@ export class Tooltip
             .attr('y', barAttrs.y)
             .attr('width', barAttrs.width)
             .attr('height', barAttrs.height)
-            .style('fill', '#F2F2F2')
+            .style('fill', '#8a8a8a')
             .style('pointer-events', 'none')
+            .style('opacity', 0.2)
             .lower();
         
         return barHighlighter;

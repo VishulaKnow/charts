@@ -1,6 +1,6 @@
 import * as d3 from "d3";
 import { ChartOrientation } from "../../../config/config";
-import { DataRow, DataSource, Field, IntervalChartModel, PolarChartModel, Size, TwoDimensionalChartModel } from "../../../model/model";
+import { BlockMargin, DataRow, DataSource, Field, IntervalChartModel, PolarChartModel, Size, TwoDimensionalChartModel } from "../../../model/model";
 import { Block } from "../../block/block";
 import { Helper } from "../../helper";
 import { ValueFormatter, } from "../../valueFormatter";
@@ -155,12 +155,19 @@ export class TooltipHelper
             elements.style('opacity', 1);
     }
 
-    public static getBarHighlighterAttrs(bar: d3.Selection<d3.BaseType, DataRow, HTMLElement, unknown>): BarHighlighterAttrs {
+    public static getBarHighlighterAttrs(bar: d3.Selection<d3.BaseType, DataRow, HTMLElement, unknown>, chartOrientation: ChartOrientation, blockSize: Size, margin: BlockMargin): BarHighlighterAttrs {
         const pad = 3;
+        if(chartOrientation === 'vertical')
+            return {
+                x: Helper.getSelectionNumericAttr(bar, 'x') - pad,
+                y: margin.top,
+                width: Helper.getSelectionNumericAttr(bar, 'width') + pad * 2,
+                height: blockSize.height - margin.top - margin.bottom
+            }
         return {
-            x: Helper.getSelectionNumericAttr(bar, 'x') - pad,
+            x: margin.left,
             y: Helper.getSelectionNumericAttr(bar, 'y') - pad,
-            width: Helper.getSelectionNumericAttr(bar, 'width') + pad * 2,
+            width: blockSize.width - margin.left - margin.right,
             height: Helper.getSelectionNumericAttr(bar, 'height') + pad * 2
         }
     }
