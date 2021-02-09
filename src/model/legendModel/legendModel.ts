@@ -7,6 +7,7 @@ export class LegendModel
     public static getLegendSize(chartNotation: ChartNotation, position: Orient, texts: string[], legendMaxWidth: number, blockSize: Size, legendBlockModel: LegendBlockModel): number {
         if(position === 'left' || position === 'right')
             return this.getLegendWidth(texts, legendMaxWidth);
+
         if(chartNotation === '2d' || chartNotation === 'interval') {
             return LegendCanvasModel.getLegendHeight(texts, blockSize.width, legendBlockModel[position].margin.left, legendBlockModel[position].margin.right, 'row', position);
         } else if(chartNotation === 'polar') {
@@ -62,11 +63,32 @@ export class LegendModel
     
     private static getLegendWidth(texts: string[], legendMaxWidth: number): number {
         let longestText = '';
+        let biggestScore = 0;
+        
         texts.forEach(text => {
-            if(text.length > longestText.length) 
+            if(this.getStringScore(text) > biggestScore) {
                 longestText = text;
+                biggestScore = this.getStringScore(text);
+            } 
         });
-        const maxWidth = LegendCanvasModel.getLegendItemWidth(longestText + ' '); //Запас на один символ
+
+        const maxWidth = LegendCanvasModel.getLegendItemWidth(longestText + ' '); // One letter reserve
         return maxWidth > legendMaxWidth ? legendMaxWidth : maxWidth;
+    }
+
+    private static getStringScore(word: string): number {
+        // lower case letter width ~ 0.74 from upper case width.
+
+        let score = 0;
+        const upperLetterScore = 1;
+        const lowerLetterScore = 0.74; 
+        for(let i = 0; i < word.length; i++) {
+            if(word[i].toUpperCase() === word[i] && parseFloat(word[i]).toString() !== word[i])
+                score += upperLetterScore;
+            else
+                score += lowerLetterScore;
+        }
+
+        return score;
     }
 }
