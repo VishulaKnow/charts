@@ -62,3 +62,12 @@ describe('should return first N colors for polar chart', () => {
         expect(getColorHex(result)).toEqual(['#f44336', '#e91e63', '#9c27b0', '#673ab7', '#3f51b5', '#2196f3', '#03a9f4']);
     });
 });
+
+describe('test getting base color from simple colors (black, white etc.)', () => {
+    const chartPalette = colorsJson;
+
+    test('should return black and white', () => {
+        const result = ChartStyleModel.get2DChartStyle(chartPalette, 2, 'bar', [21, 2], 1, false).elementColors;
+        expect(getColorHex(result)).toEqual(['#ffffff', '#000000']);
+    });
+});

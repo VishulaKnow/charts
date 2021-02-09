@@ -37,8 +37,7 @@ export class ChartStyleModel
             startIndex += chartsValueFieldAmount[i]
         }
 
-        const result = this.getColorsForFields(palette, startIndex, chartsValueFieldAmount[chartIndex], chartIndex, isSegmented);
-        return result;
+        return this.getColorsForFields(palette, startIndex, chartsValueFieldAmount[chartIndex], chartIndex, isSegmented);
     }   
 
     private static getElementColorPalette(palette: ChartColors[], elementsAmount: number): Color[] {
