@@ -153,7 +153,9 @@ h3.title {
     color: #000000;
     font-family: "Roboto", sans-serif;
     font-weight: bold;
-    text-transform: uppercase;
+}
+.aggregator-value {
+    margin-top: 20px;
 }
 
 .grid-line {

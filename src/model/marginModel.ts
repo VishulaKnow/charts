@@ -39,7 +39,7 @@ export class MarginModel
                 position = 'bottom';
             
             const legendSize = LegendModel.getLegendSize(config.options.type, position, dataScope.allowableKeys, designerConfig.canvas.legendBlock.maxWidth, config.canvas.size, legendBlockModel);
-            margin[position] += legendSize;            
+            margin[position] += legendSize + legendBlockModel[position].margin[position];            
             legendBlockModel[position].size = legendSize;
             options.legend.position = position;
         }
