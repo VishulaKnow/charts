@@ -30,8 +30,10 @@ export interface DotEdgingAttrs {
     cy: number
 }
 
+export const ARROW_SIZE = 20;
 export const ARROW_DEFAULT_POSITION = 9;
-const TOOLTIP_ARROW_PADDING_X = ARROW_DEFAULT_POSITION - (20 * Math.sqrt(2) - 20) / 2 + 13.3;
+
+const TOOLTIP_ARROW_PADDING_X = ARROW_DEFAULT_POSITION - (ARROW_SIZE * Math.sqrt(2) - ARROW_SIZE) / 2 + 14;
 const TOOLTIP_ARROW_PADDING_Y = 13;
 
 export class TooltipHelper
@@ -83,10 +85,10 @@ export class TooltipHelper
 
     public static getRecalcedCoordinateByArrow(coordinate: [number, number], tooltipBlock: d3.Selection<d3.BaseType, unknown, HTMLElement, any>, blockSize: Size, tooltipArrow: d3.Selection<d3.BaseType, unknown, HTMLElement, any>, translateX: number = 0, translateY: number = 0): [number, number] {
         const tooltipBlockNode = tooltipBlock.node() as HTMLElement;
-        const horizontalPad = this.getHorizontalPad(coordinate, tooltipBlockNode, blockSize, translateX);
-        const verticalPad = this.getVerticalPad(coordinate, tooltipBlockNode, translateY);        
+        const horizontalPad = this.getHorizontalPad(coordinate[0], tooltipBlockNode, blockSize, translateX);
+        const verticalPad = this.getVerticalPad(coordinate[1], tooltipBlockNode, translateY);        
 
-        this.setTooltipArrowCoordinate(tooltipArrow, this.getTooltipArrowPadding(tooltipBlockNode, horizontalPad));        
+        this.setTooltipArrowCoordinate(tooltipArrow, this.getTooltipArrowPadding(tooltipBlockNode, horizontalPad));  
 
         return [coordinate[0] - TOOLTIP_ARROW_PADDING_X - horizontalPad,
             coordinate[1] - TOOLTIP_ARROW_PADDING_Y - tooltipBlockNode.getBoundingClientRect().height - verticalPad];
@@ -161,18 +163,18 @@ export class TooltipHelper
         return `${row[chart.data.keyField.name]} - ${ValueFormatter.formatValue(valueField.format, row[valueField.name])}`;
     }
 
-    private static getHorizontalPad(coordinate: [number, number], tooltipBlockNode: HTMLElement, blockSize: Size, translateX: number): number {
+    private static getHorizontalPad(coordinateX: number, tooltipBlockNode: HTMLElement, blockSize: Size, translateX: number): number {
         let pad = 0;
-        if(tooltipBlockNode.getBoundingClientRect().width + coordinate[0] - TOOLTIP_ARROW_PADDING_X + translateX > blockSize.width)
-            pad = tooltipBlockNode.getBoundingClientRect().width + coordinate[0] - TOOLTIP_ARROW_PADDING_X + translateX - blockSize.width;
+        if(tooltipBlockNode.getBoundingClientRect().width + coordinateX - TOOLTIP_ARROW_PADDING_X + translateX > blockSize.width)
+            pad = tooltipBlockNode.getBoundingClientRect().width + coordinateX - TOOLTIP_ARROW_PADDING_X + translateX - blockSize.width;
         
         return pad;
     }
 
-    private static getVerticalPad(coordinate: [number, number], tooltipBlockNode: HTMLElement, translateY: number): number {
+    private static getVerticalPad(coordinateY: number, tooltipBlockNode: HTMLElement, translateY: number): number {
         let pad = 0;
-        if(coordinate[1] - TOOLTIP_ARROW_PADDING_Y - tooltipBlockNode.getBoundingClientRect().height + translateY < -tooltipBlockNode.getBoundingClientRect().height - TOOLTIP_ARROW_PADDING_Y)
-            pad = coordinate[1];
+        if(coordinateY - TOOLTIP_ARROW_PADDING_Y - tooltipBlockNode.getBoundingClientRect().height + translateY < -tooltipBlockNode.getBoundingClientRect().height - TOOLTIP_ARROW_PADDING_Y)
+            pad = coordinateY;
 
         return pad; // return zero or sub zero
     }

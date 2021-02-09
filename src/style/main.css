@@ -115,18 +115,15 @@ h3.title {
     font-family: "Roboto", sans-serif;
     line-height: 1;
     font-weight: bold;
-    padding: 15px 17px 15px 12px;
+    padding: 15px 20px 15px 15px;
     background: white;
     color: black;
     z-index: 102;
-    min-width: 100px;
 }
 .tooltip-arrow {
     position: absolute;
     z-index: 101;
     background-color: white;
-    width: 20px;
-    height: 20px;
     transform: rotate(45deg);
 }
 .tooltip-group {

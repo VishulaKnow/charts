@@ -2,7 +2,7 @@ import * as d3 from "d3";
 import { BlockMargin, DataRow, DataSource, IntervalChartModel, Model, PolarChartModel, Size, TwoDimensionalChartModel } from "../../../model/model";
 import { Helper } from "../../helper";
 import { Block } from "../../block/block";
-import { ARROW_DEFAULT_POSITION, DotEdgingAttrs, TooltipCoordinate, TooltipHelper } from "./tooltipHelper";
+import { ARROW_DEFAULT_POSITION, ARROW_SIZE, DotEdgingAttrs, TooltipCoordinate, TooltipHelper } from "./tooltipHelper";
 import { Donut } from "../../polarNotation/donut";
 import { Bar } from "../../twoDimensionalNotation/bar/bar";
 import { Dot } from "../lineDots/dot";
@@ -206,7 +206,9 @@ export class Tooltip
                 .attr('class', this.tooltipArrowClass)
                 .style('position', 'absolute')
                 .style('left', `${ARROW_DEFAULT_POSITION}px`)
-                .style('bottom', '-6px');
+                .style('bottom', '-6px')
+                .style('width', `${ARROW_SIZE}px`)
+                .style('height', `${ARROW_SIZE}px`);
         
         return tooltipArrow;
     }
