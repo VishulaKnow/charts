@@ -33,9 +33,7 @@ export class Tooltip
         charts.forEach(chart => {
             if(chart.type === 'bar') {
                 this.renderTooltipForBars(block, Bar.getAllBarItems(block), data, chart, isSegmented, chartOrientation, blockSize, charts.map(ch => ch.cssClasses));
-            } else if(chart.type === 'line') {
-                this.renderTooltipForDots(block, Dot.getAllDots(block, chart.cssClasses), data, chart, false, blockSize, charts.map(ch => ch.cssClasses));
-            } else {
+            } else if(chart.type === 'line' || chart.type === 'area') {
                 this.renderTooltipForDots(block, Dot.getAllDots(block, chart.cssClasses), data, chart, isSegmented, blockSize, charts.map(ch => ch.cssClasses));
             }
         });

@@ -114,7 +114,8 @@ export class ChartRenderer
                     margin,
                     keyAxisOrient,
                     chart,
-                    blockSize);  
+                    blockSize,
+                    isSegmented);  
             else if(chart.type === 'area')
                 Area.render(block,
                     scales,

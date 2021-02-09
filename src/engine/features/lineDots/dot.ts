@@ -40,7 +40,7 @@ export class Dot
             .style('fill', 'white')
             .style('pointer-events', 'none');
 
-        DotArea.render(block, dotsWrapper, attrs, keyField, cssClasses, this.dotClass);
+        // DotArea.render(block, dotsWrapper, attrs, keyField, cssClasses, this.dotClass);
         
         Helper.setCssClasses(dots, Helper.getCssClassesWithElementIndex(cssClasses, itemIndex));
         Helper.setCssClasses(dotsInside, Helper.getCssClassesWithElementIndex(cssClasses, itemIndex));

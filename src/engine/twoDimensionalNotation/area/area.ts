@@ -84,7 +84,6 @@ export class Area
         });
         this.setSegmentColor(areas, chart.style.elementColors);
 
-
         stackedData.forEach((sd, index) => {
             Dot.render(block, sd, keyAxisOrient, scales, margin, chart.data.keyField.name, '1', chart.cssClasses, index, chart.style.elementColors, blockSize, true);
         });
