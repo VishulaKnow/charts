@@ -1,6 +1,5 @@
 import { Config, PolarChart, TwoDimensionalChart, IntervalOptions, IntervalChart, TwoDimensionalOptions, PolarOptions, LegendPosition } from "../config/config";
 import { BarOptionsCanvas, DataType, DesignerConfig } from "../designer/designerConfig";
-import { Legend } from "../engine/features/legend/legend";
 import { AxisModel } from "./axisModel";
 import { LegendCanvasModel } from "./legendModel/legendCanvasModel";
 import { LegendModel, MIN_DONUT_BLOCK_SIZE } from "./legendModel/legendModel";

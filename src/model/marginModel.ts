@@ -34,7 +34,7 @@ export class MarginModel
         let position = LegendModel.getLegendModel(config.options.type, config.options.legend.position, config.canvas.size, margin).position;
 
         if(position !== 'off') {
-            // this.clearMarginByLegendBlockPosition(margin, legendBlockModel);
+            this.clearMarginByLegendBlockPosition(margin, legendBlockModel);
 
             if(position === 'right' && blockSize.width - margin.left - margin.right - legendBlockModel[position].size < MIN_DONUT_BLOCK_SIZE)
                 position = 'bottom';
