@@ -54,7 +54,8 @@ export class Area
                 .append('path')
                 .attr('d', area(data))
                 .attr('class', this.areaChartClass)
-                .style('clip-path', `url(${block.getClipPathId()})`);
+                .style('clip-path', `url(${block.getClipPathId()})`)
+                .style('pointer-events', 'none');
         
             Helper.setCssClasses(path, Helper.getCssClassesWithElementIndex(chart.cssClasses, index));
             Helper.setChartStyle(path, chart.style, index, 'fill');
@@ -75,7 +76,8 @@ export class Area
                 .append('path')
                 .attr('d', d => area(d))
                 .attr('class', this.areaChartClass)
-                .style('clip-path', `url(${block.getClipPathId()})`);
+                .style('clip-path', `url(${block.getClipPathId()})`)
+                .style('pointer-events', 'none');
 
         areas.each(function(d, i) {
             Helper.setCssClasses(d3.select(this), Helper.getCssClassesWithElementIndex(chart.cssClasses, i));
