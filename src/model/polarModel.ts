@@ -6,7 +6,7 @@ import { BlockMargin, DataSource, PolarChartModel, PolarOptionsModel } from "./m
 
 export class PolarModel
 {
-    public static getOptions(config: Config, chartPalette: ChartColors, data: DataSource, margin: BlockMargin): PolarOptionsModel {
+    public static getOptions(config: Config, chartPalette: ChartColors[], data: DataSource, margin: BlockMargin): PolarOptionsModel {
         const configOptions = <PolarOptions>config.options;
         return {
             type: configOptions.type,
@@ -15,7 +15,7 @@ export class PolarModel
         }
     }
 
-    private static getChartsModel(charts: PolarChart[], chartPalette: ChartColors, data: DataSource): PolarChartModel[] {
+    private static getChartsModel(charts: PolarChart[], chartPalette: ChartColors[], data: DataSource): PolarChartModel[] {
         const chartsModel: PolarChartModel[] = [];
         charts.forEach((chart, index) => {
             chartsModel.push({

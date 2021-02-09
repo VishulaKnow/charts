@@ -79,7 +79,7 @@ export class IntervalModel {
         }
     }
 
-    private static getChartsModel(charts: IntervalChart[], chartPalette: ChartColors): IntervalChartModel[] {
+    private static getChartsModel(charts: IntervalChart[], chartPalette: ChartColors[]): IntervalChartModel[] {
         const chartsModel: IntervalChartModel[] = [];
         charts.forEach((chart, index) => {
             chartsModel.push({

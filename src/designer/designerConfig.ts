@@ -85,7 +85,7 @@ interface ChartOptions {
 }
 
 interface ChartStyle {
-    palette: ChartColors;
+    palette: ChartColors[];
 }
 
 interface DataFormat {

@@ -88,7 +88,7 @@ export class TwoDimensionalModel
         return (axisSize / keysAmount - (elementsInGroupAmount - 1) * barOptions.barDistance - barOptions.groupMinDistance) / elementsInGroupAmount;
     }
 
-    private static getChartsModel(charts: TwoDimensionalChart[], chartPalette: ChartColors, chartOrientation: ChartOrientation, isSegmented: boolean): TwoDimensionalChartModel[] {
+    private static getChartsModel(charts: TwoDimensionalChart[], chartPalette: ChartColors[], chartOrientation: ChartOrientation, isSegmented: boolean): TwoDimensionalChartModel[] {
         const chartsModel: TwoDimensionalChartModel[] = [];
         charts.forEach((chart, index) => {
             chartsModel.push({

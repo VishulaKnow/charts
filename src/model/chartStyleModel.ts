@@ -6,14 +6,14 @@ import { ChartStyle } from "./model";
 
 export class ChartStyleModel
 {
-    public static get2DChartStyle(palette: ChartColors, chartsAmount: number, chartType: TwoDimensionalChartType, chartsValueFieldsAmount: number[], chartIndex: number, isSegmented: boolean): ChartStyle {
+    public static get2DChartStyle(palette: ChartColors[], chartsAmount: number, chartType: TwoDimensionalChartType, chartsValueFieldsAmount: number[], chartIndex: number, isSegmented: boolean): ChartStyle {
         return {
             elementColors: this.get2DElementColorPalette(palette, chartsValueFieldsAmount, chartIndex, isSegmented),
             opacity: this.getChartOpacity(chartsAmount, chartType)
         }
     }
 
-    public static getChartStyle(palette: ChartColors, elementsAmount: number): ChartStyle {
+    public static getChartStyle(palette: ChartColors[], elementsAmount: number): ChartStyle {
         return {
             elementColors: this.getElementColorPalette(palette, elementsAmount),
             opacity: 1
@@ -31,45 +31,27 @@ export class ChartStyleModel
         return 1;
     }
 
-    private static get2DElementColorPalette(palette: ChartColors, chartsValueFieldAmount: number[], chartIndex: number, isSegmented: boolean): Color[] {
+    private static get2DElementColorPalette(palette: ChartColors[], chartsValueFieldAmount: number[], chartIndex: number, isSegmented: boolean): Color[] {
         let startIndex = 0;
         for(let i = 0; i < chartIndex; i++) {
             startIndex += chartsValueFieldAmount[i]
         }
-        
-        return this.getColorsForFields(palette, startIndex, chartsValueFieldAmount[chartIndex], chartIndex, isSegmented);
+
+        const result = this.getColorsForFields(palette, startIndex, chartsValueFieldAmount[chartIndex], chartIndex, isSegmented);
+        return result;
     }   
 
-    private static getElementColorPalette(palette: ChartColors, elementsAmount: number): Color[] {
-        return this.getArrayOfProperties(palette, 0, elementsAmount);    
+    private static getElementColorPalette(palette: ChartColors[], elementsAmount: number): Color[] {
+        return palette.slice(0, elementsAmount).map(colors => color(this.getBaseColor(colors)));   
     }
 
-    private static getColorsForFields(palette: ChartColors, startIndex: number, valueFieldsAmount: number, chartIndex: number, isSegmented: boolean): Color[] {
+    private static getColorsForFields(palette: ChartColors[], startIndex: number, valueFieldsAmount: number, chartIndex: number, isSegmented: boolean): Color[] {
         if(!isSegmented) {
-            return this.getArrayOfProperties(palette, startIndex, valueFieldsAmount);
+            return palette.slice(startIndex, startIndex + valueFieldsAmount).map(colors => color(this.getBaseColor(colors)));
         }
 
-        const colors: Color[] = [];
         for(let i = 0; i < valueFieldsAmount; i++)
-            colors.push(color(this.getPropertyByIndex(palette, 14 * chartIndex + 5 - i)));
-        return colors;
-    }
-
-    private static getArrayOfProperties(palette: ChartColors, startIndex: number, amount: number): Color[] {
-        const arr: Color[] = [];
-        for(let i = startIndex; i < startIndex + amount; i++) {
-            arr.push(color(this.getPropertyByIndex(palette, 14 * i + 5)))
-        }
-        return arr;
-    }
-
-    private static getPropertyByIndex(obj: any, index: number): string {
-        let i = 0;
-        for(let key in obj) {
-            if(i === index)
-                return obj[key];
-            i++;
-        }
+            return this.getColorsSetByBase(palette[startIndex], valueFieldsAmount).map(colors => color(colors))
     }
 
     private static generatePalette(baseColors: Color[], colorAmount: number): Color[] {
@@ -84,5 +66,33 @@ export class ChartStyleModel
         }
 
         return colors;
+    }
+
+    private static getBaseColor(colorSet: ChartColors): string {
+        let firstKey: string;
+        for(let key in colorSet) {
+            firstKey = firstKey || key;
+            if(parseInt(key.split('-')[key.split('-').length - 1]) === 500)
+                return colorSet[key];
+        }
+        return colorSet[firstKey];
+    }
+
+    private static getColorsSetByBase(colorSet: ChartColors, colorsAmount: number): string[] {
+        const colors: string[] = [];
+        for(let key in colorSet) {
+            const colorCode = parseInt(key.split('-')[key.split('-').length - 1]);
+            if(colorCode === 200 || colorCode === 300 || colorCode === 400 || colorCode === 500)
+                colors.push(colorSet[key]);
+        }
+
+        colors.reverse();
+        
+        const chartColorSet: string[] = [];
+        for(let i = 0; i < colorsAmount; i++) {
+            chartColorSet.push(colors[i % colors.length]);
+        }
+
+        return chartColorSet;
     }
 }

@@ -1,7 +1,7 @@
 import { Color } from "d3";
 import { ChartStyleModel } from "../../model/chartStyleModel";
 
-const colorsJson = require('material-colors-json/colors.json');
+const colorsJson = require('../../assets/materialColors.json').colors;
 
 function getColorHex(colors: Color[]): string[] {
     let hexes: string[] = [];
