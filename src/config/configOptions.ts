@@ -4,7 +4,7 @@ const configCars: Config = {
     canvas: {
         class: 'outline svg-chart',
         size: {
-            width: 960,
+            width: 740,
             height: 510
         }
     },
@@ -92,7 +92,7 @@ const configCars: Config = {
                 title: 'Рост стоимости',
                 type: 'donut',
                 data: {
-                    dataSource: 'dataSet',
+                    dataSource: 'dataSet_large',
                     keyField:  {
                         name: 'brand',
                         format: 'string'

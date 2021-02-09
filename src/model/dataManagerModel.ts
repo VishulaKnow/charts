@@ -1,7 +1,10 @@
-import { Config, PolarChart, TwoDimensionalChart, IntervalOptions, IntervalChart, TwoDimensionalOptions, PolarOptions } from "../config/config";
+import { Config, PolarChart, TwoDimensionalChart, IntervalOptions, IntervalChart, TwoDimensionalOptions, PolarOptions, LegendPosition } from "../config/config";
 import { BarOptionsCanvas, DataType, DesignerConfig } from "../designer/designerConfig";
+import { Legend } from "../engine/features/legend/legend";
 import { AxisModel } from "./axisModel";
-import { BlockMargin, DataRow, DataScope, DataSource, Size } from "./model";
+import { LegendCanvasModel } from "./legendModel/legendCanvasModel";
+import { LegendModel, MIN_DONUT_BLOCK_SIZE } from "./legendModel/legendModel";
+import { BlockMargin, DataRow, DataScope, DataSource, LegendBlockModel, Size } from "./model";
 import { ModelHelper } from "./modelHelper";
 
 export class DataManagerModel
@@ -13,11 +16,11 @@ export class DataManagerModel
         return scopedData;
     }
 
-    public static getDataScope(config: Config, margin: BlockMargin, data: DataSource, designerConfig: DesignerConfig): DataScope {
+    public static getDataScope(config: Config, margin: BlockMargin, data: DataSource, designerConfig: DesignerConfig, legendBlock: LegendBlockModel): DataScope {
         if(config.options.type === '2d' || config.options.type === 'interval') {
             return this.getDataScopeFor2D(config.options, config.canvas.size, margin, data, designerConfig);
         } else if(config.options.type === 'polar') {
-            return this.getDataScopeForPolar(config.options, config.canvas.size, margin, data, designerConfig);
+            return this.getDataScopeForPolar(config.options, config.canvas.size, margin, data, designerConfig, legendBlock);
         }
     }
 
@@ -56,34 +59,46 @@ export class DataManagerModel
         }
     }
 
-    private static getDataScopeForPolar(configOptions: PolarOptions, blockSize: Size, margin: BlockMargin, data: DataSource, designerConfig: DesignerConfig): DataScope {
+    private static getDataScopeForPolar(configOptions: PolarOptions, blockSize: Size, margin: BlockMargin, data: DataSource, designerConfig: DesignerConfig, legendBlock: LegendBlockModel): DataScope {
         const dataset = data[configOptions.charts[0].data.dataSource];
-        const valueField = configOptions.charts[0].data.valueField.name;
-        const keyField = configOptions.charts[0].data.keyField.name;
+        const keyFieldName = configOptions.charts[0].data.keyField.name;
         
-        const values = dataset.map((dataRow: DataRow) => dataRow[valueField]);
-        const radius = ModelHelper.getDonutRadius(margin, blockSize);
-        let sum = ModelHelper.getValuesSum(values);
+        const keys = dataset.map(dataRow => dataRow[keyFieldName]);
 
-        if(radius <= 0) {
+        if(configOptions.legend.position === 'off') {
             return {
-                allowableKeys: [],
-                hidedRecordsAmount: dataset.length
+                allowableKeys: keys,
+                hidedRecordsAmount: 0
             }
-        }   
+        }
 
-        const allowableKeys: string[] = [];     // Only records with these keys will show
+        let position: LegendPosition;
+        if(blockSize.width - margin.left - margin.right >= MIN_DONUT_BLOCK_SIZE)
+            position = 'right';
+        else
+            position = 'bottom';
 
-        const minAngle = ModelHelper.getMinAngleByLength(designerConfig.canvas.chartOptions.donut.minPartSize, radius);            
-        dataset.forEach((dataRow: DataRow) => {
-            const angle = ModelHelper.getAngleByValue(dataRow[valueField], sum);
-            if(angle > minAngle)
-                allowableKeys.push(dataRow[keyField]);
-        });
-        
+        const size = LegendModel.getLegendSize('polar', position, keys, designerConfig.canvas.legendBlock.maxWidth, blockSize, legendBlock);
+
+        if(position === 'right') {
+            console.log(blockSize.width, margin.left, margin.right);
+            if(blockSize.width - margin.left - margin.right < MIN_DONUT_BLOCK_SIZE) {
+                position = 'bottom';
+            }
+                
+        }
+
+        let maxItemsNumber: number;
+
+        if(position === 'right') {
+            maxItemsNumber = LegendCanvasModel.findElementsAmountByLegendSize(keys, position, size, blockSize.height - margin.top - margin.bottom);
+        } else {
+            maxItemsNumber = LegendCanvasModel.findElementsAmountByLegendSize(keys, position, blockSize.width - margin.left - margin.right, blockSize.height - margin.top - margin.bottom - MIN_DONUT_BLOCK_SIZE);
+        }
+
         return {
-            allowableKeys,
-            hidedRecordsAmount: dataset.length - allowableKeys.length 
+            allowableKeys: keys.slice(0, maxItemsNumber),
+            hidedRecordsAmount: keys.length - maxItemsNumber
         }
     }
 

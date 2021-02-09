@@ -75,12 +75,11 @@ function getDataFormat(designerConfig: DesignerConfig): DataFormat {
 export function assembleModel(config: Config, data: DataSource): Model {
     const legendBlock: LegendBlockModel = LegendModel.getBaseLegendBlockModel();
     const margin = MarginModel.getMargin(designerConfig, config, legendBlock, data);
-    const dataScope = DataManagerModel.getDataScope(config, margin, data, designerConfig);
-    const preparedData = DataManagerModel.getPreparedData(data, dataScope.allowableKeys, config);    
+    const dataScope = DataManagerModel.getDataScope(config, margin, data, designerConfig, legendBlock);
+    const preparedData = DataManagerModel.getPreparedData(data, dataScope.allowableKeys, config); 
     
-    if(config.options.type === 'polar')
-        MarginModel.recalcPolarMarginWithScopedData(margin, designerConfig, config, legendBlock, dataScope); 
-    MarginModel.recalcMargnWitVerticalAxisLabel(margin, data, config, designerConfig);
+    if(config.options.type === '2d' || config.options.type === 'interval')
+        MarginModel.recalcMargnWitVerticalAxisLabel(margin, data, config, designerConfig);
 
     const blockCanvas = getBlockCanvas(config);
     const chartBlock = getChartBlock(margin);
@@ -88,7 +87,10 @@ export function assembleModel(config: Config, data: DataSource): Model {
     const dataSettings = getDataSettings(dataScope);
     const chartSettings = getChartSettings(designerConfig.canvas.chartOptions.bar, designerConfig.canvas.chartOptions.donut);
     const dataFormat = getDataFormat(designerConfig);
-    
+
+    if(options.type === 'polar')
+        MarginModel.recalcPolarMarginWithScopedData(margin, config.canvas.size, designerConfig, config, legendBlock, dataScope, options);
+    console.log(margin);
     return {
         blockCanvas,
         chartBlock,

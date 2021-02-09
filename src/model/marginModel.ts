@@ -2,8 +2,8 @@ import { TwoDimensionalAxis, Config, PolarChart, TwoDimensionalChart, IntervalCh
 import { DesignerConfig } from "../designer/designerConfig";
 import { AxisModel, LabelSize } from "./axisModel";
 import { DataManagerModel } from "./dataManagerModel";
-import { LegendModel } from "./legendModel/legendModel";
-import { BlockMargin, DataScope, DataSource, LegendBlockModel, Orient } from "./model";
+import { LegendModel, MIN_DONUT_BLOCK_SIZE } from "./legendModel/legendModel";
+import { BlockMargin, DataScope, DataSource, LegendBlockModel, Orient, PolarOptionsModel, Size } from "./model";
 import { AxisType } from "./modelOptions";
 import { TwoDimensionalModel } from "./twoDimensionalModel";
 
@@ -29,18 +29,22 @@ export class MarginModel
         return margin;
     }
 
-    public static recalcPolarMarginWithScopedData(margin: BlockMargin, designerConfig: DesignerConfig, config: Config, legendBlockModel: LegendBlockModel, dataScope: DataScope): void {
-        const position = LegendModel.getLegendModel(config.options.type, config.options.legend.position, config.canvas.size, margin).position;
+    public static recalcPolarMarginWithScopedData(margin: BlockMargin, blockSize: Size, designerConfig: DesignerConfig, config: Config, legendBlockModel: LegendBlockModel, dataScope: DataScope, options: PolarOptionsModel): void {
+        let position = LegendModel.getLegendModel(config.options.type, config.options.legend.position, config.canvas.size, margin).position;
 
         if(position !== 'off') {
-            margin.top -= legendBlockModel.top.size;
-            margin.bottom -= legendBlockModel.bottom.size;
-            margin.left -= legendBlockModel.left.size;
-            margin.right -= legendBlockModel.right.size;
+            margin['left'] -= legendBlockModel['left'].size;
+            margin['right'] -= legendBlockModel['right'].size + legendBlockModel['right'].margin.right;
+            margin['bottom'] -= legendBlockModel['bottom'].size;
+            margin['top'] -= legendBlockModel['top'].size;
+
+            if(position === 'right' && blockSize.width - margin.left - margin.right - legendBlockModel[position].size < MIN_DONUT_BLOCK_SIZE)
+                position = 'bottom';
             
             const legendSize = LegendModel.getLegendSize(config.options.type, position, dataScope.allowableKeys, designerConfig.canvas.legendBlock.maxWidth, config.canvas.size, legendBlockModel);
             margin[position] += legendSize;            
             legendBlockModel[position].size = legendSize;
+            options.legend.position = position;
         }
     }
 

@@ -54,4 +54,39 @@ export class LegendCanvasModel
         itemWrapper.remove();
         return sumWidth;
     }
+
+    public static findElementsAmountByLegendSize(texts: string[], position: LegendPosition, legendBlockWidth: number, legendBlockHeight: number): number {
+        const legendWrapper = document.createElement('div');
+        legendWrapper.style.display = 'flex';
+        legendWrapper.style.flexDirection = 'column';
+        legendWrapper.style.position = 'absolute';
+
+        legendWrapper.style.width = legendBlockWidth + 'px';
+        document.body.append(legendWrapper);
+        let amount = 0;
+
+        for(let i = 0; i < texts.length; i++) {
+            const itemWrapper = document.createElement('div');
+            const colorBlock = document.createElement('span');
+            const textBlock = document.createElement('span');
+            itemWrapper.classList.add('legend-item-row', 'mt-15');
+            if(position === 'bottom')
+                textBlock.classList.add('legend-label-nowrap');
+            colorBlock.classList.add(CLASSES.legendColor);
+            textBlock.classList.add(CLASSES.legendLabel);
+            textBlock.textContent = texts[i];
+            itemWrapper.append(colorBlock, textBlock);
+            legendWrapper.append(itemWrapper);
+
+            if(legendWrapper.offsetHeight > legendBlockHeight) {
+                itemWrapper.remove();
+                amount = i;
+                break;
+            }
+            amount++;
+        }
+        legendWrapper.remove();
+        
+        return amount;
+    }
 }
