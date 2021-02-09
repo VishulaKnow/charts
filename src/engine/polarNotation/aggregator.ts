@@ -19,7 +19,7 @@ export class Aggregator
     }
 
     private static renderAggregatorText(block: Block, innerRadius: number, aggregator: IAggregator, translate: Translate, fontSize: number): void {      
-        if(innerRadius > 90) {
+        if(innerRadius > 50) {
             const aggregatorObject = this.renderAggregatorObject(block, innerRadius, translate);
             const wrapper = this.renderAggregatorWrapper(aggregatorObject);
 

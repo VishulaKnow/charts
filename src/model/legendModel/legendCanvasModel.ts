@@ -69,9 +69,13 @@ export class LegendCanvasModel
             const itemWrapper = document.createElement('div');
             const colorBlock = document.createElement('span');
             const textBlock = document.createElement('span');
-            itemWrapper.classList.add('legend-item-row', 'mt-15');
+            itemWrapper.classList.add('legend-item-row');
+            
             if(position === 'bottom')
-                textBlock.classList.add('legend-label-nowrap');
+                textBlock.classList.add('legend-label-nowrap', 'mt-10');
+            else
+                itemWrapper.classList.add('mt-15');
+
             colorBlock.classList.add(CLASSES.legendColor);
             textBlock.classList.add(CLASSES.legendLabel);
             textBlock.textContent = texts[i];

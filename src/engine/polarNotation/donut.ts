@@ -56,7 +56,7 @@ export class Donut
     }
 
     public static getThickness(donutSettings: DonutChartSettings, blockSize: Size, margin: BlockMargin): number {
-        if(blockSize.width - margin.left - margin.right >= MIN_DONUT_BLOCK_SIZE)
+        if(blockSize.width - margin.left - margin.right > 400)
             return donutSettings.maxThickness;
         return donutSettings.minThickness;
     }

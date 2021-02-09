@@ -119,6 +119,7 @@ h3.title {
     background: white;
     color: black;
     z-index: 102;
+    max-width: 500px;
 }
 .tooltip-arrow {
     position: absolute;
