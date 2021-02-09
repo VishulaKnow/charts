@@ -2,7 +2,7 @@ import * as d3 from "d3";
 import { BlockMargin, DataRow, DataSource, IntervalChartModel, Model, PolarChartModel, Size, TwoDimensionalChartModel } from "../../../model/model";
 import { Helper } from "../../helper";
 import { Block } from "../../block/block";
-import { ARROW_DEFAULT_POSITION, ARROW_SIZE, DotEdgingAttrs, TooltipCoordinate, TooltipHelper } from "./tooltipHelper";
+import { ARROW_DEFAULT_POSITION, ARROW_SIZE, BarHighlighterAttrs, DotEdgingAttrs, TooltipCoordinate, TooltipHelper } from "./tooltipHelper";
 import { Donut } from "../../polarNotation/donut";
 import { Bar } from "../../twoDimensionalNotation/bar/bar";
 import { Dot } from "../lineDots/dot";
@@ -97,6 +97,7 @@ export class Tooltip
         const tooltipBlock = this.renderTooltipBlock(block);
         const tooltipContent = this.renderTooltipContentBlock(tooltipBlock);
         const tooltipArrow = this.renderTooltipArrow(tooltipBlock);
+
         const thisClass = this;
 
         let isGrouped: boolean;
@@ -106,6 +107,8 @@ export class Tooltip
             isGrouped = parseFloat(elemets.attr('height')) < 10;
 
         const otherChartsElements = TooltipHelper.getOtherChartsElements(block, chart.index, chartsCssClasses);
+
+        let barHighlighter: d3.Selection<SVGRectElement, unknown, HTMLElement, any>;
 
         elemets
             .on('mouseover', function(event, dataRow) {
@@ -131,12 +134,16 @@ export class Tooltip
                 }
 
                 TooltipHelper.setElementsSemiOpacity(otherChartsElements);
+
+                const highlighterAttrs = TooltipHelper.getBarHighlighterAttrs(d3.select(this));
+                barHighlighter = thisClass.renderBarHighlighter(block, highlighterAttrs);
             });
 
         elemets.on('mouseleave', function() {
             tooltipBlock.style('display', 'none');
             TooltipHelper.setElementsFullOpacity(elemets);
             TooltipHelper.setElementsFullOpacity(otherChartsElements);
+            barHighlighter.remove();
         });
     }
 
@@ -273,5 +280,20 @@ export class Tooltip
         block.getChartBlock()
             .selectAll('.dot-edging-external, .dot-edging-internal')
             .remove();
+    }
+
+    private static renderBarHighlighter(block: Block, barAttrs: BarHighlighterAttrs): d3.Selection<SVGRectElement, unknown, HTMLElement, any> {
+        const barHighlighter = block.getChartBlock()
+            .append('rect')
+            .attr('class', 'bar-highlighter')
+            .attr('x', barAttrs.x)
+            .attr('y', barAttrs.y)
+            .attr('width', barAttrs.width)
+            .attr('height', barAttrs.height)
+            .style('fill', '#F2F2F2')
+            .style('pointer-events', 'none')
+            .lower();
+        
+        return barHighlighter;
     }
 }

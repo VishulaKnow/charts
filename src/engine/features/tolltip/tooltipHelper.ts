@@ -29,6 +29,12 @@ export interface DotEdgingAttrs {
     cx: number,
     cy: number
 }
+export interface BarHighlighterAttrs {
+    x: number;
+    y: number;
+    width: number;
+    height: number;
+}
 
 export const ARROW_SIZE = 20;
 export const ARROW_DEFAULT_POSITION = 9;
@@ -141,12 +147,22 @@ export class TooltipHelper
 
     public static setElementsSemiOpacity(elements: d3.Selection<d3.BaseType, DataRow, d3.BaseType, unknown>): void {
         if(elements)
-            elements.style('opacity', 0.3);
+            elements.style('opacity', 0.8);
     }
 
     public static setElementsFullOpacity(elements: d3.Selection<d3.BaseType, DataRow, d3.BaseType, unknown>): void {
         if(elements)
             elements.style('opacity', 1);
+    }
+
+    public static getBarHighlighterAttrs(bar: d3.Selection<d3.BaseType, DataRow, HTMLElement, unknown>): BarHighlighterAttrs {
+        const pad = 3;
+        return {
+            x: Helper.getSelectionNumericAttr(bar, 'x') - pad,
+            y: Helper.getSelectionNumericAttr(bar, 'y') - pad,
+            width: Helper.getSelectionNumericAttr(bar, 'width') + pad * 2,
+            height: Helper.getSelectionNumericAttr(bar, 'height') + pad * 2
+        }
     }
 
     private static getTooltipHtml(chart: TwoDimensionalChartModel | PolarChartModel | IntervalChartModel, data: DataSource, keyValue: string, valueField: Field, markColor: string): string {

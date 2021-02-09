@@ -6,6 +6,11 @@ import { ChartStyle } from "./model";
 
 export class ChartStyleModel
 {
+    public static getCssClasses(chartIndex: number): string[] {
+        const cssClasses = [`chart-${chartIndex}`];
+        return cssClasses;
+    }
+
     public static get2DChartStyle(palette: ChartColors[], chartsAmount: number, chartType: TwoDimensionalChartType, chartsValueFieldsAmount: number[], chartIndex: number, isSegmented: boolean): ChartStyle {
         return {
             elementColors: this.get2DElementColorPalette(palette, chartsValueFieldsAmount, chartIndex, isSegmented),
@@ -18,11 +23,6 @@ export class ChartStyleModel
             elementColors: this.getElementColorPalette(palette, elementsAmount),
             opacity: 1
         }
-    }
-
-    public static getCssClasses(chartIndex: number): string[] {
-        const cssClasses = [`chart-${chartIndex}`];
-        return cssClasses;
     }
 
     private static getChartOpacity(chartsLength: number, chartType: TwoDimensionalChartType): number {
@@ -46,24 +46,22 @@ export class ChartStyleModel
 
     private static getColorsForFields(palette: ChartColors[], startIndex: number, valueFieldsAmount: number, chartIndex: number, isSegmented: boolean): Color[] {
         if(!isSegmented) {
-            return palette.slice(startIndex, startIndex + valueFieldsAmount).map(colors => color(this.getBaseColor(colors)));
+            return this.getColorsWithAmountStep(palette, valueFieldsAmount, startIndex)
+                .map(elementColor => color(elementColor));
         }
 
         for(let i = 0; i < valueFieldsAmount; i++)
             return this.getColorsSetByBase(palette[startIndex], valueFieldsAmount).map(colors => color(colors))
     }
 
-    private static generatePalette(baseColors: Color[], colorAmount: number): Color[] {
-        const hslColor = d3.hsl(baseColors[0].toString());
-        let step = 360 / colorAmount;
-        if(step < 31)
-            step = 31;
-        const colors = [];
-        for(let i = 0; i < colorAmount; i++) {
-            colors.push(color(hslColor));
-            hslColor.h += step;
+    private static getColorsWithAmountStep(palette: ChartColors[], elementColors: number, startIndex: number): string[] {
+        const step = Math.floor(19 / elementColors);
+        const colors: string[] = [];
+        let currentIndex = startIndex;
+        for(let  i = 0; i < elementColors; i++) {
+            colors.push(this.getBaseColor(palette[currentIndex % 19]));
+            currentIndex += step;
         }
-
         return colors;
     }
 
@@ -93,5 +91,19 @@ export class ChartStyleModel
         }
 
         return chartColorSet;
+    }
+
+    private static generatePalette(baseColors: Color[], colorAmount: number): Color[] {
+        const hslColor = d3.hsl(baseColors[0].toString());
+        let step = 360 / colorAmount;
+        if(step < 31)
+            step = 31;
+        const colors = [];
+        for(let i = 0; i < colorAmount; i++) {
+            colors.push(color(hslColor));
+            hslColor.h += step;
+        }
+
+        return colors;
     }
 }
