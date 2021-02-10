@@ -18,7 +18,7 @@ export class Chart
         this.designerConfig = designerConfig;
         this.data = data;
 
-        this.model = assembleModel(config, data, designerConfig);
+        this.model = assembleModel(this.config, this.data, this.designerConfig);
         this.engine = new Engine();
     }
 
