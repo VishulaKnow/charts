@@ -34,10 +34,10 @@ export class MarginModel
         let position = LegendModel.getLegendModel(config.options.type, config.options.legend.position, config.canvas.size, margin).position;
 
         if(position !== 'off') {
-            this.clearMarginByLegendBlockPosition(margin, legendBlockModel);
-
-            if(position === 'right' && blockSize.width - margin.left - margin.right - legendBlockModel[position].size < MIN_DONUT_BLOCK_SIZE)
+            if(position === 'right' && blockSize.width - margin.left - margin.right < MIN_DONUT_BLOCK_SIZE)
                 position = 'bottom';
+
+            this.clearMarginByLegendBlockPosition(margin, legendBlockModel);
             
             const legendSize = LegendModel.getLegendSize(config.options.type, position, dataScope.allowableKeys, designerConfig.canvas.legendBlock.maxWidth, config.canvas.size, legendBlockModel);
             margin[position] += legendSize + legendBlockModel[position].margin[position];            
