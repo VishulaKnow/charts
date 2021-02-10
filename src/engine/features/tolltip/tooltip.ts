@@ -8,6 +8,11 @@ import { Bar } from "../../twoDimensionalNotation/bar/bar";
 import { Dot } from "../lineDots/dot";
 import { ChartOrientation } from "../../../config/config";
 
+interface ChartStyleOptions {
+    cssClasses: string[];
+    opacity: number;
+}
+
 export class Tooltip
 {
     private static tooltipWrapperClass = 'tooltip-wrapper';
@@ -249,7 +254,7 @@ export class Tooltip
 
     private static renderDotsEdging(block: Block, attrs: DotEdgingAttrs, color: string): void {
         block.getChartBlock()
-            .insert('circle', '.dot')
+            .insert('circle', `.${Dot.dotClass}`)
             .attr('class', 'dot-edging-internal')
             .attr('cx', attrs.cx)
             .attr('cy', attrs.cy)

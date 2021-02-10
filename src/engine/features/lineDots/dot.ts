@@ -13,7 +13,7 @@ export interface DotAttrs {
 
 export class Dot
 {
-    private static dotClass = 'dot';
+    public static dotClass = 'dot';
     private static dotRadius = 5.5;
     private static innerDotRadius = 2.5;
 

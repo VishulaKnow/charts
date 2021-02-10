@@ -2,7 +2,7 @@ import { Config, PolarChart, TwoDimensionalChart, IntervalOptions, IntervalChart
 import { BarOptionsCanvas, DataType, DesignerConfig } from "../designer/designerConfig";
 import { AxisModel } from "./axisModel";
 import { LegendCanvasModel } from "./legendModel/legendCanvasModel";
-import { LegendModel, MIN_DONUT_BLOCK_SIZE } from "./legendModel/legendModel";
+import { MIN_DONUT_BLOCK_SIZE } from "./legendModel/legendModel";
 import { BlockMargin, DataRow, DataScope, DataSource, LegendBlockModel, Size } from "./model";
 import { ModelHelper } from "./modelHelper";
 
@@ -76,7 +76,6 @@ export class DataManagerModel
         else
             position = 'bottom';
 
-        // const size = LegendModel.getLegendSize('polar', position, keys, designerConfig.canvas.legendBlock.maxWidth, blockSize, legendBlock);
         if(position === 'right') {
             if(blockSize.width - margin.left - margin.right < MIN_DONUT_BLOCK_SIZE)
                 position = 'bottom';
@@ -86,7 +85,6 @@ export class DataManagerModel
         if(position === 'right') {
             maxItemsNumber = LegendCanvasModel.findElementsAmountByLegendSize(keys, position, 200, blockSize.height - margin.top - margin.bottom);
         } else {
-            console.log(blockSize.height, margin.top, margin.bottom, legendBlock.bottom.margin.bottom);
             let marginBottom = margin.bottom - (legendBlock.bottom.size === 0 ? legendBlock.bottom.size : legendBlock.bottom.size - legendBlock.bottom.margin.bottom);
             maxItemsNumber = LegendCanvasModel.findElementsAmountByLegendSize(keys, position, blockSize.width - margin.left - margin.right, blockSize.height - margin.top - marginBottom - legendBlock.bottom.margin.bottom - MIN_DONUT_BLOCK_SIZE);
         }
