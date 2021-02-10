@@ -1,8 +1,8 @@
 {
-  "name": "packd3ts",
+  "name": "mdt-charts",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "src/chart.ts",
   "scripts": {
     "dev": "npx webpack --mode development",
     "build": "npx webpack --mode production",
