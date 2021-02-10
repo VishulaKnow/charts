@@ -26,22 +26,3 @@ const engine2 = new Engine();
 engine2.render(model2, getPreparedData(model2, data, config2), '.main-wrapper2');
 
 
-// async function sendRequest(url: string) {
-//     const response = await fetch(url);
-//     const json  = await response.json();
-
-//     return json;
-// }
-
-// async function render() {
-//     console.log(await sendRequest('http://flight-pool-api/api/config'));
-//     const config2 = await sendRequest('http://flight-pool-api/api/config');
-//     const data2 = await sendRequest('http://flight-pool-api/api/data'); 
-//     const model2 = assembleModel(config2, data2);
-//     const engine2 = new Engine();
-//     engine2.render(model2, getPreparedData(model2, data2, config2), '.main-wrapper2');
-// }
-
-// render();
-
-
