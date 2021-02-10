@@ -6,9 +6,9 @@ import { Model } from '../model/model';
 export default class Engine {
     private block: Block;
 
-    public render(model: Model, data: any, parentSelector: string): void {       
+    public render(model: Model, data: any, parentElement: HTMLElement): void {       
         ValueFormatter.setFormatFunction(model.dataFormat.formatters);
-        this.block = new Block(model.blockCanvas.cssClass, parentSelector);
+        this.block = new Block(model.blockCanvas.cssClass, parentElement);
         this.block.renderWrapper(model.blockCanvas.size);
         
         if(model.options.type === '2d')
@@ -21,7 +21,7 @@ export default class Engine {
 
     public updateFullBlock(model: Model, data: any): void {
         this.clearBlock();
-        this.render(model, data, this.block.parentElementSelector);
+        this.render(model, data, this.block.parentElement);
     }
 
     public updateValueAxis(model: Model, data: any): void {

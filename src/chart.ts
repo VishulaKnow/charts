@@ -22,7 +22,7 @@ export class Chart
         this.engine = new Engine();
     }
 
-    public render(): void {
-        this.engine.render(this.model, getPreparedData(this.model, this.data, this.config), '.main-wrapper');
+    public render(parentElement: HTMLElement): void {
+        this.engine.render(this.model, getPreparedData(this.model, this.data, this.config), parentElement);
     }
 }

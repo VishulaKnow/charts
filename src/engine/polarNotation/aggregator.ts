@@ -1,5 +1,5 @@
 import * as d3 from "d3";
-import { DataRow, DonutChartSettings } from "../../model/model";
+import { DataRow } from "../../model/model";
 import { Block } from "../block/block";
 import { Translate } from "./donut";
 

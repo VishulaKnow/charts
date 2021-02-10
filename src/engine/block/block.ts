@@ -7,18 +7,18 @@ export class Block
 {
     private svgCssClasses: string[];
     private wrapperCssClasses: string[];
-    private parentElement: d3.Selection<d3.BaseType, any, HTMLElement, any>;
+    private parentElementSelection: d3.Selection<d3.BaseType, any, HTMLElement, any>;
     private wrapper: d3.Selection<d3.BaseType, any, HTMLElement, any>;
     private chartBlockClass = 'chart-block';
 
-    public parentElementSelector: string;
+    public parentElement: HTMLElement;
 
-    constructor(cssClass: string, parentElementSelector: string) {
+    constructor(cssClass: string, parentElement: HTMLElement) {
         this.wrapperCssClasses = Helper.getCssClassesArray(cssClass);
         this.svgCssClasses = Helper.getCssClassesArray(cssClass);
         this.wrapperCssClasses = BlockHelper.getFormattedCssClassesForWrapper(this.wrapperCssClasses);
-        this.parentElement = d3.select(parentElementSelector);
-        this.parentElementSelector = parentElementSelector;
+        this.parentElement = parentElement;
+        this.parentElementSelection = d3.select(parentElement);
     }
 
     public renderSvg(blockSize: Size): void {
@@ -30,7 +30,7 @@ export class Block
     }
 
     public renderWrapper(blockSize: Size): void {
-        this.wrapper = this.parentElement
+        this.wrapper = this.parentElementSelection
             .append('div')
             .attr('class', this.wrapperCssClasses.join(' '))
             .style('width', blockSize.width + 'px')
