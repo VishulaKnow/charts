@@ -16,9 +16,10 @@ export class Chart
     constructor(config: Config, designerConfig: DesignerConfig, data: DataSource) {
         this.config = config;
         this.designerConfig = designerConfig;
+        this.data = data;
+
         this.model = assembleModel(config, data, designerConfig);
         this.engine = new Engine();
-        this.data = data;
     }
 
     public render(): void {

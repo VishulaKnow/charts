@@ -1,7 +1,6 @@
 import Engine from '../engine/engine';
 import { getPreparedData, getUpdatedModel } from '../model/modelOptions';
 import { Config, IntervalOptions, PolarChart, PolarOptions, TwoDimensionalChart, TwoDimensionalOptions } from '../config/config'
-import { color } from 'd3';
 import { DesignerConfig } from '../designer/designerConfig';
 import { DataSource } from '../model/model';
 
