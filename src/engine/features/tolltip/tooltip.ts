@@ -126,14 +126,7 @@ export class Tooltip
                 const tooltipCoordinate = TooltipHelper.getTooltipCoordinate(coordinatePointer);
                 thisClass.setTooltipCoordinate(tooltipBlock, tooltipCoordinate);
 
-                if(isGrouped) {
-                    // TooltipHelper.setElementsSemiOpacity(TooltipHelper.getFilteredElements(elemets, chart.data.keyField.name, keyValue, isSegmented));
-                } else {
-                    // TooltipHelper.setElementsSemiOpacity(elemets);
-                    d3.select(this).style('opacity', 1);
-                }
-
-                // TooltipHelper.setElementsSemiOpacity(otherChartsElements);
+                TooltipHelper.setElementsSemiOpacity(otherChartsElements);
 
                 const highlighterAttrs = TooltipHelper.getBarHighlighterAttrs(d3.select(this), chartOrientation, blockSize, margin);
                 barHighlighter = thisClass.renderBarHighlighter(block, highlighterAttrs);

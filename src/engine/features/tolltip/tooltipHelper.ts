@@ -147,7 +147,7 @@ export class TooltipHelper
 
     public static setElementsSemiOpacity(elements: d3.Selection<d3.BaseType, DataRow, d3.BaseType, unknown>): void {
         if(elements)
-            elements.style('opacity', 0.8);
+            elements.style('opacity', 0.3);
     }
 
     public static setElementsFullOpacity(elements: d3.Selection<d3.BaseType, DataRow, d3.BaseType, unknown>): void {
