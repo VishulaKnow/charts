@@ -1,8 +1,8 @@
 {
   "name": "mdt-charts",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "",
-  "main": "src/chart.ts",
+  "main": "dist/main.0bcfeecf56ee7287510d.js",
   "scripts": {
     "dev": "npx webpack --mode development",
     "build": "npx webpack --mode production",

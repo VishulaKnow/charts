@@ -8,7 +8,19 @@
  */
 /******/ (() => { // webpackBootstrap
 /******/ 	"use strict";
-/******/ 	var __webpack_modules__ = ({});
+/******/ 	var __webpack_modules__ = ({
+
+/***/ "./src/main.ts":
+/*!*********************!*\
+  !*** ./src/main.ts ***!
+  \*********************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"Chart\": () => /* binding */ Chart\n/* harmony export */ });\n/* harmony import */ var _engine_engine__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./engine/engine */ \"./src/engine/engine.ts\");\n/* harmony import */ var _model_modelOptions__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./model/modelOptions */ \"./src/model/modelOptions.ts\");\n\r\n\r\nvar Chart = /** @class */ (function () {\r\n    function Chart(config, designerConfig, data) {\r\n        this.config = config;\r\n        this.designerConfig = designerConfig;\r\n        this.data = data;\r\n        this.model = (0,_model_modelOptions__WEBPACK_IMPORTED_MODULE_1__.assembleModel)(this.config, this.data, this.designerConfig);\r\n        this.engine = new _engine_engine__WEBPACK_IMPORTED_MODULE_0__.default();\r\n    }\r\n    Chart.prototype.render = function (parentElement) {\r\n        this.engine.render(this.model, (0,_model_modelOptions__WEBPACK_IMPORTED_MODULE_1__.getPreparedData)(this.model, this.data, this.config), parentElement);\r\n    };\r\n    return Chart;\r\n}());\r\n\r\n\n\n//# sourceURL=webpack://mdt-charts/./src/main.ts?");
+
+/***/ })
+
+/******/ 	});
 /************************************************************************/
 /******/ 	// The module cache
 /******/ 	var __webpack_module_cache__ = {};
@@ -88,11 +100,11 @@
 /******/ 		// undefined = chunk not loaded, null = chunk preloaded/prefetched
 /******/ 		// Promise = chunk loading, 0 = chunk loaded
 /******/ 		var installedChunks = {
-/******/ 			"listeners": 0
+/******/ 			"main": 0
 /******/ 		};
 /******/ 		
 /******/ 		var deferredModules = [
-/******/ 			["./src/listeners/listeners.ts","vendors-node_modules_css-loader_dist_runtime_api_js-node_modules_d3_index_js-node_modules_sty-ef83b8","src_listeners_listeners_ts"]
+/******/ 			["./src/main.ts","vendors-node_modules_css-loader_dist_runtime_api_js-node_modules_d3_index_js-node_modules_sty-ef83b8","src_engine_engine_ts"]
 /******/ 		];
 /******/ 		// no chunk on demand loading
 /******/ 		
