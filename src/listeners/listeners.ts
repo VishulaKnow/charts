@@ -67,7 +67,7 @@ export default class Listeners
 
     private updateFull(): void {
         this.dropAxisDomain(this.config);
-        const model = getUpdatedModel(this.config, this.data);
+        const model = getUpdatedModel(this.config, this.data, this.designerConfig);
         const preparedData = getPreparedData(model, this.data, this.config);
         this.engine.updateFullBlock(model, preparedData);
     }
@@ -433,7 +433,7 @@ export default class Listeners
                     config.options.axis.valueAxis.domain.start = -1;
                     config.options.axis.valueAxis.domain.end = max;
                 }
-                const model = getUpdatedModel(thisClass.config, newData);
+                const model = getUpdatedModel(thisClass.config, newData, thisClass.designerConfig);
                 const preparedData = getPreparedData(model, newData, config);
                 thisClass.engine.updateFullBlock(model, preparedData);
             }
@@ -447,7 +447,7 @@ export default class Listeners
                     config.options.axis.valueAxis.domain.start = -1;
                     config.options.axis.valueAxis.domain.end = max;
                 }
-                const model = getUpdatedModel(thisClass.config, newData);
+                const model = getUpdatedModel(thisClass.config, newData, thisClass.designerConfig);
                 const preparedData = getPreparedData(model, newData, config);
                 thisClass.engine.updateFullBlock(model, preparedData);
             }
@@ -475,7 +475,7 @@ export default class Listeners
                 const end = ListenersHelper.getInputValue('#domain-end');
                 config.options.axis.valueAxis.domain.start = parseInt(start) || -1;
                 config.options.axis.valueAxis.domain.end = parseInt(end) || -1;
-                thisClass.engine.updateValueAxis(getUpdatedModel(thisClass.config, thisClass.data), thisClass.data);
+                thisClass.engine.updateValueAxis(getUpdatedModel(thisClass.config, thisClass.data, thisClass.designerConfig), thisClass.data);
             }
         });
         document.querySelector('#domain-start').addEventListener('keydown', function(e: KeyboardEvent) {
@@ -485,7 +485,7 @@ export default class Listeners
                     const end = ListenersHelper.getInputValue('#domain-end');
                     config.options.axis.valueAxis.domain.start = parseInt(start) || -1;
                     config.options.axis.valueAxis.domain.end = parseInt(end) || -1;
-                    thisClass.engine.updateValueAxis(getUpdatedModel(thisClass.config, thisClass.data), thisClass.data);
+                    thisClass.engine.updateValueAxis(getUpdatedModel(thisClass.config, thisClass.data, thisClass.designerConfig), thisClass.data);
                 }
             }
         });
@@ -496,7 +496,7 @@ export default class Listeners
                     const end = ListenersHelper.getInputValue('#domain-end');
                     config.options.axis.valueAxis.domain.start = parseInt(start) || -1;
                     config.options.axis.valueAxis.domain.end = parseInt(end) || -1;
-                    thisClass.engine.updateValueAxis(getUpdatedModel(thisClass.config, thisClass.data), thisClass.data);
+                    thisClass.engine.updateValueAxis(getUpdatedModel(thisClass.config, thisClass.data, thisClass.designerConfig), thisClass.data);
                 }
             }
         });

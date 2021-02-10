@@ -5,7 +5,6 @@ import { TwoDimensionalModel } from './twoDimensionalModel';
 import { PolarModel } from './polarModel';
 import '../style/main.css'
 
-import designerConfig from '../designer/designerConfigOptions';
 import { DataManagerModel } from './dataManagerModel';
 import { BarOptionsCanvas, DesignerConfig, DonutOptionsCanvas } from '../designer/designerConfig';
 import { IntervalModel } from './intervalModel';
@@ -72,7 +71,7 @@ function getDataFormat(designerConfig: DesignerConfig): DataFormat {
     }
 }
 
-export function assembleModel(config: Config, data: DataSource): Model {
+export function assembleModel(config: Config, data: DataSource, designerConfig: DesignerConfig): Model {
     const legendBlock: LegendBlockModel = LegendModel.getBaseLegendBlockModel();
     const margin = MarginModel.getMargin(designerConfig, config, legendBlock, data);
     const dataScope = DataManagerModel.getDataScope(config, margin, data, designerConfig, legendBlock);
@@ -107,6 +106,6 @@ export function getPreparedData(model: Model, data: DataSource, config: Config):
     return preparedData;
 }
 
-export function getUpdatedModel(config: Config, data: DataSource): Model {
-    return assembleModel(config, data);
+export function getUpdatedModel(config: Config, data: DataSource, designerConfig: DesignerConfig): Model {
+    return assembleModel(config, data, designerConfig);
 }
