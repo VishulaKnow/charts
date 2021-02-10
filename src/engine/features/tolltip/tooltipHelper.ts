@@ -4,6 +4,7 @@ import { BlockMargin, DataRow, DataSource, Field, IntervalChartModel, PolarChart
 import { Block } from "../../block/block";
 import { Helper } from "../../helper";
 import { ValueFormatter, } from "../../valueFormatter";
+import { Dot } from "../lineDots/dot";
 
 type ElementType = 'circle' | 'rect';
 
@@ -34,6 +35,10 @@ export interface BarHighlighterAttrs {
     y: number;
     width: number;
     height: number;
+}
+export interface ChartStyleSettings {
+    cssClasses: string[];
+    opacity: number;
 }
 
 export const ARROW_SIZE = 20;
@@ -155,6 +160,17 @@ export class TooltipHelper
             elements.style('opacity', 1);
     }
 
+    public static setOtherChartsElementsDefaultOpacity(elements: d3.Selection<d3.BaseType, DataRow, d3.BaseType, unknown>, chartsStyleSettings: ChartStyleSettings[]): void {
+        const thisClass = this;
+        elements.each(function() {
+            const indexOfChart = thisClass.findChartIndexOfElement(d3.select(this), chartsStyleSettings);
+            if(!d3.select(this).classed(Dot.dotClass) && !d3.select(this).classed(Dot.innerDotClass))
+                d3.select(this).style('opacity', chartsStyleSettings[indexOfChart].opacity);
+            else
+                d3.select(this).style('opacity', 1);
+        });
+    }
+
     public static getBarHighlighterAttrs(bar: d3.Selection<d3.BaseType, DataRow, HTMLElement, unknown>, chartOrientation: ChartOrientation, blockSize: Size, margin: BlockMargin): BarHighlighterAttrs {
         const pad = 3;
         if(chartOrientation === 'vertical')
@@ -171,6 +187,23 @@ export class TooltipHelper
             height: Helper.getSelectionNumericAttr(bar, 'height') + pad * 2
         }
     }
+
+    public static getChartStyleSettings(chart: TwoDimensionalChartModel): ChartStyleSettings {
+        return {
+            cssClasses: chart.cssClasses,
+            opacity: chart.style.opacity
+        }
+    }
+
+    private static findChartIndexOfElement(element: d3.Selection<d3.BaseType, unknown, d3.BaseType, unknown>, chartStyleSettings: ChartStyleSettings[]): number {
+        let index: number = null;
+        chartStyleSettings.forEach((styleSettings, i) => {
+            if(element.classed(styleSettings.cssClasses.join(' '))) {
+                index = i;
+            }
+        });
+        return index;
+    }   
 
     private static getTooltipHtml(chart: TwoDimensionalChartModel | PolarChartModel | IntervalChartModel, data: DataSource, keyValue: string, valueField: Field, markColor: string): string {
         let text = `<div class="tooltip-group"><div class="tooltip-color"><span class="tooltip-circle" style="background-color: ${markColor};"></span></div>`;

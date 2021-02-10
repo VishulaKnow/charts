@@ -148,7 +148,9 @@ export class DataManagerModel
         let sumSize = dataLength * (elementsInGroupAmount * barOptions.minBarWidth + (elementsInGroupAmount - 1) * barOptions.barDistance + barOptions.groupMinDistance);
         while(dataLength !== 0 && axisLength < sumSize) {
             dataLength--;
-            sumSize = dataLength * (elementsInGroupAmount * barOptions.minBarWidth + (elementsInGroupAmount - 1) * barOptions.barDistance + barOptions.groupMinDistance);
+            // find whole space for bars in group + distance between bars + group distance
+            sumSize = dataLength * (elementsInGroupAmount * barOptions.minBarWidth + (elementsInGroupAmount - 1) 
+                * barOptions.barDistance + barOptions.groupMinDistance);
         }
         
         return dataLength;

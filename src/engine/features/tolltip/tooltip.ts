@@ -2,16 +2,11 @@ import * as d3 from "d3";
 import { BlockMargin, DataRow, DataSource, IntervalChartModel, Model, PolarChartModel, Size, TwoDimensionalChartModel } from "../../../model/model";
 import { Helper } from "../../helper";
 import { Block } from "../../block/block";
-import { ARROW_DEFAULT_POSITION, ARROW_SIZE, BarHighlighterAttrs, DotEdgingAttrs, TooltipCoordinate, TooltipHelper } from "./tooltipHelper";
+import { ARROW_DEFAULT_POSITION, ARROW_SIZE, BarHighlighterAttrs, ChartStyleSettings, DotEdgingAttrs, TooltipCoordinate, TooltipHelper } from "./tooltipHelper";
 import { Donut } from "../../polarNotation/donut";
 import { Bar } from "../../twoDimensionalNotation/bar/bar";
 import { Dot } from "../lineDots/dot";
 import { ChartOrientation } from "../../../config/config";
-
-interface ChartStyleOptions {
-    cssClasses: string[];
-    opacity: number;
-}
 
 export class Tooltip
 {
@@ -37,7 +32,7 @@ export class Tooltip
     private static rednerTooltipFor2DCharts(block: Block, margin: BlockMargin, charts: TwoDimensionalChartModel[], data: DataSource, isSegmented: boolean, blockSize: Size, chartOrientation: ChartOrientation): void {
         charts.forEach(chart => {
             if(chart.type === 'bar') {
-                this.renderTooltipForBars(block, Bar.getAllBarItems(block), data, chart, isSegmented, chartOrientation, blockSize, margin, charts.map(ch => ch.cssClasses));
+                this.renderTooltipForBars(block, Bar.getAllBarItems(block), data, chart, isSegmented, chartOrientation, blockSize, margin, charts.map(ch => TooltipHelper.getChartStyleSettings(ch)));
             } else if(chart.type === 'line' || chart.type === 'area') {
                 this.renderTooltipForDots(block, Dot.getAllDots(block, chart.cssClasses), data, chart, isSegmented, blockSize, charts.map(ch => ch.cssClasses));
             }
@@ -98,7 +93,7 @@ export class Tooltip
         });
     }
 
-    private static renderTooltipForBars(block: Block, elemets: d3.Selection<d3.BaseType, DataRow, d3.BaseType, unknown>, data: DataSource, chart: TwoDimensionalChartModel, isSegmented: boolean, chartOrientation: ChartOrientation, blockSize: Size, margin: BlockMargin, chartsCssClasses: string[][]): void {
+    private static renderTooltipForBars(block: Block, elemets: d3.Selection<d3.BaseType, DataRow, d3.BaseType, unknown>, data: DataSource, chart: TwoDimensionalChartModel, isSegmented: boolean, chartOrientation: ChartOrientation, blockSize: Size, margin: BlockMargin, chartsStyleSettings: ChartStyleSettings[]): void {
         const tooltipBlock = this.renderTooltipBlock(block);
         const tooltipContent = this.renderTooltipContentBlock(tooltipBlock);
         const tooltipArrow = this.renderTooltipArrow(tooltipBlock);
@@ -111,7 +106,7 @@ export class Tooltip
         else
             isGrouped = parseFloat(elemets.attr('height')) < 10;
 
-        const otherChartsElements = TooltipHelper.getOtherChartsElements(block, chart.index, chartsCssClasses);
+        const otherChartsElements = TooltipHelper.getOtherChartsElements(block, chart.index, chartsStyleSettings.map(ch => ch.cssClasses));
 
         let barHighlighter: d3.Selection<SVGRectElement, unknown, HTMLElement, any>;
 
@@ -140,7 +135,7 @@ export class Tooltip
         elemets.on('mouseleave', function() {
             tooltipBlock.style('display', 'none');
             TooltipHelper.setElementsFullOpacity(elemets);
-            TooltipHelper.setElementsFullOpacity(otherChartsElements);
+            TooltipHelper.setOtherChartsElementsDefaultOpacity(otherChartsElements, chartsStyleSettings);
             barHighlighter.remove();
         });
     }
@@ -264,7 +259,7 @@ export class Tooltip
             .style('pointer-events', 'none');
 
         block.getChartBlock()
-            .insert('circle', '.dot')
+            .insert('circle', `.${Dot.dotClass}`)
             .attr('class', 'dot-edging-external')
             .attr('cx', attrs.cx)
             .attr('cy', attrs.cy)

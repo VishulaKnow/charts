@@ -14,6 +14,7 @@ export interface DotAttrs {
 export class Dot
 {
     public static dotClass = 'dot';
+    public static innerDotClass = 'dot-inside';
     private static dotRadius = 5.5;
     private static innerDotRadius = 2.5;
 
@@ -33,7 +34,7 @@ export class Dot
             .style('clip-path', `url(${block.getClipPathId()})`);
 
         const dotsInside = dotsWrapper.append('circle')
-            .attr('class', 'dot-inside')
+            .attr('class', this.innerDotClass)
             .attr('cx', d => attrs.cx(d))
             .attr('cy', d => attrs.cy(d))
             .attr('r', this.innerDotRadius)
@@ -66,7 +67,7 @@ export class Dot
                 .attr('cy', d => attrs.cy(d));
 
         block.getChartBlock()
-            .selectAll(`.dot-inside${Helper.getCssClassesLine(cssClasses)}.chart-element-${index}`)
+            .selectAll(`.${this.innerDotClass}${Helper.getCssClassesLine(cssClasses)}.chart-element-${index}`)
             .data(data)
             .transition()
             .duration(1000)
