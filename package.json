@@ -2,7 +2,7 @@
   "name": "mdt-charts",
   "version": "1.0.2",
   "description": "",
-  "main": "dist/main.0bcfeecf56ee7287510d.js",
+  "main": "dist/main.410bea311b790ebaa1f4.js",
   "scripts": {
     "dev": "npx webpack --mode development",
     "build": "npx webpack --mode production",
