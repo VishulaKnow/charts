@@ -34,7 +34,7 @@ export class Tooltip
             if(chart.type === 'bar') {
                 this.renderTooltipForBars(block, Bar.getAllBarItems(block), data, chart, isSegmented, chartOrientation, blockSize, margin, charts.map(ch => TooltipHelper.getChartStyleSettings(ch)));
             } else if(chart.type === 'line' || chart.type === 'area') {
-                this.renderTooltipForDots(block, Dot.getAllDots(block, chart.cssClasses), data, chart, isSegmented, blockSize, charts.map(ch => ch.cssClasses));
+                this.renderTooltipForDots(block, Dot.getAllDots(block, chart.cssClasses), data, chart, isSegmented, blockSize, charts.map(ch => TooltipHelper.getChartStyleSettings(ch)));
             }
         });
     }
@@ -61,13 +61,13 @@ export class Tooltip
         });
     }
 
-    private static renderTooltipForDots(block: Block, elemets: d3.Selection<d3.BaseType, DataRow, d3.BaseType, unknown>, data: DataSource, chart: TwoDimensionalChartModel, isSegmented: boolean, blockSize: Size, chartsCssClasses: string[][]): void {
+    private static renderTooltipForDots(block: Block, elemets: d3.Selection<d3.BaseType, DataRow, d3.BaseType, unknown>, data: DataSource, chart: TwoDimensionalChartModel, isSegmented: boolean, blockSize: Size, chartsStyleSettings: ChartStyleSettings[]): void {
         const tooltipBlock = this.renderTooltipBlock(block);
         const tooltipContent = this.renderTooltipContentBlock(tooltipBlock);
         const tooltipArrow = this.renderTooltipArrow(tooltipBlock);
         const thisClass = this;
 
-        const otherChartsElements = TooltipHelper.getOtherChartsElements(block, chart.index, chartsCssClasses);
+        const otherChartsElements = TooltipHelper.getOtherChartsElements(block, chart.index, chartsStyleSettings.map(ch => ch.cssClasses));
 
         elemets
             .on('mouseover', function(event, d) {
@@ -89,7 +89,7 @@ export class Tooltip
         elemets.on('mouseleave', function() {
             thisClass.removeDotsEdging(block);
             tooltipBlock.style('display', 'none');
-            TooltipHelper.setElementsFullOpacity(otherChartsElements);
+            TooltipHelper.setOtherChartsElementsDefaultOpacity(otherChartsElements, chartsStyleSettings);
         });
     }
 

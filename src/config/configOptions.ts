@@ -44,9 +44,47 @@ const configCars: Config = {
         charts: [
             {
                 title: 'Рост стоимости',
-                type: 'bar',
+                type: 'area',
                 data: {
                     dataSource: 'dataSet',
+                    keyField:  {
+                        name: 'brand',
+                        format: 'string'
+                    },
+                    valueFields: [
+                        {
+                            name: 'price',
+                            format: 'money',
+                            title: 'Количество автомобилей на душу населения'
+                        },
+                        {
+                            name: 'count',
+                            format: 'integer',
+                            title: 'Количество автомобилей на душу населения'
+                        }                
+                    ]
+                },
+                tooltip: {
+                    data: {
+                        fields: [
+                            {
+                                name: 'price',
+                                format: 'money'
+                            },
+                            {
+                                name: 'count',
+                                format: 'integer'
+                            }
+                        ]
+                    }
+                },
+                embeddedLabels: 'key'
+            },
+            {
+                title: 'Рост стоимости',
+                type: 'line',
+                data: {
+                    dataSource: 'dataSet2',
                     keyField:  {
                         name: 'brand',
                         format: 'string'

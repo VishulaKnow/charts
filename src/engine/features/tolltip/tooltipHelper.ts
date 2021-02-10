@@ -163,6 +163,7 @@ export class TooltipHelper
     public static setOtherChartsElementsDefaultOpacity(elements: d3.Selection<d3.BaseType, DataRow, d3.BaseType, unknown>, chartsStyleSettings: ChartStyleSettings[]): void {
         if(!elements)
             return;
+            
         const thisClass = this;
         elements.each(function() {
             const indexOfChart = thisClass.findChartIndexOfElement(d3.select(this), chartsStyleSettings);
