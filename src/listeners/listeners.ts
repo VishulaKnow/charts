@@ -600,7 +600,6 @@ export default class Listeners
     }
 }
 
-
 import '../style/main.css'
 import config from '../config/configOptions';
 import designerConfig from '../designer/designerConfigOptions';

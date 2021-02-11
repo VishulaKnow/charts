@@ -39,6 +39,7 @@ export class Line
                 .append('path')
                 .attr('d', lineGenerator(data))
                 .attr('class', this.lineChartClass)
+                .style('fill', 'none')
                 .style('clip-path', `url(${block.getClipPathId()})`)
                 .style('pointer-events', 'none');
         
