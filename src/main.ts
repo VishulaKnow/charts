@@ -4,7 +4,7 @@ import Engine from "./engine/engine";
 import { DataSource, Model } from "./model/model";
 import { assembleModel, getPreparedData } from "./model/modelOptions";
 
-module.exports =  class Chart
+export class Chart
 {
     private config: Config;
     private designerConfig: DesignerConfig;
