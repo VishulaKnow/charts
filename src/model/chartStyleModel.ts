@@ -22,7 +22,7 @@ export class ChartStyleModel
     public static get2DChartStyle(chartsAmount: number, chartType: TwoDimensionalChartType, chartsValueFieldsAmount: number[], chartIndex: number, isSegmented: boolean): ChartStyle {
         return {
             elementColors: this.get2DElementColorPalette(this.palette, chartsValueFieldsAmount, chartIndex, isSegmented),
-            opacity: this.getChartOpacity(chartsAmount, chartType)
+            opacity: this.getChartOpacity(chartsAmount, chartType, chartsValueFieldsAmount[chartIndex], isSegmented)
         }
     }
 
@@ -33,8 +33,8 @@ export class ChartStyleModel
         }
     }
 
-    private static getChartOpacity(chartsLength: number, chartType: TwoDimensionalChartType): number {
-        if(chartsLength > 1 && chartType === 'area')
+    private static getChartOpacity(chartsLength: number, chartType: TwoDimensionalChartType, chartsValueFieldAmount: number, isSegmented: boolean): number {
+        if(chartType === 'area' && (chartsLength > 1 || chartsValueFieldAmount > 1) && !isSegmented)
             return 0.5; // combined area with other charts has 0.5 opacity
         return 1;
     }

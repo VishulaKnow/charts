@@ -103,18 +103,6 @@
         { "brand": "LADA", "price": 50, "count": 10 },
         { "brand": "MERCEDES", "price": 15, "count": 12 }
     ],
-    "dataSet_segmented": [
-        { "model": "M3", "brand": "BMW", "price": 120, "count": 12 },
-        { "model": "M4", "brand": "BMW", "price": 120, "count": 12 },
-        { "model": "V3", "brand": "LADA", "price": 50, "count": 10 },
-        { "model": "V4", "brand": "LADA", "price": 50, "count": 10 },
-        { "model": "M4", "brand": "MERCEDES", "price": 15, "count": 12 },
-        { "model": "M14", "brand": "MERCEDES", "price": 15, "count": 12 },
-        { "model": "A5", "brand": "AUDI", "price": 20, "count": 5 },
-        { "model": "A6", "brand": "AUDI", "price": 20, "count": 5 },
-        { "model": "M7", "brand": "VOLKSWAGEN", "price": 40, "count": 10 },
-        { "model": "M9", "brand": "VOLKSWAGEN", "price": 40, "count": 10 }
-    ],
     "dataSet_72": [
         { "brand": "BMW", "price": 120, "count": 12 },
         { "brand": "LADA", "price": 50, "count": 10 },
@@ -188,5 +176,43 @@
         { "brand": "SAAB8", "price": 50, "count": 11 },
         { "brand": "HONDA8", "price": 20, "count": 2 },
         { "brand": "TOYOTA8", "price": 115, "count": 1 }
+    ],
+    "data": [
+        {
+            "x": "Выставка Обзор IT-рынка",
+            "y": 175007
+        },
+        {
+            "x": "Выездной корпоратив",
+            "y": 166000
+        },
+        {
+            "x": "Вечеринка в книжном баре",
+            "y": 116000
+        },
+        {
+            "x": "Шашлыки и баня в Чебоксарах",
+            "y": 26000
+        },
+        {
+            "x": "ДР Саши и Коли",
+            "y": 19000
+        },
+        {
+            "x": "Вечер ужасов",
+            "y": 17000
+        },
+        {
+            "x": "ДР Наташи, Петра и Самвела",
+            "y": 15000
+        },
+        {
+            "x": "Митап в университете",
+            "y": 7000
+        },
+        {
+            "x": "Презентация Roadmap",
+            "y": 4500
+        }
     ]
 }
