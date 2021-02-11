@@ -17,7 +17,7 @@ export class Donut
 
     public static render(block: Block, data: DataRow[], margin: BlockMargin, chart: PolarChartModel, blockSize: Size, donutSettings: DonutChartSettings): void {
         const outerRadius = this.getOuterRadius(margin, blockSize);
-        const thickness = this.getThickness(donutSettings, blockSize, margin)
+        const thickness = this.getThickness(donutSettings, blockSize, margin);
         const innerRadius = this.getInnerRadius(outerRadius, thickness);
 
         const arc = this.getArcGenerator(outerRadius, innerRadius);

@@ -16,6 +16,7 @@ export class AxisModel
         }
         const textBlock = document.createElement('span');
         textBlock.style.position = 'absolute';
+        textBlock.style.whiteSpace = 'nowrap';
         textBlock.classList.add(CLASSES.dataLabel);
         let maxLabel = '';
         let maxWidth = 0;
@@ -23,9 +24,9 @@ export class AxisModel
             if(text.length > maxLabel.length)
                 maxLabel = text;
         });
-        textBlock.textContent = maxLabel;
+        textBlock.textContent = maxLabel; // two characters reserve
         document.body.append(textBlock);
-        maxWidth = textBlock.getBoundingClientRect().width;
+        maxWidth = Math.ceil(textBlock.getBoundingClientRect().width);
         labelSize.height = textBlock.getBoundingClientRect().height;
         labelSize.width = maxWidth > labelMaxWidth ? labelMaxWidth : maxWidth;
         textBlock.remove();
