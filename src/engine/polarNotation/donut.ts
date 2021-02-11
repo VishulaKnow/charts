@@ -96,7 +96,7 @@ export class Donut
             .value(d => d[valueField]);
     }
 
-    private static setElementsColor(arcItems: d3.Selection<SVGGElement, d3.PieArcDatum<DataRow>, d3.BaseType, unknown>, colorPalette: Color[]): void {
+    private static setElementsColor(arcItems: d3.Selection<SVGGElement, unknown, d3.BaseType, unknown>, colorPalette: Color[]): void {
         arcItems
             .select('path')
             .style('fill', (d, i) => colorPalette[i % colorPalette.length].toString());

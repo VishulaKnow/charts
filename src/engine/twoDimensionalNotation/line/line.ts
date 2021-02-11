@@ -87,7 +87,7 @@ export class Line
         if(keyAxisOrient === 'left' || keyAxisOrient === 'right') {
             return d3.line<DataRow>()
                 .x(d => scales.scaleValue(d[valueFieldName]) + margin.left)
-                .y(d => Scale.getScaleKeyPoint(scales.scaleKey, d[keyFieldName]) + margin.top)
+                .y(d => Scale.getScaleKeyPoint(scales.scaleKey, d[keyFieldName]) + margin.top);
         }
     }
 
@@ -101,7 +101,7 @@ export class Line
         if(keyAxisOrient === 'left' || keyAxisOrient === 'right') {
             return d3.line<DataRow>()
                 .x(d => scales.scaleValue(d[1]) + margin.left)
-                .y(d => Scale.getScaleKeyPoint(scales.scaleKey, d.data[keyFieldName]) + margin.top)
+                .y(d => Scale.getScaleKeyPoint(scales.scaleKey, d.data[keyFieldName]) + margin.top);
         }
     }
 

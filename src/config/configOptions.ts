@@ -92,13 +92,13 @@ const configCars: Config = {
                 title: 'Рост стоимости',
                 type: 'donut',
                 data: {
-                    dataSource: 'data',
+                    dataSource: 'dataSet_data',
                     keyField:  {
-                        name: 'x',
+                        name: 'MonthYear',
                         format: 'string'
                     },
                     valueField: {
-                        name: 'y',
+                        name: 'EventCost',
                         format: 'money'
                     }
                 },
