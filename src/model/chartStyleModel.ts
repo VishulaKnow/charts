@@ -1,26 +1,34 @@
 import * as d3 from "d3";
 import { color, Color } from "d3";
 import { TwoDimensionalChartType } from "../config/config";
-import { ChartColors } from "../designer/designerConfig";
 import { ChartStyle } from "./model";
+
+const colorJson = require('../assets/materialColors.json');
+
+interface ChartColors {
+    [colorName: string]: string
+}
+
 
 export class ChartStyleModel
 {
+    private static palette = colorJson.colors;
+
     public static getCssClasses(chartIndex: number): string[] {
         const cssClasses = [`chart-${chartIndex}`];
         return cssClasses;
     }
 
-    public static get2DChartStyle(palette: ChartColors[], chartsAmount: number, chartType: TwoDimensionalChartType, chartsValueFieldsAmount: number[], chartIndex: number, isSegmented: boolean): ChartStyle {
+    public static get2DChartStyle(chartsAmount: number, chartType: TwoDimensionalChartType, chartsValueFieldsAmount: number[], chartIndex: number, isSegmented: boolean): ChartStyle {
         return {
-            elementColors: this.get2DElementColorPalette(palette, chartsValueFieldsAmount, chartIndex, isSegmented),
+            elementColors: this.get2DElementColorPalette(this.palette, chartsValueFieldsAmount, chartIndex, isSegmented),
             opacity: this.getChartOpacity(chartsAmount, chartType)
         }
     }
 
-    public static getChartStyle(palette: ChartColors[], elementsAmount: number): ChartStyle {
+    public static getChartStyle(elementsAmount: number): ChartStyle {
         return {
-            elementColors: this.getElementColorPalette(palette, elementsAmount),
+            elementColors: this.getElementColorPalette(this.palette, elementsAmount),
             opacity: 1
         }
     }

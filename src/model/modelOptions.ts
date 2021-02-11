@@ -42,7 +42,7 @@ function getOptions(config: Config, designerConfig: DesignerConfig, margin: Bloc
     if(config.options.type === '2d') {
         return TwoDimensionalModel.getOptions(config, designerConfig, margin, dataScope, data);
     } else if(config.options.type === 'polar') {
-        return PolarModel.getOptions(config, designerConfig.chart.style.palette, data, margin);
+        return PolarModel.getOptions(config, data, margin);
     } else if(config.options.type === 'interval') {
         return IntervalModel.getOptions(config, designerConfig, margin, dataScope, data)
     }

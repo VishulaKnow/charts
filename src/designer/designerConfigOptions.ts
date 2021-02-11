@@ -35,11 +35,6 @@ const designerConfig: DesignerConfig = {
             }
         }
     },
-    chart: {
-        style: {
-            palette: colorsJson.colors
-        }
-    },
     dataFormat: {
         formatters: {
             'integer': (options: DataOptions, value: any) => Intl.NumberFormat().format(value),

@@ -1,6 +1,5 @@
-import { Color } from "d3";
 import { ChartOrientation, Config, TwoDimensionalChart, TwoDimensionalChartType, TwoDimensionalOptions } from "../config/config";
-import { BarOptionsCanvas, ChartColors, DesignerConfig } from "../designer/designerConfig";
+import { BarOptionsCanvas, DesignerConfig } from "../designer/designerConfig";
 import { AxisModel } from "./axisModel";
 import { ChartStyleModel } from "./chartStyleModel";
 import { DataManagerModel } from "./dataManagerModel";
@@ -71,7 +70,7 @@ export class TwoDimensionalModel
                 }
             },
             type: configOptions.type,
-            charts: this.getChartsModel(configOptions.charts, designerConfig.chart.style.palette, configOptions.orientation, configOptions.isSegmented),
+            charts: this.getChartsModel(configOptions.charts, configOptions.orientation, configOptions.isSegmented),
             additionalElements: this.getAdditionalElements(configOptions, designerConfig)
         }
     }
@@ -87,7 +86,7 @@ export class TwoDimensionalModel
         return (axisSize / keysAmount - (elementsInGroupAmount - 1) * barOptions.barDistance - barOptions.groupMinDistance) / elementsInGroupAmount;
     }
 
-    private static getChartsModel(charts: TwoDimensionalChart[], chartPalette: ChartColors[], chartOrientation: ChartOrientation, isSegmented: boolean): TwoDimensionalChartModel[] {
+    private static getChartsModel(charts: TwoDimensionalChart[], chartOrientation: ChartOrientation, isSegmented: boolean): TwoDimensionalChartModel[] {
         const chartsModel: TwoDimensionalChartModel[] = [];
         charts.forEach((chart, index) => {
             chartsModel.push({
@@ -96,7 +95,7 @@ export class TwoDimensionalModel
                 data: { ...chart.data },
                 tooltip: chart.tooltip,
                 cssClasses: ChartStyleModel.getCssClasses(index),
-                style: ChartStyleModel.get2DChartStyle(chartPalette, charts.length, chart.type, this.getChartsValueFieldsAmount(charts), index, isSegmented),
+                style: ChartStyleModel.get2DChartStyle(charts.length, chart.type, this.getChartsValueFieldsAmount(charts), index, isSegmented),
                 embeddedLabels: this.getEmbeddedLabelType(chart, chartOrientation),
                 index
             });

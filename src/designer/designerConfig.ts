@@ -11,7 +11,6 @@ export interface Formatter {
 
 export interface DesignerConfig {
     canvas: Canvas;
-    chart: ChartOptions;
     additionalElements: Elements;
     dataFormat: DataFormat;
 }
@@ -33,10 +32,6 @@ export interface DonutOptionsCanvas {
 
 export interface AxisLabelCanvas {
     maxSize: AxisLabelSize;
-}
-
-export interface ChartColors {
-    [colorName: string]: string
 }
 
 interface Elements {
@@ -78,14 +73,6 @@ interface LegendBlockCanvas {
 interface AxisLabelSize {
     main: number;
     orthogonal: number;
-}
-
-interface ChartOptions {
-    style: ChartStyle;
-}
-
-interface ChartStyle {
-    palette: ChartColors[];
 }
 
 interface DataFormat {

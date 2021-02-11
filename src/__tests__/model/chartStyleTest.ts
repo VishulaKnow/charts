@@ -77,12 +77,12 @@ describe('get2DChartStyle.elementColors', () => {
 
     describe('from get2DChartStyle elementColors test for grouped charts', () => {
         test('should [0, 9] colors', () => {
-            const result = ChartStyleModel.get2DChartStyle(chartPalette, 1, 'bar', [2], 0, false).elementColors;
+            const result = ChartStyleModel.get2DChartStyle(1, 'bar', [2], 0, false).elementColors;
             expect(getColorHex(result)).toEqual(['#f44336', '#4caf50']);
         });
 
         test('should [0, 6, 12] colors', () => {
-            const result = ChartStyleModel.get2DChartStyle(chartPalette, 1, 'bar', [3], 0, false).elementColors;
+            const result = ChartStyleModel.get2DChartStyle(1, 'bar', [3], 0, false).elementColors;
             expect(getColorHex(result)).toEqual(['#f44336', '#03a9f4', '#ffeb3b']);
         });
     });

@@ -1,5 +1,5 @@
 import { Config, IntervalChart, IntervalOptions } from "../config/config";
-import { ChartColors, DesignerConfig } from "../designer/designerConfig";
+import { DesignerConfig } from "../designer/designerConfig";
 import { AxisModel } from "./axisModel";
 import { ChartStyleModel } from "./chartStyleModel";
 import { DataManagerModel } from "./dataManagerModel";
@@ -68,7 +68,7 @@ export class IntervalModel {
                 }
             },
             type: configOptions.type,
-            charts: this.getChartsModel(configOptions.charts, designerConfig.chart.style.palette),
+            charts: this.getChartsModel(configOptions.charts),
             additionalElements: this.getAdditionalElements(configOptions, designerConfig)
         }
     }
@@ -79,7 +79,7 @@ export class IntervalModel {
         }
     }
 
-    private static getChartsModel(charts: IntervalChart[], chartPalette: ChartColors[]): IntervalChartModel[] {
+    private static getChartsModel(charts: IntervalChart[]): IntervalChartModel[] {
         const chartsModel: IntervalChartModel[] = [];
         charts.forEach((chart, index) => {
             chartsModel.push({
@@ -88,7 +88,7 @@ export class IntervalModel {
                 data: { ...chart.data },
                 tooltip: chart.tooltip,
                 cssClasses: ChartStyleModel.getCssClasses(index),
-                style: ChartStyleModel.getChartStyle(chartPalette, charts.length)
+                style: ChartStyleModel.getChartStyle(charts.length)
             });
         });
         return chartsModel;
