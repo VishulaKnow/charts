@@ -3,7 +3,7 @@ import { Model, BlockCanvas, ChartBlock, TwoDimensionalOptionsModel, PolarOption
 import { MarginModel } from './marginModel';
 import { TwoDimensionalModel } from './twoDimensionalModel';
 import { PolarModel } from './polarModel';
-import '../style/main.css'
+// import '../style/main.css'
 
 import { DataManagerModel } from './dataManagerModel';
 import { BarOptionsCanvas, DesignerConfig, DonutOptionsCanvas } from '../designer/designerConfig';
