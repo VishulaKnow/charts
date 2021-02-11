@@ -4,7 +4,6 @@ import { Helper } from "../../helper";
 import { Block } from "../../block/block";
 import { Scale, Scales } from "../scale/scale";
 import { AXIS_HORIZONTAL_LABEL_PADDING, AXIS_VERTICAL_LABEL_PADDING } from "../../../model/marginModel";
-import { axisBottom } from "d3";
 
 type TextAnchor = 'start' | 'end' | 'middle';
 
@@ -191,7 +190,7 @@ export class Axis
                 while(letter = letters.pop()) {
                     line.push(letter);
                     tspan.text(line.join(''));
-                    if(tspan.node().getComputedTextLength() > maxWidth && line.length > 1) {
+                    if(tspan.node().getComputedTextLength() > maxWidth && line.length > 1 && letters.length > 0) {
                         line.pop();
                         tspan.text(line.join(''));
                         if(lineNumber === 0 && line[line.length - 1] !== ' ')
@@ -206,7 +205,7 @@ export class Axis
                         lineNumber++;
                     }
                 }
-                if(textBlock.selectAll('tspan').size() > 1) {
+                if(textBlock.selectAll('tspan').size() > 0) {
                     textBlock.attr('y', -(textBlock.node().getBBox().height / 2 + 4.8));
                 }
             }

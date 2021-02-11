@@ -65,4 +65,21 @@ export class ModelHelper
     public static getUniqueValuesLength(values: string[]): number {
         return this.getUniqueValues(values).length;
     }
+
+    public static getStringScore(word: string): number {
+        // lower case letter width ~ 0.74 from upper case width.
+        // Number width == lower case letter width
+
+        let score = 0;
+        const upperLetterScore = 1;
+        const lowerLetterScore = 0.74; 
+        for(let i = 0; i < word.length; i++) {
+            if(word[i].toUpperCase() === word[i] && parseFloat(word[i]).toString() !== word[i])
+                score += upperLetterScore;
+            else
+                score += lowerLetterScore;
+        }
+
+        return score;
+    }
 }

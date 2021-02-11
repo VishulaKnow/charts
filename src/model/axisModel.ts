@@ -1,5 +1,6 @@
 import { AxisPosition, ChartOrientation } from "../config/config";
 import { AxisLabelPosition, BlockMargin, Orient, Size } from "./model";
+import { ModelHelper } from "./modelHelper";
 import { AxisType, CLASSES } from "./modelOptions";
 
 export interface LabelSize {
@@ -19,13 +20,16 @@ export class AxisModel
         textBlock.style.whiteSpace = 'nowrap';
         textBlock.classList.add(CLASSES.dataLabel);
         let maxLabel = '';
+        let biggestScore = 0;
         let maxWidth = 0;
         labelTexts.forEach((text: string) => {
-            if(text.length > maxLabel.length)
+            if(ModelHelper.getStringScore(text) > biggestScore) {
                 maxLabel = text;
+                biggestScore = ModelHelper.getStringScore(text);
+            } 
         });
-        textBlock.textContent = maxLabel; // two characters reserve
-        document.body.append(textBlock);
+        textBlock.textContent = maxLabel === '0000' ? maxLabel : maxLabel + 'D';
+        document.body.append(textBlock);       
         maxWidth = Math.ceil(textBlock.getBoundingClientRect().width);
         labelSize.height = textBlock.getBoundingClientRect().height;
         labelSize.width = maxWidth > labelMaxWidth ? labelMaxWidth : maxWidth;

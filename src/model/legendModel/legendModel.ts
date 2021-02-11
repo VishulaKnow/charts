@@ -1,5 +1,6 @@
 import { ChartNotation, LegendPosition } from "../../config/config";
 import { BlockMargin, ILegendModel, LegendBlockModel, Orient, Size } from "../model";
+import { ModelHelper } from "../modelHelper";
 import { LegendCanvasModel, LegendItemsDirection } from "./legendCanvasModel";
 
 /** If donut block has width less than this const, legend change postion from "right" to "bottom" */
@@ -69,30 +70,13 @@ export class LegendModel
         let biggestScore = 0;
 
         texts.forEach(text => {
-            if(this.getStringScore(text) > biggestScore) {
+            if(ModelHelper.getStringScore(text) > biggestScore) {
                 longestText = text;
-                biggestScore = this.getStringScore(text);
+                biggestScore = ModelHelper.getStringScore(text);
             } 
         });
 
         const maxWidth = LegendCanvasModel.getLegendItemWidth(longestText + '?'); // One letter reserve
         return maxWidth > legendMaxWidth ? legendMaxWidth : maxWidth;
-    }
-
-    private static getStringScore(word: string): number {
-        // lower case letter width ~ 0.74 from upper case width.
-        // Number width == lower case letter width
-
-        let score = 0;
-        const upperLetterScore = 1;
-        const lowerLetterScore = 0.74; 
-        for(let i = 0; i < word.length; i++) {
-            if(word[i].toUpperCase() === word[i] && parseFloat(word[i]).toString() !== word[i])
-                score += upperLetterScore;
-            else
-                score += lowerLetterScore;
-        }
-
-        return score;
     }
 }
