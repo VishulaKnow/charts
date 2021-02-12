@@ -222,7 +222,6 @@ export class TooltipHelper
             .attr('class', 'tooltip-text-item')
             .text(this.getTooltipItemText(chart, data, keyValue, valueField))
             .style('white-space', 'nowrap');
-        console.log(textBlock.node().getBoundingClientRect().width);
         if(textBlock.node().getBoundingClientRect().width > 500)
             textBlock.style('white-space', 'normal');
     }
