@@ -1,7 +1,7 @@
 dist
 node_modules
 src
-tsconfig.json
 .git
+tsconfig.json
 webpack.config.js
 babel.config.js
