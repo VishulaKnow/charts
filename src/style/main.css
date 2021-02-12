@@ -83,6 +83,7 @@ h3.title {
     color: #444444;
     width: calc(100% - 19px);
     overflow: hidden;
+    line-height: normal;
 }
 .legend-label-nowrap {
     white-space: nowrap;

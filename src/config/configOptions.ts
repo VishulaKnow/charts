@@ -92,6 +92,53 @@ const configCars: Config = {
                 title: 'Рост стоимости',
                 type: 'donut',
                 data: {
+                    dataSource: 'dataSet_large',
+                    keyField:  {
+                        name: 'brand',
+                        format: 'string'
+                    },
+                    valueField: {
+                        name: 'price',
+                        format: 'money'
+                    }
+                },
+                tooltip: {
+                    data: {
+                        fields: [
+                            {
+                                name: 'price',
+                                format: 'money'
+                            },
+                            {
+                                name: 'count',
+                                format: 'integer'
+                            }
+                        ]
+                    }
+                },
+            }
+        ]
+    }
+}
+
+const configDemo: Config = {
+    canvas: {
+        class: 'outline svg-chart',
+        size: {
+            width: 960,
+            height: 510
+        }
+    },
+    options: {
+        type: 'polar',
+        legend: {
+            position: 'top'
+        },
+        charts: [
+            {
+                title: 'Рост стоимости',
+                type: 'donut',
+                data: {
                     dataSource: 'dataSet_data',
                     keyField:  {
                         name: 'MonthYear',

@@ -1,7 +1,7 @@
-import { Color, text } from "d3";
+import { Color } from "d3";
 import { ChartNotation, LegendPosition } from "../../../config/config";
 import { LegendItemsDirection } from "../../../model/legendModel/legendCanvasModel";
-import { DataRow, DataSource, IntervalChartModel, IntervalOptionsModel, LegendBlockModel, Orient, PolarChartModel, PolarOptionsModel, Size, TwoDimensionalChartModel, TwoDimensionalOptionsModel } from "../../../model/model";
+import { DataRow, DataSource, IntervalOptionsModel, LegendBlockModel, Orient, PolarOptionsModel, Size, TwoDimensionalOptionsModel } from "../../../model/model";
 import { Block } from "../../block/block";
 import { Helper } from "../../helper";
 
