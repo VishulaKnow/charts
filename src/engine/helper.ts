@@ -1,11 +1,12 @@
 import { Color } from "d3-color";
+import { Selection, BaseType } from 'd3-selection'
 import { ChartStyle } from "../model/model";
 
 type StyleColorType = 'fill' | 'stroke';
 
 export class Helper
 {
-    public static setCssClasses(elem: d3.Selection<d3.BaseType, unknown, any, unknown>, cssClasses: string[]): void {
+    public static setCssClasses(elem: Selection<BaseType, unknown, any, unknown>, cssClasses: string[]): void {
         cssClasses.forEach(cssClass => {
             elem.classed(cssClass, true);
         });
@@ -15,16 +16,16 @@ export class Helper
         return '.' + cssClasses.join('.');
     }
 
-    public static setChartStyle(elements: d3.Selection<d3.BaseType, unknown, d3.BaseType, unknown>, chartStyle: ChartStyle, fieldIndex: number, styleType: StyleColorType): void {
+    public static setChartStyle(elements: Selection<BaseType, unknown, BaseType, unknown>, chartStyle: ChartStyle, fieldIndex: number, styleType: StyleColorType): void {
         this.setChartElementColor(elements, chartStyle.elementColors, fieldIndex, styleType);
         this.setChartOpacity(elements, chartStyle.opacity);
     }
 
-    public static setChartElementColor(elements: d3.Selection<d3.BaseType, unknown, d3.BaseType, unknown>, colorPalette: Color[], fieldIndex: number, styleType: StyleColorType): void {
+    public static setChartElementColor(elements: Selection<BaseType, unknown, BaseType, unknown>, colorPalette: Color[], fieldIndex: number, styleType: StyleColorType): void {
         elements.style(styleType, colorPalette[fieldIndex % colorPalette.length].toString());
     }
 
-    public static cropLabels(labelBlocks: d3.Selection<SVGGraphicsElement, unknown, HTMLElement, unknown>, maxWidth: number): void {
+    public static cropLabels(labelBlocks: Selection<SVGGraphicsElement, unknown, HTMLElement, unknown>, maxWidth: number): void {
         labelBlocks.nodes().forEach(node => {
             if(node.getBBox().width > maxWidth) {
                 const text = node.textContent;
@@ -67,7 +68,7 @@ export class Helper
         return parseFloat(propertyValue);
     }
 
-    public static getSelectionNumericAttr(selection: d3.Selection<d3.BaseType, unknown, d3.BaseType, unknown>, attrName: string): number {
+    public static getSelectionNumericAttr(selection: Selection<BaseType, unknown, BaseType, unknown>, attrName: string): number {
         return parseFloat(selection.attr(attrName));
     }
 
@@ -75,7 +76,7 @@ export class Helper
         return cssClasses.concat([`chart-element-${index}`]);
     }
 
-    private static setChartOpacity(elements: d3.Selection<d3.BaseType, unknown, d3.BaseType, unknown>, opacity: number): void {
+    private static setChartOpacity(elements: Selection<BaseType, unknown, BaseType, unknown>, opacity: number): void {
         elements.attr('opacity', opacity);
     }
 }

@@ -1,11 +1,14 @@
-import { area, stack } from 'd3-shape';
-import { select } from 'd3-selection'
+import { area, stack, Area as IArea } from 'd3-shape';
+import { select, Selection, BaseType } from 'd3-selection'
+import { Color } from "d3-color";
+import { transition } from 'd3-transition';
 import { BlockMargin, DataRow, Orient, Size, TwoDimensionalChartModel } from "../../../model/model";
 import { Helper } from "../../helper";
 import { Scale, Scales } from "../../features/scale/scale";
 import { Block } from "../../block/block";
 import { Dot } from "../../features/lineDots/dot";
-import { Color } from "d3";
+
+select.prototype.transition = transition;
 
 export class Area
 {
@@ -22,7 +25,7 @@ export class Area
         if(isSegmented) {
             const area = this.getSegmentedAreaGenerator(keyAxisOrient, scales, margin, chart.data.keyField.name);
             const areas = block.getChartBlock()
-                .selectAll(`path.${this.areaChartClass}${Helper.getCssClassesLine(chart.cssClasses)}`) as d3.Selection<SVGRectElement, DataRow[], d3.BaseType, unknown>;
+                .selectAll(`path.${this.areaChartClass}${Helper.getCssClassesLine(chart.cssClasses)}`) as Selection<SVGRectElement, DataRow[], BaseType, unknown>;
             
             areas
                 .transition()
@@ -90,7 +93,7 @@ export class Area
         });
     }
 
-    private static getGroupedAreaGenerator(keyAxisOrient: Orient, scales: Scales, margin: BlockMargin, keyFieldName: string, valueFieldName: string, blockSize: Size): d3.Area<DataRow> {
+    private static getGroupedAreaGenerator(keyAxisOrient: Orient, scales: Scales, margin: BlockMargin, keyFieldName: string, valueFieldName: string, blockSize: Size): IArea<DataRow> {
         if(keyAxisOrient === 'bottom' || keyAxisOrient === 'top')
             return area<DataRow>()
                 .x(d => Scale.getScaleKeyPoint(scales.scaleKey, d[keyFieldName]) + margin.left)
@@ -103,7 +106,7 @@ export class Area
                 .y(d => Scale.getScaleKeyPoint(scales.scaleKey, d[keyFieldName]) + margin.top);
     }
 
-    private static getSegmentedAreaGenerator(keyAxisOrient: Orient, scales: Scales, margin: BlockMargin, keyField: string): d3.Area<DataRow> {
+    private static getSegmentedAreaGenerator(keyAxisOrient: Orient, scales: Scales, margin: BlockMargin, keyField: string): IArea<DataRow> {
         if(keyAxisOrient === 'bottom' || keyAxisOrient === 'top') {
             return area<DataRow>()
                 .x(d => scales.scaleKey(d.data[keyField]) + margin.left)
@@ -131,7 +134,7 @@ export class Area
             return blockSize.width - margin.right;
     }
 
-    private static setSegmentColor(segments: d3.Selection<SVGGElement, unknown, SVGGElement, unknown>, colorPalette: Color[]): void {
+    private static setSegmentColor(segments: Selection<SVGGElement, unknown, SVGGElement, unknown>, colorPalette: Color[]): void {
         segments.style('fill', (d, i) => colorPalette[i % colorPalette.length].toString());
     }
 }

@@ -1,4 +1,4 @@
-import { select, pointer } from 'd3-selection'
+import { select, pointer, Selection, EnterElement } from 'd3-selection'
 import { DataRow } from "../../../model/model";
 import { Block } from "../../block/block";
 import { Helper } from "../../helper";
@@ -6,7 +6,7 @@ import { DotAttrs } from "./dot";
 
 export class DotArea
 {
-    public static render(block: Block, dotsWrapper: d3.Selection<d3.EnterElement, DataRow, SVGGElement, unknown>, attrs: DotAttrs, keyFieldName: string, cssClasses: string[], dotClass: string): void {
+    public static render(block: Block, dotsWrapper: Selection<EnterElement, DataRow, SVGGElement, unknown>, attrs: DotAttrs, keyFieldName: string, cssClasses: string[], dotClass: string): void {
         const dotsHover = dotsWrapper.append('circle')
             .attr('cx', d => attrs.cx(d))
             .attr('cy', d => attrs.cy(d))
@@ -24,10 +24,10 @@ export class DotArea
         Helper.setCssClasses(dotsHover, cssClasses);
     }
 
-    private static setDotsAreasListeners(block: Block, dotsHover: d3.Selection<SVGCircleElement, DataRow, SVGGElement, unknown>, keyFieldName: string, dotClass: string): void {
+    private static setDotsAreasListeners(block: Block, dotsHover: Selection<SVGCircleElement, DataRow, SVGGElement, unknown>, keyFieldName: string, dotClass: string): void {
         const thisClass = this;
         let eventIsActive = false;
-        let activeDot: d3.Selection<SVGCircleElement, DataRow, SVGGElement, unknown>;
+        let activeDot: Selection<SVGCircleElement, DataRow, SVGGElement, unknown>;
 
         dotsHover.each(function(dataRow) {
             select(this).on('mousemove', function(event) {

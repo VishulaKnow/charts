@@ -1,9 +1,10 @@
-import { scaleBand, scaleLinear, scalePoint, scaleTime } from 'd3-scale'
+import { scaleBand, scaleLinear, scalePoint, scaleTime, ScaleBand, ScalePoint, ScaleLinear, ScaleTime } from 'd3-scale';
+import { AxisScale } from 'd3-axis'
 import { BarChartSettings, RangeModel, ScaleKeyModel, ScaleValueModel } from '../../../model/model';
 
 export interface Scales {
-    scaleKey: d3.AxisScale<any>;
-    scaleValue: d3.AxisScale<any>;
+    scaleKey: AxisScale<any>;
+    scaleValue: AxisScale<any>;
 }
 
 export class Scale 
@@ -27,28 +28,28 @@ export class Scale
         return scales;
     }
 
-    public static getScaleWidth(scale: d3.AxisScale<any>): number {
-        if((scale as d3.ScaleBand<string>).bandwidth && scale.bandwidth() !== 0) {
+    public static getScaleWidth(scale: AxisScale<any>): number {
+        if((scale as ScaleBand<string>).bandwidth && scale.bandwidth() !== 0) {
             return scale.bandwidth();
-        } else if((scale as d3.ScalePoint<string>).step) {
-            return (scale as d3.ScalePoint<string>).step();
+        } else if((scale as ScalePoint<string>).step) {
+            return (scale as ScalePoint<string>).step();
         }
     }
 
-    public static getScaleStep(scale: d3.AxisScale<any>): number {
-        if((scale as d3.ScaleBand<string>).step) {
-            return (scale as d3.ScaleBand<string>).step();
+    public static getScaleStep(scale: AxisScale<any>): number {
+        if((scale as ScaleBand<string>).step) {
+            return (scale as ScaleBand<string>).step();
         }
     }
 
-    public static getScaleKeyPoint(scale: d3.AxisScale<any>, value: any): number {
-        if((scale as d3.ScaleBand<string>).bandwidth && (scale as d3.ScaleBand<string>).bandwidth() !== 0) {
+    public static getScaleKeyPoint(scale: AxisScale<any>, value: any): number {
+        if((scale as ScaleBand<string>).bandwidth && (scale as ScaleBand<string>).bandwidth() !== 0) {
             return scale(value) + this.getScaleWidth(scale) / 2;
         }
         return scale(value);
     }
 
-    private static getScaleBand(domain: string[], range: RangeModel, bandSettings: BarChartSettings, elementsInGroupAmount: number): d3.ScaleBand<string> {
+    private static getScaleBand(domain: string[], range: RangeModel, bandSettings: BarChartSettings, elementsInGroupAmount: number): ScaleBand<string> {
         const scale = scaleBand()
             .domain(domain)
             .range([range.start, range.end]);
@@ -75,19 +76,19 @@ export class Scale
         return scale;
     }
     
-    private static getScaleLinear(domain: number[], range: RangeModel): d3.ScaleLinear<number, number> {
+    private static getScaleLinear(domain: number[], range: RangeModel): ScaleLinear<number, number> {
         return scaleLinear()
             .domain(domain)
             .range([range.start, range.end]);
     }
 
-    private static getScalePoint(domain: string[], range: RangeModel): d3.ScalePoint<string> {
+    private static getScalePoint(domain: string[], range: RangeModel): ScalePoint<string> {
         return scalePoint()
             .domain(domain)
             .range([range.start, range.end]);
     }
 
-    private static getScaleTime(domain: any, range: RangeModel): d3.ScaleTime<number, number, never> {
+    private static getScaleTime(domain: any, range: RangeModel): ScaleTime<number, number, never> {
         return scaleTime()
             .domain(domain)
             .range([range.start, range.end])

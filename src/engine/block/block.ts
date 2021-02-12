@@ -1,4 +1,4 @@
-import * as d3 from "d3-selection";
+import { select, Selection, BaseType } from "d3-selection";
 import { BlockMargin, Size } from "../../model/model";
 import { Helper } from "../helper";
 import { BlockHelper } from "./blockHelper";
@@ -7,8 +7,8 @@ export class Block
 {
     private svgCssClasses: string[];
     private wrapperCssClasses: string[];
-    private parentElementSelection: d3.Selection<d3.BaseType, any, HTMLElement, any>;
-    private wrapper: d3.Selection<d3.BaseType, any, HTMLElement, any>;
+    private parentElementSelection: Selection<BaseType, any, HTMLElement, any>;
+    private wrapper: Selection<BaseType, any, HTMLElement, any>;
     private chartBlockClass = 'chart-block';
 
     public parentElement: HTMLElement;
@@ -18,7 +18,7 @@ export class Block
         this.svgCssClasses = Helper.getCssClassesArray(cssClass);
         this.wrapperCssClasses = BlockHelper.getFormattedCssClassesForWrapper(this.wrapperCssClasses);
         this.parentElement = parentElement;
-        this.parentElementSelection = d3.select(parentElement);
+        this.parentElementSelection = select(parentElement);
     }
 
     public renderSvg(blockSize: Size): void {
@@ -44,15 +44,15 @@ export class Block
             .attr('class', this.chartBlockClass);
     }
 
-    public getSvg(): d3.Selection<d3.BaseType, unknown, HTMLElement, any> {
+    public getSvg(): Selection<BaseType, unknown, HTMLElement, any> {
         return this.getWrapper().select('svg');
     }
 
-    public getWrapper(): d3.Selection<d3.BaseType, unknown, HTMLElement, any> {
+    public getWrapper(): Selection<BaseType, unknown, HTMLElement, any> {
         return this.wrapper;
     }
 
-    public getChartBlock(): d3.Selection<SVGGElement, unknown, HTMLElement, any> {
+    public getChartBlock(): Selection<SVGGElement, unknown, HTMLElement, any> {
         return this.getSvg()
             .select(`.${this.chartBlockClass}`);
     } 

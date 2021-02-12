@@ -1,4 +1,6 @@
 import { Color } from "d3-color";
+import { select, Selection, BaseType } from 'd3-selection';
+import { transition } from 'd3-transition';
 import { BlockMargin, DataRow, Orient, Size } from "../../../model/model";
 import { Block } from "../../block/block";
 import { Helper } from "../../helper";
@@ -8,6 +10,8 @@ export interface DotAttrs {
     cx: (data: DataRow) => number;
     cy: (data: DataRow) => number; 
 }
+
+select.prototype.transition = transition;
 
 export class Dot
 {
@@ -46,7 +50,7 @@ export class Dot
         Helper.setChartElementColor(dots, colorPalette, itemIndex, 'fill');
     }
 
-    public static getAllDots(block: Block, chartCssClasses: string[]): d3.Selection<d3.BaseType, DataRow, d3.BaseType, unknown> {
+    public static getAllDots(block: Block, chartCssClasses: string[]): Selection<BaseType, DataRow, BaseType, unknown> {
         return block.getSvg()
             .selectAll(`.${this.dotClass}${Helper.getCssClassesLine(chartCssClasses)}`);
     }

@@ -1,11 +1,13 @@
+import { Color } from "d3-color";
 import { stack } from 'd3-shape';
-import { select } from 'd3-selection';
+import { select, Selection, BaseType } from 'd3-selection';
+import { AxisScale } from 'd3-axis'
+import { transition } from "d3-transition";
 import { BarChartSettings, BlockMargin, DataRow, Orient, Size, TwoDimensionalChartModel } from "../../../model/model";
 import { ValueFormatter } from "../../valueFormatter";
 import { Helper } from "../../helper";
 import { Scale, Scales } from "../../features/scale/scale";
 import { Block } from "../../block/block";
-import { Color } from "d3";
 import { EmbeddedLabels } from "../../features/embeddedLabels/embeddedLabels";
 import { EmbeddedLabelsHelper } from "../../features/embeddedLabels/embeddedLabelsHelper";
 
@@ -15,6 +17,8 @@ interface BarAttrs {
     width: (dataRow: DataRow) => number;
     height: (dataRow: DataRow) => number;
 }
+
+select.prototype.transition = transition;
 
 export class Bar
 {
@@ -30,7 +34,7 @@ export class Bar
     public static updateBarChartByValueAxis(block: Block, scales: Scales, margin: BlockMargin, keyAxisOrient: string, chart: TwoDimensionalChartModel, blockSize: Size, isSegmented: boolean): void {
         if(isSegmented) {
             const bars = block.getChartBlock()
-                .selectAll(`.${this.barItemClass}${Helper.getCssClassesLine(chart.cssClasses)}`) as d3.Selection<SVGRectElement, DataRow, d3.BaseType, unknown>;
+                .selectAll(`.${this.barItemClass}${Helper.getCssClassesLine(chart.cssClasses)}`) as Selection<SVGRectElement, DataRow, BaseType, unknown>;
 
             this.fillStackedBarAttrsByKeyOrientWithTransition(bars,
                 keyAxisOrient,
@@ -41,7 +45,7 @@ export class Bar
         } else {
             chart.data.valueFields.forEach((field, index) => {
                 const bars = block.getChartBlock()
-                    .selectAll(`.${this.barItemClass}${Helper.getCssClassesLine(chart.cssClasses)}.chart-element-${index}`) as d3.Selection<SVGRectElement, DataRow, d3.BaseType, unknown>;
+                    .selectAll(`.${this.barItemClass}${Helper.getCssClassesLine(chart.cssClasses)}.chart-element-${index}`) as Selection<SVGRectElement, DataRow, BaseType, unknown>;
         
                 this.fillBarAttrsByKeyOrientWithTransition(bars,
                     keyAxisOrient,
@@ -54,7 +58,7 @@ export class Bar
         }
     }
 
-    public static getAllBarItems(block: Block): d3.Selection<d3.BaseType, DataRow, d3.BaseType, unknown> {
+    public static getAllBarItems(block: Block): Selection<BaseType, DataRow, BaseType, unknown> {
         return block.getSvg().selectAll(`rect.${this.barItemClass}`);
     }
 
@@ -219,14 +223,14 @@ export class Bar
         return attrs;
     }
 
-    private static fillBarAttrsByKeyOrient(bars: d3.Selection<SVGRectElement, DataRow, d3.BaseType, unknown>, barAttrs: BarAttrs): void {
+    private static fillBarAttrsByKeyOrient(bars: Selection<SVGRectElement, DataRow, BaseType, unknown>, barAttrs: BarAttrs): void {
         bars.attr('x', d => barAttrs.x(d))
             .attr('y', d => barAttrs.y(d))
             .attr('height', d => barAttrs.height(d))
             .attr('width', d => barAttrs.width(d));   
     }
     
-    private static fillBarAttrsByKeyOrientWithTransition(bars: d3.Selection<SVGRectElement, DataRow, d3.BaseType, unknown>, axisOrient: string, scaleValue: d3.AxisScale<any>, margin: BlockMargin, valueField: string, blockSize: Size, transitionDuration: number): void {
+    private static fillBarAttrsByKeyOrientWithTransition(bars: Selection<SVGRectElement, DataRow, BaseType, unknown>, axisOrient: string, scaleValue: AxisScale<any>, margin: BlockMargin, valueField: string, blockSize: Size, transitionDuration: number): void {
         const barsTran = bars.transition().duration(transitionDuration);
         
         if(axisOrient === 'top')
@@ -247,7 +251,7 @@ export class Bar
                 .attr('width', d => ValueFormatter.getValueOrZero(blockSize.width - margin.left - margin.right - scaleValue(d[valueField]))); 
     }
 
-    private static fillStackedBarAttrsByKeyOrientWithTransition(bars: d3.Selection<SVGRectElement, DataRow, d3.BaseType, unknown>, axisOrient: string, scaleValue: d3.AxisScale<any>, margin: BlockMargin, blockSize: Size, transitionDuration: number): void {
+    private static fillStackedBarAttrsByKeyOrientWithTransition(bars: Selection<SVGRectElement, DataRow, BaseType, unknown>, axisOrient: string, scaleValue: AxisScale<any>, margin: BlockMargin, blockSize: Size, transitionDuration: number): void {
         const barsTran = bars.transition().duration(transitionDuration);
         
         if(axisOrient === 'bottom') {
@@ -272,7 +276,7 @@ export class Bar
         }
     } 
 
-    private static setSegmentColor(segments: d3.Selection<SVGGElement, unknown, SVGGElement, unknown>, colorPalette: Color[]): void {
+    private static setSegmentColor(segments: Selection<SVGGElement, unknown, SVGGElement, unknown>, colorPalette: Color[]): void {
         segments.style('fill', (d, i) => colorPalette[i % colorPalette.length].toString());
     }
 }

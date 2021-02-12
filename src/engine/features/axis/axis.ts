@@ -1,12 +1,16 @@
-import { select } from 'd3-selection';
+import { select, Selection, BaseType } from 'd3-selection';
 import { min, max } from 'd3-array';
 import { format } from 'd3-format';
-import { axisTop, axisBottom, axisLeft, axisRight } from 'd3-axis';
+import { axisTop, axisBottom, axisLeft, axisRight, AxisScale, Axis as IAxis } from 'd3-axis';
+import { ScaleBand } from 'd3-scale'
+import { transition } from 'd3-transition';
 import { AxisModelOptions, BlockMargin, IAxisModel, IScaleModel, Orient, ScaleKeyModel, ScaleValueModel, Size } from "../../../model/model";
 import { Helper } from "../../helper";
 import { Block } from "../../block/block";
 import { Scale, Scales } from "../scale/scale";
 import { AXIS_HORIZONTAL_LABEL_PADDING, AXIS_VERTICAL_LABEL_PADDING } from "../../../model/marginModel";
+
+select.prototype.transition = transition;
 
 type TextAnchor = 'start' | 'end' | 'middle';
 
@@ -19,7 +23,7 @@ export class Axis
         this.renderAxis(block, scales.scaleKey, scaleModel.scaleKey, axisModel.keyAxis, margin, blockSize);
     }
 
-    public static updateValueAxisDomain(block: Block, scaleValue: d3.AxisScale<any>, scaleOptions: ScaleValueModel, axisOptions: AxisModelOptions): void {
+    public static updateValueAxisDomain(block: Block, scaleValue: AxisScale<any>, scaleOptions: ScaleValueModel, axisOptions: AxisModelOptions): void {
         const axis = this.getAxisByOrient(axisOptions.orient, scaleValue);
 
         this.setAxisFormat(scaleValue, scaleOptions, axis);
@@ -35,7 +39,7 @@ export class Axis
                 .call(axis.bind(this));
     }
 
-    private static renderAxis(block: Block, scale: d3.AxisScale<any>, scaleOptions: ScaleKeyModel | ScaleValueModel, axisOptions: AxisModelOptions, margin: BlockMargin, blockSize: Size): void {
+    private static renderAxis(block: Block, scale: AxisScale<any>, scaleOptions: ScaleKeyModel | ScaleValueModel, axisOptions: AxisModelOptions, margin: BlockMargin, blockSize: Size): void {
         const axis = this.getAxisByOrient(axisOptions.orient, scale);
 
         this.setAxisFormat(scale, scaleOptions, axis);
@@ -59,7 +63,7 @@ export class Axis
                 this.rotateLabels(axisElement);
                 
             if(axisOptions.orient === 'left' && axisOptions.type === 'key' && Scale.getScaleStep(scale) >= 38) {
-                (axisElement.selectAll('.tick text') as d3.Selection<SVGGElement, unknown, d3.BaseType, any>).call(this.wrap, axisOptions.labels.maxSize);
+                (axisElement.selectAll('.tick text') as Selection<SVGGElement, unknown, BaseType, any>).call(this.wrap, axisOptions.labels.maxSize);
             } else {
                 this.cropLabels(block, scale, scaleOptions, axisOptions, blockSize);
             }
@@ -72,7 +76,7 @@ export class Axis
         }
     }
 
-    private static setStepSize(blockSize: Size, margin: BlockMargin, axis: d3.Axis<any>, axisOptions: AxisModelOptions, scale: ScaleKeyModel | ScaleValueModel): void {
+    private static setStepSize(blockSize: Size, margin: BlockMargin, axis: IAxis<any>, axisOptions: AxisModelOptions, scale: ScaleKeyModel | ScaleValueModel): void {
         let axisLength = blockSize.width - margin.left - margin.right;
         if(axisOptions.orient === 'left' || axisOptions.orient === 'right') {
             axisLength = blockSize.height - margin.top - margin.bottom;
@@ -86,7 +90,7 @@ export class Axis
         }
     }
 
-    private static alignLabels(axisElement: d3.Selection<SVGGElement, unknown, HTMLElement, any>, anchor: TextAnchor, maxLabelSize: number): void {
+    private static alignLabels(axisElement: Selection<SVGGElement, unknown, HTMLElement, any>, anchor: TextAnchor, maxLabelSize: number): void {
         const axisTextBlocks = axisElement.selectAll('text');
         axisTextBlocks.attr('text-anchor', anchor);
         axisTextBlocks.attr('x', -(maxLabelSize + AXIS_VERTICAL_LABEL_PADDING));
@@ -96,14 +100,14 @@ export class Axis
         spans.attr('x', -(maxLabelSize + AXIS_VERTICAL_LABEL_PADDING));
     }
 
-    private static setAxisLabelPaddingByOrient(axis: d3.Axis<any>, axisOptions: AxisModelOptions): void {
+    private static setAxisLabelPaddingByOrient(axis: IAxis<any>, axisOptions: AxisModelOptions): void {
         let axisLabelPadding = AXIS_HORIZONTAL_LABEL_PADDING;
         if(axisOptions.orient === 'left' || axisOptions.orient === 'right')
             axisLabelPadding = AXIS_VERTICAL_LABEL_PADDING;
         axis.tickPadding(axisLabelPadding);
     }
 
-    private static rotateLabels(axisElement: d3.Selection<SVGGElement, unknown, HTMLElement, any>): void {
+    private static rotateLabels(axisElement: Selection<SVGGElement, unknown, HTMLElement, any>): void {
         const labelBlocks = axisElement.selectAll('text');
 
         labelBlocks.attr('text-anchor', 'end');
@@ -113,11 +117,11 @@ export class Axis
             .attr('transform', 'rotate(-90)');
     }
 
-    private static removeTicks(axis: d3.Axis<any>): void {
+    private static removeTicks(axis: IAxis<any>): void {
         axis.tickSize(0);
     }
 
-    private static getAxisByOrient(orient: Orient, scale: d3.AxisScale<any>): d3.Axis<any> {
+    private static getAxisByOrient(orient: Orient, scale: AxisScale<any>): IAxis<any> {
         if(orient === 'top')
             return axisTop(scale);
         if(orient === 'bottom')
@@ -128,7 +132,7 @@ export class Axis
             return axisRight(scale);
     }
 
-    private static setAxisFormat(scale: d3.AxisScale<any>, scaleOptions: ScaleValueModel | ScaleKeyModel, axis: d3.Axis<any>): void {
+    private static setAxisFormat(scale: AxisScale<any>, scaleOptions: ScaleValueModel | ScaleKeyModel, axis: IAxis<any>): void {
         if(scaleOptions.type === 'linear') {
             if(max(scale.domain()) > 1000) {
                 axis.tickFormat(format('.2s')); // examples: 1.2K, 350, 0 
@@ -136,14 +140,14 @@ export class Axis
         }
     }
 
-    private static cropLabels(block: Block, scale: d3.AxisScale<any>, scaleOptions: ScaleKeyModel | ScaleValueModel, axisOptions: AxisModelOptions, blockSize: Size): void {
+    private static cropLabels(block: Block, scale: AxisScale<any>, scaleOptions: ScaleKeyModel | ScaleValueModel, axisOptions: AxisModelOptions, blockSize: Size): void {
         if(scaleOptions.type === 'point' || scaleOptions.type === 'band') {
-            const axisTextBlocks = block.getSvg().select(`.${axisOptions.cssClass}`).selectAll('text') as d3.Selection<SVGGraphicsElement, unknown, HTMLElement, unknown>;
+            const axisTextBlocks = block.getSvg().select(`.${axisOptions.cssClass}`).selectAll('text') as Selection<SVGGraphicsElement, unknown, HTMLElement, unknown>;
             let labelSize: number;
             if((axisOptions.orient === 'left' || axisOptions.orient === 'right') || (axisOptions.type === 'key' && axisOptions.labels.positition === 'rotated'))
                 labelSize = axisOptions.labels.maxSize;
             else
-                labelSize = (scale as d3.ScaleBand<string>).step();
+                labelSize = (scale as ScaleBand<string>).step();
 
             Helper.cropLabels(axisTextBlocks, labelSize);
             
@@ -154,8 +158,8 @@ export class Axis
     }
 
     private static cropAndAlignExtremeLabels(block: Block, labelSize: number, axisOptions: AxisModelOptions, blockSize: Size): void {
-        const lastTick = block.getSvg().select(`.${axisOptions.cssClass}`).select('.tick:last-of-type') as d3.Selection<SVGGraphicsElement, unknown, HTMLElement, unknown>;
-        const lastLabel = lastTick.select('text') as d3.Selection<SVGGraphicsElement, unknown, HTMLElement, unknown>;
+        const lastTick = block.getSvg().select(`.${axisOptions.cssClass}`).select('.tick:last-of-type') as Selection<SVGGraphicsElement, unknown, HTMLElement, unknown>;
+        const lastLabel = lastTick.select('text') as Selection<SVGGraphicsElement, unknown, HTMLElement, unknown>;
         const translateX = Helper.getTranslateNumbers(lastTick.attr('transform'))[0];
         
         if(translateX + lastLabel.node().getBBox().width + axisOptions.translate.translateX > blockSize.width) {
@@ -166,7 +170,7 @@ export class Axis
         const firtsLabel = block.getSvg()
             .select(`.${axisOptions.cssClass}`)
             .select('.tick:first-of-type')
-            .select('text') as d3.Selection<SVGGraphicsElement, unknown, HTMLElement, unknown>;
+            .select('text') as Selection<SVGGraphicsElement, unknown, HTMLElement, unknown>;
 
         if(axisOptions.translate.translateX - firtsLabel.node().getBBox().width < 0) {
             firtsLabel.attr('text-anchor', 'start');
@@ -174,12 +178,12 @@ export class Axis
         }
     }
 
-    private static hideLabels(axisElement: d3.Selection<SVGGElement, unknown, d3.BaseType, unknown>): void {
+    private static hideLabels(axisElement: Selection<SVGGElement, unknown, BaseType, unknown>): void {
         axisElement.selectAll('.tick text')
             .style('display', 'none');
     }
 
-    private static wrap(text: d3.Selection<SVGGElement, unknown, d3.BaseType, any>, maxWidth: number) {
+    private static wrap(text: Selection<SVGGElement, unknown, BaseType, any>, maxWidth: number) {
         text.each(function() {
             let textBlock = select(this);
             if(textBlock.node().getBBox().width > maxWidth) {

@@ -1,3 +1,4 @@
+import { Selection, BaseType } from 'd3-selection'
 import { BarChartSettings, BlockMargin, DataRow, IntervalChartModel, Orient } from "../../model/model";
 import { Block } from "../block/block";
 import { Helper } from "../helper";
@@ -37,7 +38,7 @@ export class Gantt
         Helper.setChartStyle(ganttItems, chart.style, 0, 'fill');
     }
 
-    private static fillItemsAttrs(ganttItems: d3.Selection<SVGRectElement, DataRow, d3.BaseType, unknown>, attrs: GanttItemsAttrs): void {
+    private static fillItemsAttrs(ganttItems: Selection<SVGRectElement, DataRow, BaseType, unknown>, attrs: GanttItemsAttrs): void {
         ganttItems
             .attr('x', d => attrs.x(d))
             .attr('y', d => attrs.y(d))

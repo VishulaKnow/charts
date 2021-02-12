@@ -1,4 +1,4 @@
-import { Color } from "d3";
+import { Color } from "d3-color";
 import { ChartStyleModel } from "../../model/chartStyleModel";
 
 const colorsJson = require('../../assets/materialColors.json').colors;

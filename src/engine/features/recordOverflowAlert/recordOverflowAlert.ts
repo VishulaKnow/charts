@@ -1,3 +1,4 @@
+import { Selection } from 'd3-selection'
 import { ChartOrientation } from "../../../config/config";
 import { Block } from "../../block/block";
 import { Helper } from "../../helper";
@@ -23,7 +24,7 @@ export class RecordOverflowAlert
         this.setAlertPosition(alertBlock, attrs);
     }
 
-    private static setAlertPosition(alertBlock: d3.Selection<HTMLDivElement, unknown, HTMLElement, any>, attrs: AlertBlockPositionAttrs): void {
+    private static setAlertPosition(alertBlock: Selection<HTMLDivElement, unknown, HTMLElement, any>, attrs: AlertBlockPositionAttrs): void {
         alertBlock
             .style('position', 'absolute')
             .style('left', attrs.left)

@@ -1,4 +1,5 @@
 import { Color } from "d3-color";
+import { Selection, BaseType } from 'd3-selection'
 import { ChartNotation, LegendPosition } from "../../../config/config";
 import { LegendItemsDirection } from "../../../model/legendModel/legendCanvasModel";
 import { DataRow, DataSource, IntervalOptionsModel, LegendBlockModel, Orient, PolarOptionsModel, Size, TwoDimensionalOptionsModel } from "../../../model/model";
@@ -104,7 +105,7 @@ export class Legend
         return coordinate;
     }
     
-    private static fillLegendCoordinate(legendBlock: d3.Selection<SVGForeignObjectElement, unknown, HTMLElement, any>, coordinate: LegendCoordinate): void {
+    private static fillLegendCoordinate(legendBlock: Selection<SVGForeignObjectElement, unknown, HTMLElement, any>, coordinate: LegendCoordinate): void {
         legendBlock
             .attr('x', coordinate.x)
             .attr('y', coordinate.y)
@@ -112,7 +113,7 @@ export class Legend
             .attr('height', coordinate.height);
     }
     
-    private static renderLegendContent(legendBlock: d3.Selection<SVGForeignObjectElement, unknown, HTMLElement, any>, items: string[], colorPalette: Color[], itemsDirection: LegendItemsDirection, position: LegendPosition): void {
+    private static renderLegendContent(legendBlock: Selection<SVGForeignObjectElement, unknown, HTMLElement, any>, items: string[], colorPalette: Color[], itemsDirection: LegendItemsDirection, position: LegendPosition): void {
         const wrapper = legendBlock.append('xhtml:div')
             .attr('class', 'legend-block');
 
@@ -148,7 +149,7 @@ export class Legend
             this.cropRowLabels(legendBlock, itemWrappers);
     }
 
-    private static cropRowLabels(legendBlock: d3.Selection<SVGForeignObjectElement, unknown, HTMLElement, any>, items: d3.Selection<HTMLDivElement, string, d3.BaseType, unknown>): void {
+    private static cropRowLabels(legendBlock: Selection<SVGForeignObjectElement, unknown, HTMLElement, any>, items: Selection<HTMLDivElement, string, BaseType, unknown>): void {
         const maxWidth = legendBlock.node().getBoundingClientRect().width;
         let sumOfItemsWidth = this.getSumOfItemsWidths(items);
         const maxItemWidth = this.getMaxItemWidth(legendBlock, items, 'row');
@@ -177,7 +178,7 @@ export class Legend
         }
     }
 
-    private static cropColumnLabels(legendBlock: d3.Selection<SVGForeignObjectElement, unknown, HTMLElement, any>, items: d3.Selection<HTMLDivElement, string, d3.BaseType, unknown>, itemsDirection: LegendItemsDirection): void {
+    private static cropColumnLabels(legendBlock: Selection<SVGForeignObjectElement, unknown, HTMLElement, any>, items: Selection<HTMLDivElement, string, BaseType, unknown>, itemsDirection: LegendItemsDirection): void {
         const maxItemWidth = this.getMaxItemWidth(legendBlock, items, itemsDirection);
 
         items.nodes().forEach(node => {
@@ -192,7 +193,7 @@ export class Legend
         });
     }
 
-    private static getMaxItemWidth(legendBlock: d3.Selection<SVGForeignObjectElement, unknown, HTMLElement, any>, items: d3.Selection<HTMLDivElement, string, d3.BaseType, unknown>, itemsDirection: LegendItemsDirection): number {
+    private static getMaxItemWidth(legendBlock: Selection<SVGForeignObjectElement, unknown, HTMLElement, any>, items: Selection<HTMLDivElement, string, BaseType, unknown>, itemsDirection: LegendItemsDirection): number {
         if(itemsDirection === 'row') {
             const margins = items.nodes().map(node => Helper.getPXValueFromString(Helper.getCssPropertyValue(node, 'margin-left')));
             const sumOfMargins = Helper.getSumOfNumbers(margins);
@@ -229,7 +230,7 @@ export class Legend
             return chartNotation === 'polar' ? 'column' : 'row';
     }
 
-    private static getSumOfItemsWidths(items: d3.Selection<HTMLDivElement, string, d3.BaseType, unknown>): number {
+    private static getSumOfItemsWidths(items: Selection<HTMLDivElement, string, BaseType, unknown>): number {
         let sumOfItemsWidth = Helper.getSumOfNumbers(items.nodes().map(node => node.getBoundingClientRect().width));
         sumOfItemsWidth += Helper.getSumOfNumbers(items.nodes().map(node => Helper.getPXValueFromString(Helper.getCssPropertyValue(node, 'margin-left'))));
         return sumOfItemsWidth;

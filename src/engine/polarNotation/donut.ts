@@ -1,5 +1,6 @@
-import { arc, pie } from 'd3-shape'
+import { arc, pie, PieArcDatum, Pie, Arc } from 'd3-shape'
 import { Color } from "d3-color";
+import { Selection, BaseType } from 'd3-selection'
 import { BlockMargin, DataRow, DonutChartSettings, PolarChartModel, Size } from "../../model/model";
 import { Helper } from "../helper";
 import { Block } from "../block/block";
@@ -49,9 +50,9 @@ export class Donut
         Aggregator.render(block, data, chart.data.valueField.name, innerRadius, translate, thickness);      
     }
     
-    public static getAllArcs(block: Block): d3.Selection<SVGGElement, d3.PieArcDatum<DataRow>, SVGGElement, unknown> {
+    public static getAllArcs(block: Block): Selection<SVGGElement, PieArcDatum<DataRow>, SVGGElement, unknown> {
         return block.getSvg()
-            .selectAll(`.${this.arcItemClass}`) as d3.Selection<SVGGElement, d3.PieArcDatum<DataRow>, SVGGElement, unknown>;
+            .selectAll(`.${this.arcItemClass}`) as Selection<SVGGElement, PieArcDatum<DataRow>, SVGGElement, unknown>;
     }
 
     public static getThickness(donutSettings: DonutChartSettings, blockSize: Size, margin: BlockMargin): number {
@@ -60,7 +61,7 @@ export class Donut
         return donutSettings.minThickness;
     }
 
-    public static getArcCentroid(blockSize: Size, margin: BlockMargin, dataItem: d3.PieArcDatum<DataRow>, donutThickness: number): [number, number] {
+    public static getArcCentroid(blockSize: Size, margin: BlockMargin, dataItem: PieArcDatum<DataRow>, donutThickness: number): [number, number] {
         const outerRadius = this.getOuterRadius(margin, blockSize);
         const arc = this.getArcGenerator(outerRadius, outerRadius - donutThickness);
 
@@ -83,20 +84,20 @@ export class Donut
             blockSize.height - margin.top - margin.bottom) / 2;
     }
     
-    private static getArcGenerator(outerRadius: number, innerRadius: number): d3.Arc<any, d3.PieArcDatum<DataRow>> {
-        return arc<d3.PieArcDatum<DataRow>>()
+    private static getArcGenerator(outerRadius: number, innerRadius: number): Arc<any, PieArcDatum<DataRow>> {
+        return arc<PieArcDatum<DataRow>>()
             .innerRadius(innerRadius)
             .outerRadius(outerRadius);
     }
     
-    private static getPieGenerator(valueField: string, padAngle: number): d3.Pie<any, DataRow> {
+    private static getPieGenerator(valueField: string, padAngle: number): Pie<any, DataRow> {
         return pie<DataRow>()
             .padAngle(padAngle)
             .sort(null)
             .value(d => d[valueField]);
     }
 
-    private static setElementsColor(arcItems: d3.Selection<SVGGElement, unknown, d3.BaseType, unknown>, colorPalette: Color[]): void {
+    private static setElementsColor(arcItems: Selection<SVGGElement, unknown, BaseType, unknown>, colorPalette: Color[]): void {
         arcItems
             .select('path')
             .style('fill', (d, i) => colorPalette[i % colorPalette.length].toString());

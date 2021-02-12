@@ -1,4 +1,4 @@
-import { select } from 'd3-selection'
+import { select, Selection, BaseType } from 'd3-selection'
 import { ChartOrientation } from "../../../config/config";
 import { BlockMargin, DataRow, DataSource, Field, IntervalChartModel, PolarChartModel, Size, TwoDimensionalChartModel } from "../../../model/model";
 import { Block } from "../../block/block";
@@ -47,24 +47,24 @@ const TOOLTIP_ARROW_PADDING_Y = 13;
 
 export class TooltipHelper
 { 
-    public static fillMultyFor2DChart(tooltipContentBlock: d3.Selection<d3.BaseType, unknown, d3.BaseType, unknown>, chart: TwoDimensionalChartModel, data: DataSource, keyValue: string): void {
+    public static fillMultyFor2DChart(tooltipContentBlock: Selection<BaseType, unknown, BaseType, unknown>, chart: TwoDimensionalChartModel, data: DataSource, keyValue: string): void {
         tooltipContentBlock.html('');
         chart.data.valueFields.forEach((field, index) => {
             this.fillTooltipContent(tooltipContentBlock, chart, data, keyValue, field, chart.style.elementColors[index % chart.style.elementColors.length].toString());
         });
     }
 
-    public static fillTooltipFor2DChart(tooltipContentBlock: d3.Selection<d3.BaseType, unknown, d3.BaseType, unknown>, chart: TwoDimensionalChartModel, data: DataSource, keyValue: string, index: number): void {
+    public static fillTooltipFor2DChart(tooltipContentBlock: Selection<BaseType, unknown, BaseType, unknown>, chart: TwoDimensionalChartModel, data: DataSource, keyValue: string, index: number): void {
         tooltipContentBlock.html('');
         this.fillTooltipContent(tooltipContentBlock, chart, data, keyValue, chart.data.valueFields[index], chart.style.elementColors[index % chart.style.elementColors.length].toString());
     }
 
-    public static fillTooltipForPolarChart(tooltipContentBlock: d3.Selection<d3.BaseType, unknown, d3.BaseType, unknown>, chart: PolarChartModel, data: DataSource, keyValue: string, markColor: string): void {
+    public static fillTooltipForPolarChart(tooltipContentBlock: Selection<BaseType, unknown, BaseType, unknown>, chart: PolarChartModel, data: DataSource, keyValue: string, markColor: string): void {
         tooltipContentBlock.html('');
         this.fillTooltipContent(tooltipContentBlock, chart, data, keyValue, chart.data.valueField, markColor);
     }
 
-    public static fillTooltipForIntervalChart(tooltipContentBlock: d3.Selection<d3.BaseType, unknown, d3.BaseType, unknown>, chart: IntervalChartModel, data: DataSource, keyValue: string, markColor: string): void {
+    public static fillTooltipForIntervalChart(tooltipContentBlock: Selection<BaseType, unknown, BaseType, unknown>, chart: IntervalChartModel, data: DataSource, keyValue: string, markColor: string): void {
         tooltipContentBlock.html('');
         this.fillTooltipContent(tooltipContentBlock, chart, data, keyValue, chart.data.valueField1, markColor);
     }
@@ -83,18 +83,18 @@ export class TooltipHelper
         return coordinate;
     }
 
-    public static getTooltipBlockCoordinateByRect(element: d3.Selection<d3.BaseType, DataRow, HTMLElement, any>, tooltipBlock: d3.Selection<d3.BaseType, unknown, HTMLElement, any>, blockSize: Size, tooltipArrow: d3.Selection<d3.BaseType, unknown, HTMLElement, any>, chartOrientation: ChartOrientation): [number, number] {
+    public static getTooltipBlockCoordinateByRect(element: Selection<BaseType, DataRow, HTMLElement, any>, tooltipBlock: Selection<BaseType, unknown, HTMLElement, any>, blockSize: Size, tooltipArrow: Selection<BaseType, unknown, HTMLElement, any>, chartOrientation: ChartOrientation): [number, number] {
         const blockPositionRatio = chartOrientation === 'vertical' ? 2 : 1; // If chart has horizontal orientation, block takes coordinte of end of bar, if chart vertical, block takes center of bar.
         const coordinateTuple: [number, number] = [parseFloat(element.attr('x')) + parseFloat(element.attr('width')) / blockPositionRatio, parseFloat(element.attr('y'))];
         return this.getRecalcedCoordinateByArrow(coordinateTuple, tooltipBlock, blockSize, tooltipArrow);
     }
 
-    public static getTooltipBlockCoordinateByDot(element: d3.Selection<d3.BaseType, DataRow, HTMLElement, any>, tooltipBlock: d3.Selection<d3.BaseType, unknown, HTMLElement, any>, blockSize: Size, tooltipArrow: d3.Selection<d3.BaseType, unknown, HTMLElement, any>): [number, number] {
+    public static getTooltipBlockCoordinateByDot(element: Selection<BaseType, DataRow, HTMLElement, any>, tooltipBlock: Selection<BaseType, unknown, HTMLElement, any>, blockSize: Size, tooltipArrow: Selection<BaseType, unknown, HTMLElement, any>): [number, number] {
         const coordinateTuple: [number, number] = [parseFloat(element.attr('cx')), parseFloat(element.attr('cy'))];
         return this.getRecalcedCoordinateByArrow(coordinateTuple, tooltipBlock, blockSize, tooltipArrow);
     }
 
-    public static getRecalcedCoordinateByArrow(coordinate: [number, number], tooltipBlock: d3.Selection<d3.BaseType, unknown, HTMLElement, any>, blockSize: Size, tooltipArrow: d3.Selection<d3.BaseType, unknown, HTMLElement, any>, translateX: number = 0, translateY: number = 0): [number, number] {
+    public static getRecalcedCoordinateByArrow(coordinate: [number, number], tooltipBlock: Selection<BaseType, unknown, HTMLElement, any>, blockSize: Size, tooltipArrow: Selection<BaseType, unknown, HTMLElement, any>, translateX: number = 0, translateY: number = 0): [number, number] {
         const tooltipBlockNode = tooltipBlock.node() as HTMLElement;
         const horizontalPad = this.getHorizontalPad(coordinate[0], tooltipBlockNode, blockSize, translateX);
         const verticalPad = this.getVerticalPad(coordinate[1], tooltipBlockNode, translateY);        
@@ -105,7 +105,7 @@ export class TooltipHelper
             coordinate[1] - TOOLTIP_ARROW_PADDING_Y - tooltipBlockNode.getBoundingClientRect().height - verticalPad];
     }
 
-    public static getDotEdgingAttrs(element: d3.Selection<d3.BaseType, DataRow, HTMLElement, any>): DotEdgingAttrs {
+    public static getDotEdgingAttrs(element: Selection<BaseType, DataRow, HTMLElement, any>): DotEdgingAttrs {
         return {
             cx: parseFloat(element.attr('cx')),
             cy: parseFloat(element.attr('cy'))
@@ -116,13 +116,13 @@ export class TooltipHelper
         return isSegmented ? row.data[keyFieldName] : row[keyFieldName]; 
     }
 
-    public static getFilteredElements(elements: d3.Selection<d3.BaseType, DataRow, d3.BaseType, unknown>, keyFieldName: string, keyValue: string, isSegmented: boolean): d3.Selection<d3.BaseType, DataRow, d3.BaseType, unknown> {
+    public static getFilteredElements(elements: Selection<BaseType, DataRow, BaseType, unknown>, keyFieldName: string, keyValue: string, isSegmented: boolean): Selection<BaseType, DataRow, BaseType, unknown> {
         if(isSegmented)
             return elements.filter(d => d.data[keyFieldName] !== keyValue);
         return elements.filter(d => d[keyFieldName] !== keyValue);
     }
 
-    public static getElementIndex(elemets: d3.Selection<d3.BaseType, DataRow, d3.BaseType, unknown>, dot: d3.BaseType, keyValue: string, keyName: string, isSegmented: boolean): number {
+    public static getElementIndex(elemets: Selection<BaseType, DataRow, BaseType, unknown>, dot: BaseType, keyValue: string, keyName: string, isSegmented: boolean): number {
         let index = -1;
         const filtered = isSegmented ? elemets.filter(d => d.data[keyName] === keyValue) : elemets.filter(d => d[keyName] === keyValue);
         filtered.each(function(d, i) {
@@ -134,7 +134,7 @@ export class TooltipHelper
         return index;
     }
 
-    public static getOtherChartsElements(block: Block, chartIndex: number, chartsClasses: string[][]): d3.Selection<d3.BaseType, unknown, d3.BaseType, unknown> {
+    public static getOtherChartsElements(block: Block, chartIndex: number, chartsClasses: string[][]): Selection<BaseType, unknown, BaseType, unknown> {
         let classes = '';
         chartsClasses.forEach((cssClasses, index) => {
             if(chartIndex !== index) {
@@ -150,17 +150,17 @@ export class TooltipHelper
             .selectAll(classes);
     }
 
-    public static setElementsSemiOpacity(elements: d3.Selection<d3.BaseType, DataRow, d3.BaseType, unknown>): void {
+    public static setElementsSemiOpacity(elements: Selection<BaseType, DataRow, BaseType, unknown>): void {
         if(elements)
             elements.style('opacity', 0.3);
     }
 
-    public static setElementsFullOpacity(elements: d3.Selection<d3.BaseType, DataRow, d3.BaseType, unknown>): void {
+    public static setElementsFullOpacity(elements: Selection<BaseType, DataRow, BaseType, unknown>): void {
         if(elements)
             elements.style('opacity', 1);
     }
 
-    public static setOtherChartsElementsDefaultOpacity(elements: d3.Selection<d3.BaseType, DataRow, d3.BaseType, unknown>, chartsStyleSettings: ChartStyleSettings[]): void {
+    public static setOtherChartsElementsDefaultOpacity(elements: Selection<BaseType, DataRow, BaseType, unknown>, chartsStyleSettings: ChartStyleSettings[]): void {
         if(!elements)
             return;
             
@@ -174,7 +174,7 @@ export class TooltipHelper
         });
     }
 
-    public static getBarHighlighterAttrs(bar: d3.Selection<d3.BaseType, DataRow, HTMLElement, unknown>, chartOrientation: ChartOrientation, blockSize: Size, margin: BlockMargin): BarHighlighterAttrs {
+    public static getBarHighlighterAttrs(bar: Selection<BaseType, DataRow, HTMLElement, unknown>, chartOrientation: ChartOrientation, blockSize: Size, margin: BlockMargin): BarHighlighterAttrs {
         const pad = 3;
         if(chartOrientation === 'vertical')
             return {
@@ -198,7 +198,7 @@ export class TooltipHelper
         }
     }
 
-    private static findChartIndexOfElement(element: d3.Selection<d3.BaseType, unknown, d3.BaseType, unknown>, chartStyleSettings: ChartStyleSettings[]): number {
+    private static findChartIndexOfElement(element: Selection<BaseType, unknown, BaseType, unknown>, chartStyleSettings: ChartStyleSettings[]): number {
         let index: number = null;
         chartStyleSettings.forEach((styleSettings, i) => {
             if(element.classed(styleSettings.cssClasses.join(' '))) {
@@ -208,7 +208,7 @@ export class TooltipHelper
         return index;
     }   
 
-    private static fillTooltipContent(tooltipContentBlock: d3.Selection<d3.BaseType, unknown, d3.BaseType, unknown>, chart: TwoDimensionalChartModel | PolarChartModel | IntervalChartModel, data: DataSource, keyValue: string, valueField: Field, markColor: string): void {
+    private static fillTooltipContent(tooltipContentBlock: Selection<BaseType, unknown, BaseType, unknown>, chart: TwoDimensionalChartModel | PolarChartModel | IntervalChartModel, data: DataSource, keyValue: string, valueField: Field, markColor: string): void {
         const group = tooltipContentBlock.append('div')
             .attr('class', 'tooltip-group');
         group.append('div')
@@ -247,7 +247,7 @@ export class TooltipHelper
         return pad; // return zero or sub zero
     }
 
-    private static setTooltipArrowCoordinate(tooltipArrow: d3.Selection<d3.BaseType, unknown, HTMLElement, any>, horizontalPad: number): void {
+    private static setTooltipArrowCoordinate(tooltipArrow: Selection<BaseType, unknown, HTMLElement, any>, horizontalPad: number): void {
         if(horizontalPad !== 0)
             tooltipArrow.style('left', `${ARROW_DEFAULT_POSITION + Math.floor(horizontalPad)}px`);
         else

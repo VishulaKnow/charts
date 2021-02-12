@@ -1,4 +1,5 @@
 import { sum } from 'd3-array'
+import { Selection, BaseType } from 'd3-selection'
 import { DataRow } from "../../model/model";
 import { Block } from "../block/block";
 import { Translate } from "./donut";
@@ -39,7 +40,7 @@ export class Aggregator
         }
     }
 
-    private static renderAggregatorObject(block: Block, innerRadius: number, translate: Translate): d3.Selection<SVGForeignObjectElement, unknown, HTMLElement, any> {
+    private static renderAggregatorObject(block: Block, innerRadius: number, translate: Translate): Selection<SVGForeignObjectElement, unknown, HTMLElement, any> {
         return block.getSvg()
             .append('foreignObject')
             .attr('class', 'aggregator-object')
@@ -50,7 +51,7 @@ export class Aggregator
             .style('pointer-events', `none`);
     }
 
-    private static renderAggregatorWrapper(aggregatorObject: d3.Selection<SVGForeignObjectElement, unknown, HTMLElement, any>): d3.Selection<d3.BaseType, unknown, HTMLElement, any> {
+    private static renderAggregatorWrapper(aggregatorObject: Selection<SVGForeignObjectElement, unknown, HTMLElement, any>): Selection<BaseType, unknown, HTMLElement, any> {
         return aggregatorObject
             .append('xhtml:div')
             .style('width', '100%')

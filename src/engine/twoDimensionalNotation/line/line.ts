@@ -1,11 +1,14 @@
-import { stack, line } from 'd3-shape';
-import { select } from 'd3-selection';
+import { stack, line, Line as ILine } from 'd3-shape';
+import { select, Selection } from 'd3-selection';
 import { Color } from "d3-color";
 import { BlockMargin, DataRow, Orient, Size, TwoDimensionalChartModel } from "../../../model/model";
 import { Helper } from "../../helper";
 import { Scale, Scales } from "../../features/scale/scale";
 import { Block } from "../../block/block";
 import { Dot } from "../../features/lineDots/dot";
+import { transition } from 'd3-transition';
+
+select.prototype.transition = transition;
 
 export class Line
 {
@@ -78,7 +81,7 @@ export class Line
         });
     }
 
-    private static getLineGenerator(keyAxisOrient: Orient, scales: Scales, keyFieldName: string, valueFieldName: string, margin: BlockMargin): d3.Line<DataRow> {
+    private static getLineGenerator(keyAxisOrient: Orient, scales: Scales, keyFieldName: string, valueFieldName: string, margin: BlockMargin): ILine<DataRow> {
         if(keyAxisOrient === 'bottom' || keyAxisOrient === 'top') {
             return line<DataRow>()
                 .x(d => Scale.getScaleKeyPoint(scales.scaleKey, d[keyFieldName]) + margin.left)
@@ -92,7 +95,7 @@ export class Line
         }
     }
 
-    private static getSegmentedLineGenerator(keyAxisOrient: Orient, scales: Scales, keyFieldName: string, margin: BlockMargin): d3.Line<DataRow> {
+    private static getSegmentedLineGenerator(keyAxisOrient: Orient, scales: Scales, keyFieldName: string, margin: BlockMargin): ILine<DataRow> {
         if(keyAxisOrient === 'bottom' || keyAxisOrient === 'top') {
             return line<DataRow>()
                 .x(d => Scale.getScaleKeyPoint(scales.scaleKey, d.data[keyFieldName]) + margin.left)
@@ -106,7 +109,7 @@ export class Line
         }
     }
 
-    private static setSegmentColor(segments: d3.Selection<SVGGElement, unknown, SVGGElement, unknown>, colorPalette: Color[]): void {
+    private static setSegmentColor(segments: Selection<SVGGElement, unknown, SVGGElement, unknown>, colorPalette: Color[]): void {
         segments.style('stroke', (d, i) => colorPalette[i % colorPalette.length].toString());
     }
 }

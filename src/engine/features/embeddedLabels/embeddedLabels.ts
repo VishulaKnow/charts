@@ -1,4 +1,4 @@
-import { select } from 'd3-selection';
+import { select, Selection } from 'd3-selection';
 import { BlockMargin, DataRow, EmbeddedLabelTypeModel, Field, Orient, Size } from "../../../model/model";
 import { Block } from "../../block/block";
 import { Helper } from "../../helper";
@@ -7,7 +7,7 @@ import { BarAttrs, EmbeddedLabelPosition, EmbeddedLabelsHelper } from "./embedde
 
 export class EmbeddedLabels
 {
-    public static render(block: Block, bars: d3.Selection<SVGRectElement, DataRow, SVGGElement, any>, field: Field, type: EmbeddedLabelTypeModel, keyAxisOrient: Orient, blockSize: Size, margin: BlockMargin): void {
+    public static render(block: Block, bars: Selection<SVGRectElement, DataRow, SVGGElement, any>, field: Field, type: EmbeddedLabelTypeModel, keyAxisOrient: Orient, blockSize: Size, margin: BlockMargin): void {
         const thisClass = this;
         
         bars.each(function(d) {
@@ -15,7 +15,7 @@ export class EmbeddedLabels
         });
     }
 
-    private static renderOneLabel(block: Block, bar: d3.Selection<SVGRectElement, DataRow, HTMLElement, any>, dataRow: DataRow, field: Field, type: EmbeddedLabelTypeModel, keyAxisOrient: Orient, blockSize: Size, margin: BlockMargin): void {
+    private static renderOneLabel(block: Block, bar: Selection<SVGRectElement, DataRow, HTMLElement, any>, dataRow: DataRow, field: Field, type: EmbeddedLabelTypeModel, keyAxisOrient: Orient, blockSize: Size, margin: BlockMargin): void {
         const labelBlock = block.getChartBlock()
             .append('text')
             .attr('class', 'embedded-label')
@@ -48,14 +48,14 @@ export class EmbeddedLabels
         this.cropText(labelBlock, barAttrs, position, labelUnserveFlag, margin, blockSize);
     }
 
-    private static checkLabelsToResetTextAnchor(labelBlock: d3.Selection<SVGTextElement, unknown, HTMLElement, unknown>, labelUnserveFlag: boolean, margin: BlockMargin, blockSize: Size): void {
+    private static checkLabelsToResetTextAnchor(labelBlock: Selection<SVGTextElement, unknown, HTMLElement, unknown>, labelUnserveFlag: boolean, margin: BlockMargin, blockSize: Size): void {
         if(Helper.getSelectionNumericAttr(labelBlock, 'x') + labelBlock.node().getBBox().width > blockSize.width - margin.right && labelUnserveFlag) {
             labelBlock.attr('x', blockSize.width - margin.right);
             labelBlock.attr('text-anchor', 'end');
         }
     }
 
-    private static cropText(labelBlock: d3.Selection<SVGTextElement, unknown, HTMLElement, unknown>, barAttrs: BarAttrs, position: EmbeddedLabelPosition, labelUnserveFlag: boolean, margin: BlockMargin, blockSize: Size): void {
+    private static cropText(labelBlock: Selection<SVGTextElement, unknown, HTMLElement, unknown>, barAttrs: BarAttrs, position: EmbeddedLabelPosition, labelUnserveFlag: boolean, margin: BlockMargin, blockSize: Size): void {
         let labelTextSpace: number;
 
         if(labelUnserveFlag)
