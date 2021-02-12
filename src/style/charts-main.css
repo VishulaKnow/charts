@@ -1,0 +1,170 @@
+.wrapper {
+    margin: 0 auto;
+    position: relative;
+}
+h3.title {
+    font-size: 18px;
+    font-weight: 500;
+}
+.bar, .area, .donut {
+    stroke: none;
+}
+.line {
+    fill: none;
+    stroke-width: 4;
+}
+.outline {
+    outline: 1px solid black;
+}
+.data-label {
+    font-family: "Roboto" sans-serif;
+    font-style: normal;
+    font-weight: 300;
+    font-size: 12px;
+    line-height: 140.62%;
+    color: #444444;
+}
+
+.legend-item-inline {
+    white-space: nowrap;
+}
+.legend-item-inline:not(:first-of-type) {
+    margin-left: 20px;
+}
+.legend-item-row {
+    display: flex;
+}
+.legend-item-row > span {
+    display: block;
+}
+.mt-15 {
+    margin-top: 15px;
+}
+.mt-10 {
+    margin-top: 10px;
+}
+
+.legend-label {
+    font-size: 12px;
+    font-family: "Roboto", sans-serif;
+    font-weight: 300;
+    color: #444444;
+    width: calc(100% - 19px);
+    overflow: hidden;
+}
+.legend-label-nowrap {
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+.legend-circle {
+    display: inline-block;
+    width: 11px;
+    height: 11px;
+    border-radius: 50%;
+    margin-right: 8px;
+}
+
+.tooltip-circle {
+    display: inline-block;
+    width: 11px;
+    height: 11px;
+    border-radius: 50%;
+    margin-right: 13px;
+}
+.tooltip-block {
+    pointer-events: none;
+    z-index: 100;
+    filter: drop-shadow(0px 4px 10px rgba(0, 0, 0, 0.1));
+}
+.tooltip-content {
+    position: relative;
+    pointer-events: none;
+    font-size: 14px;
+    font-family: "Roboto", sans-serif;
+    line-height: 1;
+    font-weight: bold;
+    padding: 15px 20px 15px 15px;
+    background: white;
+    color: black;
+    z-index: 102;
+    max-width: 500px;
+}
+.tooltip-arrow {
+    position: absolute;
+    z-index: 101;
+    background-color: white;
+    transform: rotate(45deg);
+}
+.tooltip-group {
+    display: flex;
+}
+.tooltip-text-item {
+    font-family: "Roboto" sans-serif;
+    font-weight: 700;
+    font-style: normal;
+    font-size: 14px;
+    white-space: nowrap;
+    /* line-height: 19.69px; */
+}
+.tooltip-group:not(:first-of-type) {
+    margin-top: 8px;
+}
+.tooltip-line {
+    stroke: #b6b6b6;
+    stroke-dasharray: 3;
+    stroke-width: 1px;
+}
+
+.aggregator-value, .aggregator-name {
+    color: #000000;
+    font-family: "Roboto", sans-serif;
+    font-weight: bold;
+}
+.aggregator-value {
+    margin-top: 20px;
+}
+
+.grid-line {
+    stroke: #D2D2D2;
+    stroke-dasharray: 3;
+}
+
+.axis .domain {
+    stroke: #D2D2D2;
+}
+.axis .tick line:first-of-type {
+    stroke: #D2D2D2;
+}
+
+.record-overflow-alert {
+    background-color: #FFFFFF;;
+    padding: 5px 10px 5px;
+    border: 1px solid #0F6698;
+    box-sizing: border-box;
+    border-radius: 100px;
+    font-family: "Roboto", sans-serif;
+    font-style: normal;
+    font-weight: 500;
+    font-size: 10px;
+    line-height: 140.62%;
+    color: #0F6698;
+}
+.record-overflow-alert .btn-close {
+    border: none;
+    background-color: transparent;
+    cursor: pointer;
+    font-size: 1.3rem;
+}
+
+.chart-block {
+    stroke-width: 1px !important;
+}
+
+.embedded-label {
+    color: #444444;
+    font-family: "Roboto", sans-serif;
+    font-style: normal;
+    font-weight: 500;
+    font-size: 12px;
+    line-height: 140.62%;
+}

@@ -46,19 +46,19 @@ const configCars: Config = {
                 title: 'Рост стоимости',
                 type: 'area',
                 data: {
-                    dataSource: 'dataSet',
+                    dataSource: 'dataSet_data',
                     keyField:  {
-                        name: 'brand',
+                        name: 'MonthYear',
                         format: 'string'
                     },
                     valueFields: [
                         {
-                            name: 'price',
+                            name: 'EventCost',
                             format: 'money',
                             title: 'Количество автомобилей на душу населения'
                         },
                         {
-                            name: 'count',
+                            name: 'AlcoholCost',
                             format: 'integer',
                             title: 'Количество автомобилей на душу населения'
                         }             
