@@ -1,7 +1,6 @@
 {
     "compilerOptions": {
         "outDir": "./lib/",
-        // "sourceMap": true,
         "noImplicitAny": true,
         // "declaration": true,
         "module": "es6",
