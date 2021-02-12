@@ -4,3 +4,4 @@ src
 tsconfig.json
 .git
 webpack.config.js
+babel.config.js
