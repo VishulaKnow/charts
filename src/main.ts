@@ -25,4 +25,8 @@ export class Chart
     public render(parentElement: HTMLElement): void {
         this.engine.render(this.model, getPreparedData(this.model, this.data, this.config), parentElement);
     }
+
+    public destroy(): void {
+        this.engine.destroy();
+    }
 }
