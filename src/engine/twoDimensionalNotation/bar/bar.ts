@@ -71,7 +71,7 @@ export class Bar
                 .data(data)
                     .append('rect')
                     .attr('class', this.barItemClass)
-                    .style('clip-path', `url(${block.getClipPathId()})`);
+                    // .style('clip-path', `url(${block.getClipPathId()})`);
 
             const barAttrs = this.getGroupedBarAttrsByKeyOrient(block,
                 keyAxisOrient,
@@ -109,7 +109,7 @@ export class Bar
             .enter()
                 .append('rect')
                 .attr('class', this.barItemClass)
-                .style('clip-path', `url(${block.getClipPathId()})`);
+                // .style('clip-path', `url(${block.getClipPathId()})`);
 
         const barAttrs = this.getStackedBarAttrByKeyOrient(keyAxisOrient, scales, margin, chart.data.keyField.name, blockSize, barSettings);
        

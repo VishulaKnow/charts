@@ -33,7 +33,7 @@ export class Dot
             .attr('cx', d => attrs.cx(d))
             .attr('cy', d => attrs.cy(d))
             .attr('r', this.dotRadius)
-            .style('clip-path', `url(${block.getClipPathId()})`);
+            // .style('clip-path', `url(${block.getClipPathId()})`);
 
         const dotsInside = dotsWrapper.append('circle')
             .attr('class', this.innerDotClass)

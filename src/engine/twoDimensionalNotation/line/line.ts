@@ -44,7 +44,7 @@ export class Line
                 .attr('d', lineGenerator(data))
                 .attr('class', this.lineChartClass)
                 .style('fill', 'none')
-                .style('clip-path', `url(${block.getClipPathId()})`)
+                // .style('clip-path', `url(${block.getClipPathId()})`)
                 .style('pointer-events', 'none');
         
             Helper.setCssClasses(path, Helper.getCssClassesWithElementIndex(chart.cssClasses, index));
@@ -67,7 +67,7 @@ export class Line
                 .attr('d', d => lineGenerator(d))
                 .attr('class', this.lineChartClass)
                 .style('fill', 'none')
-                .style('clip-path', `url(${block.getClipPathId()})`)
+                // .style('clip-path', `url(${block.getClipPathId()})`)
                 .style('pointer-events', 'none');
 
         areas.each(function(d, i) {
