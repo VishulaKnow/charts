@@ -1,4 +1,7 @@
-import * as d3 from "d3";
+import { select } from 'd3-selection';
+import { min, max } from 'd3-array';
+import { format } from 'd3-format';
+import { axisTop, axisBottom, axisLeft, axisRight } from 'd3-axis';
 import { AxisModelOptions, BlockMargin, IAxisModel, IScaleModel, Orient, ScaleKeyModel, ScaleValueModel, Size } from "../../../model/model";
 import { Helper } from "../../helper";
 import { Block } from "../../block/block";
@@ -79,7 +82,7 @@ export class Axis
             if(Math.floor(axisLength / MINIMAL_STEP_SIZE) > 2)
                 axis.ticks(Math.floor(axisLength / MINIMAL_STEP_SIZE));
             else
-                axis.tickValues([d3.min(scale.domain), d3.max(scale.domain)]);
+                axis.tickValues([min(scale.domain), max(scale.domain)]);
         }
     }
 
@@ -116,19 +119,19 @@ export class Axis
 
     private static getAxisByOrient(orient: Orient, scale: d3.AxisScale<any>): d3.Axis<any> {
         if(orient === 'top')
-            return d3.axisTop(scale);
+            return axisTop(scale);
         if(orient === 'bottom')
-            return d3.axisBottom(scale);
+            return axisBottom(scale);
         if(orient === 'left')
-            return d3.axisLeft(scale);
+            return axisLeft(scale);
         if(orient === 'right')
-            return d3.axisRight(scale);
+            return axisRight(scale);
     }
 
     private static setAxisFormat(scale: d3.AxisScale<any>, scaleOptions: ScaleValueModel | ScaleKeyModel, axis: d3.Axis<any>): void {
         if(scaleOptions.type === 'linear') {
-            if(d3.max(scale.domain()) > 1000) {
-                axis.tickFormat(d3.format('.2s')); // examples: 1.2K, 350, 0 
+            if(max(scale.domain()) > 1000) {
+                axis.tickFormat(format('.2s')); // examples: 1.2K, 350, 0 
             }
         }
     }
@@ -178,7 +181,7 @@ export class Axis
 
     private static wrap(text: d3.Selection<SVGGElement, unknown, d3.BaseType, any>, maxWidth: number) {
         text.each(function() {
-            let textBlock = d3.select(this);
+            let textBlock = select(this);
             if(textBlock.node().getBBox().width > maxWidth) {
                 let letters = textBlock.text().split('').reverse(), // split text to letters.
                     letter,

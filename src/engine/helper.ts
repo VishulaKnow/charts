@@ -1,4 +1,4 @@
-import { Color } from "d3";
+import { Color } from "d3-color";
 import { ChartStyle } from "../model/model";
 
 type StyleColorType = 'fill' | 'stroke';

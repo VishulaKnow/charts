@@ -1,4 +1,4 @@
-import * as d3 from "d3";
+import * as d3 from "d3-selection";
 import { BlockMargin, Size } from "../../model/model";
 import { Helper } from "../helper";
 import { BlockHelper } from "./blockHelper";
