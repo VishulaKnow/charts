@@ -47,24 +47,26 @@ const TOOLTIP_ARROW_PADDING_Y = 13;
 
 export class TooltipHelper
 { 
-    public static getMultyTooltipHtmlFor2DChart(chart: TwoDimensionalChartModel, data: DataSource, keyValue: string): string {
-        let text = '';
+    public static fillMultyFor2DChart(tooltipContentBlock: d3.Selection<d3.BaseType, unknown, d3.BaseType, unknown>, chart: TwoDimensionalChartModel, data: DataSource, keyValue: string): void {
+        tooltipContentBlock.html('');
         chart.data.valueFields.forEach((field, index) => {
-            text += this.getTooltipHtml(chart, data, keyValue, field, chart.style.elementColors[index % chart.style.elementColors.length].toString());
+            this.fillTooltipContent(tooltipContentBlock, chart, data, keyValue, field, chart.style.elementColors[index % chart.style.elementColors.length].toString());
         });
-        return text;
     }
 
-    public static getTooltipHtmlFor2DChart(chart: TwoDimensionalChartModel, data: DataSource, keyValue: string, index: number): string {
-        return this.getTooltipHtml(chart, data, keyValue, chart.data.valueFields[index], chart.style.elementColors[index % chart.style.elementColors.length].toString());
+    public static fillTooltipFor2DChart(tooltipContentBlock: d3.Selection<d3.BaseType, unknown, d3.BaseType, unknown>, chart: TwoDimensionalChartModel, data: DataSource, keyValue: string, index: number): void {
+        tooltipContentBlock.html('');
+        this.fillTooltipContent(tooltipContentBlock, chart, data, keyValue, chart.data.valueFields[index], chart.style.elementColors[index % chart.style.elementColors.length].toString());
     }
 
-    public static getTooltipHtmlForPolarChart(chart: PolarChartModel, data: DataSource, keyValue: string, markColor: string): string {
-        return this.getTooltipHtml(chart, data, keyValue, chart.data.valueField, markColor);
+    public static fillTooltipForPolarChart(tooltipContentBlock: d3.Selection<d3.BaseType, unknown, d3.BaseType, unknown>, chart: PolarChartModel, data: DataSource, keyValue: string, markColor: string): void {
+        tooltipContentBlock.html('');
+        this.fillTooltipContent(tooltipContentBlock, chart, data, keyValue, chart.data.valueField, markColor);
     }
 
-    public static getTooltipHtmlForIntervalChart(chart: IntervalChartModel, data: DataSource, keyValue: string, markColor: string): string {
-        return this.getTooltipHtml(chart, data, keyValue, chart.data.valueField1, markColor);
+    public static fillTooltipForIntervalChart(tooltipContentBlock: d3.Selection<d3.BaseType, unknown, d3.BaseType, unknown>, chart: IntervalChartModel, data: DataSource, keyValue: string, markColor: string): void {
+        tooltipContentBlock.html('');
+        this.fillTooltipContent(tooltipContentBlock, chart, data, keyValue, chart.data.valueField1, markColor);
     }
 
     public static getTooltipCoordinate(pointer: [number, number]): TooltipCoordinate {
@@ -206,13 +208,23 @@ export class TooltipHelper
         return index;
     }   
 
-    private static getTooltipHtml(chart: TwoDimensionalChartModel | PolarChartModel | IntervalChartModel, data: DataSource, keyValue: string, valueField: Field, markColor: string): string {
-        let text = `<div class="tooltip-group"><div class="tooltip-color"><span class="tooltip-circle" style="background-color: ${markColor};"></span></div>`;
-        text += `<div class="tooltip-texts">`;
-        text += `<div class="tooltip-text-item">${this.getTooltipItemText(chart, data, keyValue, valueField)}</div>`;
-        text += '</div></div>';
-        
-        return text;
+    private static fillTooltipContent(tooltipContentBlock: d3.Selection<d3.BaseType, unknown, d3.BaseType, unknown>, chart: TwoDimensionalChartModel | PolarChartModel | IntervalChartModel, data: DataSource, keyValue: string, valueField: Field, markColor: string): void {
+        const group = tooltipContentBlock.append('div')
+            .attr('class', 'tooltip-group');
+        group.append('div')
+            .attr('class', 'tooltip-color')
+            .append('span')
+            .attr('class', 'tooltip-circle')
+            .style('background-color', markColor);
+        const textBlock = group.append('div')
+            .attr('class', 'tooltip-texts')
+            .append('div')
+            .attr('class', 'tooltip-text-item')
+            .text(this.getTooltipItemText(chart, data, keyValue, valueField))
+            .style('white-space', 'nowrap');
+        console.log(textBlock.node().getBoundingClientRect().width);
+        if(textBlock.node().getBoundingClientRect().width > 500)
+            textBlock.style('white-space', 'normal');
     }
 
     private static getTooltipItemText(chart: TwoDimensionalChartModel | PolarChartModel | IntervalChartModel, data: DataSource, keyValue: string, valueField: Field): string {

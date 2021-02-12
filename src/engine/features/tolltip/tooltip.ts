@@ -74,7 +74,7 @@ export class Tooltip
                 tooltipBlock.style('display', 'block');                               
                 const keyValue = TooltipHelper.getKeyForTooltip(d, chart.data.keyField.name, isSegmented);
                 const index = TooltipHelper.getElementIndex(elemets, this, keyValue, chart.data.keyField.name, isSegmented)
-                tooltipContent.html(`${TooltipHelper.getTooltipHtmlFor2DChart(chart, data, keyValue, index)}`);
+                TooltipHelper.fillTooltipFor2DChart(tooltipContent, chart, data, keyValue, index);
 
                 const coordinatePointer: [number, number] = TooltipHelper.getTooltipBlockCoordinateByDot(d3.select(this), tooltipBlock, blockSize, tooltipArrow);
                 const tooltipCoordinate = TooltipHelper.getTooltipCoordinate(coordinatePointer);
@@ -116,10 +116,10 @@ export class Tooltip
                 const keyValue = TooltipHelper.getKeyForTooltip(dataRow, chart.data.keyField.name, isSegmented);
                 
                 if(isGrouped) {
-                    tooltipContent.html(TooltipHelper.getMultyTooltipHtmlFor2DChart(chart, data, keyValue));
+                    TooltipHelper.fillMultyFor2DChart(tooltipContent, chart, data, keyValue)
                 } else {
                     const index = TooltipHelper.getElementIndex(elemets, this, keyValue, chart.data.keyField.name, isSegmented)
-                    tooltipContent.html(TooltipHelper.getTooltipHtmlFor2DChart(chart, data, keyValue, index));
+                    TooltipHelper.fillTooltipFor2DChart(tooltipContent, chart, data, keyValue, index);
                 }
 
                 const coordinatePointer: [number, number] = TooltipHelper.getTooltipBlockCoordinateByRect(d3.select(this), tooltipBlock, blockSize, tooltipArrow, chartOrientation);
@@ -150,7 +150,7 @@ export class Tooltip
             .on('mouseover', function(event, dataRow) {
                 tooltipBlock.style('display', 'block');
                 const key = dataRow.data[chart.data.keyField.name];
-                tooltipContent.html(TooltipHelper.getTooltipHtmlForPolarChart(chart, data, key, d3.select(this).select('path').style('fill')));
+                TooltipHelper.fillTooltipForPolarChart(tooltipContent, chart, data, key, d3.select(this).select('path').style('fill'))
                 
                 const coordinatePointer: [number, number] = TooltipHelper.getRecalcedCoordinateByArrow(Donut.getArcCentroid(blockSize, margin, dataRow, donutThickness), tooltipBlock, blockSize, tooltipArrow, translateX, translateY);
                 const tooltipCoordinate = TooltipHelper.getTooltipCoordinate(coordinatePointer);
@@ -175,7 +175,7 @@ export class Tooltip
             .on('mouseover', function(event, dataRow) {
                 tooltipBlock.style('display', 'block');
                 const key = TooltipHelper.getKeyForTooltip(dataRow, chart.data.keyField.name, false);
-                tooltipContent.html(`${TooltipHelper.getTooltipHtmlForIntervalChart(chart, data, key, d3.select(this).style('fill'))}`);
+                TooltipHelper.fillTooltipForIntervalChart(tooltipContent, chart, data, key, d3.select(this).style('fill'))
 
                 const coordinatePointer: [number, number] = TooltipHelper.getTooltipBlockCoordinateByRect(d3.select(this), tooltipBlock, blockSize, tooltipArrow, chartOrientation);
                 const tooltipCoordinate = TooltipHelper.getTooltipCoordinate(coordinatePointer);
