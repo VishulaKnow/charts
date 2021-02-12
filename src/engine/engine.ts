@@ -20,7 +20,7 @@ export default class Engine {
     }
 
     public updateFullBlock(model: Model, data: any): void {
-        this.clearBlock();
+        this.destroy();
         this.render(model, data, this.block.parentElement);
     }
 
@@ -28,7 +28,7 @@ export default class Engine {
         ChartRenderer.updateByValueAxis(this.block, model, data);
     }
 
-    private clearBlock(): void {
+    public destroy(): void {
         this.block.getWrapper().remove();
     }
 }

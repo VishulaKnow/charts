@@ -616,6 +616,10 @@ const model3 = assembleModel(config3, data, designerConfig);
 const engine3 = new Engine();
 engine3.render(model3, getPreparedData(model3, data, config3), document.querySelector('.main-wrapper2'));
 
+setTimeout(() => {
+    engine3.destroy();
+}, 5000);
+
 const config2 = require('../config/configTestPolar.json');
 const model2 = assembleModel(config2, data, designerConfig);
 const engine2 = new Engine();
