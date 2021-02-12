@@ -1,4 +1,4 @@
-import { Color } from "d3";
+import { Color } from "d3-color";
 import { ChartOrientation, IntervalChartType, LegendPosition, PolarChartType, TwoDimensionalChartType } from "../config/config";
 import { DataType, Formatter } from "../designer/designerConfig";
 

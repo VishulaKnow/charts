@@ -1,5 +1,4 @@
-import * as d3 from "d3";
-import { color, Color } from "d3";
+import { color, Color } from "d3-color";
 import { TwoDimensionalChartType } from "../config/config";
 import { ChartStyle } from "./model";
 
@@ -101,17 +100,17 @@ export class ChartStyleModel
         return chartColorSet;
     }
 
-    private static generatePalette(baseColors: Color[], colorAmount: number): Color[] {
-        const hslColor = d3.hsl(baseColors[0].toString());
-        let step = 360 / colorAmount;
-        if(step < 31)
-            step = 31;
-        const colors = [];
-        for(let i = 0; i < colorAmount; i++) {
-            colors.push(color(hslColor));
-            hslColor.h += step;
-        }
+    // private static generatePalette(baseColors: Color[], colorAmount: number): Color[] {
+    //     const hslColor = d3.hsl(baseColors[0].toString());
+    //     let step = 360 / colorAmount;
+    //     if(step < 31)
+    //         step = 31;
+    //     const colors = [];
+    //     for(let i = 0; i < colorAmount; i++) {
+    //         colors.push(color(hslColor));
+    //         hslColor.h += step;
+    //     }
 
-        return colors;
-    }
+    //     return colors;
+    // }
 }

@@ -51,6 +51,7 @@ h3.title {
     color: #444444;
     width: calc(100% - 19px);
     overflow: hidden;
+    line-height: normal;
 }
 .legend-label-nowrap {
     white-space: nowrap;
@@ -100,11 +101,9 @@ h3.title {
 }
 .tooltip-text-item {
     font-family: "Roboto" sans-serif;
-    font-weight: 700;
+    font-weight: 500;
     font-style: normal;
     font-size: 14px;
-    white-space: nowrap;
-    /* line-height: 19.69px; */
 }
 .tooltip-group:not(:first-of-type) {
     margin-top: 8px;

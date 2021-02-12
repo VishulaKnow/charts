@@ -1,5 +1,3 @@
-import { Color } from "d3";
-
 export type DataType = 'integer' | 'decimal' | 'date' | 'money' | 'string';
 export type DataOptions = {
     [option: string]: any
