@@ -1,4 +1,4 @@
-import * as d3 from 'd3'
+import { scaleBand, scaleLinear, scalePoint, scaleTime } from 'd3-scale'
 import { BarChartSettings, RangeModel, ScaleKeyModel, ScaleValueModel } from '../../../model/model';
 
 export interface Scales {
@@ -49,7 +49,7 @@ export class Scale
     }
 
     private static getScaleBand(domain: string[], range: RangeModel, bandSettings: BarChartSettings, elementsInGroupAmount: number): d3.ScaleBand<string> {
-        const scale = d3.scaleBand()
+        const scale = scaleBand()
             .domain(domain)
             .range([range.start, range.end]);
                 
@@ -76,19 +76,19 @@ export class Scale
     }
     
     private static getScaleLinear(domain: number[], range: RangeModel): d3.ScaleLinear<number, number> {
-        return d3.scaleLinear()
+        return scaleLinear()
             .domain(domain)
             .range([range.start, range.end]);
     }
 
     private static getScalePoint(domain: string[], range: RangeModel): d3.ScalePoint<string> {
-        return d3.scalePoint()
+        return scalePoint()
             .domain(domain)
             .range([range.start, range.end]);
     }
 
     private static getScaleTime(domain: any, range: RangeModel): d3.ScaleTime<number, number, never> {
-        return d3.scaleTime()
+        return scaleTime()
             .domain(domain)
             .range([range.start, range.end])
             .nice();

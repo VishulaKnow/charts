@@ -1,5 +1,4 @@
-import * as d3 from "d3";
-import { BarChartSettings, BlockMargin, DataRow, IntervalChartModel, Orient, Size } from "../../model/model";
+import { BarChartSettings, BlockMargin, DataRow, IntervalChartModel, Orient } from "../../model/model";
 import { Block } from "../block/block";
 import { Helper } from "../helper";
 import { Scale, Scales } from "../features/scale/scale";

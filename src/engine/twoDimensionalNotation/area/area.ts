@@ -1,4 +1,5 @@
-import * as d3 from "d3";
+import { area, stack } from 'd3-shape';
+import { select } from 'd3-selection'
 import { BlockMargin, DataRow, Orient, Size, TwoDimensionalChartModel } from "../../../model/model";
 import { Helper } from "../../helper";
 import { Scale, Scales } from "../../features/scale/scale";
@@ -66,7 +67,7 @@ export class Area
 
     private static renderSegmented(block: Block, scales: Scales, data: DataRow[], margin: BlockMargin, keyAxisOrient: Orient, chart: TwoDimensionalChartModel, blockSize: Size): void {
         const keys = chart.data.valueFields.map(field => field.name);
-        const stackedData = d3.stack().keys(keys)(data);
+        const stackedData = stack().keys(keys)(data);
         const area = this.getSegmentedAreaGenerator(keyAxisOrient, scales, margin, chart.data.keyField.name);
 
         const areas = block.getChartBlock()
@@ -80,7 +81,7 @@ export class Area
                 .style('pointer-events', 'none');
 
         areas.each(function(d, i) {
-            Helper.setCssClasses(d3.select(this), Helper.getCssClassesWithElementIndex(chart.cssClasses, i));
+            Helper.setCssClasses(select(this), Helper.getCssClassesWithElementIndex(chart.cssClasses, i));
         });
         this.setSegmentColor(areas, chart.style.elementColors);
 
@@ -91,12 +92,12 @@ export class Area
 
     private static getGroupedAreaGenerator(keyAxisOrient: Orient, scales: Scales, margin: BlockMargin, keyFieldName: string, valueFieldName: string, blockSize: Size): d3.Area<DataRow> {
         if(keyAxisOrient === 'bottom' || keyAxisOrient === 'top')
-            return d3.area<DataRow>()
+            return area<DataRow>()
                 .x(d => Scale.getScaleKeyPoint(scales.scaleKey, d[keyFieldName]) + margin.left)
                 .y0(d => this.getZeroCoordinate(keyAxisOrient, margin, blockSize))
                 .y1(d => scales.scaleValue(d[valueFieldName]) + margin.top);
         if(keyAxisOrient === 'left' || keyAxisOrient === 'right')
-            return d3.area<DataRow>()
+            return area<DataRow>()
                 .x0(d => this.getZeroCoordinate(keyAxisOrient, margin, blockSize))
                 .x1(d => scales.scaleValue(d[valueFieldName]) + margin.left,)
                 .y(d => Scale.getScaleKeyPoint(scales.scaleKey, d[keyFieldName]) + margin.top);
@@ -104,14 +105,14 @@ export class Area
 
     private static getSegmentedAreaGenerator(keyAxisOrient: Orient, scales: Scales, margin: BlockMargin, keyField: string): d3.Area<DataRow> {
         if(keyAxisOrient === 'bottom' || keyAxisOrient === 'top') {
-            return d3.area<DataRow>()
+            return area<DataRow>()
                 .x(d => scales.scaleKey(d.data[keyField]) + margin.left)
                 .y0(d => scales.scaleValue(d[0]) + margin.top)
                 .y1(d => scales.scaleValue(d[1]) + margin.top);
         }
         
         if(keyAxisOrient === 'left' || keyAxisOrient === 'right') {
-            return d3.area<DataRow>()
+            return area<DataRow>()
                 .x0(d => scales.scaleValue(d[0]) + margin.left)
                 .x1(d => scales.scaleValue(d[1]) + margin.left)
                 .y(d => scales.scaleKey(d.data[keyField]) + margin.top);

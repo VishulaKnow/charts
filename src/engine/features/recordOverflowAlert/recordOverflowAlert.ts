@@ -1,4 +1,3 @@
-import * as d3 from "d3";
 import { ChartOrientation } from "../../../config/config";
 import { Block } from "../../block/block";
 import { Helper } from "../../helper";

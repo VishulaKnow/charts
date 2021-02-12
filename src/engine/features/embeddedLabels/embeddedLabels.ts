@@ -1,5 +1,4 @@
-import * as d3 from "d3";
-import { lab } from "d3";
+import { select } from 'd3-selection';
 import { BlockMargin, DataRow, EmbeddedLabelTypeModel, Field, Orient, Size } from "../../../model/model";
 import { Block } from "../../block/block";
 import { Helper } from "../../helper";
@@ -12,7 +11,7 @@ export class EmbeddedLabels
         const thisClass = this;
         
         bars.each(function(d) {
-            thisClass.renderOneLabel(block, d3.select(this), d, field, type, keyAxisOrient, blockSize, margin);
+            thisClass.renderOneLabel(block, select(this), d, field, type, keyAxisOrient, blockSize, margin);
         });
     }
 

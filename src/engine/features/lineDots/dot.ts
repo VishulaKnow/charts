@@ -1,10 +1,8 @@
-import * as d3 from "d3";
-import { Color } from "d3";
+import { Color } from "d3-color";
 import { BlockMargin, DataRow, Orient, Size } from "../../../model/model";
 import { Block } from "../../block/block";
 import { Helper } from "../../helper";
 import { Scale, Scales } from "../scale/scale";
-import { DotArea } from "./dotArea";
 
 export interface DotAttrs {
     cx: (data: DataRow) => number;

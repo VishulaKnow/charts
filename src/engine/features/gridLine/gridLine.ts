@@ -1,4 +1,3 @@
-import { line } from "d3";
 import { AxisModelOptions, BlockMargin, GridLineFlag, ScaleKeyModel, Size } from "../../../model/model";
 import { Block } from "../../block/block";
 

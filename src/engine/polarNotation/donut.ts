@@ -1,5 +1,5 @@
-import * as d3 from "d3";
-import { Color } from "d3";
+import { arc, pie } from 'd3-shape'
+import { Color } from "d3-color";
 import { BlockMargin, DataRow, DonutChartSettings, PolarChartModel, Size } from "../../model/model";
 import { Helper } from "../helper";
 import { Block } from "../block/block";
@@ -84,13 +84,13 @@ export class Donut
     }
     
     private static getArcGenerator(outerRadius: number, innerRadius: number): d3.Arc<any, d3.PieArcDatum<DataRow>> {
-        return d3.arc<d3.PieArcDatum<DataRow>>()
+        return arc<d3.PieArcDatum<DataRow>>()
             .innerRadius(innerRadius)
             .outerRadius(outerRadius);
     }
     
     private static getPieGenerator(valueField: string, padAngle: number): d3.Pie<any, DataRow> {
-        return d3.pie<DataRow>()
+        return pie<DataRow>()
             .padAngle(padAngle)
             .sort(null)
             .value(d => d[valueField]);

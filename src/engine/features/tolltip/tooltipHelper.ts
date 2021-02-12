@@ -1,4 +1,4 @@
-import * as d3 from "d3";
+import { select } from 'd3-selection'
 import { ChartOrientation } from "../../../config/config";
 import { BlockMargin, DataRow, DataSource, Field, IntervalChartModel, PolarChartModel, Size, TwoDimensionalChartModel } from "../../../model/model";
 import { Block } from "../../block/block";
@@ -126,7 +126,7 @@ export class TooltipHelper
         let index = -1;
         const filtered = isSegmented ? elemets.filter(d => d.data[keyName] === keyValue) : elemets.filter(d => d[keyName] === keyValue);
         filtered.each(function(d, i) {
-            if(d3.select(this).node() === d3.select(dot).node()) {
+            if(select(this).node() === select(dot).node()) {
                 index = i;
             }
         });
@@ -166,11 +166,11 @@ export class TooltipHelper
             
         const thisClass = this;
         elements.each(function() {
-            const indexOfChart = thisClass.findChartIndexOfElement(d3.select(this), chartsStyleSettings);
-            if(!d3.select(this).classed(Dot.dotClass) && !d3.select(this).classed(Dot.innerDotClass))
-                d3.select(this).style('opacity', chartsStyleSettings[indexOfChart].opacity);
+            const indexOfChart = thisClass.findChartIndexOfElement(select(this), chartsStyleSettings);
+            if(!select(this).classed(Dot.dotClass) && !select(this).classed(Dot.innerDotClass))
+                select(this).style('opacity', chartsStyleSettings[indexOfChart].opacity);
             else
-                d3.select(this).style('opacity', 1);
+                select(this).style('opacity', 1);
         });
     }
 

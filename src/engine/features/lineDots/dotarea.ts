@@ -1,4 +1,4 @@
-import * as d3 from "d3";
+import { select, pointer } from 'd3-selection'
 import { DataRow } from "../../../model/model";
 import { Block } from "../../block/block";
 import { Helper } from "../../helper";
@@ -30,14 +30,14 @@ export class DotArea
         let activeDot: d3.Selection<SVGCircleElement, DataRow, SVGGElement, unknown>;
 
         dotsHover.each(function(dataRow) {
-            d3.select(this).on('mousemove', function(event) {
+            select(this).on('mousemove', function(event) {
                 const xDots = block.getChartBlock().selectAll<SVGCircleElement, DataRow>(`.${dotClass}`).filter((d) => d[keyFieldName] === dataRow[keyFieldName]);
                 const attrsCy: number[] = [];
                 xDots.each(function() {
-                    attrsCy.push(parseFloat(d3.select(this).attr('cy')));
+                    attrsCy.push(parseFloat(select(this).attr('cy')));
                 });
 
-                const thisY = d3.pointer(event, this)[1];
+                const thisY = pointer(event, this)[1];
                 let minClosing = Math.abs(attrsCy[0] - thisY),
                     indexOfDot = 0;
                 attrsCy.forEach((attrCy, index) => {
@@ -61,14 +61,14 @@ export class DotArea
         });
 
         dotsHover.each(function(dataRow) {
-            d3.select(this).on('mouseleave', function(event) {
+            select(this).on('mouseleave', function(event) {
                 const xDots = block.getChartBlock().selectAll<SVGCircleElement, DataRow>(`.${dotClass}`).filter((d) => d[keyFieldName] === dataRow[keyFieldName]);
                 const attrsCy: number[] = [];
                 xDots.each(function() {
-                    attrsCy.push(parseFloat(d3.select(this).attr('cy')));
+                    attrsCy.push(parseFloat(select(this).attr('cy')));
                 });
 
-                const thisY = d3.pointer(event, this)[1];
+                const thisY = pointer(event, this)[1];
                 let minClosing = Math.abs(attrsCy[0] - thisY),
                     indexOfDot = 0;
                 attrsCy.forEach((attrCy, index) => {

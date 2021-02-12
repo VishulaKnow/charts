@@ -1,4 +1,4 @@
-import { Color } from "d3";
+import { Color } from "d3-color";
 import { ChartNotation, LegendPosition } from "../../../config/config";
 import { LegendItemsDirection } from "../../../model/legendModel/legendCanvasModel";
 import { DataRow, DataSource, IntervalOptionsModel, LegendBlockModel, Orient, PolarOptionsModel, Size, TwoDimensionalOptionsModel } from "../../../model/model";

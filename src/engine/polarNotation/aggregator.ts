@@ -1,4 +1,4 @@
-import * as d3 from "d3";
+import { sum } from 'd3-array'
 import { DataRow } from "../../model/model";
 import { Block } from "../block/block";
 import { Translate } from "./donut";
@@ -13,7 +13,7 @@ export class Aggregator
     public static render(block: Block, data: DataRow[], valueField: string, innerRadius: number, translate: Translate, fontSize: number): void {
         const aggregator: IAggregator = {
             name: 'Сумма',
-            value: d3.sum(data.map(d => d[valueField]))
+            value: sum(data.map(d => d[valueField]))
         }
         this.renderAggregatorText(block, innerRadius, aggregator, translate, fontSize);
     }

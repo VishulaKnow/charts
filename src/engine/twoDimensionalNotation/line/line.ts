@@ -1,10 +1,11 @@
-import * as d3 from "d3";
+import { stack, line } from 'd3-shape';
+import { select } from 'd3-selection';
+import { Color } from "d3-color";
 import { BlockMargin, DataRow, Orient, Size, TwoDimensionalChartModel } from "../../../model/model";
 import { Helper } from "../../helper";
 import { Scale, Scales } from "../../features/scale/scale";
 import { Block } from "../../block/block";
 import { Dot } from "../../features/lineDots/dot";
-import { Color } from "d3";
 
 export class Line
 {
@@ -52,7 +53,7 @@ export class Line
 
     private static renderSegmented(block: Block, scales: Scales, data: DataRow[], margin: BlockMargin, keyAxisOrient: Orient, chart: TwoDimensionalChartModel, blockSize: Size): void {
         const keys = chart.data.valueFields.map(field => field.name);
-        const stackedData = d3.stack().keys(keys)(data);
+        const stackedData = stack().keys(keys)(data);
         const lineGenerator = this.getSegmentedLineGenerator(keyAxisOrient, scales, chart.data.keyField.name, margin);
 
         const areas = block.getChartBlock()
@@ -67,7 +68,7 @@ export class Line
                 .style('pointer-events', 'none');
 
         areas.each(function(d, i) {
-            Helper.setCssClasses(d3.select(this), Helper.getCssClassesWithElementIndex(chart.cssClasses, i));
+            Helper.setCssClasses(select(this), Helper.getCssClassesWithElementIndex(chart.cssClasses, i));
         });
 
         this.setSegmentColor(areas, chart.style.elementColors);
@@ -79,13 +80,13 @@ export class Line
 
     private static getLineGenerator(keyAxisOrient: Orient, scales: Scales, keyFieldName: string, valueFieldName: string, margin: BlockMargin): d3.Line<DataRow> {
         if(keyAxisOrient === 'bottom' || keyAxisOrient === 'top') {
-            return d3.line<DataRow>()
+            return line<DataRow>()
                 .x(d => Scale.getScaleKeyPoint(scales.scaleKey, d[keyFieldName]) + margin.left)
                 .y(d => scales.scaleValue(d[valueFieldName]) + margin.top);
         }
 
         if(keyAxisOrient === 'left' || keyAxisOrient === 'right') {
-            return d3.line<DataRow>()
+            return line<DataRow>()
                 .x(d => scales.scaleValue(d[valueFieldName]) + margin.left)
                 .y(d => Scale.getScaleKeyPoint(scales.scaleKey, d[keyFieldName]) + margin.top);
         }
@@ -93,13 +94,13 @@ export class Line
 
     private static getSegmentedLineGenerator(keyAxisOrient: Orient, scales: Scales, keyFieldName: string, margin: BlockMargin): d3.Line<DataRow> {
         if(keyAxisOrient === 'bottom' || keyAxisOrient === 'top') {
-            return d3.line<DataRow>()
+            return line<DataRow>()
                 .x(d => Scale.getScaleKeyPoint(scales.scaleKey, d.data[keyFieldName]) + margin.left)
                 .y(d => scales.scaleValue(d[1]) + margin.top);
         }
 
         if(keyAxisOrient === 'left' || keyAxisOrient === 'right') {
-            return d3.line<DataRow>()
+            return line<DataRow>()
                 .x(d => scales.scaleValue(d[1]) + margin.left)
                 .y(d => Scale.getScaleKeyPoint(scales.scaleKey, d.data[keyFieldName]) + margin.top);
         }

@@ -1,4 +1,5 @@
-import * as d3 from "d3";
+import { stack } from 'd3-shape';
+import { select } from 'd3-selection';
 import { BarChartSettings, BlockMargin, DataRow, Orient, Size, TwoDimensionalChartModel } from "../../../model/model";
 import { ValueFormatter } from "../../valueFormatter";
 import { Helper } from "../../helper";
@@ -90,7 +91,7 @@ export class Bar
 
     private static renderSegmented(block: Block, scales: Scales, data: DataRow[], margin: BlockMargin, keyAxisOrient: Orient, chart: TwoDimensionalChartModel, blockSize: Size, barSettings: BarChartSettings): void {
         const keys = chart.data.valueFields.map(field => field.name);
-        const stackedData = d3.stack().keys(keys)(data);
+        const stackedData = stack().keys(keys)(data);
 
         const groups = block.getChartBlock()
             .selectAll('g')
@@ -115,7 +116,7 @@ export class Bar
             .attr('height', barAttrs.height);
 
         groups.each(function(d, i) {
-            Helper.setCssClasses(d3.select(this).selectAll('rect'), Helper.getCssClassesWithElementIndex(chart.cssClasses, i));
+            Helper.setCssClasses(select(this).selectAll('rect'), Helper.getCssClassesWithElementIndex(chart.cssClasses, i));
         });
         
         this.setSegmentColor(groups, chart.style.elementColors);
