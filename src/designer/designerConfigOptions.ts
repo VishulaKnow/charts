@@ -1,7 +1,5 @@
 import { DesignerConfig, DataOptions } from './designerConfig'
 
-const colorsJson = require('../assets/materialColors.json');
-
 const designerConfig: DesignerConfig = {
     canvas: {
         axisLabel: {

@@ -114,8 +114,9 @@ export class DataManagerModel
     }
 
     private static getScopedChartData(data: DataRow[], allowableKeys: string[], keyFieldName: string): DataRow[] {
-        return data.filter(d => allowableKeys.includes(d[keyFieldName]));
+        return data.filter(d => allowableKeys.findIndex(key => key === d[keyFieldName]) !== -1);
     }
+    //Привет, андрей? порка поехать за подркаа, все? брольше не люфитишть?
 
     private static setDataType(data: DataSource, config: Config): void {
         if(config.options.type === 'polar' || config.options.type === '2d') {
