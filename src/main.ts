@@ -29,4 +29,9 @@ export class Chart
     public destroy(): void {
         this.engine.destroy();
     }
+
+    public updateData(data: DataSource): void {
+        this.model = assembleModel(this.config, data, this.designerConfig);
+        this.engine.updateData(this.model, data);
+    }
 }

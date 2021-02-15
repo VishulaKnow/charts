@@ -603,24 +603,13 @@ export default class Listeners
 import '../style/main.css'
 import config from '../config/configOptions';
 import designerConfig from '../designer/designerConfigOptions';
-import { Chart } from '../main';
 
 const data = require('../assets/dataSet.json');
-
-// const chart = new Chart(config, designerConfig, data);
-// chart.render(document.querySelector('.main-wrapper'));
-
 
 const model = assembleModel(config, data, designerConfig);
 const engine = new Engine();
 engine.render(model, getPreparedData(model, data, config), document.querySelector('.main-wrapper'));
 new Listeners(engine, config, designerConfig, data);
-
-setTimeout(() => {
-    data["dataSet"][0]["price"] = 200;
-    const model = assembleModel(config, data, designerConfig);
-    engine.updateData(model, data);
-}, 4000);
 
 const config3 = require('../config/configTest2D.json');
 const model3 = assembleModel(config3, data, designerConfig);
