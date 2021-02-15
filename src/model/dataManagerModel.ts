@@ -114,10 +114,10 @@ export class DataManagerModel
     }
 
     private static getScopedChartData(data: DataRow[], allowableKeys: string[], keyFieldName: string): DataRow[] {
-        return data.filter(d => allowableKeys.includes(d[keyFieldName]));
+        return data.filter(d => allowableKeys.findIndex(key => key === d[keyFieldName]) !== -1);
     }
 
-    private static setDataType(data: DataSource, config: Config): void {
+    private static setDataType(data: DataSource, config: Config): void { 
         if(config.options.type === 'polar' || config.options.type === '2d') {
             config.options.charts.forEach((chart: PolarChart | TwoDimensionalChart) => {
                 if(chart.data.keyField.format === 'date') {

@@ -316,11 +316,11 @@ export default class Listeners
             thisClass.changeConfigOptions(this.value);
             thisClass.setControlsValues();
         });
-        document.querySelector('#block-width').addEventListener('input', function(e: KeyboardEvent) {
+        document.querySelector('#block-width').addEventListener('input', function(e) {
             thisClass.config.canvas.size.width = parseFloat(ListenersHelper.getInputValue('#block-width')) || 0;
             thisClass.updateFull();
         });
-        document.querySelector('#block-height').addEventListener('input', function(e: KeyboardEvent) {
+        document.querySelector('#block-height').addEventListener('input', function(e) {
             thisClass.config.canvas.size.height = parseFloat(ListenersHelper.getInputValue('#block-height')) || 0;
             thisClass.updateFull();
         });
