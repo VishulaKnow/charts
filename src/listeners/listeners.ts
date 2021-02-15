@@ -603,13 +603,17 @@ export default class Listeners
 import '../style/main.css'
 import config from '../config/configOptions';
 import designerConfig from '../designer/designerConfigOptions';
+import { Chart } from '../main';
 
 const data = require('../assets/dataSet.json');
 
-const model = assembleModel(config, data, designerConfig);
-const engine = new Engine();
-engine.render(model, getPreparedData(model, data, config), document.querySelector('.main-wrapper'));
-new Listeners(engine, config, designerConfig, data);
+// const model = assembleModel(config, data, designerConfig);
+// const engine = new Engine();
+// engine.render(model, getPreparedData(model, data, config), document.querySelector('.main-wrapper'));
+// new Listeners(engine, config, designerConfig, data);
+
+// const chart = new Chart(config, designerConfig, data);
+// chart.render(document.querySelector('.main-wrapper'));
 
 const config3 = require('../config/configTest2D.json');
 const model3 = assembleModel(config3, data, designerConfig);

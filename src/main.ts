@@ -1,7 +1,7 @@
 import { Config } from "./config/config";
 import { DesignerConfig } from "./designer/designerConfig";
 import Engine from "./engine/engine";
-import { DataSource, Model } from "./model/model";
+import { DataSource, Model, Size } from "./model/model";
 import { assembleModel, getPreparedData } from "./model/modelOptions";
 
 export class Chart
@@ -33,5 +33,15 @@ export class Chart
     public updateData(data: DataSource): void {
         this.model = assembleModel(this.config, data, this.designerConfig);
         this.engine.updateData(this.model, data);
+    }
+
+    public updateSize(newSize: Size): void {
+        if(newSize.height)
+            this.config.canvas.size.height = newSize.height;
+        if(newSize.width)
+            this.config.canvas.size.width = newSize.width;
+
+        this.model = assembleModel(this.config, this.data, this.designerConfig);
+        this.engine.updateFullBlock(this.model, this.data);
     }
 }
