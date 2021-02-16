@@ -62,14 +62,17 @@ export class Axis
             if(axisOptions.orient === 'bottom' && axisOptions.type === 'key' && axisOptions.labels.positition === 'rotated')
                 this.rotateLabels(axisElement);
                 
-            if(axisOptions.orient === 'left' && axisOptions.type === 'key' && Scale.getScaleStep(scale) >= 38) {
+            if((axisOptions.orient === 'left' || axisOptions.orient === 'right') && axisOptions.type === 'key' && Scale.getScaleStep(scale) >= 38) {
                 (axisElement.selectAll('.tick text') as Selection<SVGGElement, unknown, BaseType, any>).call(this.wrap, axisOptions.labels.maxSize);
             } else {
                 this.cropLabels(block, scale, scaleOptions, axisOptions, blockSize);
             }
 
-            if(axisOptions.type === 'key' && axisOptions.orient === 'left') {
-                this.alignLabels(axisElement, 'start', axisOptions.labels.maxSize);
+            if(axisOptions.type === 'key') {
+                if(axisOptions.orient === 'left')
+                    this.alignLabels(axisElement, 'start', axisOptions.labels.maxSize, true);
+                else if(axisOptions.orient === 'right')
+                    this.alignLabels(axisElement, 'start', axisOptions.labels.maxSize, false);
             }
         } else {
             this.hideLabels(axisElement);
@@ -90,14 +93,17 @@ export class Axis
         }
     }
 
-    private static alignLabels(axisElement: Selection<SVGGElement, unknown, HTMLElement, any>, anchor: TextAnchor, maxLabelSize: number): void {
+    private static alignLabels(axisElement: Selection<SVGGElement, unknown, HTMLElement, any>, anchor: TextAnchor, maxLabelSize: number, changeCoordinate: boolean): void {
         const axisTextBlocks = axisElement.selectAll('text');
-        axisTextBlocks.attr('text-anchor', anchor);
-        axisTextBlocks.attr('x', -(maxLabelSize + AXIS_VERTICAL_LABEL_PADDING));
-
         const spans = axisElement.selectAll('tspan');
+        axisTextBlocks.attr('text-anchor', anchor);
         spans.attr('text-anchor', anchor);
-        spans.attr('x', -(maxLabelSize + AXIS_VERTICAL_LABEL_PADDING));
+        if(changeCoordinate) {
+            axisTextBlocks.attr('x', -(maxLabelSize + AXIS_VERTICAL_LABEL_PADDING));
+            spans.attr('x', -(maxLabelSize + AXIS_VERTICAL_LABEL_PADDING));
+        } else {
+            spans.attr('x', AXIS_VERTICAL_LABEL_PADDING);
+        }
     }
 
     private static setAxisLabelPaddingByOrient(axis: IAxis<any>, axisOptions: AxisModelOptions): void {
@@ -194,6 +200,7 @@ export class Axis
                     y = textBlock.attr("y"),
                     dy = 1.4,
                     tspan = textBlock.text(null).append("tspan").attr("y", y).attr("dy", dy + "em");
+
                 while(letter = letters.pop()) {
                     line.push(letter);
                     tspan.text(line.join(''));
@@ -212,6 +219,7 @@ export class Axis
                         lineNumber++;
                     }
                 }
+
                 if(textBlock.selectAll('tspan').size() > 0) {
                     textBlock.attr('y', -(textBlock.node().getBBox().height / 2 + 4.8));
                 }
