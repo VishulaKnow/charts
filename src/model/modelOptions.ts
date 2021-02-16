@@ -71,6 +71,9 @@ function getDataFormat(designerConfig: DesignerConfig): DataFormat {
 }
 
 export function assembleModel(config: Config, data: DataSource, designerConfig: DesignerConfig): Model {
+    if(!data || Object.keys(data).length === 0)
+        return null;
+
     const legendBlock: LegendBlockModel = LegendModel.getBaseLegendBlockModel();
     const margin = MarginModel.getMargin(designerConfig, config, legendBlock, data);
     const dataScope = DataManagerModel.getDataScope(config, margin, data, designerConfig, legendBlock);
