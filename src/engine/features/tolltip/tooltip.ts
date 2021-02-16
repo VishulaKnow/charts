@@ -170,6 +170,13 @@ export class Tooltip
         elemets.on('mouseleave', function() {
             tooltipBlock.style('display', 'none');
             TooltipHelper.setElementsFullOpacity(elemets);
+
+            // select<SVGGElement, PieArcDatum<DataRow>>(this)
+            //     .select('path')
+            //     .attr('d', (d, i) => Donut.getArcGeneratorObject(blockSize, margin, donutThickness)
+            //         .outerRadius(Donut.getOuterRadius(margin, blockSize))
+            //         .innerRadius(Donut.getOuterRadius(margin, blockSize) - donutThickness)
+            //         .padAngle(0)(d, i));
         });
     }
 
