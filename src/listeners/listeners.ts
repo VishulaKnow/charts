@@ -612,9 +612,6 @@ const engine = new Engine();
 engine.render(model, data, document.querySelector('.main-wrapper'));
 new Listeners(engine, config, designerConfig, data);
 
-// const chart = new Chart(config, designerConfig, data);
-// chart.render(document.querySelector('.main-wrapper'));
-
 const config3 = require('../config/configTest2D.json');
 const model3 = assembleModel(config3, data, designerConfig);
 const engine3 = new Engine();

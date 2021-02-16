@@ -7,15 +7,13 @@ export default class Engine {
     private block: Block;
 
     public render(model: Model, data: DataSource, parentElement: HTMLElement): void {  
-        if(!model || Object.keys(model).length === 0 || !data || Object.keys(data).length === 0)
-            return;
-        
         this.block = new Block(model.blockCanvas.cssClass, parentElement);
 
         this.block.renderWrapper(model.blockCanvas.size);
         ValueFormatter.setFormatFunction(model.dataFormat.formatters);
 
-        this.renderCharts(model, data);
+        if(model.options)
+            this.renderCharts(model, data);
     }
 
     public updateData(newModel: Model, newData: DataSource): void {

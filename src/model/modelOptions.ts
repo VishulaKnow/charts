@@ -72,7 +72,15 @@ function getDataFormat(designerConfig: DesignerConfig): DataFormat {
 
 export function assembleModel(config: Config, data: DataSource, designerConfig: DesignerConfig): Model {
     if(!data || Object.keys(data).length === 0)
-        return null;
+        return {
+            blockCanvas: getBlockCanvas(config),
+            chartBlock: null,
+            legendBlock: null,
+            options: null,
+            dataSettings: null,
+            chartSettings: null, 
+            dataFormat: getDataFormat(designerConfig)
+        }
 
     const legendBlock: LegendBlockModel = LegendModel.getBaseLegendBlockModel();
     const margin = MarginModel.getMargin(designerConfig, config, legendBlock, data);
@@ -104,6 +112,9 @@ export function assembleModel(config: Config, data: DataSource, designerConfig: 
 }
 
 export function getPreparedData(model: Model, data: DataSource, config: Config): DataSource {
+    if(!model || Object.keys(model).length === 0 || !data || Object.keys(data).length === 0)
+        return null;
+
     const preparedData = DataManagerModel.getPreparedData(data, model.dataSettings.scope.allowableKeys, config);
     return preparedData;
 }
