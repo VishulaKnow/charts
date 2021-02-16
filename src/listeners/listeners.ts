@@ -164,32 +164,8 @@ export default class Listeners
     }
     
     private getTooltipConfig(notationType: '2d' | 'polar' | 'interval'): any {
-        if(notationType === '2d' || notationType === 'polar') {
-            return {
-                data: {
-                    fields: [
-                        {
-                            name: 'price',
-                            format: 'money'
-                        }
-                    ]
-                }
-            }
-        } else if(notationType === 'interval') {
-            return {
-                data: {
-                    fields: [
-                        {
-                            format: 'date',
-                            name: 'start'
-                        },
-                        {
-                            format: 'date',
-                            name: 'end'
-                        }
-                    ]
-                }
-            }
+        return {
+            show: true
         }
     }
     

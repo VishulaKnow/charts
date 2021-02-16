@@ -145,6 +145,18 @@ export class Tooltip
         const tooltipArrow = this.renderTooltipArrow(tooltipBlock);
         const thisClass = this;
 
+        const filter = block.renderDefs()
+            .append('filter')
+            .attr('id', 'shadow')
+        
+        filter.append('feDropShadow')
+            .attr('dx', 0)
+            .attr('dy', 0)
+            .attr('flood-color', 'rgba(0, 0, 0, 0.3)')
+            .attr('stdDeviation', 10);
+            
+        let clone: Selection<BaseType, unknown, BaseType, unknown>;
+
         elemets
             .on('mouseover', function(event, dataRow) {
                 tooltipBlock.style('display', 'block');
@@ -155,7 +167,9 @@ export class Tooltip
                 const tooltipCoordinate = TooltipHelper.getTooltipCoordinate(coordinatePointer);
                 thisClass.setTooltipCoordinate(tooltipBlock, tooltipCoordinate);
 
-                TooltipHelper.setElementsSemiOpacity(elemets.filter(d => d.data[chart.data.keyField.name] !== key));
+                clone = select(this).clone();
+                select(this).style('filter', 'url(#shadow)');
+                // TooltipHelper.setElementsSemiOpacity(elemets.filter(d => d.data[chart.data.keyField.name] !== key));
 
                 // select<SVGGElement, PieArcDatum<DataRow>>(this)
                 //     .select('path')
@@ -168,13 +182,9 @@ export class Tooltip
         elemets.on('mouseleave', function() {
             tooltipBlock.style('display', 'none');
             TooltipHelper.setElementsFullOpacity(elemets);
-
-            // select<SVGGElement, PieArcDatum<DataRow>>(this)
-            //     .select('path')
-            //     .attr('d', (d, i) => Donut.getArcGeneratorObject(blockSize, margin, donutThickness)
-            //         .outerRadius(Donut.getOuterRadius(margin, blockSize))
-            //         .innerRadius(Donut.getOuterRadius(margin, blockSize) - donutThickness)
-            //         .padAngle(0)(d, i));
+            select(this)
+                .style('filter', null);
+            clone.remove();
         });
     }
 

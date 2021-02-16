@@ -59,8 +59,7 @@ export class Block
     
     public renderClipPath(margin: BlockMargin, blockSize: Size): void {
         const attributes = BlockHelper.getChartBlockAttributes(blockSize, margin);
-        this.getSvg()
-            .append('defs')
+        this.renderDefs()
             .append('clipPath')
             .attr('id', `chart-block-clippath-${this.svgCssClasses.join('-')}`)
             .append('rect')
@@ -68,6 +67,16 @@ export class Block
             .attr('y', attributes.y)
             .attr('width', attributes.width)
             .attr('height', attributes.height);
+    }
+
+    public renderDefs(): Selection<SVGDefsElement, unknown, HTMLElement, unknown> {
+        let defs = this.getSvg()
+            .select<SVGDefsElement>('defs');
+        if(defs.empty())
+            defs = this.getSvg()
+                .append<SVGDefsElement>('defs');
+    
+        return defs;
     }
 
     public getClipPathId(): string {
