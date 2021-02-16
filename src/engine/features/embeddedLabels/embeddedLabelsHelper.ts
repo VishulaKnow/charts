@@ -77,7 +77,7 @@ export class EmbeddedLabelsHelper
     }
 
     private static getLabelAttrY(barY: number, barHeight: number): number {      
-        return barY + barHeight / 2;
+        return barY + barHeight / 2 + 1;
     }
 
     private static getTextAnchor(type: EmbeddedLabelTypeModel, position: EmbeddedLabelPosition, keyAxisOrient: Orient): TextAnchor {
