@@ -148,6 +148,8 @@ export class Tooltip
         const filter = block.renderDefs()
             .append('filter')
             .attr('id', 'shadow')
+            .attr('width', blockSize.width)
+            .attr('height', blockSize.height);
         
         filter.append('feDropShadow')
             .attr('dx', 0)
