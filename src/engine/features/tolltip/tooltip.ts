@@ -18,7 +18,7 @@ export class Tooltip
 
     public static renderTooltips(block: Block, model: Model, data: DataSource): void {
         this.renderTooltipWrapper(block);
-        const chartsWithTooltipIndex = model.options.charts.findIndex((chart: TwoDimensionalChartModel | PolarChartModel | IntervalChartModel) => chart.tooltip.data.fields.length !== 0);
+        const chartsWithTooltipIndex = model.options.charts.findIndex((chart: TwoDimensionalChartModel | PolarChartModel | IntervalChartModel) => chart.tooltip.show);
         if(chartsWithTooltipIndex !== -1) {
             if(model.options.type === '2d') {
                 this.rednerTooltipFor2DCharts(block, model.chartBlock.margin, model.options.charts, data, model.options.isSegmented, model.blockCanvas.size, model.options.orient);   
@@ -54,11 +54,9 @@ export class Tooltip
 
     private static renderTooltipsForInterval(block: Block, charts: IntervalChartModel[], data: DataSource, blockSize: Size, chartOrientation: ChartOrientation): void {
         charts.forEach(chart => {
-            if(chart.tooltip.data.fields.length !== 0) {
-                const bars = block.getSvg()
-                    .selectAll(`rect${Helper.getCssClassesLine(chart.cssClasses)}`);
-                this.renderTooltipForGantt(block, bars, data, chart, chartOrientation, blockSize);
-            }
+            const bars = block.getSvg()
+                .selectAll(`rect${Helper.getCssClassesLine(chart.cssClasses)}`);
+            this.renderTooltipForGantt(block, bars, data, chart, chartOrientation, blockSize);
         });
     }
 

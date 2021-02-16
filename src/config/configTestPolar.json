@@ -27,18 +27,7 @@
             }
           },
           "tooltip":{
-            "data":{
-              "fields":[
-                {
-                  "name":"price",
-                  "format":"money"
-                },
-                {
-                  "name":"count",
-                  "format":"integer"
-                }
-              ]
-            }
+            "show": true
           }
         }
       ]

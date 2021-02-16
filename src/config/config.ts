@@ -110,7 +110,7 @@ interface TwoDimensionalValueField extends Field {
 }
 
 interface Tooltip {
-    data: TooltipData;
+    show: boolean;
 }
 
 interface TooltipData {

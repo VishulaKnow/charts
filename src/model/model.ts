@@ -200,7 +200,7 @@ interface TranslateModel {
 }
 
 interface TooltipModel {
-    data: TooltipDataModel;
+    show: boolean;
 }
 
 interface TooltipDataModel {

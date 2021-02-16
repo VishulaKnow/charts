@@ -65,18 +65,7 @@ const configCars: Config = {
                     ]
                 },
                 tooltip: {
-                    data: {
-                        fields: [
-                            {
-                                name: 'price',
-                                format: 'money'
-                            },
-                            {
-                                name: 'count',
-                                format: 'integer'
-                            }
-                        ]
-                    }
+                    show: true
                 },
                 embeddedLabels: 'key'
             }
@@ -150,18 +139,7 @@ const configDemo: Config = {
                     }
                 },
                 tooltip: {
-                    data: {
-                        fields: [
-                            {
-                                name: 'price',
-                                format: 'money'
-                            },
-                            {
-                                name: 'count',
-                                format: 'integer'
-                            }
-                        ]
-                    }
+                    show: true
                 },
             }
         ]
