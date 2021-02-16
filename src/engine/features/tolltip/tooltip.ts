@@ -141,7 +141,7 @@ export class Tooltip
         });
     }
 
-    private static renderTooltipForDonut(block: Block, elemets: Selection<BaseType, PieArcDatum<DataRow>, BaseType, unknown>, data: DataSource, chart: PolarChartModel, blockSize: Size, margin: BlockMargin, donutThickness: number, translateX: number = 0, translateY: number = 0): void {
+    private static renderTooltipForDonut(block: Block, elemets: Selection<SVGGElement, PieArcDatum<DataRow>, SVGGElement, unknown>, data: DataSource, chart: PolarChartModel, blockSize: Size, margin: BlockMargin, donutThickness: number, translateX: number = 0, translateY: number = 0): void {
         const tooltipBlock = this.renderTooltipBlock(block, translateX, translateY);
         const tooltipContent = this.renderTooltipContentBlock(tooltipBlock);
         const tooltipArrow = this.renderTooltipArrow(tooltipBlock);
@@ -158,6 +158,13 @@ export class Tooltip
                 thisClass.setTooltipCoordinate(tooltipBlock, tooltipCoordinate);
 
                 TooltipHelper.setElementsSemiOpacity(elemets.filter(d => d.data[chart.data.keyField.name] !== key));
+
+                // select<SVGGElement, PieArcDatum<DataRow>>(this)
+                //     .select('path')
+                //     .attr('d', (d, i) => Donut.getArcGeneratorObject(blockSize, margin, donutThickness)
+                //         .outerRadius(Donut.getOuterRadius(margin, blockSize) + 5)
+                //         .innerRadius(Donut.getOuterRadius(margin, blockSize) - donutThickness + 5)
+                //         .padAngle(0.025)(d, i));
             });
 
         elemets.on('mouseleave', function() {

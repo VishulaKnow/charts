@@ -607,10 +607,10 @@ import { Chart } from '../main';
 
 const data = require('../assets/dataSet.json');
 
-// const model = assembleModel(config, data, designerConfig);
-// const engine = new Engine();
-// engine.render(model, getPreparedData(model, data, config), document.querySelector('.main-wrapper'));
-// new Listeners(engine, config, designerConfig, data);
+const model = assembleModel(config, data, designerConfig);
+const engine = new Engine();
+engine.render(model, getPreparedData(model, data, config), document.querySelector('.main-wrapper'));
+new Listeners(engine, config, designerConfig, data);
 
 // const chart = new Chart(config, designerConfig, data);
 // chart.render(document.querySelector('.main-wrapper'));

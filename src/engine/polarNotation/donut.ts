@@ -62,10 +62,21 @@ export class Donut
     }
 
     public static getArcCentroid(blockSize: Size, margin: BlockMargin, dataItem: PieArcDatum<DataRow>, donutThickness: number): [number, number] {
+        const arc = this.getArcGeneratorObject(blockSize, margin, donutThickness);
+
+        return arc.centroid(dataItem);
+    }
+
+    public static getArcGeneratorObject(blockSize: Size, margin: BlockMargin, donutThickness: number): Arc<any, PieArcDatum<DataRow>> {
         const outerRadius = this.getOuterRadius(margin, blockSize);
         const arc = this.getArcGenerator(outerRadius, outerRadius - donutThickness);
 
-        return arc.centroid(dataItem);
+        return arc;
+    }
+
+    public static getOuterRadius(margin: BlockMargin, blockSize: Size): number {
+        return Math.min(blockSize.width - margin.left - margin.right,
+            blockSize.height - margin.top - margin.bottom) / 2;
     }
 
     private static getInnerRadius(outerRadius: number, thickness: number): number {
@@ -77,11 +88,6 @@ export class Donut
             x: (blockSize.width - margin.left - margin.right) / 2 + margin.left,
             y: (blockSize.height - margin.top - margin.bottom) / 2 + margin.top
         }
-    }
-
-    private static getOuterRadius(margin: BlockMargin, blockSize: Size): number {
-        return Math.min(blockSize.width - margin.left - margin.right,
-            blockSize.height - margin.top - margin.bottom) / 2;
     }
     
     private static getArcGenerator(outerRadius: number, innerRadius: number): Arc<any, PieArcDatum<DataRow>> {
