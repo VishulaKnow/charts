@@ -11,6 +11,7 @@ import { Block } from "./block/block";
 import { Tooltip } from "./features/tolltip/tooltip";
 import { RecordOverflowAlert } from "./features/recordOverflowAlert/recordOverflowAlert";
 import { Gantt } from "./intervalNotation/gantt";
+import { BarHelper } from "./twoDimensionalNotation/bar/barHelper";
 
 export class ChartRenderer
 {
@@ -109,6 +110,7 @@ export class ChartRenderer
                     chart,
                     blockSize,
                     barSettings,
+                    BarHelper.getBarsInGroupAmount(charts),
                     chart.isSegmented);
             else if(chart.type === 'line')
                 Line.render(block,

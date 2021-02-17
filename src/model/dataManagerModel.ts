@@ -53,18 +53,6 @@ export class DataManagerModel
         }
     }
 
-     /**
-     * Выводит количество элементов (преимущественно баров) в одной группе. Группа - один ключ
-     * @param configOptions 
-     * @param chartsLength 
-     */
-    private static getElementsInGroupAmount(configOptions: TwoDimensionalOptions | IntervalOptions, chartsLength: number): number {
-        if(configOptions.type === '2d')
-            return this.getBarChartsInGroupAmount(configOptions.charts);
-
-        return chartsLength;
-    }
-
     private static getDataScopeForPolar(configOptions: PolarOptions, blockSize: Size, margin: BlockMargin, data: DataSource, designerConfig: DesignerConfig, legendBlock: LegendBlockModel): DataScope {
         const dataset = data[configOptions.data.dataSource];
         const keyFieldName = configOptions.data.keyField.name;
@@ -100,6 +88,18 @@ export class DataManagerModel
             allowableKeys: keys.slice(0, maxItemsNumber),
             hidedRecordsAmount: keys.length - maxItemsNumber
         }
+    }
+
+    /**
+     * Выводит количество элементов (преимущественно баров) в одной группе. Группа - один ключ
+     * @param configOptions 
+     * @param chartsLength 
+     */
+    private static getElementsInGroupAmount(configOptions: TwoDimensionalOptions | IntervalOptions, chartsLength: number): number {
+        if(configOptions.type === '2d')
+            return this.getBarChartsInGroupAmount(configOptions.charts);
+
+        return chartsLength;
     }
 
     private static getBarChartsInGroupAmount(charts: TwoDimensionalChart[]): number {
