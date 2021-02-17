@@ -91,18 +91,24 @@ export class GridLine
     }
 
     private static removeGridLineOnValueAxis(block: Block, keyAxis: AxisModelOptions, valueAxis: AxisModelOptions): void {
-        if(valueAxis.orient === 'left') {           
-            block.getSvg()
-                .select(`.${keyAxis.cssClass}`)
-                .select('g.tick')
-                .select(`.${this.gridLineClass}`)
-                .remove();
-        } else if(valueAxis.orient === 'right') {
-            block.getSvg()
-                .select(`.${keyAxis.cssClass}`)
-                .select('g.tick:last-of-type')
-                .select(`.${this.gridLineClass}`)
-                .remove();
-        }
+        let tickOnKeyAxisSelector = '';
+        let tickOnValueAxisSelector = '';
+
+        if(valueAxis.orient === 'right')
+            tickOnValueAxisSelector = ':last-of-type';
+        if(keyAxis.orient === 'bottom')
+            tickOnKeyAxisSelector = ':last-of-type';
+
+        block.getSvg()
+            .select(`.${valueAxis.cssClass}`)
+            .select(`g.tick${tickOnKeyAxisSelector}`)
+            .select(`.${this.gridLineClass}`)
+            .remove();
+
+        block.getSvg()
+            .select(`.${keyAxis.cssClass}`)
+            .select(`g.tick${tickOnValueAxisSelector}`)
+            .select(`.${this.gridLineClass}`)
+            .remove();
     }
 }

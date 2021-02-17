@@ -51,7 +51,7 @@ const configCars: Config = {
             {
                 title: 'Рост стоимости',
                 isSegmented: true,
-                type: 'bar',
+                type: 'line',
                 data: {
                     valueFields: [
                         {
@@ -74,7 +74,7 @@ const configCars: Config = {
             {
                 title: 'Рост стоимости',
                 isSegmented: true,
-                type: 'bar',
+                type: 'line',
                 data: {
                     valueFields: [
                         {

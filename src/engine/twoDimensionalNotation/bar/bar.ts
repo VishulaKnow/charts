@@ -124,7 +124,7 @@ export class Bar
             Helper.setCssClasses(select(this).selectAll(`${Helper.getCssClassesLine(chart.cssClasses)}`), Helper.getCssClassesWithElementIndex(chart.cssClasses, i)); // Для обозначения принадлежности бара к конкретной части стака
         });
         
-        this.setSegmentColor(groups, chart.style.elementColors);
+        this.setSegmentColor(groups.selectAll(Helper.getCssClassesLine(chart.cssClasses)), chart.style.elementColors);
     }
 
     private static renderBarGroups(block: Block, data: DataRow[]): void {
