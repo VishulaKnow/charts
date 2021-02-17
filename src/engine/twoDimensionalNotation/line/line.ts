@@ -22,17 +22,32 @@ export class Line
     }
 
     public static updateLineChartByValueAxis(block: Block, scales: Scales, data: DataRow[], keyField: Field, margin: BlockMargin, keyAxisOrient: Orient, chart: TwoDimensionalChartModel): void {
-        chart.data.valueFields.forEach((valueField, index) => {
-            const line = this.getLineGenerator(keyAxisOrient, scales, keyField.name, valueField.name, margin);
-            
-            block.getChartBlock()
-                .select(`.${this.lineChartClass}${Helper.getCssClassesLine(chart.cssClasses)}.chart-element-${index}`)
+        if(chart.isSegmented) {
+            const lineGenerator = this.getSegmentedLineGenerator(keyAxisOrient, scales, keyField.name, margin);
+            const lines = block.getChartBlock()
+                .selectAll<SVGPathElement, DataRow[]>(`path.${this.lineChartClass}${Helper.getCssClassesLine(chart.cssClasses)}`);
+
+            lines
                 .transition()
                 .duration(1000)
-                    .attr('d', line(data));
-    
-            Dot.updateDotsCoordinateByValueAxis(block, data, keyAxisOrient, scales, margin, keyField.name, valueField.name, chart.cssClasses, index, false);
-        });
+                    .attr('d', d => lineGenerator(d));
+
+            lines.each((d, i) => {
+                Dot.updateDotsCoordinateByValueAxis(block, d, keyAxisOrient, scales, margin, keyField.name, '1', chart.cssClasses, i, chart.isSegmented);
+            });
+        } else {
+            chart.data.valueFields.forEach((valueField, index) => {
+                const line = this.getLineGenerator(keyAxisOrient, scales, keyField.name, valueField.name, margin);
+                
+                block.getChartBlock()
+                    .select(`.${this.lineChartClass}${Helper.getCssClassesLine(chart.cssClasses)}.chart-element-${index}`)
+                    .transition()
+                    .duration(1000)
+                        .attr('d', line(data));
+        
+                Dot.updateDotsCoordinateByValueAxis(block, data, keyAxisOrient, scales, margin, keyField.name, valueField.name, chart.cssClasses, index, false);
+            });
+        }
     }
 
     private static renderGrouped(block: Block, scales: Scales, data: DataRow[], keyField: Field, margin: BlockMargin, keyAxisOrient: Orient, chart: TwoDimensionalChartModel, blockSize: Size): void {

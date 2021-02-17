@@ -23,14 +23,14 @@ export class Area
 
     public static updateAreaChartByValueAxis(block: Block, scales: Scales, data: DataRow[], keyField: Field, margin: BlockMargin, chart: TwoDimensionalChartModel, keyAxisOrient: Orient, blockSize: Size, isSegmented: boolean): void {
         if(isSegmented) {
-            const area = this.getSegmentedAreaGenerator(keyAxisOrient, scales, margin, keyField.name);
+            const areaGenerator = this.getSegmentedAreaGenerator(keyAxisOrient, scales, margin, keyField.name);
             const areas = block.getChartBlock()
-                .selectAll(`path.${this.areaChartClass}${Helper.getCssClassesLine(chart.cssClasses)}`) as Selection<SVGRectElement, DataRow[], BaseType, unknown>;
+                .selectAll<SVGRectElement, DataRow[]>(`path.${this.areaChartClass}${Helper.getCssClassesLine(chart.cssClasses)}`);
             
             areas
                 .transition()
                 .duration(1000)
-                    .attr('d', d => area(d as DataRow[]));
+                    .attr('d', d => areaGenerator(d));
 
             areas.each((d, i) => {
                 Dot.updateDotsCoordinateByValueAxis(block, d, keyAxisOrient, scales, margin, keyField.name, '1', chart.cssClasses, i, isSegmented);
