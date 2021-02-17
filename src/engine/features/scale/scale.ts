@@ -60,7 +60,7 @@ export class Scale
             scale.paddingInner(bandSettings.groupMinDistance / bandSize);
             scale.paddingOuter(bandSettings.groupMinDistance / bandSize / 2);
         }
-
+        console.log(elementsInGroupAmount);
         // Padding inner = 10. If bandwidth more than needed, paddingInner is increased to number less than 35 
         let paddingInner = bandSettings.groupMinDistance;
         while(scale.bandwidth() > bandSettings.maxBarWidth * elementsInGroupAmount + bandSettings.barDistance * (elementsInGroupAmount - 1) && paddingInner < bandSettings.groupMaxDistance){

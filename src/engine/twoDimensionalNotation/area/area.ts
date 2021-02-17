@@ -74,7 +74,7 @@ export class Area
         const area = this.getSegmentedAreaGenerator(keyAxisOrient, scales, margin, keyField.name);
 
         const areas = block.getChartBlock()
-            .selectAll('.area')
+            .selectAll(`.${this.areaChartClass}${Helper.getCssClassesLine(chart.cssClasses)}`)
             .data(stackedData)
             .enter()
                 .append('path')

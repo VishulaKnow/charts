@@ -59,8 +59,8 @@ export class Line
         const stackedData = stack().keys(keys)(data);
         const lineGenerator = this.getSegmentedLineGenerator(keyAxisOrient, scales, keyField.name, margin);
 
-        const areas = block.getChartBlock()
-            .selectAll('.area')
+        const lines = block.getChartBlock()
+            .selectAll(`.${this.lineChartClass}${Helper.getCssClassesLine(chart.cssClasses)}`)
             .data(stackedData)
             .enter()
                 .append('path')
@@ -70,11 +70,11 @@ export class Line
                 // .style('clip-path', `url(${block.getClipPathId()})`)
                 .style('pointer-events', 'none');
 
-        areas.each(function(d, i) {
+        lines.each(function(d, i) {
             Helper.setCssClasses(select(this), Helper.getCssClassesWithElementIndex(chart.cssClasses, i));
         });
-
-        this.setSegmentColor(areas, chart.style.elementColors);
+        
+        this.setSegmentColor(lines, chart.style.elementColors);
 
         stackedData.forEach((sd, index) => {
             Dot.render(block, sd, keyAxisOrient, scales, margin, keyField.name, '1', chart.cssClasses, index, chart.style.elementColors, blockSize, true);

@@ -75,6 +75,8 @@ export class ScaleModel
             else
                 barsAmount += chart.data.valueFields.length;
         });
+        
+        return barsAmount;
     }
 
     public static getScaleMaxValue(charts: TwoDimensionalChart[], dataSource: string, data: DataSource): number {

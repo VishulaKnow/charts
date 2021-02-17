@@ -10,6 +10,7 @@ import { Scale, Scales } from "../../features/scale/scale";
 import { Block } from "../../block/block";
 import { EmbeddedLabels } from "../../features/embeddedLabels/embeddedLabels";
 import { EmbeddedLabelsHelper } from "../../features/embeddedLabels/embeddedLabelsHelper";
+import { Chart } from "../../../main";
 
 interface BarAttrs {
     x: (dataRow: DataRow) => number;
@@ -58,8 +59,8 @@ export class Bar
         }
     }
 
-    public static getAllBarItems(block: Block): Selection<BaseType, DataRow, BaseType, unknown> {
-        return block.getSvg().selectAll(`rect.${this.barItemClass}`);
+    public static getAllBarItems(block: Block, chartCssClasses: string[]): Selection<BaseType, DataRow, BaseType, unknown> {
+        return block.getSvg().selectAll(`rect.${this.barItemClass}${Helper.getCssClassesLine(chartCssClasses)}`);
     }
 
     private static renderGrouped(block: Block, scales: Scales, data: DataRow[], keyField: Field, margin: BlockMargin, keyAxisOrient: Orient, chart: TwoDimensionalChartModel, blockSize: Size, barSettings: BarChartSettings): void {

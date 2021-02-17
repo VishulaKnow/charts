@@ -12,6 +12,10 @@ export class Helper
         });
     }
 
+    /**
+     * Возвращает все CSS-классы через точку. Используется для создания селектора для поиска
+     * @param cssClasses 
+     */
     public static getCssClassesLine(cssClasses: string[]): string {
         return '.' + cssClasses.join('.');
     }

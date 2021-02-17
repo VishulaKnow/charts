@@ -51,17 +51,40 @@ const configCars: Config = {
             {
                 title: 'Рост стоимости',
                 isSegmented: false,
-                type: 'line',
+                type: 'bar',
                 data: {
                     valueFields: [
+                        {
+                            name: 'count',
+                            format: 'integer',
+                            title: 'Количество автомобилей на душу населения'
+                        },
                         {
                             name: 'price',
                             format: 'money',
                             title: 'Количество автомобилей на душу населения'
-                        },
+                        }             
+                    ]
+                },
+                tooltip: {
+                    show: true
+                },
+                embeddedLabels: 'key'
+            },
+            {
+                title: 'Рост стоимости',
+                isSegmented: false,
+                type: 'bar',
+                data: {
+                    valueFields: [
                         {
                             name: 'count',
                             format: 'integer',
+                            title: 'Количество автомобилей на душу населения'
+                        },
+                        {
+                            name: 'price',
+                            format: 'money',
                             title: 'Количество автомобилей на душу населения'
                         }             
                     ]

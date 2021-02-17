@@ -33,7 +33,7 @@ export class Tooltip
     private static rednerTooltipFor2DCharts(block: Block, margin: BlockMargin, charts: TwoDimensionalChartModel[], data: DataSource, dataOptions: OptionsModelData, blockSize: Size, chartOrientation: ChartOrientation): void {
         charts.forEach(chart => {
             if(chart.type === 'bar') {
-                this.renderTooltipForBars(block, Bar.getAllBarItems(block), data, dataOptions, chart, chartOrientation, blockSize, margin, charts.map(ch => TooltipHelper.getChartStyleSettings(ch)));
+                this.renderTooltipForBars(block, Bar.getAllBarItems(block, chart.cssClasses), data, dataOptions, chart, chartOrientation, blockSize, margin, charts.map(ch => TooltipHelper.getChartStyleSettings(ch)));
             } else if(chart.type === 'line' || chart.type === 'area') {
                 this.renderTooltipForDots(block, Dot.getAllDots(block, chart.cssClasses), data, dataOptions, chart, blockSize, charts.map(ch => TooltipHelper.getChartStyleSettings(ch)));
             }
