@@ -6,11 +6,12 @@ import { transition } from "d3-transition";
 import { BarChartSettings, BlockMargin, DataRow, Field, Orient, Size, TwoDimensionalChartModel } from "../../../model/model";
 import { ValueFormatter } from "../../valueFormatter";
 import { Helper } from "../../helper";
-import { Scale, Scales } from "../../features/scale/scale";
+import { Scales } from "../../features/scale/scale";
 import { Block } from "../../block/block";
 import { EmbeddedLabels } from "../../features/embeddedLabels/embeddedLabels";
 import { EmbeddedLabelsHelper } from "../../features/embeddedLabels/embeddedLabelsHelper";
 import { BarAttrs, BarHelper } from "./barHelper";
+import { sum } from "d3-array";
 
 select.prototype.transition = transition;
 
@@ -18,11 +19,11 @@ export class Bar
 {
     private static barItemClass  = 'bar-item';
 
-    public static render(block: Block, scales: Scales, data: DataRow[], keyField: Field, margin: BlockMargin, keyAxisOrient: Orient, chart: TwoDimensionalChartModel, blockSize: Size, barSettings: BarChartSettings, barsAmount: number, isSegmented: boolean): void {
+    public static render(block: Block, scales: Scales, data: DataRow[], keyField: Field, margin: BlockMargin, keyAxisOrient: Orient, chart: TwoDimensionalChartModel, blockSize: Size, barSettings: BarChartSettings, barsAmounts: number[], isSegmented: boolean): void {
         if(isSegmented)
-            this.renderSegmented(block, scales, data, keyField, margin, keyAxisOrient, chart, blockSize, barSettings);
+            this.renderSegmented(block, scales, data, keyField, margin, keyAxisOrient, chart, barsAmounts, blockSize, barSettings);
         else
-            this.renderGrouped(block, scales, data, keyField, margin, keyAxisOrient, chart, barsAmount, blockSize, barSettings);
+            this.renderGrouped(block, scales, data, keyField, margin, keyAxisOrient, chart, barsAmounts, blockSize, barSettings);
     }
 
     public static updateBarChartByValueAxis(block: Block, scales: Scales, margin: BlockMargin, keyAxisOrient: string, chart: TwoDimensionalChartModel, blockSize: Size, isSegmented: boolean): void {
@@ -56,7 +57,7 @@ export class Bar
         return block.getSvg().selectAll(`rect.${this.barItemClass}${Helper.getCssClassesLine(chartCssClasses)}`);
     }
 
-    private static renderGrouped(block: Block, scales: Scales, data: DataRow[], keyField: Field, margin: BlockMargin, keyAxisOrient: Orient, chart: TwoDimensionalChartModel, barsAmount: number, blockSize: Size, barSettings: BarChartSettings): void {
+    private static renderGrouped(block: Block, scales: Scales, data: DataRow[], keyField: Field, margin: BlockMargin, keyAxisOrient: Orient, chart: TwoDimensionalChartModel, barsAmounts: number[], blockSize: Size, barSettings: BarChartSettings): void {
         this.renderBarGroups(block, data);
         
         chart.data.valueFields.forEach((field, index) => {
@@ -74,7 +75,7 @@ export class Bar
                 keyField.name,
                 field.name,
                 blockSize,
-                barsAmount,
+                sum(barsAmounts),
                 barSettings,
                 this.barItemClass);
         
@@ -88,25 +89,29 @@ export class Bar
         });
     }
 
-    private static renderSegmented(block: Block, scales: Scales, data: DataRow[], keyField: Field, margin: BlockMargin, keyAxisOrient: Orient, chart: TwoDimensionalChartModel, blockSize: Size, barSettings: BarChartSettings): void {
+    private static renderSegmented(block: Block, scales: Scales, data: DataRow[], keyField: Field, margin: BlockMargin, keyAxisOrient: Orient, chart: TwoDimensionalChartModel, barsAmounts: number[], blockSize: Size, barSettings: BarChartSettings): void {
         const keys = chart.data.valueFields.map(field => field.name);
         const stackedData = stack().keys(keys)(data);
 
-        const groups = block.getChartBlock()
-            .selectAll('g')
-            .data(stackedData)
-            .enter()
-                .append('g');
+        let groups = block.getChartBlock()
+            .selectAll<SVGGElement, DataRow>('g')
+            .data(stackedData);
+        
+        if(groups.empty())
+            groups = groups
+                .data(stackedData)
+                .enter()
+                    .append<SVGGElement>('g');
 
         const bars = groups
-            .selectAll('rect')
+            .selectAll(`rect${Helper.getCssClassesLine(chart.cssClasses)}`)
             .data(d => d)
             .enter()
                 .append('rect')
                 .attr('class', this.barItemClass)
                 // .style('clip-path', `url(${block.getClipPathId()})`);
 
-        const barAttrs = BarHelper.getStackedBarAttrByKeyOrient(keyAxisOrient, scales, margin, keyField.name, blockSize, barSettings);
+        const barAttrs = BarHelper.getStackedBarAttrByKeyOrient(keyAxisOrient, scales, margin, keyField.name, blockSize, BarHelper.getBarIndex(barsAmounts, chart.index), sum(barsAmounts), barSettings);
        
         bars
             .attr('x', barAttrs.x)
@@ -114,8 +119,9 @@ export class Bar
             .attr('width', barAttrs.width)
             .attr('height', barAttrs.height);
 
+        Helper.setCssClasses(bars, chart.cssClasses); // Для обозначения принадлежности бара к конкретному чарту
         groups.each(function(d, i) {
-            Helper.setCssClasses(select(this).selectAll('rect'), Helper.getCssClassesWithElementIndex(chart.cssClasses, i));
+            Helper.setCssClasses(select(this).selectAll(`${Helper.getCssClassesLine(chart.cssClasses)}`), Helper.getCssClassesWithElementIndex(chart.cssClasses, i)); // Для обозначения принадлежности бара к конкретной части стака
         });
         
         this.setSegmentColor(groups, chart.style.elementColors);
@@ -187,7 +193,7 @@ export class Bar
         }
     } 
 
-    private static setSegmentColor(segments: Selection<SVGGElement, unknown, SVGGElement, unknown>, colorPalette: Color[]): void {
+    private static setSegmentColor(segments: Selection<SVGGElement, any, SVGGElement, unknown>, colorPalette: Color[]): void {
         segments.style('fill', (d, i) => colorPalette[i % colorPalette.length].toString());
     }
 }

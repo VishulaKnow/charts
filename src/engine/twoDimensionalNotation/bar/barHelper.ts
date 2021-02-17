@@ -13,7 +13,7 @@ export interface BarAttrs {
 export class BarHelper
 {
     public static getGroupedBarAttrsByKeyOrient(block: Block, axisOrient: Orient, scales: Scales, margin: BlockMargin, keyField: string, valueField: string, blockSize: Size, barsAmount: number, barSettings: BarChartSettings, barItemCssClass: string): BarAttrs {
-        const chartIndex = block.getSvg().select('.bar-group').selectAll(`.${barItemCssClass}`).size() - 1;
+        const barIndex = block.getSvg().select('.bar-group').selectAll(`.${barItemCssClass}`).size() - 1;
         const barDistance = barSettings.barDistance;
         const barStep = (Scale.getScaleWidth(scales.scaleKey) - barDistance * (barsAmount - 1)) / barsAmount; // Space for one bar
         const barSize = barStep > barSettings.maxBarWidth ? barSettings.maxBarWidth : barStep;
@@ -27,11 +27,11 @@ export class BarHelper
         }
 
         if(axisOrient === 'top' || axisOrient === 'bottom') {
-            attrs.x = d => scales.scaleKey(d[keyField]) + margin.left + barSize * chartIndex + barDistance * chartIndex + barDiff;
+            attrs.x = d => scales.scaleKey(d[keyField]) + margin.left + barSize * barIndex + barDistance * barIndex + barDiff;
             attrs.width = d => barSize;
         }
         if(axisOrient === 'left' || axisOrient === 'right') {
-            attrs.y = d => scales.scaleKey(d[keyField]) + margin.top + barSize * chartIndex + barDistance * chartIndex + barDiff;
+            attrs.y = d => scales.scaleKey(d[keyField]) + margin.top + barSize * barIndex + barDistance * barIndex + barDiff;
             attrs.height = d => barSize;
         }
         
@@ -55,10 +55,13 @@ export class BarHelper
         return attrs;
     }
 
-    public static getStackedBarAttrByKeyOrient(axisOrient: Orient, scales: Scales, margin: BlockMargin, keyField: string, blockSize: Size, barSettings: BarChartSettings): BarAttrs {
-        const barStep = (Scale.getScaleWidth(scales.scaleKey));
+    public static getStackedBarAttrByKeyOrient(axisOrient: Orient, scales: Scales, margin: BlockMargin, keyField: string, blockSize: Size, barIndex: number, barsAmount: number, barSettings: BarChartSettings): BarAttrs {
+        const barDistance = barSettings.barDistance;
+        const barStep = (Scale.getScaleWidth(scales.scaleKey) - barDistance * (barsAmount - 1)) / barsAmount; // Space for one bar
         const barSize = barStep > barSettings.maxBarWidth ? barSettings.maxBarWidth : barStep;
-        const barDiff = (barStep - barSize) / 2;
+        const barDiff = (barStep - barSize) * barsAmount / 2; // if bar bigger than maxWidth, diff for x coordinate
+
+        console.log(barIndex, barSize, barDiff);
 
         const attrs: BarAttrs = {
             x: null,
@@ -68,11 +71,11 @@ export class BarHelper
         }
 
         if(axisOrient === 'top' || axisOrient === 'bottom') {
-            attrs.x = d => scales.scaleKey(d.data[keyField]) + margin.left + barDiff;
+            attrs.x = d => scales.scaleKey(d.data[keyField]) + margin.left + barSize * barIndex + barDistance * barIndex + barDiff;
             attrs.width = d => barSize;
         }
         if(axisOrient === 'left' || axisOrient === 'right') {
-            attrs.y = d => scales.scaleKey(d.data[keyField]) + margin.top + barDiff;
+            attrs.y = d => scales.scaleKey(d.data[keyField]) + margin.top + barSize * barIndex + barDistance * barIndex + barDiff;
             attrs.height = d => barSize;
         }
         
@@ -96,15 +99,24 @@ export class BarHelper
         return attrs;
     }
 
-    public static getBarsInGroupAmount(charts: TwoDimensionalChartModel[]): number {
-        let amount= 0;
-        charts.forEach(chart => {
+    public static getBarsInGroupAmount(charts: TwoDimensionalChartModel[]): number[] {
+        let amounts: number[] = [];
+        charts.forEach((chart, i) => {
             if(chart.type === 'bar' && chart.isSegmented)
-                amount += 1; // Сегментированный бар содержит все свои valueFields в одном баре
+                amounts.push(1) // Сегментированный бар содержит все свои valueFields в одном баре
             else if(chart.type === 'bar')
-                amount += chart.data.valueFields.length;
+                amounts.push(chart.data.valueFields.length);
         });
 
-        return amount;
+        return amounts;
+    }
+
+    public static getBarIndex(barsAmounts: number[], chartIndex: number): number {
+        let index = 0;
+        barsAmounts.forEach((ba, i) => {
+            if(i < chartIndex)
+                index += ba;
+        });
+        return index;
     }
 }
