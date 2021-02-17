@@ -35,8 +35,7 @@ export class ChartRenderer
             model.chartBlock.margin,
             options.axis.keyAxis.orient,
             model.chartSettings.bar,
-            model.blockCanvas.size,
-            options.isSegmented);
+            model.blockCanvas.size);
     
         Legend.render(block, 
             data,
@@ -96,7 +95,7 @@ export class ChartRenderer
             RecordOverflowAlert.render(block, model.dataSettings.scope.hidedRecordsAmount, 'top', options.orient);
     }
 
-    private static render2DCharts(block: Block, charts: TwoDimensionalChartModel[], scales: Scales, data: DataSource, dataOptions: OptionsModelData, margin: BlockMargin, keyAxisOrient: Orient, barSettings: BarChartSettings, blockSize: Size, isSegmented: boolean) {      
+    private static render2DCharts(block: Block, charts: TwoDimensionalChartModel[], scales: Scales, data: DataSource, dataOptions: OptionsModelData, margin: BlockMargin, keyAxisOrient: Orient, barSettings: BarChartSettings, blockSize: Size) {      
         block.renderClipPath(margin, blockSize);
         block.renderChartBlock();
         charts.forEach((chart: TwoDimensionalChartModel) => {
@@ -110,7 +109,7 @@ export class ChartRenderer
                     chart,
                     blockSize,
                     barSettings,
-                    isSegmented);
+                    chart.isSegmented);
             else if(chart.type === 'line')
                 Line.render(block,
                     scales,
@@ -120,7 +119,7 @@ export class ChartRenderer
                     keyAxisOrient,
                     chart,
                     blockSize,
-                    isSegmented);  
+                    chart.isSegmented);  
             else if(chart.type === 'area')
                 Area.render(block,
                     scales,
@@ -130,7 +129,7 @@ export class ChartRenderer
                     keyAxisOrient,
                     chart,
                     blockSize,
-                    isSegmented);
+                    chart.isSegmented);
         });
     }
     
@@ -188,11 +187,10 @@ export class ChartRenderer
             model.options.data,
             model.chartBlock.margin,
             options.axis.keyAxis.orient,
-            model.blockCanvas.size,
-            options.isSegmented);
+            model.blockCanvas.size);
     }
 
-    private static updateChartsByValueAxis(block: Block, charts: TwoDimensionalChartModel[], scales: Scales, data: DataSource, dataOptions: OptionsModelData, margin: BlockMargin, keyAxisOrient: Orient, blockSize: Size, isSegmented: boolean): void {
+    private static updateChartsByValueAxis(block: Block, charts: TwoDimensionalChartModel[], scales: Scales, data: DataSource, dataOptions: OptionsModelData, margin: BlockMargin, keyAxisOrient: Orient, blockSize: Size): void {
         charts.forEach((chart: TwoDimensionalChartModel) => {
             if(chart.type === 'bar') {
                 Bar.updateBarChartByValueAxis(block, 
@@ -201,7 +199,7 @@ export class ChartRenderer
                     keyAxisOrient,
                     chart,
                     blockSize,
-                    isSegmented);
+                    chart.isSegmented);
             }
             else if(chart.type === 'line') {
                 Line.updateLineChartByValueAxis(block,
@@ -221,7 +219,7 @@ export class ChartRenderer
                     chart,
                     keyAxisOrient,
                     blockSize,
-                    isSegmented);
+                    chart.isSegmented);
             }
         });
     }

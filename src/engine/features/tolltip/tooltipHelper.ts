@@ -211,17 +211,20 @@ export class TooltipHelper
     private static fillTooltipContent(tooltipContentBlock: Selection<BaseType, unknown, BaseType, unknown>, data: DataSource, dataOptions: OptionsModelData, keyValue: string, valueField: Field, markColor: string): void {
         const group = tooltipContentBlock.append('div')
             .attr('class', 'tooltip-group');
+
         group.append('div')
             .attr('class', 'tooltip-color')
             .append('span')
             .attr('class', 'tooltip-circle')
             .style('background-color', markColor);
+
         const textBlock = group.append('div')
             .attr('class', 'tooltip-texts')
             .append('div')
             .attr('class', 'tooltip-text-item')
             .text(this.getTooltipItemText(data, dataOptions, keyValue, valueField))
             .style('white-space', 'nowrap');
+            
         if(textBlock.node().getBoundingClientRect().width > 500)
             textBlock.style('white-space', 'normal');
     }

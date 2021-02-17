@@ -158,13 +158,13 @@ export default class Listeners
         if(notationType === '2d') {
             const options: TwoDimensionalOptions = {
                 legend: this.config.options.legend,
-                isSegmented: false,
                 orientation: ListenersHelper.getInputValue('#chart-orient') as 'horizontal' | 'vertical',
                 type: notationType,
                 data: { ...this.config.options.data },
                 charts: [
                     {
                         data: this.getDataConfig(notationType),
+                        isSegmented: false,
                         title: this.config.options.charts[0].title,
                         tooltip: this.getTooltipConfig(notationType),
                         type: ListenersHelper.getInputValue('#chart-2d-type') === 'barLine' ? 'bar' : ListenersHelper.getInputValue('#chart-2d-type') as 'line' | 'bar' | 'area',
@@ -460,7 +460,9 @@ export default class Listeners
         });
         document.querySelector('#is-segmented').addEventListener('change', function() {
             if(config.options.type === '2d') {
-                config.options.isSegmented = this.checked;
+                config.options.charts.forEach(chart => {
+                    chart.isSegmented = this.checked;
+                })
                 thisClass.updateFull();
             }
         });
@@ -551,7 +553,7 @@ export default class Listeners
             ListenersHelper.setCheckboxValue('#config-key-grid', config.options.additionalElements.gridLine.flag.key);
             ListenersHelper.setCheckboxValue('#config-tick-key', config.options.axis.keyAxis.ticks.flag);
             ListenersHelper.setCheckboxValue('#config-tick-value', config.options.axis.valueAxis.ticks.flag);
-            ListenersHelper.setCheckboxValue('#is-segmented', config.options.isSegmented);
+            ListenersHelper.setCheckboxValue('#is-segmented', config.options.charts.findIndex(ch => ch.isSegmented) !== -1);
             ListenersHelper.setInputValue('#embedded-labels', config.options.charts[0].embeddedLabels);
         } else if(config.options.type === 'polar') {
             ListenersHelper.setInputValue('#chart-polar-type', config.options.charts[0].type);
