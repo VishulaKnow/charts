@@ -560,8 +560,8 @@ export default class Listeners
 }
 
 import '../style/main.css'
-import config from '../config/configOptions';
-import designerConfig from '../designer/designerConfigOptions';
+import config from '../config/configExample';
+import designerConfig from '../designer/designerConfigExample';
 import { Chart } from '../main';
 
 const data = require('../assets/dataSet.json');
