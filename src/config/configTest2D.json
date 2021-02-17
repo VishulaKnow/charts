@@ -1,6 +1,6 @@
 {
   "canvas":{
-    "class":"svg-chart-2",
+    "class":"svg-chart",
     "size":{
       "width":800,
       "height":400
@@ -39,17 +39,24 @@
       "show":true
     },
     "orientation":"vertical",
+    "data":{
+      "dataSource":"dataSet",
+      "keyField":{
+        "name":"brand",
+        "format":"string"
+      }
+    },
     "charts":[
       {
         "title":"Рост стоимости",
         "type":"bar",
         "data":{
-          "dataSource":"dataSet",
-          "keyField":{
-            "name":"brand",
-            "format":"string"
-          },
           "valueFields":[
+            {
+              "name":"price",
+              "format":"money",
+              "title":"Количество автомобилей на душу населения"
+            },
             {
               "name":"count",
               "format":"integer",
@@ -58,34 +65,29 @@
           ]
         },
         "tooltip":{
-          "show": true
+          "show":true
         },
         "embeddedLabels":"key"
       },
       {
-        "title":"Рост продаж",
+        "title":"Рост стоимости",
         "type":"line",
         "data":{
-          "dataSource":"dataSet2",
-          "keyField":{
-            "name":"brand",
-            "format":"string"
-          },
           "valueFields":[
+            {
+              "name":"price",
+              "format":"money",
+              "title":"Количество автомобилей на душу населения"
+            },
             {
               "name":"count",
               "format":"integer",
               "title":"Количество автомобилей на душу населения"
-            },
-            {
-              "name":"price",
-              "format":"integer",
-              "title":"Цена автомобилей"
             }
           ]
         },
         "tooltip":{
-          "show": true
+          "show":true
         },
         "embeddedLabels":"key"
       }

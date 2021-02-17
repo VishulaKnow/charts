@@ -1,35 +1,37 @@
 {
-    "canvas":{
-      "class":"svg-chart-3",
-      "size":{
-        "width":700,
-        "height":400
+  "canvas":{
+    "class":"svg-chart",
+    "size":{
+      "width":500,
+      "height":510
+    }
+  },
+  "options":{
+    "type":"polar",
+    "legend":{
+      "show":true
+    },
+    "data":{
+      "dataSource":"dataSet",
+      "keyField":{
+        "name":"brand",
+        "format":"string"
       }
     },
-    "options":{
-      "type":"polar",
-      "legend":{
-        "show":true
-      },
-      "charts":[
-        {
-          "title":"Рост стоимости",
-          "type":"donut",
-          "data":{
-            "dataSource":"dataSet",
-            "keyField":{
-              "name":"brand",
-              "format":"string"
-            },
-            "valueField":{
-              "name":"price",
-              "format":"money"
-            }
-          },
-          "tooltip":{
-            "show": true
+    "charts":[
+      {
+        "title":"Рост стоимости",
+        "type":"donut",
+        "data":{
+          "valueField":{
+            "name":"price",
+            "format":"money"
           }
+        },
+        "tooltip":{
+          "show":true
         }
-      ]
-    }
+      }
+    ]
   }
+}
