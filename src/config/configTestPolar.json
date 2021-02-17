@@ -1,0 +1,35 @@
+{
+    "canvas":{
+      "class":"svg-chart-3",
+      "size":{
+        "width":700,
+        "height":400
+      }
+    },
+    "options":{
+      "type":"polar",
+      "legend":{
+        "show":true
+      },
+      "charts":[
+        {
+          "title":"Рост стоимости",
+          "type":"donut",
+          "data":{
+            "dataSource":"dataSet",
+            "keyField":{
+              "name":"brand",
+              "format":"string"
+            },
+            "valueField":{
+              "name":"price",
+              "format":"money"
+            }
+          },
+          "tooltip":{
+            "show": true
+          }
+        }
+      ]
+    }
+  }

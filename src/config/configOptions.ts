@@ -74,7 +74,7 @@ const configCars: Config = {
     options: {
         type: 'polar',
         legend: {
-            show: true
+            show: false
         },
         charts: [
             {
