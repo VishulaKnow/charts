@@ -82,12 +82,13 @@ export class TwoDimensionalModel
             && charts.length === this.findChartsWithEmbeddedKeyLabels(charts).length;
     }
 
-    private static getBarSize(elementsInGroupAmount: number, keysAmount: number, chartOrientation: ChartOrientation, blockSize: Size, margin: BlockMargin, barOptions: BarOptionsCanvas): number {
-        const axisSize = AxisModel.getAxisLength(chartOrientation, margin, blockSize);
-        return (axisSize / keysAmount - (elementsInGroupAmount - 1) * barOptions.barDistance - barOptions.groupMinDistance) / elementsInGroupAmount;
+    public static sortCharts(charts: TwoDimensionalChart[]): void {
+        const chartOrder: TwoDimensionalChartType[] = ['area', 'bar', 'line'];
+        charts.sort((ch1, ch2) => chartOrder.indexOf(ch1.type) - chartOrder.indexOf(ch2.type));
     }
 
     private static getChartsModel(charts: TwoDimensionalChart[], chartOrientation: ChartOrientation): TwoDimensionalChartModel[] {
+        this.sortCharts(charts);
         const chartsModel: TwoDimensionalChartModel[] = [];
         charts.forEach((chart, index) => {
             chartsModel.push({

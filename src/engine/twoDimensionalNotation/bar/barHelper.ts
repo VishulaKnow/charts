@@ -61,8 +61,6 @@ export class BarHelper
         const barSize = barStep > barSettings.maxBarWidth ? barSettings.maxBarWidth : barStep;
         const barDiff = (barStep - barSize) * barsAmount / 2; // if bar bigger than maxWidth, diff for x coordinate
 
-        console.log(barIndex, barSize, barDiff);
-
         const attrs: BarAttrs = {
             x: null,
             y: null,
@@ -112,6 +110,9 @@ export class BarHelper
     }
 
     public static getBarIndex(barsAmounts: number[], chartIndex: number): number {
+        if(barsAmounts.length < 2)
+            return 0;
+            
         let index = 0;
         barsAmounts.forEach((ba, i) => {
             if(i < chartIndex)

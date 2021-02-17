@@ -106,10 +106,10 @@ export class Area
                 .y(d => Scale.getScaleKeyPoint(scales.scaleKey, d[keyFieldName]) + margin.top);
     }
 
-    private static getSegmentedAreaGenerator(keyAxisOrient: Orient, scales: Scales, margin: BlockMargin, keyField: string): IArea<DataRow> {
+    private static getSegmentedAreaGenerator(keyAxisOrient: Orient, scales: Scales, margin: BlockMargin, keyFieldName: string): IArea<DataRow> {
         if(keyAxisOrient === 'bottom' || keyAxisOrient === 'top') {
             return area<DataRow>()
-                .x(d => scales.scaleKey(d.data[keyField]) + margin.left)
+                .x(d => Scale.getScaleKeyPoint(scales.scaleKey, d.data[keyFieldName]) + margin.left)
                 .y0(d => scales.scaleValue(d[0]) + margin.top)
                 .y1(d => scales.scaleValue(d[1]) + margin.top);
         }
@@ -118,7 +118,7 @@ export class Area
             return area<DataRow>()
                 .x0(d => scales.scaleValue(d[0]) + margin.left)
                 .x1(d => scales.scaleValue(d[1]) + margin.left)
-                .y(d => scales.scaleKey(d.data[keyField]) + margin.top);
+                .y(d => Scale.getScaleKeyPoint(scales.scaleKey, d.data[keyFieldName]) + margin.top);
         }
     }
 
