@@ -10,7 +10,6 @@ const configCars: Config = {
     },
     options: {
         type: '2d',
-        isSegmented: false,
         axis: {
             keyAxis: {
                 position: 'end',
@@ -51,6 +50,7 @@ const configCars: Config = {
         charts: [
             {
                 title: 'Рост стоимости',
+                isSegmented: false,
                 type: 'line',
                 data: {
                     valueFields: [

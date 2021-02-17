@@ -85,9 +85,9 @@
         { "id": 6, "task": "task6", "start": "2020-12-12", "end": "2020-12-16", "next_task_id": 1 }
     ],
     "dataSet_poor": [
-        { "brand": "BMW", "price": 120, "count": 12 },
-        { "brand": "LADA", "price": 50, "count": 10 },
-        { "brand": "MERCEDES", "price": 15, "count": 12 }
+        { "brand": "BMW", "price": 120, "count": 12, "simple": 300 },
+        { "brand": "LADA", "price": 50, "count": 10, "simple": 30 },
+        { "brand": "MERCEDES", "price": 15, "count": 12, "simple": 500 }
     ],
     "dataSet_poor2": [
         { "brand": "BMW", "price": 120, "count": 12 },

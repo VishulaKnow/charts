@@ -27,23 +27,18 @@ export class DataManagerModel
         return data[dataSource].map(dataRow => dataRow[keyFieldName]);
     }
 
-    public static getElementsInGroupAmount(configOptions: TwoDimensionalOptions | IntervalOptions, chartsLength: number): number {
-        if(configOptions.type === '2d' && !configOptions.isSegmented) {
-            return this.getBarChartsInGroupAmount(configOptions);
-        }
-        return chartsLength;
-    }
 
     private static getDataScopeFor2D(configOptions: TwoDimensionalOptions | IntervalOptions, blockSize: Size, margin: BlockMargin, data: DataSource, designerConfig: DesignerConfig): DataScope {
-        const charts = (configOptions.charts as Array<TwoDimensionalChart | IntervalChart>)
+        // Выбор чартов, которые используют столбики
+        const chartsWithBarElement = (configOptions.charts as Array<TwoDimensionalChart | IntervalChart>)
             .filter((chart: TwoDimensionalChart | IntervalChart) => chart.type === 'bar' || chart.type === 'gantt');
 
-        if(charts.length !== 0) {
+        if(chartsWithBarElement.length !== 0) {
             const axisLength = AxisModel.getAxisLength(configOptions.orientation, margin, blockSize);
             const uniqueKeys = ModelHelper.getUniqueValues(data[configOptions.data.dataSource].map(d => d[configOptions.data.keyField.name]));
             const dataLength = uniqueKeys.length;
             
-            const limit = this.getDataLimitByBarSize(this.getElementsInGroupAmount(configOptions, charts.length), dataLength, axisLength, designerConfig.canvas.chartOptions.bar);
+            const limit = this.getDataLimitByBarSize(this.getElementsInGroupAmount(configOptions, chartsWithBarElement.length), dataLength, axisLength, designerConfig.canvas.chartOptions.bar);
             const allowableKeys = uniqueKeys.slice(0, limit);
             
             return {
@@ -56,6 +51,18 @@ export class DataManagerModel
             allowableKeys: this.getDataValuesByKeyField(data, configOptions.data.dataSource, configOptions.data.keyField.name),
             hidedRecordsAmount: 0   
         }
+    }
+
+     /**
+     * Выводит количество элементов (преимущественно баров) в одной группе. Группа - один ключ
+     * @param configOptions 
+     * @param chartsLength 
+     */
+    private static getElementsInGroupAmount(configOptions: TwoDimensionalOptions | IntervalOptions, chartsLength: number): number {
+        if(configOptions.type === '2d')
+            return this.getBarChartsInGroupAmount(configOptions.charts);
+
+        return chartsLength;
     }
 
     private static getDataScopeForPolar(configOptions: PolarOptions, blockSize: Size, margin: BlockMargin, data: DataSource, designerConfig: DesignerConfig, legendBlock: LegendBlockModel): DataScope {
@@ -95,13 +102,15 @@ export class DataManagerModel
         }
     }
 
-    private static getBarChartsInGroupAmount(configOptions: TwoDimensionalOptions): number {
-        let barAmount = 0;
-        configOptions.charts.forEach(chart => {
-            if(chart.type === 'bar')
-                barAmount += chart.data.valueFields.length;
+    private static getBarChartsInGroupAmount(charts: TwoDimensionalChart[]): number {
+        let barsAmount = 0;
+        charts.forEach(chart => {
+            if(chart.type === 'bar' && chart.isSegmented)
+                barsAmount += 1; // в сегментированном баре все valueFields находятся внутри одного бара, поэтому бар всегда один.
+            else 
+                barsAmount += chart.data.valueFields.length;
         });
-        return barAmount;
+        return barsAmount;
     }
 
     private static getScopedData(data: DataSource, allowableKeys: string[], config: Config): DataSource {

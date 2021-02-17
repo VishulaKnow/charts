@@ -17,7 +17,6 @@ export class TwoDimensionalModel
         return {
             legend: LegendModel.getLegendModel(config.options.type, config.options.legend.show, config.canvas.size, margin),
             orient: configOptions.orientation,
-            isSegmented: configOptions.isSegmented,
             scale: {
                 scaleKey: {
                     domain: ScaleModel.getScaleKeyDomain(dataScope.allowableKeys),
@@ -26,7 +25,7 @@ export class TwoDimensionalModel
                         end: ScaleModel.getScaleRangePeek(ScaleType.Key, configOptions.orientation, margin, config.canvas.size)
                     },
                     type: ScaleModel.getScaleKeyType(configOptions.charts),
-                    elementsAmount: ScaleModel.getScaleElementsAmount(this.getChartsByType(configOptions.charts, 'bar'), configOptions.isSegmented)
+                    elementsAmount: ScaleModel.getScaleElementsAmount(this.getChartsByType(configOptions.charts, 'bar'))
                 },
                 scaleValue: {
                     domain: ScaleModel.getScaleLinearValueDomain(configOptions.axis.valueAxis.domain, data, configOptions),
@@ -50,7 +49,7 @@ export class TwoDimensionalModel
                     labels: {
                         maxSize: AxisModel.getLabelSize(designerConfig.canvas.axisLabel.maxSize.main, data[configOptions.data.dataSource].map(d => d[configOptions.data.keyField.name])).width,
                         positition: AxisModel.getKeyAxisLabelPosition(margin, config.canvas.size, DataManagerModel.getDataValuesByKeyField(data, configOptions.data.dataSource, configOptions.data.keyField.name).length),
-                        visible: !TwoDimensionalModel.getChartsEmbeddedLabelsFlag(configOptions.charts, configOptions, data, configOptions.orientation, config.canvas.size, margin, designerConfig.canvas.chartOptions.bar, configOptions.isSegmented)
+                        visible: !TwoDimensionalModel.getChartsEmbeddedLabelsFlag(configOptions.charts, configOptions.orientation)
                     }
                 },
                 valueAxis: {
@@ -71,13 +70,14 @@ export class TwoDimensionalModel
             },
             type: configOptions.type,
             data: { ...configOptions.data },
-            charts: this.getChartsModel(configOptions.charts, configOptions.orientation, configOptions.isSegmented),
+            charts: this.getChartsModel(configOptions.charts, configOptions.orientation),
             additionalElements: this.getAdditionalElements(configOptions, designerConfig)
         }
     }
 
-    public static getChartsEmbeddedLabelsFlag(charts: TwoDimensionalChart[], configOptions: TwoDimensionalOptions, data: DataSource, chartOrientation: ChartOrientation, blockSize: Size, margin: BlockMargin, barOptions: BarOptionsCanvas, isSegmented: boolean): boolean {
-        return !isSegmented 
+    public static getChartsEmbeddedLabelsFlag(charts: TwoDimensionalChart[], chartOrientation: ChartOrientation): boolean {
+        // Если НЕ найден хотя бы один чарт, который сегментированный или хотя бы один НЕ бар чарт, то лейблы можно прятать
+        return charts.findIndex(chart => chart.isSegmented || chart.type !== 'bar') === -1
             && chartOrientation === 'horizontal' 
             && charts.length === this.findChartsWithEmbeddedKeyLabels(charts).length;
     }
@@ -87,16 +87,17 @@ export class TwoDimensionalModel
         return (axisSize / keysAmount - (elementsInGroupAmount - 1) * barOptions.barDistance - barOptions.groupMinDistance) / elementsInGroupAmount;
     }
 
-    private static getChartsModel(charts: TwoDimensionalChart[], chartOrientation: ChartOrientation, isSegmented: boolean): TwoDimensionalChartModel[] {
+    private static getChartsModel(charts: TwoDimensionalChart[], chartOrientation: ChartOrientation): TwoDimensionalChartModel[] {
         const chartsModel: TwoDimensionalChartModel[] = [];
         charts.forEach((chart, index) => {
             chartsModel.push({
                 type: chart.type,
+                isSegmented: chart.isSegmented,
                 title: chart.title,
                 data: { ...chart.data },
                 tooltip: chart.tooltip,
                 cssClasses: ChartStyleModel.getCssClasses(index),
-                style: ChartStyleModel.get2DChartStyle(charts.length, chart.type, this.getChartsValueFieldsAmount(charts), index, isSegmented),
+                style: ChartStyleModel.get2DChartStyle(charts.length, chart.type, this.getChartsValueFieldsAmount(charts), index, chart.isSegmented),
                 embeddedLabels: this.getEmbeddedLabelType(chart, chartOrientation),
                 index
             });

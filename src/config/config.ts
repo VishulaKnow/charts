@@ -27,10 +27,9 @@ interface DataOptions {
 export interface TwoDimensionalOptions extends Options {
     type: '2d';
     axis: TwoDimensionalAxis;
-    additionalElements: TwoDimensionalAdditionalElements;
+    additionalElements: AdditionalElements;
     charts: TwoDimensionalChart[];
     orientation: ChartOrientation;
-    isSegmented: boolean;
 }
 
 export interface PolarOptions extends Options {
@@ -42,7 +41,7 @@ export interface IntervalOptions extends Options {
     type: 'interval';
     axis: IntervalAxis;
     charts: IntervalChart[];
-    additionalElements: TwoDimensionalAdditionalElements;
+    additionalElements: AdditionalElements;
     orientation: ChartOrientation;
 }
 
@@ -60,6 +59,7 @@ export interface TwoDimensionalChart extends Chart {
     type: TwoDimensionalChartType;
     data: TwoDimensionalChartData;
     embeddedLabels: EmbeddedLabelType;
+    isSegmented: boolean;
 }
 
 export interface PolarChart extends Chart {
@@ -126,7 +126,7 @@ interface Size {
     height: number;
 }
 
-interface TwoDimensionalAdditionalElements {
+interface AdditionalElements {
     gridLine: GridLineOptions;
 }
 

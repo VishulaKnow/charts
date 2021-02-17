@@ -99,7 +99,6 @@ export interface TwoDimensionalOptionsModel extends OptionsModel {
     charts: TwoDimensionalChartModel[];
     additionalElements: AdditionalElementsOptions;
     orient: ChartOrientation;
-    isSegmented: boolean;
 }
 export interface PolarOptionsModel extends OptionsModel {
     type: 'polar';
@@ -146,6 +145,7 @@ export interface TwoDimensionalChartModel extends ChartModel {
     type: TwoDimensionalChartType;
     data: TwoDimensionalChartDataModel;
     embeddedLabels: EmbeddedLabelTypeModel;
+    isSegmented: boolean;
 }
 export interface IntervalChartModel extends ChartModel {
     type: IntervalChartType;

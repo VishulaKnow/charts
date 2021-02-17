@@ -41,7 +41,7 @@ export class ScaleModel
         else
             domainPeekMin = configDomain.start;
         if(configDomain.end === -1)
-            domainPeekMax = this.getScaleMaxValue(configOptions, data);
+            domainPeekMax = this.getScaleMaxValue(configOptions.charts, configOptions.data.dataSource, data);
         else
             domainPeekMax = configDomain.end;
             
@@ -64,23 +64,27 @@ export class ScaleModel
         return 'linear';
     }
 
-    public static getScaleElementsAmount(barCharts: TwoDimensionalChart[], isSegmented: boolean): number {
+    public static getScaleElementsAmount(barCharts: TwoDimensionalChart[]): number {
         if(barCharts.length === 0)
             return 1;
 
-        return isSegmented 
-            ? barCharts.length 
-            : ModelHelper.getMaxNumberValue(barCharts.map(chart => chart.data.valueFields.length));
+        let barsAmount = 0;
+        barCharts.forEach(chart => {
+            if(chart.isSegmented)
+                barsAmount += 1; // Если бар сегментированный, то все valueFields являются частями одного бара
+            else
+                barsAmount += chart.data.valueFields.length;
+        });
     }
 
-    private static getScaleMaxValue(configOptions: TwoDimensionalOptions, data: DataSource): number {
+    public static getScaleMaxValue(charts: TwoDimensionalChart[], dataSource: string, data: DataSource): number {
         let max: number = 0;
 
-        configOptions.charts.forEach(chart => {
-            data[configOptions.data.dataSource].forEach(dataRow => {
+        charts.forEach(chart => {
+            data[dataSource].forEach(dataRow => {
                 let sumInRow = 0;
                 chart.data.valueFields.forEach(field => {
-                    if(configOptions.isSegmented)
+                    if(chart.isSegmented)
                         sumInRow += dataRow[field.name];
                     else
                         if(dataRow[field.name] > sumInRow)
