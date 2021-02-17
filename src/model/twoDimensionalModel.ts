@@ -15,7 +15,7 @@ export class TwoDimensionalModel
         const configOptions = <TwoDimensionalOptions>config.options;
 
         return {
-            legend: LegendModel.getLegendModel(config.options.type, config.options.legend.position, config.canvas.size, margin),
+            legend: LegendModel.getLegendModel(config.options.type, config.options.legend.show, config.canvas.size, margin),
             orient: configOptions.orientation,
             isSegmented: configOptions.isSegmented,
             scale: {

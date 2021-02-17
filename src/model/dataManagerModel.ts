@@ -1,9 +1,9 @@
-import { Config, PolarChart, TwoDimensionalChart, IntervalOptions, IntervalChart, TwoDimensionalOptions, PolarOptions, LegendPosition } from "../config/config";
+import { Config, PolarChart, TwoDimensionalChart, IntervalOptions, IntervalChart, TwoDimensionalOptions, PolarOptions } from "../config/config";
 import { BarOptionsCanvas, DataType, DesignerConfig } from "../designer/designerConfig";
 import { AxisModel } from "./axisModel";
 import { LegendCanvasModel } from "./legendModel/legendCanvasModel";
 import { MIN_DONUT_BLOCK_SIZE } from "./legendModel/legendModel";
-import { BlockMargin, DataRow, DataScope, DataSource, LegendBlockModel, Size } from "./model";
+import { BlockMargin, DataRow, DataScope, DataSource, LegendBlockModel, LegendPosition, Size } from "./model";
 import { ModelHelper } from "./modelHelper";
 
 export class DataManagerModel
@@ -63,7 +63,7 @@ export class DataManagerModel
         const keyFieldName = configOptions.charts[0].data.keyField.name;
         const keys = dataset.map(dataRow => dataRow[keyFieldName]);
 
-        if(configOptions.legend.position === 'off') {
+        if(!configOptions.legend.show) {
             return {
                 allowableKeys: keys,
                 hidedRecordsAmount: 0

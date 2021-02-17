@@ -10,7 +10,7 @@ export class PolarModel
         return {
             type: configOptions.type,
             charts: this.getChartsModel(configOptions.charts, data),
-            legend: LegendModel.getLegendModel(config.options.type, config.options.legend.position, config.canvas.size, margin)
+            legend: LegendModel.getLegendModel(config.options.type, config.options.legend.show, config.canvas.size, margin)
         }
     }
 

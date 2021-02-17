@@ -1,8 +1,8 @@
 import { Color } from "d3-color";
 import { Selection, BaseType } from 'd3-selection'
-import { ChartNotation, LegendPosition } from "../../../config/config";
+import { ChartNotation } from "../../../config/config";
 import { LegendItemsDirection } from "../../../model/legendModel/legendCanvasModel";
-import { DataRow, DataSource, IntervalOptionsModel, LegendBlockModel, Orient, PolarOptionsModel, Size, TwoDimensionalOptionsModel } from "../../../model/model";
+import { DataRow, DataSource, IntervalOptionsModel, LegendBlockModel, LegendPosition, Orient, PolarOptionsModel, Size, TwoDimensionalOptionsModel } from "../../../model/model";
 import { Block } from "../../block/block";
 import { Helper } from "../../helper";
 

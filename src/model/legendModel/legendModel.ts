@@ -1,5 +1,5 @@
-import { ChartNotation, LegendPosition } from "../../config/config";
-import { BlockMargin, ILegendModel, LegendBlockModel, Orient, Size } from "../model";
+import { ChartNotation } from "../../config/config";
+import { BlockMargin, ILegendModel, LegendBlockModel, LegendPosition, Orient, Size } from "../model";
 import { ModelHelper } from "../modelHelper";
 import { LegendCanvasModel, LegendItemsDirection } from "./legendCanvasModel";
 
@@ -42,9 +42,9 @@ export class LegendModel
         }
     }
 
-    public static getLegendModel(chartNotation: ChartNotation, position: LegendPosition, blockSize: Size, margin: BlockMargin): ILegendModel {
+    public static getLegendModel(chartNotation: ChartNotation, legendShow: boolean, blockSize: Size, margin: BlockMargin): ILegendModel {
         let legendPosition: LegendPosition = 'off';
-        if(position !== 'off') {
+        if(legendShow) {
             if(chartNotation === '2d' || chartNotation === 'interval')
                 legendPosition = 'top';
             else if(chartNotation === 'polar') {

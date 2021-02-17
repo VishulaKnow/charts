@@ -31,7 +31,7 @@ export class MarginModel
     }
 
     public static recalcPolarMarginWithScopedData(margin: BlockMargin, blockSize: Size, designerConfig: DesignerConfig, config: Config, legendBlockModel: LegendBlockModel, dataScope: DataScope, options: PolarOptionsModel): void {
-        let position = LegendModel.getLegendModel(config.options.type, config.options.legend.position, config.canvas.size, margin).position;
+        let position = LegendModel.getLegendModel(config.options.type, config.options.legend.show, config.canvas.size, margin).position;
 
         if(position !== 'off') {
             if(position === 'right' && blockSize.width - margin.left - margin.right < MIN_DONUT_BLOCK_SIZE)
@@ -93,7 +93,7 @@ export class MarginModel
     }
 
     private static recalcMarginWithLegend(margin: BlockMargin, config: Config, legendMaxWidth: number, legendBlockModel: LegendBlockModel, data: DataSource): void {
-        const legendPosition = LegendModel.getLegendModel(config.options.type, config.options.legend.position, config.canvas.size, margin).position;
+        const legendPosition = LegendModel.getLegendModel(config.options.type, config.options.legend.show, config.canvas.size, margin).position;
         if(legendPosition !== 'off') {
             const legendItemsContent = this.getLegendItemsContent(config.options.charts, config.options, data);
             const legendSize = LegendModel.getLegendSize(config.options.type, legendPosition, legendItemsContent, legendMaxWidth, config.canvas.size, legendBlockModel);

@@ -1,4 +1,4 @@
-import { LegendPosition } from "../../config/config";
+import { LegendPosition } from "../model";
 import { CLASSES } from "../modelOptions";
 import { LegendModel } from "./legendModel";
 

@@ -7,7 +7,6 @@ export type ChartType = 'bar' | 'line' | 'area' | 'donut' | 'gantt';
 export type TwoDimensionalChartType = 'line' | 'bar' | 'area';
 export type PolarChartType = 'donut';
 export type IntervalChartType = 'gantt';
-export type LegendPosition = 'off' | 'top' | 'bottom' | 'left' | 'right';
 export type EmbeddedLabelType = 'none' | 'key' | 'value';
 
 export interface Config {
@@ -118,7 +117,7 @@ interface TooltipData {
 }
 
 interface Legend {
-    position: LegendPosition;
+    show: boolean;
 }
 
 interface Size {
