@@ -2,7 +2,7 @@ import Engine from '../engine/engine';
 import { assembleModel, getPreparedData, getUpdatedModel } from '../model/modelOptions';
 import { Config, IntervalOptions, PolarChart, PolarOptions, TwoDimensionalChart, TwoDimensionalOptions } from '../config/config'
 import { DesignerConfig } from '../designer/designerConfig';
-import { DataSource } from '../model/model';
+import { DataSource, TwoDimensionalChartDataModel } from '../model/model';
 
 class ListenersHelper
 {
@@ -97,13 +97,13 @@ export default class Listeners
     private getDataWithRandomValues(data: any, maxRand: number) {
         if(this.config.options.type === '2d')
             this.config.options.charts.forEach((chart: TwoDimensionalChart) => {
-                data[chart.data.dataSource].forEach((row: any) => {
+                data[config.options.data.dataSource].forEach((row: any) => {
                     row[chart.data.valueFields[0].name] = ListenersHelper.randInt(0, maxRand);
                 });
             });
         else if(this.config.options.type === 'polar') {
             this.config.options.charts.forEach((chart: PolarChart) => {
-                data[chart.data.dataSource].forEach((row: any) => {
+                data[config.options.data.dataSource].forEach((row: any) => {
                     row[chart.data.valueField.name] = ListenersHelper.randInt(0, maxRand);
                 });
             });
@@ -114,11 +114,6 @@ export default class Listeners
     private getDataConfig(notationType: '2d' | 'polar' | 'interval'): any {
         if(notationType === '2d') {
             return {
-                dataSource: ListenersHelper.getInputValue('#data-size') === 'normal' ? 'dataSet' : 'dataSet_large',
-                keyField: {
-                    name: 'brand',
-                    format: 'string'
-                },
                 valueFields: [
                     {
                         name: 'price',
@@ -134,11 +129,6 @@ export default class Listeners
             }
         } else if(notationType === 'interval') {
             return {
-                dataSource: 'dataSet_gantt',
-                keyField: {
-                    name: 'task',
-                    format: 'string'
-                },
                 valueField1: {
                     name: 'start',
                     format: 'date'
@@ -150,11 +140,6 @@ export default class Listeners
             }
         } else if(notationType === 'polar') {
             return {
-                dataSource: ListenersHelper.getInputValue('#data-size') === 'normal' ? 'dataSet' : 'dataSet_large',
-                keyField: {
-                    name: 'brand',
-                    format: 'string'
-                },
                 valueField: {
                     name: 'price',
                     format: 'money'
@@ -176,6 +161,7 @@ export default class Listeners
                 isSegmented: false,
                 orientation: ListenersHelper.getInputValue('#chart-orient') as 'horizontal' | 'vertical',
                 type: notationType,
+                data: { ...this.config.options.data },
                 charts: [
                     {
                         data: this.getDataConfig(notationType),
@@ -216,6 +202,7 @@ export default class Listeners
         } else if(notationType === 'polar') {
             const options: PolarOptions = {
                 legend: this.config.options.legend,
+                data: { ...this.config.options.data },
                 type: notationType,
                 charts: [
                     {
@@ -230,6 +217,7 @@ export default class Listeners
         } else if(notationType === 'interval') {
             const options: IntervalOptions = {
                 legend: this.config.options.legend,
+                data: { ...this.config.options.data },
                 orientation: ListenersHelper.getInputValue('#chart-orient') as 'horizontal' | 'vertical',
                 type: notationType,
                 charts: [
@@ -274,11 +262,9 @@ export default class Listeners
             config.options.charts.push(ListenersHelper.getCopy(config.options.charts[0]));
             config.options.charts[0].type = 'bar';
             config.options.charts[1].type = 'line';
-            config.options.charts[1].data.dataSource = config.options.charts[0].data.dataSource + '2';
         } else if(chartType === 'barLine' && config.options.charts.length === 2) {
             config.options.charts[0].type = 'bar';
             config.options.charts[1].type = 'line';
-            config.options.charts[1].data.dataSource = config.options.charts[0].data.dataSource + '2';
         } else if(chartType !== 'barLine') {
             config.options.charts.splice(1, 1);
             config.options.charts[0].type = chartType;
@@ -387,11 +373,8 @@ export default class Listeners
         const config = this.config
         document.querySelector('#data-size').addEventListener('change', function() {
             if(config.options.type === '2d' || config.options.type === 'polar') {
-                config.options.charts.forEach((chart: TwoDimensionalChart | PolarChart, index: number) => {
-                    chart.data.dataSource = this.value === 'normal' 
-                        ? 'dataSet' + (index === 0 ? '' : index + 1)
-                        : 'dataSet_large' + (index === 0 ? '' : index + 1);
-                });
+                config.options.data.dataSource = this.value === 'normal' 
+                    ? 'dataSet' : 'dataSet_large';
                 thisClass.updateFull();
             }
         });
@@ -540,7 +523,7 @@ export default class Listeners
         ListenersHelper.setCheckboxValue('#wrapper-border', config.canvas.class.includes('outline'));
     
         ListenersHelper.setCheckboxValue('#legend', config.options.legend.show);
-        ListenersHelper.setInputValue('#data-size', config.options.charts[0].data.dataSource.includes('large') ? 'large' : 'normal');
+        ListenersHelper.setInputValue('#data-size', config.options.data.dataSource.includes('large') ? 'large' : 'normal');
         ListenersHelper.setInputValue('#axis-label-width', designerConfig.canvas.axisLabel.maxSize.main);
         ListenersHelper.setInputValue('#chart-block-margin-top', designerConfig.canvas.chartBlockMargin.top);
         ListenersHelper.setInputValue('#chart-block-margin-bottom', designerConfig.canvas.chartBlockMargin.bottom);
@@ -588,12 +571,12 @@ const engine = new Engine();
 engine.render(model, data, document.querySelector('.main-wrapper'));
 new Listeners(engine, config, designerConfig, data);
 
-const config3 = require('../config/configTest2D.json');
-const model3 = assembleModel(config3, data, designerConfig);
-const engine3 = new Engine();
-engine3.render(model3, getPreparedData(model3, data, config3), document.querySelector('.main-wrapper2'));
+// const config3 = require('../config/configTest2D.json');
+// const model3 = assembleModel(config3, data, designerConfig);
+// const engine3 = new Engine();
+// engine3.render(model3, getPreparedData(model3, data, config3), document.querySelector('.main-wrapper2'));
 
-const config2 = require('../config/configTestPolar.json');
-const model2 = assembleModel(config2, data, designerConfig);
-const engine2 = new Engine();
-engine2.render(model2, getPreparedData(model2, data, config2), document.querySelector('.main-wrapper2'));
+// const config2 = require('../config/configTestPolar.json');
+// const model2 = assembleModel(config2, data, designerConfig);
+// const engine2 = new Engine();
+// engine2.render(model2, getPreparedData(model2, data, config2), document.querySelector('.main-wrapper2'));

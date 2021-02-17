@@ -9,12 +9,13 @@ export class PolarModel
         const configOptions = <PolarOptions>config.options;
         return {
             type: configOptions.type,
-            charts: this.getChartsModel(configOptions.charts, data),
+            data: { ...configOptions.data },
+            charts: this.getChartsModel(configOptions.charts, data[configOptions.data.dataSource].length),
             legend: LegendModel.getLegendModel(config.options.type, config.options.legend.show, config.canvas.size, margin)
         }
     }
 
-    private static getChartsModel(charts: PolarChart[], data: DataSource): PolarChartModel[] {
+    private static getChartsModel(charts: PolarChart[], dataLength: number): PolarChartModel[] {
         const chartsModel: PolarChartModel[] = [];
         charts.forEach((chart, index) => {
             chartsModel.push({
@@ -23,7 +24,7 @@ export class PolarModel
                 data: { ...chart.data },
                 tooltip: chart.tooltip,
                 cssClasses: ChartStyleModel.getCssClasses(index),
-                style: ChartStyleModel.getChartStyle(data[chart.data.dataSource].length)
+                style: ChartStyleModel.getChartStyle(dataLength)
             });
         });
         return chartsModel;

@@ -27,7 +27,7 @@ export class IntervalModel {
                     elementsAmount: configOptions.charts.length
                 },
                 scaleValue: {
-                    domain: ScaleModel.getScaleDateValueDomain(data, configOptions.charts, configOptions.axis.keyAxis.position, dataScope.allowableKeys),
+                    domain: ScaleModel.getScaleDateValueDomain(data, configOptions.charts, configOptions.axis.keyAxis.position, configOptions.data.dataSource),
                     range: {
                         start: 0,
                         end: ScaleModel.getScaleRangePeek(ScaleType.Value, configOptions.orientation, margin, config.canvas.size)
@@ -47,7 +47,7 @@ export class IntervalModel {
                     ticks: configOptions.axis.keyAxis.ticks,
                     labels: {
                         maxSize: designerConfig.canvas.axisLabel.maxSize.main,
-                        positition: AxisModel.getKeyAxisLabelPosition(margin, config.canvas.size, DataManagerModel.getDataValuesByKeyField(data, configOptions.charts[0]).length),
+                        positition: AxisModel.getKeyAxisLabelPosition(margin, config.canvas.size, DataManagerModel.getDataValuesByKeyField(data, configOptions.data.dataSource, configOptions.data.keyField.name).length),
                         visible: true
                     }
                 },
@@ -67,6 +67,7 @@ export class IntervalModel {
                     }
                 }
             },
+            data: { ...configOptions.data },
             type: configOptions.type,
             charts: this.getChartsModel(configOptions.charts),
             additionalElements: this.getAdditionalElements(configOptions, designerConfig)

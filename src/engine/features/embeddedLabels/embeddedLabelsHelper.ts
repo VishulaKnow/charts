@@ -43,11 +43,11 @@ export class EmbeddedLabelsHelper
         }
     }
 
-    public static getLabelField(type: EmbeddedLabelTypeModel, chartData: TwoDimensionalChartDataModel, index: number): Field {
+    public static getLabelField(type: EmbeddedLabelTypeModel, valueFields: Field[], keyField: Field, index: number): Field {
         if(type === 'key')
-            return chartData.keyField;
+            return keyField;
         else if(type === 'value')
-            return chartData.valueFields[index];
+            return valueFields[index];
 
         return null;
     }

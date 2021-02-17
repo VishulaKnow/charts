@@ -88,23 +88,29 @@ export interface DataScope {
     hidedRecordsAmount: number;
     allowableKeys: string[];
 }
-export interface TwoDimensionalOptionsModel {
+interface OptionsModel {
+    legend: ILegendModel;
+    data: OptionsModelData;
+}
+export interface TwoDimensionalOptionsModel extends OptionsModel {
     type: '2d';
     scale: IScaleModel;
     axis: IAxisModel;
     charts: TwoDimensionalChartModel[];
     additionalElements: AdditionalElementsOptions;
-    legend: ILegendModel;
     orient: ChartOrientation;
     isSegmented: boolean;
 }
-export interface IntervalOptionsModel {
+export interface PolarOptionsModel extends OptionsModel {
+    type: 'polar';
+    charts: PolarChartModel[];
+}
+export interface IntervalOptionsModel extends OptionsModel {
     type: 'interval';
     scale: IScaleModel;
     axis: IAxisModel;
     charts: IntervalChartModel[];
     additionalElements: AdditionalElementsOptions;
-    legend: ILegendModel;
     orient: ChartOrientation;
 }
 export interface AdditionalElementsOptions {
@@ -116,11 +122,6 @@ export interface GridLineOptions {
 export interface GridLineFlag {
     key: boolean;
     value: boolean;
-}
-export interface PolarOptionsModel {
-    type: 'polar';
-    charts: PolarChartModel[];
-    legend: ILegendModel;
 }
 export interface DonutChartSettings {
     maxThickness: number;
@@ -212,21 +213,20 @@ export interface ILegendModel {
     position: LegendPosition;
 }
 
-export interface TwoDimensionalChartDataModel {
+export interface OptionsModelData {
     dataSource: string;
     keyField: Field;
+}
+
+export interface TwoDimensionalChartDataModel {
     valueFields: TwoDimensionalValueField[];
 }
 
 interface PolarChartDataModel {
-    dataSource: string;
-    keyField: Field;
     valueField: Field;
 }
 
 interface IntervalChartDataModel {
-    dataSource: string;
-    keyField: Field;
     valueField1: Field;
     valueField2: Field;
 }

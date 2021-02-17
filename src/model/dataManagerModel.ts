@@ -3,7 +3,7 @@ import { BarOptionsCanvas, DataType, DesignerConfig } from "../designer/designer
 import { AxisModel } from "./axisModel";
 import { LegendCanvasModel } from "./legendModel/legendCanvasModel";
 import { MIN_DONUT_BLOCK_SIZE } from "./legendModel/legendModel";
-import { BlockMargin, DataRow, DataScope, DataSource, LegendBlockModel, LegendPosition, Size } from "./model";
+import { BlockMargin, DataRow, DataScope, DataSource, Field, LegendBlockModel, LegendPosition, Size } from "./model";
 import { ModelHelper } from "./modelHelper";
 
 export class DataManagerModel
@@ -23,8 +23,8 @@ export class DataManagerModel
         }
     }
 
-    public static getDataValuesByKeyField(data: DataSource, chart: TwoDimensionalChart | PolarChart | IntervalChart): string[] {
-        return data[chart.data.dataSource].map(dataRow => dataRow[chart.data.keyField.name]);
+    public static getDataValuesByKeyField(data: DataSource, dataSource: string, keyFieldName: string): string[] {
+        return data[dataSource].map(dataRow => dataRow[keyFieldName]);
     }
 
     public static getElementsInGroupAmount(configOptions: TwoDimensionalOptions | IntervalOptions, chartsLength: number): number {
@@ -40,7 +40,7 @@ export class DataManagerModel
 
         if(charts.length !== 0) {
             const axisLength = AxisModel.getAxisLength(configOptions.orientation, margin, blockSize);
-            const uniqueKeys = ModelHelper.getUniqueValues(data[charts[0].data.dataSource].map(d => d[charts[0].data.keyField.name]));
+            const uniqueKeys = ModelHelper.getUniqueValues(data[configOptions.data.dataSource].map(d => d[configOptions.data.keyField.name]));
             const dataLength = uniqueKeys.length;
             
             const limit = this.getDataLimitByBarSize(this.getElementsInGroupAmount(configOptions, charts.length), dataLength, axisLength, designerConfig.canvas.chartOptions.bar);
@@ -53,14 +53,14 @@ export class DataManagerModel
         }
 
         return {
-            allowableKeys: this.getDataValuesByKeyField(data, configOptions.charts[0]),
+            allowableKeys: this.getDataValuesByKeyField(data, configOptions.data.dataSource, configOptions.data.keyField.name),
             hidedRecordsAmount: 0   
         }
     }
 
     private static getDataScopeForPolar(configOptions: PolarOptions, blockSize: Size, margin: BlockMargin, data: DataSource, designerConfig: DesignerConfig, legendBlock: LegendBlockModel): DataScope {
-        const dataset = data[configOptions.charts[0].data.dataSource];
-        const keyFieldName = configOptions.charts[0].data.keyField.name;
+        const dataset = data[configOptions.data.dataSource];
+        const keyFieldName = configOptions.data.keyField.name;
         const keys = dataset.map(dataRow => dataRow[keyFieldName]);
 
         if(!configOptions.legend.show) {
@@ -106,9 +106,7 @@ export class DataManagerModel
 
     private static getScopedData(data: DataSource, allowableKeys: string[], config: Config): DataSource {
         const newData: DataSource = {};
-        config.options.charts.forEach((chart: TwoDimensionalChart | PolarChart | IntervalChart) => {
-            newData[chart.data.dataSource] = this.getScopedChartData(data[chart.data.dataSource], allowableKeys, chart.data.keyField.name);
-        });
+        newData[config.options.data.dataSource] = this.getScopedChartData(data[config.options.data.dataSource], allowableKeys, config.options.data.keyField.name);
 
         return newData;
     }
@@ -119,27 +117,25 @@ export class DataManagerModel
 
     private static setDataType(data: DataSource, config: Config): void { 
         if(config.options.type === 'polar' || config.options.type === '2d') {
-            config.options.charts.forEach((chart: PolarChart | TwoDimensionalChart) => {
-                if(chart.data.keyField.format === 'date') {
-                    data[chart.data.dataSource] = this.getTypedData(data[chart.data.dataSource], chart.data.keyField.name, chart.data.keyField.format);
-                }
-            });
+            if(config.options.data.keyField.format === 'date') {
+                data[config.options.data.dataSource] = this.getTypedData(data[config.options.data.dataSource], config.options.data.keyField);
+            }
         } else if(config.options.type === 'interval') {
             config.options.charts.forEach((chart: IntervalChart) => {
                 if(chart.data.valueField1.format === 'date') {
-                    data[chart.data.dataSource] = this.getTypedData(data[chart.data.dataSource], chart.data.valueField1.name, chart.data.valueField1.format);
+                    data[config.options.data.dataSource] = this.getTypedData(data[config.options.data.dataSource], chart.data.valueField1);
                 }
                 if(chart.data.valueField2.format === 'date') {
-                    data[chart.data.dataSource] = this.getTypedData(data[chart.data.dataSource], chart.data.valueField2.name, chart.data.valueField2.format);
+                    data[config.options.data.dataSource] = this.getTypedData(data[config.options.data.dataSource], chart.data.valueField2);
                 }
             });
         }
     }
 
-    private static getTypedData(data: DataRow[], fieldName: string, type: DataType): DataRow[] {
-        if(type === 'date')
+    private static getTypedData(data: DataRow[], field: Field): DataRow[] {
+        if(field.format === 'date')
             data.forEach(d => {
-                d[fieldName] = new Date(d[fieldName]);
+                d[field.name] = new Date(d[field.name]);
             });
         return data;
     }

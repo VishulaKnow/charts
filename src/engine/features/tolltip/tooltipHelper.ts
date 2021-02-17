@@ -1,6 +1,6 @@
 import { select, Selection, BaseType } from 'd3-selection'
 import { ChartOrientation } from "../../../config/config";
-import { BlockMargin, DataRow, DataSource, Field, IntervalChartModel, PolarChartModel, Size, TwoDimensionalChartModel } from "../../../model/model";
+import { BlockMargin, DataRow, DataSource, Field, IntervalChartModel, OptionsModelData, PolarChartModel, Size, TwoDimensionalChartModel } from "../../../model/model";
 import { Block } from "../../block/block";
 import { Helper } from "../../helper";
 import { ValueFormatter, } from "../../valueFormatter";
@@ -47,26 +47,26 @@ const TOOLTIP_ARROW_PADDING_Y = 13;
 
 export class TooltipHelper
 { 
-    public static fillMultyFor2DChart(tooltipContentBlock: Selection<BaseType, unknown, BaseType, unknown>, chart: TwoDimensionalChartModel, data: DataSource, keyValue: string): void {
+    public static fillMultyFor2DChart(tooltipContentBlock: Selection<BaseType, unknown, BaseType, unknown>, chart: TwoDimensionalChartModel, data: DataSource, dataOptions: OptionsModelData, keyValue: string): void {
         tooltipContentBlock.html('');
         chart.data.valueFields.forEach((field, index) => {
-            this.fillTooltipContent(tooltipContentBlock, chart, data, keyValue, field, chart.style.elementColors[index % chart.style.elementColors.length].toString());
+            this.fillTooltipContent(tooltipContentBlock, data, dataOptions, keyValue, field, chart.style.elementColors[index % chart.style.elementColors.length].toString());
         });
     }
 
-    public static fillTooltipFor2DChart(tooltipContentBlock: Selection<BaseType, unknown, BaseType, unknown>, chart: TwoDimensionalChartModel, data: DataSource, keyValue: string, index: number): void {
+    public static fillTooltipFor2DChart(tooltipContentBlock: Selection<BaseType, unknown, BaseType, unknown>, chart: TwoDimensionalChartModel, data: DataSource, dataOptions: OptionsModelData, keyValue: string, index: number): void {
         tooltipContentBlock.html('');
-        this.fillTooltipContent(tooltipContentBlock, chart, data, keyValue, chart.data.valueFields[index], chart.style.elementColors[index % chart.style.elementColors.length].toString());
+        this.fillTooltipContent(tooltipContentBlock, data, dataOptions, keyValue, chart.data.valueFields[index], chart.style.elementColors[index % chart.style.elementColors.length].toString());
     }
 
-    public static fillTooltipForPolarChart(tooltipContentBlock: Selection<BaseType, unknown, BaseType, unknown>, chart: PolarChartModel, data: DataSource, keyValue: string, markColor: string): void {
+    public static fillTooltipForPolarChart(tooltipContentBlock: Selection<BaseType, unknown, BaseType, unknown>, chart: PolarChartModel, data: DataSource, dataOptions: OptionsModelData, keyValue: string, markColor: string): void {
         tooltipContentBlock.html('');
-        this.fillTooltipContent(tooltipContentBlock, chart, data, keyValue, chart.data.valueField, markColor);
+        this.fillTooltipContent(tooltipContentBlock, data, dataOptions, keyValue, chart.data.valueField, markColor);
     }
 
-    public static fillTooltipForIntervalChart(tooltipContentBlock: Selection<BaseType, unknown, BaseType, unknown>, chart: IntervalChartModel, data: DataSource, keyValue: string, markColor: string): void {
+    public static fillTooltipForIntervalChart(tooltipContentBlock: Selection<BaseType, unknown, BaseType, unknown>, chart: IntervalChartModel, data: DataSource, dataOptions: OptionsModelData, keyValue: string, markColor: string): void {
         tooltipContentBlock.html('');
-        this.fillTooltipContent(tooltipContentBlock, chart, data, keyValue, chart.data.valueField1, markColor);
+        this.fillTooltipContent(tooltipContentBlock, data, dataOptions, keyValue, chart.data.valueField1, markColor);
     }
 
     public static getTooltipCoordinate(pointer: [number, number]): TooltipCoordinate {
@@ -208,7 +208,7 @@ export class TooltipHelper
         return index;
     }   
 
-    private static fillTooltipContent(tooltipContentBlock: Selection<BaseType, unknown, BaseType, unknown>, chart: TwoDimensionalChartModel | PolarChartModel | IntervalChartModel, data: DataSource, keyValue: string, valueField: Field, markColor: string): void {
+    private static fillTooltipContent(tooltipContentBlock: Selection<BaseType, unknown, BaseType, unknown>, data: DataSource, dataOptions: OptionsModelData, keyValue: string, valueField: Field, markColor: string): void {
         const group = tooltipContentBlock.append('div')
             .attr('class', 'tooltip-group');
         group.append('div')
@@ -220,15 +220,15 @@ export class TooltipHelper
             .attr('class', 'tooltip-texts')
             .append('div')
             .attr('class', 'tooltip-text-item')
-            .text(this.getTooltipItemText(chart, data, keyValue, valueField))
+            .text(this.getTooltipItemText(data, dataOptions, keyValue, valueField))
             .style('white-space', 'nowrap');
         if(textBlock.node().getBoundingClientRect().width > 500)
             textBlock.style('white-space', 'normal');
     }
 
-    private static getTooltipItemText(chart: TwoDimensionalChartModel | PolarChartModel | IntervalChartModel, data: DataSource, keyValue: string, valueField: Field): string {
-        const row = data[chart.data.dataSource].find(d => d[chart.data.keyField.name] === keyValue);
-        return `${row[chart.data.keyField.name]} - ${ValueFormatter.formatValue(valueField.format, row[valueField.name])}`;
+    private static getTooltipItemText(data: DataSource, dataOptions: OptionsModelData, keyValue: string, valueField: Field): string {
+        const row = data[dataOptions.dataSource].find(d => d[dataOptions.keyField.name] === keyValue);
+        return `${row[dataOptions.keyField.name]} - ${ValueFormatter.formatValue(valueField.format, row[valueField.name])}`;
     }
 
     private static getHorizontalPad(coordinateX: number, tooltipBlockNode: HTMLElement, blockSize: Size, translateX: number): number {

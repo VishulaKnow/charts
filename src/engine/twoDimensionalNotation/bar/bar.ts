@@ -3,7 +3,7 @@ import { stack } from 'd3-shape';
 import { select, Selection, BaseType } from 'd3-selection';
 import { AxisScale } from 'd3-axis'
 import { transition } from "d3-transition";
-import { BarChartSettings, BlockMargin, DataRow, Orient, Size, TwoDimensionalChartModel } from "../../../model/model";
+import { BarChartSettings, BlockMargin, DataRow, Field, Orient, Size, TwoDimensionalChartModel } from "../../../model/model";
 import { ValueFormatter } from "../../valueFormatter";
 import { Helper } from "../../helper";
 import { Scale, Scales } from "../../features/scale/scale";
@@ -24,11 +24,11 @@ export class Bar
 {
     private static barItemClass  = 'bar-item';
 
-    public static render(block: Block, scales: Scales, data: DataRow[], margin: BlockMargin, keyAxisOrient: Orient, chart: TwoDimensionalChartModel, blockSize: Size, barSettings: BarChartSettings, isSegmented: boolean): void {
+    public static render(block: Block, scales: Scales, data: DataRow[], keyField: Field, margin: BlockMargin, keyAxisOrient: Orient, chart: TwoDimensionalChartModel, blockSize: Size, barSettings: BarChartSettings, isSegmented: boolean): void {
         if(isSegmented)
-            this.renderSegmented(block, scales, data, margin, keyAxisOrient, chart, blockSize, barSettings);
+            this.renderSegmented(block, scales, data, keyField, margin, keyAxisOrient, chart, blockSize, barSettings);
         else
-            this.renderGrouped(block, scales, data, margin, keyAxisOrient, chart, blockSize, barSettings);
+            this.renderGrouped(block, scales, data, keyField, margin, keyAxisOrient, chart, blockSize, barSettings);
     }
 
     public static updateBarChartByValueAxis(block: Block, scales: Scales, margin: BlockMargin, keyAxisOrient: string, chart: TwoDimensionalChartModel, blockSize: Size, isSegmented: boolean): void {
@@ -62,7 +62,7 @@ export class Bar
         return block.getSvg().selectAll(`rect.${this.barItemClass}`);
     }
 
-    private static renderGrouped(block: Block, scales: Scales, data: DataRow[], margin: BlockMargin, keyAxisOrient: Orient, chart: TwoDimensionalChartModel, blockSize: Size, barSettings: BarChartSettings): void {
+    private static renderGrouped(block: Block, scales: Scales, data: DataRow[], keyField: Field, margin: BlockMargin, keyAxisOrient: Orient, chart: TwoDimensionalChartModel, blockSize: Size, barSettings: BarChartSettings): void {
         this.renderBarGroups(block, data);
         
         chart.data.valueFields.forEach((field, index) => {
@@ -77,7 +77,7 @@ export class Bar
                 keyAxisOrient,
                 scales,
                 margin,
-                chart.data.keyField.name,
+                keyField.name,
                 field.name,
                 blockSize,
                 chart.data.valueFields.length,
@@ -89,11 +89,11 @@ export class Bar
             Helper.setChartStyle(bars, chart.style, index, 'fill');
 
             if(chart.embeddedLabels !== 'none')
-                EmbeddedLabels.render(block, bars, EmbeddedLabelsHelper.getLabelField(chart.embeddedLabels, chart.data, index), chart.embeddedLabels, keyAxisOrient, blockSize, margin);
+                EmbeddedLabels.render(block, bars, EmbeddedLabelsHelper.getLabelField(chart.embeddedLabels, chart.data.valueFields, keyField, index), chart.embeddedLabels, keyAxisOrient, blockSize, margin);
         });
     }
 
-    private static renderSegmented(block: Block, scales: Scales, data: DataRow[], margin: BlockMargin, keyAxisOrient: Orient, chart: TwoDimensionalChartModel, blockSize: Size, barSettings: BarChartSettings): void {
+    private static renderSegmented(block: Block, scales: Scales, data: DataRow[], keyField: Field, margin: BlockMargin, keyAxisOrient: Orient, chart: TwoDimensionalChartModel, blockSize: Size, barSettings: BarChartSettings): void {
         const keys = chart.data.valueFields.map(field => field.name);
         const stackedData = stack().keys(keys)(data);
 
@@ -111,7 +111,7 @@ export class Bar
                 .attr('class', this.barItemClass)
                 // .style('clip-path', `url(${block.getClipPathId()})`);
 
-        const barAttrs = this.getStackedBarAttrByKeyOrient(keyAxisOrient, scales, margin, chart.data.keyField.name, blockSize, barSettings);
+        const barAttrs = this.getStackedBarAttrByKeyOrient(keyAxisOrient, scales, margin, keyField.name, blockSize, barSettings);
        
         bars
             .attr('x', barAttrs.x)

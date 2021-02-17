@@ -1,4 +1,4 @@
-import { BarChartSettings, BlockMargin, ChartSettings, DataSource, DonutChartSettings, IntervalChartModel, IntervalOptionsModel, Model, Orient, PolarChartModel, PolarOptionsModel, Size, TwoDimensionalChartModel, TwoDimensionalOptionsModel } from "../model/model";
+import { BarChartSettings, BlockMargin, ChartSettings, DataOptions, DataSource, DonutChartSettings, IntervalChartModel, IntervalOptionsModel, Model, OptionsModelData, Orient, PolarChartModel, PolarOptionsModel, Size, TwoDimensionalChartModel, TwoDimensionalOptionsModel } from "../model/model";
 import { Area } from "./twoDimensionalNotation/area/area";
 import { Axis } from "./features/axis/axis";
 import { Bar } from "./twoDimensionalNotation/bar/bar";
@@ -31,6 +31,7 @@ export class ChartRenderer
             options.charts,
             scales,
             data,
+            options.data,
             model.chartBlock.margin,
             options.axis.keyAxis.orient,
             model.chartSettings.bar,
@@ -55,6 +56,7 @@ export class ChartRenderer
     
         this.renderPolarCharts(block, options.charts,
             data,
+            options.data.dataSource,
             model.chartBlock.margin,
             model.blockCanvas.size,
             model.chartSettings.donut);
@@ -83,6 +85,7 @@ export class ChartRenderer
             options.charts,
             scales,
             data,
+            options.data,
             model.chartBlock.margin,
             options.axis.keyAxis.orient,
             model.chartSettings);
@@ -93,14 +96,15 @@ export class ChartRenderer
             RecordOverflowAlert.render(block, model.dataSettings.scope.hidedRecordsAmount, 'top', options.orient);
     }
 
-    private static render2DCharts(block: Block, charts: TwoDimensionalChartModel[], scales: Scales, data: DataSource, margin: BlockMargin, keyAxisOrient: Orient, barSettings: BarChartSettings, blockSize: Size, isSegmented: boolean) {      
+    private static render2DCharts(block: Block, charts: TwoDimensionalChartModel[], scales: Scales, data: DataSource, dataOptions: OptionsModelData, margin: BlockMargin, keyAxisOrient: Orient, barSettings: BarChartSettings, blockSize: Size, isSegmented: boolean) {      
         block.renderClipPath(margin, blockSize);
         block.renderChartBlock();
         charts.forEach((chart: TwoDimensionalChartModel) => {
             if(chart.type === 'bar')
                 Bar.render(block,
                     scales,
-                    data[chart.data.dataSource],
+                    data[dataOptions.dataSource],
+                    dataOptions.keyField,
                     margin,
                     keyAxisOrient,
                     chart,
@@ -110,7 +114,8 @@ export class ChartRenderer
             else if(chart.type === 'line')
                 Line.render(block,
                     scales,
-                    data[chart.data.dataSource],
+                    data[dataOptions.dataSource],
+                    dataOptions.keyField,
                     margin,
                     keyAxisOrient,
                     chart,
@@ -119,7 +124,8 @@ export class ChartRenderer
             else if(chart.type === 'area')
                 Area.render(block,
                     scales,
-                    data[chart.data.dataSource],
+                    data[dataOptions.dataSource],
+                    dataOptions.keyField,
                     margin,
                     keyAxisOrient,
                     chart,
@@ -128,11 +134,11 @@ export class ChartRenderer
         });
     }
     
-    private static renderPolarCharts(block: Block, charts: PolarChartModel[], data: DataSource, margin: BlockMargin, blockSize: Size, donutSettings: DonutChartSettings) {
+    private static renderPolarCharts(block: Block, charts: PolarChartModel[], data: DataSource, dataSource: string, margin: BlockMargin, blockSize: Size, donutSettings: DonutChartSettings) {
         charts.forEach((chart: PolarChartModel) => {
             if(chart.type === 'donut')
                 Donut.render(block, 
-                    data[chart.data.dataSource],
+                    data[dataSource],
                     margin,
                     chart,
                     blockSize,
@@ -140,12 +146,13 @@ export class ChartRenderer
         });
     }
 
-    private static renderIntervalCharts(block: Block, charts: IntervalChartModel[], scales: Scales, data: DataSource, margin: BlockMargin, keyAxisOrient: Orient, chartSettings: ChartSettings): void {
+    private static renderIntervalCharts(block: Block, charts: IntervalChartModel[], scales: Scales, data: DataSource, dataOptions: OptionsModelData, margin: BlockMargin, keyAxisOrient: Orient, chartSettings: ChartSettings): void {
         block.renderChartBlock();
         charts.forEach(chart => {
             if(chart.type === 'gantt')
                 Gantt.render(block,
-                    data[chart.data.dataSource],
+                    data[dataOptions.dataSource],
+                    dataOptions,
                     scales,
                     margin,
                     keyAxisOrient,
@@ -178,13 +185,14 @@ export class ChartRenderer
             options.charts,
             scales,
             data,
+            model.options.data,
             model.chartBlock.margin,
             options.axis.keyAxis.orient,
             model.blockCanvas.size,
             options.isSegmented);
     }
 
-    private static updateChartsByValueAxis(block: Block, charts: TwoDimensionalChartModel[], scales: Scales, data: DataSource, margin: BlockMargin, keyAxisOrient: Orient, blockSize: Size, isSegmented: boolean): void {
+    private static updateChartsByValueAxis(block: Block, charts: TwoDimensionalChartModel[], scales: Scales, data: DataSource, dataOptions: OptionsModelData, margin: BlockMargin, keyAxisOrient: Orient, blockSize: Size, isSegmented: boolean): void {
         charts.forEach((chart: TwoDimensionalChartModel) => {
             if(chart.type === 'bar') {
                 Bar.updateBarChartByValueAxis(block, 
@@ -198,7 +206,8 @@ export class ChartRenderer
             else if(chart.type === 'line') {
                 Line.updateLineChartByValueAxis(block,
                     scales,
-                    data[chart.data.dataSource],
+                    data[dataOptions.dataSource],
+                    dataOptions.keyField,
                     margin,
                     keyAxisOrient,
                     chart);
@@ -206,7 +215,8 @@ export class ChartRenderer
             else if(chart.type === 'area') {
                 Area.updateAreaChartByValueAxis(block, 
                     scales,
-                    data[chart.data.dataSource],
+                    data[dataOptions.dataSource],
+                    dataOptions.keyField,
                     margin,
                     chart,
                     keyAxisOrient,

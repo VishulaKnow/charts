@@ -14,29 +14,36 @@ export interface Config {
     options: PolarOptions | TwoDimensionalOptions | IntervalOptions;
 }
 
-export interface TwoDimensionalOptions {
+interface Options {
+    legend: Legend;
+    data: DataOptions;
+}
+
+interface DataOptions {
+    dataSource: string;
+    keyField: Field;
+}
+
+export interface TwoDimensionalOptions extends Options {
     type: '2d';
     axis: TwoDimensionalAxis;
     additionalElements: TwoDimensionalAdditionalElements;
     charts: TwoDimensionalChart[];
     orientation: ChartOrientation;
-    legend: Legend;
     isSegmented: boolean;
 }
 
-export interface PolarOptions {
+export interface PolarOptions extends Options {
     type: 'polar';
     charts: PolarChart[];
-    legend: Legend;
 }
 
-export interface IntervalOptions {
+export interface IntervalOptions extends Options {
     type: 'interval';
     axis: IntervalAxis;
     charts: IntervalChart[];
     additionalElements: TwoDimensionalAdditionalElements;
     orientation: ChartOrientation;
-    legend: Legend;
 }
 
 interface Chart {
@@ -81,20 +88,14 @@ export interface IntervalAxis {
 }
 
 interface TwoDimensionalChartData {
-    dataSource: string;
-    keyField: Field;
     valueFields: TwoDimensionalValueField[];
 }
 
 interface PolarChartData {
-    dataSource: string;
-    keyField: Field;
     valueField: Field;
 }
 
 interface IntervalChartData {
-    dataSource: string;
-    keyField: Field;
     valueField1: Field;
     valueField2: Field;
 }

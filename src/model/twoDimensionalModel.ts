@@ -48,8 +48,8 @@ export class TwoDimensionalModel
                     cssClass: 'key-axis',
                     ticks: configOptions.axis.keyAxis.ticks,
                     labels: {
-                        maxSize: AxisModel.getLabelSize(designerConfig.canvas.axisLabel.maxSize.main, data[configOptions.charts[0].data.dataSource].map(d => d[configOptions.charts[0].data.keyField.name])).width, //One character reserve
-                        positition: AxisModel.getKeyAxisLabelPosition(margin, config.canvas.size, DataManagerModel.getDataValuesByKeyField(data, configOptions.charts[0]).length),
+                        maxSize: AxisModel.getLabelSize(designerConfig.canvas.axisLabel.maxSize.main, data[configOptions.data.dataSource].map(d => d[configOptions.data.keyField.name])).width,
+                        positition: AxisModel.getKeyAxisLabelPosition(margin, config.canvas.size, DataManagerModel.getDataValuesByKeyField(data, configOptions.data.dataSource, configOptions.data.keyField.name).length),
                         visible: !TwoDimensionalModel.getChartsEmbeddedLabelsFlag(configOptions.charts, configOptions, data, configOptions.orientation, config.canvas.size, margin, designerConfig.canvas.chartOptions.bar, configOptions.isSegmented)
                     }
                 },
@@ -70,6 +70,7 @@ export class TwoDimensionalModel
                 }
             },
             type: configOptions.type,
+            data: { ...configOptions.data },
             charts: this.getChartsModel(configOptions.charts, configOptions.orientation, configOptions.isSegmented),
             additionalElements: this.getAdditionalElements(configOptions, designerConfig)
         }

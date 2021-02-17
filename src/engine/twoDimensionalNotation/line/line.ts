@@ -1,7 +1,7 @@
 import { stack, line, Line as ILine } from 'd3-shape';
 import { select, Selection } from 'd3-selection';
 import { Color } from "d3-color";
-import { BlockMargin, DataRow, Orient, Size, TwoDimensionalChartModel } from "../../../model/model";
+import { BlockMargin, DataRow, Field, Orient, Size, TwoDimensionalChartModel } from "../../../model/model";
 import { Helper } from "../../helper";
 import { Scale, Scales } from "../../features/scale/scale";
 import { Block } from "../../block/block";
@@ -14,16 +14,16 @@ export class Line
 {
     private static lineChartClass = 'line';
 
-    public static render(block: Block, scales: Scales, data: DataRow[], margin: BlockMargin, keyAxisOrient: Orient, chart: TwoDimensionalChartModel, blockSize: Size, isSegmented: boolean): void {
+    public static render(block: Block, scales: Scales, data: DataRow[], keyField: Field, margin: BlockMargin, keyAxisOrient: Orient, chart: TwoDimensionalChartModel, blockSize: Size, isSegmented: boolean): void {
         if(isSegmented)
-            this.renderSegmented(block, scales, data, margin, keyAxisOrient, chart, blockSize);
+            this.renderSegmented(block, scales, data, keyField, margin, keyAxisOrient, chart, blockSize);
         else
-            this.renderGrouped(block, scales, data, margin, keyAxisOrient, chart, blockSize);
+            this.renderGrouped(block, scales, data, keyField, margin, keyAxisOrient, chart, blockSize);
     }
 
-    public static updateLineChartByValueAxis(block: Block, scales: Scales, data: DataRow[], margin: BlockMargin, keyAxisOrient: Orient, chart: TwoDimensionalChartModel): void {
+    public static updateLineChartByValueAxis(block: Block, scales: Scales, data: DataRow[], keyField: Field, margin: BlockMargin, keyAxisOrient: Orient, chart: TwoDimensionalChartModel): void {
         chart.data.valueFields.forEach((valueField, index) => {
-            const line = this.getLineGenerator(keyAxisOrient, scales, chart.data.keyField.name, valueField.name, margin);
+            const line = this.getLineGenerator(keyAxisOrient, scales, keyField.name, valueField.name, margin);
             
             block.getChartBlock()
                 .select(`.${this.lineChartClass}${Helper.getCssClassesLine(chart.cssClasses)}.chart-element-${index}`)
@@ -31,13 +31,13 @@ export class Line
                 .duration(1000)
                     .attr('d', line(data));
     
-            Dot.updateDotsCoordinateByValueAxis(block, data, keyAxisOrient, scales, margin, chart.data.keyField.name, valueField.name, chart.cssClasses, index, false);
+            Dot.updateDotsCoordinateByValueAxis(block, data, keyAxisOrient, scales, margin, keyField.name, valueField.name, chart.cssClasses, index, false);
         });
     }
 
-    private static renderGrouped(block: Block, scales: Scales, data: DataRow[], margin: BlockMargin, keyAxisOrient: Orient, chart: TwoDimensionalChartModel, blockSize: Size): void {
+    private static renderGrouped(block: Block, scales: Scales, data: DataRow[], keyField: Field, margin: BlockMargin, keyAxisOrient: Orient, chart: TwoDimensionalChartModel, blockSize: Size): void {
         chart.data.valueFields.forEach((valueField, index) => {
-            const lineGenerator = this.getLineGenerator(keyAxisOrient, scales, chart.data.keyField.name, valueField.name, margin);
+            const lineGenerator = this.getLineGenerator(keyAxisOrient, scales, keyField.name, valueField.name, margin);
             
             const path = block.getChartBlock()
                 .append('path')
@@ -50,14 +50,14 @@ export class Line
             Helper.setCssClasses(path, Helper.getCssClassesWithElementIndex(chart.cssClasses, index));
             Helper.setChartStyle(path, chart.style, index, 'stroke');
 
-            Dot.render(block, data, keyAxisOrient, scales, margin, chart.data.keyField.name, valueField.name, chart.cssClasses, index, chart.style.elementColors, blockSize, false);
+            Dot.render(block, data, keyAxisOrient, scales, margin, keyField.name, valueField.name, chart.cssClasses, index, chart.style.elementColors, blockSize, false);
         });
     }
 
-    private static renderSegmented(block: Block, scales: Scales, data: DataRow[], margin: BlockMargin, keyAxisOrient: Orient, chart: TwoDimensionalChartModel, blockSize: Size): void {
+    private static renderSegmented(block: Block, scales: Scales, data: DataRow[], keyField: Field, margin: BlockMargin, keyAxisOrient: Orient, chart: TwoDimensionalChartModel, blockSize: Size): void {
         const keys = chart.data.valueFields.map(field => field.name);
         const stackedData = stack().keys(keys)(data);
-        const lineGenerator = this.getSegmentedLineGenerator(keyAxisOrient, scales, chart.data.keyField.name, margin);
+        const lineGenerator = this.getSegmentedLineGenerator(keyAxisOrient, scales, keyField.name, margin);
 
         const areas = block.getChartBlock()
             .selectAll('.area')
@@ -77,7 +77,7 @@ export class Line
         this.setSegmentColor(areas, chart.style.elementColors);
 
         stackedData.forEach((sd, index) => {
-            Dot.render(block, sd, keyAxisOrient, scales, margin, chart.data.keyField.name, '1', chart.cssClasses, index, chart.style.elementColors, blockSize, true);
+            Dot.render(block, sd, keyAxisOrient, scales, margin, keyField.name, '1', chart.cssClasses, index, chart.style.elementColors, blockSize, true);
         });
     }
 

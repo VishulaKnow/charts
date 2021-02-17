@@ -1,5 +1,5 @@
 import { Selection, BaseType } from 'd3-selection'
-import { BarChartSettings, BlockMargin, DataRow, IntervalChartModel, Orient } from "../../model/model";
+import { BarChartSettings, BlockMargin, DataRow, IntervalChartModel, OptionsModelData, Orient } from "../../model/model";
 import { Block } from "../block/block";
 import { Helper } from "../helper";
 import { Scale, Scales } from "../features/scale/scale";
@@ -15,7 +15,7 @@ export class Gantt
 {
     private static ganttItemClass = 'gantt-item';
 
-    public static render(block: Block, data: DataRow[], scales: Scales, margin: BlockMargin, keyAxisOrient: Orient, chart: IntervalChartModel, barSettings: BarChartSettings): void {
+    public static render(block: Block, data: DataRow[], dataOptions: OptionsModelData, scales: Scales, margin: BlockMargin, keyAxisOrient: Orient, chart: IntervalChartModel, barSettings: BarChartSettings): void {
         const ganttItems = block.getChartBlock()
             .selectAll(`.${this.ganttItemClass}`)
             .data(data)
@@ -25,12 +25,12 @@ export class Gantt
                 .style('clip-path', `url(${block.getClipPathId()})`);
         
         const itemsAttrs = this.getItemsAttrsByKeyOrient(keyAxisOrient,
-                scales,
-                margin,
-                chart.data.keyField.name,
-                chart.data.valueField1.name,
-                chart.data.valueField2.name,
-                barSettings);
+            scales,
+            margin,
+            dataOptions.keyField.name,
+            chart.data.valueField1.name,
+            chart.data.valueField2.name,
+            barSettings);
 
         this.fillItemsAttrs(ganttItems, itemsAttrs);
 

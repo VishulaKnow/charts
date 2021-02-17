@@ -1,6 +1,6 @@
 import { select, Selection, BaseType } from 'd3-selection';
 import { PieArcDatum } from 'd3-shape'
-import { BlockMargin, DataRow, DataSource, IntervalChartModel, Model, PolarChartModel, Size, TwoDimensionalChartModel } from "../../../model/model";
+import { BlockMargin, DataRow, DataSource, IntervalChartModel, Model, OptionsModelData, PolarChartModel, Size, TwoDimensionalChartModel } from "../../../model/model";
 import { Helper } from "../../helper";
 import { Block } from "../../block/block";
 import { ARROW_DEFAULT_POSITION, ARROW_SIZE, BarHighlighterAttrs, ChartStyleSettings, DotEdgingAttrs, TooltipCoordinate, TooltipHelper } from "./tooltipHelper";
@@ -21,26 +21,26 @@ export class Tooltip
         const chartsWithTooltipIndex = model.options.charts.findIndex((chart: TwoDimensionalChartModel | PolarChartModel | IntervalChartModel) => chart.tooltip.show);
         if(chartsWithTooltipIndex !== -1) {
             if(model.options.type === '2d') {
-                this.rednerTooltipFor2DCharts(block, model.chartBlock.margin, model.options.charts, data, model.options.isSegmented, model.blockCanvas.size, model.options.orient);   
+                this.rednerTooltipFor2DCharts(block, model.chartBlock.margin, model.options.charts, data, model.options.data, model.options.isSegmented, model.blockCanvas.size, model.options.orient);   
             } else if(model.options.type === 'polar') {
-                this.renderTooltipsForDonut(block, model.options.charts, data, model.blockCanvas.size, model.chartBlock.margin, Donut.getThickness(model.chartSettings.donut, model.blockCanvas.size, model.chartBlock.margin));
+                this.renderTooltipsForDonut(block, model.options.charts, data, model.options.data, model.blockCanvas.size, model.chartBlock.margin, Donut.getThickness(model.chartSettings.donut, model.blockCanvas.size, model.chartBlock.margin));
             } else if(model.options.type === 'interval') {
-                this.renderTooltipsForInterval(block, model.options.charts, data, model.blockCanvas.size, model.options.orient);
+                this.renderTooltipsForInterval(block, model.options.charts, data,model.options.data, model.blockCanvas.size, model.options.orient);
             }
         }
     }
 
-    private static rednerTooltipFor2DCharts(block: Block, margin: BlockMargin, charts: TwoDimensionalChartModel[], data: DataSource, isSegmented: boolean, blockSize: Size, chartOrientation: ChartOrientation): void {
+    private static rednerTooltipFor2DCharts(block: Block, margin: BlockMargin, charts: TwoDimensionalChartModel[], data: DataSource, dataOptions: OptionsModelData, isSegmented: boolean, blockSize: Size, chartOrientation: ChartOrientation): void {
         charts.forEach(chart => {
             if(chart.type === 'bar') {
-                this.renderTooltipForBars(block, Bar.getAllBarItems(block), data, chart, isSegmented, chartOrientation, blockSize, margin, charts.map(ch => TooltipHelper.getChartStyleSettings(ch)));
+                this.renderTooltipForBars(block, Bar.getAllBarItems(block), data, dataOptions, chart, isSegmented, chartOrientation, blockSize, margin, charts.map(ch => TooltipHelper.getChartStyleSettings(ch)));
             } else if(chart.type === 'line' || chart.type === 'area') {
-                this.renderTooltipForDots(block, Dot.getAllDots(block, chart.cssClasses), data, chart, isSegmented, blockSize, charts.map(ch => TooltipHelper.getChartStyleSettings(ch)));
+                this.renderTooltipForDots(block, Dot.getAllDots(block, chart.cssClasses), data, dataOptions, chart, isSegmented, blockSize, charts.map(ch => TooltipHelper.getChartStyleSettings(ch)));
             }
         });
     }
 
-    private static renderTooltipsForDonut(block: Block, charts: PolarChartModel[], data: DataSource, blockSize: Size, margin: BlockMargin, chartThickness: number): void {
+    private static renderTooltipsForDonut(block: Block, charts: PolarChartModel[], data: DataSource, dataOptions: OptionsModelData, blockSize: Size, margin: BlockMargin, chartThickness: number): void {
         charts.forEach(chart => {
             const attrTransform = block.getSvg().select(`.${Donut.donutBlockClass}`).attr('transform');
             const translateNumbers = Helper.getTranslateNumbers(attrTransform);
@@ -48,19 +48,19 @@ export class Tooltip
             const translateY = translateNumbers[1];
 
             const arcItems = Donut.getAllArcs(block);
-            this.renderTooltipForDonut(block, arcItems, data, chart, blockSize, margin, chartThickness, translateX, translateY);
+            this.renderTooltipForDonut(block, arcItems, data, dataOptions, chart, blockSize, margin, chartThickness, translateX, translateY);
         });
     }
 
-    private static renderTooltipsForInterval(block: Block, charts: IntervalChartModel[], data: DataSource, blockSize: Size, chartOrientation: ChartOrientation): void {
+    private static renderTooltipsForInterval(block: Block, charts: IntervalChartModel[], data: DataSource, dataOptions: OptionsModelData, blockSize: Size, chartOrientation: ChartOrientation): void {
         charts.forEach(chart => {
             const bars = block.getSvg()
                 .selectAll(`rect${Helper.getCssClassesLine(chart.cssClasses)}`);
-            this.renderTooltipForGantt(block, bars, data, chart, chartOrientation, blockSize);
+            this.renderTooltipForGantt(block, bars, data, dataOptions, chart, chartOrientation, blockSize);
         });
     }
 
-    private static renderTooltipForDots(block: Block, elemets: Selection<BaseType, DataRow, BaseType, unknown>, data: DataSource, chart: TwoDimensionalChartModel, isSegmented: boolean, blockSize: Size, chartsStyleSettings: ChartStyleSettings[]): void {
+    private static renderTooltipForDots(block: Block, elemets: Selection<BaseType, DataRow, BaseType, unknown>, data: DataSource, dataOptions: OptionsModelData, chart: TwoDimensionalChartModel, isSegmented: boolean, blockSize: Size, chartsStyleSettings: ChartStyleSettings[]): void {
         const tooltipBlock = this.renderTooltipBlock(block);
         const tooltipContent = this.renderTooltipContentBlock(tooltipBlock);
         const tooltipArrow = this.renderTooltipArrow(tooltipBlock);
@@ -71,9 +71,9 @@ export class Tooltip
         elemets
             .on('mouseover', function(event, d) {
                 tooltipBlock.style('display', 'block');                               
-                const keyValue = TooltipHelper.getKeyForTooltip(d, chart.data.keyField.name, isSegmented);
-                const index = TooltipHelper.getElementIndex(elemets, this, keyValue, chart.data.keyField.name, isSegmented)
-                TooltipHelper.fillTooltipFor2DChart(tooltipContent, chart, data, keyValue, index);
+                const keyValue = TooltipHelper.getKeyForTooltip(d, dataOptions.keyField.name, isSegmented);
+                const index = TooltipHelper.getElementIndex(elemets, this, keyValue, dataOptions.keyField.name, isSegmented)
+                TooltipHelper.fillTooltipFor2DChart(tooltipContent, chart, data, dataOptions, keyValue, index);
 
                 const coordinatePointer: [number, number] = TooltipHelper.getTooltipBlockCoordinateByDot(select(this), tooltipBlock, blockSize, tooltipArrow);
                 const tooltipCoordinate = TooltipHelper.getTooltipCoordinate(coordinatePointer);
@@ -92,7 +92,7 @@ export class Tooltip
         });
     }
 
-    private static renderTooltipForBars(block: Block, elemets: Selection<BaseType, DataRow, BaseType, unknown>, data: DataSource, chart: TwoDimensionalChartModel, isSegmented: boolean, chartOrientation: ChartOrientation, blockSize: Size, margin: BlockMargin, chartsStyleSettings: ChartStyleSettings[]): void {
+    private static renderTooltipForBars(block: Block, elemets: Selection<BaseType, DataRow, BaseType, unknown>, data: DataSource, dataOptions: OptionsModelData, chart: TwoDimensionalChartModel, isSegmented: boolean, chartOrientation: ChartOrientation, blockSize: Size, margin: BlockMargin, chartsStyleSettings: ChartStyleSettings[]): void {
         const tooltipBlock = this.renderTooltipBlock(block);
         const tooltipContent = this.renderTooltipContentBlock(tooltipBlock);
         const tooltipArrow = this.renderTooltipArrow(tooltipBlock);
@@ -112,13 +112,13 @@ export class Tooltip
         elemets
             .on('mouseover', function(event, dataRow) {
                 tooltipBlock.style('display', 'block');
-                const keyValue = TooltipHelper.getKeyForTooltip(dataRow, chart.data.keyField.name, isSegmented);
+                const keyValue = TooltipHelper.getKeyForTooltip(dataRow, dataOptions.keyField.name, isSegmented);
                 
                 if(isGrouped) {
-                    TooltipHelper.fillMultyFor2DChart(tooltipContent, chart, data, keyValue)
+                    TooltipHelper.fillMultyFor2DChart(tooltipContent, chart, data, dataOptions, keyValue)
                 } else {
-                    const index = TooltipHelper.getElementIndex(elemets, this, keyValue, chart.data.keyField.name, isSegmented)
-                    TooltipHelper.fillTooltipFor2DChart(tooltipContent, chart, data, keyValue, index);
+                    const index = TooltipHelper.getElementIndex(elemets, this, keyValue, dataOptions.keyField.name, isSegmented)
+                    TooltipHelper.fillTooltipFor2DChart(tooltipContent, chart, data, dataOptions, keyValue, index);
                 }
 
                 const coordinatePointer: [number, number] = TooltipHelper.getTooltipBlockCoordinateByRect(select(this), tooltipBlock, blockSize, tooltipArrow, chartOrientation);
@@ -139,7 +139,7 @@ export class Tooltip
         });
     }
 
-    private static renderTooltipForDonut(block: Block, elemets: Selection<SVGGElement, PieArcDatum<DataRow>, SVGGElement, unknown>, data: DataSource, chart: PolarChartModel, blockSize: Size, margin: BlockMargin, donutThickness: number, translateX: number = 0, translateY: number = 0): void {
+    private static renderTooltipForDonut(block: Block, elemets: Selection<SVGGElement, PieArcDatum<DataRow>, SVGGElement, unknown>, data: DataSource, dataOptions: OptionsModelData, chart: PolarChartModel, blockSize: Size, margin: BlockMargin, donutThickness: number, translateX: number = 0, translateY: number = 0): void {
         const tooltipBlock = this.renderTooltipBlock(block, translateX, translateY);
         const tooltipContent = this.renderTooltipContentBlock(tooltipBlock);
         const tooltipArrow = this.renderTooltipArrow(tooltipBlock);
@@ -165,8 +165,8 @@ export class Tooltip
         elemets
             .on('mouseover', function(event, dataRow) {
                 tooltipBlock.style('display', 'block');
-                const key = dataRow.data[chart.data.keyField.name];
-                TooltipHelper.fillTooltipForPolarChart(tooltipContent, chart, data, key, select(this).select('path').style('fill'))
+                const key = dataRow.data[dataOptions.keyField.name];
+                TooltipHelper.fillTooltipForPolarChart(tooltipContent, chart, data, dataOptions, key, select(this).select('path').style('fill'))
                 
                 const coordinatePointer: [number, number] = TooltipHelper.getRecalcedCoordinateByArrow(Donut.getArcCentroid(blockSize, margin, dataRow, donutThickness), tooltipBlock, blockSize, tooltipArrow, translateX, translateY);
                 const tooltipCoordinate = TooltipHelper.getTooltipCoordinate(coordinatePointer);
@@ -193,7 +193,7 @@ export class Tooltip
         });
     }
 
-    private static renderTooltipForGantt(block: Block, elemets: Selection<BaseType, DataRow, BaseType, unknown>, data: DataSource, chart: IntervalChartModel, chartOrientation: ChartOrientation, blockSize: Size): void {
+    private static renderTooltipForGantt(block: Block, elemets: Selection<BaseType, DataRow, BaseType, unknown>, data: DataSource, dataOptions: OptionsModelData, chart: IntervalChartModel, chartOrientation: ChartOrientation, blockSize: Size): void {
         const tooltipBlock = this.renderTooltipBlock(block);
         const tooltipContent = this.renderTooltipContentBlock(tooltipBlock);
         const tooltipArrow = this.renderTooltipArrow(tooltipBlock);
@@ -202,14 +202,14 @@ export class Tooltip
         elemets
             .on('mouseover', function(event, dataRow) {
                 tooltipBlock.style('display', 'block');
-                const key = TooltipHelper.getKeyForTooltip(dataRow, chart.data.keyField.name, false);
-                TooltipHelper.fillTooltipForIntervalChart(tooltipContent, chart, data, key, select(this).style('fill'))
+                const key = TooltipHelper.getKeyForTooltip(dataRow, dataOptions.keyField.name, false);
+                TooltipHelper.fillTooltipForIntervalChart(tooltipContent, chart, data, dataOptions, key, select(this).style('fill'))
 
                 const coordinatePointer: [number, number] = TooltipHelper.getTooltipBlockCoordinateByRect(select(this), tooltipBlock, blockSize, tooltipArrow, chartOrientation);
                 const tooltipCoordinate = TooltipHelper.getTooltipCoordinate(coordinatePointer);
                 thisClass.setTooltipCoordinate(tooltipBlock, tooltipCoordinate);
 
-                TooltipHelper.setElementsSemiOpacity(TooltipHelper.getFilteredElements(elemets, chart.data.keyField.name, key, false));
+                TooltipHelper.setElementsSemiOpacity(TooltipHelper.getFilteredElements(elemets, dataOptions.keyField.name, key, false));
             });
 
         elemets.on('mouseleave', function() {

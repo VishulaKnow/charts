@@ -23,8 +23,8 @@ export class ScaleModel
         return allowableKeys;
     }
 
-    public static getScaleDateValueDomain(data: DataSource, charts: IntervalChart[], keyAxisPosition: AxisPosition, allowableKeys: string[]): [Date, Date] {
-        const minMax = ModelHelper.getMinAndMaxOfIntervalData(data, charts);
+    public static getScaleDateValueDomain(data: DataSource, charts: IntervalChart[], keyAxisPosition: AxisPosition, dataSource: string): [Date, Date] {
+        const minMax = ModelHelper.getMinAndMaxOfIntervalData(data, dataSource, charts);
         let domainPeekMin = minMax[0];
         let domainPeekMax = minMax[1];
 
@@ -77,7 +77,7 @@ export class ScaleModel
         let max: number = 0;
 
         configOptions.charts.forEach(chart => {
-            data[chart.data.dataSource].forEach(dataRow => {
+            data[configOptions.data.dataSource].forEach(dataRow => {
                 let sumInRow = 0;
                 chart.data.valueFields.forEach(field => {
                     if(configOptions.isSegmented)

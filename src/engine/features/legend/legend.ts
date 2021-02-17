@@ -54,7 +54,7 @@ export class Legend
             });            
             return texts;
         } else if(options.type === 'polar') {
-            return options.charts.map(chart => data[chart.data.dataSource].map((record: DataRow) => record[chart.data.keyField.name]))[0];
+            return data[options.data.dataSource].map((record: DataRow) => record[options.data.keyField.name]);
         } else if(options.type === 'interval') {
             return options.charts.map(chart => chart.title);
         }

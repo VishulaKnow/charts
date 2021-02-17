@@ -1,4 +1,4 @@
-import { IntervalChart, TwoDimensionalChart } from "../config/config";
+import { IntervalChart } from "../config/config";
 import { BlockMargin, DataSource, Size } from "./model";
 
 export class ModelHelper
@@ -20,12 +20,12 @@ export class ModelHelper
         return max;
     }
 
-    public static getMinAndMaxOfIntervalData(data: DataSource, charts: IntervalChart[]): [Date, Date] {
-        let min = data[charts[0].data.dataSource][0][charts[0].data.valueField1.name];
-        let max = data[charts[0].data.dataSource][0][charts[0].data.valueField1.name];
+    public static getMinAndMaxOfIntervalData(data: DataSource, dataSource: string, charts: IntervalChart[]): [Date, Date] {
+        let min = data[dataSource][0][charts[0].data.valueField1.name];
+        let max = data[dataSource][0][charts[0].data.valueField1.name];
 
         charts.forEach(chart => {
-            const chartData = data[chart.data.dataSource];
+            const chartData = data[dataSource];
             const valueField1 = chart.data.valueField1.name;
             const valueField2 = chart.data.valueField2.name;
             chartData.forEach(dataRow => {
