@@ -18,8 +18,10 @@ export class LegendCanvasModel
             const colorBlock = document.createElement('span');
             const textBlock = document.createElement('span');
             itemWrapper.classList.add(LegendModel.getLegendItemClass(itemsPosition));
-            if(itemsPosition === 'column')
+            if(itemsPosition === 'column') {
+                itemWrapper.style.whiteSpace = 'nowrap';
                 itemWrapper.classList.add(LegendModel.getMarginClass(legendPosition));
+            }
             colorBlock.classList.add(CLASSES.legendColor);
             textBlock.classList.add(CLASSES.legendLabel);
             textBlock.textContent = text;

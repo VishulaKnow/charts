@@ -39,7 +39,11 @@ export class MarginModel
 
             this.clearMarginByLegendBlockPosition(margin, legendBlockModel);
             
-            const legendSize = LegendModel.getLegendSize(config.options.type, position, dataScope.allowableKeys, designerConfig.canvas.legendBlock.maxWidth, config.canvas.size, legendBlockModel);
+            let allowableKeys = [...dataScope.allowableKeys];
+            if(dataScope.hidedRecordsAmount !== 0 && position === 'bottom')
+                allowableKeys.push('1'); // Если есть спрятанные записи, то в массив добавляется объект, чтобы выделить место в легенде для индикатора переполнения
+
+            const legendSize = LegendModel.getLegendSize(config.options.type, position, allowableKeys, designerConfig.canvas.legendBlock.maxWidth, config.canvas.size, legendBlockModel);
             margin[position] += legendSize + legendBlockModel[position].margin[position];            
             legendBlockModel[position].size = legendSize;
             options.legend.position = position;
