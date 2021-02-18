@@ -10,8 +10,13 @@ export type IntervalChartType = 'gantt';
 export type EmbeddedLabelType = 'none' | 'key' | 'value';
 
 export interface Config {
-    canvas: Canvas;
+    canvas: ChartBlockCanvas;
     options: PolarOptions | TwoDimensionalOptions | IntervalOptions;
+}
+
+export interface ChartBlockCanvas {
+    size: Size;
+    class: string;
 }
 
 interface Options {
@@ -137,11 +142,6 @@ interface GridLineOptions {
 interface GridLineFlag {
     key: boolean;
     value: boolean;
-}
-
-interface Canvas {
-    size: Size;
-    class: string;
 }
 
 interface AxisOptions {
