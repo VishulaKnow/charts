@@ -66,6 +66,8 @@ h3.title {
 }
 
 .tooltip-circle {
+    position: relative;
+    bottom: -1px;
     display: inline-block;
     width: 11px;
     height: 11px;
