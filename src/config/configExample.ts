@@ -8,99 +8,99 @@ const configCars: Config = {
             height: 510
         }
     },
-    // options: {
-    //     type: '2d',
-    //     axis: {
-    //         keyAxis: {
-    //             position: 'end',
-    //             ticks: {
-    //                 flag: false
-    //             }
-    //         },
-    //         valueAxis: {
-    //             domain: {
-    //                 start: -1,
-    //                 end: -1
-    //             },
-    //             position: 'start',
-    //             ticks: {
-    //                 flag: false
-    //             }
-    //         }
-    //     },
-    //     additionalElements: {
-    //         gridLine: {
-    //             flag: {
-    //                 value: true,
-    //                 key: true
-    //             }
-    //         }
-    //     },
-    //     legend: {
-    //         show: true
-    //     },
-    //     orientation: 'vertical',
-    //     data: {
-    //         dataSource: 'dataSet',
-    //         keyField:  {
-    //             name: 'brand',
-    //             format: 'string'
-    //         }
-    //     },
-    //     charts: [
-    //         {
-    //             title: 'Рост стоимости',
-    //             isSegmented: false,
-    //             type: 'line',
-    //             data: {
-    //                 valueFields: [
-    //                     {
-    //                         name: 'count',
-    //                         format: 'integer',
-    //                         title: 'Количество автомобилей на душу населения'
-    //                     },
-    //                     {
-    //                         name: 'price',
-    //                         format: 'money',
-    //                         title: 'Количество автомобилей на душу населения'
-    //                     }          
-    //                 ]
-    //             },
-    //             tooltip: {
-    //                 show: true
-    //             },
-    //             embeddedLabels: 'key'
-    //         }
-    //     ]
-    // }
     options: {
-        type: 'polar',
+        type: '2d',
+        axis: {
+            keyAxis: {
+                position: 'end',
+                ticks: {
+                    flag: false
+                }
+            },
+            valueAxis: {
+                domain: {
+                    start: -1,
+                    end: -1
+                },
+                position: 'start',
+                ticks: {
+                    flag: false
+                }
+            }
+        },
+        additionalElements: {
+            gridLine: {
+                flag: {
+                    value: true,
+                    key: true
+                }
+            }
+        },
         legend: {
             show: true
         },
+        orientation: 'vertical',
         data: {
-            dataSource: 'data',
+            dataSource: 'dataSet',
             keyField:  {
-                name: 'x',
+                name: 'brand',
                 format: 'string'
             }
         },
         charts: [
             {
                 title: 'Рост стоимости',
-                type: 'donut',
+                isSegmented: false,
+                type: 'line',
                 data: {
-                    valueField: {
-                        name: 'y',
-                        format: 'money'
-                    }
+                    valueFields: [
+                        {
+                            name: 'count',
+                            format: 'integer',
+                            title: 'Количество автомобилей на душу населения'
+                        },
+                        {
+                            name: 'price',
+                            format: 'money',
+                            title: 'Количество автомобилей на душу населения'
+                        }          
+                    ]
                 },
                 tooltip: {
                     show: true
                 },
+                embeddedLabels: 'key'
             }
         ]
     }
+    // options: {
+    //     type: 'polar',
+    //     legend: {
+    //         show: true
+    //     },
+    //     data: {
+    //         dataSource: 'data',
+    //         keyField:  {
+    //             name: 'x',
+    //             format: 'string'
+    //         }
+    //     },
+    //     charts: [
+    //         {
+    //             title: 'Рост стоимости',
+    //             type: 'donut',
+    //             data: {
+    //                 valueField: {
+    //                     name: 'y',
+    //                     format: 'money'
+    //                 }
+    //             },
+    //             tooltip: {
+    //                 show: true
+    //             },
+    //         }
+    //     ]
+    // }
 }
 
 const configDemo: Config = {
@@ -112,10 +112,37 @@ const configDemo: Config = {
         }
     },
     options: {
-        type: 'polar',
+        type: '2d',
+        axis: {
+            keyAxis: {
+                position: 'end',
+                ticks: {
+                    flag: false
+                }
+            },
+            valueAxis: {
+                domain: {
+                    start: -1,
+                    end: -1
+                },
+                position: 'start',
+                ticks: {
+                    flag: false
+                }
+            }
+        },
+        additionalElements: {
+            gridLine: {
+                flag: {
+                    value: true,
+                    key: true
+                }
+            }
+        },
         legend: {
             show: true
         },
+        orientation: 'vertical',
         data: {
             dataSource: 'dataSet_data',
             keyField:  {
@@ -126,19 +153,29 @@ const configDemo: Config = {
         charts: [
             {
                 title: 'Рост стоимости',
-                type: 'donut',
+                isSegmented: false,
+                type: 'bar',
                 data: {
-                    valueField: {
-                        name: 'EventCost',
-                        format: 'money'
-                    }
+                    valueFields: [
+                        {
+                            name: 'EventCost',
+                            format: 'integer',
+                            title: 'Количество автомобилей на душу населения'
+                        },
+                        {
+                            name: 'AlcoholCost',
+                            format: 'money',
+                            title: 'Количество автомобилей на душу населения'
+                        }
+                    ]
                 },
                 tooltip: {
                     show: true
                 },
+                embeddedLabels: 'key'
             }
         ]
     }
 }
 
-export default configCars;
+export default configDemo;

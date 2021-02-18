@@ -75,6 +75,7 @@ export class Bar
                 keyField.name,
                 field.name,
                 blockSize,
+                BarHelper.getBarIndex(barsAmounts, chart.index) + index,
                 sum(barsAmounts),
                 barSettings,
                 this.barItemClass);
@@ -120,11 +121,11 @@ export class Bar
             .attr('height', barAttrs.height);
 
         Helper.setCssClasses(bars, chart.cssClasses); // Для обозначения принадлежности бара к конкретному чарту
+        const thisClass = this;
         groups.each(function(d, i) {
-            Helper.setCssClasses(select(this).selectAll(`${Helper.getCssClassesLine(chart.cssClasses)}`), Helper.getCssClassesWithElementIndex(chart.cssClasses, i)); // Для обозначения принадлежности бара к конкретной части стака
+            Helper.setCssClasses(select(this).selectAll(`rect${Helper.getCssClassesLine(chart.cssClasses)}`), Helper.getCssClassesWithElementIndex(chart.cssClasses, i)); // Для обозначения принадлежности бара к конкретной части стака
+            thisClass.setSegmentColor(select(this).selectAll(Helper.getCssClassesLine(chart.cssClasses)), chart.style.elementColors, i);
         });
-        
-        this.setSegmentColor(groups.selectAll(Helper.getCssClassesLine(chart.cssClasses)), chart.style.elementColors);
     }
 
     private static renderBarGroups(block: Block, data: DataRow[]): void {
@@ -193,7 +194,7 @@ export class Bar
         }
     } 
 
-    private static setSegmentColor(segments: Selection<SVGGElement, any, SVGGElement, unknown>, colorPalette: Color[]): void {
-        segments.style('fill', (d, i) => colorPalette[i % colorPalette.length].toString());
+    private static setSegmentColor(segments: Selection<SVGGElement, any, SVGGElement, unknown>, colorPalette: Color[], segmentedIndex: number): void {
+        segments.style('fill', colorPalette[segmentedIndex % colorPalette.length].toString());
     }
 }
