@@ -157,8 +157,8 @@ export class Tooltip
         filter.append('feDropShadow')
             .attr('dx', 0)
             .attr('dy', 0)
-            .attr('flood-color', 'rgba(0, 0, 0, 0.3)')
-            .attr('stdDeviation', 10);
+            .attr('flood-color', 'rgba(0, 0, 0, 0.15)')
+            .attr('stdDeviation', 20);
             
         let clone: Selection<BaseType, unknown, BaseType, unknown>;
 
