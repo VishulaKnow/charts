@@ -126,9 +126,10 @@ export class DataManagerModel
 
     private static setDataType(data: DataSource, config: Config): void { 
         if(config.options.type === 'polar' || config.options.type === '2d') {
-            if(config.options.data.keyField.format === 'date') {
-                data[config.options.data.dataSource] = this.getTypedData(data[config.options.data.dataSource], config.options.data.keyField);
-            }
+            // Форматиривание для оси ключей пока не совсем верно установлено
+            // if(config.options.data.keyField.format === 'date') {
+            //     data[config.options.data.dataSource] = this.getTypedData(data[config.options.data.dataSource], config.options.data.keyField);
+            // }
         } else if(config.options.type === 'interval') {
             config.options.charts.forEach((chart: IntervalChart) => {
                 if(chart.data.valueField1.format === 'date') {
