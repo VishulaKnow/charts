@@ -20,7 +20,7 @@ const designerConfig: DesignerConfig = {
         chartOptions: {
             bar: {
                 groupMinDistance: 10,
-                minBarWidth: 3,
+                minBarWidth: 12,
                 maxBarWidth: 30,
                 barDistance: 5,
                 groupMaxDistance: 35

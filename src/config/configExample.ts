@@ -115,7 +115,7 @@ const configDemo: Config = {
         type: '2d',
         axis: {
             keyAxis: {
-                position: 'end',
+                position: 'start',
                 ticks: {
                     flag: false
                 }
@@ -142,7 +142,7 @@ const configDemo: Config = {
         legend: {
             show: true
         },
-        orientation: 'vertical',
+        orientation: 'horizontal',
         data: {
             dataSource: 'dataSet_data',
             keyField:  {
@@ -172,7 +172,30 @@ const configDemo: Config = {
                 tooltip: {
                     show: true
                 },
-                embeddedLabels: 'key'
+                embeddedLabels: 'value'
+            },
+            {
+                title: 'Рост стоимости',
+                isSegmented: false,
+                type: 'line',
+                data: {
+                    valueFields: [
+                        {
+                            name: 'EventCost',
+                            format: 'integer',
+                            title: 'Количество автомобилей на душу населения'
+                        },
+                        {
+                            name: 'AlcoholCost',
+                            format: 'money',
+                            title: 'Количество автомобилей на душу населения'
+                        }
+                    ]
+                },
+                tooltip: {
+                    show: true
+                },
+                embeddedLabels: 'value'
             }
         ]
     }
