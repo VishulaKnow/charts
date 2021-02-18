@@ -6,7 +6,7 @@
  * or disable the default devtool with "devtool: false".
  * If you are looking for production-ready output files, see mode: "production" (https://webpack.js.org/configuration/mode/).
  */
-(self["webpackChunkmdt_charts"] = self["webpackChunkmdt_charts"] || []).push([["src_main_ts"],{
+(self["webpackChunkmdt_charts"] = self["webpackChunkmdt_charts"] || []).push([["src_engine_engine_ts"],{
 
 /***/ "./src/designer/designerConfigExample.ts":
 /*!***********************************************!*\
@@ -269,17 +269,6 @@ eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpac
 
 "use strict";
 eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"ValueFormatter\": () => /* binding */ ValueFormatter\n/* harmony export */ });\nclass ValueFormatter {\r\n    static formatValue(valueType, value) {\r\n        return this.format[valueType]({}, value);\r\n    }\r\n    static setFormatFunction(formatFunction) {\r\n        this.format = formatFunction;\r\n    }\r\n    static getValueOrZero(value) {\r\n        return value > 0 ? value : 0;\r\n    }\r\n}\r\n\n\n//# sourceURL=webpack://mdt-charts/./src/engine/valueFormatter.ts?");
-
-/***/ }),
-
-/***/ "./src/main.ts":
-/*!*********************!*\
-  !*** ./src/main.ts ***!
-  \*********************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-"use strict";
-eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"Chart\": () => /* binding */ Chart\n/* harmony export */ });\n/* harmony import */ var _engine_engine__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./engine/engine */ \"./src/engine/engine.ts\");\n/* harmony import */ var _model_modelOptions__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./model/modelOptions */ \"./src/model/modelOptions.ts\");\n\r\n\r\nclass Chart {\r\n    constructor(config, designerConfig, data) {\r\n        this.config = config;\r\n        this.designerConfig = designerConfig;\r\n        this.data = data;\r\n        this.model = (0,_model_modelOptions__WEBPACK_IMPORTED_MODULE_1__.assembleModel)(this.config, this.data, this.designerConfig);\r\n        this.engine = new _engine_engine__WEBPACK_IMPORTED_MODULE_0__.default();\r\n    }\r\n    render(parentElement) {\r\n        this.engine.render(this.model, (0,_model_modelOptions__WEBPACK_IMPORTED_MODULE_1__.getPreparedData)(this.model, this.data, this.config), parentElement);\r\n    }\r\n    destroy() {\r\n        this.engine.destroy();\r\n    }\r\n    updateData(data) {\r\n        this.model = (0,_model_modelOptions__WEBPACK_IMPORTED_MODULE_1__.assembleModel)(this.config, data, this.designerConfig);\r\n        this.data = data;\r\n        this.engine.updateData(this.model, (0,_model_modelOptions__WEBPACK_IMPORTED_MODULE_1__.getPreparedData)(this.model, this.data, this.config));\r\n    }\r\n    updateSize(newSize) {\r\n        if (newSize.height)\r\n            this.config.canvas.size.height = newSize.height;\r\n        if (newSize.width)\r\n            this.config.canvas.size.width = newSize.width;\r\n        this.model = (0,_model_modelOptions__WEBPACK_IMPORTED_MODULE_1__.assembleModel)(this.config, this.data, this.designerConfig);\r\n        this.engine.updateFullBlock(this.model, (0,_model_modelOptions__WEBPACK_IMPORTED_MODULE_1__.getPreparedData)(this.model, this.data, this.config));\r\n    }\r\n}\r\n\n\n//# sourceURL=webpack://mdt-charts/./src/main.ts?");
 
 /***/ }),
 

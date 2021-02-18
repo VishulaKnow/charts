@@ -90,6 +90,8 @@ h3.title {
     text-overflow: ellipsis;
 }
 .legend-circle {
+    position: relative;
+    bottom: -1px;
     display: inline-block;
     width: 11px;
     height: 11px;
