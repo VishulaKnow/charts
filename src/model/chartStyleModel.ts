@@ -1,33 +1,45 @@
 import { color, Color } from "d3-color";
 import { TwoDimensionalChartType } from "../config/config";
+import { ChartStyleConfig } from "../designer/designerConfig";
 import { ChartStyle } from "./model";
 
-const colorJson = require('../assets/materialColors.json');
+const colorsTemplate = require('../assets/colorsTemplate.json')
 
 interface ChartColors {
-    [colorName: string]: string
+    colorName: string;
+    colorPalette: string[];
+}
+
+interface IColorContainer extends ChartColors {
+    colors: ChartColors[];
 }
 
 
 export class ChartStyleModel
 {
-    private static palette = colorJson.colors;
+    private static palette = colorsTemplate.colors
 
     public static getCssClasses(chartIndex: number): string[] {
         const cssClasses = [`chart-${chartIndex}`];
         return cssClasses;
     }
 
-    public static get2DChartStyle(chartsAmount: number, chartType: TwoDimensionalChartType, chartsValueFieldsAmount: number[], chartIndex: number, isSegmented: boolean): ChartStyle {
+    public static get2DChartStyle(chartsAmount: number, chartType: TwoDimensionalChartType, chartsValueFieldAmount: number[], chartIndex: number, isSegmented: boolean, chartStyleConfig: ChartStyleConfig): ChartStyle {
+        let startIndex = 0;
+        for(let i = 0; i < chartIndex; i++) {
+            startIndex += chartsValueFieldAmount[i];
+        }
+        const valueFieldsAmount = chartsValueFieldAmount[chartIndex];
+
         return {
-            elementColors: this.get2DElementColorPalette(this.palette, chartsValueFieldsAmount, chartIndex, isSegmented),
-            opacity: this.getChartOpacity(chartsAmount, chartType, chartsValueFieldsAmount[chartIndex], isSegmented)
+            elementColors: this.getColors(this.palette, chartStyleConfig.step, valueFieldsAmount, startIndex, chartStyleConfig.baseColor, isSegmented),
+            opacity: this.getChartOpacity(chartsAmount, chartType, chartsValueFieldAmount[chartIndex], isSegmented)
         }
     }
-
-    public static getChartStyle(elementsAmount: number): ChartStyle {
+    
+    public static getChartStyle(elementsAmount: number, chartStyleConfig: ChartStyleConfig): ChartStyle {
         return {
-            elementColors: this.getElementColorPalette(this.palette, elementsAmount),
+            elementColors: this.getColors(this.palette, chartStyleConfig.step, elementsAmount, 0, chartStyleConfig.baseColor, false),
             opacity: 1
         }
     }
@@ -38,58 +50,36 @@ export class ChartStyleModel
         return 1;
     }
 
-    private static get2DElementColorPalette(palette: ChartColors[], chartsValueFieldAmount: number[], chartIndex: number, isSegmented: boolean): Color[] {
-        let startIndex = 0;
-        for(let i = 0; i < chartIndex; i++) {
-            startIndex += chartsValueFieldAmount[i]
+    private static getColors(palette: IColorContainer[], step: number, valueFieldsAmount: number, startIndex: number, baseColorName: string, isSegmented: boolean): Color[] {   
+        const colorsArray: string[] = [];
+        const baseColorIndex = this.getColorIndex(palette, baseColorName);
+        const colorsAmountInPallete: number = palette.length;
+        let indexOfDesired = 0;
+        startIndex *= step;
+        do
+        {
+            indexOfDesired = baseColorIndex + startIndex + colorsArray.length * step;
+            indexOfDesired = indexOfDesired % colorsAmountInPallete;
+            if(isSegmented) {
+                colorsArray.push(...this.getColorRow(palette[indexOfDesired].colorPalette, valueFieldsAmount));
+            }
+            else {
+                colorsArray.push(this.getBaseColor(palette[indexOfDesired].colorPalette));
+            }
         }
+        while (colorsArray.length !== valueFieldsAmount);
 
-        return this.getColorsForFields(palette, startIndex, chartsValueFieldAmount[chartIndex], chartIndex, isSegmented);
-    }   
+        return colorsArray.map(elementColor => color(elementColor));
+     }  
 
-    private static getElementColorPalette(palette: ChartColors[], elementsAmount: number): Color[] {
-        return palette.slice(0, elementsAmount).map(colors => color(this.getBaseColor(colors)));   
-    }
 
-    private static getColorsForFields(palette: ChartColors[], startIndex: number, valueFieldsAmount: number, chartIndex: number, isSegmented: boolean): Color[] {
-        if(!isSegmented) {
-            return this.getColorsWithAmountStep(palette, valueFieldsAmount, startIndex)
-                .map(elementColor => color(elementColor));
-        }
-
-        for(let i = 0; i < valueFieldsAmount; i++)
-            return this.getColorsSetByBase(palette[startIndex], valueFieldsAmount).map(colors => color(colors))
-    }
-
-    private static getColorsWithAmountStep(palette: ChartColors[], elementColors: number, startIndex: number): string[] {
-        const step = Math.floor(19 / elementColors);
-        const colors: string[] = [];
-        let currentIndex = startIndex;
-        for(let  i = 0; i < elementColors; i++) {
-            colors.push(this.getBaseColor(palette[currentIndex % 19]));
-            currentIndex += step;
-        }
-        return colors;
-    }
-
-    private static getBaseColor(colorSet: ChartColors): string {
-        let firstKey: string;
-        for(let key in colorSet) {
-            firstKey = firstKey || key;
-            if(parseInt(key.split('-')[key.split('-').length - 1]) === 500)
-                return colorSet[key];
-        }
-        return colorSet[firstKey];
-    }
-
-    private static getColorsSetByBase(colorSet: ChartColors, colorsAmount: number): string[] {
+    private static getColorRow(colorSet: string[], colorsAmount: number): string[] {
         const colors: string[] = [];
         for(let key in colorSet) {
-            const colorCode = parseInt(key.split('-')[key.split('-').length - 1]);
-            if(colorCode === 200 || colorCode === 300 || colorCode === 400 || colorCode === 500)
+            const colorCode = key;
+            if(colorCode === '100' || colorCode === '200' || colorCode === '300' || colorCode === '500')
                 colors.push(colorSet[key]);
         }
-
         colors.reverse();
         
         const chartColorSet: string[] = [];
@@ -100,17 +90,18 @@ export class ChartStyleModel
         return chartColorSet;
     }
 
-    // private static generatePalette(baseColors: Color[], colorAmount: number): Color[] {
-    //     const hslColor = d3.hsl(baseColors[0].toString());
-    //     let step = 360 / colorAmount;
-    //     if(step < 31)
-    //         step = 31;
-    //     const colors = [];
-    //     for(let i = 0; i < colorAmount; i++) {
-    //         colors.push(color(hslColor));
-    //         hslColor.h += step;
-    //     }
+    private static getColorIndex(palette: IColorContainer[], baseColorName: string): number {
+        const index = palette.findIndex(colorObject => colorObject.colorName === baseColorName);
+        return index === -1 ? 0 : index;
+    }    
 
-    //     return colors;
-    // }
+    private static getBaseColor(colorSet: string[]): string {
+        let firstKey: string;
+        for(let key in colorSet) {
+            firstKey = firstKey || key;
+            if(key == "500")
+                return colorSet[key];
+        }
+        return colorSet[0];
+    }
 }

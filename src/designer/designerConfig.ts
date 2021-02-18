@@ -11,6 +11,12 @@ export interface DesignerConfig {
     canvas: Canvas;
     additionalElements: Elements;
     dataFormat: DataFormat;
+    chartStyle: ChartStyleConfig;
+}
+
+export interface ChartStyleConfig {
+    baseColor: string;
+    step: number;
 }
 
 export interface BarOptionsCanvas {

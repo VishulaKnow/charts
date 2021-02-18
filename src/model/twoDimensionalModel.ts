@@ -1,5 +1,5 @@
 import { ChartOrientation, Config, TwoDimensionalChart, TwoDimensionalChartType, TwoDimensionalOptions } from "../config/config";
-import { BarOptionsCanvas, DesignerConfig } from "../designer/designerConfig";
+import { BarOptionsCanvas, ChartStyleConfig, DesignerConfig } from "../designer/designerConfig";
 import { AxisModel } from "./axisModel";
 import { ChartStyleModel } from "./chartStyleModel";
 import { DataManagerModel } from "./dataManagerModel";
@@ -70,7 +70,7 @@ export class TwoDimensionalModel
             },
             type: configOptions.type,
             data: { ...configOptions.data },
-            charts: this.getChartsModel(configOptions.charts, configOptions.orientation),
+            charts: this.getChartsModel(configOptions.charts, configOptions.orientation, designerConfig.chartStyle),
             additionalElements: this.getAdditionalElements(configOptions, designerConfig)
         }
     }
@@ -87,7 +87,7 @@ export class TwoDimensionalModel
         charts.sort((ch1, ch2) => chartOrder.indexOf(ch1.type) - chartOrder.indexOf(ch2.type));
     }
 
-    private static getChartsModel(charts: TwoDimensionalChart[], chartOrientation: ChartOrientation): TwoDimensionalChartModel[] {
+    private static getChartsModel(charts: TwoDimensionalChart[], chartOrientation: ChartOrientation, chartStyleConfig: ChartStyleConfig): TwoDimensionalChartModel[] {
         this.sortCharts(charts);
         const chartsModel: TwoDimensionalChartModel[] = [];
         charts.forEach((chart, index) => {
@@ -98,7 +98,7 @@ export class TwoDimensionalModel
                 data: { ...chart.data },
                 tooltip: chart.tooltip,
                 cssClasses: ChartStyleModel.getCssClasses(index),
-                style: ChartStyleModel.get2DChartStyle(charts.length, chart.type, this.getChartsValueFieldsAmount(charts), index, chart.isSegmented),
+                style: ChartStyleModel.get2DChartStyle(charts.length, chart.type, this.getChartsValueFieldsAmount(charts), index, chart.isSegmented, chartStyleConfig),
                 embeddedLabels: this.getEmbeddedLabelType(chart, chartOrientation),
                 index
             });

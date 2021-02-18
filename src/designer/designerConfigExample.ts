@@ -42,6 +42,10 @@ const designerConfig: DesignerConfig = {
             'string': (options: DataTypeOptions, value: any) => value
         }
     },
+    chartStyle: {
+        baseColor: 'indigo',
+        step: 3
+    },
     additionalElements: {
         gridLine: {
             flag: {
