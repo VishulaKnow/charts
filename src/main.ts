@@ -33,7 +33,7 @@ export class Chart
     public updateData(data: DataSource): void {
         this.model = assembleModel(this.config, data, this.designerConfig);
         this.data = data;
-        this.engine.updateData(this.model, data);
+        this.engine.updateData(this.model, getPreparedData(this.model, this.data, this.config));
     }
 
     public updateSize(newSize: Size): void {
@@ -43,6 +43,6 @@ export class Chart
             this.config.canvas.size.width = newSize.width;
 
         this.model = assembleModel(this.config, this.data, this.designerConfig);
-        this.engine.updateFullBlock(this.model, this.data);
+        this.engine.updateFullBlock(this.model, getPreparedData(this.model, this.data, this.config));
     }
 }
