@@ -3,7 +3,7 @@ import { TwoDimensionalChartType } from "../config/config";
 import { ChartStyleConfig } from "../designer/designerConfig";
 import { ChartStyle } from "./model";
 
-const colorsTemplate = require('../assets/colorsTemplate.json')
+const colorsTemplate = require('../assets/materialColors.json')
 
 interface ChartColors {
     colorName: string;
