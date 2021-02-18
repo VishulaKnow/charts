@@ -34,8 +34,6 @@ export class DataManagerModel
             .filter((chart: TwoDimensionalChart | IntervalChart) => chart.type === 'bar' || chart.type === 'gantt');
 
         if(chartsWithBarElement.length !== 0) {
-            console.log(chartsWithBarElement.length);
-
             const axisLength = AxisModel.getAxisLength(configOptions.orientation, margin, blockSize);
             const uniqueKeys = ModelHelper.getUniqueValues(data[configOptions.data.dataSource].map(d => d[configOptions.data.keyField.name]));
             const dataLength = uniqueKeys.length;
