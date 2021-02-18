@@ -46,7 +46,7 @@ export class IntervalModel {
                     cssClass: 'key-axis',
                     ticks: configOptions.axis.keyAxis.ticks,
                     labels: {
-                        maxSize: designerConfig.canvas.axisLabel.maxSize.main,
+                        maxSize: AxisModel.getLabelSize(designerConfig.canvas.axisLabel.maxSize.main, data[configOptions.data.dataSource].map(d => d[configOptions.data.keyField.name])).width,
                         positition: AxisModel.getKeyAxisLabelPosition(margin, config.canvas.size, DataManagerModel.getDataValuesByKeyField(data, configOptions.data.dataSource, configOptions.data.keyField.name).length),
                         visible: true
                     }

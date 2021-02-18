@@ -160,7 +160,13 @@ export default class Listeners
                 legend: this.config.options.legend,
                 orientation: ListenersHelper.getInputValue('#chart-orient') as 'horizontal' | 'vertical',
                 type: notationType,
-                data: { ...this.config.options.data },
+                data: {
+                    dataSource: 'dataSet',
+                    keyField: {
+                        format: 'string',
+                        name: 'brand'
+                    }
+                },
                 charts: [
                     {
                         data: this.getDataConfig(notationType),
@@ -202,7 +208,13 @@ export default class Listeners
         } else if(notationType === 'polar') {
             const options: PolarOptions = {
                 legend: this.config.options.legend,
-                data: { ...this.config.options.data },
+                data: {
+                    dataSource: 'dataSet',
+                    keyField: {
+                        format: 'string',
+                        name: 'brand'
+                    }
+                },
                 type: notationType,
                 charts: [
                     {
@@ -217,7 +229,13 @@ export default class Listeners
         } else if(notationType === 'interval') {
             const options: IntervalOptions = {
                 legend: this.config.options.legend,
-                data: { ...this.config.options.data },
+                data: {
+                    dataSource: 'dataSet_gantt',
+                    keyField: {
+                        format: 'string',
+                        name: 'task'
+                    }
+                },
                 orientation: ListenersHelper.getInputValue('#chart-orient') as 'horizontal' | 'vertical',
                 type: notationType,
                 charts: [

@@ -44,7 +44,7 @@ export class GridLine
             .attr('y1', lineAttributes.y1)
             .attr('x2', lineAttributes.x2)
             .attr('y2', lineAttributes.y2)
-            .attr('shape-rendering', 'crispEdges');
+            // .attr('shape-rendering', 'crispEdges');
     }
 
     private static getLineAttributes(axis: AxisModelOptions, lineLength: number): GridLineAttributes {
