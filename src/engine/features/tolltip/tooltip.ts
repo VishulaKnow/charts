@@ -69,7 +69,7 @@ export class Tooltip
         const otherChartsElements = TooltipHelper.getOtherChartsElements(block, chart.index, chartsStyleSettings.map(ch => ch.cssClasses));
 
         elemets
-            .on('mouseover', function(event, d) {
+            .on('mouseover', function(_event, d) {
                 tooltipBlock.style('display', 'block');                               
                 const keyValue = TooltipHelper.getKeyForTooltip(d, dataOptions.keyField.name, chart.isSegmented);
                 const index = TooltipHelper.getElementIndex(elemets, this, keyValue, dataOptions.keyField.name, chart.isSegmented)
@@ -110,7 +110,7 @@ export class Tooltip
         let barHighlighter: Selection<SVGRectElement, unknown, HTMLElement, any>;
 
         elemets
-            .on('mouseover', function(event, dataRow) {
+            .on('mouseover', function(_event, dataRow) {
                 tooltipBlock.style('display', 'block');
                 const keyValue = TooltipHelper.getKeyForTooltip(dataRow, dataOptions.keyField.name, chart.isSegmented);
                 
@@ -163,7 +163,7 @@ export class Tooltip
         let clone: Selection<BaseType, unknown, BaseType, unknown>;
 
         elemets
-            .on('mouseover', function(event, dataRow) {
+            .on('mouseover', function(_event, dataRow) {
                 tooltipBlock.style('display', 'block');
                 const key = dataRow.data[dataOptions.keyField.name];
                 TooltipHelper.fillTooltipForPolarChart(tooltipContent, chart, data, dataOptions, key, select(this).select('path').style('fill'))
@@ -200,7 +200,7 @@ export class Tooltip
         const thisClass = this;
 
         elemets
-            .on('mouseover', function(event, dataRow) {
+            .on('mouseover', function(_event, dataRow) {
                 tooltipBlock.style('display', 'block');
                 const key = TooltipHelper.getKeyForTooltip(dataRow, dataOptions.keyField.name, false);
                 TooltipHelper.fillTooltipForIntervalChart(tooltipContent, chart, data, dataOptions, key, select(this).style('fill'))
