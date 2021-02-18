@@ -174,7 +174,7 @@ export class Tooltip
 
                 clone = select(this).clone();
                 select(this).style('filter', 'url(#shadow)');
-                // TooltipHelper.setElementsSemiOpacity(elemets.filter(d => d.data[chart.data.keyField.name] !== key));
+                // TooltipHelper.setElementsSemiOpacity(elemets.filter(d => d.data[dataOptions.keyField.name] !== key));
 
                 // select<SVGGElement, PieArcDatum<DataRow>>(this)
                 //     .select('path')
