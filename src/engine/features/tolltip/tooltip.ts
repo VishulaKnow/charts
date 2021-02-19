@@ -107,7 +107,7 @@ export class Tooltip
 
         const otherChartsElements = TooltipHelper.getOtherChartsElements(block, chart.index, chartsStyleSettings.map(ch => ch.cssClasses));
 
-        let barHighlighter: Selection<SVGRectElement, unknown, HTMLElement, any>;
+        let barHighlighter: Selection<SVGRectElement, unknown, HTMLElement, any>; // серая линия, проходящая от начала бара до конца чарт-блока
 
         elemets
             .on('mouseover', function(_event, dataRow) {
@@ -174,8 +174,10 @@ export class Tooltip
 
                 clone = select(this).clone();
                 select(this).style('filter', 'url(#shadow)');
+                // Задание прозрачности всем сегментам, кроме выделенного
                 // TooltipHelper.setElementsSemiOpacity(elemets.filter(d => d.data[dataOptions.keyField.name] !== key));
 
+                // Выезд сегмента наружу
                 // select<SVGGElement, PieArcDatum<DataRow>>(this)
                 //     .select('path')
                 //     .attr('d', (d, i) => Donut.getArcGeneratorObject(blockSize, margin, donutThickness)
@@ -189,7 +191,7 @@ export class Tooltip
             TooltipHelper.setElementsFullOpacity(elemets);
             select(this)
                 .style('filter', null);
-            clone.remove();
+            clone.remove(); // удаление клона с тенью
         });
     }
 
