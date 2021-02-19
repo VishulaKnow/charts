@@ -70,7 +70,7 @@ export class Tooltip
 
         elemets
             .on('mouseover', function(_event, d) {
-                tooltipBlock.style('display', 'block');                               
+                thisClass.showTooltipBlock(tooltipBlock);                              
                 const keyValue = TooltipHelper.getKeyForTooltip(d, dataOptions.keyField.name, chart.isSegmented);
                 const index = TooltipHelper.getElementIndex(elemets, this, keyValue, dataOptions.keyField.name, chart.isSegmented)
                 TooltipHelper.fillTooltipFor2DChart(tooltipContent, chart, data, dataOptions, keyValue, index);
@@ -86,8 +86,8 @@ export class Tooltip
             });
 
         elemets.on('mouseleave', function() {
+            thisClass.hideTooltipBlock(tooltipBlock);
             thisClass.removeDotsEdging(block);
-            tooltipBlock.style('display', 'none');
             TooltipHelper.setOtherChartsElementsDefaultOpacity(otherChartsElements, chartsStyleSettings);
         });
     }
@@ -111,7 +111,7 @@ export class Tooltip
 
         elemets
             .on('mouseover', function(_event, dataRow) {
-                tooltipBlock.style('display', 'block');
+                thisClass.showTooltipBlock(tooltipBlock);
                 const keyValue = TooltipHelper.getKeyForTooltip(dataRow, dataOptions.keyField.name, chart.isSegmented);
                 
                 if(isGrouped) {
@@ -132,7 +132,7 @@ export class Tooltip
             });
 
         elemets.on('mouseleave', function() {
-            tooltipBlock.style('display', 'none');
+            thisClass.hideTooltipBlock(tooltipBlock);
             TooltipHelper.setElementsFullOpacity(elemets);
             TooltipHelper.setOtherChartsElementsDefaultOpacity(otherChartsElements, chartsStyleSettings);
             barHighlighter.remove();
@@ -164,7 +164,7 @@ export class Tooltip
 
         elemets
             .on('mouseover', function(_event, dataRow) {
-                tooltipBlock.style('display', 'block');
+                thisClass.showTooltipBlock(tooltipBlock);
                 const key = dataRow.data[dataOptions.keyField.name];
                 TooltipHelper.fillTooltipForPolarChart(tooltipContent, chart, data, dataOptions, key, select(this).select('path').style('fill'))
                 
@@ -172,8 +172,11 @@ export class Tooltip
                 const tooltipCoordinate = TooltipHelper.getTooltipCoordinate(coordinatePointer);
                 thisClass.setTooltipCoordinate(tooltipBlock, tooltipCoordinate);
 
+                // Выделение выбранного сегмента с помощью тени. Для этого создается копия сегмента, которая отображает поверх оригинального
+                // Оригинальный сегмент на оргинальный сегмент вешается фильтр, который преобразовывает его в тень.
                 clone = select(this).clone();
                 select(this).style('filter', 'url(#shadow)');
+
                 // Задание прозрачности всем сегментам, кроме выделенного
                 // TooltipHelper.setElementsSemiOpacity(elemets.filter(d => d.data[dataOptions.keyField.name] !== key));
 
@@ -187,7 +190,7 @@ export class Tooltip
             });
 
         elemets.on('mouseleave', function() {
-            tooltipBlock.style('display', 'none');
+            thisClass.hideTooltipBlock(tooltipBlock);
             TooltipHelper.setElementsFullOpacity(elemets);
             select(this)
                 .style('filter', null);
@@ -203,7 +206,7 @@ export class Tooltip
 
         elemets
             .on('mouseover', function(_event, dataRow) {
-                tooltipBlock.style('display', 'block');
+                thisClass.showTooltipBlock(tooltipBlock);
                 const key = TooltipHelper.getKeyForTooltip(dataRow, dataOptions.keyField.name, false);
                 TooltipHelper.fillTooltipForIntervalChart(tooltipContent, chart, data, dataOptions, key, select(this).style('fill'))
 
@@ -215,8 +218,8 @@ export class Tooltip
             });
 
         elemets.on('mouseleave', function() {
+            thisClass.hideTooltipBlock(tooltipBlock);
             TooltipHelper.setElementsFullOpacity(elemets);
-            tooltipBlock.style('display', 'none');
         });
     }
 
@@ -319,5 +322,13 @@ export class Tooltip
             .lower();
         
         return barHighlighter;
+    }
+
+    private static showTooltipBlock(tooltipBlock: Selection<BaseType, unknown, HTMLElement, any>): void {
+        tooltipBlock.style('display', 'block');
+    }
+
+    private static hideTooltipBlock(tooltipBlock: Selection<BaseType, unknown, HTMLElement, any>): void {
+        tooltipBlock.style('display', 'none');
     }
 }
