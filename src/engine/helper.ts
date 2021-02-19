@@ -29,7 +29,7 @@ export class Helper
         elements.style(styleType, colorPalette[fieldIndex % colorPalette.length].toString());
     }
 
-    public static cropLabels(labelBlocks: Selection<SVGGraphicsElement, unknown, HTMLElement, unknown>, maxWidth: number): void {
+    public static cropLabels(labelBlocks: Selection<SVGGraphicsElement, unknown, BaseType, unknown>, maxWidth: number): void {
         labelBlocks.nodes().forEach(node => {
             if(node.getBBox().width > maxWidth) {
                 const text = node.textContent;

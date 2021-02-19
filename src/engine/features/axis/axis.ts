@@ -148,7 +148,7 @@ export class Axis
 
     private static cropLabels(block: Block, scale: AxisScale<any>, scaleOptions: ScaleKeyModel | ScaleValueModel, axisOptions: AxisModelOptions, blockSize: Size): void {
         if(scaleOptions.type === 'point' || scaleOptions.type === 'band') {
-            const axisTextBlocks = block.getSvg().select(`.${axisOptions.cssClass}`).selectAll('text') as Selection<SVGGraphicsElement, unknown, HTMLElement, unknown>;
+            const axisTextBlocks = block.getSvg().select(`.${axisOptions.cssClass}`).selectAll<SVGGraphicsElement, unknown>('text');
             let labelSize: number;
             if((axisOptions.orient === 'left' || axisOptions.orient === 'right') || (axisOptions.type === 'key' && axisOptions.labels.positition === 'rotated'))
                 labelSize = axisOptions.labels.maxSize;
@@ -164,8 +164,8 @@ export class Axis
     }
 
     private static cropAndAlignExtremeLabels(block: Block, labelSize: number, axisOptions: AxisModelOptions, blockSize: Size): void {
-        const lastTick = block.getSvg().select(`.${axisOptions.cssClass}`).select('.tick:last-of-type') as Selection<SVGGraphicsElement, unknown, HTMLElement, unknown>;
-        const lastLabel = lastTick.select('text') as Selection<SVGGraphicsElement, unknown, HTMLElement, unknown>;
+        const lastTick = block.getSvg().select(`.${axisOptions.cssClass}`).select<SVGGraphicsElement>('.tick:last-of-type');
+        const lastLabel = lastTick.select<SVGGraphicsElement>('text');
         const translateX = Helper.getTranslateNumbers(lastTick.attr('transform'))[0];
         
         if(translateX + lastLabel.node().getBBox().width + axisOptions.translate.translateX > blockSize.width) {
@@ -176,7 +176,7 @@ export class Axis
         const firtsLabel = block.getSvg()
             .select(`.${axisOptions.cssClass}`)
             .select('.tick:first-of-type')
-            .select('text') as Selection<SVGGraphicsElement, unknown, HTMLElement, unknown>;
+            .select<SVGGraphicsElement>('text');
 
         if(axisOptions.translate.translateX - firtsLabel.node().getBBox().width < 0) {
             firtsLabel.attr('text-anchor', 'start');
@@ -220,7 +220,7 @@ export class Axis
                     }
                 }
 
-                if(textBlock.selectAll('tspan').size() > 0) {
+                if(!textBlock.selectAll('tspan').empty()) {
                     textBlock.attr('y', -(textBlock.node().getBBox().height / 2 + 4.8));
                 }
             }

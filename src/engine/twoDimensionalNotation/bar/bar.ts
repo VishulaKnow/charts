@@ -29,7 +29,7 @@ export class Bar
     public static updateBarChartByValueAxis(block: Block, scales: Scales, margin: BlockMargin, keyAxisOrient: string, chart: TwoDimensionalChartModel, blockSize: Size, isSegmented: boolean): void {
         if(isSegmented) {
             const bars = block.getChartBlock()
-                .selectAll(`.${this.barItemClass}${Helper.getCssClassesLine(chart.cssClasses)}`) as Selection<SVGRectElement, DataRow, BaseType, unknown>;
+                .selectAll<SVGRectElement, DataRow>(`.${this.barItemClass}${Helper.getCssClassesLine(chart.cssClasses)}`);
 
             this.fillStackedBarAttrsByKeyOrientWithTransition(bars,
                 keyAxisOrient,
@@ -40,7 +40,7 @@ export class Bar
         } else {
             chart.data.valueFields.forEach((field, index) => {
                 const bars = block.getChartBlock()
-                    .selectAll(`.${this.barItemClass}${Helper.getCssClassesLine(chart.cssClasses)}.chart-element-${index}`) as Selection<SVGRectElement, DataRow, BaseType, unknown>;
+                    .selectAll<SVGRectElement, DataRow>(`.${this.barItemClass}${Helper.getCssClassesLine(chart.cssClasses)}.chart-element-${index}`);
         
                 this.fillBarAttrsByKeyOrientWithTransition(bars,
                     keyAxisOrient,
