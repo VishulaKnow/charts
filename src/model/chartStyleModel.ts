@@ -63,8 +63,7 @@ export class ChartStyleModel
             else {
                 colorsArray.push(this.getBaseColor(palette[indexOfDesired].colorPalette));
             }
-        }
-        while (colorsArray.length !== valueFieldsAmount);
+        } while (colorsArray.length !== valueFieldsAmount);
 
         return colorsArray.map(elementColor => color(elementColor));
      }  
