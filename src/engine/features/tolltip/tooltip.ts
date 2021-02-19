@@ -9,8 +9,7 @@ import { Bar } from "../../twoDimensionalNotation/bar/bar";
 import { Dot } from "../lineDots/dot";
 import { ChartOrientation } from "../../../config/config";
 
-export class Tooltip
-{
+export class Tooltip {
     private static tooltipWrapperClass = 'tooltip-wrapper';
     private static tooltipContentClass = 'tooltip-content';
     private static tooltipBlockClass = 'tooltip-block';
@@ -19,22 +18,22 @@ export class Tooltip
     public static renderTooltips(block: Block, model: Model, data: DataSource): void {
         this.renderTooltipWrapper(block);
         const chartsWithTooltipIndex = model.options.charts.findIndex((chart: TwoDimensionalChartModel | PolarChartModel | IntervalChartModel) => chart.tooltip.show);
-        if(chartsWithTooltipIndex !== -1) {
-            if(model.options.type === '2d') {
-                this.rednerTooltipFor2DCharts(block, model.chartBlock.margin, model.options.charts, data, model.options.data, model.blockCanvas.size, model.options.orient);   
-            } else if(model.options.type === 'polar') {
+        if (chartsWithTooltipIndex !== -1) {
+            if (model.options.type === '2d') {
+                this.rednerTooltipFor2DCharts(block, model.chartBlock.margin, model.options.charts, data, model.options.data, model.blockCanvas.size, model.options.orient);
+            } else if (model.options.type === 'polar') {
                 this.renderTooltipsForDonut(block, model.options.charts, data, model.options.data, model.blockCanvas.size, model.chartBlock.margin, Donut.getThickness(model.chartSettings.donut, model.blockCanvas.size, model.chartBlock.margin));
-            } else if(model.options.type === 'interval') {
-                this.renderTooltipsForInterval(block, model.options.charts, data,model.options.data, model.blockCanvas.size, model.options.orient);
+            } else if (model.options.type === 'interval') {
+                this.renderTooltipsForInterval(block, model.options.charts, data, model.options.data, model.blockCanvas.size, model.options.orient);
             }
         }
     }
 
     private static rednerTooltipFor2DCharts(block: Block, margin: BlockMargin, charts: TwoDimensionalChartModel[], data: DataSource, dataOptions: OptionsModelData, blockSize: Size, chartOrientation: ChartOrientation): void {
         charts.forEach(chart => {
-            if(chart.type === 'bar') {
+            if (chart.type === 'bar') {
                 this.renderTooltipForBars(block, Bar.getAllBarItems(block, chart.cssClasses), data, dataOptions, chart, chartOrientation, blockSize, margin, charts.map(ch => TooltipHelper.getChartStyleSettings(ch)));
-            } else if(chart.type === 'line' || chart.type === 'area') {
+            } else if (chart.type === 'line' || chart.type === 'area') {
                 this.renderTooltipForDots(block, Dot.getAllDots(block, chart.cssClasses), data, dataOptions, chart, blockSize, charts.map(ch => TooltipHelper.getChartStyleSettings(ch)));
             }
         });
@@ -66,11 +65,11 @@ export class Tooltip
         const tooltipArrow = this.renderTooltipArrow(tooltipBlock);
         const thisClass = this;
 
-        const otherChartsElements = TooltipHelper.getOtherChartsElements(block, chart.index, chartsStyleSettings.map(ch => ch.cssClasses));
+        const otherChartsElements = TooltipHelper.getOtherChartsElements(block, chart.index, chartsStyleSettings.map(chart => chart.cssClasses));
 
         elemets
-            .on('mouseover', function(_event, d) {
-                thisClass.showTooltipBlock(tooltipBlock);                              
+            .on('mouseover', function (_event, d) {
+                thisClass.showTooltipBlock(tooltipBlock);
                 const keyValue = TooltipHelper.getKeyForTooltip(d, dataOptions.keyField.name, chart.isSegmented);
                 const index = TooltipHelper.getElementIndex(elemets, this, keyValue, dataOptions.keyField.name, chart.isSegmented)
                 TooltipHelper.fillTooltipFor2DChart(tooltipContent, chart, data, dataOptions, keyValue, index);
@@ -78,14 +77,14 @@ export class Tooltip
                 const coordinatePointer: [number, number] = TooltipHelper.getTooltipBlockCoordinateByDot(select(this), tooltipBlock, blockSize, tooltipArrow);
                 const tooltipCoordinate = TooltipHelper.getTooltipCoordinate(coordinatePointer);
                 thisClass.setTooltipCoordinate(tooltipBlock, tooltipCoordinate);
-                
+
                 const dotsEdgingAttrs = TooltipHelper.getDotEdgingAttrs(select(this));
                 thisClass.renderDotsEdging(block, dotsEdgingAttrs, chart.style.elementColors[index].toString());
-                
+
                 TooltipHelper.setElementsSemiOpacity(otherChartsElements);
             });
 
-        elemets.on('mouseleave', function() {
+        elemets.on('mouseleave', function () {
             thisClass.hideTooltipBlock(tooltipBlock);
             thisClass.removeDotsEdging(block);
             TooltipHelper.setOtherChartsElementsDefaultOpacity(otherChartsElements, chartsStyleSettings);
@@ -100,7 +99,7 @@ export class Tooltip
         const thisClass = this;
 
         let isGrouped: boolean;
-        if(chartOrientation === 'vertical')
+        if (chartOrientation === 'vertical')
             isGrouped = parseFloat(elemets.attr('width')) < 10; // grouping bar by one bar width
         else
             isGrouped = parseFloat(elemets.attr('height')) < 10;
@@ -110,11 +109,11 @@ export class Tooltip
         let barHighlighter: Selection<SVGRectElement, unknown, HTMLElement, any>; // серая линия, проходящая от начала бара до конца чарт-блока
 
         elemets
-            .on('mouseover', function(_event, dataRow) {
+            .on('mouseover', function (_event, dataRow) {
                 thisClass.showTooltipBlock(tooltipBlock);
                 const keyValue = TooltipHelper.getKeyForTooltip(dataRow, dataOptions.keyField.name, chart.isSegmented);
-                
-                if(isGrouped) {
+
+                if (isGrouped) {
                     TooltipHelper.fillMultyFor2DChart(tooltipContent, chart, data, dataOptions, keyValue)
                 } else {
                     const index = TooltipHelper.getElementIndex(elemets, this, keyValue, dataOptions.keyField.name, chart.isSegmented)
@@ -131,7 +130,7 @@ export class Tooltip
                 barHighlighter = thisClass.renderBarHighlighter(block, highlighterAttrs);
             });
 
-        elemets.on('mouseleave', function() {
+        elemets.on('mouseleave', function () {
             thisClass.hideTooltipBlock(tooltipBlock);
             TooltipHelper.setElementsFullOpacity(elemets);
             TooltipHelper.setOtherChartsElementsDefaultOpacity(otherChartsElements, chartsStyleSettings);
@@ -153,21 +152,21 @@ export class Tooltip
             .attr('x', '-100%')
             .attr('y', '-100%')
             .style('outline', '1px solid red');
-        
+
         filter.append('feDropShadow')
             .attr('dx', 0)
             .attr('dy', 0)
             .attr('flood-color', 'rgba(0, 0, 0, 0.15)')
             .attr('stdDeviation', 20);
-            
+
         let clone: Selection<BaseType, unknown, BaseType, unknown>;
 
         elemets
-            .on('mouseover', function(_event, dataRow) {
+            .on('mouseover', function (_event, dataRow) {
                 thisClass.showTooltipBlock(tooltipBlock);
                 const key = dataRow.data[dataOptions.keyField.name];
                 TooltipHelper.fillTooltipForPolarChart(tooltipContent, chart, data, dataOptions, key, select(this).select('path').style('fill'))
-                
+
                 const coordinatePointer: [number, number] = TooltipHelper.getRecalcedCoordinateByArrow(Donut.getArcCentroid(blockSize, margin, dataRow, donutThickness), tooltipBlock, blockSize, tooltipArrow, translateX, translateY);
                 const tooltipCoordinate = TooltipHelper.getTooltipCoordinate(coordinatePointer);
                 thisClass.setTooltipCoordinate(tooltipBlock, tooltipCoordinate);
@@ -189,12 +188,12 @@ export class Tooltip
                 //         .padAngle(0.025)(d, i));
             });
 
-        elemets.on('mouseleave', function() {
+        elemets.on('mouseleave', function () {
             thisClass.hideTooltipBlock(tooltipBlock);
             TooltipHelper.setElementsFullOpacity(elemets);
-            select(this)
+            select(this) // удаление тени с оригинального сегмента
                 .style('filter', null);
-            clone.remove(); // удаление клона с тенью
+            clone.remove(); // удаление клона
         });
     }
 
@@ -205,7 +204,7 @@ export class Tooltip
         const thisClass = this;
 
         elemets
-            .on('mouseover', function(_event, dataRow) {
+            .on('mouseover', function (_event, dataRow) {
                 thisClass.showTooltipBlock(tooltipBlock);
                 const key = TooltipHelper.getKeyForTooltip(dataRow, dataOptions.keyField.name, false);
                 TooltipHelper.fillTooltipForIntervalChart(tooltipContent, chart, data, dataOptions, key, select(this).style('fill'))
@@ -217,7 +216,7 @@ export class Tooltip
                 TooltipHelper.setElementsSemiOpacity(TooltipHelper.getFilteredElements(elemets, dataOptions.keyField.name, key, false));
             });
 
-        elemets.on('mouseleave', function() {
+        elemets.on('mouseleave', function () {
             thisClass.hideTooltipBlock(tooltipBlock);
             TooltipHelper.setElementsFullOpacity(elemets);
         });
@@ -231,7 +230,7 @@ export class Tooltip
 
     private static renderTooltipArrow(tooltipBlock: Selection<BaseType, unknown, HTMLElement, any>): Selection<BaseType, unknown, HTMLElement, any> {
         let tooltipArrow = tooltipBlock.select(`.${this.tooltipArrowClass}`);
-        if(tooltipArrow.empty())
+        if (tooltipArrow.empty())
             tooltipArrow = tooltipBlock
                 .append('div')
                 .attr('class', this.tooltipArrowClass)
@@ -240,7 +239,7 @@ export class Tooltip
                 .style('bottom', '-6px')
                 .style('width', `${ARROW_SIZE}px`)
                 .style('height', `${ARROW_SIZE}px`);
-        
+
         return tooltipArrow;
     }
 
@@ -248,24 +247,24 @@ export class Tooltip
         const wrapper = block.getWrapper().select(`.${this.tooltipWrapperClass}`);
 
         let tooltipBlock = wrapper.select(`.${this.tooltipBlockClass}`);
-        if(tooltipBlock.empty()) {
+        if (tooltipBlock.empty()) {
             tooltipBlock = wrapper
                 .append('div')
                 .attr('class', this.tooltipBlockClass)
                 .style('position', 'absolute')
                 .style('display', 'none');
-        }    
+        }
 
-        if(translateX !== 0 || translateY !== 0)
+        if (translateX !== 0 || translateY !== 0)
             tooltipBlock.style('transform', `translate(${translateX}px, ${translateY}px)`);
 
         return tooltipBlock;
     }
 
     private static renderTooltipContentBlock(tooltipBlock: Selection<BaseType, unknown, HTMLElement, any>): Selection<HTMLDivElement, unknown, HTMLElement, any> {
-        let tooltipContentBlock = tooltipBlock.select<HTMLDivElement>(`div.${this.tooltipContentClass}`); 
-        
-        if(tooltipContentBlock.empty())
+        let tooltipContentBlock = tooltipBlock.select<HTMLDivElement>(`div.${this.tooltipContentClass}`);
+
+        if (tooltipContentBlock.empty())
             tooltipContentBlock = tooltipBlock.append('div')
                 .attr('class', this.tooltipContentClass);
 
@@ -301,7 +300,7 @@ export class Tooltip
             .style('fill', color)
             .style('pointer-events', 'none');
     }
-    
+
     private static removeDotsEdging(block: Block): void {
         block.getChartBlock()
             .selectAll('.dot-edging-external, .dot-edging-internal')
@@ -320,7 +319,7 @@ export class Tooltip
             .style('pointer-events', 'none')
             .style('opacity', 0.2)
             .lower();
-        
+
         return barHighlighter;
     }
 
