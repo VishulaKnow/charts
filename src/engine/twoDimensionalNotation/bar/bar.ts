@@ -179,7 +179,7 @@ export class Bar
         }
         if(axisOrient === 'left') {
             barsTran
-                .attr('x', d => margin.left + scaleValue(d[0]) + 1)
+                .attr('x', d => margin.left + scaleValue(d[0]) + 1) // 1px - ось
                 .attr('width', d => ValueFormatter.getValueOrZero(scaleValue(d[1] - d[0])));
         }
         if(axisOrient === 'right') {
