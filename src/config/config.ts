@@ -110,7 +110,7 @@ interface Field {
     format: DataType;
 }
 
-interface TwoDimensionalValueField extends Field {
+export interface TwoDimensionalValueField extends Field {
     title: string;
 }
 
