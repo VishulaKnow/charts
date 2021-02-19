@@ -360,10 +360,6 @@ export default class Listeners
             thisClass.designerConfig.canvas.chartOptions.donut.minPartSize = parseFloat(ListenersHelper.getInputValue('#min-donut-part-size')) || 0;
             thisClass.updateFull();
         });
-        document.querySelector('.btn-base-color').addEventListener('click', function() {
-            // thisClass.designerConfig.chart.style.palette[0] = color(ListenersHelper.getInputValue('#base-color'));
-            thisClass.updateFull();
-        });
         document.querySelector('#designer-key-grid').addEventListener('change', function() {
             thisClass.designerConfig.additionalElements.gridLine.flag.key = this.checked;
             thisClass.updateFull();
@@ -382,6 +378,16 @@ export default class Listeners
         });
         document.querySelector('#donut-max-thickness').addEventListener('input', function() {
             thisClass.designerConfig.canvas.chartOptions.donut.maxThickness = parseFloat(ListenersHelper.getInputValue('#donut-max-thickness'));
+            thisClass.updateFull();
+        });
+        document.querySelector('#base-color').addEventListener('keydown', function(e: KeyboardEvent) {
+            if(e.code === 'Enter') {
+                thisClass.designerConfig.chartStyle.baseColor = this.value;
+                thisClass.updateFull();
+            }
+        });
+        document.querySelector('#color-step').addEventListener('input', function() {
+            thisClass.designerConfig.chartStyle.step = parseFloat(this.value);
             thisClass.updateFull();
         });
     }
@@ -554,8 +560,9 @@ export default class Listeners
         ListenersHelper.setInputValue('#bar-distance', designerConfig.canvas.chartOptions.bar.barDistance);
         ListenersHelper.setInputValue('#min-bar-size', designerConfig.canvas.chartOptions.bar.minBarWidth);
         ListenersHelper.setInputValue('#max-bar-size', designerConfig.canvas.chartOptions.bar.maxBarWidth);
+        ListenersHelper.setInputValue('#base-color', designerConfig.chartStyle.baseColor);
+        ListenersHelper.setInputValue('#color-step', designerConfig.chartStyle.step);
         ListenersHelper.setInputValue('#min-donut-part-size', designerConfig.canvas.chartOptions.donut.minPartSize);
-        // ListenersHelper.setInputValue('#base-color', designerConfig.chart.style.palette[0]);
         ListenersHelper.setCheckboxValue('#designer-key-grid', designerConfig.additionalElements.gridLine.flag.key);
         ListenersHelper.setCheckboxValue('#designer-value-grid', designerConfig.additionalElements.gridLine.flag.value);
         ListenersHelper.setInputValue('#pad-angle', designerConfig.canvas.chartOptions.donut.padAngle);
