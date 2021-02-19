@@ -223,9 +223,13 @@ export class Tooltip {
     }
 
     private static renderTooltipWrapper(block: Block): void {
-        block.getWrapper()
-            .append('div')
-            .attr('class', this.tooltipWrapperClass);
+        let tooltipWrapper = block.getWrapper()
+            .select(`.${this.tooltipWrapperClass}`)
+
+        if(tooltipWrapper.empty())
+            block.getWrapper()
+                .append('div')
+                .attr('class', this.tooltipWrapperClass);
     }
 
     private static renderTooltipArrow(tooltipBlock: Selection<BaseType, unknown, HTMLElement, any>): Selection<BaseType, unknown, HTMLElement, any> {

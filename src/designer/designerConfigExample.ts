@@ -43,8 +43,8 @@ const designerConfig: DesignerConfig = {
         }
     },
     chartStyle: {
-        baseColor: 'pink',
-        step: 4
+        baseColor: 'indigo',
+        step: 3
     },
     additionalElements: {
         gridLine: {
