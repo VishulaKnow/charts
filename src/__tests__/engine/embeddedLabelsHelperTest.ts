@@ -64,18 +64,6 @@ describe('test postion and space', () => {
             expect(result).toEqual('inside');
         });
 
-        test('should return outside position because bar height is too small', () => {
-            barAttrs.height = 10;
-            const result = EmbeddedLabelsHelper.getLabelPosition(barAttrs, 500, margin, blockSize, false);
-            expect(result).toEqual('outside');
-        });
-
-        test('should return outside position because bar height is too small #2', () => {
-            barAttrs.height = 11.9;
-            const result = EmbeddedLabelsHelper.getLabelPosition(barAttrs, 500, margin, blockSize, false);
-            expect(result).toEqual('outside');
-        });
-
         test('should return inside position because bar height is big enough to serve label inside', () => {
             barAttrs.height = 12;
             const result = EmbeddedLabelsHelper.getLabelPosition(barAttrs, 500, margin, blockSize, false);
@@ -99,7 +87,7 @@ describe('test label coordinates', () => {
             }
             expected = {
                 x: 26,
-                y: 50,
+                y: 51,
                 textAnchor: 'start'
             }
         });
@@ -125,45 +113,6 @@ describe('test label coordinates', () => {
         test('outside bar with end anchor', () => {
             const result = EmbeddedLabelsHelper.getLabelAttrs(barAttrs, 'value', 'outside', 'left');
             expected.x = 126;
-            expect(result).toEqual(expected);
-        });
-    });
-
-    describe('test coordinates with right key axis orient', () => {
-        beforeEach(() => {
-            barAttrs = {
-                x: 120,
-                y: 40,
-                width: 80,
-                height: 20
-            }
-            expected = {
-                x: 114,
-                y: 50,
-                textAnchor: 'end'
-            }
-        });
-
-        test('should return value text on left with end text anchor', () => {
-            const result = EmbeddedLabelsHelper.getLabelAttrs(barAttrs, 'value', 'outside', 'right');
-            expect(result).toEqual(expected);
-        });
-
-        test('should return key text on left with end text anchor', () => {
-            const result = EmbeddedLabelsHelper.getLabelAttrs(barAttrs, 'key', 'outside', 'right');
-            expect(result).toEqual(expected);
-        });
-
-        test('should return value text inside bar with start text anchor', () => {
-            const result = EmbeddedLabelsHelper.getLabelAttrs(barAttrs, 'value', 'inside', 'right');
-            expected.x = 126;
-            expected.textAnchor = 'start'
-            expect(result).toEqual(expected);
-        });
-
-        test('should return key text inside bar with start text anchor', () => {
-            const result = EmbeddedLabelsHelper.getLabelAttrs(barAttrs, 'key', 'inside', 'right');
-            expected.x = 194;
             expect(result).toEqual(expected);
         });
     });

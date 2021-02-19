@@ -394,11 +394,10 @@ export default class Listeners
     
     private setCommonListeners(): void {
         const thisClass = this;
-        const config = this.config
+        const config = this.config;
         document.querySelector('#data-size').addEventListener('change', function() {
             if(config.options.type === '2d' || config.options.type === 'polar') {
-                config.options.data.dataSource = this.value === 'normal' 
-                    ? 'dataSet' : 'dataSet_large';
+                config.options.data.dataSource = this.value === 'normal' ? 'dataSet' : 'dataSet_large';
                 thisClass.updateFull();
             }
         });
