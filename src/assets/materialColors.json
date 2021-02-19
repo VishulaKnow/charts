@@ -3,8 +3,7 @@
         [
             {
                 "colorName": "red",
-                "colorPalette" : 
-                {
+                "colorPalette": {
                     "50": "#ffebee",
                     "100": "#ffcdd2",
                     "200": "#ef9a9a",
@@ -19,8 +18,7 @@
             },
             {
                  "colorName": "pink",
-                 "colorPalette":
-                 {
+                 "colorPalette": {
                     "50": "#fce4ec",
                     "100": "#f8bbd0",
                     "200": "#f48fb1",

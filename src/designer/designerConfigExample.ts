@@ -35,11 +35,11 @@ const designerConfig: DesignerConfig = {
     },
     dataFormat: {
         formatters: {
-            'integer': (options: DataTypeOptions, value: any) => Intl.NumberFormat().format(value),
-            'decimal': (options: DataTypeOptions, value: any) => Intl.NumberFormat().format(value),
-            'money': (options: DataTypeOptions, value: any) => Intl.NumberFormat('ru-RU', { style: 'currency', currency: 'RUB' }).format(value),
-            'date': (options: DataTypeOptions, value: Date) => value.getFullYear() + '-' + (value.getMonth() + 1) + '-' + value.getDate() + ' ' + value.getHours() + ':' + value.getMinutes(),
-            'string': (options: DataTypeOptions, value: any) => value
+            'integer': (value: any, options?: DataTypeOptions) => Intl.NumberFormat().format(value),
+            'decimal': (value: any, options?: DataTypeOptions) => Intl.NumberFormat().format(value),
+            'money': (value: any, options?: DataTypeOptions) => Intl.NumberFormat('ru-RU', { style: 'currency', currency: 'RUB' }).format(value),
+            'date': (value: any, options?: DataTypeOptions) => value.getFullYear() + '-' + (value.getMonth() + 1) + '-' + value.getDate() + ' ' + value.getHours() + ':' + value.getMinutes(),
+            'string': (value: any, options?: DataTypeOptions) => value
         }
     },
     chartStyle: {

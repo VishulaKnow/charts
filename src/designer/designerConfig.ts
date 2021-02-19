@@ -4,7 +4,7 @@ export type DataTypeOptions = {
 }
 
 export interface Formatter {
-    [type: string]: (options: DataTypeOptions, value: any) => string
+    [type: string]: (value: any, options?: DataTypeOptions) => string
 }
 
 export interface DesignerConfig {

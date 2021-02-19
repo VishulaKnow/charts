@@ -7,10 +7,10 @@ const colorsTemplate = require('../assets/materialColors.json');
 
 interface ChartColors {
     colorName: string;
-    colorPalette: ColorPalette;
+    colorPalette: ColorSet;
 }
 
-interface ColorPalette {
+interface ColorSet {
     [colorCode: string]: string;
 }
 
@@ -70,7 +70,7 @@ export class ChartStyleModel
      }  
 
 
-    private static getColorRow(colorSet: ColorPalette, colorsAmount: number): string[] {
+    private static getColorRow(colorSet: ColorSet, colorsAmount: number): string[] {
         const colors: string[] = [];
         for(let colorCode in colorSet) {
             if(colorCode === '100' || colorCode === '200' || colorCode === '300' || colorCode === '500')
@@ -91,7 +91,7 @@ export class ChartStyleModel
         return index === -1 ? 0 : index;
     }    
 
-    private static getBaseColor(colorSet: ColorPalette): string {
+    private static getBaseColor(colorSet: ColorSet): string {
         let firstKey: string;
         for(let key in colorSet) {
             firstKey = firstKey || key;

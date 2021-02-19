@@ -587,7 +587,7 @@ import { Chart } from '../main';
 const data = require('../assets/dataSet.json');
 
 
-// const chart = new Chart(config, designerConfig, data);
+// const chart = new Chart(config, designerConfig, data, false);
 // chart.render(document.querySelector('.main-wrapper'));
 
 const model = assembleModel(config, data, designerConfig);

@@ -63,7 +63,7 @@ export class Axis
                 this.rotateLabels(axisElement);
                 
             if((axisOptions.orient === 'left' || axisOptions.orient === 'right') && axisOptions.type === 'key' && Scale.getScaleStep(scale) >= 38) {
-                (axisElement.selectAll('.tick text') as Selection<SVGGElement, unknown, BaseType, any>).call(this.wrap, axisOptions.labels.maxSize);
+                axisElement.selectAll<SVGGElement, unknown>('.tick text').call(this.wrap, axisOptions.labels.maxSize);
             } else {
                 this.cropLabels(block, scale, scaleOptions, axisOptions, blockSize);
             }
@@ -189,8 +189,8 @@ export class Axis
             .style('display', 'none');
     }
 
-    private static wrap(text: Selection<SVGGElement, unknown, BaseType, any>, maxWidth: number) {
-        text.each(function() {
+    private static wrap(textBlocks: Selection<SVGGElement, unknown, BaseType, any>, maxWidth: number) {
+        textBlocks.each(function() {
             let textBlock = select(this);
             if(textBlock.node().getBBox().width > maxWidth) {
                 let letters = textBlock.text().split('').reverse(), // split text to letters.
