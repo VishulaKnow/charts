@@ -172,6 +172,11 @@ export class Bar
     private static fillStackedBarAttrsByKeyOrientWithTransition(bars: Selection<SVGRectElement, DataRow, BaseType, unknown>, axisOrient: string, scaleValue: AxisScale<any>, margin: BlockMargin, blockSize: Size, transitionDuration: number): void {
         const barsTran = bars.transition().duration(transitionDuration);
         
+        if(axisOrient === 'top') {
+            barsTran
+                .attr('y', d => margin.top + scaleValue(d[0]))
+                .attr('height', d => ValueFormatter.getValueOrZero(scaleValue(d[1] - d[0])));
+        }
         if(axisOrient === 'bottom') {
             barsTran
                 .attr('y', d => scaleValue(d[1]) + margin.top)
@@ -186,11 +191,6 @@ export class Bar
             barsTran
                 .attr('x', d => scaleValue(d[1]) + margin.left)
                 .attr('width', d => ValueFormatter.getValueOrZero(blockSize.width - margin.left - margin.right - scaleValue(d[1] - d[0])));
-        } 
-        if(axisOrient === 'top') {
-            barsTran
-                .attr('y', d => margin.top + scaleValue(d[0]))
-                .attr('height', d => ValueFormatter.getValueOrZero(scaleValue(d[1] - d[0])));
         }
     } 
 
