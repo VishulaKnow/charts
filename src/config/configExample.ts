@@ -39,10 +39,10 @@ const configCars: Config = {
         legend: {
             show: true
         },
-        orientation: 'vertical',
+        orientation: 'horizontal',
         data: {
             dataSource: 'dataSet',
-            keyField:  {
+            keyField: {
                 name: 'brand',
                 format: 'string'
             }
@@ -63,7 +63,7 @@ const configCars: Config = {
                             name: 'price',
                             format: 'money',
                             title: 'Количество автомобилей на душу населения'
-                        }          
+                        }
                     ]
                 },
                 tooltip: {
@@ -145,7 +145,7 @@ const configDemo: Config = {
         orientation: 'horizontal',
         data: {
             dataSource: 'dataSet_data',
-            keyField:  {
+            keyField: {
                 name: 'MonthYear',
                 format: 'string'
             }

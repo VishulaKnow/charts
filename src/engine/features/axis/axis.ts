@@ -215,7 +215,7 @@ export class Axis
                                 tspan.text(tspan.text().substr(0, tspan.text().length - 1) + '...')
                             break;
                         }
-                        tspan = textBlock.append("tspan").attr("y", y).attr("dy", dy + "em").text(letter);
+                        tspan = textBlock.append("tspan").attr("y", y).attr("dy", dy * lineNumber + 1 + "em").text(letter);
                         lineNumber++;
                     }
                 }
