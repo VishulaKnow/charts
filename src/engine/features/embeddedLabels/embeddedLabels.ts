@@ -4,7 +4,7 @@ import { Block } from "../../block/block";
 import { Helper } from "../../helper";
 import { ValueFormatter } from "../../valueFormatter";
 import { BarAttrs, EmbeddedLabelPosition, EmbeddedLabelsHelper } from "./embeddedLabelsHelper";
-//comment2
+
 export class EmbeddedLabels {
     public static render(block: Block, bars: Selection<SVGRectElement, DataRow, SVGGElement, any>, field: Field, type: EmbeddedLabelTypeModel, keyAxisOrient: Orient, blockSize: Size, margin: BlockMargin): void {
         const thisClass = this;
