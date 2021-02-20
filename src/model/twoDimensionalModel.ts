@@ -1,11 +1,11 @@
 import { ChartOrientation, Config, TwoDimensionalChart, TwoDimensionalChartType, TwoDimensionalOptions } from "../config/config";
-import { BarOptionsCanvas, ChartStyleConfig, DesignerConfig } from "../designer/designerConfig";
+import { ChartStyleConfig, DesignerConfig } from "../designer/designerConfig";
 import { AxisModel } from "./axisModel";
 import { ChartStyleModel } from "./chartStyleModel";
 import { DataManagerModel } from "./dataManagerModel";
 import { GridLineModel } from "./gridLineModel";
 import { LegendModel } from "./legendModel/legendModel";
-import { BlockMargin, DataScope, DataSource, AdditionalElementsOptions, TwoDimensionalChartModel, TwoDimensionalOptionsModel, EmbeddedLabelTypeModel, Size } from "./model";
+import { BlockMargin, DataScope, DataSource, AdditionalElementsOptions, TwoDimensionalChartModel, TwoDimensionalOptionsModel, EmbeddedLabelTypeModel } from "./model";
 import { AxisType } from "./modelOptions";
 import { ScaleModel, ScaleType } from "./scaleModel";
 
