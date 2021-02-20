@@ -19,11 +19,11 @@ export class Bar
 {
     private static barItemClass  = 'bar-item';
 
-    public static render(block: Block, scales: Scales, data: DataRow[], keyField: Field, margin: BlockMargin, keyAxisOrient: Orient, chart: TwoDimensionalChartModel, blockSize: Size, barSettings: BarChartSettings, barsAmounts: number[], isSegmented: boolean): void {
+    public static render(block: Block, scales: Scales, data: DataRow[], keyField: Field, margin: BlockMargin, keyAxisOrient: Orient, chart: TwoDimensionalChartModel, blockSize: Size, barSettings: BarChartSettings, barsAmounts: number[], isSegmented: boolean, firstBarIndex: number): void {
         if(isSegmented)
-            this.renderSegmented(block, scales, data, keyField, margin, keyAxisOrient, chart, barsAmounts, blockSize, barSettings);
+            this.renderSegmented(block, scales, data, keyField, margin, keyAxisOrient, chart, barsAmounts, blockSize, firstBarIndex, barSettings);
         else
-            this.renderGrouped(block, scales, data, keyField, margin, keyAxisOrient, chart, barsAmounts, blockSize, barSettings);
+            this.renderGrouped(block, scales, data, keyField, margin, keyAxisOrient, chart, barsAmounts, blockSize, firstBarIndex, barSettings);
     }
 
     public static updateBarChartByValueAxis(block: Block, scales: Scales, margin: BlockMargin, keyAxisOrient: string, chart: TwoDimensionalChartModel, blockSize: Size, isSegmented: boolean): void {
@@ -57,7 +57,7 @@ export class Bar
         return block.getSvg().selectAll(`rect.${this.barItemClass}${Helper.getCssClassesLine(chartCssClasses)}`);
     }
 
-    private static renderGrouped(block: Block, scales: Scales, data: DataRow[], keyField: Field, margin: BlockMargin, keyAxisOrient: Orient, chart: TwoDimensionalChartModel, barsAmounts: number[], blockSize: Size, barSettings: BarChartSettings): void {
+    private static renderGrouped(block: Block, scales: Scales, data: DataRow[], keyField: Field, margin: BlockMargin, keyAxisOrient: Orient, chart: TwoDimensionalChartModel, barsAmounts: number[], blockSize: Size, firstBarIndex: number, barSettings: BarChartSettings): void {
         this.renderBarGroups(block, data);
         
         chart.data.valueFields.forEach((field, index) => {
@@ -75,7 +75,7 @@ export class Bar
                 keyField.name,
                 field.name,
                 blockSize,
-                BarHelper.getBarIndex(barsAmounts, chart.index) + index,
+                BarHelper.getBarIndex(barsAmounts, chart.index) + index - firstBarIndex,
                 sum(barsAmounts),
                 barSettings,
                 this.barItemClass);
@@ -90,7 +90,7 @@ export class Bar
         });
     }
 
-    private static renderSegmented(block: Block, scales: Scales, data: DataRow[], keyField: Field, margin: BlockMargin, keyAxisOrient: Orient, chart: TwoDimensionalChartModel, barsAmounts: number[], blockSize: Size, barSettings: BarChartSettings): void {
+    private static renderSegmented(block: Block, scales: Scales, data: DataRow[], keyField: Field, margin: BlockMargin, keyAxisOrient: Orient, chart: TwoDimensionalChartModel, barsAmounts: number[], blockSize: Size, firstBarIndex: number, barSettings: BarChartSettings): void {
         const keys = chart.data.valueFields.map(field => field.name);
         const stackedData = stack().keys(keys)(data);
 
@@ -112,7 +112,14 @@ export class Bar
                 .attr('class', this.barItemClass)
                 // .style('clip-path', `url(${block.getClipPathId()})`);
 
-        const barAttrs = BarHelper.getStackedBarAttrByKeyOrient(keyAxisOrient, scales, margin, keyField.name, blockSize, BarHelper.getBarIndex(barsAmounts, chart.index), sum(barsAmounts), barSettings);
+        const barAttrs = BarHelper.getStackedBarAttrByKeyOrient(keyAxisOrient,
+            scales, 
+            margin, 
+            keyField.name, 
+            blockSize, 
+            BarHelper.getBarIndex(barsAmounts, chart.index) - firstBarIndex, 
+            sum(barsAmounts), 
+            barSettings);
        
         bars
             .attr('x', barAttrs.x)

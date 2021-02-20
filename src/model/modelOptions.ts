@@ -88,7 +88,7 @@ export function assembleModel(config: Config, data: DataSource, designerConfig: 
     const preparedData = DataManagerModel.getPreparedData(data, dataScope.allowableKeys, config); 
     
     if(config.options.type === '2d' || config.options.type === 'interval')
-        MarginModel.recalcMargnWitVerticalAxisLabel(margin, data, config, designerConfig);
+        MarginModel.recalcMargnWitVerticalAxisLabel(margin, data, config, designerConfig, dataScope);
 
     const blockCanvas = getBlockCanvas(config);
     const chartBlock = getChartBlock(margin);
@@ -116,6 +116,7 @@ export function getPreparedData(model: Model, data: DataSource, config: Config):
         return null;
 
     const preparedData = DataManagerModel.getPreparedData(data, model.dataSettings.scope.allowableKeys, config);
+    console.log(model.dataSettings.scope.allowableKeys, preparedData.dataSet);
     return preparedData;
 }
 

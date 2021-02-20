@@ -111,7 +111,8 @@ export class ChartRenderer
                     blockSize,
                     barSettings,
                     BarHelper.getBarsInGroupAmount(charts),
-                    chart.isSegmented);
+                    chart.isSegmented,
+                    charts.findIndex(ch => ch.type === 'bar'));
             else if(chart.type === 'line')
                 Line.render(block,
                     scales,

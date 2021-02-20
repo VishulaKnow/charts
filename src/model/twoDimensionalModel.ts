@@ -82,9 +82,14 @@ export class TwoDimensionalModel
             && charts.length === this.findChartsWithEmbeddedKeyLabels(charts).length;
     }
 
+    /**
+     * Сортирует список чартов в порядке: area - bar - line.
+     * Используется для того, чтобы при рендере графики с наибольшей площадью (area) не перекрывали графики с меньшей площадью (bar, line).
+     * @param charts Чарты из конфига
+     */
     public static sortCharts(charts: TwoDimensionalChart[]): void {
         const chartOrder: TwoDimensionalChartType[] = ['area', 'bar', 'line'];
-        charts.sort((ch1, ch2) => chartOrder.indexOf(ch1.type) - chartOrder.indexOf(ch2.type));
+        charts.sort((chart1, chart2) => chartOrder.indexOf(chart1.type) - chartOrder.indexOf(chart2.type));
     }
 
     private static getChartsModel(charts: TwoDimensionalChart[], chartOrientation: ChartOrientation, chartStyleConfig: ChartStyleConfig): TwoDimensionalChartModel[] {

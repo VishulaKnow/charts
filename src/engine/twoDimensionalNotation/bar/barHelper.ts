@@ -104,18 +104,20 @@ export class BarHelper
             else if(chart.type === 'bar')
                 amounts.push(chart.data.valueFields.length);
         });
-
         return amounts;
     }
 
     public static getBarIndex(barsAmounts: number[], chartIndex: number): number {
         if(barsAmounts.length < 2)
             return 0;
+
+        console.log(chartIndex);
             
         let index = 0;
         barsAmounts.forEach((chartBars, i) => {
-            if(i < chartIndex)
+            if(i < chartIndex) {
                 index += chartBars;
+            }
         });
         return index;
     }

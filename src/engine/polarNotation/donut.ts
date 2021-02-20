@@ -1,4 +1,4 @@
-import { arc, pie, PieArcDatum, Pie, Arc } from 'd3-shape'
+import { PieArcDatum } from 'd3-shape'
 import { Color } from "d3-color";
 import { Selection, BaseType } from 'd3-selection'
 import { BlockMargin, DataRow, DonutChartSettings, PolarChartModel, Size } from "../../model/model";
