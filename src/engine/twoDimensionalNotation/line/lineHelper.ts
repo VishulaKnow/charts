@@ -1,6 +1,12 @@
+<<<<<<< HEAD
 import { stack, line, Line as ILine } from 'd3-shape';
 import { Orient, BlockMargin, DataRow } from "../../../model/model";
 import { Scales, Scale } from "../../features/scale/scale";
+=======
+import { line, Line as ILine } from 'd3-shape';
+import { BlockMargin, DataRow, Orient } from "../../../model/model";
+import { Scale, Scales } from "../../features/scale/scale";
+>>>>>>> e43248ee7537739e04cb2d024be27f28cf0eeb03
 
 export class LineHelper
 {

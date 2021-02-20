@@ -1,4 +1,4 @@
-import { area, stack, Area as IArea } from 'd3-shape';
+import { area, Area as IArea } from 'd3-shape';
 import { BlockMargin, DataRow, Orient, Size } from "../../../model/model";
 import { Scales, Scale } from "../../features/scale/scale";
 
