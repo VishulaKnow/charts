@@ -7,6 +7,7 @@ export interface LabelSize {
     width: number;
     height: number
 }
+// comment1
 
 export class AxisModel
 {
