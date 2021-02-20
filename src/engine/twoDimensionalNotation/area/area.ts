@@ -1,12 +1,13 @@
-import { area, stack, Area as IArea } from 'd3-shape';
-import { select, Selection, BaseType } from 'd3-selection'
+import { stack } from 'd3-shape';
+import { select, Selection } from 'd3-selection'
 import { Color } from "d3-color";
 import { transition } from 'd3-transition';
 import { BlockMargin, DataRow, Field, Orient, Size, TwoDimensionalChartModel } from "../../../model/model";
 import { Helper } from "../../helper";
-import { Scale, Scales } from "../../features/scale/scale";
+import { Scales } from "../../features/scale/scale";
 import { Block } from "../../block/block";
 import { Dot } from "../../features/lineDots/dot";
+import { AreaHelper } from './areaHelper';
 
 select.prototype.transition = transition;
 
@@ -23,7 +24,7 @@ export class Area
 
     public static updateAreaChartByValueAxis(block: Block, scales: Scales, data: DataRow[], keyField: Field, margin: BlockMargin, chart: TwoDimensionalChartModel, keyAxisOrient: Orient, blockSize: Size, isSegmented: boolean): void {
         if(isSegmented) {
-            const areaGenerator = this.getSegmentedAreaGenerator(keyAxisOrient, scales, margin, keyField.name);
+            const areaGenerator = AreaHelper.getSegmentedAreaGenerator(keyAxisOrient, scales, margin, keyField.name);
             const areas = block.getChartBlock()
                 .selectAll<SVGRectElement, DataRow[]>(`path.${this.areaChartClass}${Helper.getCssClassesLine(chart.cssClasses)}`);
             
@@ -37,7 +38,7 @@ export class Area
             });
         } else {
             chart.data.valueFields.forEach((field, index) => {
-                const area = this.getGroupedAreaGenerator(keyAxisOrient, scales, margin, keyField.name, field.name, blockSize);
+                const area = AreaHelper.getGroupedAreaGenerator(keyAxisOrient, scales, margin, keyField.name, field.name, blockSize);
             
                 block.getChartBlock()
                     .select(`.${this.areaChartClass}${Helper.getCssClassesLine(chart.cssClasses)}.chart-element-${index}`)
@@ -52,7 +53,7 @@ export class Area
 
     private static renderGrouped(block: Block, scales: Scales, data: DataRow[], keyField: Field, margin: BlockMargin, keyAxisOrient: Orient, chart: TwoDimensionalChartModel, blockSize: Size): void {
         chart.data.valueFields.forEach((field, index) => {
-            const area = this.getGroupedAreaGenerator(keyAxisOrient, scales, margin, keyField.name, field.name, blockSize);
+            const area = AreaHelper.getGroupedAreaGenerator(keyAxisOrient, scales, margin, keyField.name, field.name, blockSize);
         
             const path = block.getChartBlock()
                 .append('path')
@@ -71,7 +72,7 @@ export class Area
     private static renderSegmented(block: Block, scales: Scales, data: DataRow[], keyField: Field, margin: BlockMargin, keyAxisOrient: Orient, chart: TwoDimensionalChartModel, blockSize: Size): void {
         const keys = chart.data.valueFields.map(field => field.name);
         const stackedData = stack().keys(keys)(data);
-        const area = this.getSegmentedAreaGenerator(keyAxisOrient, scales, margin, keyField.name);
+        const area = AreaHelper.getSegmentedAreaGenerator(keyAxisOrient, scales, margin, keyField.name);
 
         const areas = block.getChartBlock()
             .selectAll(`.${this.areaChartClass}${Helper.getCssClassesLine(chart.cssClasses)}`)
@@ -91,47 +92,6 @@ export class Area
         stackedData.forEach((sd, index) => {
             Dot.render(block, sd, keyAxisOrient, scales, margin, keyField.name, '1', chart.cssClasses, index, chart.style.elementColors, blockSize, true);
         });
-    }
-
-    private static getGroupedAreaGenerator(keyAxisOrient: Orient, scales: Scales, margin: BlockMargin, keyFieldName: string, valueFieldName: string, blockSize: Size): IArea<DataRow> {
-        if(keyAxisOrient === 'bottom' || keyAxisOrient === 'top')
-            return area<DataRow>()
-                .x(d => Scale.getScaleKeyPoint(scales.scaleKey, d[keyFieldName]) + margin.left)
-                .y0(d => this.getZeroCoordinate(keyAxisOrient, margin, blockSize))
-                .y1(d => scales.scaleValue(d[valueFieldName]) + margin.top);
-        if(keyAxisOrient === 'left' || keyAxisOrient === 'right')
-            return area<DataRow>()
-                .x0(d => this.getZeroCoordinate(keyAxisOrient, margin, blockSize))
-                .x1(d => scales.scaleValue(d[valueFieldName]) + margin.left,)
-                .y(d => Scale.getScaleKeyPoint(scales.scaleKey, d[keyFieldName]) + margin.top);
-    }
-
-    private static getSegmentedAreaGenerator(keyAxisOrient: Orient, scales: Scales, margin: BlockMargin, keyFieldName: string): IArea<DataRow> {
-        if(keyAxisOrient === 'bottom' || keyAxisOrient === 'top') {
-            return area<DataRow>()
-                .x(d => Scale.getScaleKeyPoint(scales.scaleKey, d.data[keyFieldName]) + margin.left)
-                .y0(d => scales.scaleValue(d[0]) + margin.top)
-                .y1(d => scales.scaleValue(d[1]) + margin.top);
-        }
-        
-        if(keyAxisOrient === 'left' || keyAxisOrient === 'right') {
-            return area<DataRow>()
-                .x0(d => scales.scaleValue(d[0]) + margin.left)
-                .x1(d => scales.scaleValue(d[1]) + margin.left)
-                .y(d => Scale.getScaleKeyPoint(scales.scaleKey, d.data[keyFieldName]) + margin.top);
-        }
-    }
-
-    private static getZeroCoordinate(axisOrient: Orient, margin: BlockMargin, blockSize: Size): number {
-        if(axisOrient === 'bottom')
-            return blockSize.height - margin.bottom;
-        if(axisOrient === 'top')
-            return margin.top;
-
-        if(axisOrient === 'left')
-            return margin.left;
-        if(axisOrient === 'right')
-            return blockSize.width - margin.right;
     }
 
     private static setSegmentColor(segments: Selection<SVGGElement, unknown, SVGGElement, unknown>, colorPalette: Color[]): void {
