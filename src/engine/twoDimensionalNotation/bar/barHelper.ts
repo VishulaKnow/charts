@@ -113,9 +113,9 @@ export class BarHelper
             return 0;
             
         let index = 0;
-        barsAmounts.forEach((ba, i) => {
+        barsAmounts.forEach((chartBars, i) => {
             if(i < chartIndex)
-                index += ba;
+                index += chartBars;
         });
         return index;
     }

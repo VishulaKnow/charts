@@ -8,6 +8,7 @@ import { Donut } from "../../polarNotation/donut";
 import { Bar } from "../../twoDimensionalNotation/bar/bar";
 import { Dot } from "../lineDots/dot";
 import { ChartOrientation } from "../../../config/config";
+import { DonutHelper } from '../../polarNotation/DonutHelper';
 
 export class Tooltip {
     private static tooltipWrapperClass = 'tooltip-wrapper';
@@ -22,7 +23,7 @@ export class Tooltip {
             if (model.options.type === '2d') {
                 this.rednerTooltipFor2DCharts(block, model.chartBlock.margin, model.options.charts, data, model.options.data, model.blockCanvas.size, model.options.orient);
             } else if (model.options.type === 'polar') {
-                this.renderTooltipsForDonut(block, model.options.charts, data, model.options.data, model.blockCanvas.size, model.chartBlock.margin, Donut.getThickness(model.chartSettings.donut, model.blockCanvas.size, model.chartBlock.margin));
+                this.renderTooltipsForDonut(block, model.options.charts, data, model.options.data, model.blockCanvas.size, model.chartBlock.margin, DonutHelper.getThickness(model.chartSettings.donut, model.blockCanvas.size, model.chartBlock.margin));
             } else if (model.options.type === 'interval') {
                 this.renderTooltipsForInterval(block, model.options.charts, data, model.options.data, model.blockCanvas.size, model.options.orient);
             }
@@ -46,7 +47,7 @@ export class Tooltip {
             const translateX = translateNumbers[0];
             const translateY = translateNumbers[1];
 
-            const arcItems = Donut.getAllArcs(block);
+            const arcItems = Donut.getAllArcGroups(block);
             this.renderTooltipForDonut(block, arcItems, data, dataOptions, chart, blockSize, margin, chartThickness, translateX, translateY);
         });
     }
@@ -167,7 +168,7 @@ export class Tooltip {
                 const key = dataRow.data[dataOptions.keyField.name];
                 TooltipHelper.fillTooltipForPolarChart(tooltipContent, chart, data, dataOptions, key, select(this).select('path').style('fill'))
 
-                const coordinatePointer: [number, number] = TooltipHelper.getRecalcedCoordinateByArrow(Donut.getArcCentroid(blockSize, margin, dataRow, donutThickness), tooltipBlock, blockSize, tooltipArrow, translateX, translateY);
+                const coordinatePointer: [number, number] = TooltipHelper.getRecalcedCoordinateByArrow(DonutHelper.getArcCentroid(blockSize, margin, dataRow, donutThickness), tooltipBlock, blockSize, tooltipArrow, translateX, translateY);
                 const tooltipCoordinate = TooltipHelper.getTooltipCoordinate(coordinatePointer);
                 thisClass.setTooltipCoordinate(tooltipBlock, tooltipCoordinate);
 

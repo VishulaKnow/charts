@@ -5,6 +5,7 @@ import { BlockMargin, DataRow, DonutChartSettings, PolarChartModel, Size } from 
 import { Helper } from "../helper";
 import { Block } from "../block/block";
 import { Aggregator } from "./aggregator";
+import { DonutHelper } from './DonutHelper';
 
 export interface Translate {
     x: number;
@@ -17,14 +18,14 @@ export class Donut
     private static arcItemClass = 'arc';
 
     public static render(block: Block, data: DataRow[], margin: BlockMargin, chart: PolarChartModel, blockSize: Size, donutSettings: DonutChartSettings): void {
-        const outerRadius = this.getOuterRadius(margin, blockSize);
-        const thickness = this.getThickness(donutSettings, blockSize, margin);
-        const innerRadius = this.getInnerRadius(outerRadius, thickness);
+        const outerRadius = DonutHelper.getOuterRadius(margin, blockSize);
+        const thickness = DonutHelper.getThickness(donutSettings, blockSize, margin);
+        const innerRadius = DonutHelper.getInnerRadius(outerRadius, thickness);
 
-        const arc = this.getArcGenerator(outerRadius, innerRadius);
-        const pie = this.getPieGenerator(chart.data.valueField.name, donutSettings.padAngle);
+        const arc = DonutHelper.getArcGenerator(outerRadius, innerRadius);
+        const pie = DonutHelper.getPieGenerator(chart.data.valueField.name, donutSettings.padAngle);
     
-        const translate = this.getTranslate(margin, blockSize);
+        const translate = DonutHelper.getTranslate(margin, blockSize);
     
         const donutBlock = block.getSvg()
             .append('g')
@@ -50,57 +51,9 @@ export class Donut
         Aggregator.render(block, data, chart.data.valueField.name, innerRadius, translate, thickness);      
     }
     
-    public static getAllArcs(block: Block): Selection<SVGGElement, PieArcDatum<DataRow>, SVGGElement, unknown> {
+    public static getAllArcGroups(block: Block): Selection<SVGGElement, PieArcDatum<DataRow>, SVGGElement, unknown> {
         return block.getSvg()
             .selectAll(`.${this.arcItemClass}`) as Selection<SVGGElement, PieArcDatum<DataRow>, SVGGElement, unknown>;
-    }
-
-    public static getThickness(donutSettings: DonutChartSettings, blockSize: Size, margin: BlockMargin): number {
-        if(Math.min(blockSize.width - margin.left - margin.right, blockSize.height - margin.bottom - margin.top) > 400)
-            return donutSettings.maxThickness;
-        return donutSettings.minThickness;
-    }
-
-    public static getArcCentroid(blockSize: Size, margin: BlockMargin, dataItem: PieArcDatum<DataRow>, donutThickness: number): [number, number] {
-        const arc = this.getArcGeneratorObject(blockSize, margin, donutThickness);
-
-        return arc.centroid(dataItem);
-    }
-
-    public static getArcGeneratorObject(blockSize: Size, margin: BlockMargin, donutThickness: number): Arc<any, PieArcDatum<DataRow>> {
-        const outerRadius = this.getOuterRadius(margin, blockSize);
-        const arc = this.getArcGenerator(outerRadius, outerRadius - donutThickness);
-
-        return arc;
-    }
-
-    public static getOuterRadius(margin: BlockMargin, blockSize: Size): number {
-        return Math.min(blockSize.width - margin.left - margin.right,
-            blockSize.height - margin.top - margin.bottom) / 2;
-    }
-
-    private static getInnerRadius(outerRadius: number, thickness: number): number {
-        return outerRadius - thickness;
-    }
-
-    private static getTranslate(margin: BlockMargin, blockSize: Size): Translate {
-        return {
-            x: (blockSize.width - margin.left - margin.right) / 2 + margin.left,
-            y: (blockSize.height - margin.top - margin.bottom) / 2 + margin.top
-        }
-    }
-    
-    private static getArcGenerator(outerRadius: number, innerRadius: number): Arc<any, PieArcDatum<DataRow>> {
-        return arc<PieArcDatum<DataRow>>()
-            .innerRadius(innerRadius)
-            .outerRadius(outerRadius);
-    }
-    
-    private static getPieGenerator(valueField: string, padAngle: number): Pie<any, DataRow> {
-        return pie<DataRow>()
-            .padAngle(padAngle)
-            .sort(null)
-            .value(d => d[valueField]);
     }
 
     private static setElementsColor(arcItems: Selection<SVGGElement, unknown, BaseType, unknown>, colorPalette: Color[]): void {
