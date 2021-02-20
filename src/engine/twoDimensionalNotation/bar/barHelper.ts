@@ -110,8 +110,6 @@ export class BarHelper
     public static getBarIndex(barsAmounts: number[], chartIndex: number): number {
         if(barsAmounts.length < 2)
             return 0;
-
-        console.log(chartIndex);
             
         let index = 0;
         barsAmounts.forEach((chartBars, i) => {

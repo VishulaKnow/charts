@@ -116,7 +116,6 @@ export function getPreparedData(model: Model, data: DataSource, config: Config):
         return null;
 
     const preparedData = DataManagerModel.getPreparedData(data, model.dataSettings.scope.allowableKeys, config);
-    console.log(model.dataSettings.scope.allowableKeys, preparedData.dataSet);
     return preparedData;
 }
 

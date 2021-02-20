@@ -21,9 +21,12 @@ export class MarginModel
             const labelSize = this.getMarginValuesByAxisLabels(designerConfig.canvas.axisLabel.maxSize.main, config.options.axis, data, config.options);
             this.recalcMarginWithAxisLabelHeight(labelSize, margin, config.options, config.options.axis);
 
+            // Если встроенный лейбл показывает ключи, то лейблы оси ключей не показываются
+            // При этом все графики должны иметь: embeddedLabels = 'key'
+            // И все графики должны быть типа bar. 
             const showingFlag = config.options.type === '2d' 
                 ? !TwoDimensionalModel.getChartsEmbeddedLabelsFlag(config.options.charts, config.options.orientation)
-                : true; // Если встроенный лейбл показывает ключи, то лейблы оси ключей не показываются
+                : true;
             this.recalcMarginWithAxisLabelWidth(labelSize, margin, config.options, config.options.axis, showingFlag);
         }
 
