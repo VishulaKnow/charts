@@ -68,8 +68,7 @@ export class Bar
                     .attr('class', this.barItemClass)
                     // .style('clip-path', `url(${block.getClipPathId()})`);
 
-            const barAttrs = BarHelper.getGroupedBarAttrsByKeyOrient(block,
-                keyAxisOrient,
+            const barAttrs = BarHelper.getGroupedBarAttrsByKeyOrient(keyAxisOrient,
                 scales,
                 margin,
                 keyField.name,
@@ -77,8 +76,7 @@ export class Bar
                 blockSize,
                 BarHelper.getBarIndex(barsAmounts, chart.index) + index - firstBarIndex,
                 sum(barsAmounts),
-                barSettings,
-                this.barItemClass);
+                barSettings);
         
             this.fillBarAttrsByKeyOrient(bars, barAttrs);
             

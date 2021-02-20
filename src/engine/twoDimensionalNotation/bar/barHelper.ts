@@ -12,7 +12,7 @@ export interface BarAttrs {
 
 export class BarHelper
 {
-    public static getGroupedBarAttrsByKeyOrient(block: Block, axisOrient: Orient, scales: Scales, margin: BlockMargin, keyField: string, valueField: string, blockSize: Size, barIndex: number, barsAmount: number, barSettings: BarChartSettings, barItemCssClass: string): BarAttrs {
+    public static getGroupedBarAttrsByKeyOrient(axisOrient: Orient, scales: Scales, margin: BlockMargin, keyField: string, valueField: string, blockSize: Size, barIndex: number, barsAmount: number, barSettings: BarChartSettings): BarAttrs {
         const barDistance = barSettings.barDistance;
         const barStep = (Scale.getScaleWidth(scales.scaleKey) - barDistance * (barsAmount - 1)) / barsAmount; // Space for one bar
         const barSize = barStep > barSettings.maxBarWidth ? barSettings.maxBarWidth : barStep;
