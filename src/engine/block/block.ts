@@ -82,8 +82,4 @@ export class Block
     public getClipPathId(): string {
         return `#chart-block-clippath-${this.svgCssClasses.join('-')}`;
     }
-
-    public getSvgCssClasses(): string[] {
-        return this.svgCssClasses;
-    }
 }

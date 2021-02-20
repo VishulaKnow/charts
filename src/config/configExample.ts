@@ -39,7 +39,7 @@ const configCars: Config = {
         legend: {
             show: true
         },
-        orientation: 'horizontal',
+        orientation: 'vertical',
         data: {
             dataSource: 'dataSet',
             keyField: {
@@ -51,7 +51,7 @@ const configCars: Config = {
             {
                 title: 'Рост стоимости',
                 isSegmented: true,
-                type: 'bar',
+                type: 'line',
                 data: {
                     valueFields: [
                         {
@@ -115,7 +115,7 @@ const configDemo: Config = {
         type: '2d',
         axis: {
             keyAxis: {
-                position: 'start',
+                position: 'end',
                 ticks: {
                     flag: false
                 }
@@ -142,7 +142,7 @@ const configDemo: Config = {
         legend: {
             show: true
         },
-        orientation: 'horizontal',
+        orientation: 'vertical',
         data: {
             dataSource: 'dataSet_data',
             keyField: {

@@ -23,9 +23,9 @@ export class GridLine
             const lineLength = this.getGridLineLength('key', keyAxis, valueAxis, blockSize, margin);
             const lineAttributes = this.getLineAttributes(keyAxis, lineLength);
             this.renderLine(block, keyAxis, lineAttributes);
-            if(scaleKey.type === 'point')
-                this.removeGridLineOnValueAxis(block, keyAxis, valueAxis);
         }
+        if(scaleKey.type === 'point' && (gridLineFlag.key || gridLineFlag.value))
+            this.removeGridLinesOnAxes(block, keyAxis, valueAxis);
     }
 
     public static rerender(block: Block, gridLineFlag: GridLineFlag, keyAxis: AxisModelOptions, valueAxis: AxisModelOptions, blockSize: Size, margin: BlockMargin, scaleKey: ScaleKeyModel): void {
@@ -90,13 +90,13 @@ export class GridLine
         return axisLength;
     }
 
-    private static removeGridLineOnValueAxis(block: Block, keyAxis: AxisModelOptions, valueAxis: AxisModelOptions): void {
+    private static removeGridLinesOnAxes(block: Block, keyAxis: AxisModelOptions, valueAxis: AxisModelOptions): void {
         let tickOnKeyAxisSelector = '';
         let tickOnValueAxisSelector = '';
 
-        if(valueAxis.orient === 'right')
+        if(valueAxis.orient === 'right' || valueAxis.orient === 'bottom')
             tickOnValueAxisSelector = ':last-of-type';
-        if(keyAxis.orient === 'bottom')
+        if(keyAxis.orient === 'bottom' || keyAxis.orient === 'right')
             tickOnKeyAxisSelector = ':last-of-type';
 
         block.getSvg()
