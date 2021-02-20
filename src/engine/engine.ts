@@ -6,13 +6,13 @@ import { DataSource, Model } from '../model/model';
 export default class Engine {
     private block: Block;
 
-    public render(model: Model, data: DataSource, parentElement: HTMLElement): void {  
+    public render(model: Model, data: DataSource, parentElement: HTMLElement): void {
         this.block = new Block(model.blockCanvas.cssClass, parentElement);
 
         this.block.renderWrapper(model.blockCanvas.size);
         ValueFormatter.setFormatFunction(model.dataFormat.formatters);
 
-        if(model.options)
+        if (model.options)
             this.renderCharts(model, data);
     }
 
@@ -35,11 +35,11 @@ export default class Engine {
     }
 
     private renderCharts(model: Model, data: DataSource): void {
-        if(model.options.type === '2d')
+        if (model.options.type === '2d')
             ChartRenderer.render2D(this.block, model, data);
-        else if(model.options.type === 'polar')
+        else if (model.options.type === 'polar')
             ChartRenderer.renderPolar(this.block, model, data);
-        else if(model.options.type === 'interval')
+        else if (model.options.type === 'interval')
             ChartRenderer.renderInterval(this.block, model, data);
     }
 }

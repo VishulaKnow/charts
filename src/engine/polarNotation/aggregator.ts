@@ -9,8 +9,7 @@ export interface IAggregator {
     value: number;
 }
 
-export class Aggregator
-{
+export class Aggregator {
     public static render(block: Block, data: DataRow[], valueField: string, innerRadius: number, translate: Translate, fontSize: number): void {
         const aggregator: IAggregator = {
             name: 'Сумма',
@@ -19,20 +18,20 @@ export class Aggregator
         this.renderAggregatorText(block, innerRadius, aggregator, translate, fontSize);
     }
 
-    private static renderAggregatorText(block: Block, innerRadius: number, aggregator: IAggregator, translate: Translate, fontSize: number): void {      
-        if(innerRadius > 50) {
+    private static renderAggregatorText(block: Block, innerRadius: number, aggregator: IAggregator, translate: Translate, fontSize: number): void {
+        if (innerRadius > 50) {
             const aggregatorObject = this.renderAggregatorObject(block, innerRadius, translate);
             const wrapper = this.renderAggregatorWrapper(aggregatorObject);
 
             wrapper
-                .append('div') 
+                .append('div')
                 .attr('class', 'aggregator-value')
                 .style('text-align', 'center')
                 .style('font-size', `${fontSize}px`)
                 .text(aggregator.value);
 
             wrapper
-                .append('div') 
+                .append('div')
                 .attr('class', 'aggregator-name')
                 .style('text-align', 'center')
                 .style('font-size', '18px')

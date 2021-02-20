@@ -2,10 +2,9 @@ import { PieArcDatum, Arc, arc, Pie, pie } from "d3-shape";
 import { DonutChartSettings, Size, BlockMargin, DataRow } from "../../model/model";
 import { Translate } from "./donut";
 
-export class DonutHelper
-{
+export class DonutHelper {
     public static getThickness(donutSettings: DonutChartSettings, blockSize: Size, margin: BlockMargin): number {
-        if(Math.min(blockSize.width - margin.left - margin.right, blockSize.height - margin.bottom - margin.top) > 400)
+        if (Math.min(blockSize.width - margin.left - margin.right, blockSize.height - margin.bottom - margin.top) > 400)
             return donutSettings.maxThickness;
         return donutSettings.minThickness;
     }
@@ -38,13 +37,13 @@ export class DonutHelper
             y: (blockSize.height - margin.top - margin.bottom) / 2 + margin.top
         }
     }
-    
+
     public static getArcGenerator(outerRadius: number, innerRadius: number): Arc<any, PieArcDatum<DataRow>> {
         return arc<PieArcDatum<DataRow>>()
             .innerRadius(innerRadius)
             .outerRadius(outerRadius);
     }
-    
+
     public static getPieGenerator(valueField: string, padAngle: number): Pie<any, DataRow> {
         return pie<DataRow>()
             .padAngle(padAngle)

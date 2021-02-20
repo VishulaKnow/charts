@@ -4,8 +4,7 @@ import { ChartStyle } from "../model/model";
 
 type StyleColorType = 'fill' | 'stroke';
 
-export class Helper
-{
+export class Helper {
     public static setCssClasses(elem: Selection<BaseType, unknown, any, unknown>, cssClasses: string[]): void {
         cssClasses.forEach(cssClass => {
             elem.classed(cssClass, true);
@@ -31,13 +30,13 @@ export class Helper
 
     public static cropLabels(labelBlocks: Selection<SVGGraphicsElement, unknown, BaseType, unknown>, maxWidth: number): void {
         labelBlocks.nodes().forEach(node => {
-            if(node.getBBox().width > maxWidth) {
+            if (node.getBBox().width > maxWidth) {
                 const text = node.textContent;
                 let textLength = text.length;
-                while(node.getBBox().width > maxWidth && textLength > 0) {
+                while (node.getBBox().width > maxWidth && textLength > 0) {
                     node.textContent = text.substring(0, --textLength) + '...';
                 }
-                if(textLength === 0)
+                if (textLength === 0)
                     node.textContent = '';
             }
         });
@@ -48,9 +47,9 @@ export class Helper
     }
 
     public static getTranslateNumbers(transformValue: string): [number, number] {
-        if(!transformValue)
+        if (!transformValue)
             return [0, 0];
-        
+
         const translateNumbers = transformValue.substring(10, transformValue.length - 1).split(', ');
         const translateX = parseFloat(translateNumbers[0]);
         const translateY = parseFloat(translateNumbers[1]);

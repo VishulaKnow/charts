@@ -1,7 +1,6 @@
 import { DataType, Formatter } from '../designer/designerConfig';
 
-export class ValueFormatter
-{
+export class ValueFormatter {
     private static format: Formatter;
 
     public static formatValue(valueType: DataType, value: string): string {

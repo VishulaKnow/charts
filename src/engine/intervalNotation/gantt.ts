@@ -11,8 +11,7 @@ interface GanttItemsAttrs {
     height: (data: DataRow) => number;
 }
 
-export class Gantt 
-{
+export class Gantt {
     private static ganttItemClass = 'gantt-item';
 
     public static render(block: Block, data: DataRow[], dataOptions: OptionsModelData, scales: Scales, margin: BlockMargin, keyAxisOrient: Orient, chart: IntervalChartModel, barSettings: BarChartSettings): void {
@@ -20,10 +19,10 @@ export class Gantt
             .selectAll(`.${this.ganttItemClass}`)
             .data(data)
             .enter()
-                .append('rect')
-                .attr('class', this.ganttItemClass)
-                .style('clip-path', `url(${block.getClipPathId()})`);
-        
+            .append('rect')
+            .attr('class', this.ganttItemClass)
+            .style('clip-path', `url(${block.getClipPathId()})`);
+
         const itemsAttrs = this.getItemsAttrsByKeyOrient(keyAxisOrient,
             scales,
             margin,
@@ -53,33 +52,33 @@ export class Gantt
             width: null,
             height: null
         }
-        const itemSize = Scale.getScaleWidth(scales.scaleKey) > barSettings.maxBarWidth 
-            ? barSettings.maxBarWidth 
+        const itemSize = Scale.getScaleWidth(scales.scaleKey) > barSettings.maxBarWidth
+            ? barSettings.maxBarWidth
             : Scale.getScaleWidth(scales.scaleKey);
-        const sizeDiff = (Scale.getScaleWidth(scales.scaleKey) - itemSize) / 2;       
+        const sizeDiff = (Scale.getScaleWidth(scales.scaleKey) - itemSize) / 2;
 
-        if(axisOrient === 'top' || axisOrient === 'bottom') {
+        if (axisOrient === 'top' || axisOrient === 'bottom') {
             attrs.x = d => scales.scaleKey(d[keyField]) + margin.left + sizeDiff;
             attrs.width = d => itemSize;
         }
-        if(axisOrient === 'left' || axisOrient === 'right') {
+        if (axisOrient === 'left' || axisOrient === 'right') {
             attrs.y = d => scales.scaleKey(d[keyField]) + margin.top + sizeDiff;
             attrs.height = d => itemSize;
         }
-        
-        if(axisOrient === 'top') {
+
+        if (axisOrient === 'top') {
             attrs.y = d => scales.scaleValue(d[valueField1]) + margin.top;
             attrs.height = d => scales.scaleValue(d[valueField2]) - scales.scaleValue(d[valueField1]);
-        } 
-        else if(axisOrient === 'bottom') {
+        }
+        else if (axisOrient === 'bottom') {
             attrs.y = d => scales.scaleValue(d[valueField2]) + margin.top;
             attrs.height = d => scales.scaleValue(d[valueField1]) - scales.scaleValue(d[valueField2]);
-        }   
-        else if(axisOrient === 'left') {
+        }
+        else if (axisOrient === 'left') {
             attrs.x = d => scales.scaleValue(d[valueField1]) + margin.left;
             attrs.width = d => scales.scaleValue(d[valueField2]) - scales.scaleValue(d[valueField1]);
-        }    
-        else if(axisOrient === 'right') {
+        }
+        else if (axisOrient === 'right') {
             attrs.x = d => scales.scaleValue(d[valueField2]) + margin.left;
             attrs.width = d => scales.scaleValue(d[valueField1]) - scales.scaleValue(d[valueField2]);
         }

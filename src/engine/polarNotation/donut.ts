@@ -12,8 +12,7 @@ export interface Translate {
     y: number;
 }
 
-export class Donut
-{
+export class Donut {
     public static donutBlockClass = 'donut-block';
     private static arcItemClass = 'arc';
 
@@ -24,33 +23,33 @@ export class Donut
 
         const arc = DonutHelper.getArcGenerator(outerRadius, innerRadius);
         const pie = DonutHelper.getPieGenerator(chart.data.valueField.name, donutSettings.padAngle);
-    
+
         const translate = DonutHelper.getTranslate(margin, blockSize);
-    
+
         const donutBlock = block.getSvg()
             .append('g')
             .attr('class', this.donutBlockClass)
             .attr('x', translate.x)
             .attr('y', translate.y)
             .attr('transform', `translate(${translate.x}, ${translate.y})`);
-        
+
         const items = donutBlock
             .selectAll(`.${this.arcItemClass}`)
             .data(pie(data))
             .enter()
             .append('g')
             .attr('class', this.arcItemClass);
-    
+
         const arcs = items
             .append('path')
             .attr('d', arc);
-    
+
         Helper.setCssClasses(arcs, chart.cssClasses);
         this.setElementsColor(items, chart.style.elementColors);
-        
-        Aggregator.render(block, data, chart.data.valueField.name, innerRadius, translate, thickness);      
+
+        Aggregator.render(block, data, chart.data.valueField.name, innerRadius, translate, thickness);
     }
-    
+
     public static getAllArcGroups(block: Block): Selection<SVGGElement, PieArcDatum<DataRow>, SVGGElement, unknown> {
         return block.getSvg()
             .selectAll(`.${this.arcItemClass}`) as Selection<SVGGElement, PieArcDatum<DataRow>, SVGGElement, unknown>;
