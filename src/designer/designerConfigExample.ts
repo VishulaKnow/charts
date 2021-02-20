@@ -1,4 +1,5 @@
 import { DesignerConfig, DataTypeOptions } from './designerConfig'
+
 const designerConfig: DesignerConfig = {
     canvas: {
         axisLabel: {
