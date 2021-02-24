@@ -8,7 +8,7 @@
         { "brand": "DODGE", "price": 115, "count": 4 },
         { "brand": "SAAB", "price": 50, "count": 11 },
         { "brand": "HONDA", "price": 20, "count": 2 },
-        { "brand": "TOYOTA", "price": 120, "count": 20 }
+        { "brand": "TOYOTA", "price": 120, "count": 15 }
     ],
     "dataSet2": [
         { "brand": "BMW", "price": 100, "count": 5 },

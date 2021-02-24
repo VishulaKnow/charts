@@ -48,11 +48,13 @@ const TOOLTIP_ARROW_PADDING_X = ARROW_DEFAULT_POSITION - (ARROW_SIZE * Math.sqrt
 const TOOLTIP_ARROW_PADDING_Y = 13;
 
 export class TooltipHelper {
-    public static fillMultyFor2DChart(tooltipContentBlock: Selection<BaseType, unknown, BaseType, unknown>, chart: TwoDimensionalChartModel, data: DataSource, dataOptions: OptionsModelData, keyValue: string): void {
+    public static fillMultyFor2DChart(tooltipContentBlock: Selection<BaseType, unknown, BaseType, unknown>, charts: TwoDimensionalChartModel[], data: DataSource, dataOptions: OptionsModelData, keyValue: string): void {
         tooltipContentBlock.html('');
-        chart.data.valueFields.forEach((field, index) => {
-            this.fillTooltipContent(tooltipContentBlock, data, dataOptions, keyValue, field, chart.style.elementColors[index % chart.style.elementColors.length].toString());
-        });
+        charts.forEach(chart => {
+            chart.data.valueFields.forEach((field, index) => {
+                this.fillTooltipContent(tooltipContentBlock, data, dataOptions, keyValue, field, chart.style.elementColors[index % chart.style.elementColors.length].toString());
+            });
+        })
     }
 
     public static fillTooltipFor2DChart(tooltipContentBlock: Selection<BaseType, unknown, BaseType, unknown>, chart: TwoDimensionalChartModel, data: DataSource, dataOptions: OptionsModelData, keyValue: string, index: number): void {
@@ -123,18 +125,6 @@ export class TooltipHelper {
         return elements.filter(d => d[keyFieldName] !== keyValue);
     }
 
-    public static getElementIndex(elemets: Selection<BaseType, DataRow, BaseType, unknown>, dot: BaseType, keyValue: string, keyName: string, isSegmented: boolean): number {
-        let index = -1;
-        const filtered = isSegmented ? elemets.filter(d => d.data[keyName] === keyValue) : elemets.filter(d => d[keyName] === keyValue);
-        filtered.each(function (d, i) {
-            if (select(this).node() === select(dot).node()) {
-                index = i;
-            }
-        });
-
-        return index;
-    }
-
     public static getOtherChartsElements(block: Block, chartIndex: number, chartsClasses: string[][]): Selection<BaseType, unknown, BaseType, unknown> {
         let classes = '';
         chartsClasses.forEach((cssClasses, index) => {
@@ -159,20 +149,6 @@ export class TooltipHelper {
     public static setElementsFullOpacity(elements: Selection<BaseType, DataRow, BaseType, unknown>): void {
         if (elements)
             elements.style('opacity', 1);
-    }
-
-    public static setOtherChartsElementsDefaultOpacity(elements: Selection<BaseType, DataRow, BaseType, unknown>, chartsStyleSettings: ChartStyleSettings[]): void {
-        if (!elements)
-            return;
-
-        const thisClass = this;
-        elements.each(function () {
-            const indexOfChart = thisClass.findChartIndexOfElement(select(this), chartsStyleSettings);
-            if (!select(this).classed(Dot.dotClass) && !select(this).classed(Dot.innerDotClass))
-                select(this).style('opacity', chartsStyleSettings[indexOfChart].opacity);
-            else
-                select(this).style('opacity', 1);
-        });
     }
 
     public static getBarHighlighterAttrs(bar: Selection<BaseType, DataRow, HTMLElement, unknown>, chartOrientation: ChartOrientation, blockSize: Size, margin: BlockMargin): BarHighlighterAttrs {
@@ -211,25 +187,28 @@ export class TooltipHelper {
     public static getKeyIndex(pointer: [number, number], orient: ChartOrientation, margin: BlockMargin, blockSize: Size, scaleKey: AxisScale<any>, scaleKeyType: ScaleKeyType): number {
         const pointerAxisType = orient === 'vertical' ? 0 : 1; // 0 - координата поинтера по оси x, 1 - по оси y
         const marginByOrient = orient === 'vertical' ? margin.left : margin.top;
-        const scaleStep = Scale.getScaleStep(scaleKey)
+        const scaleStep = Scale.getScaleStep(scaleKey);
 
-        let point: number;
         if (scaleKeyType === 'point') {
-            point = pointer[pointerAxisType] - marginByOrient + scaleStep / 2;
+            const point = pointer[pointerAxisType] - marginByOrient + scaleStep / 2;
             if (point < 0)
                 return 0;
 
             return Math.floor(point / scaleStep);
         }
         else {
-            const outerPadding = blockSize.width - margin.left - margin.right - scaleStep * scaleKey.domain().length;
+            const chartBlockSizeByDir = orient === 'vertical'
+                ? blockSize.width - margin.left - margin.right
+                : blockSize.height - margin.top - margin.bottom;
 
-            if(pointer[pointerAxisType] - marginByOrient - 1 < outerPadding / 2)
-                return 0;
-            if(pointer[pointerAxisType] - marginByOrient - 1 + outerPadding / 2 > blockSize.width - margin.left - margin.right)
+            const outerPadding = chartBlockSizeByDir - scaleStep * scaleKey.domain().length;
+
+            if (pointer[pointerAxisType] - marginByOrient - 1 < outerPadding / 2)
+                return 0; // Самый первый элемент
+            if (pointer[pointerAxisType] - marginByOrient - 1 + outerPadding / 2 > chartBlockSizeByDir)
                 return scaleKey.domain().length - 1; // последний индекс
 
-            point = pointer[pointerAxisType] - outerPadding / 2 - marginByOrient - 1;
+            const point = pointer[pointerAxisType] - outerPadding / 2 - marginByOrient - 1;
 
             return Math.floor(point / scaleStep);
         }

@@ -89,7 +89,7 @@ export class Axis
             if(Math.floor(axisLength / MINIMAL_STEP_SIZE) > 2)
                 axis.ticks(Math.floor(axisLength / MINIMAL_STEP_SIZE));
             else
-                axis.tickValues([min(scale.domain), max(scale.domain)]);
+                axis.tickValues([max(scale.domain), min(scale.domain)]);
         }
     }
 

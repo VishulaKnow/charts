@@ -58,6 +58,11 @@ const configCars: Config = {
                             name: 'price',
                             format: 'integer',
                             title: 'Количество автомобилей на душу населения'
+                        },
+                        {
+                            name: 'count',
+                            format: 'integer',
+                            title: 'Количество автомобилей на душу населения'
                         }
                     ]
                 },
