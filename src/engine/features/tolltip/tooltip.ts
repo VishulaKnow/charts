@@ -1,14 +1,16 @@
-import { select, Selection, BaseType } from 'd3-selection';
+import { select, Selection, BaseType, pointer } from 'd3-selection';
 import { PieArcDatum } from 'd3-shape'
-import { BlockMargin, DataRow, DataSource, IntervalChartModel, Model, OptionsModelData, PolarChartModel, Size, TwoDimensionalChartModel } from "../../../model/model";
+import { BlockMargin, DataRow, DataSource, IntervalChartModel, Model, OptionsModelData, PolarChartModel, ScaleKeyModel, Size, TwoDimensionalChartModel } from "../../../model/model";
 import { Helper } from "../../helper";
 import { Block } from "../../block/block";
-import { ARROW_DEFAULT_POSITION, ARROW_SIZE, BarHighlighterAttrs, ChartStyleSettings, DotEdgingAttrs, TooltipCoordinate, TooltipHelper } from "./tooltipHelper";
+import { ARROW_DEFAULT_POSITION, ARROW_SIZE, BarHighlighterAttrs, ChartStyleSettings, DotEdgingAttrs, TipBoxAttributes, TooltipCoordinate, TooltipHelper, TooltipLineAttributes } from "./tooltipHelper";
 import { Donut } from "../../polarNotation/donut";
 import { Bar } from "../../twoDimensionalNotation/bar/bar";
 import { Dot } from "../lineDots/dot";
 import { ChartOrientation } from "../../../config/config";
 import { DonutHelper } from '../../polarNotation/DonutHelper';
+import { Scale, Scales } from '../scale/scale';
+import { AxisScale } from 'd3-axis';
 
 export class Tooltip {
     private static tooltipWrapperClass = 'tooltip-wrapper';
@@ -16,12 +18,12 @@ export class Tooltip {
     private static tooltipBlockClass = 'tooltip-block';
     private static tooltipArrowClass = 'tooltip-arrow';
 
-    public static renderTooltips(block: Block, model: Model, data: DataSource): void {
+    public static renderTooltips(block: Block, model: Model, data: DataSource, scales?: Scales): void {
         this.renderTooltipWrapper(block);
         const chartsWithTooltipIndex = model.options.charts.findIndex((chart: TwoDimensionalChartModel | PolarChartModel | IntervalChartModel) => chart.tooltip.show);
         if (chartsWithTooltipIndex !== -1) {
             if (model.options.type === '2d') {
-                this.rednerTooltipFor2DCharts(block, model.chartBlock.margin, model.options.charts, data, model.options.data, model.blockCanvas.size, model.options.orient);
+                this.rednerTooltipFor2DCharts(block, model.chartBlock.margin, model.options.charts, data, model.options.data, model.blockCanvas.size, model.options.orient, scales.scaleKey, model.options.scale.scaleKey);
             } else if (model.options.type === 'polar') {
                 this.renderTooltipsForDonut(block, model.options.charts, data, model.options.data, model.blockCanvas.size, model.chartBlock.margin, DonutHelper.getThickness(model.chartSettings.donut, model.blockCanvas.size, model.chartBlock.margin));
             } else if (model.options.type === 'interval') {
@@ -30,14 +32,15 @@ export class Tooltip {
         }
     }
 
-    private static rednerTooltipFor2DCharts(block: Block, margin: BlockMargin, charts: TwoDimensionalChartModel[], data: DataSource, dataOptions: OptionsModelData, blockSize: Size, chartOrientation: ChartOrientation): void {
-        charts.forEach(chart => {
-            if (chart.type === 'bar') {
-                this.renderTooltipForBars(block, Bar.getAllBarItems(block, chart.cssClasses), data, dataOptions, chart, chartOrientation, blockSize, margin, charts.map(ch => TooltipHelper.getChartStyleSettings(ch)));
-            } else if (chart.type === 'line' || chart.type === 'area') {
-                this.renderTooltipForDots(block, Dot.getAllDots(block, chart.cssClasses), data, dataOptions, chart, blockSize, charts.map(ch => TooltipHelper.getChartStyleSettings(ch)));
-            }
-        });
+    private static rednerTooltipFor2DCharts(block: Block, margin: BlockMargin, charts: TwoDimensionalChartModel[], data: DataSource, dataOptions: OptionsModelData, blockSize: Size, chartOrientation: ChartOrientation, scaleKey: AxisScale<any>, scaleKeyModel: ScaleKeyModel): void {
+        // charts.forEach(chart => {
+        //     if (chart.type === 'bar') {
+        //         this.renderTooltipForBars(block, Bar.getAllBarItems(block, chart.cssClasses), data, dataOptions, chart, chartOrientation, blockSize, margin, charts.map(ch => TooltipHelper.getChartStyleSettings(ch)));
+        //     } else if (chart.type === 'line' || chart.type === 'area') {
+        //         this.renderTooltipForDots(block, Dot.getAllDots(block, chart.cssClasses), data, dataOptions, chart, blockSize, charts.map(ch => TooltipHelper.getChartStyleSettings(ch)));
+        //     }
+        // });
+        this.renderLineTooltip(block, scaleKey, margin, blockSize, charts, chartOrientation, data, scaleKeyModel)
     }
 
     private static renderTooltipsForDonut(block: Block, charts: PolarChartModel[], data: DataSource, dataOptions: OptionsModelData, blockSize: Size, margin: BlockMargin, chartThickness: number): void {
@@ -90,6 +93,64 @@ export class Tooltip {
             thisClass.removeDotsEdging(block);
             TooltipHelper.setOtherChartsElementsDefaultOpacity(otherChartsElements, chartsStyleSettings);
         });
+    }
+
+    private static renderLineTooltip(block: Block, scaleKey: AxisScale<any>, margin: BlockMargin, blockSize: Size, charts: TwoDimensionalChartModel[], chartOrientation: ChartOrientation, data: DataSource, scaleKeyModel: ScaleKeyModel): void {
+        const tooltipBlock = this.renderTooltipBlock(block);
+        const tooltipContent = this.renderTooltipContentBlock(tooltipBlock);
+        const thisClass = this;
+    
+        const tooltipLine = this.renderTooltipLine(block);
+        const tipBoxAttributes = TooltipHelper.getTipBoxAttributes(margin, blockSize);
+        const tipBox = this.renderTipBox(block, tipBoxAttributes);
+
+        tipBox
+            .on('mouseover', function(event) {
+                tooltipBlock.style('display', 'block');
+            })
+            .on('mousemove', function(event) {
+                const index = TooltipHelper.getKeyIndex(pointer(event, this), chartOrientation, margin, blockSize, scaleKey, scaleKeyModel.type);        
+                const key = scaleKey.domain()[index];
+                tooltipContent.html('asd');
+                
+                const coordinatePointer = pointer(event, this);
+                const tooltipCoordinate = TooltipHelper.getTooltipCoordinate(coordinatePointer);
+                thisClass.setTooltipCoordinate(tooltipBlock, tooltipCoordinate);
+
+                tooltipLine.style('display', 'block');
+                const tooltipLineAttributes = TooltipHelper.getTooltipLineAttributes(scaleKey, margin, key, chartOrientation, blockSize);
+                thisClass.setTooltipLineAttributes(tooltipLine, tooltipLineAttributes);
+            })
+            .on('mouseleave', function(event) {
+                tooltipBlock.style('display', 'none');
+                tooltipLine.style('display', 'none');
+            });
+    }
+
+    private static renderTooltipLine(block: Block): Selection<SVGLineElement, unknown, HTMLElement, any> {
+        return block.getChartBlock()
+            .append('line')
+            .attr('class', 'tooltip-line')
+            .raise();
+    }
+
+    private static renderTipBox(block: Block, attributes: TipBoxAttributes): Selection<SVGRectElement, unknown, HTMLElement, any> {
+        return block.getSvg()
+            .append('rect')
+            .attr('class', 'tipbox')
+            .attr('x', attributes.x)
+            .attr('y', attributes.y)
+            .attr('width', attributes.width)
+            .attr('height', attributes.height)
+            .style('opacity', 0);
+    }
+
+    private static setTooltipLineAttributes(tooltipLine: Selection<SVGLineElement, unknown, HTMLElement, any>, attributes: TooltipLineAttributes): void {
+        tooltipLine
+            .attr('x1', attributes.x1)
+            .attr('x2', attributes.x2)
+            .attr('y1', attributes.y1)
+            .attr('y2', attributes.y2);
     }
 
     private static renderTooltipForBars(block: Block, elemets: Selection<BaseType, DataRow, BaseType, unknown>, data: DataSource, dataOptions: OptionsModelData, chart: TwoDimensionalChartModel, chartOrientation: ChartOrientation, blockSize: Size, margin: BlockMargin, chartsStyleSettings: ChartStyleSettings[]): void {

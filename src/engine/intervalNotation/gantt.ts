@@ -52,10 +52,10 @@ export class Gantt {
             width: null,
             height: null
         }
-        const itemSize = Scale.getScaleWidth(scales.scaleKey) > barSettings.maxBarWidth
+        const itemSize = Scale.getScaleBandWidth(scales.scaleKey) > barSettings.maxBarWidth
             ? barSettings.maxBarWidth
-            : Scale.getScaleWidth(scales.scaleKey);
-        const sizeDiff = (Scale.getScaleWidth(scales.scaleKey) - itemSize) / 2;
+            : Scale.getScaleBandWidth(scales.scaleKey);
+        const sizeDiff = (Scale.getScaleBandWidth(scales.scaleKey) - itemSize) / 2;
 
         if (axisOrient === 'top' || axisOrient === 'bottom') {
             attrs.x = d => scales.scaleKey(d[keyField]) + margin.left + sizeDiff;

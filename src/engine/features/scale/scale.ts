@@ -28,7 +28,7 @@ export class Scale
         return scales;
     }
 
-    public static getScaleWidth(scale: AxisScale<any>): number {
+    public static getScaleBandWidth(scale: AxisScale<any>): number {
         if((scale as ScaleBand<string>).bandwidth && scale.bandwidth() !== 0) {
             return scale.bandwidth();
         } else if((scale as ScalePoint<string>).step) {
@@ -44,7 +44,7 @@ export class Scale
 
     public static getScaleKeyPoint(scale: AxisScale<any>, value: any): number {
         if((scale as ScaleBand<string>).bandwidth && (scale as ScaleBand<string>).bandwidth() !== 0) {
-            return scale(value) + this.getScaleWidth(scale) / 2;
+            return scale(value) + this.getScaleBandWidth(scale) / 2;
         }
         return scale(value);
     }

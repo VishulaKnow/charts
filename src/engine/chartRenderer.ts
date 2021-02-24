@@ -43,7 +43,7 @@ export class ChartRenderer {
             model.legendBlock,
             model.blockCanvas.size);
 
-        Tooltip.renderTooltips(block, model, data);
+        Tooltip.renderTooltips(block, model, data, scales);
         if (model.dataSettings.scope.hidedRecordsAmount !== 0)
             RecordOverflowAlert.render(block, model.dataSettings.scope.hidedRecordsAmount, 'top', options.orient);
     }

@@ -100,6 +100,11 @@ export function assembleModel(config: Config, data: DataSource, designerConfig: 
     if(options.type === 'polar')
         MarginModel.recalcPolarMarginWithScopedData(margin, config.canvas.size, designerConfig, config, legendBlock, dataScope, options);
 
+    margin.top = Math.ceil(margin.top);
+    margin.bottom = Math.ceil(margin.bottom);
+    margin.left = Math.ceil(margin.left);
+    margin.right = Math.ceil(margin.right);
+
     return {
         blockCanvas,
         chartBlock,
