@@ -86,6 +86,12 @@ export class BarHelper {
         return amounts;
     }
 
+    /**
+     * Получение индекса бара среди всх графиков и value-филдов. Используется для того, чтобы узнать, какой по счету в группе 
+     * этот бар идет (сегментированный всегда один, группированный - количество value-филдов).
+     * @param barsAmounts 
+     * @param chartIndex 
+     */
     public static getBarIndex(barsAmounts: number[], chartIndex: number): number {
         if (barsAmounts.length < 2)
             return 0;
