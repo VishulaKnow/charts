@@ -98,14 +98,14 @@ export class Axis {
         let valuesArray = [];
         let step = 1;
         let numbers = [1, 2, 5];
-        let k = 0;
+        let numberIndex = 0;
 
         // В случае если количество интервалов полученных при разбиении отрезка от 0 до максимального значения
         // будет меньше или равно количеству возможных для отрисовки интервалов поиск подходящего шага завершится
         while ((maxValue / step) > countValues) {
-            step = numbers[(k % numbers.length)]; // получение числа 1, 2 или 5 по очередно с каждым проходом цикла
-            step = step * Math.pow(10, Math.floor(k / numbers.length)); // произведение шага на 10-ки 
-            k++;
+            step = numbers[(numberIndex % numbers.length)]; // получение числа 1, 2 или 5 по очередно с каждым проходом цикла
+            step = step * Math.pow(10, Math.floor(numberIndex / numbers.length)); // произведение шага на 10-ки 
+            numberIndex++;
         }
 
         valuesArray.push(minValue);
@@ -119,7 +119,7 @@ export class Axis {
         currentValue += step; // получение значения предпоследнего элемента
         if (maxValue - currentValue > step / 3) // Если расстояние между последним и предпоследним больше, чем 1/3 шага
             valuesArray.push(currentValue);
-            
+
         valuesArray.push(maxValue);
         valuesArray = valuesArray.reverse(); // Reverse массива для корректного отображения гридов
         return valuesArray;
