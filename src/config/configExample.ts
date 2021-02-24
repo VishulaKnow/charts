@@ -56,7 +56,7 @@ const configCars: Config = {
                     valueFields: [
                         {
                             name: 'price',
-                            format: 'integer',
+                            format: 'money',
                             title: 'Количество автомобилей на душу населения'
                         },
                         {
