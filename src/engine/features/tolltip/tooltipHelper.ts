@@ -1,11 +1,8 @@
 import { AxisScale } from 'd3-axis';
-import { select, Selection, BaseType } from 'd3-selection'
+import { Selection, BaseType } from 'd3-selection'
 import { ChartOrientation } from "../../../config/config";
 import { BlockMargin, DataRow, DataSource, Field, IntervalChartModel, OptionsModelData, PolarChartModel, ScaleKeyType, Size, TwoDimensionalChartModel } from "../../../model/model";
-import { Block } from "../../block/block";
-import { Helper } from "../../helper";
 import { ValueFormatter, } from "../../valueFormatter";
-import { Dot } from "../lineDots/dot";
 import { Scale } from '../scale/scale';
 
 export interface TooltipLineAttributes {
@@ -26,20 +23,6 @@ export interface TooltipCoordinate {
     right: string;
     bottom: string;
 }
-export interface DotEdgingAttrs {
-    cx: number,
-    cy: number
-}
-export interface BarHighlighterAttrs {
-    x: number;
-    y: number;
-    width: number;
-    height: number;
-}
-export interface ChartStyleSettings {
-    cssClasses: string[];
-    opacity: number;
-}
 
 export const ARROW_SIZE = 20;
 export const ARROW_DEFAULT_POSITION = 9;
@@ -55,11 +38,6 @@ export class TooltipHelper {
                 this.fillTooltipContent(tooltipContentBlock, data, dataOptions, keyValue, field, chart.style.elementColors[index % chart.style.elementColors.length].toString());
             });
         })
-    }
-
-    public static fillTooltipFor2DChart(tooltipContentBlock: Selection<BaseType, unknown, BaseType, unknown>, chart: TwoDimensionalChartModel, data: DataSource, dataOptions: OptionsModelData, keyValue: string, index: number): void {
-        tooltipContentBlock.html('');
-        this.fillTooltipContent(tooltipContentBlock, data, dataOptions, keyValue, chart.data.valueFields[index], chart.style.elementColors[index % chart.style.elementColors.length].toString());
     }
 
     public static fillTooltipForPolarChart(tooltipContentBlock: Selection<BaseType, unknown, BaseType, unknown>, chart: PolarChartModel, data: DataSource, dataOptions: OptionsModelData, keyValue: string, markColor: string): void {
@@ -92,11 +70,6 @@ export class TooltipHelper {
         return this.getRecalcedCoordinateByArrow(coordinateTuple, tooltipBlock, blockSize, tooltipArrow);
     }
 
-    public static getTooltipBlockCoordinateByDot(element: Selection<BaseType, DataRow, HTMLElement, any>, tooltipBlock: Selection<BaseType, unknown, HTMLElement, any>, blockSize: Size, tooltipArrow: Selection<BaseType, unknown, HTMLElement, any>): [number, number] {
-        const coordinateTuple: [number, number] = [parseFloat(element.attr('cx')), parseFloat(element.attr('cy'))];
-        return this.getRecalcedCoordinateByArrow(coordinateTuple, tooltipBlock, blockSize, tooltipArrow);
-    }
-
     public static getRecalcedCoordinateByArrow(coordinate: [number, number], tooltipBlock: Selection<BaseType, unknown, HTMLElement, any>, blockSize: Size, tooltipArrow: Selection<BaseType, unknown, HTMLElement, any>, translateX: number = 0, translateY: number = 0): [number, number] {
         const tooltipBlockNode = tooltipBlock.node() as HTMLElement;
         const horizontalPad = this.getHorizontalPad(coordinate[0], tooltipBlockNode, blockSize, translateX);
@@ -106,13 +79,6 @@ export class TooltipHelper {
 
         return [coordinate[0] - TOOLTIP_ARROW_PADDING_X - horizontalPad,
         coordinate[1] - TOOLTIP_ARROW_PADDING_Y - tooltipBlockNode.getBoundingClientRect().height - verticalPad];
-    }
-
-    public static getDotEdgingAttrs(element: Selection<BaseType, DataRow, HTMLElement, any>): DotEdgingAttrs {
-        return {
-            cx: parseFloat(element.attr('cx')),
-            cy: parseFloat(element.attr('cy'))
-        }
     }
 
     public static getKeyForTooltip(row: DataRow, keyFieldName: string, isSegmented: boolean): string {
@@ -125,22 +91,6 @@ export class TooltipHelper {
         return elements.filter(d => d[keyFieldName] !== keyValue);
     }
 
-    public static getOtherChartsElements(block: Block, chartIndex: number, chartsClasses: string[][]): Selection<BaseType, unknown, BaseType, unknown> {
-        let classes = '';
-        chartsClasses.forEach((cssClasses, index) => {
-            if (chartIndex !== index) {
-                if (classes !== '')
-                    classes += ', ';
-                classes += Helper.getCssClassesLine(cssClasses);
-            }
-        });
-
-        if (classes === '')
-            return null;
-        return block.getChartBlock()
-            .selectAll(classes);
-    }
-
     public static setElementsSemiOpacity(elements: Selection<BaseType, DataRow, BaseType, unknown>): void {
         if (elements)
             elements.style('opacity', 0.3);
@@ -149,30 +99,6 @@ export class TooltipHelper {
     public static setElementsFullOpacity(elements: Selection<BaseType, DataRow, BaseType, unknown>): void {
         if (elements)
             elements.style('opacity', 1);
-    }
-
-    public static getBarHighlighterAttrs(bar: Selection<BaseType, DataRow, HTMLElement, unknown>, chartOrientation: ChartOrientation, blockSize: Size, margin: BlockMargin): BarHighlighterAttrs {
-        const pad = 3;
-        if (chartOrientation === 'vertical')
-            return {
-                x: Helper.getSelectionNumericAttr(bar, 'x') - pad,
-                y: margin.top,
-                width: Helper.getSelectionNumericAttr(bar, 'width') + pad * 2,
-                height: blockSize.height - margin.top - margin.bottom
-            }
-        return {
-            x: margin.left,
-            y: Helper.getSelectionNumericAttr(bar, 'y') - pad,
-            width: blockSize.width - margin.left - margin.right,
-            height: Helper.getSelectionNumericAttr(bar, 'height') + pad * 2
-        }
-    }
-
-    public static getChartStyleSettings(chart: TwoDimensionalChartModel): ChartStyleSettings {
-        return {
-            cssClasses: chart.cssClasses,
-            opacity: chart.style.opacity
-        }
     }
 
     public static getTipBoxAttributes(margin: BlockMargin, blockSize: Size): TipBoxAttributes {
@@ -233,15 +159,6 @@ export class TooltipHelper {
         return attributes;
     }
 
-    private static findChartIndexOfElement(element: Selection<BaseType, unknown, BaseType, unknown>, chartStyleSettings: ChartStyleSettings[]): number {
-        let index: number = null;
-        chartStyleSettings.forEach((styleSettings, i) => {
-            if (element.classed(styleSettings.cssClasses.join(' '))) {
-                index = i;
-            }
-        });
-        return index;
-    }
 
     private static fillTooltipContent(tooltipContentBlock: Selection<BaseType, unknown, BaseType, unknown>, data: DataSource, dataOptions: OptionsModelData, keyValue: string, valueField: Field, markColor: string): void {
         const group = tooltipContentBlock.append('div')

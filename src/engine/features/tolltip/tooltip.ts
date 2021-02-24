@@ -86,32 +86,6 @@ export class Tooltip {
             });
     }
 
-    private static renderTooltipLine(block: Block): Selection<SVGLineElement, unknown, HTMLElement, any> {
-        return block.getChartBlock()
-            .append('line')
-            .attr('class', 'tooltip-line')
-            .raise();
-    }
-
-    private static renderTipBox(block: Block, attributes: TipBoxAttributes): Selection<SVGRectElement, unknown, HTMLElement, any> {
-        return block.getSvg()
-            .append('rect')
-            .attr('class', 'tipbox')
-            .attr('x', attributes.x)
-            .attr('y', attributes.y)
-            .attr('width', attributes.width)
-            .attr('height', attributes.height)
-            .style('opacity', 0);
-    }
-
-    private static setTooltipLineAttributes(tooltipLine: Selection<SVGLineElement, unknown, HTMLElement, any>, attributes: TooltipLineAttributes): void {
-        tooltipLine
-            .attr('x1', attributes.x1)
-            .attr('x2', attributes.x2)
-            .attr('y1', attributes.y1)
-            .attr('y2', attributes.y2);
-    }
-
     private static renderTooltipForDonut(block: Block, elemets: Selection<SVGGElement, PieArcDatum<DataRow>, SVGGElement, unknown>, data: DataSource, dataOptions: OptionsModelData, chart: PolarChartModel, blockSize: Size, margin: BlockMargin, donutThickness: number, translateX: number = 0, translateY: number = 0): void {
         const tooltipBlock = this.renderTooltipBlock(block, translateX, translateY);
         const tooltipContent = this.renderTooltipContentBlock(tooltipBlock);
@@ -204,6 +178,32 @@ export class Tooltip {
             block.getWrapper()
                 .append('div')
                 .attr('class', this.tooltipWrapperClass);
+    }
+
+    private static renderTooltipLine(block: Block): Selection<SVGLineElement, unknown, HTMLElement, any> {
+        return block.getChartBlock()
+            .append('line')
+            .attr('class', 'tooltip-line')
+            .raise();
+    }
+
+    private static renderTipBox(block: Block, attributes: TipBoxAttributes): Selection<SVGRectElement, unknown, HTMLElement, any> {
+        return block.getSvg()
+            .append('rect')
+            .attr('class', 'tipbox')
+            .attr('x', attributes.x)
+            .attr('y', attributes.y)
+            .attr('width', attributes.width)
+            .attr('height', attributes.height)
+            .style('opacity', 0);
+    }
+
+    private static setTooltipLineAttributes(tooltipLine: Selection<SVGLineElement, unknown, HTMLElement, any>, attributes: TooltipLineAttributes): void {
+        tooltipLine
+            .attr('x1', attributes.x1)
+            .attr('x2', attributes.x2)
+            .attr('y1', attributes.y1)
+            .attr('y2', attributes.y2);
     }
 
     private static renderTooltipArrow(tooltipBlock: Selection<BaseType, unknown, HTMLElement, any>): Selection<BaseType, unknown, HTMLElement, any> {
