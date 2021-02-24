@@ -1,7 +1,7 @@
 import { AxisScale } from 'd3-axis';
 import { Selection, BaseType } from 'd3-selection'
 import { ChartOrientation } from "../../../config/config";
-import { BlockMargin, DataRow, DataSource, Field, IntervalChartModel, OptionsModelData, PolarChartModel, ScaleKeyType, Size, TwoDimensionalChartModel } from "../../../model/model";
+import { BlockMargin, DataRow, DataSource, Field, IntervalChartModel, OptionsModelData, Orient, PolarChartModel, ScaleKeyType, Size, TwoDimensionalChartModel } from "../../../model/model";
 import { Helper } from '../../helper';
 import { ValueFormatter, } from "../../valueFormatter";
 import { Scale } from '../scale/scale';
@@ -65,8 +65,8 @@ export class TooltipHelper {
         return coordinate;
     }
 
-    public static getTooltipFixedCoordinate(scaleKey: AxisScale<any>, margin: BlockMargin, blockSize: Size, keyValue: string, tooltipBlockElement: HTMLElement, chartOrientation: ChartOrientation): TooltipCoordinate {
-        if(chartOrientation === 'vertical') {
+    public static getTooltipFixedCoordinate(scaleKey: AxisScale<any>, margin: BlockMargin, blockSize: Size, keyValue: string, tooltipBlockElement: HTMLElement, keyAxisOrient: Orient): TooltipCoordinate {
+        if(keyAxisOrient === 'bottom' || keyAxisOrient === 'top') {
             const coordinate: TooltipCoordinate = {
                 top: margin.top + 'px',
                 bottom: null,
@@ -80,6 +80,11 @@ export class TooltipHelper {
             if(Helper.getPXValueFromString(coordinate.left) + tooltipBlockElement.getBoundingClientRect().width > blockSize.width - margin.right) {
                 coordinate.left = null;
                 coordinate.right = margin.right + 'px';
+            }
+
+            if(keyAxisOrient === 'top') {
+                coordinate.top = null;
+                coordinate.bottom = margin.bottom + 'px';
             }
 
             return coordinate;
@@ -99,18 +104,23 @@ export class TooltipHelper {
                 coordinate.bottom = margin.bottom + 'px';
             }
 
+            if(keyAxisOrient === 'left') {
+                coordinate.left = null;
+                coordinate.right = margin.right + 'px';
+            }
+
             return coordinate;
         }
     }
 
-    public static getTooltipBlockCoordinateByRect(element: Selection<BaseType, DataRow, HTMLElement, any>, tooltipBlock: Selection<BaseType, unknown, HTMLElement, any>, blockSize: Size, tooltipArrow: Selection<BaseType, unknown, HTMLElement, any>, chartOrientation: ChartOrientation): [number, number] {
+    public static getTooltipBlockCoordinateByRect(element: Selection<BaseType, DataRow, HTMLElement, any>, tooltipBlock: Selection<HTMLElement, unknown, HTMLElement, any>, blockSize: Size, tooltipArrow: Selection<BaseType, unknown, HTMLElement, any>, chartOrientation: ChartOrientation): [number, number] {
         const blockPositionRatio = chartOrientation === 'vertical' ? 2 : 1; // If chart has horizontal orientation, block takes coordinte of end of bar, if chart vertical, block takes center of bar.
         const coordinateTuple: [number, number] = [parseFloat(element.attr('x')) + parseFloat(element.attr('width')) / blockPositionRatio, parseFloat(element.attr('y'))];
         return this.getRecalcedCoordinateByArrow(coordinateTuple, tooltipBlock, blockSize, tooltipArrow);
     }
 
-    public static getRecalcedCoordinateByArrow(coordinate: [number, number], tooltipBlock: Selection<BaseType, unknown, HTMLElement, any>, blockSize: Size, tooltipArrow: Selection<BaseType, unknown, HTMLElement, any>, translateX: number = 0, translateY: number = 0): [number, number] {
-        const tooltipBlockNode = tooltipBlock.node() as HTMLElement;
+    public static getRecalcedCoordinateByArrow(coordinate: [number, number], tooltipBlock: Selection<HTMLElement, unknown, HTMLElement, any>, blockSize: Size, tooltipArrow: Selection<BaseType, unknown, HTMLElement, any>, translateX: number = 0, translateY: number = 0): [number, number] {
+        const tooltipBlockNode = tooltipBlock.node();
         const horizontalPad = this.getHorizontalPad(coordinate[0], tooltipBlockNode, blockSize, translateX);
         const verticalPad = this.getVerticalPad(coordinate[1], tooltipBlockNode, translateY);
 
