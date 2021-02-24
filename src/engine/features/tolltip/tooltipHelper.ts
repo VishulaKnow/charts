@@ -99,7 +99,7 @@ export class TooltipHelper {
                 coordinate.bottom = margin.bottom + 'px';
             }
 
-            return coordinate 
+            return coordinate;
         }
     }
 
