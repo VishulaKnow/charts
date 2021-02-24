@@ -2,4 +2,3 @@ node_modules
 *.zip
 lib
 stats.json
-dist
