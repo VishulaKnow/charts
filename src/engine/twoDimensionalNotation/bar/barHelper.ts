@@ -46,11 +46,6 @@ export class BarHelper {
     }
 
     public static getStackedBarAttr(keyAxisOrient: Orient, scales: Scales, margin: BlockMargin, keyField: string, blockSize: Size, barIndex: number, barsAmount: number, barSettings: BarChartSettings): BarAttrs {
-        const barDistance = barSettings.barDistance;
-        const barStep = (Scale.getScaleBandWidth(scales.scaleKey) - barDistance * (barsAmount - 1)) / barsAmount; // Space for one bar
-        const barSize = barStep > barSettings.maxBarWidth ? barSettings.maxBarWidth : barStep;
-        const barDiff = (barStep - barSize) * barsAmount / 2; // if bar bigger than maxWidth, diff for x coordinate
-
         const attrs: BarAttrs = {
             x: null,
             y: null,
