@@ -50,18 +50,13 @@ const configCars: Config = {
         charts: [
             {
                 title: 'Рост стоимости',
-                isSegmented: true,
-                type: 'line',
+                isSegmented: false,
+                type: 'bar',
                 data: {
                     valueFields: [
                         {
-                            name: 'count',
-                            format: 'integer',
-                            title: 'Количество автомобилей на душу населения'
-                        },
-                        {
                             name: 'price',
-                            format: 'money',
+                            format: 'integer',
                             title: 'Количество автомобилей на душу населения'
                         }
                     ]

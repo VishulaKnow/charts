@@ -25,7 +25,9 @@ export class GridLine
             this.renderLine(block, keyAxis, lineAttributes);
         }
         if(scaleKey.type === 'point' && (gridLineFlag.key || gridLineFlag.value))
-            this.removeGridLinesOnAxes(block, keyAxis, valueAxis);
+            this.removeGridLinesOnAxes(block, keyAxis, valueAxis, false);
+        else if(gridLineFlag.key || gridLineFlag.value)
+            this.removeGridLinesOnAxes(block, keyAxis, valueAxis, true);
     }
 
     public static rerender(block: Block, gridLineFlag: GridLineFlag, keyAxis: AxisModelOptions, valueAxis: AxisModelOptions, blockSize: Size, margin: BlockMargin, scaleKey: ScaleKeyModel): void {
@@ -90,7 +92,7 @@ export class GridLine
         return axisLength;
     }
 
-    private static removeGridLinesOnAxes(block: Block, keyAxis: AxisModelOptions, valueAxis: AxisModelOptions): void {
+    private static removeGridLinesOnAxes(block: Block, keyAxis: AxisModelOptions, valueAxis: AxisModelOptions, excludeKey: boolean): void {
         let tickOnKeyAxisSelector = '';
         let tickOnValueAxisSelector = '';
 
@@ -105,10 +107,11 @@ export class GridLine
             .select(`.${this.gridLineClass}`)
             .remove();
 
-        block.getSvg()
-            .select(`.${keyAxis.cssClass}`)
-            .select(`g.tick${tickOnValueAxisSelector}`)
-            .select(`.${this.gridLineClass}`)
-            .remove();
+        if(!excludeKey)
+            block.getSvg()
+                .select(`.${keyAxis.cssClass}`)
+                .select(`g.tick${tickOnValueAxisSelector}`)
+                .select(`.${this.gridLineClass}`)
+                .remove();
     }
 }

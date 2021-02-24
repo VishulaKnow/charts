@@ -1,6 +1,7 @@
 import { BarChartSettings, BlockMargin, DataRow, Orient, Size, TwoDimensionalChartModel } from "../../../model/model";
 import { Block } from "../../block/block";
 import { Scale, Scales } from "../../features/scale/scale";
+import { Helper } from "../../helper";
 import { ValueFormatter } from "../../valueFormatter";
 
 export interface BarAttrs {
@@ -35,7 +36,7 @@ export class BarHelper {
 
         if (axisOrient === 'top') {
             attrs.y = d => margin.top;
-            attrs.height = d => ValueFormatter.getValueOrZero(scales.scaleValue(d[valueField]));
+            attrs.height = d => Helper.getValueWithLimiter(ValueFormatter.getValueOrZero(scales.scaleValue(d[valueField])), blockSize.height - margin.top - margin.bottom, true);
         }
         else if (axisOrient === 'bottom') {
             attrs.y = d => scales.scaleValue(d[valueField]) + margin.top;
