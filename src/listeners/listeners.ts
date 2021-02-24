@@ -2,7 +2,7 @@ import Engine from '../engine/engine';
 import { assembleModel, getPreparedData, getUpdatedModel } from '../model/modelOptions';
 import { Config, IntervalOptions, PolarChart, PolarOptions, TwoDimensionalChart, TwoDimensionalOptions } from '../config/config'
 import { DesignerConfig } from '../designer/designerConfig';
-import { DataSource, TwoDimensionalChartDataModel } from '../model/model';
+import { DataSource } from '../model/model';
 
 class ListenersHelper
 {
@@ -148,7 +148,7 @@ export default class Listeners
         }
     }
     
-    private getTooltipConfig(notationType: '2d' | 'polar' | 'interval'): any {
+    private getTooltipConfig(): any {
         return {
             show: true
         }
@@ -172,7 +172,7 @@ export default class Listeners
                         data: this.getDataConfig(notationType),
                         isSegmented: false,
                         title: this.config.options.charts[0].title,
-                        tooltip: this.getTooltipConfig(notationType),
+                        tooltip: this.getTooltipConfig(),
                         type: ListenersHelper.getInputValue('#chart-2d-type') === 'barLine' ? 'bar' : ListenersHelper.getInputValue('#chart-2d-type') as 'line' | 'bar' | 'area',
                         embeddedLabels: 'none'
                     }
@@ -220,7 +220,7 @@ export default class Listeners
                     {
                         data: this.getDataConfig(notationType),
                         title: this.config.options.charts[0].title,
-                        tooltip: this.getTooltipConfig(notationType),
+                        tooltip: this.getTooltipConfig(),
                         type: 'donut'
                     }
                 ]
@@ -242,7 +242,7 @@ export default class Listeners
                     {
                         data: this.getDataConfig(notationType),
                         title: this.config.options.charts[0].title,
-                        tooltip: this.getTooltipConfig(notationType),
+                        tooltip: this.getTooltipConfig(),
                         type: 'gantt'
                     }
                 ],

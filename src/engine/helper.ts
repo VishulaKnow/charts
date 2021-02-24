@@ -75,6 +75,18 @@ export class Helper {
         return parseFloat(selection.attr(attrName));
     }
 
+    /**
+     * Если значение больше лимитера, то возвращается лимитер, иначе возвращается само значение
+     * @param value 
+     * @param limiter 
+     * @param isBigger Если параметр установлен true, лимитр возвращается, если он меньше значения, в противном случае - если больше
+     */
+    public static getValueWithLimiter<T>(value: T, limiter: T, isBigger: boolean): T {
+        if(isBigger)
+            return value > limiter ? limiter : value;
+        return value < limiter ? limiter : value;
+    }
+
     public static getCssClassesWithElementIndex(cssClasses: string[], index: number): string[] {
         return cssClasses.concat([`chart-element-${index}`]);
     }

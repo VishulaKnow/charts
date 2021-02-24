@@ -1,5 +1,5 @@
 import { IntervalChart } from "../config/config";
-import { BlockMargin, DataSource, Size } from "./model";
+import { DataSource } from "./model";
 
 export class ModelHelper
 {

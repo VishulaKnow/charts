@@ -1,6 +1,7 @@
 import { BarChartSettings, BlockMargin, DataRow, Orient, Size, TwoDimensionalChartModel } from "../../../model/model";
 import { Block } from "../../block/block";
 import { Scale, Scales } from "../../features/scale/scale";
+import { Helper } from "../../helper";
 import { ValueFormatter } from "../../valueFormatter";
 
 export interface BarAttrs {
@@ -13,7 +14,7 @@ export interface BarAttrs {
 export class BarHelper {
     public static getGroupedBarAttrsByKeyOrient(axisOrient: Orient, scales: Scales, margin: BlockMargin, keyField: string, valueField: string, blockSize: Size, barIndex: number, barsAmount: number, barSettings: BarChartSettings): BarAttrs {
         const barDistance = barSettings.barDistance;
-        const barStep = (Scale.getScaleWidth(scales.scaleKey) - barDistance * (barsAmount - 1)) / barsAmount; // Space for one bar
+        const barStep = (Scale.getScaleBandWidth(scales.scaleKey) - barDistance * (barsAmount - 1)) / barsAmount; // Space for one bar
         const barSize = barStep > barSettings.maxBarWidth ? barSettings.maxBarWidth : barStep;
         const barDiff = (barStep - barSize) * barsAmount / 2; // if bar bigger than maxWidth, diff for x coordinate
 
@@ -35,7 +36,7 @@ export class BarHelper {
 
         if (axisOrient === 'top') {
             attrs.y = d => margin.top;
-            attrs.height = d => ValueFormatter.getValueOrZero(scales.scaleValue(d[valueField]));
+            attrs.height = d => Helper.getValueWithLimiter(ValueFormatter.getValueOrZero(scales.scaleValue(d[valueField])), blockSize.height - margin.top - margin.bottom, true);
         }
         else if (axisOrient === 'bottom') {
             attrs.y = d => scales.scaleValue(d[valueField]) + margin.top;
@@ -55,7 +56,7 @@ export class BarHelper {
 
     public static getStackedBarAttrByKeyOrient(axisOrient: Orient, scales: Scales, margin: BlockMargin, keyField: string, blockSize: Size, barIndex: number, barsAmount: number, barSettings: BarChartSettings): BarAttrs {
         const barDistance = barSettings.barDistance;
-        const barStep = (Scale.getScaleWidth(scales.scaleKey) - barDistance * (barsAmount - 1)) / barsAmount; // Space for one bar
+        const barStep = (Scale.getScaleBandWidth(scales.scaleKey) - barDistance * (barsAmount - 1)) / barsAmount; // Space for one bar
         const barSize = barStep > barSettings.maxBarWidth ? barSettings.maxBarWidth : barStep;
         const barDiff = (barStep - barSize) * barsAmount / 2; // if bar bigger than maxWidth, diff for x coordinate
 

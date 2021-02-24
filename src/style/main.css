@@ -143,9 +143,9 @@ h3.title {
     margin-top: 8px;
 }
 .tooltip-line {
-    stroke: #b6b6b6;
-    stroke-dasharray: 3;
-    stroke-width: 1px;
+    stroke: #000000;
+    /* stroke-dasharray: 3; */
+    stroke-width: 2px;
 }
 
 .aggregator-value, .aggregator-name {

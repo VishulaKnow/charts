@@ -90,6 +90,7 @@ export class Axis
             if(Math.floor(axisLength / MINIMAL_STEP_SIZE) > 2)
                 axis.ticks(Math.floor(axisLength / MINIMAL_STEP_SIZE));
             else
+axisTicks
             axis.tickValues([min(scale.domain), max(scale.domain)]);
         }
         axis.tickValues(this.getTicksValues(min(scale.domain), max(scale.domain), Math.floor(axisLength / MINIMAL_STEP_SIZE), axisLength))
@@ -120,6 +121,7 @@ export class Axis
         while(currentValue + step * 2 < maxValue){ 
             currentValue += step;
             valuesArray.push(currentValue)
+                axis.tickValues([max(scale.domain), min(scale.domain)]);
         }
         currentValue += step // получение значения предпоследнего элемента
         if (maxValue - currentValue > step / 3) // Условие для корректного отображения

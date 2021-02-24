@@ -50,18 +50,18 @@ const configCars: Config = {
         charts: [
             {
                 title: 'Рост стоимости',
-                isSegmented: true,
-                type: 'line',
+                isSegmented: false,
+                type: 'bar',
                 data: {
                     valueFields: [
                         {
-                            name: 'count',
-                            format: 'integer',
+                            name: 'price',
+                            format: 'money',
                             title: 'Количество автомобилей на душу населения'
                         },
                         {
-                            name: 'price',
-                            format: 'money',
+                            name: 'count',
+                            format: 'integer',
                             title: 'Количество автомобилей на душу населения'
                         }
                     ]
@@ -69,7 +69,7 @@ const configCars: Config = {
                 tooltip: {
                     show: true
                 },
-                embeddedLabels: 'key'
+                embeddedLabels: 'value'
             }
         ]
     }
@@ -183,11 +183,6 @@ const configDemo: Config = {
                         {
                             name: 'EventCost',
                             format: 'integer',
-                            title: 'Количество автомобилей на душу населения'
-                        },
-                        {
-                            name: 'AlcoholCost',
-                            format: 'money',
                             title: 'Количество автомобилей на душу населения'
                         }
                     ]

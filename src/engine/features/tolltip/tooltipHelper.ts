@@ -1,10 +1,10 @@
-import { select, Selection, BaseType } from 'd3-selection'
+import { AxisScale } from 'd3-axis';
+import { Selection, BaseType } from 'd3-selection'
 import { ChartOrientation } from "../../../config/config";
-import { BlockMargin, DataRow, DataSource, Field, IntervalChartModel, OptionsModelData, PolarChartModel, Size, TwoDimensionalChartModel } from "../../../model/model";
-import { Block } from "../../block/block";
-import { Helper } from "../../helper";
+import { BlockMargin, DataRow, DataSource, Field, IntervalChartModel, OptionsModelData, Orient, PolarChartModel, ScaleKeyType, Size, TwoDimensionalChartModel } from "../../../model/model";
+import { Helper } from '../../helper';
 import { ValueFormatter, } from "../../valueFormatter";
-import { Dot } from "../lineDots/dot";
+import { Scale } from '../scale/scale';
 
 export interface TooltipLineAttributes {
     x1: number;
@@ -24,20 +24,6 @@ export interface TooltipCoordinate {
     right: string;
     bottom: string;
 }
-export interface DotEdgingAttrs {
-    cx: number,
-    cy: number
-}
-export interface BarHighlighterAttrs {
-    x: number;
-    y: number;
-    width: number;
-    height: number;
-}
-export interface ChartStyleSettings {
-    cssClasses: string[];
-    opacity: number;
-}
 
 export const ARROW_SIZE = 20;
 export const ARROW_DEFAULT_POSITION = 9;
@@ -45,18 +31,14 @@ export const ARROW_DEFAULT_POSITION = 9;
 const TOOLTIP_ARROW_PADDING_X = ARROW_DEFAULT_POSITION - (ARROW_SIZE * Math.sqrt(2) - ARROW_SIZE) / 2 + 14;
 const TOOLTIP_ARROW_PADDING_Y = 13;
 
-export class TooltipHelper
-{ 
-    public static fillMultyFor2DChart(tooltipContentBlock: Selection<BaseType, unknown, BaseType, unknown>, chart: TwoDimensionalChartModel, data: DataSource, dataOptions: OptionsModelData, keyValue: string): void {
+export class TooltipHelper {
+    public static fillMultyFor2DChart(tooltipContentBlock: Selection<BaseType, unknown, BaseType, unknown>, charts: TwoDimensionalChartModel[], data: DataSource, dataOptions: OptionsModelData, keyValue: string): void {
         tooltipContentBlock.html('');
-        chart.data.valueFields.forEach((field, index) => {
-            this.fillTooltipContent(tooltipContentBlock, data, dataOptions, keyValue, field, chart.style.elementColors[index % chart.style.elementColors.length].toString());
-        });
-    }
-
-    public static fillTooltipFor2DChart(tooltipContentBlock: Selection<BaseType, unknown, BaseType, unknown>, chart: TwoDimensionalChartModel, data: DataSource, dataOptions: OptionsModelData, keyValue: string, index: number): void {
-        tooltipContentBlock.html('');
-        this.fillTooltipContent(tooltipContentBlock, data, dataOptions, keyValue, chart.data.valueFields[index], chart.style.elementColors[index % chart.style.elementColors.length].toString());
+        charts.forEach(chart => {
+            chart.data.valueFields.forEach((field, index) => {
+                this.fillTooltipContent(tooltipContentBlock, data, dataOptions, keyValue, field, chart.style.elementColors[index % chart.style.elementColors.length].toString());
+            });
+        })
     }
 
     public static fillTooltipForPolarChart(tooltipContentBlock: Selection<BaseType, unknown, BaseType, unknown>, chart: PolarChartModel, data: DataSource, dataOptions: OptionsModelData, keyValue: string, markColor: string): void {
@@ -83,130 +65,149 @@ export class TooltipHelper
         return coordinate;
     }
 
-    public static getTooltipBlockCoordinateByRect(element: Selection<BaseType, DataRow, HTMLElement, any>, tooltipBlock: Selection<BaseType, unknown, HTMLElement, any>, blockSize: Size, tooltipArrow: Selection<BaseType, unknown, HTMLElement, any>, chartOrientation: ChartOrientation): [number, number] {
+    public static getTooltipFixedCoordinate(scaleKey: AxisScale<any>, margin: BlockMargin, blockSize: Size, keyValue: string, tooltipBlockElement: HTMLElement, keyAxisOrient: Orient): TooltipCoordinate {
+        if (keyAxisOrient === 'bottom' || keyAxisOrient === 'top') {
+            const coordinate: TooltipCoordinate = {
+                top: margin.top + 'px',
+                bottom: null,
+                left: Scale.getScaledValue(scaleKey, keyValue) + margin.left - tooltipBlockElement.getBoundingClientRect().width / 2 + 'px',
+                right: null
+            }
+
+            if (Helper.getPXValueFromString(coordinate.left) < margin.left)
+                coordinate.left = margin.left + 'px';
+
+            if (Helper.getPXValueFromString(coordinate.left) + tooltipBlockElement.getBoundingClientRect().width > blockSize.width - margin.right) {
+                coordinate.left = null;
+                coordinate.right = margin.right + 'px';
+            }
+
+            if (keyAxisOrient === 'top') {
+                coordinate.top = null;
+                coordinate.bottom = margin.bottom + 'px';
+            }
+
+            return coordinate;
+        } else {
+            const coordinate: TooltipCoordinate = {
+                top: Scale.getScaledValue(scaleKey, keyValue) + margin.top - tooltipBlockElement.getBoundingClientRect().height / 2 + 'px',
+                left: margin.left + 'px',
+                bottom: null,
+                right: null
+            }
+
+            if (Helper.getPXValueFromString(coordinate.top) < margin.top)
+                coordinate.top = margin.top + 'px';
+
+            if (Helper.getPXValueFromString(coordinate.top) + tooltipBlockElement.getBoundingClientRect().height > blockSize.height - margin.bottom) {
+                coordinate.top = null;
+                coordinate.bottom = margin.bottom + 'px';
+            }
+
+            if (keyAxisOrient === 'left') {
+                coordinate.left = null;
+                coordinate.right = margin.right + 'px';
+            }
+
+            return coordinate;
+        }
+    }
+
+    public static getTooltipBlockCoordinateByRect(element: Selection<BaseType, DataRow, HTMLElement, any>, tooltipBlock: Selection<HTMLElement, unknown, HTMLElement, any>, blockSize: Size, tooltipArrow: Selection<BaseType, unknown, HTMLElement, any>, chartOrientation: ChartOrientation): [number, number] {
         const blockPositionRatio = chartOrientation === 'vertical' ? 2 : 1; // If chart has horizontal orientation, block takes coordinte of end of bar, if chart vertical, block takes center of bar.
         const coordinateTuple: [number, number] = [parseFloat(element.attr('x')) + parseFloat(element.attr('width')) / blockPositionRatio, parseFloat(element.attr('y'))];
         return this.getRecalcedCoordinateByArrow(coordinateTuple, tooltipBlock, blockSize, tooltipArrow);
     }
 
-    public static getTooltipBlockCoordinateByDot(element: Selection<BaseType, DataRow, HTMLElement, any>, tooltipBlock: Selection<BaseType, unknown, HTMLElement, any>, blockSize: Size, tooltipArrow: Selection<BaseType, unknown, HTMLElement, any>): [number, number] {
-        const coordinateTuple: [number, number] = [parseFloat(element.attr('cx')), parseFloat(element.attr('cy'))];
-        return this.getRecalcedCoordinateByArrow(coordinateTuple, tooltipBlock, blockSize, tooltipArrow);
-    }
-
-    public static getRecalcedCoordinateByArrow(coordinate: [number, number], tooltipBlock: Selection<BaseType, unknown, HTMLElement, any>, blockSize: Size, tooltipArrow: Selection<BaseType, unknown, HTMLElement, any>, translateX: number = 0, translateY: number = 0): [number, number] {
-        const tooltipBlockNode = tooltipBlock.node() as HTMLElement;
+    public static getRecalcedCoordinateByArrow(coordinate: [number, number], tooltipBlock: Selection<HTMLElement, unknown, HTMLElement, any>, blockSize: Size, tooltipArrow: Selection<BaseType, unknown, HTMLElement, any>, translateX: number = 0, translateY: number = 0): [number, number] {
+        const tooltipBlockNode = tooltipBlock.node();
         const horizontalPad = this.getHorizontalPad(coordinate[0], tooltipBlockNode, blockSize, translateX);
-        const verticalPad = this.getVerticalPad(coordinate[1], tooltipBlockNode, translateY);        
+        const verticalPad = this.getVerticalPad(coordinate[1], tooltipBlockNode, translateY);
 
-        this.setTooltipArrowCoordinate(tooltipArrow, this.getTooltipArrowPadding(tooltipBlockNode, horizontalPad));  
+        this.setTooltipArrowCoordinate(tooltipArrow, this.getTooltipArrowPadding(tooltipBlockNode, horizontalPad));
 
         return [coordinate[0] - TOOLTIP_ARROW_PADDING_X - horizontalPad,
-            coordinate[1] - TOOLTIP_ARROW_PADDING_Y - tooltipBlockNode.getBoundingClientRect().height - verticalPad];
-    }
-
-    public static getDotEdgingAttrs(element: Selection<BaseType, DataRow, HTMLElement, any>): DotEdgingAttrs {
-        return {
-            cx: parseFloat(element.attr('cx')),
-            cy: parseFloat(element.attr('cy'))
-        }
+        coordinate[1] - TOOLTIP_ARROW_PADDING_Y - tooltipBlockNode.getBoundingClientRect().height - verticalPad];
     }
 
     public static getKeyForTooltip(row: DataRow, keyFieldName: string, isSegmented: boolean): string {
-        return isSegmented ? row.data[keyFieldName] : row[keyFieldName]; 
+        return isSegmented ? row.data[keyFieldName] : row[keyFieldName];
     }
 
     public static getFilteredElements(elements: Selection<BaseType, DataRow, BaseType, unknown>, keyFieldName: string, keyValue: string, isSegmented: boolean): Selection<BaseType, DataRow, BaseType, unknown> {
-        if(isSegmented)
+        if (isSegmented)
             return elements.filter(d => d.data[keyFieldName] !== keyValue);
         return elements.filter(d => d[keyFieldName] !== keyValue);
     }
 
-    public static getElementIndex(elemets: Selection<BaseType, DataRow, BaseType, unknown>, dot: BaseType, keyValue: string, keyName: string, isSegmented: boolean): number {
-        let index = -1;
-        const filtered = isSegmented ? elemets.filter(d => d.data[keyName] === keyValue) : elemets.filter(d => d[keyName] === keyValue);
-        filtered.each(function(d, i) {
-            if(select(this).node() === select(dot).node()) {
-                index = i;
-            }
-        });
-
-        return index;
-    }
-
-    public static getOtherChartsElements(block: Block, chartIndex: number, chartsClasses: string[][]): Selection<BaseType, unknown, BaseType, unknown> {
-        let classes = '';
-        chartsClasses.forEach((cssClasses, index) => {
-            if(chartIndex !== index) {
-                if(classes !== '')
-                    classes += ', ';
-                classes += Helper.getCssClassesLine(cssClasses);
-            }
-        });
-
-        if(classes === '')
-            return null;
-        return block.getChartBlock()
-            .selectAll(classes);
-    }
-
     public static setElementsSemiOpacity(elements: Selection<BaseType, DataRow, BaseType, unknown>): void {
-        if(elements)
+        if (elements)
             elements.style('opacity', 0.3);
     }
 
     public static setElementsFullOpacity(elements: Selection<BaseType, DataRow, BaseType, unknown>): void {
-        if(elements)
+        if (elements)
             elements.style('opacity', 1);
     }
 
-    public static setOtherChartsElementsDefaultOpacity(elements: Selection<BaseType, DataRow, BaseType, unknown>, chartsStyleSettings: ChartStyleSettings[]): void {
-        if(!elements)
-            return;
-            
-        const thisClass = this;
-        elements.each(function() {
-            const indexOfChart = thisClass.findChartIndexOfElement(select(this), chartsStyleSettings);
-            if(!select(this).classed(Dot.dotClass) && !select(this).classed(Dot.innerDotClass))
-                select(this).style('opacity', chartsStyleSettings[indexOfChart].opacity);
-            else
-                select(this).style('opacity', 1);
-        });
-    }
-
-    public static getBarHighlighterAttrs(bar: Selection<BaseType, DataRow, HTMLElement, unknown>, chartOrientation: ChartOrientation, blockSize: Size, margin: BlockMargin): BarHighlighterAttrs {
-        const pad = 3;
-        if(chartOrientation === 'vertical')
-            return {
-                x: Helper.getSelectionNumericAttr(bar, 'x') - pad,
-                y: margin.top,
-                width: Helper.getSelectionNumericAttr(bar, 'width') + pad * 2,
-                height: blockSize.height - margin.top - margin.bottom
-            }
+    public static getTipBoxAttributes(margin: BlockMargin, blockSize: Size): TipBoxAttributes {
         return {
             x: margin.left,
-            y: Helper.getSelectionNumericAttr(bar, 'y') - pad,
+            y: margin.top,
             width: blockSize.width - margin.left - margin.right,
-            height: Helper.getSelectionNumericAttr(bar, 'height') + pad * 2
+            height: blockSize.height - margin.top - margin.bottom,
         }
     }
 
-    public static getChartStyleSettings(chart: TwoDimensionalChartModel): ChartStyleSettings {
-        return {
-            cssClasses: chart.cssClasses,
-            opacity: chart.style.opacity
+    public static getKeyIndex(pointer: [number, number], orient: ChartOrientation, margin: BlockMargin, blockSize: Size, scaleKey: AxisScale<any>, scaleKeyType: ScaleKeyType): number {
+        const pointerAxisType = orient === 'vertical' ? 0 : 1; // 0 - координата поинтера по оси x, 1 - по оси y
+        const marginByOrient = orient === 'vertical' ? margin.left : margin.top;
+        const scaleStep = Scale.getScaleStep(scaleKey);
+
+        if (scaleKeyType === 'point') {
+            const point = pointer[pointerAxisType] - marginByOrient + scaleStep / 2;
+            if (point < 0)
+                return 0;
+
+            return Math.floor(point / scaleStep);
+        }
+        else {
+            const chartBlockSizeByDir = orient === 'vertical'
+                ? blockSize.width - margin.left - margin.right
+                : blockSize.height - margin.top - margin.bottom;
+
+            const outerPadding = chartBlockSizeByDir - scaleStep * scaleKey.domain().length;
+
+            if (pointer[pointerAxisType] - marginByOrient - 1 < outerPadding / 2)
+                return 0; // Самый первый элемент
+            if (pointer[pointerAxisType] - marginByOrient - 1 + outerPadding / 2 > chartBlockSizeByDir)
+                return scaleKey.domain().length - 1; // последний индекс
+
+            const point = pointer[pointerAxisType] - outerPadding / 2 - marginByOrient - 1;
+
+            return Math.floor(point / scaleStep);
         }
     }
 
-    private static findChartIndexOfElement(element: Selection<BaseType, unknown, BaseType, unknown>, chartStyleSettings: ChartStyleSettings[]): number {
-        let index: number = null;
-        chartStyleSettings.forEach((styleSettings, i) => {
-            if(element.classed(styleSettings.cssClasses.join(' '))) {
-                index = i;
-            }
-        });
-        return index;
-    }   
+    public static getTooltipLineAttributes(scaleKey: AxisScale<any>, margin: BlockMargin, key: string, chartOrientation: ChartOrientation, blockSize: Size): TooltipLineAttributes {
+        const attributes: TooltipLineAttributes = {
+            x1: 0, x2: 0, y1: 0, y2: 0
+        }
+        if (chartOrientation === 'vertical') {
+            attributes.x1 = Math.ceil(Scale.getScaledValue(scaleKey, key) + margin.left) - 0.5;
+            attributes.x2 = Math.ceil(Scale.getScaledValue(scaleKey, key) + margin.left) - 0.5;
+            attributes.y1 = margin.top;
+            attributes.y2 = blockSize.height - margin.bottom;
+        } else {
+            attributes.x1 = margin.left;
+            attributes.x2 = blockSize.width - margin.right;
+            attributes.y1 = Scale.getScaledValue(scaleKey, key) + margin.top;
+            attributes.y2 = Scale.getScaledValue(scaleKey, key) + margin.top;
+        }
+
+        return attributes;
+    }
+
 
     private static fillTooltipContent(tooltipContentBlock: Selection<BaseType, unknown, BaseType, unknown>, data: DataSource, dataOptions: OptionsModelData, keyValue: string, valueField: Field, markColor: string): void {
         const group = tooltipContentBlock.append('div')
@@ -224,8 +225,8 @@ export class TooltipHelper
             .attr('class', 'tooltip-text-item')
             .text(this.getTooltipItemText(data, dataOptions, keyValue, valueField))
             .style('white-space', 'nowrap');
-            
-        if(textBlock.node().getBoundingClientRect().width > 500)
+
+        if (textBlock.node().getBoundingClientRect().width > 500)
             textBlock.style('white-space', 'normal');
     }
 
@@ -236,30 +237,30 @@ export class TooltipHelper
 
     private static getHorizontalPad(coordinateX: number, tooltipBlockNode: HTMLElement, blockSize: Size, translateX: number): number {
         let pad = 0;
-        if(tooltipBlockNode.getBoundingClientRect().width + coordinateX - TOOLTIP_ARROW_PADDING_X + translateX > blockSize.width)
+        if (tooltipBlockNode.getBoundingClientRect().width + coordinateX - TOOLTIP_ARROW_PADDING_X + translateX > blockSize.width)
             pad = tooltipBlockNode.getBoundingClientRect().width + coordinateX - TOOLTIP_ARROW_PADDING_X + translateX - blockSize.width;
-        
+
         return pad;
     }
 
     private static getVerticalPad(coordinateY: number, tooltipBlockNode: HTMLElement, translateY: number): number {
         let pad = 0;
-        if(coordinateY - TOOLTIP_ARROW_PADDING_Y - tooltipBlockNode.getBoundingClientRect().height + translateY < -tooltipBlockNode.getBoundingClientRect().height - TOOLTIP_ARROW_PADDING_Y)
+        if (coordinateY - TOOLTIP_ARROW_PADDING_Y - tooltipBlockNode.getBoundingClientRect().height + translateY < -tooltipBlockNode.getBoundingClientRect().height - TOOLTIP_ARROW_PADDING_Y)
             pad = coordinateY;
 
         return pad; // return zero or sub zero
     }
 
     private static setTooltipArrowCoordinate(tooltipArrow: Selection<BaseType, unknown, HTMLElement, any>, horizontalPad: number): void {
-        if(horizontalPad !== 0)
+        if (horizontalPad !== 0)
             tooltipArrow.style('left', `${ARROW_DEFAULT_POSITION + Math.floor(horizontalPad)}px`);
         else
             tooltipArrow.style('left', `${ARROW_DEFAULT_POSITION}px`);
     }
 
     private static getTooltipArrowPadding(tooltipBlockNode: HTMLElement, horizontalPad: number): number {
-        return horizontalPad > tooltipBlockNode.getBoundingClientRect().width 
-            ? tooltipBlockNode.getBoundingClientRect().width - ARROW_DEFAULT_POSITION - 20 * Math.sqrt(2) 
+        return horizontalPad > tooltipBlockNode.getBoundingClientRect().width
+            ? tooltipBlockNode.getBoundingClientRect().width - ARROW_DEFAULT_POSITION - 20 * Math.sqrt(2)
             : horizontalPad; // If tooltip arrow has coordinate outside svg, it take X position in end of tooltip block
     }
 }
