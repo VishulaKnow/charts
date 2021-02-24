@@ -25,12 +25,12 @@ export class Bar {
             this.renderGrouped(block, scales, data, keyField, margin, keyAxisOrient, chart, barsAmounts, blockSize, firstBarIndex, barSettings);
     }
 
-    public static updateBarChartByValueAxis(block: Block, scales: Scales, margin: BlockMargin, keyAxisOrient: string, chart: TwoDimensionalChartModel, blockSize: Size, isSegmented: boolean): void {
+    public static updateBarChartByValueAxis(block: Block, scales: Scales, margin: BlockMargin, keyAxisOrient: Orient, chart: TwoDimensionalChartModel, blockSize: Size, isSegmented: boolean): void {
         if (isSegmented) {
             const bars = block.getChartBlock()
                 .selectAll<SVGRectElement, DataRow>(`.${this.barItemClass}${Helper.getCssClassesLine(chart.cssClasses)}`);
 
-            this.fillStackedBarAttrsByKeyOrientWithTransition(bars,
+            this.fillStackedBarAttrsWithTransition(bars,
                 keyAxisOrient,
                 scales.scaleValue,
                 margin,
@@ -41,7 +41,7 @@ export class Bar {
                 const bars = block.getChartBlock()
                     .selectAll<SVGRectElement, DataRow>(`.${this.barItemClass}${Helper.getCssClassesLine(chart.cssClasses)}.chart-element-${index}`);
 
-                this.fillBarAttrsByKeyOrientWithTransition(bars,
+                this.fillGroupedBarAttrsWithTransition(bars,
                     keyAxisOrient,
                     scales.scaleValue,
                     margin,
@@ -67,7 +67,7 @@ export class Bar {
                 .attr('class', this.barItemClass)
             // .style('clip-path', `url(${block.getClipPathId()})`);
 
-            const barAttrs = BarHelper.getGroupedBarAttrsByKeyOrient(keyAxisOrient,
+            const barAttrs = BarHelper.getGroupedBarAttrs(keyAxisOrient,
                 scales,
                 margin,
                 keyField.name,
@@ -109,7 +109,7 @@ export class Bar {
             .attr('class', this.barItemClass)
         // .style('clip-path', `url(${block.getClipPathId()})`);
 
-        const barAttrs = BarHelper.getStackedBarAttrByKeyOrient(keyAxisOrient,
+        const barAttrs = BarHelper.getStackedBarAttr(keyAxisOrient,
             scales,
             margin,
             keyField.name,
@@ -152,28 +152,29 @@ export class Bar {
             .attr('width', d => barAttrs.width(d));
     }
 
-    private static fillBarAttrsByKeyOrientWithTransition(bars: Selection<SVGRectElement, DataRow, BaseType, unknown>, axisOrient: string, scaleValue: AxisScale<any>, margin: BlockMargin, valueField: string, blockSize: Size, transitionDuration: number): void {
+    private static fillGroupedBarAttrsWithTransition(bars: Selection<SVGRectElement, DataRow, BaseType, unknown>, axisOrient: Orient, scaleValue: AxisScale<any>, margin: BlockMargin, valueField: string, blockSize: Size, transitionDuration: number): void {
+        const barAttrs: BarAttrs = {
+            x: null,
+            y: null,
+            width: null,
+            height: null
+        }
+
+        BarHelper.setGroupedBarAttrsByValueAxis(barAttrs, axisOrient, margin, scaleValue, valueField, blockSize);
+        
         const barsTran = bars.transition().duration(transitionDuration);
 
-        if (axisOrient === 'top')
+        if (axisOrient === 'top' || axisOrient === 'bottom')
             barsTran
-                .attr('y', d => margin.top)
-                .attr('height', d => ValueFormatter.getValueOrZero(scaleValue(d[valueField])));
-        else if (axisOrient === 'bottom')
+                .attr('y', d => barAttrs.y(d))
+                .attr('height', d => barAttrs.height(d));
+        else if (axisOrient === 'left' || axisOrient === 'right')
             barsTran
-                .attr('y', d => scaleValue(d[valueField]) + margin.top)
-                .attr('height', d => ValueFormatter.getValueOrZero(blockSize.height - margin.top - margin.bottom - scaleValue(d[valueField])));
-        else if (axisOrient === 'left')
-            barsTran
-                .attr('x', d => margin.left)
-                .attr('width', d => ValueFormatter.getValueOrZero(scaleValue(d[valueField])));
-        else if (axisOrient === 'right')
-            barsTran
-                .attr('x', d => scaleValue(d[valueField]) + margin.left)
-                .attr('width', d => ValueFormatter.getValueOrZero(blockSize.width - margin.left - margin.right - scaleValue(d[valueField])));
+                .attr('x', d => barAttrs.x(d))
+                .attr('width', d => barAttrs.width(d));
     }
 
-    private static fillStackedBarAttrsByKeyOrientWithTransition(bars: Selection<SVGRectElement, DataRow, BaseType, unknown>, axisOrient: string, scaleValue: AxisScale<any>, margin: BlockMargin, blockSize: Size, transitionDuration: number): void {
+    private static fillStackedBarAttrsWithTransition(bars: Selection<SVGRectElement, DataRow, BaseType, unknown>, axisOrient: string, scaleValue: AxisScale<any>, margin: BlockMargin, blockSize: Size, transitionDuration: number): void {
         const barsTran = bars.transition().duration(transitionDuration);
 
         if (axisOrient === 'top') {

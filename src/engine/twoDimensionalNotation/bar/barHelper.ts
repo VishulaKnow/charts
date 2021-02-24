@@ -1,5 +1,5 @@
+import { AxisScale } from "d3-axis";
 import { BarChartSettings, BlockMargin, DataRow, Orient, Size, TwoDimensionalChartModel } from "../../../model/model";
-import { Block } from "../../block/block";
 import { Scale, Scales } from "../../features/scale/scale";
 import { Helper } from "../../helper";
 import { ValueFormatter } from "../../valueFormatter";
@@ -12,12 +12,7 @@ export interface BarAttrs {
 }
 
 export class BarHelper {
-    public static getGroupedBarAttrsByKeyOrient(axisOrient: Orient, scales: Scales, margin: BlockMargin, keyField: string, valueField: string, blockSize: Size, barIndex: number, barsAmount: number, barSettings: BarChartSettings): BarAttrs {
-        const barDistance = barSettings.barDistance;
-        const barStep = (Scale.getScaleBandWidth(scales.scaleKey) - barDistance * (barsAmount - 1)) / barsAmount; // Space for one bar
-        const barSize = barStep > barSettings.maxBarWidth ? barSettings.maxBarWidth : barStep;
-        const barDiff = (barStep - barSize) * barsAmount / 2; // if bar bigger than maxWidth, diff for x coordinate
-
+    public static getGroupedBarAttrs(keyAxisOrient: Orient, scales: Scales, margin: BlockMargin, keyField: string, valueFieldName: string, blockSize: Size, barIndex: number, barsAmount: number, barSettings: BarChartSettings): BarAttrs {
         const attrs: BarAttrs = {
             x: null,
             y: null,
@@ -25,36 +20,32 @@ export class BarHelper {
             height: null
         }
 
-        if (axisOrient === 'top' || axisOrient === 'bottom') {
-            attrs.x = d => scales.scaleKey(d[keyField]) + margin.left + barSize * barIndex + barDistance * barIndex + barDiff;
-            attrs.width = d => barSize;
-        }
-        if (axisOrient === 'left' || axisOrient === 'right') {
-            attrs.y = d => scales.scaleKey(d[keyField]) + margin.top + barSize * barIndex + barDistance * barIndex + barDiff;
-            attrs.height = d => barSize;
-        }
-
-        if (axisOrient === 'top') {
-            attrs.y = d => margin.top;
-            attrs.height = d => Helper.getValueWithLimiter(ValueFormatter.getValueOrZero(scales.scaleValue(d[valueField])), blockSize.height - margin.top - margin.bottom, true);
-        }
-        else if (axisOrient === 'bottom') {
-            attrs.y = d => scales.scaleValue(d[valueField]) + margin.top;
-            attrs.height = d => ValueFormatter.getValueOrZero(blockSize.height - margin.top - margin.bottom - scales.scaleValue(d[valueField]));
-        }
-        else if (axisOrient === 'left') {
-            attrs.x = d => margin.left + 1;
-            attrs.width = d => ValueFormatter.getValueOrZero(scales.scaleValue(d[valueField]));
-        }
-        else if (axisOrient === 'right') {
-            attrs.x = d => scales.scaleValue(d[valueField]) + margin.left;
-            attrs.width = d => ValueFormatter.getValueOrZero(blockSize.width - margin.left - margin.right - scales.scaleValue(d[valueField]));
-        }
+        this.setGroupedBarAttrsByKeyAxis(attrs, keyAxisOrient, scales, margin, keyField, barIndex, barsAmount, barSettings, false);
+        this.setGroupedBarAttrsByValueAxis(attrs, keyAxisOrient, margin, scales.scaleValue, valueFieldName, blockSize);
 
         return attrs;
     }
 
-    public static getStackedBarAttrByKeyOrient(axisOrient: Orient, scales: Scales, margin: BlockMargin, keyField: string, blockSize: Size, barIndex: number, barsAmount: number, barSettings: BarChartSettings): BarAttrs {
+    public static setGroupedBarAttrsByValueAxis(attrs: BarAttrs, keyAxisOrient: Orient, margin: BlockMargin, scaleValue: AxisScale<any>, valueFieldName: string, blockSize: Size): void {
+        if (keyAxisOrient === 'top') {
+            attrs.y = () => margin.top;
+            attrs.height = d => Helper.getValueWithLimiter(ValueFormatter.getValueOrZero(scaleValue(d[valueFieldName])), blockSize.height - margin.top - margin.bottom, true);
+        }
+        else if (keyAxisOrient === 'bottom') {
+            attrs.y = d => scaleValue(d[valueFieldName]) + margin.top;
+            attrs.height = d => ValueFormatter.getValueOrZero(blockSize.height - margin.top - margin.bottom - scaleValue(d[valueFieldName]));
+        }
+        else if (keyAxisOrient === 'left') {
+            attrs.x = () => margin.left + 1;
+            attrs.width = d => ValueFormatter.getValueOrZero(scaleValue(d[valueFieldName]));
+        }
+        else if (keyAxisOrient === 'right') {
+            attrs.x = d => scaleValue(d[valueFieldName]) + margin.left;
+            attrs.width = d => ValueFormatter.getValueOrZero(blockSize.width - margin.left - margin.right - scaleValue(d[valueFieldName]));
+        }
+    }
+
+    public static getStackedBarAttr(keyAxisOrient: Orient, scales: Scales, margin: BlockMargin, keyField: string, blockSize: Size, barIndex: number, barsAmount: number, barSettings: BarChartSettings): BarAttrs {
         const barDistance = barSettings.barDistance;
         const barStep = (Scale.getScaleBandWidth(scales.scaleKey) - barDistance * (barsAmount - 1)) / barsAmount; // Space for one bar
         const barSize = barStep > barSettings.maxBarWidth ? barSettings.maxBarWidth : barStep;
@@ -67,28 +58,21 @@ export class BarHelper {
             height: null
         }
 
-        if (axisOrient === 'top' || axisOrient === 'bottom') {
-            attrs.x = d => scales.scaleKey(d.data[keyField]) + margin.left + barSize * barIndex + barDistance * barIndex + barDiff;
-            attrs.width = d => barSize;
-        }
-        if (axisOrient === 'left' || axisOrient === 'right') {
-            attrs.y = d => scales.scaleKey(d.data[keyField]) + margin.top + barSize * barIndex + barDistance * barIndex + barDiff;
-            attrs.height = d => barSize;
-        }
+        this.setGroupedBarAttrsByKeyAxis(attrs, keyAxisOrient, scales, margin, keyField, barIndex, barsAmount, barSettings, true);
 
-        if (axisOrient === 'top') {
+        if (keyAxisOrient === 'top') {
             attrs.y = d => margin.top + scales.scaleValue(d[0]);
             attrs.height = d => ValueFormatter.getValueOrZero(scales.scaleValue(d[1] - d[0]));
         }
-        if (axisOrient === 'bottom') {
+        if (keyAxisOrient === 'bottom') {
             attrs.y = d => scales.scaleValue(d[1]) + margin.top;
             attrs.height = d => blockSize.height - margin.top - margin.bottom - scales.scaleValue(d[1] - d[0]);
         }
-        if (axisOrient === 'left') {
+        if (keyAxisOrient === 'left') {
             attrs.x = d => margin.left + scales.scaleValue(d[0]) + 1;
             attrs.width = d => ValueFormatter.getValueOrZero(scales.scaleValue(d[1] - d[0]));
         }
-        if (axisOrient === 'right') {
+        if (keyAxisOrient === 'right') {
             attrs.x = d => scales.scaleValue(d[1]) + margin.left;
             attrs.width = d => ValueFormatter.getValueOrZero(blockSize.width - margin.left - margin.right - scales.scaleValue(d[1] - d[0]));
         }
@@ -98,7 +82,7 @@ export class BarHelper {
 
     public static getBarsInGroupAmount(charts: TwoDimensionalChartModel[]): number[] {
         let amounts: number[] = [];
-        charts.forEach((chart, i) => {
+        charts.forEach((chart) => {
             if (chart.type === 'bar' && chart.isSegmented)
                 amounts.push(1) // Сегментированный бар содержит все свои valueFields в одном баре
             else if (chart.type === 'bar')
@@ -118,5 +102,24 @@ export class BarHelper {
             }
         });
         return index;
+    }
+
+    private static setGroupedBarAttrsByKeyAxis(attrs: BarAttrs, keyAxisOrient: Orient, scales: Scales, margin: BlockMargin, keyField: string, barIndex: number, barsAmount: number, barSettings: BarChartSettings, isSegmented: boolean): void {
+        const barDistance = barSettings.barDistance;
+        const barStep = (Scale.getScaleBandWidth(scales.scaleKey) - barDistance * (barsAmount - 1)) / barsAmount; // Space for one bar
+        const barSize = barStep > barSettings.maxBarWidth ? barSettings.maxBarWidth : barStep;
+        const barDiff = (barStep - barSize) * barsAmount / 2; // if bar bigger than maxWidth, diff for x coordinate
+
+        // функция получения пути к значению key-филда. Если сегментированный, то данные хранятся в dataRow.data
+        const keyValuePath = (d: DataRow, keyName: string, isSegmented: boolean) => isSegmented ? d.data[keyName] : d[keyName];
+
+        if (keyAxisOrient === 'top' || keyAxisOrient === 'bottom') {
+            attrs.x = d => scales.scaleKey(keyValuePath(d, keyField, isSegmented)) + margin.left + barSize * barIndex + barDistance * barIndex + barDiff;
+            attrs.width = () => barSize;
+        }
+        if (keyAxisOrient === 'left' || keyAxisOrient === 'right') {
+            attrs.y = d => scales.scaleKey(keyValuePath(d, keyField, isSegmented)) + margin.top + barSize * barIndex + barDistance * barIndex + barDiff;
+            attrs.height = () => barSize;
+        }
     }
 }

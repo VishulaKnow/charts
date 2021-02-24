@@ -49,7 +49,6 @@ export class Axis {
         if (axisOptions.type === 'value')
             this.setStepSize(blockSize, margin, axis, axisOptions, scaleOptions);
 
-
         this.setAxisLabelPaddingByOrient(axis, axisOptions);
 
         const axisElement = block.getSvg()
