@@ -28,7 +28,7 @@ export class BarHelper {
 
     public static setGroupedBarAttrsByValueAxis(attrs: BarAttrs, keyAxisOrient: Orient, margin: BlockMargin, scaleValue: AxisScale<any>, valueFieldName: string, blockSize: Size): void {
         if (keyAxisOrient === 'top') {
-            attrs.y = () => margin.top;
+            attrs.y = d => margin.top;
             attrs.height = d => Helper.getValueWithLimiter(ValueFormatter.getValueOrZero(scaleValue(d[valueFieldName])), blockSize.height - margin.top - margin.bottom, true);
         }
         else if (keyAxisOrient === 'bottom') {
@@ -36,7 +36,7 @@ export class BarHelper {
             attrs.height = d => ValueFormatter.getValueOrZero(blockSize.height - margin.top - margin.bottom - scaleValue(d[valueFieldName]));
         }
         else if (keyAxisOrient === 'left') {
-            attrs.x = () => margin.left + 1;
+            attrs.x = d => margin.left + 1;
             attrs.width = d => ValueFormatter.getValueOrZero(scaleValue(d[valueFieldName]));
         }
         else if (keyAxisOrient === 'right') {
@@ -79,7 +79,7 @@ export class BarHelper {
         let amounts: number[] = [];
         charts.forEach((chart) => {
             if (chart.type === 'bar' && chart.isSegmented)
-                amounts.push(1) // Сегментированный бар содержит все свои valueFields в одном баре
+                amounts.push(1); // Сегментированный бар содержит все свои valueFields в одном баре
             else if (chart.type === 'bar')
                 amounts.push(chart.data.valueFields.length);
         });
@@ -116,11 +116,11 @@ export class BarHelper {
 
         if (keyAxisOrient === 'top' || keyAxisOrient === 'bottom') {
             attrs.x = d => scales.scaleKey(keyValuePath(d, keyField, isSegmented)) + margin.left + barSize * barIndex + barDistance * barIndex + barDiff;
-            attrs.width = () => barSize;
+            attrs.width = d => barSize;
         }
         if (keyAxisOrient === 'left' || keyAxisOrient === 'right') {
             attrs.y = d => scales.scaleKey(keyValuePath(d, keyField, isSegmented)) + margin.top + barSize * barIndex + barDistance * barIndex + barDiff;
-            attrs.height = () => barSize;
+            attrs.height = d => barSize;
         }
     }
 }
