@@ -66,7 +66,7 @@ export class TooltipHelper {
     }
 
     public static getTooltipFixedCoordinate(scaleKey: AxisScale<any>, margin: BlockMargin, blockSize: Size, keyValue: string, tooltipBlockElement: HTMLElement, keyAxisOrient: Orient): TooltipCoordinate {
-        if(keyAxisOrient === 'bottom' || keyAxisOrient === 'top') {
+        if (keyAxisOrient === 'bottom' || keyAxisOrient === 'top') {
             const coordinate: TooltipCoordinate = {
                 top: margin.top + 'px',
                 bottom: null,
@@ -74,15 +74,15 @@ export class TooltipHelper {
                 right: null
             }
 
-            if(Helper.getPXValueFromString(coordinate.left) < margin.left)
+            if (Helper.getPXValueFromString(coordinate.left) < margin.left)
                 coordinate.left = margin.left + 'px';
 
-            if(Helper.getPXValueFromString(coordinate.left) + tooltipBlockElement.getBoundingClientRect().width > blockSize.width - margin.right) {
+            if (Helper.getPXValueFromString(coordinate.left) + tooltipBlockElement.getBoundingClientRect().width > blockSize.width - margin.right) {
                 coordinate.left = null;
                 coordinate.right = margin.right + 'px';
             }
 
-            if(keyAxisOrient === 'top') {
+            if (keyAxisOrient === 'top') {
                 coordinate.top = null;
                 coordinate.bottom = margin.bottom + 'px';
             }
@@ -96,15 +96,15 @@ export class TooltipHelper {
                 right: null
             }
 
-            if(Helper.getPXValueFromString(coordinate.top) < margin.top)
+            if (Helper.getPXValueFromString(coordinate.top) < margin.top)
                 coordinate.top = margin.top + 'px';
 
-            if(Helper.getPXValueFromString(coordinate.top) + tooltipBlockElement.getBoundingClientRect().height > blockSize.height - margin.bottom) {
+            if (Helper.getPXValueFromString(coordinate.top) + tooltipBlockElement.getBoundingClientRect().height > blockSize.height - margin.bottom) {
                 coordinate.top = null;
                 coordinate.bottom = margin.bottom + 'px';
             }
 
-            if(keyAxisOrient === 'left') {
+            if (keyAxisOrient === 'left') {
                 coordinate.left = null;
                 coordinate.right = margin.right + 'px';
             }

@@ -31,9 +31,9 @@ export class Tooltip {
     }
 
     private static rednerTooltipFor2DCharts(block: Block, margin: BlockMargin, charts: TwoDimensionalChartModel[], data: DataSource, dataOptions: OptionsModelData, blockSize: Size, chartOrientation: ChartOrientation, scaleKey: AxisScale<any>, scaleKeyModel: ScaleKeyModel, keyAxisOrient: Orient): void {
-        if(scaleKey.domain().length === 0)
+        if (scaleKey.domain().length === 0)
             return;
-        
+
         this.renderLineTooltip(block, scaleKey, margin, blockSize, charts, chartOrientation, keyAxisOrient, data, dataOptions, scaleKeyModel)
     }
 
@@ -61,22 +61,20 @@ export class Tooltip {
         const tooltipBlock = this.renderTooltipBlock(block);
         const tooltipContent = this.renderTooltipContentBlock(tooltipBlock);
         const thisClass = this;
-    
+
         const tooltipLine = this.renderTooltipLine(block);
         const tipBoxAttributes = TooltipHelper.getTipBoxAttributes(margin, blockSize);
         const tipBox = this.renderTipBox(block, tipBoxAttributes);
 
         tipBox
-            .on('mouseover', function() {
+            .on('mouseover', function () {
                 tooltipBlock.style('display', 'block');
             })
-            .on('mousemove', function(event) {
-                const index = TooltipHelper.getKeyIndex(pointer(event, this), chartOrientation, margin, blockSize, scaleKey, scaleKeyModel.type);        
+            .on('mousemove', function (event) {
+                const index = TooltipHelper.getKeyIndex(pointer(event, this), chartOrientation, margin, blockSize, scaleKey, scaleKeyModel.type);
                 const keyValue = scaleKey.domain()[index];
                 TooltipHelper.fillMultyFor2DChart(tooltipContent, charts, data, dataOptions, keyValue);
-                
-                const coordinatePointer = pointer(event, this);
-                // const tooltipCoordinate = TooltipHelper.getTooltipCoordinate(coordinatePointer);
+
                 const tooltipCoordinate = TooltipHelper.getTooltipFixedCoordinate(scaleKey, margin, blockSize, keyValue, tooltipContent.node(), keyAxisOrient);
                 thisClass.setTooltipCoordinate(tooltipBlock, tooltipCoordinate);
 
@@ -84,7 +82,7 @@ export class Tooltip {
                 const tooltipLineAttributes = TooltipHelper.getTooltipLineAttributes(scaleKey, margin, keyValue, chartOrientation, blockSize);
                 thisClass.setTooltipLineAttributes(tooltipLine, tooltipLineAttributes);
             })
-            .on('mouseleave', function() {
+            .on('mouseleave', function () {
                 tooltipBlock.style('display', 'none');
                 tooltipLine.style('display', 'none');
             });
@@ -178,7 +176,7 @@ export class Tooltip {
         let tooltipWrapper = block.getWrapper()
             .select(`.${this.tooltipWrapperClass}`)
 
-        if(tooltipWrapper.empty())
+        if (tooltipWrapper.empty())
             block.getWrapper()
                 .append('div')
                 .attr('class', this.tooltipWrapperClass);
