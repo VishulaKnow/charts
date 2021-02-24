@@ -82,9 +82,9 @@ export class Dot
 
         if(keyAxisOrient === 'left' || keyAxisOrient === 'right') {
             attrs.cx = d => scales.scaleValue(d[valueField]) + margin.left;
-            attrs.cy = d => Scale.getScaleKeyPoint(scales.scaleKey, this.getKeyFieldValue(d, keyField, isSegmented)) + margin.top;
+            attrs.cy = d => Scale.getScaledValue(scales.scaleKey, this.getKeyFieldValue(d, keyField, isSegmented)) + margin.top;
         } else if(keyAxisOrient === 'bottom' || keyAxisOrient === 'top') {
-            attrs.cx = d => Scale.getScaleKeyPoint(scales.scaleKey, this.getKeyFieldValue(d, keyField, isSegmented)) + margin.left,
+            attrs.cx = d => Scale.getScaledValue(scales.scaleKey, this.getKeyFieldValue(d, keyField, isSegmented)) + margin.left,
             attrs.cy = d => scales.scaleValue(d[valueField]) + margin.top
         }
 

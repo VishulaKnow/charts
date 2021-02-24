@@ -2,6 +2,7 @@ import { AxisScale } from 'd3-axis';
 import { Selection, BaseType } from 'd3-selection'
 import { ChartOrientation } from "../../../config/config";
 import { BlockMargin, DataRow, DataSource, Field, IntervalChartModel, OptionsModelData, PolarChartModel, ScaleKeyType, Size, TwoDimensionalChartModel } from "../../../model/model";
+import { Helper } from '../../helper';
 import { ValueFormatter, } from "../../valueFormatter";
 import { Scale } from '../scale/scale';
 
@@ -62,6 +63,44 @@ export class TooltipHelper {
         coordinate.top = pointer[1] + 'px';
 
         return coordinate;
+    }
+
+    public static getTooltipFixedCoordinate(scaleKey: AxisScale<any>, margin: BlockMargin, blockSize: Size, keyValue: string, tooltipBlockElement: HTMLElement, chartOrientation: ChartOrientation): TooltipCoordinate {
+        if(chartOrientation === 'vertical') {
+            const coordinate: TooltipCoordinate = {
+                top: margin.top + 'px',
+                bottom: null,
+                left: Scale.getScaledValue(scaleKey, keyValue) + margin.left - tooltipBlockElement.getBoundingClientRect().width / 2 + 'px',
+                right: null
+            }
+
+            if(Helper.getPXValueFromString(coordinate.left) < margin.left)
+                coordinate.left = margin.left + 'px';
+
+            if(Helper.getPXValueFromString(coordinate.left) + tooltipBlockElement.getBoundingClientRect().width > blockSize.width - margin.right) {
+                coordinate.left = null;
+                coordinate.right = margin.right + 'px';
+            }
+
+            return coordinate;
+        } else {
+            const coordinate: TooltipCoordinate = {
+                top: Scale.getScaledValue(scaleKey, keyValue) + margin.top - tooltipBlockElement.getBoundingClientRect().height / 2 + 'px',
+                left: margin.left + 'px',
+                bottom: null,
+                right: null
+            }
+
+            if(Helper.getPXValueFromString(coordinate.top) < margin.top)
+                coordinate.top = margin.top + 'px';
+
+            if(Helper.getPXValueFromString(coordinate.top) + tooltipBlockElement.getBoundingClientRect().height > blockSize.height - margin.bottom) {
+                coordinate.top = null;
+                coordinate.bottom = margin.bottom + 'px';
+            }
+
+            return coordinate 
+        }
     }
 
     public static getTooltipBlockCoordinateByRect(element: Selection<BaseType, DataRow, HTMLElement, any>, tooltipBlock: Selection<BaseType, unknown, HTMLElement, any>, blockSize: Size, tooltipArrow: Selection<BaseType, unknown, HTMLElement, any>, chartOrientation: ChartOrientation): [number, number] {
@@ -145,15 +184,15 @@ export class TooltipHelper {
             x1: 0, x2: 0, y1: 0, y2: 0
         }
         if (chartOrientation === 'vertical') {
-            attributes.x1 = Math.ceil(Scale.getScaleKeyPoint(scaleKey, key) + margin.left);
-            attributes.x2 = Math.ceil(Scale.getScaleKeyPoint(scaleKey, key) + margin.left);
+            attributes.x1 = Math.ceil(Scale.getScaledValue(scaleKey, key) + margin.left) - 0.5;
+            attributes.x2 = Math.ceil(Scale.getScaledValue(scaleKey, key) + margin.left) - 0.5;
             attributes.y1 = margin.top;
             attributes.y2 = blockSize.height - margin.bottom;
         } else {
             attributes.x1 = margin.left;
             attributes.x2 = blockSize.width - margin.right;
-            attributes.y1 = Scale.getScaleKeyPoint(scaleKey, key) + margin.top;
-            attributes.y2 = Scale.getScaleKeyPoint(scaleKey, key) + margin.top;
+            attributes.y1 = Scale.getScaledValue(scaleKey, key) + margin.top;
+            attributes.y2 = Scale.getScaledValue(scaleKey, key) + margin.top;
         }
 
         return attributes;

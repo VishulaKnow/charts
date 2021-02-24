@@ -31,6 +31,9 @@ export class Tooltip {
     }
 
     private static rednerTooltipFor2DCharts(block: Block, margin: BlockMargin, charts: TwoDimensionalChartModel[], data: DataSource, dataOptions: OptionsModelData, blockSize: Size, chartOrientation: ChartOrientation, scaleKey: AxisScale<any>, scaleKeyModel: ScaleKeyModel): void {
+        if(scaleKey.domain().length === 0)
+            return;
+        
         this.renderLineTooltip(block, scaleKey, margin, blockSize, charts, chartOrientation, data, dataOptions, scaleKeyModel)
     }
 
@@ -73,7 +76,8 @@ export class Tooltip {
                 TooltipHelper.fillMultyFor2DChart(tooltipContent, charts, data, dataOptions, keyValue);
                 
                 const coordinatePointer = pointer(event, this);
-                const tooltipCoordinate = TooltipHelper.getTooltipCoordinate(coordinatePointer);
+                // const tooltipCoordinate = TooltipHelper.getTooltipCoordinate(coordinatePointer);
+                const tooltipCoordinate = TooltipHelper.getTooltipFixedCoordinate(scaleKey, margin, blockSize, keyValue, tooltipContent.node(), chartOrientation);
                 thisClass.setTooltipCoordinate(tooltipBlock, tooltipCoordinate);
 
                 tooltipLine.style('display', 'block');

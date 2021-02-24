@@ -58,18 +58,13 @@ const configCars: Config = {
                             name: 'price',
                             format: 'integer',
                             title: 'Количество автомобилей на душу населения'
-                        },
-                        {
-                            name: 'count',
-                            format: 'integer',
-                            title: 'Количество автомобилей на душу населения'
                         }
                     ]
                 },
                 tooltip: {
                     show: true
                 },
-                embeddedLabels: 'key'
+                embeddedLabels: 'value'
             }
         ]
     }
@@ -183,11 +178,6 @@ const configDemo: Config = {
                         {
                             name: 'EventCost',
                             format: 'integer',
-                            title: 'Количество автомобилей на душу населения'
-                        },
-                        {
-                            name: 'AlcoholCost',
-                            format: 'money',
                             title: 'Количество автомобилей на душу населения'
                         }
                     ]
