@@ -49,6 +49,7 @@ export class Axis
 
         if(axisOptions.type === 'value')
             this.setStepSize(blockSize, margin, axis, axisOptions, scaleOptions);
+            
 
         this.setAxisLabelPaddingByOrient(axis, axisOptions);
     
@@ -89,8 +90,43 @@ export class Axis
             if(Math.floor(axisLength / MINIMAL_STEP_SIZE) > 2)
                 axis.ticks(Math.floor(axisLength / MINIMAL_STEP_SIZE));
             else
-                axis.tickValues([min(scale.domain), max(scale.domain)]);
+            axis.tickValues([min(scale.domain), max(scale.domain)]);
         }
+        axis.tickValues(this.getTicksValues(min(scale.domain), max(scale.domain), Math.floor(axisLength / MINIMAL_STEP_SIZE), axisLength))
+
+
+    }
+    private static getTicksValues(minValue: number, maxValue: number, countValues: number, axisLength: number) : number[]{
+        let valuesArray = []
+        let step = 1
+        let numbers = [1, 2, 5] 
+        let k = 0
+        /*
+        В случае если количество интервалов полученных при разбиении отрезка от 0 до максимального значения
+        будет меньше или равно количеству возможных для отрисовки интервалов поиск подходящего шага завершится
+        */
+        while((maxValue / step) > countValues)
+        {
+            step = numbers[(k % numbers.length)] // получение числа 1, 2 или 5 по очередно с каждым проходом цикла
+            step = step * Math.pow(10, Math.floor(k / numbers.length)) // произведение шага на 10-ки 
+            k++
+        }
+        
+        valuesArray.push(minValue)
+        let currentValue = 0
+        /* 
+        Если цикл дошел до предпоследнего элемента, цикл завершается
+        */
+        while(currentValue + step * 2 < maxValue){ 
+            currentValue += step;
+            valuesArray.push(currentValue)
+        }
+        currentValue += step // получение значения предпоследнего элемента
+        if (maxValue - currentValue > step / 3) // Условие для корректного отображения
+        valuesArray.push(currentValue)
+        valuesArray.push(maxValue)
+        valuesArray = valuesArray.reverse() // Reverse массива для корректного отображения гридов
+        return valuesArray
     }
 
     private static alignLabels(axisElement: Selection<SVGGElement, unknown, HTMLElement, any>, anchor: TextAnchor, maxLabelSize: number, changeCoordinate: boolean): void {
