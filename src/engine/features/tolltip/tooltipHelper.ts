@@ -1,5 +1,5 @@
 import { AxisScale } from 'd3-axis';
-import { Selection, BaseType } from 'd3-selection'
+import { Selection, BaseType, select } from 'd3-selection'
 import { PieArcDatum } from 'd3-shape';
 import { ChartOrientation } from "../../../config/config";
 import { BlockMargin, DataRow, DataSource, Field, IntervalChartModel, OptionsModelData, Orient, PolarChartModel, ScaleKeyType, Size, TwoDimensionalChartModel } from "../../../model/model";
@@ -27,6 +27,12 @@ export interface TooltipCoordinate {
     right: string;
     bottom: string;
 }
+export interface BarHighlighterAttrs {
+    x: number;
+    y: number;
+    width: number;
+    height: number;
+}
 
 export const ARROW_SIZE = 20;
 export const ARROW_DEFAULT_POSITION = 9;
@@ -35,13 +41,21 @@ const TOOLTIP_ARROW_PADDING_X = ARROW_DEFAULT_POSITION - (ARROW_SIZE * Math.sqrt
 const TOOLTIP_ARROW_PADDING_Y = 13;
 
 export class TooltipHelper {
-    public static fillMultyFor2DChart(tooltipContentBlock: Selection<BaseType, unknown, BaseType, unknown>, charts: TwoDimensionalChartModel[], data: DataSource, dataOptions: OptionsModelData, keyValue: string): void {
+    public static fillForMulty2DCharts(tooltipContentBlock: Selection<BaseType, unknown, BaseType, unknown>, charts: TwoDimensionalChartModel[], data: DataSource, dataOptions: OptionsModelData, keyValue: string): void {
         tooltipContentBlock.html('');
         charts.forEach(chart => {
             chart.data.valueFields.forEach((field, index) => {
                 this.fillTooltipContent(tooltipContentBlock, data, dataOptions, keyValue, field, chart.style.elementColors[index % chart.style.elementColors.length].toString());
             });
         })
+    }
+
+    public static fillFor2DChart(tooltipContentBlock: Selection<BaseType, unknown, BaseType, unknown>, chart: TwoDimensionalChartModel, data: DataSource, dataOptions: OptionsModelData, keyValue: string, fieldIndex: number = null): void {
+        tooltipContentBlock.html('');
+        chart.data.valueFields.forEach((field, index) => {
+            if(fieldIndex === null || index === fieldIndex)
+                this.fillTooltipContent(tooltipContentBlock, data, dataOptions, keyValue, field, chart.style.elementColors[index % chart.style.elementColors.length].toString());
+        });
     }
 
     public static fillTooltipForPolarChart(tooltipContentBlock: Selection<BaseType, unknown, BaseType, unknown>, chart: PolarChartModel, data: DataSource, dataOptions: OptionsModelData, keyValue: string, markColor: string): void {
@@ -53,6 +67,19 @@ export class TooltipHelper {
         tooltipContentBlock.html('');
         this.fillTooltipContent(tooltipContentBlock, data, dataOptions, keyValue, chart.data.valueField1, markColor);
     }
+
+    public static getElementIndex(elemets: Selection<BaseType, DataRow, BaseType, unknown>, dot: BaseType, keyValue: string, keyName: string, isSegmented: boolean): number {
+        let index = -1;
+        const filtered = isSegmented ? elemets.filter(d => d.data[keyName] === keyValue) : elemets.filter(d => d[keyName] === keyValue);
+        filtered.each(function(d, i) {
+            if(select(this).node() === select(dot).node()) {
+                index = i;
+            }
+        });
+
+        return index;
+    }
+
 
     public static getTooltipCoordinate(pointer: [number, number]): TooltipCoordinate {
         const coordinate: TooltipCoordinate = {
@@ -230,6 +257,22 @@ export class TooltipHelper {
         return attributes;
     }
 
+    public static getBarHighlighterAttrs(bar: Selection<BaseType, DataRow, HTMLElement, unknown>, chartOrientation: ChartOrientation, blockSize: Size, margin: BlockMargin): BarHighlighterAttrs {
+        const pad = 3;
+        if(chartOrientation === 'vertical')
+            return {
+                x: Helper.getSelectionNumericAttr(bar, 'x') - pad,
+                y: margin.top,
+                width: Helper.getSelectionNumericAttr(bar, 'width') + pad * 2,
+                height: blockSize.height - margin.top - margin.bottom
+            }
+        return {
+            x: margin.left,
+            y: Helper.getSelectionNumericAttr(bar, 'y') - pad,
+            width: blockSize.width - margin.left - margin.right,
+            height: Helper.getSelectionNumericAttr(bar, 'height') + pad * 2
+        }
+    }
 
     private static fillTooltipContent(tooltipContentBlock: Selection<BaseType, unknown, BaseType, unknown>, data: DataSource, dataOptions: OptionsModelData, keyValue: string, valueField: Field, markColor: string): void {
         const group = tooltipContentBlock.append('div')
