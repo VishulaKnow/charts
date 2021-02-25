@@ -3,44 +3,45 @@ import { Size, TitleBlockModel } from "../../../model/model";
 import { Block } from "../../block/block";
 import { Helper } from "../../helper";
 
-interface titleCoordinate {
+interface TitleAttributes {
     x: number;
     y: number;
     height: number;
     width: number;
+    dominantBaseline: string;
 }
 export class Title {
-    public static render(block: Block,  text: string, titleBlockModel: TitleBlockModel, blockSize: Size): void
-    {
+    public static render(block: Block, text: string, titleBlockModel: TitleBlockModel, blockSize: Size): void {
         this.renderTitleBlock(block, text, titleBlockModel, blockSize);
     }
     private static renderTitleBlock(block: Block, text: string, titleBlockModel: TitleBlockModel, blockSize: Size) {
         const titleBlock = block.getSvg()
             .append('text')
-                .attr('class', 'chart-title');
-        
-        const titleCoordinate = this.getTitleCoordinate(blockSize, titleBlockModel);
-        
+            .attr('class', 'chart-title');
+
+        const titleCoordinate = this.getTitleAttributes(blockSize, titleBlockModel);
+
         this.fillTitleBlockAttributes(titleBlock, titleCoordinate, text);
-              
+
     }
-    private static fillTitleBlockAttributes(titleBlock: Selection<SVGTextElement, unknown, HTMLElement, any>, coordinate: titleCoordinate, text: string) {
+    private static fillTitleBlockAttributes(titleBlock: Selection<SVGTextElement, unknown, HTMLElement, any>, attributes: TitleAttributes, text: string) {
         titleBlock
-        .attr('x', coordinate.x)
-        .attr('y', coordinate.y)
-        .attr('width', coordinate.width)
-        .attr('height', coordinate.height)
-        .attr('dominant-baseline', 'hanging')
-        .text(text);   
-        Helper.cropLabels(titleBlock, coordinate.width);
-      
+            .attr('x', attributes.x)
+            .attr('y', attributes.y)
+            .attr('width', attributes.width)
+            .attr('height', attributes.height)
+            .attr('dominant-baseline', attributes.dominantBaseline)
+            .text(text);
+        Helper.cropLabels(titleBlock, attributes.width);
+
     }
-    private static getTitleCoordinate(blockSize: Size, titleBlockModel: TitleBlockModel) : titleCoordinate{
-        const coordinate: titleCoordinate = {
+    private static getTitleAttributes(blockSize: Size, titleBlockModel: TitleBlockModel): TitleAttributes {
+        const coordinate: TitleAttributes = {
             x: 0,
             y: 0,
             width: 0,
-            height: 0
+            height: 0,
+            dominantBaseline: "hanging"
         };
         coordinate.x = titleBlockModel.margin.left;
         coordinate.y = titleBlockModel.margin.top;

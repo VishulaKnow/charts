@@ -36,7 +36,7 @@ export class Legend
             .append('foreignObject')
                 .attr('class', 'legend-object');
         
-        const legendCoordinate = this.getLegendCoordinateByPosition(legendPosition, legendBlockModel, blockSize, );
+        const legendCoordinate = this.getLegendCoordinateByPosition(legendPosition, legendBlockModel, blockSize);
         this.fillLegendCoordinate(legendBlock, legendCoordinate);  
             
         this.renderLegendContent(legendBlock,
