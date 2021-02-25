@@ -83,6 +83,7 @@ export interface DataFormat {
 }
 export interface DataSettings {
     scope: DataScope;
+    format: DataFormat;
 }
 export interface DataScope {
     hidedRecordsAmount: number;
@@ -158,11 +159,19 @@ export interface PolarChartModel extends ChartModel {
 export interface Model {
     blockCanvas: BlockCanvas;
     chartBlock: ChartBlock;
-    legendBlock: LegendBlockModel;
+    otherComponents: OtherComponents;
     options: TwoDimensionalOptionsModel | PolarOptionsModel | IntervalOptionsModel;
     dataSettings: DataSettings;
     chartSettings: ChartSettings;
-    dataFormat: DataFormat;
+}
+
+export interface OtherComponents {
+    legendBlock: LegendBlockModel;
+    titleBlock: TitleBlockModel;
+}
+export interface TitleBlockModel {
+    margin: BlockMargin;
+    size: number;
 }
 
 export interface Field {

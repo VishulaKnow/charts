@@ -40,7 +40,7 @@ export class ChartRenderer {
         Legend.render(block,
             data,
             options,
-            model.legendBlock,
+            model.otherComponents.legendBlock,
             model.blockCanvas.size);
 
         Tooltip.renderTooltips(block, model, data, scales);
@@ -60,7 +60,7 @@ export class ChartRenderer {
             model.blockCanvas.size,
             model.chartSettings.donut);
 
-        Legend.render(block, data, options, model.legendBlock, model.blockCanvas.size);
+        Legend.render(block, data, options, model.otherComponents.legendBlock, model.blockCanvas.size);
 
         Tooltip.renderTooltips(block, model, data);
         if (model.dataSettings.scope.hidedRecordsAmount !== 0 && model.options.legend.position !== 'off')
@@ -89,7 +89,7 @@ export class ChartRenderer {
             options.axis.keyAxis.orient,
             model.chartSettings);
 
-        Legend.render(block, data, options, model.legendBlock, model.blockCanvas.size);
+        Legend.render(block, data, options, model.otherComponents.legendBlock, model.blockCanvas.size);
         Tooltip.renderTooltips(block, model, data);
         if (model.dataSettings.scope.hidedRecordsAmount !== 0)
             RecordOverflowAlert.render(block, model.dataSettings.scope.hidedRecordsAmount, 'top', options.orient);

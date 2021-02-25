@@ -10,7 +10,7 @@ export default class Engine {
         this.block = new Block(model.blockCanvas.cssClass, parentElement);
 
         this.block.renderWrapper(model.blockCanvas.size);
-        ValueFormatter.setFormatFunction(model.dataFormat.formatters);
+        ValueFormatter.setFormatFunction(model.dataSettings.format.formatters);
 
         if (model.options)
             this.renderCharts(model, data);

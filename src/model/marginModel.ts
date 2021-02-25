@@ -3,19 +3,23 @@ import { DesignerConfig } from "../designer/designerConfig";
 import { AxisModel, LabelSize } from "./axisModel";
 import { DataManagerModel } from "./dataManagerModel";
 import { LegendModel, MIN_DONUT_BLOCK_SIZE } from "./legendModel/legendModel";
-import { BlockMargin, DataScope, DataSource, LegendBlockModel, Orient, PolarOptionsModel, Size } from "./model";
+import { BlockMargin, DataScope, DataSource, LegendBlockModel, Orient, OtherComponents, PolarOptionsModel, Size, TitleBlockModel } from "./model";
 import { AxisType } from "./modelOptions";
+import { OtherComponentsModel } from "./otherComponents";
 import { TwoDimensionalModel } from "./twoDimensionalModel";
 
 export const AXIS_HORIZONTAL_LABEL_PADDING = 15;
 export const AXIS_VERTICAL_LABEL_PADDING = 10;
 
+
+
 export class MarginModel
 {
-    public static getMargin(designerConfig: DesignerConfig, config: Config, legendBlockModel: LegendBlockModel, data: DataSource): BlockMargin {
+    public static getMargin(designerConfig: DesignerConfig, config: Config, otherComponents: OtherComponents, data: DataSource): BlockMargin {
         const margin: BlockMargin = { ...designerConfig.canvas.chartBlockMargin }
 
-        this.recalcMarginWithLegend(margin, config, designerConfig.canvas.legendBlock.maxWidth, legendBlockModel, data);
+        this.recalcMarginWithLegend(margin, config, designerConfig.canvas.legendBlock.maxWidth, otherComponents.legendBlock, data);
+        this.recalcMarginByTitle(margin, otherComponents.titleBlock);
 
         if(config.options.type === '2d' || config.options.type === 'interval') {
             const labelSize = this.getMarginValuesByAxisLabels(designerConfig.canvas.axisLabel.maxSize.main, config.options.axis, data, config.options);
@@ -140,5 +144,9 @@ export class MarginModel
                 ? 0 
                 : legendBlockModel[position].size + legendBlockModel[position].margin[position];
         });
+    }
+
+    private static recalcMarginByTitle(margin: BlockMargin, titleBlockModel: TitleBlockModel): void {
+        margin.top += titleBlockModel.margin.top + titleBlockModel.size;
     }
 }

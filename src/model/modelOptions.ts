@@ -8,6 +8,7 @@ import { DataManagerModel } from './dataManagerModel';
 import { BarOptionsCanvas, DesignerConfig, DonutOptionsCanvas } from '../designer/designerConfig';
 import { IntervalModel } from './intervalModel';
 import { LegendModel } from './legendModel/legendModel';
+import { OtherComponentsModel } from './otherComponents';
 
 
 export enum AxisType {
@@ -47,9 +48,10 @@ function getOptions(config: Config, designerConfig: DesignerConfig, margin: Bloc
     }
 } 
 
-function getDataSettings(dataScope: DataScope): DataSettings {
+function getDataSettings(dataScope: DataScope, designerConfig: DesignerConfig): DataSettings {
     return {
-        scope: dataScope
+        scope: dataScope,
+        format: getDataFormat(designerConfig)
     }
 }
 
@@ -82,16 +84,15 @@ export function assembleModel(config: Config, data: DataSource, designerConfig: 
         return {
             blockCanvas: getBlockCanvas(config),
             chartBlock: null,
-            legendBlock: null,
+            otherComponents: null,
             options: null,
             dataSettings: null,
-            chartSettings: null, 
-            dataFormat: getDataFormat(designerConfig)
+            chartSettings: null
         }
 
-    const legendBlock: LegendBlockModel = LegendModel.getBaseLegendBlockModel();
-    const margin = MarginModel.getMargin(designerConfig, config, legendBlock, data);
-    const dataScope = DataManagerModel.getDataScope(config, margin, data, designerConfig, legendBlock);
+    const otherComponents = OtherComponentsModel.getOtherComponentsModel();
+    const margin = MarginModel.getMargin(designerConfig, config, otherComponents, data);
+    const dataScope = DataManagerModel.getDataScope(config, margin, data, designerConfig, otherComponents.legendBlock);
     const preparedData = DataManagerModel.getPreparedData(data, dataScope.allowableKeys, config); 
     
     if(config.options.type === '2d' || config.options.type === 'interval')
@@ -100,23 +101,23 @@ export function assembleModel(config: Config, data: DataSource, designerConfig: 
     const blockCanvas = getBlockCanvas(config);
     const chartBlock = getChartBlock(margin);
     const options = getOptions(config, designerConfig, margin, dataScope, preparedData);
-    const dataSettings = getDataSettings(dataScope);
+    const dataSettings = getDataSettings(dataScope, designerConfig);
     const chartSettings = getChartSettings(designerConfig.canvas.chartOptions.bar, designerConfig.canvas.chartOptions.donut);
-    const dataFormat = getDataFormat(designerConfig);
 
     if(options.type === 'polar')
-        MarginModel.recalcPolarMarginWithScopedData(margin, config.canvas.size, designerConfig, config, legendBlock, dataScope, options);
+        MarginModel.recalcPolarMarginWithScopedData(margin, config.canvas.size, designerConfig, config, otherComponents.legendBlock, dataScope, options);
 
     roundMargin(margin);
+
+    console.log(otherComponents);
 
     return {
         blockCanvas,
         chartBlock,
-        legendBlock,
+        otherComponents,
         options,
         dataSettings,
-        chartSettings, 
-        dataFormat
+        chartSettings
     }
 }
 
