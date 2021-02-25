@@ -1,6 +1,9 @@
 import { Color } from "d3-color";
 import { Selection, BaseType } from 'd3-selection'
-import { ChartStyle } from "../model/model";
+import { ChartStyle, DataRow, TwoDimensionalChartModel } from "../model/model";
+import { Block } from "./block/block";
+import { Dot } from "./features/lineDots/dot";
+import { Bar } from "./twoDimensionalNotation/bar/bar";
 
 type StyleColorType = 'fill' | 'stroke';
 
@@ -89,6 +92,13 @@ export class Helper {
 
     public static getCssClassesWithElementIndex(cssClasses: string[], index: number): string[] {
         return cssClasses.concat([`chart-element-${index}`]);
+    }
+
+    public static getChartElements(block: Block, chart: TwoDimensionalChartModel): Selection<BaseType, DataRow, BaseType, unknown> {
+        if(chart.type === 'line' || chart.type === 'area')
+            return Dot.getAllDots(block, chart.cssClasses);
+        else
+            return Bar.getAllBarItems(block, chart.cssClasses);
     }
 
     private static setChartOpacity(elements: Selection<BaseType, unknown, BaseType, unknown>, opacity: number): void {

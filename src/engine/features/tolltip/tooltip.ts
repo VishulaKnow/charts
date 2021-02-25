@@ -36,14 +36,7 @@ export class Tooltip {
         if (scaleKey.domain().length === 0)
             return;
 
-        let elements: Selection<BaseType, DataRow, BaseType, unknown>[] = [];
-        charts.forEach(chart => {
-            if(chart.type === 'line' || chart.type === 'area')
-                elements.push(Dot.getAllDots(block, chart.cssClasses));
-            else
-                elements.push(Bar.getAllBarItems(block, chart.cssClasses));
-        });
-        this.renderLineTooltip(elements, block, scaleKey, margin, blockSize, charts, chartOrientation, keyAxisOrient, data, dataOptions, scaleKeyModel);
+        this.renderLineTooltip(block, scaleKey, margin, blockSize, charts, chartOrientation, keyAxisOrient, data, dataOptions, scaleKeyModel);
     }
 
     private static renderTooltipsForDonut(block: Block, charts: PolarChartModel[], data: DataSource, dataOptions: OptionsModelData, blockSize: Size, margin: BlockMargin, chartThickness: number): void {
@@ -66,7 +59,7 @@ export class Tooltip {
         });
     }
 
-    private static renderLineTooltip(elements: Selection<BaseType, DataRow, BaseType, unknown>[], block: Block, scaleKey: AxisScale<any>, margin: BlockMargin, blockSize: Size, charts: TwoDimensionalChartModel[], chartOrientation: ChartOrientation, keyAxisOrient: Orient, data: DataSource, dataOptions: OptionsModelData, scaleKeyModel: ScaleKeyModel): void {
+    private static renderLineTooltip(block: Block, scaleKey: AxisScale<any>, margin: BlockMargin, blockSize: Size, charts: TwoDimensionalChartModel[], chartOrientation: ChartOrientation, keyAxisOrient: Orient, data: DataSource, dataOptions: OptionsModelData, scaleKeyModel: ScaleKeyModel): void {
         const tooltipBlock = this.renderTooltipBlock(block);
         const tooltipContent = this.renderTooltipContentBlock(tooltipBlock);
         const thisClass = this;
@@ -96,18 +89,24 @@ export class Tooltip {
                 thisClass.setTooltipLineAttributes(tooltipLine, tooltipLineAttributes);
                 
 
-                elements.forEach(elementSet => {
-                    elementSet.classed('chart-element-highlight', false);
-                    elementSet.filter(d => d[dataOptions.keyField.name] === keyValue)
-                        .classed('chart-element-highlight', true);
+                charts.forEach(chart => {
+                    const elems = Helper.getChartElements(block, chart);
+                    elems.classed('chart-element-highlight', false);
+                    if(!chart.isSegmented)
+                        elems.filter(d => d[dataOptions.keyField.name] === keyValue)
+                            .classed('chart-element-highlight', true);
+                    else 
+                        elems.filter(d => d.data[dataOptions.keyField.name] === keyValue)
+                            .classed('chart-element-highlight', true);
                 });
             })
             .on('mouseleave', function () {
                 tooltipBlock.style('display', 'none');
                 tooltipLine.style('display', 'none');
 
-                elements.forEach(elementSet => {
-                    elementSet.classed('chart-element-highlight', false);
+                charts.forEach(chart => {
+                    const elems = Helper.getChartElements(block, chart);
+                    elems.classed('chart-element-highlight', false);
                 });
             });
     }
