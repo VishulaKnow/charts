@@ -57,12 +57,13 @@ export class ChartStyleModel
         do {
             indexOfDesired = baseColorIndex + startIndex + colorsArray.length * step;
             indexOfDesired = indexOfDesired % palette.length;
-            if(isSegmented) {
-                colorsArray.push(...this.getColorRow(palette[indexOfDesired].colorPalette, valueFieldsAmount));
-            }
-            else {
-                colorsArray.push(this.getBaseColor(palette[indexOfDesired].colorPalette));
-            }
+            // if(isSegmented) {
+            //     colorsArray.push(...this.getColorRow(palette[indexOfDesired].colorPalette, valueFieldsAmount));
+            // }
+            // else {
+            //     colorsArray.push(this.getBaseColor(palette[indexOfDesired].colorPalette));
+            // }
+            colorsArray.push(this.getBaseColor(palette[indexOfDesired].colorPalette));
         } while (colorsArray.length !== valueFieldsAmount);
 
         return colorsArray.map(elementColor => color(elementColor));
