@@ -167,7 +167,7 @@ export class Tooltip {
         return block.getChartBlock()
             .append('line')
             .attr('class', 'tooltip-line')
-            .raise();
+            .lower();
     }
 
     private static renderTipBox(block: Block, attributes: TipBoxAttributes): Selection<SVGRectElement, unknown, HTMLElement, any> {
@@ -186,7 +186,8 @@ export class Tooltip {
             .attr('x1', attributes.x1)
             .attr('x2', attributes.x2)
             .attr('y1', attributes.y1)
-            .attr('y2', attributes.y2);
+            .attr('y2', attributes.y2)
+            .attr('stroke-linecap', attributes.strokeLinecap);
     }
 
     private static renderTooltipArrow(tooltipBlock: Selection<BaseType, unknown, HTMLElement, any>): Selection<BaseType, unknown, HTMLElement, any> {

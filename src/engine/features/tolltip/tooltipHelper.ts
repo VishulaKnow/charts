@@ -13,6 +13,7 @@ export interface TooltipLineAttributes {
     x2: number;
     y1: number;
     y2: number;
+    strokeLinecap: string;
 }
 export interface TipBoxAttributes {
     x: number;
@@ -169,15 +170,6 @@ export class TooltipHelper {
                 .innerRadius(DonutHelper.getOuterRadius(margin, blockSize) - donutThickness)(d, i));
     }
 
-    public static getTipBoxAttributes(margin: BlockMargin, blockSize: Size): TipBoxAttributes {
-        return {
-            x: margin.left,
-            y: margin.top,
-            width: blockSize.width - margin.left - margin.right,
-            height: blockSize.height - margin.top - margin.bottom,
-        }
-    }
-
     public static getKeyIndex(pointer: [number, number], orient: ChartOrientation, margin: BlockMargin, blockSize: Size, scaleKey: AxisScale<any>, scaleKeyType: ScaleKeyType): number {
         const pointerAxisType = orient === 'vertical' ? 0 : 1; // 0 - координата поинтера по оси x, 1 - по оси y
         const marginByOrient = orient === 'vertical' ? margin.left : margin.top;
@@ -208,18 +200,29 @@ export class TooltipHelper {
         }
     }
 
-    public static getTooltipLineAttributes(scaleKey: AxisScale<any>, margin: BlockMargin, key: string, chartOrientation: ChartOrientation, blockSize: Size): TooltipLineAttributes {
-        const attributes: TooltipLineAttributes = {
-            x1: 0, x2: 0, y1: 0, y2: 0
+    public static getTipBoxAttributes(margin: BlockMargin, blockSize: Size): TipBoxAttributes {
+        return {
+            x: margin.left,
+            y: margin.top,
+            width: blockSize.width - margin.left - margin.right,
+            height: blockSize.height - margin.top - margin.bottom,
         }
+    }
+
+    public static getTooltipLineAttributes(scaleKey: AxisScale<any>, margin: BlockMargin, key: string, chartOrientation: ChartOrientation, blockSize: Size): TooltipLineAttributes {
+        const convexSize = 5;        
+        const attributes: TooltipLineAttributes = {
+            x1: 0, x2: 0, y1: 0, y2: 0, strokeLinecap: 'round'
+        }
+
         if (chartOrientation === 'vertical') {
             attributes.x1 = Math.ceil(Scale.getScaledValue(scaleKey, key) + margin.left) - 0.5;
             attributes.x2 = Math.ceil(Scale.getScaledValue(scaleKey, key) + margin.left) - 0.5;
-            attributes.y1 = margin.top;
-            attributes.y2 = blockSize.height - margin.bottom;
+            attributes.y1 = margin.top - convexSize;
+            attributes.y2 = blockSize.height - margin.bottom + convexSize * 2;
         } else {
-            attributes.x1 = margin.left;
-            attributes.x2 = blockSize.width - margin.right;
+            attributes.x1 = margin.left - convexSize;
+            attributes.x2 = blockSize.width - margin.right + convexSize * 2;
             attributes.y1 = Scale.getScaledValue(scaleKey, key) + margin.top;
             attributes.y2 = Scale.getScaledValue(scaleKey, key) + margin.top;
         }
