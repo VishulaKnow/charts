@@ -1,4 +1,4 @@
-import { BlockMargin, EmbeddedLabelTypeModel, Field, Orient, Size, TwoDimensionalChartDataModel } from "../../../model/model";
+import { BlockMargin, EmbeddedLabelTypeModel, Field, Orient, Size } from "../../../model/model";
 
 export type EmbeddedLabelPosition = 'inside' | 'outside';
 export type TextAnchor = 'start' | 'end' | 'center';
