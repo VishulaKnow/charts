@@ -10,7 +10,7 @@ const configCars: Config = {
     },
     options: {
         type: '2d',
-        title: 'asd',
+        title: 'Тext text text text text text text text text text text text text text text text text text text text text text text text text  ',
         axis: {
             keyAxis: {
                 position: 'end',
