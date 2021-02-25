@@ -9,7 +9,8 @@ export class TitleModel {
                 right: 20,
                 top: 20
             },
-            size: 25
+            size: 20,
+            pad: 0
         }
     }
 }

@@ -12,6 +12,7 @@ import { Tooltip } from "./features/tolltip/tooltip";
 import { RecordOverflowAlert } from "./features/recordOverflowAlert/recordOverflowAlert";
 import { Gantt } from "./intervalNotation/gantt";
 import { BarHelper } from "./twoDimensionalNotation/bar/barHelper";
+import { Title } from "./features/title/title";
 
 export class ChartRenderer {
     public static render2D(block: Block, model: Model, data: DataSource): void {
@@ -37,11 +38,20 @@ export class ChartRenderer {
             model.chartSettings.bar,
             model.blockCanvas.size);
 
+
+        
+        Title.render(block, 
+            options.title,
+            model.otherComponents.titleBlock,
+            model.blockCanvas.size
+            );
         Legend.render(block,
             data,
             options,
             model.otherComponents.legendBlock,
             model.blockCanvas.size);
+
+
 
         Tooltip.renderTooltips(block, model, data, scales);
         if (model.dataSettings.scope.hidedRecordsAmount !== 0)
@@ -60,6 +70,11 @@ export class ChartRenderer {
             model.blockCanvas.size,
             model.chartSettings.donut);
 
+        Title.render(block, 
+            options.title,
+            model.otherComponents.titleBlock,
+            model.blockCanvas.size
+            );
         Legend.render(block, data, options, model.otherComponents.legendBlock, model.blockCanvas.size);
 
         Tooltip.renderTooltips(block, model, data);
@@ -89,6 +104,11 @@ export class ChartRenderer {
             options.axis.keyAxis.orient,
             model.chartSettings);
 
+        Title.render(block, 
+            options.title,
+            model.otherComponents.titleBlock,
+            model.blockCanvas.size
+            );
         Legend.render(block, data, options, model.otherComponents.legendBlock, model.blockCanvas.size);
         Tooltip.renderTooltips(block, model, data);
         if (model.dataSettings.scope.hidedRecordsAmount !== 0)
