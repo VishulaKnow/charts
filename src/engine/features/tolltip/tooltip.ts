@@ -9,8 +9,7 @@ import { ChartOrientation } from "../../../config/config";
 import { DonutHelper } from '../../polarNotation/DonutHelper';
 import { Scales } from '../scale/scale';
 import { AxisScale } from 'd3-axis';
-import { Bar } from '../../twoDimensionalNotation/bar/bar';
-import { Dot } from '../lineDots/dot';
+import { easeLinear } from 'd3-ease';
 
 export class Tooltip {
     private static tooltipWrapperClass = 'tooltip-wrapper';
@@ -82,13 +81,12 @@ export class Tooltip {
                 TooltipHelper.fillForMulty2DCharts(tooltipContent, charts, data, dataOptions, keyValue);
 
                 const tooltipCoordinate = TooltipHelper.getTooltipFixedCoordinate(scaleKey, margin, blockSize, keyValue, tooltipContent.node(), keyAxisOrient);
-                thisClass.setTooltipCoordinate(tooltipBlock, tooltipCoordinate);
+                thisClass.setTooltipCoordinate(tooltipBlock, tooltipCoordinate, 0);
 
                 tooltipLine.style('display', 'block');
                 const tooltipLineAttributes = TooltipHelper.getTooltipLineAttributes(scaleKey, margin, keyValue, chartOrientation, blockSize);
-                thisClass.setTooltipLineAttributes(tooltipLine, tooltipLineAttributes);
+                thisClass.setTooltipLineAttributes(tooltipLine, tooltipLineAttributes, 50);
                 
-
                 charts.forEach(chart => {
                     const elems = Helper.getChartElements(block, chart);
                     elems.classed('chart-element-highlight', false);
@@ -203,13 +201,24 @@ export class Tooltip {
             .style('opacity', 0);
     }
 
-    private static setTooltipLineAttributes(tooltipLine: Selection<SVGLineElement, unknown, HTMLElement, any>, attributes: TooltipLineAttributes): void {
-        tooltipLine
-            .attr('x1', attributes.x1)
-            .attr('x2', attributes.x2)
-            .attr('y1', attributes.y1)
-            .attr('y2', attributes.y2)
-            .attr('stroke-linecap', attributes.strokeLinecap);
+    private static setTooltipLineAttributes(tooltipLine: Selection<SVGLineElement, unknown, HTMLElement, any>, attributes: TooltipLineAttributes, transition: number): void {
+        if(transition) {
+            tooltipLine
+                .attr('stroke-linecap', attributes.strokeLinecap)
+                .transition()
+                .duration(transition)
+                .attr('x1', attributes.x1)
+                .attr('x2', attributes.x2)
+                .attr('y1', attributes.y1)
+                .attr('y2', attributes.y2)
+        } else {
+            tooltipLine
+                .attr('x1', attributes.x1)
+                .attr('x2', attributes.x2)
+                .attr('y1', attributes.y1)
+                .attr('y2', attributes.y2)
+                .attr('stroke-linecap', attributes.strokeLinecap);
+        }
     }
 
     private static renderTooltipArrow(tooltipBlock: Selection<BaseType, unknown, HTMLElement, any>): Selection<BaseType, unknown, HTMLElement, any> {
@@ -255,12 +264,24 @@ export class Tooltip {
         return tooltipContentBlock;
     }
 
-    private static setTooltipCoordinate(tooltipBlock: Selection<BaseType, unknown, HTMLElement, any>, tooltipCoordinate: TooltipCoordinate): void {
-        tooltipBlock
-            .style('left', tooltipCoordinate.left)
-            .style('top', tooltipCoordinate.top)
-            .style('right', tooltipCoordinate.right)
-            .style('bottom', tooltipCoordinate.bottom);
+    private static setTooltipCoordinate(tooltipBlock: Selection<BaseType, unknown, HTMLElement, any>, tooltipCoordinate: TooltipCoordinate, transition: number = null): void {
+        if(transition) {
+            tooltipBlock
+                .style('right', tooltipCoordinate.right)
+                .style('bottom', tooltipCoordinate.bottom)
+                .transition()
+                .duration(transition)
+                .ease(easeLinear)
+                .style('left', tooltipCoordinate.left)
+                .style('top', tooltipCoordinate.top);
+        }
+        else {
+            tooltipBlock
+                .style('left', tooltipCoordinate.left)
+                .style('top', tooltipCoordinate.top)
+                .style('right', tooltipCoordinate.right)
+                .style('bottom', tooltipCoordinate.bottom);
+        }
     }
 
     private static showTooltipBlock(tooltipBlock: Selection<BaseType, unknown, HTMLElement, any>): void {
@@ -295,19 +316,4 @@ export class Tooltip {
         return filter;
     }
 
-    private static renderBarHighlighter(block: Block, barAttrs: BarHighlighterAttrs): Selection<SVGRectElement, unknown, HTMLElement, any> {
-        const barHighlighter = block.getChartBlock()
-            .append('rect')
-            .attr('class', 'bar-highlighter')
-            .attr('x', barAttrs.x)
-            .attr('y', barAttrs.y)
-            .attr('width', barAttrs.width)
-            .attr('height', barAttrs.height)
-            .style('fill', '#BDBDBD')
-            .style('pointer-events', 'none')
-            .style('opacity', 0.2)
-            .lower();
-
-        return barHighlighter;
-    }
 }

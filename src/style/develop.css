@@ -85,7 +85,6 @@
 .tooltip-content {
     position: relative;
     pointer-events: none;
-    font-size: 14px;
     font-family: "Roboto", sans-serif;
     line-height: 1;
     font-weight: bold;
@@ -97,7 +96,8 @@
 }
 .tooltip-content-2d {
     border: 1px solid gray;
-    background: rgba(255, 255, 255, 0.8);
+    color: white;
+    background: rgba(0, 0, 0, 0.82);
 }
 .tooltip-arrow {
     position: absolute;
@@ -114,15 +114,29 @@
     font-style: normal;
     font-size: 14px;
 }
+
+.tooltip-content-2d .tooltip-head {
+    font-size: 12px;
+}
+.tooltip-content-2d .tooltip-text-item {
+    font-size: 12px;
+}
+.tooltip-content-2d .tooltip-circle {
+    position: relative;
+    top: -2px;
+}
+
 .tooltip-group:not(:first-of-type) {
     margin-top: 8px;
 }
 .tooltip-line {
     stroke: #000000;
-    stroke-width: 1px;
+    stroke-width: 2px;
 }
 
 .chart-element-highlight {
+    stroke: black;
+    stroke-width: 1px;
     opacity: 0.9;
 }
 
