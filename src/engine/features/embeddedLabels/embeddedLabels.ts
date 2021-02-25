@@ -3,7 +3,7 @@ import { BlockMargin, DataRow, EmbeddedLabelTypeModel, Field, Orient, Size } fro
 import { Block } from "../../block/block";
 import { Helper } from "../../helper";
 import { ValueFormatter } from "../../valueFormatter";
-import { BarAttrs, EmbeddedLabelPosition, EmbeddedLabelsHelper } from "./embeddedLabelsHelper";
+import { BarAttrs, EmbeddedLabelPosition, EmbeddedLabelsHelper, LABEL_BAR_PADDING } from "./embeddedLabelsHelper";
 
 export class EmbeddedLabels {
     public static render(block: Block, bars: Selection<SVGRectElement, DataRow, SVGGElement, any>, field: Field, type: EmbeddedLabelTypeModel, keyAxisOrient: Orient, blockSize: Size, margin: BlockMargin): void {
@@ -43,14 +43,22 @@ export class EmbeddedLabels {
         if (position === 'inside')
             labelBlock.style('fill', '#FFFFFF');
 
-        this.checkLabelsToResetTextAnchor(labelBlock, labelUnserveFlag, margin, blockSize);
+        if(labelUnserveFlag)
+            this.checkLabelsToResetTextAnchor(labelBlock, margin, blockSize, keyAxisOrient);
         this.cropText(labelBlock, barAttrs, position, labelUnserveFlag, margin, blockSize);
     }
 
-    private static checkLabelsToResetTextAnchor(labelBlock: Selection<SVGTextElement, unknown, HTMLElement, unknown>, labelUnserveFlag: boolean, margin: BlockMargin, blockSize: Size): void {
-        if (Helper.getSelectionNumericAttr(labelBlock, 'x') + labelBlock.node().getBBox().width > blockSize.width - margin.right && labelUnserveFlag) {
-            labelBlock.attr('x', blockSize.width - margin.right);
-            labelBlock.attr('text-anchor', 'end');
+    private static checkLabelsToResetTextAnchor(labelBlock: Selection<SVGTextElement, unknown, HTMLElement, unknown>, margin: BlockMargin, blockSize: Size, keyAxisOrient: Orient): void {
+        if(keyAxisOrient === 'left') {
+            if (Helper.getSelectionNumericAttr(labelBlock, 'x') + labelBlock.node().getBBox().width > blockSize.width - margin.right) {
+                labelBlock.attr('x', blockSize.width - margin.right);
+                labelBlock.attr('text-anchor', 'end');
+            }
+        } else if(keyAxisOrient === 'right') {
+            if(Helper.getSelectionNumericAttr(labelBlock, 'x') - labelBlock.node().getBBox().width < margin.left) {
+                labelBlock.attr('x', margin.left);
+                labelBlock.attr('text-anchor', 'left');
+            }
         }
     }
 
