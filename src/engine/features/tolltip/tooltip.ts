@@ -94,20 +94,8 @@ export class Tooltip {
         const tooltipArrow = this.renderTooltipArrow(tooltipBlock);
         const thisClass = this;
 
-        const filter = block.renderDefs()
-            .append('filter')
-            .attr('id', 'shadow')
-            .attr('width', '300%')
-            .attr('height', '300%')
-            .attr('x', '-100%')
-            .attr('y', '-100%')
-            .style('outline', '1px solid red');
-
-        filter.append('feDropShadow')
-            .attr('dx', 0)
-            .attr('dy', 0)
-            .attr('flood-color', 'rgba(0, 0, 0, 0.15)')
-            .attr('stdDeviation', 20);
+        const filterId = 'shadow'
+        this.renderShadowFilter(block, filterId);
 
         let clone: Selection<BaseType, unknown, BaseType, unknown>;
 
@@ -124,7 +112,7 @@ export class Tooltip {
                 // Выделение выбранного сегмента с помощью тени. Для этого создается копия сегмента, которая отображает поверх оригинального
                 // Оригинальный сегмент на оргинальный сегмент вешается фильтр, который преобразовывает его в тень.
                 clone = select(this).clone();
-                select(this).style('filter', 'url(#shadow)');
+                select(this).style('filter', `url(#${filterId})`);
 
                 TooltipHelper.highlightDonutSegment(select<SVGGElement, PieArcDatum<DataRow>>(this), margin, blockSize, donutThickness);
             });
@@ -258,5 +246,29 @@ export class Tooltip {
 
     private static hideTooltipBlock(tooltipBlock: Selection<BaseType, unknown, HTMLElement, any>): void {
         tooltipBlock.style('display', 'none');
+    }
+
+    private static renderShadowFilter(block: Block, filterId: string): Selection<SVGFilterElement, unknown, HTMLElement, unknown> {
+        let filter = block.renderDefs()
+            .select<SVGFilterElement>(`filter#${filterId}`);
+
+        if(filter.empty())
+            filter = block.renderDefs()
+                .append('filter')
+                .attr('id', filterId)
+                .attr('width', '300%')
+                .attr('height', '300%')
+                .attr('x', '-100%')
+                .attr('y', '-100%')
+                .style('outline', '1px solid red');
+
+        if(filter.select('feDropShadow').empty())
+            filter.append('feDropShadow')
+                .attr('dx', 0)
+                .attr('dy', 0)
+                .attr('flood-color', 'rgba(0, 0, 0, 0.15)')
+                .attr('stdDeviation', 20);
+
+        return filter;
     }
 }
