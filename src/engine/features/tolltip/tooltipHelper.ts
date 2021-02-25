@@ -43,9 +43,13 @@ const TOOLTIP_ARROW_PADDING_Y = 13;
 export class TooltipHelper {
     public static fillForMulty2DCharts(tooltipContentBlock: Selection<BaseType, unknown, BaseType, unknown>, charts: TwoDimensionalChartModel[], data: DataSource, dataOptions: OptionsModelData, keyValue: string): void {
         tooltipContentBlock.html('');
+        tooltipContentBlock.append('div')
+            .attr('class', 'tooltip-group')
+            .text(keyValue);
         charts.forEach(chart => {
             chart.data.valueFields.forEach((field, index) => {
-                this.fillTooltipContent(tooltipContentBlock, data, dataOptions, keyValue, field, chart.style.elementColors[index % chart.style.elementColors.length].toString());
+                const text = this.getTooltipItemText(data, dataOptions, keyValue, field, false);
+                this.fillTooltipContent(tooltipContentBlock, chart.style.elementColors[index % chart.style.elementColors.length].toString(), text);
             });
         })
     }
@@ -53,19 +57,23 @@ export class TooltipHelper {
     public static fillFor2DChart(tooltipContentBlock: Selection<BaseType, unknown, BaseType, unknown>, chart: TwoDimensionalChartModel, data: DataSource, dataOptions: OptionsModelData, keyValue: string, fieldIndex: number = null): void {
         tooltipContentBlock.html('');
         chart.data.valueFields.forEach((field, index) => {
-            if(fieldIndex === null || index === fieldIndex)
-                this.fillTooltipContent(tooltipContentBlock, data, dataOptions, keyValue, field, chart.style.elementColors[index % chart.style.elementColors.length].toString());
+            if(fieldIndex === null || index === fieldIndex) {
+                const text = this.getTooltipItemText(data, dataOptions, keyValue, field);
+                this.fillTooltipContent(tooltipContentBlock, chart.style.elementColors[index % chart.style.elementColors.length].toString(), text);
+            }
         });
     }
 
     public static fillTooltipForPolarChart(tooltipContentBlock: Selection<BaseType, unknown, BaseType, unknown>, chart: PolarChartModel, data: DataSource, dataOptions: OptionsModelData, keyValue: string, markColor: string): void {
         tooltipContentBlock.html('');
-        this.fillTooltipContent(tooltipContentBlock, data, dataOptions, keyValue, chart.data.valueField, markColor);
+        const text = this.getTooltipItemText(data, dataOptions, keyValue, chart.data.valueField);
+        this.fillTooltipContent(tooltipContentBlock, markColor, text);
     }
 
     public static fillTooltipForIntervalChart(tooltipContentBlock: Selection<BaseType, unknown, BaseType, unknown>, chart: IntervalChartModel, data: DataSource, dataOptions: OptionsModelData, keyValue: string, markColor: string): void {
         tooltipContentBlock.html('');
-        this.fillTooltipContent(tooltipContentBlock, data, dataOptions, keyValue, chart.data.valueField1, markColor);
+        const text = this.getTooltipItemText(data, dataOptions, keyValue, chart.data.valueField1);
+        this.fillTooltipContent(tooltipContentBlock, markColor, text);
     }
 
     public static getElementIndex(elemets: Selection<BaseType, DataRow, BaseType, unknown>, dot: BaseType, keyValue: string, keyName: string, isSegmented: boolean): number {
@@ -291,7 +299,7 @@ export class TooltipHelper {
         }
     }
 
-    private static fillTooltipContent(tooltipContentBlock: Selection<BaseType, unknown, BaseType, unknown>, data: DataSource, dataOptions: OptionsModelData, keyValue: string, valueField: Field, markColor: string): void {
+    private static fillTooltipContent(tooltipContentBlock: Selection<BaseType, unknown, BaseType, unknown>, markColor: string, tooltipText: string): void {
         const group = tooltipContentBlock.append('div')
             .attr('class', 'tooltip-group');
 
@@ -305,16 +313,21 @@ export class TooltipHelper {
             .attr('class', 'tooltip-texts')
             .append('div')
             .attr('class', 'tooltip-text-item')
-            .text(this.getTooltipItemText(data, dataOptions, keyValue, valueField))
+            .text(tooltipText)
             .style('white-space', 'nowrap');
 
         if (textBlock.node().getBoundingClientRect().width > 500)
             textBlock.style('white-space', 'normal');
     }
 
-    private static getTooltipItemText(data: DataSource, dataOptions: OptionsModelData, keyValue: string, valueField: Field): string {
+    private static getTooltipItemText(data: DataSource, dataOptions: OptionsModelData, keyValue: string, valueField: Field, showKey: boolean = true): string {
         const row = data[dataOptions.dataSource].find(d => d[dataOptions.keyField.name] === keyValue);
-        return `${row[dataOptions.keyField.name]} - ${ValueFormatter.formatValue(valueField.format, row[valueField.name])}`;
+        let text: string;
+        if(showKey)
+            text = `${row[dataOptions.keyField.name]} - ${ValueFormatter.formatValue(valueField.format, row[valueField.name])}`;
+        else
+            text = `${ValueFormatter.formatValue(valueField.format, row[valueField.name])}`;
+        return text;
     }
 
     private static getHorizontalPad(coordinateX: number, tooltipBlockNode: HTMLElement, blockSize: Size, translateX: number): number {

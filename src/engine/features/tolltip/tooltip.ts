@@ -77,6 +77,8 @@ export class Tooltip {
 
         let keyValue: string;
 
+        tooltipContent.classed('tooltip-content-2d', true);
+
         tipBox
             .on('mouseover', function () {
                 tooltipBlock.style('display', 'block');
@@ -103,56 +105,11 @@ export class Tooltip {
             .on('mouseleave', function () {
                 tooltipBlock.style('display', 'none');
                 tooltipLine.style('display', 'none');
-                
+
                 elements.forEach(elementSet => {
                     elementSet.classed('chart-element-highlight', false);
                 });
             });
-    }
-
-    private static renderTooltipForBars(block: Block, elemets: Selection<BaseType, DataRow, BaseType, unknown>, data: DataSource, dataOptions: OptionsModelData, chart: TwoDimensionalChartModel, chartOrientation: ChartOrientation, blockSize: Size, margin: BlockMargin): void {
-        const tooltipBlock = this.renderTooltipBlock(block);
-        const tooltipContent = this.renderTooltipContentBlock(tooltipBlock);
-        const tooltipArrow = this.renderTooltipArrow(tooltipBlock);
-
-        const thisClass = this;
-
-        let isGrouped: boolean;
-        if (chartOrientation === 'vertical')
-            isGrouped = parseFloat(elemets.attr('width')) < 10; // grouping bar by one bar width
-        else
-            isGrouped = parseFloat(elemets.attr('height')) < 10;
-
-        let barHighlighter: Selection<SVGRectElement, unknown, HTMLElement, any>; // серая линия, проходящая от начала бара до конца чарт-блока
-
-        elemets
-            .on('mouseover', function (_event, dataRow) {
-                thisClass.showTooltipBlock(tooltipBlock);
-                const keyValue = TooltipHelper.getKeyForTooltip(dataRow, dataOptions.keyField.name, chart.isSegmented);
-
-                if (isGrouped) {
-                    TooltipHelper.fillFor2DChart(tooltipContent, chart, data, dataOptions, keyValue)
-                } else {
-                    const index = TooltipHelper.getElementIndex(elemets, this, keyValue, dataOptions.keyField.name, chart.isSegmented)
-                    TooltipHelper.fillFor2DChart(tooltipContent, chart, data, dataOptions, keyValue, index);
-                }
-
-                const coordinatePointer: [number, number] = TooltipHelper.getTooltipBlockCoordinateByRect(select(this), tooltipBlock, blockSize, tooltipArrow, chartOrientation);
-                const tooltipCoordinate = TooltipHelper.getTooltipCoordinate(coordinatePointer);
-                thisClass.setTooltipCoordinate(tooltipBlock, tooltipCoordinate);
-
-                let highlighterAttrs: BarHighlighterAttrs;
-                if(isGrouped)
-                    highlighterAttrs = TooltipHelper.getBarHighlighterAttrs(elemets.filter(d => d[dataOptions.keyField.name] === keyValue), chartOrientation, blockSize, margin, isGrouped);
-                else
-                    highlighterAttrs = TooltipHelper.getBarHighlighterAttrs(select(this), chartOrientation, blockSize, margin, isGrouped);
-                barHighlighter = thisClass.renderBarHighlighter(block, highlighterAttrs);
-            });
-
-        elemets.on('mouseleave', function () {
-            thisClass.hideTooltipBlock(tooltipBlock);
-            barHighlighter.remove();
-        });
     }
 
     private static renderTooltipForDonut(block: Block, elemets: Selection<SVGGElement, PieArcDatum<DataRow>, SVGGElement, unknown>, data: DataSource, dataOptions: OptionsModelData, chart: PolarChartModel, blockSize: Size, margin: BlockMargin, donutThickness: number, translateX: number = 0, translateY: number = 0): void {

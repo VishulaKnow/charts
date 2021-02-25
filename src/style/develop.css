@@ -90,11 +90,14 @@
     line-height: 1;
     font-weight: bold;
     padding: 15px 20px 15px 15px;
-    background: rgba(255, 255, 255, 0.8);
     color: black;
     z-index: 102;
     max-width: 500px;
+    background: rgba(255, 255, 255, 1);
+}
+.tooltip-content-2d {
     border: 1px solid gray;
+    background: rgba(255, 255, 255, 0.8);
 }
 .tooltip-arrow {
     position: absolute;
