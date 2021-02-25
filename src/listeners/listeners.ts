@@ -157,6 +157,7 @@ export default class Listeners
     private changeConfigOptions(notationType: '2d' | 'polar' | 'interval'): void {
         if(notationType === '2d') {
             const options: TwoDimensionalOptions = {
+                title: this.config.options.title,
                 legend: this.config.options.legend,
                 orientation: ListenersHelper.getInputValue('#chart-orient') as 'horizontal' | 'vertical',
                 type: notationType,
@@ -207,6 +208,7 @@ export default class Listeners
             this.config.options = options;
         } else if(notationType === 'polar') {
             const options: PolarOptions = {
+                title: this.config.options.title,
                 legend: this.config.options.legend,
                 data: {
                     dataSource: 'dataSet',
@@ -228,6 +230,7 @@ export default class Listeners
             this.config.options = options;
         } else if(notationType === 'interval') {
             const options: IntervalOptions = {
+                title: this.config.options.title,
                 legend: this.config.options.legend,
                 data: {
                     dataSource: 'dataSet_gantt',

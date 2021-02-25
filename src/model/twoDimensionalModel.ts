@@ -16,6 +16,7 @@ export class TwoDimensionalModel
 
         return {
             legend: LegendModel.getLegendModel(config.options.type, config.options.legend.show, config.canvas.size, margin),
+            title: configOptions.title,
             orient: configOptions.orientation,
             scale: {
                 scaleKey: {

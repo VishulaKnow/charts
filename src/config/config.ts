@@ -22,6 +22,7 @@ export interface ChartBlockCanvas {
 interface Options {
     legend: Legend;
     data: DataOptions;
+    title: string;
 }
 
 interface DataOptions {

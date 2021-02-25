@@ -109,8 +109,6 @@ export function assembleModel(config: Config, data: DataSource, designerConfig: 
 
     roundMargin(margin);
 
-    console.log(otherComponents);
-
     return {
         blockCanvas,
         chartBlock,

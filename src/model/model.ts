@@ -92,6 +92,7 @@ export interface DataScope {
 interface OptionsModel {
     legend: ILegendModel;
     data: OptionsModelData;
+    title: string;
 }
 export interface TwoDimensionalOptionsModel extends OptionsModel {
     type: '2d';

@@ -11,6 +11,7 @@ export class PolarModel
         const configOptions = <PolarOptions>config.options;
         return {
             type: configOptions.type,
+            title: configOptions.title,
             data: { ...configOptions.data },
             charts: this.getChartsModel(configOptions.charts, data[configOptions.data.dataSource].length, designerConfig.chartStyle),
             legend: LegendModel.getLegendModel(config.options.type, config.options.legend.show, config.canvas.size, margin)

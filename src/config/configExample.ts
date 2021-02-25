@@ -10,6 +10,7 @@ const configCars: Config = {
     },
     options: {
         type: '2d',
+        title: 'asd',
         axis: {
             keyAxis: {
                 position: 'end',
@@ -112,6 +113,7 @@ const configDemo: Config = {
         }
     },
     options: {
+        title: 'asd',
         type: '2d',
         axis: {
             keyAxis: {
