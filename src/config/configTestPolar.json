@@ -2,11 +2,12 @@
   "canvas":{
     "class":"svg-chart",
     "size":{
-      "width":500,
+      "width":600,
       "height":510
     }
   },
   "options":{
+    "title": "Рост стоимости",
     "type":"polar",
     "legend":{
       "show":true
