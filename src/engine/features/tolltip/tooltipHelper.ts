@@ -1,8 +1,10 @@
 import { AxisScale } from 'd3-axis';
 import { Selection, BaseType } from 'd3-selection'
+import { PieArcDatum } from 'd3-shape';
 import { ChartOrientation } from "../../../config/config";
 import { BlockMargin, DataRow, DataSource, Field, IntervalChartModel, OptionsModelData, Orient, PolarChartModel, ScaleKeyType, Size, TwoDimensionalChartModel } from "../../../model/model";
 import { Helper } from '../../helper';
+import { DonutHelper } from '../../polarNotation/DonutHelper';
 import { ValueFormatter, } from "../../valueFormatter";
 import { Scale } from '../scale/scale';
 
@@ -148,6 +150,23 @@ export class TooltipHelper {
     public static setElementsFullOpacity(elements: Selection<BaseType, DataRow, BaseType, unknown>): void {
         if (elements)
             elements.style('opacity', 1);
+    }
+
+    public static highlightDonutSegment(segment: Selection<SVGGElement, PieArcDatum<DataRow>, BaseType, unknown>, margin: BlockMargin, blockSize: Size, donutThickness: number): void {
+        const scaleSize = 2;
+        segment
+            .select('path')
+            .attr('d', (d, i) => DonutHelper.getArcGeneratorObject(blockSize, margin, donutThickness)
+                .outerRadius(DonutHelper.getOuterRadius(margin, blockSize) + scaleSize)
+                .innerRadius(DonutHelper.getOuterRadius(margin, blockSize) - donutThickness - scaleSize)(d, i));
+    }
+
+    public static setDonutSegmentDefaultAppearance(segment: Selection<SVGGElement, PieArcDatum<DataRow>, BaseType, unknown>, margin: BlockMargin, blockSize: Size, donutThickness: number): void {
+        segment
+            .select('path')
+            .attr('d', (d, i) => DonutHelper.getArcGeneratorObject(blockSize, margin, donutThickness)
+                .outerRadius(DonutHelper.getOuterRadius(margin, blockSize))
+                .innerRadius(DonutHelper.getOuterRadius(margin, blockSize) - donutThickness)(d, i));
     }
 
     public static getTipBoxAttributes(margin: BlockMargin, blockSize: Size): TipBoxAttributes {

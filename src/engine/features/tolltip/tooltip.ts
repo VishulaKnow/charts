@@ -126,24 +126,17 @@ export class Tooltip {
                 clone = select(this).clone();
                 select(this).style('filter', 'url(#shadow)');
 
-                // Задание прозрачности всем сегментам, кроме выделенного
-                // TooltipHelper.setElementsSemiOpacity(elemets.filter(d => d.data[dataOptions.keyField.name] !== key));
-
-                // Выезд сегмента наружу
-                // select<SVGGElement, PieArcDatum<DataRow>>(this)
-                //     .select('path')
-                //     .attr('d', (d, i) => Donut.getArcGeneratorObject(blockSize, margin, donutThickness)
-                //         .outerRadius(Donut.getOuterRadius(margin, blockSize) + 5)
-                //         .innerRadius(Donut.getOuterRadius(margin, blockSize) - donutThickness + 5)
-                //         .padAngle(0.025)(d, i));
+                TooltipHelper.highlightDonutSegment(select<SVGGElement, PieArcDatum<DataRow>>(this), margin, blockSize, donutThickness);
             });
 
         elemets.on('mouseleave', function () {
             thisClass.hideTooltipBlock(tooltipBlock);
-            TooltipHelper.setElementsFullOpacity(elemets);
+
             select(this) // удаление тени с оригинального сегмента
                 .style('filter', null);
             clone.remove(); // удаление клона
+            
+            TooltipHelper.setDonutSegmentDefaultAppearance(select<SVGGElement, PieArcDatum<DataRow>>(this), margin, blockSize, donutThickness)
         });
     }
 
