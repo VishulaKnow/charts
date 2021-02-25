@@ -2,7 +2,7 @@
   "canvas":{
     "class":"svg-chart",
     "size":{
-      "width":600,
+      "width":800,
       "height":510
     }
   },

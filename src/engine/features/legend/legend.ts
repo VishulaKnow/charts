@@ -122,7 +122,8 @@ export class Legend
             .style('display', 'flex');
     
         if(itemsDirection === 'column') {
-            wrapper.style('flex-direction', 'column');
+            wrapper.style('flex-direction', 'column')
+                .style('justify-content', 'center');
         }
         
         const itemWrappers = wrapper

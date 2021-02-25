@@ -67,7 +67,6 @@ export class Tooltip {
     private static renderLineTooltip(block: Block, scaleKey: AxisScale<any>, margin: BlockMargin, blockSize: Size, charts: TwoDimensionalChartModel[], chartOrientation: ChartOrientation, keyAxisOrient: Orient, data: DataSource, dataOptions: OptionsModelData, scaleKeyModel: ScaleKeyModel): void {
         const tooltipBlock = this.renderTooltipBlock(block);
         const tooltipContent = this.renderTooltipContentBlock(tooltipBlock);
-        const tooltipArrow = this.renderTooltipArrow(tooltipBlock);
         const thisClass = this;
 
         const tooltipLine = this.renderTooltipLine(block);

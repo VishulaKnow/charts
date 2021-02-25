@@ -10,7 +10,7 @@ const configCars: Config = {
     },
     options: {
         type: '2d',
-        title: 'Тext text text text text text text text text text text text text text text text text text text text text text text text text  ',
+        title: 'График по 14 показателям в 4 разрезах, название длинное в одну строчку, если не влазит, то скрываем все в 3 точки',
         axis: {
             keyAxis: {
                 position: 'end',
