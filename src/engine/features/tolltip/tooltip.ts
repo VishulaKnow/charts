@@ -67,6 +67,7 @@ export class Tooltip {
     private static renderLineTooltip(block: Block, scaleKey: AxisScale<any>, margin: BlockMargin, blockSize: Size, charts: TwoDimensionalChartModel[], chartOrientation: ChartOrientation, keyAxisOrient: Orient, data: DataSource, dataOptions: OptionsModelData, scaleKeyModel: ScaleKeyModel): void {
         const tooltipBlock = this.renderTooltipBlock(block);
         const tooltipContent = this.renderTooltipContentBlock(tooltipBlock);
+        const tooltipArrow = this.renderTooltipArrow(tooltipBlock);
         const thisClass = this;
 
         const tooltipLine = this.renderTooltipLine(block);
@@ -126,7 +127,11 @@ export class Tooltip {
                 const tooltipCoordinate = TooltipHelper.getTooltipCoordinate(coordinatePointer);
                 thisClass.setTooltipCoordinate(tooltipBlock, tooltipCoordinate);
 
-                const highlighterAttrs = TooltipHelper.getBarHighlighterAttrs(select(this), chartOrientation, blockSize, margin);
+                let highlighterAttrs: BarHighlighterAttrs;
+                if(isGrouped)
+                    highlighterAttrs= TooltipHelper.getBarHighlighterAttrs(elemets.filter(d => d[dataOptions.keyField.name] === keyValue), chartOrientation, blockSize, margin, isGrouped);
+                else
+                    highlighterAttrs= TooltipHelper.getBarHighlighterAttrs(select(this), chartOrientation, blockSize, margin, isGrouped);
                 barHighlighter = thisClass.renderBarHighlighter(block, highlighterAttrs);
             });
 

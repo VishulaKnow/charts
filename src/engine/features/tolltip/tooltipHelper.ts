@@ -157,7 +157,7 @@ export class TooltipHelper {
         this.setTooltipArrowCoordinate(tooltipArrow, this.getTooltipArrowPadding(tooltipBlockNode, horizontalPad));
 
         return [coordinate[0] - TOOLTIP_ARROW_PADDING_X - horizontalPad,
-        coordinate[1] - TOOLTIP_ARROW_PADDING_Y - tooltipBlockNode.getBoundingClientRect().height - verticalPad];
+            coordinate[1] - TOOLTIP_ARROW_PADDING_Y - tooltipBlockNode.getBoundingClientRect().height - verticalPad];
     }
 
     public static getKeyForTooltip(row: DataRow, keyFieldName: string, isSegmented: boolean): string {
@@ -208,8 +208,7 @@ export class TooltipHelper {
                 return 0;
 
             return Math.floor(point / scaleStep);
-        }
-        else {
+        } else {
             const chartBlockSizeByDir = orient === 'vertical'
                 ? blockSize.width - margin.left - margin.right
                 : blockSize.height - margin.top - margin.bottom;
@@ -257,20 +256,38 @@ export class TooltipHelper {
         return attributes;
     }
 
-    public static getBarHighlighterAttrs(bar: Selection<BaseType, DataRow, HTMLElement, unknown>, chartOrientation: ChartOrientation, blockSize: Size, margin: BlockMargin): BarHighlighterAttrs {
+    public static getBarHighlighterAttrs(barSelection: Selection<BaseType, DataRow, BaseType, unknown>, chartOrientation: ChartOrientation, blockSize: Size, margin: BlockMargin, isGrouped: boolean): BarHighlighterAttrs {
         const pad = 3;
+        if(!isGrouped) {
+            if(chartOrientation === 'vertical')
+                return {
+                    x: Helper.getSelectionNumericAttr(barSelection, 'x') - pad,
+                    y: margin.top,
+                    width: Helper.getSelectionNumericAttr(barSelection, 'width') + pad * 2,
+                    height: blockSize.height - margin.top - margin.bottom
+                }
+            return {
+                x: margin.left,
+                y: Helper.getSelectionNumericAttr(barSelection, 'y') - pad,
+                width: blockSize.width - margin.left - margin.right,
+                height: Helper.getSelectionNumericAttr(barSelection, 'height') + pad * 2
+            }
+        }
+
+        const firstBar = barSelection.filter(':first-child');
+        const lastBar = barSelection.filter(':last-child');
         if(chartOrientation === 'vertical')
             return {
-                x: Helper.getSelectionNumericAttr(bar, 'x') - pad,
+                x: Helper.getSelectionNumericAttr(firstBar, 'x') - pad,
                 y: margin.top,
-                width: Helper.getSelectionNumericAttr(bar, 'width') + pad * 2,
+                width: Helper.getSelectionNumericAttr(lastBar, 'x') + Helper.getSelectionNumericAttr(lastBar, 'width') - Helper.getSelectionNumericAttr(firstBar, 'x') + pad * 2,
                 height: blockSize.height - margin.top - margin.bottom
             }
         return {
             x: margin.left,
-            y: Helper.getSelectionNumericAttr(bar, 'y') - pad,
+            y: Helper.getSelectionNumericAttr(firstBar, 'y') - pad,
             width: blockSize.width - margin.left - margin.right,
-            height: Helper.getSelectionNumericAttr(bar, 'height') + pad * 2
+            height: Helper.getSelectionNumericAttr(lastBar, 'y') + Helper.getSelectionNumericAttr(lastBar, 'height') - Helper.getSelectionNumericAttr(firstBar, 'y') + pad * 2
         }
     }
 
