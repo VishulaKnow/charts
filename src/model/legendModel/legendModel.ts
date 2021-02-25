@@ -35,8 +35,8 @@ export class LegendModel
             },
             right: { 
                 size: 0,
-                margin: { top: mt, bottom: mb, left: 0, right: mr },
-                pad: titleModelTemplate.pad + titleModelTemplate.margin.top + titleModelTemplate.size
+                margin: { top: mt + titleModelTemplate.pad + titleModelTemplate.margin.top + titleModelTemplate.size, bottom: mb, left: 0, right: mr },
+                pad: 0
             },
             bottom: { 
                 size: 0,
