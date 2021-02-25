@@ -36,7 +36,7 @@ export class Legend
             .append('foreignObject')
                 .attr('class', 'legend-object');
         
-        const legendCoordinate = this.getLegendCoordinateByPosition(legendPosition, legendBlockModel, blockSize);
+        const legendCoordinate = this.getLegendCoordinateByPosition(legendPosition, legendBlockModel, blockSize, );
         this.fillLegendCoordinate(legendBlock, legendCoordinate);  
             
         this.renderLegendContent(legendBlock,
@@ -84,7 +84,7 @@ export class Legend
         }
         
         if(legendPosition === 'left' || legendPosition === 'right') {
-            coordinate.y = legendModel.margin.top;
+            coordinate.y = legendModel.margin.top + legendModel.pad;
             coordinate.width = legendModel.size;
             coordinate.height = blockSize.height - legendModel.margin.top - legendModel.margin.bottom;
         } else if(legendPosition === 'bottom' || legendPosition === 'top') {
@@ -98,7 +98,7 @@ export class Legend
         else if(legendPosition === 'right')
             coordinate.x = blockSize.width - legendModel.size - legendModel.margin.right;
         else if(legendPosition === 'top')
-            coordinate.y = legendModel.margin.top;
+            coordinate.y = legendModel.margin.top + legendModel.pad;
         else if(legendPosition === 'bottom')
             coordinate.y = blockSize.height - legendModel.size - legendModel.margin.bottom;
         

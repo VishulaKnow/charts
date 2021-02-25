@@ -1,7 +1,9 @@
 import { ChartNotation } from "../../config/config";
 import { BlockMargin, ILegendModel, LegendBlockModel, LegendPosition, Orient, Size } from "../model";
 import { ModelHelper } from "../modelHelper";
+import { TitleModel } from "../titleModel";
 import { LegendCanvasModel, LegendItemsDirection } from "./legendCanvasModel";
+
 
 /** If donut block has width less than this const, legend change postion from "right" to "bottom" */
 export const MIN_DONUT_BLOCK_SIZE = 260;
@@ -22,22 +24,29 @@ export class LegendModel
 
     public static getBaseLegendBlockModel(): LegendBlockModel {
         const mt = 20, mb = 20, ml = 20, mr = 20;
+        const titleModelTemplate = TitleModel.getTitleModel()
+        
         return {
+            
             left: { 
                 size: 0,
-                margin: { top: mt, bottom: mb, left: ml, right: 0 }
+                margin: { top: mt, bottom: mb, left: ml, right: 0 },
+                pad: 0
             },
             right: { 
                 size: 0,
-                margin: { top: mt, bottom: mb, left: 0, right: mr }
+                margin: { top: mt, bottom: mb, left: 0, right: mr },
+                pad: titleModelTemplate.pad + titleModelTemplate.margin.top + titleModelTemplate.size
             },
             bottom: { 
                 size: 0,
-                margin: { top: 0, bottom: 20, left: 20, right: 20 }
+                margin: { top: 0, bottom: 20, left: 20, right: 20 },
+                pad: 0
             },
             top: { 
                 size: 0,
-                margin: { top: 20, bottom: 0, left: 20, right: 20 }
+                margin: { top: 20, bottom: 0, left: 20, right: 20 },
+                pad: titleModelTemplate.pad + titleModelTemplate.margin.top + titleModelTemplate.size
             }
         }
     }

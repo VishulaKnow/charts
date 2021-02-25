@@ -39,6 +39,7 @@ export class ChartRenderer {
             model.blockCanvas.size);
 
 
+        
         Title.render(block, 
             options.title,
             model.otherComponents.titleBlock,

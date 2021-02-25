@@ -170,9 +170,20 @@ export interface OtherComponents {
     legendBlock: LegendBlockModel;
     titleBlock: TitleBlockModel;
 }
-export interface TitleBlockModel {
+
+interface ComponentBlockModel {
     margin: BlockMargin;
     size: number;
+    pad: number;
+}
+
+export interface TitleBlockModel extends ComponentBlockModel {}
+
+export interface LegendBlockModel {
+    top: LegendBlockCanvas;
+    bottom: LegendBlockCanvas;
+    left: LegendBlockCanvas;
+    right: LegendBlockCanvas;
 }
 
 export interface Field {
@@ -189,12 +200,7 @@ export interface ChartSettings {
     donut: DonutChartSettings;
 }
 
-export interface LegendBlockModel {
-    top: LegendBlockCanvas;
-    bottom: LegendBlockCanvas;
-    left: LegendBlockCanvas;
-    right: LegendBlockCanvas;
-}
+
 
 export interface IAxisModel {
     keyAxis: AxisModelOptions;
@@ -249,7 +255,4 @@ export interface BarChartSettings {
     minBarWidth: number;
 }
 
-interface LegendBlockCanvas {
-    size: number;
-    margin: BlockMargin;
-}
+interface LegendBlockCanvas extends ComponentBlockModel {}
