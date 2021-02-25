@@ -10,6 +10,7 @@ import { DonutHelper } from '../../polarNotation/DonutHelper';
 import { Scales } from '../scale/scale';
 import { AxisScale } from 'd3-axis';
 import { Bar } from '../../twoDimensionalNotation/bar/bar';
+import { Dot } from '../lineDots/dot';
 
 export class Tooltip {
     private static tooltipWrapperClass = 'tooltip-wrapper';
@@ -35,7 +36,14 @@ export class Tooltip {
         if (scaleKey.domain().length === 0)
             return;
 
-        this.renderLineTooltip(block, scaleKey, margin, blockSize, charts, chartOrientation, keyAxisOrient, data, dataOptions, scaleKeyModel);
+        let elements: Selection<BaseType, DataRow, BaseType, unknown>[] = [];
+        charts.forEach(chart => {
+            if(chart.type === 'line' || chart.type === 'area')
+                elements.push(Dot.getAllDots(block, chart.cssClasses));
+            else
+                elements.push(Bar.getAllBarItems(block, chart.cssClasses));
+        });
+        this.renderLineTooltip(elements, block, scaleKey, margin, blockSize, charts, chartOrientation, keyAxisOrient, data, dataOptions, scaleKeyModel);
     }
 
     private static renderTooltipsForDonut(block: Block, charts: PolarChartModel[], data: DataSource, dataOptions: OptionsModelData, blockSize: Size, margin: BlockMargin, chartThickness: number): void {
@@ -58,7 +66,7 @@ export class Tooltip {
         });
     }
 
-    private static renderLineTooltip(block: Block, scaleKey: AxisScale<any>, margin: BlockMargin, blockSize: Size, charts: TwoDimensionalChartModel[], chartOrientation: ChartOrientation, keyAxisOrient: Orient, data: DataSource, dataOptions: OptionsModelData, scaleKeyModel: ScaleKeyModel): void {
+    private static renderLineTooltip(elements: Selection<BaseType, DataRow, BaseType, unknown>[], block: Block, scaleKey: AxisScale<any>, margin: BlockMargin, blockSize: Size, charts: TwoDimensionalChartModel[], chartOrientation: ChartOrientation, keyAxisOrient: Orient, data: DataSource, dataOptions: OptionsModelData, scaleKeyModel: ScaleKeyModel): void {
         const tooltipBlock = this.renderTooltipBlock(block);
         const tooltipContent = this.renderTooltipContentBlock(tooltipBlock);
         const thisClass = this;
@@ -67,13 +75,15 @@ export class Tooltip {
         const tipBoxAttributes = TooltipHelper.getTipBoxAttributes(margin, blockSize);
         const tipBox = this.renderTipBox(block, tipBoxAttributes);
 
+        let keyValue: string;
+
         tipBox
             .on('mouseover', function () {
                 tooltipBlock.style('display', 'block');
             })
             .on('mousemove', function (event) {
                 const index = TooltipHelper.getKeyIndex(pointer(event, this), chartOrientation, margin, blockSize, scaleKey, scaleKeyModel.type);
-                const keyValue = scaleKey.domain()[index];
+                keyValue = scaleKey.domain()[index];
                 TooltipHelper.fillForMulty2DCharts(tooltipContent, charts, data, dataOptions, keyValue);
 
                 const tooltipCoordinate = TooltipHelper.getTooltipFixedCoordinate(scaleKey, margin, blockSize, keyValue, tooltipContent.node(), keyAxisOrient);
@@ -82,10 +92,21 @@ export class Tooltip {
                 tooltipLine.style('display', 'block');
                 const tooltipLineAttributes = TooltipHelper.getTooltipLineAttributes(scaleKey, margin, keyValue, chartOrientation, blockSize);
                 thisClass.setTooltipLineAttributes(tooltipLine, tooltipLineAttributes);
+                
+
+                elements.forEach(elementSet => {
+                    elementSet.classed('chart-element-highlight', false);
+                    elementSet.filter(d => d[dataOptions.keyField.name] === keyValue)
+                        .classed('chart-element-highlight', true);
+                });
             })
             .on('mouseleave', function () {
                 tooltipBlock.style('display', 'none');
                 tooltipLine.style('display', 'none');
+                
+                elements.forEach(elementSet => {
+                    elementSet.classed('chart-element-highlight', false);
+                });
             });
     }
 
@@ -122,9 +143,9 @@ export class Tooltip {
 
                 let highlighterAttrs: BarHighlighterAttrs;
                 if(isGrouped)
-                    highlighterAttrs= TooltipHelper.getBarHighlighterAttrs(elemets.filter(d => d[dataOptions.keyField.name] === keyValue), chartOrientation, blockSize, margin, isGrouped);
+                    highlighterAttrs = TooltipHelper.getBarHighlighterAttrs(elemets.filter(d => d[dataOptions.keyField.name] === keyValue), chartOrientation, blockSize, margin, isGrouped);
                 else
-                    highlighterAttrs= TooltipHelper.getBarHighlighterAttrs(select(this), chartOrientation, blockSize, margin, isGrouped);
+                    highlighterAttrs = TooltipHelper.getBarHighlighterAttrs(select(this), chartOrientation, blockSize, margin, isGrouped);
                 barHighlighter = thisClass.renderBarHighlighter(block, highlighterAttrs);
             });
 
@@ -159,7 +180,7 @@ export class Tooltip {
                 clone = select(this).clone();
                 select(this).style('filter', `url(#${filterId})`);
 
-                TooltipHelper.highlightDonutSegment(select<SVGGElement, PieArcDatum<DataRow>>(this), margin, blockSize, donutThickness);
+                TooltipHelper.changeDonutHighlightAppearance(select<SVGGElement, PieArcDatum<DataRow>>(this), margin, blockSize, donutThickness, true);
             });
 
         elemets.on('mouseleave', function () {
@@ -169,7 +190,7 @@ export class Tooltip {
                 .style('filter', null);
             clone.remove(); // удаление клона
             
-            TooltipHelper.setDonutSegmentDefaultAppearance(select<SVGGElement, PieArcDatum<DataRow>>(this), margin, blockSize, donutThickness)
+            TooltipHelper.changeDonutHighlightAppearance(select<SVGGElement, PieArcDatum<DataRow>>(this), margin, blockSize, donutThickness, false);
         });
     }
 
@@ -313,7 +334,7 @@ export class Tooltip {
                 .attr('dx', 0)
                 .attr('dy', 0)
                 .attr('flood-color', 'rgba(0, 0, 0, 0.15)')
-                .attr('stdDeviation', 20);
+                .attr('stdDeviation', 10);
 
         return filter;
     }

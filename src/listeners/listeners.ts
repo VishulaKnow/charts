@@ -588,7 +588,7 @@ export default class Listeners
     }
 }
 
-import '../style/main.css'
+import '../style/develop.css'
 import config from '../config/configExample';
 import designerConfig from '../designer/designerConfigExample';
 import { Chart } from '../main';

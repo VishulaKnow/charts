@@ -98,23 +98,26 @@ export class TooltipHelper {
     public static getTooltipFixedCoordinate(scaleKey: AxisScale<any>, margin: BlockMargin, blockSize: Size, keyValue: string, tooltipBlockElement: HTMLElement, keyAxisOrient: Orient): TooltipCoordinate {
         if (keyAxisOrient === 'bottom' || keyAxisOrient === 'top') {
             const coordinate: TooltipCoordinate = {
-                top: margin.top + 'px',
+                top: margin.top - tooltipBlockElement.getBoundingClientRect().height + 'px',
                 bottom: null,
                 left: Scale.getScaledValue(scaleKey, keyValue) + margin.left - tooltipBlockElement.getBoundingClientRect().width / 2 + 'px',
                 right: null
             }
 
-            if (Helper.getPXValueFromString(coordinate.left) < margin.left)
-                coordinate.left = margin.left + 'px';
+            if(Helper.getPXValueFromString(coordinate.top) < 0)
+                coordinate.top = 0 + 'px';
 
-            if (Helper.getPXValueFromString(coordinate.left) + tooltipBlockElement.getBoundingClientRect().width > blockSize.width - margin.right) {
+            if (Helper.getPXValueFromString(coordinate.left) < 0)
+                coordinate.left = 0 + 'px';
+
+            if (Helper.getPXValueFromString(coordinate.left) + tooltipBlockElement.getBoundingClientRect().width > blockSize.width) {
                 coordinate.left = null;
-                coordinate.right = margin.right + 'px';
+                coordinate.right = 0 + 'px';
             }
 
             if (keyAxisOrient === 'top') {
                 coordinate.top = null;
-                coordinate.bottom = margin.bottom + 'px';
+                coordinate.bottom = 0 + 'px';
             }
 
             return coordinate;
@@ -180,21 +183,18 @@ export class TooltipHelper {
             elements.style('opacity', 1);
     }
 
-    public static highlightDonutSegment(segment: Selection<SVGGElement, PieArcDatum<DataRow>, BaseType, unknown>, margin: BlockMargin, blockSize: Size, donutThickness: number): void {
-        const scaleSize = 2;
+    public static changeDonutHighlightAppearance(segment: Selection<SVGGElement, PieArcDatum<DataRow>, BaseType, unknown>, margin: BlockMargin, blockSize: Size, donutThickness: number, on: boolean): void {
+        let scaleSize = 0;
+        if(on)
+            scaleSize = 5; // Если нужно выделить сегмент, то scaleSize не равен нулю и отображается увеличенным
+
         segment
             .select('path')
+            .transition()
+            .duration(200)
             .attr('d', (d, i) => DonutHelper.getArcGeneratorObject(blockSize, margin, donutThickness)
                 .outerRadius(DonutHelper.getOuterRadius(margin, blockSize) + scaleSize)
                 .innerRadius(DonutHelper.getOuterRadius(margin, blockSize) - donutThickness - scaleSize)(d, i));
-    }
-
-    public static setDonutSegmentDefaultAppearance(segment: Selection<SVGGElement, PieArcDatum<DataRow>, BaseType, unknown>, margin: BlockMargin, blockSize: Size, donutThickness: number): void {
-        segment
-            .select('path')
-            .attr('d', (d, i) => DonutHelper.getArcGeneratorObject(blockSize, margin, donutThickness)
-                .outerRadius(DonutHelper.getOuterRadius(margin, blockSize))
-                .innerRadius(DonutHelper.getOuterRadius(margin, blockSize) - donutThickness)(d, i));
     }
 
     public static getKeyIndex(pointer: [number, number], orient: ChartOrientation, margin: BlockMargin, blockSize: Size, scaleKey: AxisScale<any>, scaleKeyType: ScaleKeyType): number {

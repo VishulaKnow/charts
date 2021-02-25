@@ -1,6 +1,6 @@
 {
   "canvas":{
-    "class":"svg-chart",
+    "class":"svg-chart outline",
     "size":{
       "width":800,
       "height":510

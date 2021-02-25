@@ -90,10 +90,11 @@
     line-height: 1;
     font-weight: bold;
     padding: 15px 20px 15px 15px;
-    background: white;
+    background: rgba(255, 255, 255, 0.8);
     color: black;
     z-index: 102;
     max-width: 500px;
+    border: 1px solid gray;
 }
 .tooltip-arrow {
     position: absolute;
@@ -116,7 +117,11 @@
 .tooltip-line {
     stroke: #000000;
     /* stroke-dasharray: 3; */
-    stroke-width: 2px;
+    stroke-width: 1px;
+}
+
+.chart-element-highlight {
+    opacity: 0.9;
 }
 
 .aggregator-value, .aggregator-name {
