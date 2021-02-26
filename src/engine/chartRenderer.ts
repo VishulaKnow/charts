@@ -151,8 +151,7 @@ export class ChartRenderer {
                     margin,
                     keyAxisOrient,
                     chart,
-                    blockSize,
-                    chart.isSegmented);
+                    blockSize);
         });
     }
 
@@ -241,8 +240,7 @@ export class ChartRenderer {
                     margin,
                     chart,
                     keyAxisOrient,
-                    blockSize,
-                    chart.isSegmented);
+                    blockSize);
             }
         });
     }

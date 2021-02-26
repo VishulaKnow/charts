@@ -1,7 +1,7 @@
 import { Color } from "d3-color";
 import { select, Selection, BaseType } from 'd3-selection';
 import { transition } from 'd3-transition';
-import { BlockMargin, DataRow, Orient, Size } from "../../../model/model";
+import { BlockMargin, DataRow, Orient } from "../../../model/model";
 import { Block } from "../../block/block";
 import { Helper } from "../../helper";
 import { Scale, Scales } from "../scale/scale";
@@ -13,12 +13,12 @@ export interface DotAttrs {
 
 select.prototype.transition = transition;
 
-export class Dot
+export class MarkDot
 {
     public static dotClass = 'dot';
     private static dotRadius = 4;
 
-    public static render(block: Block, data: DataRow[], keyAxisOrient: Orient, scales: Scales, margin: BlockMargin, keyField: string, valueField: string, cssClasses: string[], itemIndex: number, colorPalette: Color[], blockSize: Size, isSegmented: boolean): void {
+    public static render(block: Block, data: DataRow[], keyAxisOrient: Orient, scales: Scales, margin: BlockMargin, keyField: string, valueField: string, cssClasses: string[], itemIndex: number, colorPalette: Color[], isSegmented: boolean): void {
         const dotsWrapper = block.getChartBlock()
             .selectAll(`.${this.dotClass}${Helper.getCssClassesLine(cssClasses)}.chart-index-${itemIndex}`)
             .data(data)
@@ -72,6 +72,6 @@ export class Dot
     }
 
     private static getKeyFieldValue(row: DataRow, keyFieldName: string, isSegmented: boolean): string {
-        return isSegmented ? row.data[keyFieldName] : row[keyFieldName];
+        return isSegmented ? row.data[keyFieldName] : row[keyFieldName]
     }
 }

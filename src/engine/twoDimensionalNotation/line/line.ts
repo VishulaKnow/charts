@@ -5,7 +5,7 @@ import { BlockMargin, DataRow, Field, Orient, Size, TwoDimensionalChartModel } f
 import { Helper } from "../../helper";
 import { Scales } from "../../features/scale/scale";
 import { Block } from "../../block/block";
-import { Dot } from "../../features/lineDots/dot";
+import { MarkDot } from "../../features/lineDots/markDot";
 import { LineHelper } from './lineHelper';
 
 export class Line {
@@ -30,7 +30,7 @@ export class Line {
                 .attr('d', d => lineGenerator(d));
 
             lines.each((d, i) => {
-                Dot.updateDotsCoordinateByValueAxis(block, d, keyAxisOrient, scales, margin, keyField.name, '1', chart.cssClasses, i, chart.isSegmented);
+                MarkDot.updateDotsCoordinateByValueAxis(block, d, keyAxisOrient, scales, margin, keyField.name, '1', chart.cssClasses, i, chart.isSegmented);
             });
         } else {
             chart.data.valueFields.forEach((valueField, index) => {
@@ -42,7 +42,7 @@ export class Line {
                     .duration(1000)
                     .attr('d', line(data));
 
-                Dot.updateDotsCoordinateByValueAxis(block, data, keyAxisOrient, scales, margin, keyField.name, valueField.name, chart.cssClasses, index, false);
+                MarkDot.updateDotsCoordinateByValueAxis(block, data, keyAxisOrient, scales, margin, keyField.name, valueField.name, chart.cssClasses, index, false);
             });
         }
     }
@@ -62,7 +62,7 @@ export class Line {
             Helper.setCssClasses(path, Helper.getCssClassesWithElementIndex(chart.cssClasses, index));
             Helper.setChartStyle(path, chart.style, index, 'stroke');
 
-            Dot.render(block, data, keyAxisOrient, scales, margin, keyField.name, valueField.name, chart.cssClasses, index, chart.style.elementColors, blockSize, false);
+            MarkDot.render(block, data, keyAxisOrient, scales, margin, keyField.name, valueField.name, chart.cssClasses, index, chart.style.elementColors, false);
         });
     }
 
@@ -89,7 +89,7 @@ export class Line {
         this.setSegmentColor(lines, chart.style.elementColors);
 
         stackedData.forEach((sd, index) => {
-            Dot.render(block, sd, keyAxisOrient, scales, margin, keyField.name, '1', chart.cssClasses, index, chart.style.elementColors, blockSize, true);
+            MarkDot.render(block, sd, keyAxisOrient, scales, margin, keyField.name, '1', chart.cssClasses, index, chart.style.elementColors, true);
         });
     }
 

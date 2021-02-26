@@ -5,22 +5,22 @@ import { BlockMargin, DataRow, Field, Orient, Size, TwoDimensionalChartModel } f
 import { Helper } from "../../helper";
 import { Scales } from "../../features/scale/scale";
 import { Block } from "../../block/block";
-import { Dot } from "../../features/lineDots/dot";
+import { MarkDot } from "../../features/lineDots/markDot";
 import { AreaHelper } from './areaHelper';
 
 
 export class Area {
     private static areaChartClass = 'area';
 
-    public static render(block: Block, scales: Scales, data: DataRow[], keyField: Field, margin: BlockMargin, keyAxisOrient: Orient, chart: TwoDimensionalChartModel, blockSize: Size, isSegmented: boolean): void {
-        if (isSegmented)
+    public static render(block: Block, scales: Scales, data: DataRow[], keyField: Field, margin: BlockMargin, keyAxisOrient: Orient, chart: TwoDimensionalChartModel, blockSize: Size): void {
+        if (chart.isSegmented)
             this.renderSegmented(block, scales, data, keyField, margin, keyAxisOrient, chart, blockSize);
         else
             this.renderGrouped(block, scales, data, keyField, margin, keyAxisOrient, chart, blockSize);
     }
 
-    public static updateAreaChartByValueAxis(block: Block, scales: Scales, data: DataRow[], keyField: Field, margin: BlockMargin, chart: TwoDimensionalChartModel, keyAxisOrient: Orient, blockSize: Size, isSegmented: boolean): void {
-        if (isSegmented) {
+    public static updateAreaChartByValueAxis(block: Block, scales: Scales, data: DataRow[], keyField: Field, margin: BlockMargin, chart: TwoDimensionalChartModel, keyAxisOrient: Orient, blockSize: Size): void {
+        if (chart.isSegmented) {
             const areaGenerator = AreaHelper.getSegmentedAreaGenerator(keyAxisOrient, scales, margin, keyField.name);
             const areas = block.getChartBlock()
                 .selectAll<SVGRectElement, DataRow[]>(`path.${this.areaChartClass}${Helper.getCssClassesLine(chart.cssClasses)}`);
@@ -31,7 +31,7 @@ export class Area {
                 .attr('d', d => areaGenerator(d));
 
             areas.each((d, i) => {
-                Dot.updateDotsCoordinateByValueAxis(block, d, keyAxisOrient, scales, margin, keyField.name, '1', chart.cssClasses, i, isSegmented);
+                MarkDot.updateDotsCoordinateByValueAxis(block, d, keyAxisOrient, scales, margin, keyField.name, '1', chart.cssClasses, i, chart.isSegmented);
             });
         } else {
             chart.data.valueFields.forEach((field, index) => {
@@ -43,7 +43,7 @@ export class Area {
                     .duration(1000)
                     .attr('d', area(data));
 
-                Dot.updateDotsCoordinateByValueAxis(block, data, keyAxisOrient, scales, margin, keyField.name, field.name, chart.cssClasses, index, isSegmented);
+                MarkDot.updateDotsCoordinateByValueAxis(block, data, keyAxisOrient, scales, margin, keyField.name, field.name, chart.cssClasses, index, chart.isSegmented);
             });
         }
     }
@@ -62,7 +62,7 @@ export class Area {
             Helper.setCssClasses(path, Helper.getCssClassesWithElementIndex(chart.cssClasses, index));
             Helper.setChartStyle(path, chart.style, index, 'fill');
 
-            Dot.render(block, data, keyAxisOrient, scales, margin, keyField.name, field.name, chart.cssClasses, index, chart.style.elementColors, blockSize, false);
+            MarkDot.render(block, data, keyAxisOrient, scales, margin, keyField.name, field.name, chart.cssClasses, index, chart.style.elementColors, false);
         });
     }
 
@@ -87,7 +87,7 @@ export class Area {
         this.setSegmentColor(areas, chart.style.elementColors);
 
         stackedData.forEach((sd, index) => {
-            Dot.render(block, sd, keyAxisOrient, scales, margin, keyField.name, '1', chart.cssClasses, index, chart.style.elementColors, blockSize, true);
+            MarkDot.render(block, sd, keyAxisOrient, scales, margin, keyField.name, '1', chart.cssClasses, index, chart.style.elementColors, true);
         });
     }
 
