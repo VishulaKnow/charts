@@ -77,7 +77,6 @@ export class Tooltip {
 
                 tooltipBlock.style('display', 'block');
                 const tooltipCoordinate = TooltipHelper.getTooltipFixedCoordinate(scaleKey, margin, blockSize, keyValue, tooltipContent.node(), keyAxisOrient);
-                console.log(tooltipCoordinate);
                 thisClass.setTooltipCoordinate(tooltipBlock, tooltipCoordinate, 75);
 
                 const tooltipLineAttributes = TooltipHelper.getTooltipLineAttributes(scaleKey, margin, keyValue, chartOrientation, blockSize);
@@ -263,7 +262,7 @@ export class Tooltip {
     }
 
     private static setTooltipCoordinate(tooltipBlock: Selection<BaseType, unknown, HTMLElement, any>, tooltipCoordinate: TooltipCoordinate, transition: number = null): void {
-        if(transition && tooltipBlock.style('display') === 'block' && tooltipBlock.style('right') !== '0px' && tooltipCoordinate.right === null) {
+        if(transition && tooltipBlock.style('left') !== '0px' && tooltipBlock.style('right') !== '0px' && tooltipCoordinate.right === null) {
             tooltipBlock
                 .style('right', tooltipCoordinate.right)
                 .style('bottom', tooltipCoordinate.bottom)
