@@ -132,7 +132,7 @@ export class TooltipHelper {
         } else {
             const coordinate: TooltipCoordinate = {
                 top: Scale.getScaledValue(scaleKey, keyValue) + margin.top - tooltipBlockElement.getBoundingClientRect().height / 2 + 'px',
-                left: margin.left + 'px',
+                left: 0 + 'px',
                 bottom: null,
                 right: null
             }
@@ -147,7 +147,7 @@ export class TooltipHelper {
 
             if (keyAxisOrient === 'left') {
                 coordinate.left = null;
-                coordinate.right = margin.right + 'px';
+                coordinate.right = 0 + 'px';
             }
 
             return coordinate;
@@ -210,25 +210,46 @@ export class TooltipHelper {
 
         charts.forEach(chart => {
             const elems = Helper.getChartElements(block, chart);
-            elems.classed('chart-element-highlight', false)
-                .call(this.scaled, false);
+            if(chart.type === 'area' || chart.type === 'line') {
+                elems.call(this.scaled, false);
 
-            if(!chart.isSegmented)
-                elems.filter(d => d[keyFieldName] === keyValue)
-                    .classed('chart-element-highlight', true)
-                    .call(this.scaled, true);
-            else 
-                elems.filter(d => d.data[keyFieldName] === keyValue)
-                    .classed('chart-element-highlight', true)
-                    .call(this.scaled, true);
+                if(!chart.isSegmented)
+                    elems.filter(d => d[keyFieldName] === keyValue)
+                        .call(this.scaled, true);
+                else 
+                    elems.filter(d => d.data[keyFieldName] === keyValue)
+                        .call(this.scaled, true);
+            } else {
+                let selectedElems: Selection<BaseType, DataRow, BaseType, unknown>;
+
+                if(!chart.isSegmented)
+                    selectedElems = elems.filter(d => d[keyFieldName] === keyValue)
+                        .call(this.scaled, true);
+                else 
+                    selectedElems = elems.filter(d => d.data[keyFieldName] === keyValue)
+                        .call(this.scaled, true);
+
+                        
+                let clones = selectedElems.clone();
+                clones.classed('bar-clone', true);
+                clones.classed('chart-element-highlight', true);
+                selectedElems.style('filter', 'url(#shadow)');
+            }
         });
     }
 
     public static remove2DElementsHighlighting(block: Block, charts: TwoDimensionalChartModel[]): void {
         charts.forEach(chart => {
             const elems = Helper.getChartElements(block, chart);
-            elems.classed('chart-element-highlight', false)
-            .call(this.scaled, false);
+            if(chart.type === 'area' || chart.type === 'line') {
+                elems.call(this.scaled, false);
+            } else {
+                elems.classed('chart-element-highlight', false);
+                elems.style('filter', null);
+                block.getChartBlock()
+                    .selectAll('.bar-clone')
+                    .remove();
+            }
         });
     }
 
