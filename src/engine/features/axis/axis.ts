@@ -58,7 +58,7 @@ export class Axis {
             .call(axis);
 
         if (axisOptions.labels.visible) {
-            if (axisOptions.type === 'key' && axisOptions.labels.positition === 'rotated')
+            if (axisOptions.type === 'key' && axisOptions.labels.positition === 'rotated' && (axisOptions.orient === 'top' || axisOptions.orient === 'bottom'))
                 this.rotateLabels(axisElement, axisOptions.orient);
 
             if ((axisOptions.orient === 'left' || axisOptions.orient === 'right') && axisOptions.type === 'key' && Scale.getScaleStep(scale) >= 38) {

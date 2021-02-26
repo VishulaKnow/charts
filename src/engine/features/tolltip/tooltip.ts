@@ -269,7 +269,7 @@ export class Tooltip {
         if (!transition || transition <= 0)
             this.setTooltipCoordinate(tooltipBlock, tooltipCoordinate);
             
-        if (chartOrientation === 'vertical' && tooltipBlock.style('left') !== '0px' && tooltipBlock.style('right') !== '0px' && tooltipCoordinate.right === null) {
+        if (chartOrientation === 'vertical' && tooltipBlock.style('left') !== '0px' && tooltipBlock.style('right') !== '0px' && tooltipCoordinate.right !== '0px' && tooltipCoordinate.left !== null) {
             tooltipBlock
                 .style('right', tooltipCoordinate.right)
                 .style('bottom', tooltipCoordinate.bottom)
