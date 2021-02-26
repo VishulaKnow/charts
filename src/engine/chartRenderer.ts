@@ -116,10 +116,13 @@ export class ChartRenderer {
     }
 
     private static render2DCharts(block: Block, charts: TwoDimensionalChartModel[], scales: Scales, data: DataSource, dataOptions: OptionsModelData, margin: BlockMargin, keyAxisOrient: Orient, barSettings: BarChartSettings, blockSize: Size) {
+        
         block.renderClipPath(margin, blockSize);
         block.renderChartBlock();
         charts.forEach((chart: TwoDimensionalChartModel) => {
+            console.log("render");
             if (chart.type === 'bar')
+                
                 Bar.render(block,
                     scales,
                     data[dataOptions.dataSource],

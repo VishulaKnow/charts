@@ -26,8 +26,12 @@ export class EmbeddedLabels {
             y: Helper.getSelectionNumericAttr(bar, 'y'),
             width: Helper.getSelectionNumericAttr(bar, 'width'),
             height: Helper.getSelectionNumericAttr(bar, 'height')
+            
         }
-
+        console.log("field.name: " + field.name)
+        console.log("x: " + barAttrs.x + " y: " + barAttrs.y)
+        console.log("value: " + ValueFormatter.formatValue(field.format, dataRow[field.name]))
+        
         const labelUnserveFlag = EmbeddedLabelsHelper.getLabelUnserveFlag(barAttrs.height); // if bar is too small to serve label inside. This flag is needed for set outside postion and change text anchor if bar wide as whole chart block
 
         const position = EmbeddedLabelsHelper.getLabelPosition(barAttrs, labelBlock.node().getBBox().width, margin, blockSize, labelUnserveFlag);
