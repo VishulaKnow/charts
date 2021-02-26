@@ -209,8 +209,6 @@ export class Axis {
             .select('.tick:first-of-type')
             .select<SVGGraphicsElement>('text');
 
-        console.log(firtsLabel.node().getBoundingClientRect());
-
         if (axisOptions.translate.translateX - firtsLabel.node().getBBox().width < 0) {
             firtsLabel.attr('text-anchor', 'start');
             Helper.cropLabels(firtsLabel, labelSize / 2);

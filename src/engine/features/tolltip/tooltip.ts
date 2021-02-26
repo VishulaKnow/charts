@@ -177,14 +177,20 @@ export class Tooltip {
     }
 
     private static renderTipBox(block: Block, attributes: TipBoxAttributes): Selection<SVGRectElement, unknown, HTMLElement, any> {
-        return block.getSvg()
-            .append('rect')
-            .attr('class', 'tipbox')
-            .attr('x', attributes.x)
-            .attr('y', attributes.y)
-            .attr('width', attributes.width)
-            .attr('height', attributes.height)
-            .style('opacity', 0);
+        let tipBox = block.getSvg()
+            .select<SVGRectElement>('rect.tipbox');
+
+        if(tipBox.empty())
+            tipBox = block.getSvg()
+                .append<SVGRectElement>('rect')
+                .attr('class', 'tipbox')
+                .attr('x', attributes.x)
+                .attr('y', attributes.y)
+                .attr('width', attributes.width)
+                .attr('height', attributes.height)
+                .style('opacity', 0);
+
+        return tipBox;
     }
 
     private static setTooltipLineAttributes(tooltipLine: Selection<SVGLineElement, unknown, HTMLElement, any>, attributes: TooltipLineAttributes, transition: number): void {

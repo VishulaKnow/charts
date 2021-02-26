@@ -120,9 +120,7 @@ export class ChartRenderer {
         block.renderClipPath(margin, blockSize);
         block.renderChartBlock();
         charts.forEach((chart: TwoDimensionalChartModel) => {
-            console.log("render");
             if (chart.type === 'bar')
-                
                 Bar.render(block,
                     scales,
                     data[dataOptions.dataSource],
