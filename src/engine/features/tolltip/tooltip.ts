@@ -67,25 +67,21 @@ export class Tooltip {
         const tipBoxAttributes = TooltipHelper.getTipBoxAttributes(margin, blockSize);
         const tipBox = this.renderTipBox(block, tipBoxAttributes);
 
-        let keyValue: string;
-
         tooltipContent.classed('tooltip-content-2d', true);
 
         tipBox
-            .on('mouseover', function () {
-                tooltipBlock.style('display', 'block');
-            })
             .on('mousemove', function (event) {
                 const index = TooltipHelper.getKeyIndex(pointer(event, this), chartOrientation, margin, blockSize, scaleKey, scaleKeyModel.type);
-                keyValue = scaleKey.domain()[index];
+                const keyValue = scaleKey.domain()[index];
                 TooltipHelper.fillForMulty2DCharts(tooltipContent, charts, data, dataOptions, keyValue);
 
                 const tooltipCoordinate = TooltipHelper.getTooltipFixedCoordinate(scaleKey, margin, blockSize, keyValue, tooltipContent.node(), keyAxisOrient);
-                thisClass.setTooltipCoordinate(tooltipBlock, tooltipCoordinate, 0);
+                thisClass.setTooltipCoordinate(tooltipBlock, tooltipCoordinate, 75);
+                tooltipBlock.style('display', 'block');
 
-                tooltipLine.style('display', 'block');
                 const tooltipLineAttributes = TooltipHelper.getTooltipLineAttributes(scaleKey, margin, keyValue, chartOrientation, blockSize);
-                thisClass.setTooltipLineAttributes(tooltipLine, tooltipLineAttributes, 50);
+                thisClass.setTooltipLineAttributes(tooltipLine, tooltipLineAttributes, 75);
+                tooltipLine.style('display', 'block');
                 
                 charts.forEach(chart => {
                     const elems = Helper.getChartElements(block, chart);
@@ -202,11 +198,12 @@ export class Tooltip {
     }
 
     private static setTooltipLineAttributes(tooltipLine: Selection<SVGLineElement, unknown, HTMLElement, any>, attributes: TooltipLineAttributes, transition: number): void {
-        if(transition) {
+        if(transition && tooltipLine.style('display') === 'block') {
             tooltipLine
                 .attr('stroke-linecap', attributes.strokeLinecap)
                 .transition()
                 .duration(transition)
+                .ease(easeLinear)
                 .attr('x1', attributes.x1)
                 .attr('x2', attributes.x2)
                 .attr('y1', attributes.y1)
@@ -265,7 +262,7 @@ export class Tooltip {
     }
 
     private static setTooltipCoordinate(tooltipBlock: Selection<BaseType, unknown, HTMLElement, any>, tooltipCoordinate: TooltipCoordinate, transition: number = null): void {
-        if(transition) {
+        if(transition && tooltipBlock.style('display') === 'block' && tooltipBlock.style('right') !== '0px' && tooltipCoordinate.right === null) {
             tooltipBlock
                 .style('right', tooltipCoordinate.right)
                 .style('bottom', tooltipCoordinate.bottom)

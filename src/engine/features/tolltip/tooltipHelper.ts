@@ -107,7 +107,7 @@ export class TooltipHelper {
     public static getTooltipFixedCoordinate(scaleKey: AxisScale<any>, margin: BlockMargin, blockSize: Size, keyValue: string, tooltipBlockElement: HTMLElement, keyAxisOrient: Orient): TooltipCoordinate {
         if (keyAxisOrient === 'bottom' || keyAxisOrient === 'top') {
             const coordinate: TooltipCoordinate = {
-                top: margin.top - tooltipBlockElement.getBoundingClientRect().height + 'px',
+                top: margin.top - 5 - tooltipBlockElement.getBoundingClientRect().height + 'px',
                 bottom: null,
                 left: Scale.getScaledValue(scaleKey, keyValue) + margin.left - tooltipBlockElement.getBoundingClientRect().width / 2 + 'px',
                 right: null
@@ -311,10 +311,10 @@ export class TooltipHelper {
             .attr('class', 'tooltip-texts')
             .append('div')
             .attr('class', 'tooltip-text-item')
-            .text(tooltipText)
+            .html(tooltipText)
             .style('white-space', 'nowrap');
 
-        if (textBlock.node().getBoundingClientRect().width > 500)
+        if (textBlock.node().getBoundingClientRect().width >= 450)
             textBlock.style('white-space', 'normal');
     }
 
@@ -324,7 +324,7 @@ export class TooltipHelper {
         if(showKey)
             text = `${row[dataOptions.keyField.name]} - ${ValueFormatter.formatValue(valueField.format, row[valueField.name])}`;
         else
-            text = `${(valueField as TwoDimensionalValueField).title + ' - ' || ''}${ValueFormatter.formatValue(valueField.format, row[valueField.name])}`;
+            text = `<span>${(valueField as TwoDimensionalValueField).title + ' ' || ''}</span><span>${ValueFormatter.formatValue(valueField.format, row[valueField.name])}</span>`;
         return text;
     }
 

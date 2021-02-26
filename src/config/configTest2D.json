@@ -73,7 +73,7 @@
             {
               "name":"price",
               "format":"money",
-              "title":"Aвтомобилей на "
+              "title":"Aвтомобилей на"
             },
             {
               "name":"count",
