@@ -3,6 +3,7 @@ import { Selection, BaseType, select } from 'd3-selection'
 import { PieArcDatum } from 'd3-shape';
 import { ChartOrientation, TwoDimensionalValueField } from "../../../config/config";
 import { BlockMargin, DataRow, DataSource, Field, IntervalChartModel, OptionsModelData, Orient, PolarChartModel, ScaleKeyType, Size, TwoDimensionalChartModel } from "../../../model/model";
+import { Block } from '../../block/block';
 import { Helper } from '../../helper';
 import { DonutHelper } from '../../polarNotation/DonutHelper';
 import { ValueFormatter, } from "../../valueFormatter";
@@ -201,6 +202,27 @@ export class TooltipHelper {
             .attr('d', (d, i) => DonutHelper.getArcGeneratorObject(blockSize, margin, donutThickness)
                 .outerRadius(DonutHelper.getOuterRadius(margin, blockSize) + scaleSize)
                 .innerRadius(DonutHelper.getOuterRadius(margin, blockSize) - donutThickness - scaleSize)(d, i));
+    }
+
+    public static highlight2DElements(block: Block, keyFieldName: string, keyValue: string, charts: TwoDimensionalChartModel[]): void {
+        charts.forEach(chart => {
+            const elems = Helper.getChartElements(block, chart);
+            elems.classed('chart-element-highlight', false);
+
+            if(!chart.isSegmented)
+                elems.filter(d => d[keyFieldName] === keyValue)
+                    .classed('chart-element-highlight', true);
+            else 
+                elems.filter(d => d.data[keyFieldName] === keyValue)
+                    .classed('chart-element-highlight', true);
+        });
+    }
+
+    public static remove2DElementsHighlighting(block: Block, charts: TwoDimensionalChartModel[]): void {
+        charts.forEach(chart => {
+            const elems = Helper.getChartElements(block, chart);
+            elems.classed('chart-element-highlight', false);
+        });
     }
 
     public static getKeyIndex(pointer: [number, number], orient: ChartOrientation, margin: BlockMargin, blockSize: Size, scaleKey: AxisScale<any>, scaleKeyType: ScaleKeyType): number {

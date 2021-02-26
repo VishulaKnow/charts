@@ -5,7 +5,7 @@ import { Helper } from "../../helper";
 import { Block } from "../../block/block";
 import { ARROW_DEFAULT_POSITION, ARROW_SIZE, BarHighlighterAttrs, TipBoxAttributes, TooltipCoordinate, TooltipHelper, TooltipLineAttributes } from "./tooltipHelper";
 import { Donut } from "../../polarNotation/donut";
-import { ChartOrientation } from "../../../config/config";
+import { ChartOrientation, TwoDimensionalChart } from "../../../config/config";
 import { DonutHelper } from '../../polarNotation/DonutHelper';
 import { Scales } from '../scale/scale';
 import { AxisScale } from 'd3-axis';
@@ -71,11 +71,11 @@ export class Tooltip {
 
         tipBox
             .on('mousemove', function (event) {
+                tooltipBlock.style('display', 'block');
                 const index = TooltipHelper.getKeyIndex(pointer(event, this), chartOrientation, margin, blockSize, scaleKey, scaleKeyModel.type);
                 const keyValue = scaleKey.domain()[index];
                 TooltipHelper.fillForMulty2DCharts(tooltipContent, charts, data, dataOptions, keyValue);
 
-                tooltipBlock.style('display', 'block');
                 const tooltipCoordinate = TooltipHelper.getTooltipFixedCoordinate(scaleKey, margin, blockSize, keyValue, tooltipContent.node(), keyAxisOrient);
                 thisClass.setTooltipCoordinate(tooltipBlock, tooltipCoordinate, 75);
 
@@ -83,25 +83,13 @@ export class Tooltip {
                 thisClass.setTooltipLineAttributes(tooltipLine, tooltipLineAttributes, 75);
                 tooltipLine.style('display', 'block');
                 
-                charts.forEach(chart => {
-                    const elems = Helper.getChartElements(block, chart);
-                    elems.classed('chart-element-highlight', false);
-                    if(!chart.isSegmented)
-                        elems.filter(d => d[dataOptions.keyField.name] === keyValue)
-                            .classed('chart-element-highlight', true);
-                    else 
-                        elems.filter(d => d.data[dataOptions.keyField.name] === keyValue)
-                            .classed('chart-element-highlight', true);
-                });
+                TooltipHelper.highlight2DElements(block, dataOptions.keyField.name, keyValue, charts);
             })
             .on('mouseleave', function () {
                 tooltipBlock.style('display', 'none');
                 tooltipLine.style('display', 'none');
 
-                charts.forEach(chart => {
-                    const elems = Helper.getChartElements(block, chart);
-                    elems.classed('chart-element-highlight', false);
-                });
+                TooltipHelper.remove2DElementsHighlighting(block, charts);
             });
     }
 
@@ -312,5 +300,4 @@ export class Tooltip {
 
         return filter;
     }
-
 }
