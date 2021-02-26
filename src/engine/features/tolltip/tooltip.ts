@@ -257,8 +257,8 @@ export class Tooltip {
                 .transition()
                 .duration(transition)
                 .ease(easeLinear)
-                .style('left', tooltipCoordinate.left)
-                .style('top', tooltipCoordinate.top);
+                    .style('left', tooltipCoordinate.left)
+                    .style('top', tooltipCoordinate.top);
         }
         else {
             tooltipBlock

@@ -6,10 +6,7 @@ import { Helper } from "../../helper";
 import { Scales } from "../../features/scale/scale";
 import { Block } from "../../block/block";
 import { Dot } from "../../features/lineDots/dot";
-import { transition } from 'd3-transition';
 import { LineHelper } from './lineHelper';
-
-select.prototype.transition = transition;
 
 export class Line {
     private static lineChartClass = 'line';

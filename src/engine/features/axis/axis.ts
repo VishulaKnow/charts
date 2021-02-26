@@ -10,7 +10,7 @@ import { Block } from "../../block/block";
 import { Scale, Scales } from "../scale/scale";
 import { AXIS_HORIZONTAL_LABEL_PADDING, AXIS_VERTICAL_LABEL_PADDING } from "../../../model/marginModel";
 
-select.prototype.transition = transition;
+
 
 type TextAnchor = 'start' | 'end' | 'middle';
 

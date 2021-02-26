@@ -1,7 +1,6 @@
 import { stack } from 'd3-shape';
 import { select, Selection } from 'd3-selection'
 import { Color } from "d3-color";
-import { transition } from 'd3-transition';
 import { BlockMargin, DataRow, Field, Orient, Size, TwoDimensionalChartModel } from "../../../model/model";
 import { Helper } from "../../helper";
 import { Scales } from "../../features/scale/scale";
@@ -9,7 +8,6 @@ import { Block } from "../../block/block";
 import { Dot } from "../../features/lineDots/dot";
 import { AreaHelper } from './areaHelper';
 
-select.prototype.transition = transition;
 
 export class Area {
     private static areaChartClass = 'area';
