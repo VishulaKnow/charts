@@ -69,6 +69,8 @@ export class Tooltip {
 
         tooltipContent.classed('tooltip-content-2d', true);
 
+        this.renderShadowFilter(block, 'shadow');
+
         tipBox
             .on('mousemove', function (event) {
                 tooltipBlock.style('display', 'block');
