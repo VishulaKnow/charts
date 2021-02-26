@@ -19,7 +19,7 @@ export class MarginModel
         const margin: BlockMargin = { ...designerConfig.canvas.chartBlockMargin }
 
         this.recalcMarginWithLegend(margin, config, designerConfig.canvas.legendBlock.maxWidth, otherComponents.legendBlock, data);
-        // this.recalcMarginByTitle(margin, otherComponents.titleBlock);
+        this.recalcMarginByTitle(margin, otherComponents.titleBlock);
 
         if(config.options.type === '2d' || config.options.type === 'interval') {
             const labelSize = this.getMarginValuesByAxisLabels(designerConfig.canvas.axisLabel.maxSize.main, config.options.axis, data, config.options);

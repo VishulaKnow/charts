@@ -40,11 +40,11 @@ export class ChartRenderer {
 
 
         
-        // Title.render(block, 
-        //     options.title,
-        //     model.otherComponents.titleBlock,
-        //     model.blockCanvas.size
-        //     );
+        Title.render(block, 
+            options.title,
+            model.otherComponents.titleBlock,
+            model.blockCanvas.size
+            );
         Legend.render(block,
             data,
             options,
@@ -70,11 +70,11 @@ export class ChartRenderer {
             model.blockCanvas.size,
             model.chartSettings.donut);
 
-        // Title.render(block, 
-        //     options.title,
-        //     model.otherComponents.titleBlock,
-        //     model.blockCanvas.size
-        //     );
+        Title.render(block, 
+            options.title,
+            model.otherComponents.titleBlock,
+            model.blockCanvas.size
+            );
         Legend.render(block, data, options, model.otherComponents.legendBlock, model.blockCanvas.size);
 
         Tooltip.renderTooltips(block, model, data);
@@ -104,11 +104,11 @@ export class ChartRenderer {
             options.axis.keyAxis.orient,
             model.chartSettings);
 
-        // Title.render(block, 
-        //     options.title,
-        //     model.otherComponents.titleBlock,
-        //     model.blockCanvas.size
-        //     );
+        Title.render(block, 
+            options.title,
+            model.otherComponents.titleBlock,
+            model.blockCanvas.size
+            );
         Legend.render(block, data, options, model.otherComponents.legendBlock, model.blockCanvas.size);
         Tooltip.renderTooltips(block, model, data);
         if (model.dataSettings.scope.hidedRecordsAmount !== 0)
