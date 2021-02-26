@@ -47,7 +47,7 @@ export class Donut {
         Helper.setCssClasses(arcs, chart.cssClasses);
         this.setElementsColor(items, chart.style.elementColors);
 
-        Aggregator.render(block, data, chart.data.valueField.name, innerRadius, translate, thickness);
+        Aggregator.render(block, data, chart.data.valueField, innerRadius, translate, thickness);
     }
 
     public static getAllArcGroups(block: Block): Selection<SVGGElement, PieArcDatum<DataRow>, SVGGElement, unknown> {

@@ -2,16 +2,16 @@
     "compilerOptions": {
         "outDir": "./lib/",
         "noImplicitAny": true,
-        "declaration": true,
+        // "declaration": true,
         "target": "es6",
         "jsx": "react",
         "allowJs": true,
         "types": ["jest"]
     },
-    "include": ["src"],
-    "exclude": ["node_modules",
-        "**/__tests__/*",
-        "src/listeners/*",
-        "**/*Example.ts"
-    ]
+    // "include": ["src"],
+    // "exclude": ["node_modules",
+    //     "**/__tests__/*",
+    //     "src/listeners/*",
+    //     "**/*Example.ts"
+    // ]
 }

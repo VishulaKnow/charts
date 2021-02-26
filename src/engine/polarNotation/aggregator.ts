@@ -1,19 +1,23 @@
 import { sum } from 'd3-array'
 import { Selection, BaseType } from 'd3-selection'
-import { DataRow } from "../../model/model";
+import { DataType } from '../../designer/designerConfig';
+import { DataRow, Field } from "../../model/model";
 import { Block } from "../block/block";
+import { ValueFormatter } from '../valueFormatter';
 import { Translate } from "./donut";
 
 export interface IAggregator {
     name: string;
     value: number;
+    format: DataType;
 }
 
 export class Aggregator {
-    public static render(block: Block, data: DataRow[], valueField: string, innerRadius: number, translate: Translate, fontSize: number): void {
+    public static render(block: Block, data: DataRow[], valueField: Field, innerRadius: number, translate: Translate, fontSize: number): void {
         const aggregator: IAggregator = {
             name: 'Сумма',
-            value: sum(data.map(d => d[valueField]))
+            value: sum(data.map(d => d[valueField.name])),
+            format: valueField.format
         }
         this.renderAggregatorText(block, innerRadius, aggregator, translate, fontSize);
     }
@@ -24,11 +28,11 @@ export class Aggregator {
             const wrapper = this.renderAggregatorWrapper(aggregatorObject);
 
             wrapper
-                .append('div')
+                .append<HTMLDivElement>('div')
                 .attr('class', 'aggregator-value')
                 .style('text-align', 'center')
                 .style('font-size', `${fontSize}px`)
-                .text(aggregator.value);
+                .text(ValueFormatter.formatValue(aggregator.format, aggregator.value));
 
             wrapper
                 .append('div')
@@ -36,6 +40,11 @@ export class Aggregator {
                 .style('text-align', 'center')
                 .style('font-size', '18px')
                 .text(aggregator.name);
+
+            if(wrapper.node().getBoundingClientRect().width > innerRadius * 2 - 20) {
+                wrapper.select('aggregator-value')
+                    .style('font-size', `${fontSize - 10}px`)
+            }
         }
     }
 
@@ -50,9 +59,9 @@ export class Aggregator {
             .style('pointer-events', `none`);
     }
 
-    private static renderAggregatorWrapper(aggregatorObject: Selection<SVGForeignObjectElement, unknown, HTMLElement, any>): Selection<BaseType, unknown, HTMLElement, any> {
+    private static renderAggregatorWrapper(aggregatorObject: Selection<SVGForeignObjectElement, unknown, HTMLElement, any>): Selection<HTMLDivElement, unknown, HTMLElement, any> {
         return aggregatorObject
-            .append('xhtml:div')
+            .append<HTMLDivElement>('xhtml:div')
             .style('width', '100%')
             .style('height', '100%')
             .style('border-radius', '50%')

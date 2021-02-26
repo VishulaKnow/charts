@@ -3,7 +3,7 @@ import { DataType, Formatter } from '../designer/designerConfig';
 export class ValueFormatter {
     private static format: Formatter;
 
-    public static formatValue(valueType: DataType, value: string): string {
+    public static formatValue(valueType: DataType, value: any): string {
         return this.format[valueType](value);
     }
 
