@@ -2,7 +2,6 @@ import { Color } from "d3-color";
 import { stack } from 'd3-shape';
 import { select, Selection, BaseType } from 'd3-selection';
 import { AxisScale } from 'd3-axis'
-import { transition } from "d3-transition";
 import { BarChartSettings, BlockMargin, DataRow, Field, Orient, Size, TwoDimensionalChartModel } from "../../../model/model";
 import { ValueFormatter } from "../../valueFormatter";
 import { Helper } from "../../helper";
@@ -12,8 +11,6 @@ import { EmbeddedLabels } from "../../features/embeddedLabels/embeddedLabels";
 import { EmbeddedLabelsHelper } from "../../features/embeddedLabels/embeddedLabelsHelper";
 import { BarAttrs, BarHelper } from "./barHelper";
 import { sum } from "d3-array";
-
-select.prototype.transition = transition;
 
 export class Bar {
     private static barItemClass = 'bar-item';
