@@ -75,9 +75,10 @@ export class Tooltip {
                 const keyValue = scaleKey.domain()[index];
                 TooltipHelper.fillForMulty2DCharts(tooltipContent, charts, data, dataOptions, keyValue);
 
-                const tooltipCoordinate = TooltipHelper.getTooltipFixedCoordinate(scaleKey, margin, blockSize, keyValue, tooltipContent.node(), keyAxisOrient);
-                thisClass.setTooltipCoordinate(tooltipBlock, tooltipCoordinate, 75);
                 tooltipBlock.style('display', 'block');
+                const tooltipCoordinate = TooltipHelper.getTooltipFixedCoordinate(scaleKey, margin, blockSize, keyValue, tooltipContent.node(), keyAxisOrient);
+                console.log(tooltipCoordinate);
+                thisClass.setTooltipCoordinate(tooltipBlock, tooltipCoordinate, 75);
 
                 const tooltipLineAttributes = TooltipHelper.getTooltipLineAttributes(scaleKey, margin, keyValue, chartOrientation, blockSize);
                 thisClass.setTooltipLineAttributes(tooltipLine, tooltipLineAttributes, 75);
