@@ -40,7 +40,7 @@ const configCars: Config = {
         legend: {
             show: true
         },
-        orientation: 'horizontal',
+        orientation: 'vertical',
         data: {
             dataSource: 'dataSet',
             keyField: {
@@ -52,7 +52,7 @@ const configCars: Config = {
             {
                 title: 'Рост стоимости',
                 isSegmented: false,
-                type: 'line',
+                type: 'bar',
                 data: {
                     valueFields: [
                         {

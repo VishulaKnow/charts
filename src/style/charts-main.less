@@ -2,10 +2,6 @@
     margin: 0 auto;
     position: relative;
 }
-h3.title {
-    font-size: 18px;
-    font-weight: 500;
-}
 .bar, .area, .donut {
     stroke: none;
 }
@@ -42,6 +38,13 @@ h3.title {
 }
 .mt-10 {
     margin-top: 10px;
+}
+.chart-title {
+    font-family: "Roboto", sans-serif;
+    font-style: normal;
+    font-weight: 500;
+    font-size: 18px;
+    line-height: 140.62%;
 }
 
 .legend-label {
@@ -82,15 +85,18 @@ h3.title {
 .tooltip-content {
     position: relative;
     pointer-events: none;
-    font-size: 14px;
     font-family: "Roboto", sans-serif;
     line-height: 1;
     font-weight: bold;
     padding: 15px 20px 15px 15px;
-    background: white;
     color: black;
     z-index: 102;
     max-width: 500px;
+    background: rgba(255, 255, 255, 1);
+}
+.tooltip-content-2d {
+    color: white;
+    background: rgba(0, 0, 0, 0.82);
 }
 .tooltip-arrow {
     position: absolute;
@@ -107,13 +113,54 @@ h3.title {
     font-style: normal;
     font-size: 14px;
 }
+
+.tooltip-content-2d {
+    padding: 8px 16px;
+}
+.tooltip-content-2d .tooltip-head {
+    font-size: 12px;
+    margin-top: 4px;
+    margin-bottom: 10px;
+}
+.tooltip-content-2d .tooltip-texts {
+    width: 100%;
+}
+.tooltip-content-2d .tooltip-text-item {
+    font-size: 11px;
+    width: 100%;
+    flex: 1;
+    display: flex;
+}
+.tooltip-content-2d .tooltip-text-item > span {
+    display: block;
+}
+.tooltip-content-2d .tooltip-text-item > span:first-of-type {
+    flex: 1;
+}
+.tooltip-content-2d .tooltip-text-item > span:last-of-type {
+    flex: 0;
+}
+.field-value {
+    margin-left: 0.5rem;
+}
+.tooltip-content-2d .tooltip-circle {
+    position: relative;
+    top: -4px;
+    width: 9px;
+    height: 9px;
+    margin-right: 10px;
+}
+
 .tooltip-group:not(:first-of-type) {
-    margin-top: 8px;
+    margin-top: 4px;
 }
 .tooltip-line {
-    stroke: #b6b6b6;
-    stroke-dasharray: 3;
-    stroke-width: 1px;
+    stroke: #000000;
+    stroke-width: 2px;
+}
+
+.chart-element-highlight {
+    opacity: 0.5;
 }
 
 .aggregator-value, .aggregator-name {

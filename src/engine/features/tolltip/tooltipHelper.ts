@@ -256,10 +256,10 @@ export class TooltipHelper {
     private static scaled(elementSelection: Selection<BaseType, DataRow, BaseType, unknown>, isScaled: boolean) : void {
         elementSelection
             .transition()
-            .duration(100)
+            .duration(50)
             .ease(easeLinear)
-            .attr('r', isScaled ? 5.2 : 4)
-            .style('stroke-width', isScaled ? '4px' : '3px')
+            .attr('r', isScaled ? 6 : 4)
+            .style('stroke-width', (isScaled ? 4.3 : 3) + 'px')
     }
 
     public static getKeyIndex(pointer: [number, number], orient: ChartOrientation, margin: BlockMargin, blockSize: Size, scaleKey: AxisScale<any>, scaleKeyType: ScaleKeyType): number {
@@ -292,11 +292,12 @@ export class TooltipHelper {
     }
 
     public static getTipBoxAttributes(margin: BlockMargin, blockSize: Size): TipBoxAttributes {
+        const pad = 5;
         return {
-            x: margin.left,
-            y: margin.top,
-            width: blockSize.width - margin.left - margin.right,
-            height: blockSize.height - margin.top - margin.bottom,
+            x: margin.left - pad,
+            y: margin.top - pad,
+            width: blockSize.width - margin.left - margin.right + pad * 2,
+            height: blockSize.height - margin.top - margin.bottom + pad * 2,
         }
     }
 
