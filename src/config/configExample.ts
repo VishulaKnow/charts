@@ -198,4 +198,4 @@ const configDemo: Config = {
     }
 }
 
-export default configDemo;
+export default configCars;
