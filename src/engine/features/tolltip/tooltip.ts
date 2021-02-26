@@ -3,9 +3,9 @@ import { PieArcDatum } from 'd3-shape'
 import { BlockMargin, DataRow, DataSource, IntervalChartModel, Model, OptionsModelData, Orient, PolarChartModel, ScaleKeyModel, Size, TwoDimensionalChartModel } from "../../../model/model";
 import { Helper } from "../../helper";
 import { Block } from "../../block/block";
-import { ARROW_DEFAULT_POSITION, ARROW_SIZE, BarHighlighterAttrs, TipBoxAttributes, TooltipCoordinate, TooltipHelper, TooltipLineAttributes } from "./tooltipHelper";
+import { ARROW_DEFAULT_POSITION, ARROW_SIZE, TipBoxAttributes, TooltipCoordinate, TooltipHelper, TooltipLineAttributes } from "./tooltipHelper";
 import { Donut } from "../../polarNotation/donut";
-import { ChartOrientation, TwoDimensionalChart } from "../../../config/config";
+import { ChartOrientation } from "../../../config/config";
 import { DonutHelper } from '../../polarNotation/DonutHelper';
 import { Scales } from '../scale/scale';
 import { AxisScale } from 'd3-axis';
@@ -77,12 +77,12 @@ export class Tooltip {
                 TooltipHelper.fillForMulty2DCharts(tooltipContent, charts, data, dataOptions, keyValue);
 
                 const tooltipCoordinate = TooltipHelper.getTooltipFixedCoordinate(scaleKey, margin, blockSize, keyValue, tooltipContent.node(), keyAxisOrient);
-                thisClass.setTooltipCoordinate(tooltipBlock, tooltipCoordinate, 75);
+                thisClass.setLineTooltipCoordinate(tooltipBlock, tooltipCoordinate, chartOrientation, 75);
 
                 const tooltipLineAttributes = TooltipHelper.getTooltipLineAttributes(scaleKey, margin, keyValue, chartOrientation, blockSize);
                 thisClass.setTooltipLineAttributes(tooltipLine, tooltipLineAttributes, 75);
                 tooltipLine.style('display', 'block');
-                
+
                 TooltipHelper.highlight2DElements(block, dataOptions.keyField.name, keyValue, charts);
             })
             .on('mouseleave', function () {
@@ -127,7 +127,7 @@ export class Tooltip {
             select(this) // удаление тени с оригинального сегмента
                 .style('filter', null);
             clone.remove(); // удаление клона
-            
+
             TooltipHelper.changeDonutHighlightAppearance(select<SVGGElement, PieArcDatum<DataRow>>(this), margin, blockSize, donutThickness, false);
         });
     }
@@ -186,7 +186,7 @@ export class Tooltip {
     }
 
     private static setTooltipLineAttributes(tooltipLine: Selection<SVGLineElement, unknown, HTMLElement, any>, attributes: TooltipLineAttributes, transition: number): void {
-        if(transition && tooltipLine.style('display') === 'block') {
+        if (transition && tooltipLine.style('display') === 'block') {
             tooltipLine
                 .attr('stroke-linecap', attributes.strokeLinecap)
                 .transition()
@@ -249,23 +249,38 @@ export class Tooltip {
         return tooltipContentBlock;
     }
 
-    private static setTooltipCoordinate(tooltipBlock: Selection<BaseType, unknown, HTMLElement, any>, tooltipCoordinate: TooltipCoordinate, transition: number = null): void {
-        if(transition && tooltipBlock.style('left') !== '0px' && tooltipBlock.style('right') !== '0px' && tooltipCoordinate.right === null) {
+    private static setTooltipCoordinate(tooltipBlock: Selection<BaseType, unknown, HTMLElement, any>, tooltipCoordinate: TooltipCoordinate): void {
+        tooltipBlock
+            .style('right', tooltipCoordinate.right)
+            .style('bottom', tooltipCoordinate.bottom)
+            .style('left', tooltipCoordinate.left)
+            .style('top', tooltipCoordinate.top);
+    }
+
+    private static setLineTooltipCoordinate(tooltipBlock: Selection<BaseType, unknown, HTMLElement, any>, tooltipCoordinate: TooltipCoordinate, chartOrientation: ChartOrientation, transition: number = null): void {
+        if (!transition || transition <= 0)
+            this.setTooltipCoordinate(tooltipBlock, tooltipCoordinate);
+            
+        if (chartOrientation === 'vertical' && tooltipBlock.style('left') !== '0px' && tooltipBlock.style('right') !== '0px' && tooltipCoordinate.right === null) {
             tooltipBlock
                 .style('right', tooltipCoordinate.right)
                 .style('bottom', tooltipCoordinate.bottom)
+                .style('top', tooltipCoordinate.top)
                 .transition()
                 .duration(transition)
                 .ease(easeLinear)
-                    .style('left', tooltipCoordinate.left)
-                    .style('top', tooltipCoordinate.top);
-        }
-        else {
+                    .style('left', tooltipCoordinate.left);
+        } else if (chartOrientation === 'horizontal' && tooltipBlock.style('top') !== '0px' && parseInt(tooltipBlock.style('bottom')) > 0 && tooltipCoordinate.bottom === null) {
             tooltipBlock
                 .style('left', tooltipCoordinate.left)
-                .style('top', tooltipCoordinate.top)
+                .style('bottom', tooltipCoordinate.bottom)
                 .style('right', tooltipCoordinate.right)
-                .style('bottom', tooltipCoordinate.bottom);
+                .transition()
+                .duration(transition)
+                .ease(easeLinear)
+                    .style('top', tooltipCoordinate.top);
+        } else {
+            this.setTooltipCoordinate(tooltipBlock, tooltipCoordinate);
         }
     }
 
@@ -281,7 +296,7 @@ export class Tooltip {
         let filter = block.renderDefs()
             .select<SVGFilterElement>(`filter#${filterId}`);
 
-        if(filter.empty())
+        if (filter.empty())
             filter = block.renderDefs()
                 .append('filter')
                 .attr('id', filterId)
@@ -291,7 +306,7 @@ export class Tooltip {
                 .attr('y', '-100%')
                 .style('outline', '1px solid red');
 
-        if(filter.select('feDropShadow').empty())
+        if (filter.select('feDropShadow').empty())
             filter.append('feDropShadow')
                 .attr('dx', 0)
                 .attr('dy', 0)

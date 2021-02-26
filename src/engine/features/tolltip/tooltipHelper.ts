@@ -137,12 +137,12 @@ export class TooltipHelper {
                 right: null
             }
 
-            if (Helper.getPXValueFromString(coordinate.top) < margin.top)
-                coordinate.top = margin.top + 'px';
+            if (Helper.getPXValueFromString(coordinate.top) < 0)
+                coordinate.top = 0 + 'px';
 
-            if (Helper.getPXValueFromString(coordinate.top) + tooltipBlockElement.getBoundingClientRect().height > blockSize.height - margin.bottom) {
+            if (Helper.getPXValueFromString(coordinate.top) + tooltipBlockElement.getBoundingClientRect().height > blockSize.height) {
                 coordinate.top = null;
-                coordinate.bottom = margin.bottom + 'px';
+                coordinate.bottom = 0 + 'px';
             }
 
             if (keyAxisOrient === 'left') {
