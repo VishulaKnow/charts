@@ -2,23 +2,24 @@ import { Color } from "d3-color";
 import { ChartOrientation, IntervalChartType, PolarChartType, TwoDimensionalChartType } from "../config/config";
 import { DataType, Formatter } from "../designer/designerConfig";
 
+type AxisType = 'key' | 'value';
+
 export type Orient = 'top' | 'bottom' | 'left' | 'right';
 export type ScaleKeyType = 'band' | 'point';
 export type ScaleValueType = 'linear' | 'datetime';
 export type AxisLabelPosition = 'straight' | 'rotated';
 export type LegendPosition = 'off' | 'top' | 'bottom' | 'left' | 'right';
+export type EmbeddedLabelTypeModel = 'none' | 'key' | 'value';
 export type DataOptions = {
     [option: string]: any
 }
 export type DataRow = {
     [field: string]: any
 }
-export type EmbeddedLabelTypeModel = 'none' | 'key' | 'value';
-type AxisType = 'key' | 'value';
+
 export interface DataSource {
     [source: string]: DataRow[];
 }
-
 
 export interface Model {
     blockCanvas: BlockCanvas;
