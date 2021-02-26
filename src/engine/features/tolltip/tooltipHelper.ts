@@ -1,4 +1,5 @@
 import { AxisScale } from 'd3-axis';
+import { easeLinear } from 'd3-ease';
 import { Selection, BaseType, select } from 'd3-selection'
 import { PieArcDatum } from 'd3-shape';
 import { ChartOrientation, TwoDimensionalValueField } from "../../../config/config";
@@ -204,25 +205,40 @@ export class TooltipHelper {
                 .innerRadius(DonutHelper.getOuterRadius(margin, blockSize) - donutThickness - scaleSize)(d, i));
     }
 
-    public static highlight2DElements(block: Block, keyFieldName: string, keyValue: string, charts: TwoDimensionalChartModel[]): void {
+    public static highlight2DElements(block: Block, keyFieldName: string, keyValue: string, charts: TwoDimensionalChartModel[]): void {     
+        this.remove2DElementsHighlighting(block, charts);
+
         charts.forEach(chart => {
             const elems = Helper.getChartElements(block, chart);
-            elems.classed('chart-element-highlight', false);
+            elems.classed('chart-element-highlight', false)
+                .call(this.scaled, false);
 
             if(!chart.isSegmented)
                 elems.filter(d => d[keyFieldName] === keyValue)
-                    .classed('chart-element-highlight', true);
+                    .classed('chart-element-highlight', true)
+                    .call(this.scaled, true);
             else 
                 elems.filter(d => d.data[keyFieldName] === keyValue)
-                    .classed('chart-element-highlight', true);
+                    .classed('chart-element-highlight', true)
+                    .call(this.scaled, true);
         });
     }
 
     public static remove2DElementsHighlighting(block: Block, charts: TwoDimensionalChartModel[]): void {
         charts.forEach(chart => {
             const elems = Helper.getChartElements(block, chart);
-            elems.classed('chart-element-highlight', false);
+            elems.classed('chart-element-highlight', false)
+            .call(this.scaled, false);
         });
+    }
+
+    private static scaled(elementSelection: Selection<BaseType, DataRow, BaseType, unknown>, isScaled: boolean) : void {
+        elementSelection
+            .transition()
+            .duration(100)
+            .ease(easeLinear)
+            .attr('r', isScaled ? 5.2 : 4)
+            .style('stroke-width', isScaled ? '4px' : '3px')
     }
 
     public static getKeyIndex(pointer: [number, number], orient: ChartOrientation, margin: BlockMargin, blockSize: Size, scaleKey: AxisScale<any>, scaleKeyType: ScaleKeyType): number {
