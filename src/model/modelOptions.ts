@@ -1,5 +1,5 @@
 import { Config } from '../config/config';
-import { Model, BlockCanvas, ChartBlock, TwoDimensionalOptionsModel, PolarOptionsModel, BlockMargin, LegendBlockModel, DataSettings, ChartSettings, DataFormat, DataScope, DataSource, IntervalOptionsModel } from './model';
+import { Model, BlockCanvas, ChartBlock, TwoDimensionalOptionsModel, PolarOptionsModel, BlockMargin, DataSettings, ChartSettings, DataFormat, DataScope, DataSource, IntervalOptionsModel } from './model';
 import { MarginModel } from './marginModel';
 import { TwoDimensionalModel } from './twoDimensionalModel';
 import { PolarModel } from './polarModel';
@@ -7,7 +7,6 @@ import { PolarModel } from './polarModel';
 import { DataManagerModel } from './dataManagerModel';
 import { BarOptionsCanvas, DesignerConfig, DonutOptionsCanvas } from '../designer/designerConfig';
 import { IntervalModel } from './intervalModel';
-import { LegendModel } from './legendModel/legendModel';
 import { OtherComponentsModel } from './otherComponents';
 
 
@@ -42,7 +41,7 @@ function getOptions(config: Config, designerConfig: DesignerConfig, margin: Bloc
     if(config.options.type === '2d') {
         return TwoDimensionalModel.getOptions(config, designerConfig, margin, dataScope, data);
     } else if(config.options.type === 'polar') {
-        return PolarModel.getOptions(config, data, margin);
+        return PolarModel.getOptions(config, data, margin, designerConfig);
     } else if(config.options.type === 'interval') {
         return IntervalModel.getOptions(config, designerConfig, margin, dataScope, data)
     }
