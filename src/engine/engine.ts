@@ -10,10 +10,11 @@ export default class Engine {
         this.block = new Block(model.blockCanvas.cssClass, parentElement);
 
         this.block.renderWrapper(model.blockCanvas.size);
-        ValueFormatter.setFormatFunction(model.dataSettings.format.formatters);
-
-        if (model.options)
+        
+        if (model.options) {
+            ValueFormatter.setFormatFunction(model.dataSettings.format.formatters);
             this.renderCharts(model, data);
+        }
     }
 
     public updateData(newModel: Model, newData: DataSource): void {
