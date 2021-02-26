@@ -14,20 +14,37 @@ export interface Config {
     options: PolarOptions | TwoDimensionalOptions | IntervalOptions;
 }
 
+
+//====================================================== ChartBlockCanvas
 export interface ChartBlockCanvas {
     size: Size;
     class: string;
 }
+interface Size {
+    width: number;
+    height: number;
+}
 
+
+//====================================================== Options
 interface Options {
     legend: Legend;
     data: DataOptions;
     title: string;
 }
 
+interface Legend {
+    show: boolean;
+}
+
 interface DataOptions {
     dataSource: string;
     keyField: Field;
+}
+
+interface Field {
+    name: string;
+    format: DataType;
 }
 
 export interface TwoDimensionalOptions extends Options {
@@ -51,14 +68,65 @@ export interface IntervalOptions extends Options {
     orientation: ChartOrientation;
 }
 
+//====================================================== TwoDimensionalOptions & IntervalOptions
+interface AdditionalElements {
+    gridLine: GridLineOptions;
+}
+
+interface GridLineOptions {
+    flag: GridLineFlag;
+}
+
+interface GridLineFlag {
+    key: boolean;
+    value: boolean;
+}
+
+
+//====================================================== TwoDimensionalOptions
+export interface TwoDimensionalAxis {
+    keyAxis: DiscreteAxisOptions;
+    valueAxis: NumberAxisOptions;
+}
+
+interface AxisOptions {
+    position: AxisPosition;
+    ticks: AxisTicks;
+}
+
+interface AxisTicks {
+    flag: boolean;
+}
+
+interface NumberAxisOptions extends AxisOptions {
+    domain: NumberDomain;
+}
+
+export interface NumberDomain {
+    start: number;
+    end: number;
+}
+
+interface DiscreteAxisOptions extends AxisOptions {}
+
+
+//====================================================== IntervalOptions
+export interface IntervalAxis {
+    keyAxis: DiscreteAxisOptions;
+    valueAxis: DateAxisOptions;
+}
+
+interface DateAxisOptions extends AxisOptions {}
+
+
+//====================================================== Charts
 interface Chart {
     title: string;
     tooltip: Tooltip;
 }
 
-export interface IntervalChart extends Chart { 
-    type: IntervalChartType;
-    data: IntervalChartData;
+interface Tooltip {
+    show: boolean;
 }
 
 export interface TwoDimensionalChart extends Chart {
@@ -73,91 +141,30 @@ export interface PolarChart extends Chart {
     data: PolarChartData;
 }
 
-export interface NumberDomain {
-    start: number;
-    end: number;
+export interface IntervalChart extends Chart { 
+    type: IntervalChartType;
+    data: IntervalChartData;
 }
 
-export interface DateDomain {
-    start: Date;
-    end: Date;
-}
 
-export interface TwoDimensionalAxis {
-    keyAxis: DiscreteAxisOptions;
-    valueAxis: NumberAxisOptions;
-}
-
-export interface IntervalAxis {
-    keyAxis: DiscreteAxisOptions;
-    valueAxis: DateAxisOptions;
-}
-
+//====================================================== TwoDimensionalChart
 interface TwoDimensionalChartData {
     valueFields: TwoDimensionalValueField[];
-}
-
-interface PolarChartData {
-    valueField: Field;
-}
-
-interface IntervalChartData {
-    valueField1: Field;
-    valueField2: Field;
-}
-
-interface Field {
-    name: string;
-    format: DataType;
 }
 
 export interface TwoDimensionalValueField extends Field {
     title: string;
 }
 
-interface Tooltip {
-    show: boolean;
+
+//====================================================== PolarChart
+interface PolarChartData {
+    valueField: Field;
 }
 
-interface TooltipData {
-    fields: Field[];
-}
 
-interface Legend {
-    show: boolean;
-}
-
-interface Size {
-    width: number;
-    height: number;
-}
-
-interface AdditionalElements {
-    gridLine: GridLineOptions;
-}
-
-interface GridLineOptions {
-    flag: GridLineFlag;
-}
-
-interface GridLineFlag {
-    key: boolean;
-    value: boolean;
-}
-
-interface AxisOptions {
-    position: AxisPosition;
-    ticks: AxisTicks;
-}
-
-interface NumberAxisOptions extends AxisOptions {
-    domain: NumberDomain;
-}
-
-interface DiscreteAxisOptions extends AxisOptions {}
-
-interface DateAxisOptions extends AxisOptions {}
-
-interface AxisTicks {
-    flag: boolean;
+//====================================================== IntervalChart
+interface IntervalChartData {
+    valueField1: Field;
+    valueField2: Field;
 }
