@@ -87,7 +87,7 @@ interface TwoDimensionalAdditionalElements extends AdditionalElements {
 }
 
 interface MarksOptions {
-    flag: boolean;
+    show: boolean;
 }
 
 

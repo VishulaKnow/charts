@@ -36,7 +36,8 @@ export class ChartRenderer {
             model.chartBlock.margin,
             options.axis.keyAxis.orient,
             model.chartSettings.bar,
-            model.blockCanvas.size);
+            model.blockCanvas.size,
+            options.additionalElements.marks.show);
 
 
         
@@ -115,7 +116,7 @@ export class ChartRenderer {
             RecordOverflowAlert.render(block, model.dataSettings.scope.hidedRecordsAmount, 'top', options.orient);
     }
 
-    private static render2DCharts(block: Block, charts: TwoDimensionalChartModel[], scales: Scales, data: DataSource, dataOptions: OptionsModelData, margin: BlockMargin, keyAxisOrient: Orient, barSettings: BarChartSettings, blockSize: Size) {
+    private static render2DCharts(block: Block, charts: TwoDimensionalChartModel[], scales: Scales, data: DataSource, dataOptions: OptionsModelData, margin: BlockMargin, keyAxisOrient: Orient, barSettings: BarChartSettings, blockSize: Size, markFlag: boolean) {
         
         block.renderClipPath(margin, blockSize);
         block.renderChartBlock();
@@ -141,8 +142,7 @@ export class ChartRenderer {
                     margin,
                     keyAxisOrient,
                     chart,
-                    blockSize,
-                    chart.isSegmented);
+                    markFlag);
             else if (chart.type === 'area')
                 Area.render(block,
                     scales,
@@ -151,7 +151,8 @@ export class ChartRenderer {
                     margin,
                     keyAxisOrient,
                     chart,
-                    blockSize);
+                    blockSize,
+                    markFlag);
         });
     }
 

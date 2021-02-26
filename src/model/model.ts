@@ -155,7 +155,7 @@ export interface TwoDimensionalAdditionalElementsOptions extends AdditionalEleme
     marks: MarksOptions;
 }
 export interface MarksOptions {
-    flag: boolean;
+    show: boolean;
 }
 
 

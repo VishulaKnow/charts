@@ -37,7 +37,7 @@ const configCars: Config = {
                 }
             },
             marks: {
-                flag: true
+                show: true
             }
         },
         legend: {
@@ -144,7 +144,7 @@ const configDemo: Config = {
                 }
             },
             marks: {
-                flag: true
+                show: true
             }
         },
         legend: {

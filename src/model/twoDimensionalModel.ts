@@ -133,7 +133,9 @@ export class TwoDimensionalModel
     private static getAdditionalElements(options: TwoDimensionalOptions, designerConfig: DesignerConfig): TwoDimensionalAdditionalElementsOptions {
         return {
             gridLine: GridLineModel.getGridLineOptions(options.additionalElements.gridLine, designerConfig.additionalElements.gridLine),
-            marks: { ...options.additionalElements.marks }
+            marks: {
+                show: options.additionalElements.marks.show
+            }
         }
     }
 

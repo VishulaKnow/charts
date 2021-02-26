@@ -12,11 +12,11 @@ import { AreaHelper } from './areaHelper';
 export class Area {
     private static areaChartClass = 'area';
 
-    public static render(block: Block, scales: Scales, data: DataRow[], keyField: Field, margin: BlockMargin, keyAxisOrient: Orient, chart: TwoDimensionalChartModel, blockSize: Size): void {
+    public static render(block: Block, scales: Scales, data: DataRow[], keyField: Field, margin: BlockMargin, keyAxisOrient: Orient, chart: TwoDimensionalChartModel, blockSize: Size, markFlag: boolean): void {
         if (chart.isSegmented)
-            this.renderSegmented(block, scales, data, keyField, margin, keyAxisOrient, chart, blockSize);
+            this.renderSegmented(block, scales, data, keyField, margin, keyAxisOrient, chart, markFlag);
         else
-            this.renderGrouped(block, scales, data, keyField, margin, keyAxisOrient, chart, blockSize);
+            this.renderGrouped(block, scales, data, keyField, margin, keyAxisOrient, chart, blockSize, markFlag);
     }
 
     public static updateAreaChartByValueAxis(block: Block, scales: Scales, data: DataRow[], keyField: Field, margin: BlockMargin, chart: TwoDimensionalChartModel, keyAxisOrient: Orient, blockSize: Size): void {
@@ -48,7 +48,7 @@ export class Area {
         }
     }
 
-    private static renderGrouped(block: Block, scales: Scales, data: DataRow[], keyField: Field, margin: BlockMargin, keyAxisOrient: Orient, chart: TwoDimensionalChartModel, blockSize: Size): void {
+    private static renderGrouped(block: Block, scales: Scales, data: DataRow[], keyField: Field, margin: BlockMargin, keyAxisOrient: Orient, chart: TwoDimensionalChartModel, blockSize: Size, markFlag: boolean): void {
         chart.data.valueFields.forEach((field, index) => {
             const area = AreaHelper.getGroupedAreaGenerator(keyAxisOrient, scales, margin, keyField.name, field.name, blockSize);
 
@@ -62,11 +62,12 @@ export class Area {
             Helper.setCssClasses(path, Helper.getCssClassesWithElementIndex(chart.cssClasses, index));
             Helper.setChartStyle(path, chart.style, index, 'fill');
 
-            MarkDot.render(block, data, keyAxisOrient, scales, margin, keyField.name, field.name, chart.cssClasses, index, chart.style.elementColors, false);
+            if(markFlag)
+                MarkDot.render(block, data, keyAxisOrient, scales, margin, keyField.name, field.name, chart.cssClasses, index, chart.style.elementColors, false);
         });
     }
 
-    private static renderSegmented(block: Block, scales: Scales, data: DataRow[], keyField: Field, margin: BlockMargin, keyAxisOrient: Orient, chart: TwoDimensionalChartModel, blockSize: Size): void {
+    private static renderSegmented(block: Block, scales: Scales, data: DataRow[], keyField: Field, margin: BlockMargin, keyAxisOrient: Orient, chart: TwoDimensionalChartModel, markFlag: boolean): void {
         const keys = chart.data.valueFields.map(field => field.name);
         const stackedData = stack().keys(keys)(data);
         const area = AreaHelper.getSegmentedAreaGenerator(keyAxisOrient, scales, margin, keyField.name);
@@ -87,7 +88,8 @@ export class Area {
         this.setSegmentColor(areas, chart.style.elementColors);
 
         stackedData.forEach((sd, index) => {
-            MarkDot.render(block, sd, keyAxisOrient, scales, margin, keyField.name, '1', chart.cssClasses, index, chart.style.elementColors, true);
+            if(markFlag)
+                MarkDot.render(block, sd, keyAxisOrient, scales, margin, keyField.name, '1', chart.cssClasses, index, chart.style.elementColors, true);
         });
     }
 
