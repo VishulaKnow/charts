@@ -58,8 +58,8 @@ export class Axis {
             .call(axis);
 
         if (axisOptions.labels.visible) {
-            if (axisOptions.orient === 'bottom' && axisOptions.type === 'key' && axisOptions.labels.positition === 'rotated')
-                this.rotateLabels(axisElement);
+            if (axisOptions.type === 'key' && axisOptions.labels.positition === 'rotated')
+                this.rotateLabels(axisElement, axisOptions.orient);
 
             if ((axisOptions.orient === 'left' || axisOptions.orient === 'right') && axisOptions.type === 'key' && Scale.getScaleStep(scale) >= 38) {
                 axisElement.selectAll<SVGGElement, unknown>('.tick text').call(this.wrap, axisOptions.labels.maxSize);
@@ -144,14 +144,22 @@ export class Axis {
         axis.tickPadding(axisLabelPadding);
     }
 
-    private static rotateLabels(axisElement: Selection<SVGGElement, unknown, HTMLElement, any>): void {
+    private static rotateLabels(axisElement: Selection<SVGGElement, unknown, HTMLElement, any>, keyAxisOrient: Orient): void {
         const labelBlocks = axisElement.selectAll('text');
+        labelBlocks.attr('transform', 'rotate(-90)');
 
-        labelBlocks.attr('text-anchor', 'end');
-        labelBlocks
-            .attr('x', -AXIS_HORIZONTAL_LABEL_PADDING)
-            .attr('y', -4)
-            .attr('transform', 'rotate(-90)');
+        if(keyAxisOrient === 'bottom') {
+            labelBlocks
+                .attr('text-anchor', 'end')
+                .attr('x', -AXIS_HORIZONTAL_LABEL_PADDING)
+                .attr('y', -4);
+        }
+        else if(keyAxisOrient === 'top') {
+            labelBlocks
+                .attr('text-anchor', 'start')
+                .attr('x', AXIS_HORIZONTAL_LABEL_PADDING)
+                .attr('y', 6);
+        }
     }
 
     private static removeTicks(axis: IAxis<any>): void {

@@ -58,12 +58,14 @@ export class MarginModel
     }
 
     public static recalcMargnWitVerticalAxisLabel(margin: BlockMargin, data: DataSource, config: Config, designerConfig: DesignerConfig, dataScope: DataScope): void {
-        if((config.options.type === '2d' || config.options.type === 'interval') && config.options.orientation === 'vertical' && config.options.axis.keyAxis.position === 'end') {
+        if((config.options.type === '2d' || config.options.type === 'interval') && config.options.orientation === 'vertical') {
             const axisLabelSize = AxisModel.getLabelSize(designerConfig.canvas.axisLabel.maxSize.main, dataScope.allowableKeys);
             const axisConfig = AxisModel.getKeyAxisLabelPosition(margin, config.canvas.size, dataScope.allowableKeys.length);
 
+            const marginOrient = config.options.axis.keyAxis.position === 'end' ? 'bottom' : 'top';
+
             if(axisConfig === 'rotated')
-                margin.bottom += (axisLabelSize.width - axisLabelSize.height);
+                margin[marginOrient] += (axisLabelSize.width - axisLabelSize.height);
         }
     }
 
