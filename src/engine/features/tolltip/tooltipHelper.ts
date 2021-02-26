@@ -1,7 +1,7 @@
 import { AxisScale } from 'd3-axis';
 import { Selection, BaseType, select } from 'd3-selection'
 import { PieArcDatum } from 'd3-shape';
-import { ChartOrientation } from "../../../config/config";
+import { ChartOrientation, TwoDimensionalValueField } from "../../../config/config";
 import { BlockMargin, DataRow, DataSource, Field, IntervalChartModel, OptionsModelData, Orient, PolarChartModel, ScaleKeyType, Size, TwoDimensionalChartModel } from "../../../model/model";
 import { Helper } from '../../helper';
 import { DonutHelper } from '../../polarNotation/DonutHelper';
@@ -44,8 +44,9 @@ export class TooltipHelper {
     public static fillForMulty2DCharts(tooltipContentBlock: Selection<BaseType, unknown, BaseType, unknown>, charts: TwoDimensionalChartModel[], data: DataSource, dataOptions: OptionsModelData, keyValue: string): void {
         tooltipContentBlock.html('');
         tooltipContentBlock.append('div')
-            .attr('class', 'tooltip-group')
+            .attr('class', 'tooltip-group tooltip-head')
             .text(keyValue);
+
         charts.forEach(chart => {
             chart.data.valueFields.forEach((field, index) => {
                 const text = this.getTooltipItemText(data, dataOptions, keyValue, field, false);
@@ -106,14 +107,11 @@ export class TooltipHelper {
     public static getTooltipFixedCoordinate(scaleKey: AxisScale<any>, margin: BlockMargin, blockSize: Size, keyValue: string, tooltipBlockElement: HTMLElement, keyAxisOrient: Orient): TooltipCoordinate {
         if (keyAxisOrient === 'bottom' || keyAxisOrient === 'top') {
             const coordinate: TooltipCoordinate = {
-                top: margin.top - tooltipBlockElement.getBoundingClientRect().height + 'px',
+                top: margin.top - 5 - tooltipBlockElement.getBoundingClientRect().height + 'px',
                 bottom: null,
                 left: Scale.getScaledValue(scaleKey, keyValue) + margin.left - tooltipBlockElement.getBoundingClientRect().width / 2 + 'px',
                 right: null
             }
-
-            if(Helper.getPXValueFromString(coordinate.top) < 0)
-                coordinate.top = 0 + 'px';
 
             if (Helper.getPXValueFromString(coordinate.left) < 0)
                 coordinate.left = 0 + 'px';
@@ -313,10 +311,10 @@ export class TooltipHelper {
             .attr('class', 'tooltip-texts')
             .append('div')
             .attr('class', 'tooltip-text-item')
-            .text(tooltipText)
+            .html(tooltipText)
             .style('white-space', 'nowrap');
 
-        if (textBlock.node().getBoundingClientRect().width > 500)
+        if (textBlock.node().getBoundingClientRect().width >= 450)
             textBlock.style('white-space', 'normal');
     }
 
@@ -326,7 +324,7 @@ export class TooltipHelper {
         if(showKey)
             text = `${row[dataOptions.keyField.name]} - ${ValueFormatter.formatValue(valueField.format, row[valueField.name])}`;
         else
-            text = `${ValueFormatter.formatValue(valueField.format, row[valueField.name])}`;
+            text = `<span class="field-title">${(valueField as TwoDimensionalValueField).title + ' ' || ''}</span><span class="field-value">${ValueFormatter.formatValue(valueField.format, row[valueField.name])}</span>`;
         return text;
     }
 

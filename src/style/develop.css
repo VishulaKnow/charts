@@ -85,7 +85,6 @@
 .tooltip-content {
     position: relative;
     pointer-events: none;
-    font-size: 14px;
     font-family: "Roboto", sans-serif;
     line-height: 1;
     font-weight: bold;
@@ -97,7 +96,8 @@
 }
 .tooltip-content-2d {
     border: 1px solid gray;
-    background: rgba(255, 255, 255, 0.8);
+    color: white;
+    background: rgba(0, 0, 0, 0.82);
 }
 .tooltip-arrow {
     position: absolute;
@@ -114,12 +114,50 @@
     font-style: normal;
     font-size: 14px;
 }
+
+.tooltip-content-2d {
+    padding: 8px 16px;
+}
+.tooltip-content-2d .tooltip-head {
+    font-size: 12px;
+    margin-top: 4px;
+    margin-bottom: 10px;
+}
+.tooltip-content-2d .tooltip-texts {
+    width: 100%;
+}
+.tooltip-content-2d .tooltip-text-item {
+    font-size: 11px;
+    width: 100%;
+    flex: 1;
+    display: flex;
+}
+.tooltip-content-2d .tooltip-text-item > span {
+    display: block;
+}
+.tooltip-content-2d .tooltip-text-item > span:first-of-type {
+    flex: 1;
+}
+.tooltip-content-2d .tooltip-text-item > span:last-of-type {
+    flex: 0;
+}
+.field-value {
+    margin-left: 0.5rem;
+}
+.tooltip-content-2d .tooltip-circle {
+    position: relative;
+    top: -4px;
+    width: 9px;
+    height: 9px;
+    margin-right: 10px;
+}
+
 .tooltip-group:not(:first-of-type) {
-    margin-top: 8px;
+    margin-top: 4px;
 }
 .tooltip-line {
     stroke: #000000;
-    stroke-width: 1px;
+    stroke-width: 2px;
 }
 
 .chart-element-highlight {
