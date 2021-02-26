@@ -52,7 +52,7 @@ const configCars: Config = {
             {
                 title: 'Рост стоимости',
                 isSegmented: false,
-                type: 'bar',
+                type: 'line',
                 data: {
                     valueFields: [
                         {

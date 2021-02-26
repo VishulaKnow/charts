@@ -16,9 +16,7 @@ select.prototype.transition = transition;
 export class Dot
 {
     public static dotClass = 'dot';
-    public static innerDotClass = 'dot-inside';
     private static dotRadius = 5.5;
-    private static innerDotRadius = 2.5;
 
     public static render(block: Block, data: DataRow[], keyAxisOrient: Orient, scales: Scales, margin: BlockMargin, keyField: string, valueField: string, cssClasses: string[], itemIndex: number, colorPalette: Color[], blockSize: Size, isSegmented: boolean): void {
         const dotsWrapper = block.getChartBlock()
@@ -33,19 +31,11 @@ export class Dot
             .attr('cx', d => attrs.cx(d))
             .attr('cy', d => attrs.cy(d))
             .attr('r', this.dotRadius)
-            // .style('clip-path', `url(${block.getClipPathId()})`);
-
-        const dotsInside = dotsWrapper.append('circle')
-            .attr('class', this.innerDotClass)
-            .attr('cx', d => attrs.cx(d))
-            .attr('cy', d => attrs.cy(d))
-            .attr('r', this.innerDotRadius)
-            .style('fill', 'white')
-            .style('pointer-events', 'none');
+            .style('stroke-width', '2.5px')
+            .style('fill', 'white');
         
         Helper.setCssClasses(dots, Helper.getCssClassesWithElementIndex(cssClasses, itemIndex));
-        Helper.setCssClasses(dotsInside, Helper.getCssClassesWithElementIndex(cssClasses, itemIndex));
-        Helper.setChartElementColor(dots, colorPalette, itemIndex, 'fill');
+        Helper.setChartElementColor(dots, colorPalette, itemIndex, 'stroke');
     }
 
     public static getAllDots(block: Block, chartCssClasses: string[]): Selection<BaseType, DataRow, BaseType, unknown> {
@@ -61,14 +51,6 @@ export class Dot
         const attrs = this.getDotAttrs(keyAxisOrient, scales, margin, keyField, valueField, isSegmented);
         
         dots
-            .transition()
-            .duration(1000)
-                .attr('cx', d => attrs.cx(d))
-                .attr('cy', d => attrs.cy(d));
-
-        block.getChartBlock()
-            .selectAll(`.${this.innerDotClass}${Helper.getCssClassesLine(cssClasses)}.chart-element-${index}`)
-            .data(data)
             .transition()
             .duration(1000)
                 .attr('cx', d => attrs.cx(d))
