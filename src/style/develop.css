@@ -147,14 +147,14 @@
 }
 .tooltip-content-2d .tooltip-circle {
     position: relative;
-    top: -4px;
+    display: block;
     width: 9px;
     height: 9px;
     margin-right: 10px;
 }
 
 .tooltip-group:not(:first-of-type) {
-    margin-top: 4px;
+    margin-top: 6px;
 }
 .tooltip-line {
     stroke: #000000;

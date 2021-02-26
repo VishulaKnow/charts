@@ -599,9 +599,9 @@ const data = require('../assets/dataSet.json');
 const chart = new Chart(config, designerConfig, data, false);
 chart.render(document.querySelector('.main-wrapper'));
 
-setInterval(() => {
-    chart.updateData(data);
-}, 2000);
+// setInterval(() => {
+//     chart.updateData(data);
+// }, 2000);
 
 // const model = assembleModel(config, data, designerConfig);
 // const engine = new Engine();

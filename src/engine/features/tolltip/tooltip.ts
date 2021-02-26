@@ -88,7 +88,7 @@ export class Tooltip {
                 TooltipHelper.highlight2DElements(block, dataOptions.keyField.name, keyValue, charts);
             })
             .on('mouseleave', function () {
-                tooltipBlock.style('display', 'none');
+                // tooltipBlock.style('display', 'none');
                 tooltipLine.style('display', 'none');
 
                 TooltipHelper.remove2DElementsHighlighting(block, charts);
