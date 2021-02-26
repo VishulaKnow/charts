@@ -141,6 +141,9 @@
 .tooltip-content-2d .tooltip-text-item > span:last-of-type {
     flex: 0;
 }
+.field-value {
+    margin-left: 0.5rem;
+}
 .tooltip-content-2d .tooltip-circle {
     position: relative;
     top: -4px;
