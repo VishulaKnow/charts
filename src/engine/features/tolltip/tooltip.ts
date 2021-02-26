@@ -265,11 +265,11 @@ export class Tooltip {
             tooltipBlock
                 .style('right', tooltipCoordinate.right)
                 .style('bottom', tooltipCoordinate.bottom)
+                .style('top', tooltipCoordinate.top)
                 .transition()
                 .duration(transition)
                 .ease(easeLinear)
-                    .style('left', tooltipCoordinate.left)
-                    .style('top', tooltipCoordinate.top);
+                    .style('left', tooltipCoordinate.left);
         } else if (chartOrientation === 'horizontal' && tooltipBlock.style('top') !== '0px' && parseInt(tooltipBlock.style('bottom')) > 0 && tooltipCoordinate.bottom === null) {
             tooltipBlock
                 .style('left', tooltipCoordinate.left)
