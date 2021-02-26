@@ -202,6 +202,9 @@ export default class Listeners
                             value: true,
                             key: false
                         }
+                    },
+                    marks: {
+                        flag: true
                     }
                 }
             }

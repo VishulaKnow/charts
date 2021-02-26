@@ -50,7 +50,7 @@ interface Field {
 export interface TwoDimensionalOptions extends Options {
     type: '2d';
     axis: TwoDimensionalAxis;
-    additionalElements: AdditionalElements;
+    additionalElements: TwoDimensionalAdditionalElements;
     charts: TwoDimensionalChart[];
     orientation: ChartOrientation;
 }
@@ -80,6 +80,14 @@ interface GridLineOptions {
 interface GridLineFlag {
     key: boolean;
     value: boolean;
+}
+
+interface TwoDimensionalAdditionalElements extends AdditionalElements {
+    marks: MarksOptions;
+}
+
+interface MarksOptions {
+    flag: boolean;
 }
 
 

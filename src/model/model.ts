@@ -63,7 +63,7 @@ export interface TwoDimensionalOptionsModel extends OptionsModel {
     scale: IScaleModel;
     axis: IAxisModel;
     charts: TwoDimensionalChartModel[];
-    additionalElements: AdditionalElementsOptions;
+    additionalElements: TwoDimensionalAdditionalElementsOptions;
     orient: ChartOrientation;
 }
 export interface PolarOptionsModel extends OptionsModel {
@@ -149,6 +149,13 @@ export interface GridLineOptions {
 export interface GridLineFlag {
     key: boolean;
     value: boolean;
+}
+
+export interface TwoDimensionalAdditionalElementsOptions extends AdditionalElementsOptions {
+    marks: MarksOptions;
+}
+export interface MarksOptions {
+    flag: boolean;
 }
 
 

@@ -35,6 +35,9 @@ const configCars: Config = {
                     value: true,
                     key: true
                 }
+            },
+            marks: {
+                flag: true
             }
         },
         legend: {
@@ -139,6 +142,9 @@ const configDemo: Config = {
                     value: true,
                     key: true
                 }
+            },
+            marks: {
+                flag: true
             }
         },
         legend: {
