@@ -15,16 +15,26 @@ export type DataRow = {
 }
 export type EmbeddedLabelTypeModel = 'none' | 'key' | 'value';
 type AxisType = 'key' | 'value';
-
 export interface DataSource {
     [source: string]: DataRow[];
 }
 
+
+export interface Model {
+    blockCanvas: BlockCanvas;
+    chartBlock: ChartBlock;
+    options: TwoDimensionalOptionsModel | PolarOptionsModel | IntervalOptionsModel;
+    otherComponents: OtherComponents;
+    dataSettings: DataSettings;
+    chartSettings: ChartSettings;
+}
+
+
+//====================================================== Canvas
 export interface BlockCanvas {
     size: Size;
     cssClass: string;
 }
-
 export interface Size {
     width: number;
     height: number;
@@ -33,7 +43,6 @@ export interface Size {
 export interface ChartBlock {
     margin: BlockMargin;
 }
-
 export interface BlockMargin {
     top: number;
     bottom: number;
@@ -41,54 +50,8 @@ export interface BlockMargin {
     right: number;
 }
 
-export interface ScaleKeyModel {
-    domain: any[];
-    range: RangeModel;
-    type: ScaleKeyType;
-    elementsAmount: number;
-}
 
-export interface ScaleValueModel {
-    domain: any[];
-    range: RangeModel;
-    type: ScaleValueType;
-}
-
-export interface RangeModel {
-    start: number;
-    end: number;
-}
-
-export interface AxisModelOptions {
-    type: AxisType;
-    orient: Orient;
-    translate: TranslateModel;
-    cssClass: string;
-    ticks: AxisTicksModel;
-    labels: AxisLabelModel;
-}
-
-export interface AxisLabelModel {
-    maxSize: number;
-    positition: AxisLabelPosition;
-    visible: boolean;
-}
-
-interface AxisTicksModel {
-    flag: boolean;
-}
-
-export interface DataFormat {
-    formatters: Formatter;
-}
-export interface DataSettings {
-    scope: DataScope;
-    format: DataFormat;
-}
-export interface DataScope {
-    hidedRecordsAmount: number;
-    allowableKeys: string[];
-}
+//====================================================== Options
 interface OptionsModel {
     legend: ILegendModel;
     data: OptionsModelData;
@@ -114,6 +77,68 @@ export interface IntervalOptionsModel extends OptionsModel {
     additionalElements: AdditionalElementsOptions;
     orient: ChartOrientation;
 }
+
+
+//====================================================== Options Model Common
+export interface ILegendModel {
+    position: LegendPosition;
+}
+export interface OptionsModelData {
+    dataSource: string;
+    keyField: Field;
+}
+export interface Field {
+    name: string;
+    format: DataType;
+}
+
+
+//====================================================== TwoDimensionalOptionsModel & IntervalOptionsModel
+export interface IScaleModel {
+    scaleKey: ScaleKeyModel;
+    scaleValue: ScaleValueModel;
+}
+export interface ScaleKeyModel {
+    domain: any[];
+    range: RangeModel;
+    type: ScaleKeyType;
+    elementsAmount: number;
+}
+export interface ScaleValueModel {
+    domain: any[];
+    range: RangeModel;
+    type: ScaleValueType;
+}
+export interface RangeModel {
+    start: number;
+    end: number;
+}
+
+export interface IAxisModel {
+    keyAxis: AxisModelOptions;
+    valueAxis: AxisModelOptions;
+}
+export interface AxisModelOptions {
+    type: AxisType;
+    orient: Orient;
+    translate: TranslateModel;
+    cssClass: string;
+    ticks: AxisTicksModel;
+    labels: AxisLabelModel;
+}
+interface TranslateModel {
+    translateX: number;
+    translateY: number;
+}
+interface AxisTicksModel {
+    flag: boolean;
+}
+export interface AxisLabelModel {
+    maxSize: number;
+    positition: AxisLabelPosition;
+    visible: boolean;
+}
+
 export interface AdditionalElementsOptions {
     gridLine: GridLineOptions;
 }
@@ -124,19 +149,18 @@ export interface GridLineFlag {
     key: boolean;
     value: boolean;
 }
-export interface DonutChartSettings {
-    maxThickness: number;
-    minThickness: number;
-    padAngle: number;
-}
 
+
+//====================================================== Charts
 interface ChartModel {
     title: string;
     tooltip: TooltipModel;
     cssClasses: string[];
     style: ChartStyle;
 }
-
+interface TooltipModel {
+    show: boolean;
+}
 export interface ChartStyle {
     elementColors: Color[];
     opacity: number;
@@ -157,96 +181,49 @@ export interface PolarChartModel extends ChartModel {
     type: PolarChartType;
     data: PolarChartDataModel;
 }
-export interface Model {
-    blockCanvas: BlockCanvas;
-    chartBlock: ChartBlock;
-    otherComponents: OtherComponents;
-    options: TwoDimensionalOptionsModel | PolarOptionsModel | IntervalOptionsModel;
-    dataSettings: DataSettings;
-    chartSettings: ChartSettings;
+
+
+//====================================================== TwoDimensionalChartModel
+export interface TwoDimensionalChartDataModel {
+    valueFields: TwoDimensionalValueField[];
 }
-
-export interface OtherComponents {
-    legendBlock: LegendBlockModel;
-    titleBlock: TitleBlockModel;
-}
-
-interface ComponentBlockModel {
-    margin: BlockMargin;
-    size: number;
-    pad: number;
-}
-
-export interface TitleBlockModel extends ComponentBlockModel {}
-
-export interface LegendBlockModel {
-    top: LegendBlockCanvas;
-    bottom: LegendBlockCanvas;
-    left: LegendBlockCanvas;
-    right: LegendBlockCanvas;
-}
-
-export interface Field {
-    name: string;
-    format: DataType;
-}
-
 export interface TwoDimensionalValueField extends Field {
     title: string;
 }
 
-export interface ChartSettings {
-    bar: BarChartSettings;
-    donut: DonutChartSettings;
-}
 
-
-
-export interface IAxisModel {
-    keyAxis: AxisModelOptions;
-    valueAxis: AxisModelOptions;
-}
-
-export interface IScaleModel {
-    scaleKey: ScaleKeyModel;
-    scaleValue: ScaleValueModel;
-}
-
-interface TranslateModel {
-    translateX: number;
-    translateY: number;
-}
-
-interface TooltipModel {
-    show: boolean;
-}
-
-interface TooltipDataModel {
-    fields: Field[];
-}
-
-export interface ILegendModel {
-    position: LegendPosition;
-}
-
-export interface OptionsModelData {
-    dataSource: string;
-    keyField: Field;
-}
-
-export interface TwoDimensionalChartDataModel {
-    valueFields: TwoDimensionalValueField[];
-}
-
-interface PolarChartDataModel {
-    valueField: Field;
-}
-
+//====================================================== IntervalChartModel
 interface IntervalChartDataModel {
     valueField1: Field;
     valueField2: Field;
 }
 
+
+//====================================================== PolarChartModel
+interface PolarChartDataModel {
+    valueField: Field;
+}
+
+
+//====================================================== DataSettings
+export interface DataSettings {
+    scope: DataScope;
+    format: DataFormat;
+}
+export interface DataScope {
+    hidedRecordsAmount: number;
+    allowableKeys: string[];
+}
+export interface DataFormat {
+    formatters: Formatter;
+}
+
+
+//====================================================== ChartSettings
+export interface ChartSettings {
+    bar: BarChartSettings;
+    donut: DonutChartSettings;
+}
 export interface BarChartSettings {
     groupMaxDistance: number;
     groupMinDistance: number;
@@ -254,5 +231,29 @@ export interface BarChartSettings {
     maxBarWidth: number;
     minBarWidth: number;
 }
+export interface DonutChartSettings {
+    maxThickness: number;
+    minThickness: number;
+    padAngle: number;
+}
 
+
+//====================================================== OtherComponents
+export interface OtherComponents {
+    legendBlock: LegendBlockModel;
+    titleBlock: TitleBlockModel;
+}
+interface ComponentBlockModel {
+    margin: BlockMargin;
+    size: number;
+    pad: number;
+}
+export interface LegendBlockModel {
+    top: LegendBlockCanvas;
+    bottom: LegendBlockCanvas;
+    left: LegendBlockCanvas;
+    right: LegendBlockCanvas;
+}
+
+export interface TitleBlockModel extends ComponentBlockModel {}
 interface LegendBlockCanvas extends ComponentBlockModel {}
