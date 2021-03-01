@@ -61,6 +61,6 @@ export default class Engine {
         const arcItems = Donut.getAllArcGroups(this.block);
         arcItems.on('mouseover', null);
         arcItems.on('mouseleave', null);
-        arcItems.nodes().forEach(node => interrupt(node));
+        arcItems.select('path').nodes().forEach(node => interrupt(node));
     }
 }

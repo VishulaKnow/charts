@@ -74,6 +74,8 @@ export class Tooltip {
 
         this.renderShadowFilter(block, 'shadow');
 
+        let currentKey: string = null;
+
         tipBox
             .on('mousemove', function (event) {
                 tooltipBlock.style('display', 'block');
@@ -81,12 +83,16 @@ export class Tooltip {
                 const keyValue = scaleKey.domain()[index];
                 TooltipHelper.fillForMulty2DCharts(tooltipContent, charts, data, dataOptions, keyValue);
 
-                const tooltipCoordinate = TooltipHelper.getTooltipFixedCoordinate(scaleKey, margin, blockSize, keyValue, tooltipContent.node(), keyAxisOrient);
-                thisClass.setLineTooltipCoordinate(tooltipBlock, tooltipCoordinate, chartOrientation, 75);
+                if(!currentKey || currentKey !== keyValue) {
+                    currentKey = keyValue;
 
-                const tooltipLineAttributes = TooltipHelper.getTooltipLineAttributes(scaleKey, margin, keyValue, chartOrientation, blockSize);
-                thisClass.setTooltipLineAttributes(tooltipLine, tooltipLineAttributes, 75);
-                tooltipLine.style('display', 'block');
+                    const tooltipCoordinate = TooltipHelper.getTooltipFixedCoordinate(scaleKey, margin, blockSize, keyValue, tooltipContent.node(), keyAxisOrient);
+                    thisClass.setLineTooltipCoordinate(tooltipBlock, tooltipCoordinate, chartOrientation, 75);
+
+                    const tooltipLineAttributes = TooltipHelper.getTooltipLineAttributes(scaleKey, margin, keyValue, chartOrientation, blockSize);
+                    thisClass.setTooltipLineAttributes(tooltipLine, tooltipLineAttributes, 75);
+                    tooltipLine.style('display', 'block');
+                }
 
                 TooltipHelper.highlight2DElements(block, dataOptions.keyField.name, keyValue, charts);
             })
@@ -95,6 +101,8 @@ export class Tooltip {
                 tooltipLine.style('display', 'none');
 
                 TooltipHelper.remove2DElementsHighlighting(block, charts);
+
+                currentKey = null;
             });
     }
 
