@@ -1,5 +1,5 @@
 import { sum } from 'd3-array'
-import { Selection, BaseType } from 'd3-selection'
+import { Selection } from 'd3-selection'
 import { DataType } from '../../designer/designerConfig';
 import { DataRow, Field } from "../../model/model";
 import { Block } from "../block/block";
@@ -27,7 +27,7 @@ export class Aggregator {
             const aggregatorObject = this.renderAggregatorObject(block, innerRadius, translate);
             const wrapper = this.renderAggregatorWrapper(aggregatorObject);
 
-            wrapper
+            const aggreggatorValue = wrapper
                 .append<HTMLDivElement>('div')
                 .attr('class', 'aggregator-value')
                 .style('text-align', 'center')
@@ -41,9 +41,9 @@ export class Aggregator {
                 .style('font-size', '18px')
                 .text(aggregator.name);
 
-            if(wrapper.node().getBoundingClientRect().width > innerRadius * 2 - 20) {
-                wrapper.select('aggregator-value')
-                    .style('font-size', `${fontSize - 10}px`)
+            while(aggreggatorValue.node().getBoundingClientRect().width > innerRadius * 2 - 20 && fontSize > 15) {
+                aggreggatorValue
+                    .style('font-size', `${fontSize -= 2}px`)
             }
         }
     }
