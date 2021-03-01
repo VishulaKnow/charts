@@ -384,7 +384,7 @@ export class TooltipHelper {
         if(showKey)
             text = `${row[dataOptions.keyField.name]} - ${ValueFormatter.formatValue(valueField.format, row[valueField.name])}`;
         else
-            text = `<span class="field-title">${(valueField as TwoDimensionalValueField).title + ' ' || ''}</span><span class="field-value">${ValueFormatter.formatValue(valueField.format, row[valueField.name])}</span>`;
+            text = `<span class="tooltip-field-title">${(valueField as TwoDimensionalValueField).title + ' ' || ''}</span><span class="tooltip-field-value">${ValueFormatter.formatValue(valueField.format, row[valueField.name])}</span>`;
         return text;
     }
 

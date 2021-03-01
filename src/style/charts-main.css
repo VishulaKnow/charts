@@ -9,9 +9,6 @@
     fill: none;
     stroke-width: 4;
 }
-.outline {
-    outline: 1px solid black;
-}
 .data-label {
     font-family: "Roboto" sans-serif;
     font-style: normal;
@@ -21,6 +18,8 @@
     color: #444444;
 }
 
+
+/*========================================================================= Legend */
 .legend-item-inline {
     white-space: nowrap;
 }
@@ -38,13 +37,6 @@
 }
 .mt-10 {
     margin-top: 10px;
-}
-.chart-title {
-    font-family: "Roboto", sans-serif;
-    font-style: normal;
-    font-weight: 500;
-    font-size: 18px;
-    line-height: 140.62%;
 }
 
 .legend-label {
@@ -70,13 +62,8 @@
     margin-right: 8px;
 }
 
-.tooltip-circle {
-    display: inline-block;
-    width: 11px;
-    height: 11px;
-    border-radius: 50%;
-    margin-right: 13px;
-}
+
+/*========================================================================= Tooltip */
 .tooltip-block {
     pointer-events: none;
     z-index: 100;
@@ -103,8 +90,20 @@
     background-color: white;
     transform: rotate(45deg);
 }
+
+/* Tooltip Content */
 .tooltip-group {
     display: flex;
+}
+.tooltip-group:not(:first-of-type) {
+    margin-top: 6px;
+}
+.tooltip-circle {
+    display: inline-block;
+    width: 11px;
+    height: 11px;
+    border-radius: 50%;
+    margin-right: 13px;
 }
 .tooltip-text-item {
     font-family: "Roboto" sans-serif;
@@ -113,6 +112,11 @@
     font-size: 14px;
 }
 
+/* Tooltip Content 2D */
+.tooltip-line {
+    stroke: #000000;
+    stroke-width: 2px;
+}
 .tooltip-content-2d {
     padding: 8px 16px;
 }
@@ -124,6 +128,14 @@
 .tooltip-content-2d .tooltip-texts {
     width: 100%;
 }
+.tooltip-content-2d .tooltip-circle {
+    position: relative;
+    display: block;
+    width: 9px;
+    height: 9px;
+    margin-right: 10px;
+}
+
 .tooltip-content-2d .tooltip-text-item {
     font-size: 11px;
     width: 100%;
@@ -140,29 +152,24 @@
 .tooltip-content-2d .tooltip-text-item > span:last-of-type {
     flex: 0;
 }
-.field-value {
+.tooltip-field-value {
     margin-left: 0.5rem;
-}
-.tooltip-content-2d .tooltip-circle {
-    position: relative;
-    display: block;
-    width: 9px;
-    height: 9px;
-    margin-right: 10px;
-}
-
-.tooltip-group:not(:first-of-type) {
-    margin-top: 6px;
-}
-.tooltip-line {
-    stroke: #000000;
-    stroke-width: 2px;
 }
 
 .chart-element-highlight {
     opacity: 0.5;
 }
 
+
+/*========================================================================= Additional */
+.axis .domain {
+    stroke: #D2D2D2;
+}
+.axis .tick line:first-of-type {
+    stroke: #D2D2D2;
+}
+
+/* Aggregator */
 .aggregator-value, .aggregator-name {
     color: #000000;
     font-family: "Roboto", sans-serif;
@@ -172,18 +179,13 @@
     margin-top: 20px;
 }
 
+/* Grid */
 .grid-line {
     stroke: #D2D2D2;
     stroke-dasharray: 3;
 }
 
-.axis .domain {
-    stroke: #D2D2D2;
-}
-.axis .tick line:first-of-type {
-    stroke: #D2D2D2;
-}
-
+/* Record overflow */
 .record-overflow-alert {
     background-color: #FFFFFF;;
     padding: 5px 10px 5px;
@@ -204,15 +206,20 @@
     font-size: 1.3rem;
 }
 
-.chart-block {
-    stroke-width: 1px !important;
-}
-
+/* Embedded label */
 .embedded-label {
     color: #444444;
     font-family: "Roboto", sans-serif;
     font-style: normal;
     font-weight: 500;
     font-size: 12px;
+    line-height: 140.62%;
+}
+
+.chart-title {
+    font-family: "Roboto", sans-serif;
+    font-style: normal;
+    font-weight: 500;
+    font-size: 18px;
     line-height: 140.62%;
 }
