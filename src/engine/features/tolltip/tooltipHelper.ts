@@ -2,6 +2,7 @@ import { AxisScale } from 'd3-axis';
 import { easeLinear } from 'd3-ease';
 import { Selection, BaseType, select } from 'd3-selection'
 import { PieArcDatum } from 'd3-shape';
+import { interrupt } from 'd3-transition';
 import { ChartOrientation, TwoDimensionalValueField } from "../../../config/config";
 import { BlockMargin, DataRow, DataSource, Field, IntervalChartModel, OptionsModelData, Orient, PolarChartModel, ScaleKeyType, Size, TwoDimensionalChartModel } from "../../../model/model";
 import { Block } from '../../block/block';
@@ -192,6 +193,8 @@ export class TooltipHelper {
     }
 
     public static changeDonutHighlightAppearance(segment: Selection<SVGGElement, PieArcDatum<DataRow>, BaseType, unknown>, margin: BlockMargin, blockSize: Size, donutThickness: number, on: boolean): void {
+        interrupt(segment.select('path').node());
+        
         let scaleSize = 0;
         if(on)
             scaleSize = 5; // Если нужно выделить сегмент, то scaleSize не равен нулю и отображается увеличенным
@@ -254,6 +257,10 @@ export class TooltipHelper {
     }
 
     private static scaled(elementSelection: Selection<BaseType, DataRow, BaseType, unknown>, isScaled: boolean) : void {
+        elementSelection.nodes().forEach(node => {
+            interrupt(node);
+        });
+        
         elementSelection
             .transition()
             .duration(50)
