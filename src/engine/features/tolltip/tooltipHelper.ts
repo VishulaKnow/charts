@@ -193,6 +193,7 @@ export class TooltipHelper {
     }
 
     public static changeDonutHighlightAppearance(segment: Selection<SVGGElement, PieArcDatum<DataRow>, BaseType, unknown>, margin: BlockMargin, blockSize: Size, donutThickness: number, on: boolean): void {
+        interrupt(segment.node());
         interrupt(segment.select('path').node());
         
         let scaleSize = 0;
