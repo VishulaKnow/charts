@@ -92,9 +92,9 @@ export class Tooltip {
                     const tooltipLineAttributes = TooltipHelper.getTooltipLineAttributes(scaleKey, margin, keyValue, chartOrientation, blockSize);
                     thisClass.setTooltipLineAttributes(tooltipLine, tooltipLineAttributes, 75);
                     tooltipLine.style('display', 'block');
-                }
 
-                TooltipHelper.highlight2DElements(block, dataOptions.keyField.name, keyValue, charts);
+                    TooltipHelper.highlight2DElements(block, dataOptions.keyField.name, keyValue, charts);
+                }
             })
             .on('mouseleave', function () {
                 tooltipBlock.style('display', 'none');

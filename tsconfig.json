@@ -2,11 +2,11 @@
     "compilerOptions": {
         "outDir": "./lib/",
         "noImplicitAny": true,
-        // "declaration": true,
         "target": "es6",
         "jsx": "react",
         "allowJs": true,
-        "types": ["jest"]
+        "types": ["jest"],
+        // "declaration": true
     },
     // "include": ["src"],
     // "exclude": ["node_modules",
