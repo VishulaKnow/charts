@@ -604,7 +604,7 @@ chart.render(document.querySelector('.main-wrapper'));
 
 setInterval(() => {
     chart.updateData(data);
-}, 2000);
+}, 10);
 
 // setTimeout(() => {
 //     chart.destroy();

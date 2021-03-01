@@ -10,6 +10,7 @@ import { DonutHelper } from '../../polarNotation/DonutHelper';
 import { Scales } from '../scale/scale';
 import { AxisScale } from 'd3-axis';
 import { easeLinear } from 'd3-ease';
+import { interrupt } from 'd3-transition';
 
 export class Tooltip {
     public static tipBoxClass = 'tipbox';
@@ -196,6 +197,8 @@ export class Tooltip {
     }
 
     private static setTooltipLineAttributes(tooltipLine: Selection<SVGLineElement, unknown, HTMLElement, any>, attributes: TooltipLineAttributes, transition: number): void {
+        interrupt(tooltipLine.node());
+        
         if (transition && tooltipLine.style('display') === 'block') {
             tooltipLine
                 .attr('stroke-linecap', attributes.strokeLinecap)
@@ -268,6 +271,8 @@ export class Tooltip {
     }
 
     private static setLineTooltipCoordinate(tooltipBlock: Selection<BaseType, unknown, HTMLElement, any>, tooltipCoordinate: TooltipCoordinate, chartOrientation: ChartOrientation, transition: number = null): void {
+        interrupt(tooltipBlock.node());
+        
         if (!transition || transition <= 0)
             this.setTooltipCoordinate(tooltipBlock, tooltipCoordinate);
             
