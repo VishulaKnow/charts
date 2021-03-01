@@ -3,19 +3,21 @@ import { BlockMargin, DataRow, EmbeddedLabelTypeModel, Field, Orient, Size } fro
 import { Block } from "../../block/block";
 import { Helper } from "../../helper";
 import { ValueFormatter } from "../../valueFormatter";
-import { BarAttrs, EmbeddedLabelPosition, EmbeddedLabelsHelper, LABEL_BAR_PADDING } from "./embeddedLabelsHelper";
+import { BarAttrs, EmbeddedLabelPosition, EmbeddedLabelsHelper } from "./embeddedLabelsHelper";
 
 export class EmbeddedLabels {
     public static render(block: Block, bars: Selection<SVGRectElement, DataRow, SVGGElement, any>, field: Field, type: EmbeddedLabelTypeModel, keyAxisOrient: Orient, blockSize: Size, margin: BlockMargin): void {
         const thisClass = this;
 
+        const labelsGroup = this.renderGroup(block);
+
         bars.each(function (d) {
-            thisClass.renderOneLabel(block, select(this), d, field, type, keyAxisOrient, blockSize, margin);
+            thisClass.renderOneLabel(labelsGroup, select(this), d, field, type, keyAxisOrient, blockSize, margin);
         });
     }
 
-    private static renderOneLabel(block: Block, bar: Selection<SVGRectElement, DataRow, HTMLElement, any>, dataRow: DataRow, field: Field, type: EmbeddedLabelTypeModel, keyAxisOrient: Orient, blockSize: Size, margin: BlockMargin): void {
-        const labelBlock = block.getChartBlock()
+    private static renderOneLabel(labelsGroup: Selection<SVGGElement, unknown, HTMLElement, unknown>, bar: Selection<SVGRectElement, DataRow, HTMLElement, any>, dataRow: DataRow, field: Field, type: EmbeddedLabelTypeModel, keyAxisOrient: Orient, blockSize: Size, margin: BlockMargin): void {
+        const labelBlock = labelsGroup
             .append('text')
             .attr('class', 'embedded-label')
             .style('pointer-events', 'none')
@@ -26,7 +28,6 @@ export class EmbeddedLabels {
             y: Helper.getSelectionNumericAttr(bar, 'y'),
             width: Helper.getSelectionNumericAttr(bar, 'width'),
             height: Helper.getSelectionNumericAttr(bar, 'height')
-            
         }
         
         const labelUnserveFlag = EmbeddedLabelsHelper.getLabelUnserveFlag(barAttrs.height); // if bar is too small to serve label inside. This flag is needed for set outside postion and change text anchor if bar wide as whole chart block
@@ -72,5 +73,11 @@ export class EmbeddedLabels {
             labelTextSpace = EmbeddedLabelsHelper.getSpaceSizeForType(position, barAttrs.width, margin, blockSize);
 
         Helper.cropLabels(labelBlock, labelTextSpace);
+    }
+
+    private static renderGroup(block: Block): Selection<SVGGElement, unknown, HTMLElement, unknown> {
+        return block.getChartBlock()
+            .append('g')
+            .attr('class', 'embedded-labels-group');
     }
 }

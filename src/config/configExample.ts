@@ -13,7 +13,7 @@ const configCars: Config = {
         title: 'График по 14 показателям в 4 разрезах, название длинное в одну строчку, если не влазит, то скрываем все в 3 точки',
         axis: {
             keyAxis: {
-                position: 'end',
+                position: 'start',
                 ticks: {
                     flag: false
                 }
@@ -43,7 +43,7 @@ const configCars: Config = {
         legend: {
             show: true
         },
-        orientation: 'vertical',
+        orientation: 'horizontal',
         data: {
             dataSource: 'dataSet',
             keyField: {
@@ -55,18 +55,13 @@ const configCars: Config = {
             {
                 title: 'Рост стоимости',
                 isSegmented: false,
-                type: 'line',
+                type: 'bar',
                 data: {
                     valueFields: [
                         {
                             name: 'price',
                             format: 'money',
                             title: 'Количество автомобилей'
-                        },
-                        {
-                            name: 'count',
-                            format: 'integer',
-                            title: 'Количество на душу населения'
                         }
                     ]
                 },
