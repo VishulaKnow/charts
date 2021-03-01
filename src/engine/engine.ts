@@ -4,6 +4,8 @@ import { ChartRenderer } from './chartRenderer';
 import { DataSource, Model } from '../model/model';
 import { Tooltip } from './features/tolltip/tooltip';
 import { Donut } from './polarNotation/donut';
+import { interrupt } from 'd3-transition';
+import { arc } from 'd3-shape';
 
 export default class Engine {
     private block: Block;
@@ -22,8 +24,8 @@ export default class Engine {
     public updateData(newModel: Model, newData: DataSource, parentElement: HTMLElement): void {
         this.removeEventListeners();
         this.destroy();
-        // this.block.getSvg().remove();
         this.render(newModel, newData, parentElement);
+        // this.block.getSvg().remove();
         // this.renderCharts(newModel, newData);
     }
 
@@ -54,9 +56,11 @@ export default class Engine {
         const tipBoxes = this.block.getSvg().selectAll(`.${Tooltip.tipBoxClass}`)
         tipBoxes.on('mousemove', null);
         tipBoxes.on('mouseleave', null);
+        tipBoxes.nodes().forEach(node => interrupt(node));
 
         const arcItems = Donut.getAllArcGroups(this.block);
         arcItems.on('mouseover', null);
         arcItems.on('mouseleave', null);
+        arcItems.nodes().forEach(node => interrupt(node));
     }
 }

@@ -33,6 +33,7 @@ export class Axis {
 
         block.getSvg()
             .select(`g.${axisOptions.cssClass}`)
+            .interrupt()
             .transition()
             .duration(1000)
             .call(axis.bind(this));
