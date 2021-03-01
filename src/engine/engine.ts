@@ -12,17 +12,19 @@ export default class Engine {
         this.block = new Block(model.blockCanvas.cssClass, parentElement);
 
         this.block.renderWrapper(model.blockCanvas.size);
-        
+
         if (model.options) {
             ValueFormatter.setFormatFunction(model.dataSettings.format.formatters);
             this.renderCharts(model, data);
         }
     }
 
-    public updateData(newModel: Model, newData: DataSource): void {
+    public updateData(newModel: Model, newData: DataSource, parentElement: HTMLElement): void {
         this.removeEventListeners();
-        this.block.getSvg().remove();
-        this.renderCharts(newModel, newData);
+        this.destroy();
+        // this.block.getSvg().remove();
+        this.render(newModel, newData, parentElement);
+        // this.renderCharts(newModel, newData);
     }
 
     public updateFullBlock(model: Model, data: DataSource): void {
