@@ -28,8 +28,6 @@ export class Tooltip {
                 this.rednerTooltipFor2DCharts(block, model.chartBlock.margin, model.options.charts, data, model.options.data, model.blockCanvas.size, model.options.orient, scales.scaleKey, model.options.scale.scaleKey, model.options.axis.keyAxis.orient);
             } else if (model.options.type === 'polar') {
                 this.renderTooltipsForDonut(block, model.options.charts, data, model.options.data, model.blockCanvas.size, model.chartBlock.margin, DonutHelper.getThickness(model.chartSettings.donut, model.blockCanvas.size, model.chartBlock.margin));
-            } else if (model.options.type === 'interval') {
-                this.renderTooltipsForInterval(block, model.options.charts, data, model.options.data, model.blockCanvas.size, model.options.orient);
             }
         }
     }
@@ -53,14 +51,6 @@ export class Tooltip {
         });
     }
 
-    private static renderTooltipsForInterval(block: Block, charts: IntervalChartModel[], data: DataSource, dataOptions: OptionsModelData, blockSize: Size, chartOrientation: ChartOrientation): void {
-        charts.forEach(chart => {
-            const bars = block.getSvg()
-                .selectAll(`rect${Helper.getCssClassesLine(chart.cssClasses)}`);
-            this.renderTooltipForGantt(block, bars, data, dataOptions, chart, chartOrientation, blockSize);
-        });
-    }
-
     private static renderLineTooltip(block: Block, scaleKey: AxisScale<any>, margin: BlockMargin, blockSize: Size, charts: TwoDimensionalChartModel[], chartOrientation: ChartOrientation, keyAxisOrient: Orient, data: DataSource, dataOptions: OptionsModelData, scaleKeyModel: ScaleKeyModel): void {
         const tooltipBlock = this.renderTooltipBlock(block);
         const tooltipContent = this.renderTooltipContentBlock(tooltipBlock);
@@ -78,13 +68,15 @@ export class Tooltip {
 
         tipBox
             .on('mousemove', function (event) {
-                tooltipBlock.style('display', 'block');
                 const index = TooltipHelper.getKeyIndex(pointer(event, this), chartOrientation, margin, blockSize, scaleKey, scaleKeyModel.type);
                 const keyValue = scaleKey.domain()[index];
-                TooltipHelper.fillForMulty2DCharts(tooltipContent, charts, data, dataOptions, keyValue);
 
                 if(!currentKey || currentKey !== keyValue) {
                     currentKey = keyValue;
+
+                    tooltipBlock.style('display', 'block');
+
+                    TooltipHelper.fillForMulty2DCharts(tooltipContent, charts, data, dataOptions, keyValue);
 
                     const tooltipCoordinate = TooltipHelper.getTooltipFixedCoordinate(scaleKey, margin, blockSize, keyValue, tooltipContent.node(), keyAxisOrient);
                     thisClass.setLineTooltipCoordinate(tooltipBlock, tooltipCoordinate, chartOrientation, 75);
@@ -120,8 +112,7 @@ export class Tooltip {
         elemets
             .on('mouseover', function (_event, dataRow) {
                 thisClass.showTooltipBlock(tooltipBlock);
-                const key = dataRow.data[dataOptions.keyField.name];
-                TooltipHelper.fillTooltipForPolarChart(tooltipContent, chart, data, dataOptions, key, select(this).select('path').style('fill'))
+                TooltipHelper.fillTooltipForPolarChart(tooltipContent, chart, data, dataOptions, dataRow.data[dataOptions.keyField.name], select(this).select('path').style('fill'))
 
                 const coordinatePointer: [number, number] = TooltipHelper.getRecalcedCoordinateByArrow(DonutHelper.getArcCentroid(blockSize, margin, dataRow, donutThickness), tooltipBlock, blockSize, tooltipArrow, translateX, translateY);
                 const tooltipCoordinate = TooltipHelper.getTooltipCoordinate(coordinatePointer);
@@ -131,7 +122,7 @@ export class Tooltip {
                 clone = select(this).clone();
                 select(this).style('filter', `url(#${filterId})`);
 
-                TooltipHelper.changeDonutHighlightAppearance(select<SVGGElement, PieArcDatum<DataRow>>(this), margin, blockSize, donutThickness, true);
+                thisClass.changeDonutHighlightAppearance(select<SVGGElement, PieArcDatum<DataRow>>(this), margin, blockSize, donutThickness, true);
             });
 
         elemets.on('mouseleave', function () {
@@ -141,32 +132,7 @@ export class Tooltip {
                 .style('filter', null);
             clone.remove(); // удаление клона
 
-            TooltipHelper.changeDonutHighlightAppearance(select<SVGGElement, PieArcDatum<DataRow>>(this), margin, blockSize, donutThickness, false);
-        });
-    }
-
-    private static renderTooltipForGantt(block: Block, elemets: Selection<BaseType, DataRow, BaseType, unknown>, data: DataSource, dataOptions: OptionsModelData, chart: IntervalChartModel, chartOrientation: ChartOrientation, blockSize: Size): void {
-        const tooltipBlock = this.renderTooltipBlock(block);
-        const tooltipContent = this.renderTooltipContentBlock(tooltipBlock);
-        const tooltipArrow = this.renderTooltipArrow(tooltipBlock);
-        const thisClass = this;
-
-        elemets
-            .on('mouseover', function (_event, dataRow) {
-                thisClass.showTooltipBlock(tooltipBlock);
-                const key = TooltipHelper.getKeyForTooltip(dataRow, dataOptions.keyField.name, false);
-                TooltipHelper.fillTooltipForIntervalChart(tooltipContent, chart, data, dataOptions, key, select(this).style('fill'))
-
-                const coordinatePointer: [number, number] = TooltipHelper.getTooltipBlockCoordinateByRect(select(this), tooltipBlock, blockSize, tooltipArrow, chartOrientation);
-                const tooltipCoordinate = TooltipHelper.getTooltipCoordinate(coordinatePointer);
-                thisClass.setTooltipCoordinate(tooltipBlock, tooltipCoordinate);
-
-                TooltipHelper.setElementsSemiOpacity(TooltipHelper.getFilteredElements(elemets, dataOptions.keyField.name, key, false));
-            });
-
-        elemets.on('mouseleave', function () {
-            thisClass.hideTooltipBlock(tooltipBlock);
-            TooltipHelper.setElementsFullOpacity(elemets);
+            thisClass.changeDonutHighlightAppearance(select<SVGGElement, PieArcDatum<DataRow>>(this), margin, blockSize, donutThickness, false);
         });
     }
 
@@ -337,5 +303,23 @@ export class Tooltip {
                 .attr('stdDeviation', 10);
 
         return filter;
+    }
+
+    private static changeDonutHighlightAppearance(segment: Selection<SVGGElement, PieArcDatum<DataRow>, BaseType, unknown>, margin: BlockMargin, blockSize: Size, donutThickness: number, on: boolean): void {
+        interrupt(segment.node());
+        
+        let scaleSize = 0;
+        if(on)
+            scaleSize = 5; // Если нужно выделить сегмент, то scaleSize не равен нулю и отображается увеличенным
+
+        segment
+            .select('path')
+            .interrupt()
+            .transition()
+            .duration(200)
+            .ease(easeLinear)
+            .attr('d', (d, i) => DonutHelper.getArcGeneratorObject(blockSize, margin, donutThickness)
+                .outerRadius(DonutHelper.getOuterRadius(margin, blockSize) + scaleSize)
+                .innerRadius(DonutHelper.getOuterRadius(margin, blockSize) - donutThickness - scaleSize)(d, i));
     }
 }

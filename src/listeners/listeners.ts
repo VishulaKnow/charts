@@ -386,7 +386,7 @@ export default class Listeners
             thisClass.designerConfig.canvas.chartOptions.donut.maxThickness = parseFloat(ListenersHelper.getInputValue('#donut-max-thickness'));
             thisClass.updateFull();
         });
-        document.querySelector('#base-color').addEventListener('keydown', function(e: KeyboardEvent) {
+        document.querySelector('#base-color').addEventListener('keydown', function(e: any) {
             if(e.code === 'Enter') {
                 thisClass.designerConfig.chartStyle.baseColor = this.value;
                 thisClass.updateFull();
@@ -425,7 +425,7 @@ export default class Listeners
                 thisClass.engine.updateFullBlock(model, preparedData);
             }
         });
-        document.querySelector('#max-random-value').addEventListener('keydown', function(e: KeyboardEvent) {
+        document.querySelector('#max-random-value').addEventListener('keydown', function(e: any) {
             if(e.code === 'Enter' && (config.options.type === '2d' || config.options.type === 'polar')) {
                 const max = parseInt(ListenersHelper.getInputValue('#max-random-value')) || 120;
                 const copy = ListenersHelper.getCopy(thisClass.data);
@@ -465,7 +465,7 @@ export default class Listeners
                 thisClass.engine.updateValueAxis(getUpdatedModel(thisClass.config, thisClass.data, thisClass.designerConfig), thisClass.data);
             }
         });
-        document.querySelector('#domain-start').addEventListener('keydown', function(e: KeyboardEvent) {
+        document.querySelector('#domain-start').addEventListener('keydown', function(e: any) {
             if(e.code === 'Enter') {
                 if(config.options.type === '2d') {
                     const start = ListenersHelper.getInputValue('#domain-start');
@@ -476,7 +476,7 @@ export default class Listeners
                 }
             }
         });
-        document.querySelector('#domain-end').addEventListener('keydown', function(e: KeyboardEvent) {
+        document.querySelector('#domain-end').addEventListener('keydown', function(e: any) {
             if(e.code === 'Enter') {
                 if(config.options.type === '2d') {
                     const start = ListenersHelper.getInputValue('#domain-start');

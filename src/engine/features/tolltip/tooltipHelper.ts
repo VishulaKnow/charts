@@ -74,12 +74,6 @@ export class TooltipHelper {
         this.fillTooltipContent(tooltipContentBlock, markColor, text);
     }
 
-    public static fillTooltipForIntervalChart(tooltipContentBlock: Selection<BaseType, unknown, BaseType, unknown>, chart: IntervalChartModel, data: DataSource, dataOptions: OptionsModelData, keyValue: string, markColor: string): void {
-        tooltipContentBlock.html('');
-        const text = this.getTooltipItemText(data, dataOptions, keyValue, chart.data.valueField1);
-        this.fillTooltipContent(tooltipContentBlock, markColor, text);
-    }
-
     public static getElementIndex(elemets: Selection<BaseType, DataRow, BaseType, unknown>, dot: BaseType, keyValue: string, keyName: string, isSegmented: boolean): number {
         let index = -1;
         const filtered = isSegmented ? elemets.filter(d => d.data[keyName] === keyValue) : elemets.filter(d => d[keyName] === keyValue);
@@ -190,23 +184,6 @@ export class TooltipHelper {
     public static setElementsFullOpacity(elements: Selection<BaseType, DataRow, BaseType, unknown>): void {
         if (elements)
             elements.style('opacity', 1);
-    }
-
-    public static changeDonutHighlightAppearance(segment: Selection<SVGGElement, PieArcDatum<DataRow>, BaseType, unknown>, margin: BlockMargin, blockSize: Size, donutThickness: number, on: boolean): void {
-        interrupt(segment.node());
-        
-        let scaleSize = 0;
-        if(on)
-            scaleSize = 5; // Если нужно выделить сегмент, то scaleSize не равен нулю и отображается увеличенным
-
-        segment
-            .select('path')
-            .interrupt()
-            .transition()
-            .duration(200)
-            .attr('d', (d, i) => DonutHelper.getArcGeneratorObject(blockSize, margin, donutThickness)
-                .outerRadius(DonutHelper.getOuterRadius(margin, blockSize) + scaleSize)
-                .innerRadius(DonutHelper.getOuterRadius(margin, blockSize) - donutThickness - scaleSize)(d, i));
     }
 
     public static highlight2DElements(block: Block, keyFieldName: string, keyValue: string, charts: TwoDimensionalChartModel[]): void {     
