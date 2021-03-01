@@ -1,5 +1,5 @@
 import { Color } from "d3-color";
-import { Selection, BaseType } from 'd3-selection'
+import { Selection, BaseType, select } from 'd3-selection'
 import { ChartNotation } from "../../../config/config";
 import { LegendItemsDirection } from "../../../model/legendModel/legendCanvasModel";
 import { DataRow, DataSource, IntervalOptionsModel, LegendBlockModel, LegendPosition, Orient, PolarOptionsModel, Size, TwoDimensionalOptionsModel } from "../../../model/model";
@@ -133,8 +133,12 @@ export class Legend
             .selectAll('.legend-item')
             .data(items)
             .enter()
-            .append('div')
-                .attr('class', this.getItemClasses(itemsDirection, position));
+            .append('div');
+
+        const thisClass = this;
+        itemWrappers.each(function(d, i) {
+            select(this).attr('class', thisClass.getItemClasses(itemsDirection, position, i));
+        });
     
         itemWrappers
             .append('span')
@@ -206,9 +210,9 @@ export class Legend
         return parseFloat(legendBlock.attr('width'));
     }
 
-    private static getItemClasses(itemsDirection: LegendItemsDirection, position: LegendPosition): string {
+    private static getItemClasses(itemsDirection: LegendItemsDirection, position: LegendPosition, index: number): string {
         let cssClasses = this.getLegendItemClassByDirection(itemsDirection);
-        if(itemsDirection === 'column')
+        if(itemsDirection === 'column' && index !== 0)
             cssClasses += ` ${this.getLegendItemsMarginClass(position)}`;
         return cssClasses;
     }
