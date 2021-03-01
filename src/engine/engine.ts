@@ -2,6 +2,8 @@ import { Block } from './block/block';
 import { ValueFormatter } from './valueFormatter';
 import { ChartRenderer } from './chartRenderer';
 import { DataSource, Model } from '../model/model';
+import { Tooltip } from './features/tolltip/tooltip';
+import { Donut } from './polarNotation/donut';
 
 export default class Engine {
     private block: Block;
@@ -18,6 +20,7 @@ export default class Engine {
     }
 
     public updateData(newModel: Model, newData: DataSource): void {
+        this.removeEventListeners();
         this.block.getSvg().remove();
         this.renderCharts(newModel, newData);
     }
@@ -32,6 +35,7 @@ export default class Engine {
     }
 
     public destroy(): void {
+        this.removeEventListeners();
         this.block.getWrapper().remove();
     }
 
@@ -42,5 +46,15 @@ export default class Engine {
             ChartRenderer.renderPolar(this.block, model, data);
         else if (model.options.type === 'interval')
             ChartRenderer.renderInterval(this.block, model, data);
+    }
+
+    private removeEventListeners(): void {
+        const tipBoxes = this.block.getSvg().selectAll(`.${Tooltip.tipBoxClass}`)
+        tipBoxes.on('mousemove', null);
+        tipBoxes.on('mouseleave', null);
+
+        const arcItems = Donut.getAllArcGroups(this.block);
+        arcItems.on('mouseover', null);
+        arcItems.on('mouseleave', null);
     }
 }

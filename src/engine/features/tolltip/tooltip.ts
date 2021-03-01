@@ -12,6 +12,8 @@ import { AxisScale } from 'd3-axis';
 import { easeLinear } from 'd3-ease';
 
 export class Tooltip {
+    public static tipBoxClass = 'tipbox';
+
     private static tooltipWrapperClass = 'tooltip-wrapper';
     private static tooltipContentClass = 'tooltip-content';
     private static tooltipBlockClass = 'tooltip-block';
@@ -178,12 +180,12 @@ export class Tooltip {
 
     private static renderTipBox(block: Block, attributes: TipBoxAttributes): Selection<SVGRectElement, unknown, HTMLElement, any> {
         let tipBox = block.getSvg()
-            .select<SVGRectElement>('rect.tipbox');
+            .select<SVGRectElement>(`rect.${this.tipBoxClass}`);
 
         if(tipBox.empty())
             tipBox = block.getSvg()
                 .append<SVGRectElement>('rect')
-                .attr('class', 'tipbox')
+                .attr('class', this.tipBoxClass)
                 .attr('x', attributes.x)
                 .attr('y', attributes.y)
                 .attr('width', attributes.width)
