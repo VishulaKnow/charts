@@ -26,18 +26,18 @@ export class Tooltip {
         const chartsWithTooltipIndex = model.options.charts.findIndex((chart: TwoDimensionalChartModel | PolarChartModel | IntervalChartModel) => chart.tooltip.show);
         if (chartsWithTooltipIndex !== -1) {
             if (model.options.type === '2d') {
-                this.rednerTooltipFor2DCharts(block, model.chartBlock.margin, model.options.charts, data, model.options.data, model.blockCanvas.size, model.options.orient, scales.scaleKey, model.options.scale.scaleKey, model.options.axis.keyAxis.orient);
+                this.rednerTooltipFor2DCharts(block, model.chartBlock.margin, model.options.charts, data, model.options.data, model.blockCanvas.size, model.options.orient, scales.scaleKey, model.options.scale.scaleKey, model.options.axis.keyAxis.orient, chartId);
             } else if (model.options.type === 'polar') {
                 this.renderTooltipsForDonut(block, model.options.charts, data, model.options.data, model.blockCanvas.size, model.chartBlock.margin, DonutHelper.getThickness(model.chartSettings.donut, model.blockCanvas.size, model.chartBlock.margin), chartId);
             }
         }
     }
 
-    private static rednerTooltipFor2DCharts(block: Block, margin: BlockMargin, charts: TwoDimensionalChartModel[], data: DataSource, dataOptions: OptionsModelData, blockSize: Size, chartOrientation: ChartOrientation, scaleKey: AxisScale<any>, scaleKeyModel: ScaleKeyModel, keyAxisOrient: Orient): void {
+    private static rednerTooltipFor2DCharts(block: Block, margin: BlockMargin, charts: TwoDimensionalChartModel[], data: DataSource, dataOptions: OptionsModelData, blockSize: Size, chartOrientation: ChartOrientation, scaleKey: AxisScale<any>, scaleKeyModel: ScaleKeyModel, keyAxisOrient: Orient, chartId: number): void {
         if (scaleKey.domain().length === 0)
             return;
 
-        this.renderLineTooltip(block, scaleKey, margin, blockSize, charts, chartOrientation, keyAxisOrient, data, dataOptions, scaleKeyModel);
+        this.renderLineTooltip(block, scaleKey, margin, blockSize, charts, chartOrientation, keyAxisOrient, data, dataOptions, scaleKeyModel, chartId);
     }
 
     private static renderTooltipsForDonut(block: Block, charts: PolarChartModel[], data: DataSource, dataOptions: OptionsModelData, blockSize: Size, margin: BlockMargin, chartThickness: number, chartId: number): void {
@@ -52,7 +52,7 @@ export class Tooltip {
         });
     }
 
-    private static renderLineTooltip(block: Block, scaleKey: AxisScale<any>, margin: BlockMargin, blockSize: Size, charts: TwoDimensionalChartModel[], chartOrientation: ChartOrientation, keyAxisOrient: Orient, data: DataSource, dataOptions: OptionsModelData, scaleKeyModel: ScaleKeyModel): void {
+    private static renderLineTooltip(block: Block, scaleKey: AxisScale<any>, margin: BlockMargin, blockSize: Size, charts: TwoDimensionalChartModel[], chartOrientation: ChartOrientation, keyAxisOrient: Orient, data: DataSource, dataOptions: OptionsModelData, scaleKeyModel: ScaleKeyModel, chartId: number): void {
         const tooltipBlock = this.renderTooltipBlock(block);
         const tooltipContent = this.renderTooltipContentBlock(tooltipBlock);
         const thisClass = this;
@@ -63,7 +63,8 @@ export class Tooltip {
 
         tooltipContent.classed('tooltip-content-2d', true);
 
-        const shadow = this.renderRectShadow(block);
+        const filterId = 'shadow' + chartId;
+        this.renderShadowFilter(block, filterId);
 
         let currentKey: string = null;
 
@@ -73,8 +74,6 @@ export class Tooltip {
                 const keyValue = scaleKey.domain()[index];
 
                 if (!currentKey || currentKey !== keyValue) {
-                    shadow.style('display', 'block');
-
                     currentKey = keyValue;
 
                     tooltipBlock.style('display', 'block');
@@ -88,7 +87,7 @@ export class Tooltip {
                     thisClass.setTooltipLineAttributes(tooltipLine, tooltipLineAttributes, 75);
                     tooltipLine.style('display', 'block');
 
-                    TooltipHelper.highlight2DElements(block, dataOptions.keyField.name, keyValue, charts);
+                    TooltipHelper.highlight2DElements(block, dataOptions.keyField.name, keyValue, charts, filterId);
                 }
             })
             .on('mouseleave', function () {
@@ -104,8 +103,6 @@ export class Tooltip {
                     .attr('height', 0)
 
                 currentKey = null;
-
-                shadow.style('display', 'none');
             });
     }
 
@@ -294,24 +291,6 @@ export class Tooltip {
 
     private static hideTooltipBlock(tooltipBlock: Selection<BaseType, unknown, HTMLElement, any>): void {
         tooltipBlock.style('display', 'none');
-    }
-
-    private static renderRectShadow(block: Block): Selection<HTMLDivElement, unknown, HTMLElement, any> {
-        let shadow = block.getWrapper()
-            .select<HTMLDivElement>('.rect-shadow');
-        if (shadow.empty())
-            shadow = block.getWrapper()
-                .append('div')
-                .classed('rect-shadow', true)
-                .classed('shadow', true)
-                .style('position', 'absolute')
-                .style('top', 0)
-                .style('left', 0)
-                .style('width', 0)
-                .style('height', 0)
-                .style('display', 'none');
-
-        return shadow;
     }
 
     private static renderShadowFilter(block: Block, filterId: string): Selection<SVGFilterElement, unknown, HTMLElement, unknown> {

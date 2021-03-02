@@ -186,7 +186,7 @@ export class TooltipHelper {
             elements.style('opacity', 1);
     }
 
-    public static highlight2DElements(block: Block, keyFieldName: string, keyValue: string, charts: TwoDimensionalChartModel[]): void {     
+    public static highlight2DElements(block: Block, keyFieldName: string, keyValue: string, charts: TwoDimensionalChartModel[], filterId: string): void {     
         this.remove2DElementsHighlighting(block, charts);
 
         charts.forEach(chart => {
@@ -203,14 +203,10 @@ export class TooltipHelper {
                 selectedElems
                     .call(this.scaled, true);
             } else {
-                selectedElems.each(function(d, i) {
-                    block.getWrapper()
-                        .select('.rect-shadow')
-                        .style('left', Helper.getSelectionNumericAttr(select(this), 'x') + 'px')
-                        .style('top', Helper.getSelectionNumericAttr(select(this), 'y') + 'px')
-                        .style('width', Helper.getSelectionNumericAttr(select(this), 'width') + 'px')
-                        .style('height', Helper.getSelectionNumericAttr(select(this), 'height') + 'px')
-                });
+                let clones = selectedElems.clone();
+                clones.classed('bar-clone', true);
+                clones.classed('chart-element-highlight', true);
+                selectedElems.style('filter', `url(#${filterId})`);
             }
         });
     }
