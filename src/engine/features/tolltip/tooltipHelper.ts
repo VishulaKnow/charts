@@ -1,13 +1,11 @@
 import { AxisScale } from 'd3-axis';
 import { easeLinear } from 'd3-ease';
 import { Selection, BaseType, select } from 'd3-selection'
-import { PieArcDatum } from 'd3-shape';
 import { interrupt } from 'd3-transition';
 import { ChartOrientation, TwoDimensionalValueField } from "../../../config/config";
-import { BlockMargin, DataRow, DataSource, Field, IntervalChartModel, OptionsModelData, Orient, PolarChartModel, ScaleKeyType, Size, TwoDimensionalChartModel } from "../../../model/model";
+import { BlockMargin, DataRow, DataSource, Field, OptionsModelData, Orient, PolarChartModel, ScaleKeyType, Size, TwoDimensionalChartModel } from "../../../model/model";
 import { Block } from '../../block/block';
 import { Helper } from '../../helper';
-import { DonutHelper } from '../../polarNotation/DonutHelper';
 import { ValueFormatter, } from "../../valueFormatter";
 import { Scale } from '../scale/scale';
 
