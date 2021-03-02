@@ -125,11 +125,10 @@
     stroke-width: 2px;
 }
 .tooltip-content-2d {
-    padding: 8px 16px;
+    padding: 12px 16px;
 }
 .tooltip-content-2d .tooltip-head {
     font-size: 12px;
-    margin-top: 4px;
     margin-bottom: 10px;
 }
 .tooltip-content-2d .tooltip-texts {
