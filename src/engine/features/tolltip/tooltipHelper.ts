@@ -360,9 +360,9 @@ export class TooltipHelper {
         const row = data[dataOptions.dataSource].find(d => d[dataOptions.keyField.name] === keyValue);
         let text: string;
         if(showKey)
-            text = `${row[dataOptions.keyField.name]} - ${ValueFormatter.formatValue(valueField.format, row[valueField.name])}`;
+            text = `<span class="tooltip-field-title">${keyValue}</span><span class="tooltip-field-value">${ValueFormatter.formatValue(valueField.format, row[valueField.name])}</span>`;
         else
-            text = `<span class="tooltip-field-title">${(valueField as TwoDimensionalValueField).title + ' ' || ''}</span><span class="tooltip-field-value">${ValueFormatter.formatValue(valueField.format, row[valueField.name])}</span>`;
+            text = `<span class="tooltip-field-title">${(valueField as TwoDimensionalValueField).title}</span><span class="tooltip-field-value">${ValueFormatter.formatValue(valueField.format, row[valueField.name])}</span>`;
         return text;
     }
 
