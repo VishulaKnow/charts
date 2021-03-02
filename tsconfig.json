@@ -6,12 +6,12 @@
         "jsx": "react",
         "allowJs": true,
         "types": ["jest"],
-        // "declaration": true
+        "declaration": true
     },
-    // "include": ["src"],
-    // "exclude": ["node_modules",
-    //     "**/__tests__/*",
-    //     "src/listeners/*",
-    //     "**/*Example.ts"
-    // ]
+    "include": ["src"],
+    "exclude": ["node_modules",
+        "**/__tests__/*",
+        "src/listeners/*",
+        "**/*Example.ts"
+    ]
 }
