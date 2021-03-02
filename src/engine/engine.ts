@@ -22,7 +22,6 @@ export default class Engine {
     }
 
     public updateData(newModel: Model, newData: DataSource, parentElement: HTMLElement): void {
-        this.removeEventListeners();
         this.destroy();
         this.render(newModel, newData, parentElement);
         // this.block.getSvg().remove();
@@ -39,6 +38,7 @@ export default class Engine {
     }
 
     public destroy(): void {
+        this.interruptAnimations();
         this.removeEventListeners();
         this.block.getWrapper().remove();
     }
@@ -52,11 +52,21 @@ export default class Engine {
             ChartRenderer.renderInterval(this.block, model, data);
     }
 
+    private interruptAnimations(): void {
+        const arcItems = Donut.getAllArcGroups(this.block);
+        arcItems.select('path').nodes().forEach(node => interrupt(node));
+
+        const lines = this.block.getSvg().selectAll(`.${Tooltip.tooltipLineClass}`);
+        lines.nodes().forEach(node => interrupt(node));
+
+        const tooltips = this.block.getWrapper().selectAll(`.${Tooltip.tooltipBlockClass}`);
+        tooltips.nodes().forEach(node => interrupt(node));
+    }
+
     private removeEventListeners(): void {
         const tipBoxes = this.block.getSvg().selectAll(`.${Tooltip.tipBoxClass}`)
         tipBoxes.on('mousemove', null);
         tipBoxes.on('mouseleave', null);
-        tipBoxes.nodes().forEach(node => interrupt(node));
 
         const arcItems = Donut.getAllArcGroups(this.block);
         arcItems.on('mouseover', null);

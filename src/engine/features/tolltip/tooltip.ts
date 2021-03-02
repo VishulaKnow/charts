@@ -14,10 +14,11 @@ import { interrupt } from 'd3-transition';
 
 export class Tooltip {
     public static tipBoxClass = 'tipbox';
+    public static tooltipBlockClass = 'tooltip-block';
+    public static tooltipLineClass = 'tooltip-block';
 
     private static tooltipWrapperClass = 'tooltip-wrapper';
     private static tooltipContentClass = 'tooltip-content';
-    private static tooltipBlockClass = 'tooltip-block';
     private static tooltipArrowClass = 'tooltip-arrow';
 
     public static renderTooltips(block: Block, model: Model, data: DataSource, scales?: Scales): void {
@@ -74,7 +75,6 @@ export class Tooltip {
                 const keyValue = scaleKey.domain()[index];
 
                 if(!currentKey || currentKey !== keyValue) {
-                    console.time();
                     currentKey = keyValue;
 
                     tooltipBlock.style('display', 'block');
@@ -89,10 +89,7 @@ export class Tooltip {
                     tooltipLine.style('display', 'block');
 
                     TooltipHelper.highlight2DElements(block, dataOptions.keyField.name, keyValue, charts);
-                    console.timeEnd();
                 }
-
-                
             })
             .on('mouseleave', function () {
                 tooltipBlock.style('display', 'none');
@@ -117,7 +114,6 @@ export class Tooltip {
 
         elemets
             .on('mouseover', function (_event, dataRow) {
-                console.time();
                 thisClass.showTooltipBlock(tooltipBlock);
                 TooltipHelper.fillTooltipForPolarChart(tooltipContent, chart, data, dataOptions, dataRow.data[dataOptions.keyField.name], select(this).select('path').style('fill'))
 
@@ -130,7 +126,6 @@ export class Tooltip {
                 select(this).style('filter', `url(#${filterId})`);
 
                 thisClass.changeDonutHighlightAppearance(select<SVGGElement, PieArcDatum<DataRow>>(this), margin, blockSize, donutThickness, true);
-                console.timeEnd();
             });
 
         elemets.on('mouseleave', function () {
@@ -157,7 +152,7 @@ export class Tooltip {
     private static renderTooltipLine(block: Block): Selection<SVGLineElement, unknown, HTMLElement, any> {
         return block.getChartBlock()
             .append('line')
-            .attr('class', 'tooltip-line')
+            .attr('class', this.tooltipLineClass)
             .lower();
     }
 
