@@ -67,7 +67,8 @@ export class Tooltip {
             .attr('x', 0)
             .attr('y', 0)
             .attr('width', Helper.getSelectionNumericAttr(block.getSvg(), 'width'))
-            .attr('height', Helper.getSelectionNumericAttr(block.getSvg(), 'height'));
+            .attr('height', Helper.getSelectionNumericAttr(block.getSvg(), 'height'))
+            .lower();
 
         svgShadow.append('rect')
             .attr('x', 0)

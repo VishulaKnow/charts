@@ -7,12 +7,15 @@
     top: 0;
     pointer-events: none;
     filter: drop-shadow(0 0 9px rgba(0,0,0,0.3));
-    z-index: -1;
+    z-index: 10;
 }
 
 .wrapper {
     margin: 0 auto;
     position: relative;
+}
+.svg-chart {
+    z-index: 15;
 }
 .bar, .area, .donut {
     stroke: none;

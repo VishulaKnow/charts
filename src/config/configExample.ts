@@ -2,7 +2,7 @@ import { Config } from './config';
 
 const configCars: Config = {
     canvas: {
-        class: 'outline svg-chart',
+        class: 'outline',
         size: {
             width: 960,
             height: 510

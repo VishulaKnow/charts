@@ -26,7 +26,7 @@ export class Block
             .append('svg')
             .attr('width', blockSize.width)
             .attr('height', blockSize.height)
-            .attr('class', this.svgCssClasses.join(' '));
+            .attr('class', this.svgCssClasses.join(' ') + ' svg-chart');
     }
 
     public renderWrapper(blockSize: Size): void {
@@ -45,7 +45,7 @@ export class Block
     }
 
     public getSvg(): Selection<BaseType, unknown, HTMLElement, any> {
-        return this.getWrapper().select('svg');
+        return this.getWrapper().select('svg.svg-chart');
     }
 
     public getWrapper(): Selection<BaseType, unknown, HTMLElement, any> {
