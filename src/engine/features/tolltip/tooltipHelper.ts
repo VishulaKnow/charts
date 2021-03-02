@@ -204,12 +204,9 @@ export class TooltipHelper {
                 let selectedElems: Selection<BaseType, DataRow, BaseType, unknown>;
 
                 if(!chart.isSegmented)
-                    selectedElems = elems.filter(d => d[keyFieldName] === keyValue)
-                        .call(this.scaled, true);
+                    selectedElems = elems.filter(d => d[keyFieldName] === keyValue);
                 else 
-                    selectedElems = elems.filter(d => d.data[keyFieldName] === keyValue)
-                        .call(this.scaled, true);
-
+                    selectedElems = elems.filter(d => d.data[keyFieldName] === keyValue);
                         
                 let clones = selectedElems.clone();
                 clones.classed('bar-clone', true);
