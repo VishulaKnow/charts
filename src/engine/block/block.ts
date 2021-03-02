@@ -1,6 +1,7 @@
 import { select, Selection, BaseType } from "d3-selection";
 import { BlockMargin, Size } from "../../model/model";
 import { Helper } from "../helper";
+import { Namer } from "../namer";
 import { BlockHelper } from "./blockHelper";
 
 export class Block
@@ -26,7 +27,7 @@ export class Block
             .append('svg')
             .attr('width', blockSize.width)
             .attr('height', blockSize.height)
-            .attr('class', this.svgCssClasses.join(' ') + ' svg-chart');
+            .attr('class', this.svgCssClasses.join(' ') + ' ' + Namer.getClassName('svg-chart'));
     }
 
     public renderWrapper(blockSize: Size): void {
@@ -45,7 +46,7 @@ export class Block
     }
 
     public getSvg(): Selection<BaseType, unknown, HTMLElement, any> {
-        return this.getWrapper().select('svg.svg-chart');
+        return this.getWrapper().select(`svg.${Namer.getClassName('svg-chart')}`);
     }
 
     public getWrapper(): Selection<BaseType, unknown, HTMLElement, any> {

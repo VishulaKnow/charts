@@ -1,13 +1,11 @@
 import { AxisScale } from 'd3-axis';
 import { easeLinear } from 'd3-ease';
 import { Selection, BaseType, select } from 'd3-selection'
-import { PieArcDatum } from 'd3-shape';
 import { interrupt } from 'd3-transition';
 import { ChartOrientation, TwoDimensionalValueField } from "../../../config/config";
-import { BlockMargin, DataRow, DataSource, Field, IntervalChartModel, OptionsModelData, Orient, PolarChartModel, ScaleKeyType, Size, TwoDimensionalChartModel } from "../../../model/model";
+import { BlockMargin, DataRow, DataSource, Field, OptionsModelData, Orient, PolarChartModel, ScaleKeyType, Size, TwoDimensionalChartModel } from "../../../model/model";
 import { Block } from '../../block/block';
 import { Helper } from '../../helper';
-import { DonutHelper } from '../../polarNotation/DonutHelper';
 import { ValueFormatter, } from "../../valueFormatter";
 import { Scale } from '../scale/scale';
 
@@ -360,9 +358,9 @@ export class TooltipHelper {
         const row = data[dataOptions.dataSource].find(d => d[dataOptions.keyField.name] === keyValue);
         let text: string;
         if(showKey)
-            text = `${row[dataOptions.keyField.name]} - ${ValueFormatter.formatValue(valueField.format, row[valueField.name])}`;
+            text = `<span class="tooltip-field-title">${keyValue}</span><span class="tooltip-field-value">${ValueFormatter.formatValue(valueField.format, row[valueField.name])}</span>`;
         else
-            text = `<span class="tooltip-field-title">${(valueField as TwoDimensionalValueField).title + ' ' || ''}</span><span class="tooltip-field-value">${ValueFormatter.formatValue(valueField.format, row[valueField.name])}</span>`;
+            text = `<span class="tooltip-field-title">${(valueField as TwoDimensionalValueField).title}</span><span class="tooltip-field-value">${ValueFormatter.formatValue(valueField.format, row[valueField.name])}</span>`;
         return text;
     }
 

@@ -43,7 +43,7 @@ export class EmbeddedLabels {
                 .attr('y', attrs.y - labelBlock.node().getBBox().height / 2)
                 .attr('width', labelBlock.node().getBBox().width)
                 .attr('height', labelBlock.node().getBBox().height)
-                .style('fill', 'rgba(255, 255, 255, 0.7)')
+                .style('fill', 'rgba(255, 255, 255, 0.8)')
                 .lower();
         }
 
