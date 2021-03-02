@@ -63,19 +63,15 @@ export class Tooltip {
 
         tooltipContent.classed('tooltip-content-2d', true);
 
-        const svgShadow = block.getWrapper().append('svg').attr('class', 'svg-shadow')
-            .attr('x', 0)
-            .attr('y', 0)
-            .attr('width', Helper.getSelectionNumericAttr(block.getSvg(), 'width'))
-            .attr('height', Helper.getSelectionNumericAttr(block.getSvg(), 'height'))
-            .lower();
-
-        svgShadow.append('rect')
-            .attr('x', 0)
-            .attr('y', 0)
-            .attr('width', 0)
-            .attr('height', 0)
-            .style('fill', 'white');
+        block.getWrapper()
+            .append('div')
+            .classed('rect-shadow', true)
+            .classed('shadow', true)
+            .style('position', 'absolute')
+            .style('left', 0)
+            .style('top', 0)
+            .style('width', 30 + 'px')
+            .style('height', 30 + 'px');
 
         // this.renderShadowFilter(block, 'shadow');
 

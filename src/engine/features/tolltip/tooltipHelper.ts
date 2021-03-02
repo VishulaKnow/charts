@@ -214,12 +214,15 @@ export class TooltipHelper {
                 // selectedElems.style('filter', 'url(#shadow)');
 
                 selectedElems.each(function(d, i) {
-                    block.getWrapper().select('.svg-shadow')
-                        .select('rect')
-                        .attr('x', Helper.getSelectionNumericAttr(select(this), 'x'))
-                        .attr('y', Helper.getSelectionNumericAttr(select(this), 'y'))
-                        .attr('width', Helper.getSelectionNumericAttr(select(this), 'width'))
-                        .attr('height', Helper.getSelectionNumericAttr(select(this), 'height'))
+                    console.log(block.getWrapper()
+                    .select('.rect-shadow').node());
+
+                    block.getWrapper()
+                        .select('.rect-shadow')
+                        .style('left', Helper.getSelectionNumericAttr(select(this), 'x') + 'px')
+                        .style('top', Helper.getSelectionNumericAttr(select(this), 'y') + 'px')
+                        .style('width', Helper.getSelectionNumericAttr(select(this), 'width') + 'px')
+                        .style('height', Helper.getSelectionNumericAttr(select(this), 'height') + 'px')
                 });
             }
         });

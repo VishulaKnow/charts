@@ -1,11 +1,6 @@
-.svg-shadow {
-    display: block;
-    position: absolute;
-    left: 0;
-    top: 0;
+.shadow {
+    box-shadow: 0 0 5px #000;
     pointer-events: none;
-    filter: drop-shadow(0 0 9px rgba(0,0,0,0.3));
-    z-index: -1;
 }
 
 .wrapper {
