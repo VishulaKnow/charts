@@ -240,6 +240,7 @@ export class TooltipHelper {
         });
         
         elementSelection
+            .interrupt()
             .transition()
             .duration(50)
             .ease(easeLinear)

@@ -65,6 +65,9 @@ export default class Engine {
 
         const tooltips = this.block.getWrapper().selectAll(`.${Tooltip.tooltipBlockClass}`);
         tooltips.nodes().forEach(node => interrupt(node));
+
+        this.block.getSvg().selectAll('.bar-clone').remove();
+        this.block.getSvg().selectAll('.donut-segmentd-clone').remove();
     }
 
     private removeEventListeners(): void {

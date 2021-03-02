@@ -69,8 +69,6 @@ export class Tooltip {
 
         tipBox
             .on('mousemove', function (event) {
-                
-
                 const index = TooltipHelper.getKeyIndex(pointer(event, this), chartOrientation, margin, blockSize, scaleKey, scaleKeyModel.type);
                 const keyValue = scaleKey.domain()[index];
 
@@ -123,6 +121,7 @@ export class Tooltip {
 
                 // Выделение выбранного сегмента с помощью тени. копия сегмента поверх оригинальногой. Оригинальный становится тенью
                 clone = select(this).clone();
+                clone.classed('donut-segmentd-clone', true);
                 select(this).style('filter', `url(#${filterId})`);
 
                 thisClass.changeDonutHighlightAppearance(select<SVGGElement, PieArcDatum<DataRow>>(this), margin, blockSize, donutThickness, true);
@@ -179,6 +178,7 @@ export class Tooltip {
         if (transition && tooltipLine.style('display') === 'block') {
             tooltipLine
                 .attr('stroke-linecap', attributes.strokeLinecap)
+                .interrupt()
                 .transition()
                 .duration(transition)
                 .ease(easeLinear)
@@ -258,6 +258,7 @@ export class Tooltip {
                 .style('right', tooltipCoordinate.right)
                 .style('bottom', tooltipCoordinate.bottom)
                 .style('top', tooltipCoordinate.top)
+                .interrupt()
                 .transition()
                 .duration(transition)
                 .ease(easeLinear)
@@ -267,6 +268,7 @@ export class Tooltip {
                 .style('left', tooltipCoordinate.left)
                 .style('bottom', tooltipCoordinate.bottom)
                 .style('right', tooltipCoordinate.right)
+                .interrupt()
                 .transition()
                 .duration(transition)
                 .ease(easeLinear)
