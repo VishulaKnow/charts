@@ -6,6 +6,7 @@ import { Tooltip } from './features/tolltip/tooltip';
 import { Donut } from './polarNotation/donut';
 import { interrupt } from 'd3-transition';
 import { arc } from 'd3-shape';
+import { MarkDot } from './features/lineDots/markDot';
 
 export default class Engine {
     private block: Block;
@@ -55,6 +56,9 @@ export default class Engine {
     private interruptAnimations(): void {
         const arcItems = Donut.getAllArcGroups(this.block);
         arcItems.select('path').nodes().forEach(node => interrupt(node));
+
+        const dots = MarkDot.getAllDots(this.block);
+        dots.nodes().forEach(node => interrupt(node));
 
         const lines = this.block.getSvg().selectAll(`.${Tooltip.tooltipLineClass}`);
         lines.nodes().forEach(node => interrupt(node));

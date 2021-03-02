@@ -15,7 +15,7 @@ import { interrupt } from 'd3-transition';
 export class Tooltip {
     public static tipBoxClass = 'tipbox';
     public static tooltipBlockClass = 'tooltip-block';
-    public static tooltipLineClass = 'tooltip-block';
+    public static tooltipLineClass = 'tooltip-line';
 
     private static tooltipWrapperClass = 'tooltip-wrapper';
     private static tooltipContentClass = 'tooltip-content';

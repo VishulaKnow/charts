@@ -96,7 +96,7 @@ export class Helper {
 
     public static getChartElements(block: Block, chart: TwoDimensionalChartModel): Selection<BaseType, DataRow, BaseType, unknown> {
         if(chart.type === 'line' || chart.type === 'area')
-            return MarkDot.getAllDots(block, chart.cssClasses);
+            return MarkDot.getMarkDotForChart(block, chart.cssClasses);
         else
             return Bar.getAllBarItems(block, chart.cssClasses);
     }

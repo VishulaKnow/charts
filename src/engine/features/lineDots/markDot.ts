@@ -38,7 +38,11 @@ export class MarkDot
         Helper.setChartElementColor(dots, colorPalette, itemIndex, 'stroke');
     }
 
-    public static getAllDots(block: Block, chartCssClasses: string[]): Selection<BaseType, DataRow, BaseType, unknown> {
+    public static getAllDots(block: Block): Selection<BaseType, DataRow, BaseType, unknown> {
+        return block.getSvg().selectAll(`.${this.dotClass}`);
+    }
+
+    public static getMarkDotForChart(block: Block, chartCssClasses: string[]): Selection<BaseType, DataRow, BaseType, unknown> {
         return block.getSvg()
             .selectAll(`.${this.dotClass}${Helper.getCssClassesLine(chartCssClasses)}`);
     }
