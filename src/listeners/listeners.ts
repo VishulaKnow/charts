@@ -172,7 +172,6 @@ export default class Listeners
                     {
                         data: this.getDataConfig(notationType),
                         isSegmented: false,
-                        title: this.config.options.charts[0].title,
                         tooltip: this.getTooltipConfig(),
                         type: ListenersHelper.getInputValue('#chart-2d-type') === 'barLine' ? 'bar' : ListenersHelper.getInputValue('#chart-2d-type') as 'line' | 'bar' | 'area',
                         embeddedLabels: 'none'
@@ -224,7 +223,6 @@ export default class Listeners
                 charts: [
                     {
                         data: this.getDataConfig(notationType),
-                        title: this.config.options.charts[0].title,
                         tooltip: this.getTooltipConfig(),
                         type: 'donut'
                     }
@@ -247,7 +245,6 @@ export default class Listeners
                 charts: [
                     {
                         data: this.getDataConfig(notationType),
-                        title: this.config.options.charts[0].title,
                         tooltip: this.getTooltipConfig(),
                         type: 'gantt'
                     }

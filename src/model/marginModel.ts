@@ -129,7 +129,7 @@ export class MarginModel
         } else if(options.type === 'polar') {
             return DataManagerModel.getDataValuesByKeyField(data, options.data.dataSource, options.data.keyField.name);
         } else if(options.type === 'interval') {
-            return charts.map(chart => chart.title);
+            return options.charts.map(chart => chart.data.valueField1.name);
         }
     }
 

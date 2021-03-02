@@ -161,7 +161,6 @@ export interface MarksOptions {
 
 //====================================================== Charts
 interface ChartModel {
-    title: string;
     tooltip: TooltipModel;
     cssClasses: string[];
     style: ChartStyle;

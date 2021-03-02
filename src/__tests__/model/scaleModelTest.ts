@@ -10,7 +10,6 @@ describe('getScaleMaxValue test', () => {
     beforeEach(() => {
         charts = [
             {
-                title: 'Рост стоимости',
                 isSegmented: false,
                 type: 'line',
                 data: {
@@ -95,7 +94,6 @@ describe('getScaleMaxValue test', () => {
             test('should return 500', () => {
                 charts = [
                     {
-                        title: 'Рост стоимости',
                         isSegmented: true,
                         type: 'line',
                         data: {
@@ -118,7 +116,6 @@ describe('getScaleMaxValue test', () => {
                         embeddedLabels: 'key'
                     },
                     {
-                        title: 'Рост стоимости',
                         isSegmented: false,
                         type: 'line',
                         data: {
@@ -144,7 +141,6 @@ describe('getScaleMaxValue test', () => {
             test('should return 500', () => {
                 charts = [
                     {
-                        title: 'Рост стоимости',
                         isSegmented: true,
                         type: 'line',
                         data: {
@@ -167,7 +163,6 @@ describe('getScaleMaxValue test', () => {
                         embeddedLabels: 'key'
                     },
                     {
-                        title: 'Рост стоимости',
                         isSegmented: true,
                         type: 'line',
                         data: {
@@ -195,7 +190,6 @@ describe('getScaleMaxValue test', () => {
             test('should return 500', () => {
                 charts = [
                     {
-                        title: 'Рост стоимости',
                         isSegmented: true,
                         type: 'line',
                         data: {
@@ -218,7 +212,6 @@ describe('getScaleMaxValue test', () => {
                         embeddedLabels: 'key'
                     },
                     {
-                        title: 'Рост стоимости',
                         isSegmented: true,
                         type: 'line',
                         data: {
@@ -244,7 +237,6 @@ describe('getScaleMaxValue test', () => {
             test('should return 512', () => {
                 charts = [
                     {
-                        title: 'Рост стоимости',
                         isSegmented: true,
                         type: 'line',
                         data: {
@@ -267,7 +259,6 @@ describe('getScaleMaxValue test', () => {
                         embeddedLabels: 'key'
                     },
                     {
-                        title: 'Рост стоимости',
                         isSegmented: true,
                         type: 'line',
                         data: {
@@ -298,7 +289,6 @@ describe('getScaleMaxValue test', () => {
             test('should return 512', () => {
                 charts = [
                     {
-                        title: 'Рост стоимости',
                         isSegmented: true,
                         type: 'line',
                         data: {
@@ -321,7 +311,6 @@ describe('getScaleMaxValue test', () => {
                         embeddedLabels: 'key'
                     },
                     {
-                        title: 'Рост стоимости',
                         isSegmented: true,
                         type: 'line',
                         data: {
@@ -339,7 +328,6 @@ describe('getScaleMaxValue test', () => {
                         embeddedLabels: 'key'
                     },
                     {
-                        title: 'Рост стоимости',
                         isSegmented: false,
                         type: 'line',
                         data: {

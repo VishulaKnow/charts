@@ -87,7 +87,6 @@ const configCars: Config = {
         },
         charts: [
             {
-                title: 'Рост стоимости',
                 type: 'donut',
                 data: {
                     valueField: {
@@ -156,7 +155,6 @@ const configDemo: Config = {
         },
         charts: [
             {
-                title: 'Рост стоимости',
                 isSegmented: false,
                 type: 'bar',
                 data: {
@@ -179,7 +177,6 @@ const configDemo: Config = {
                 embeddedLabels: 'value'
             },
             {
-                title: 'Рост стоимости',
                 isSegmented: false,
                 type: 'line',
                 data: {
