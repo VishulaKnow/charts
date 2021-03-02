@@ -191,23 +191,18 @@ export class TooltipHelper {
 
         charts.forEach(chart => {
             const elems = Helper.getChartElements(block, chart);
+
+            let selectedElems: Selection<BaseType, DataRow, BaseType, unknown>;
+            if(!chart.isSegmented)
+                selectedElems = elems.filter(d => d[keyFieldName] === keyValue);
+            else 
+                selectedElems = elems.filter(d => d.data[keyFieldName] === keyValue);
+
             if(chart.type === 'area' || chart.type === 'line') {
                 elems.call(this.scaled, false);
-
-                if(!chart.isSegmented)
-                    elems.filter(d => d[keyFieldName] === keyValue)
-                        .call(this.scaled, true);
-                else 
-                    elems.filter(d => d.data[keyFieldName] === keyValue)
-                        .call(this.scaled, true);
+                selectedElems
+                    .call(this.scaled, true);
             } else {
-                let selectedElems: Selection<BaseType, DataRow, BaseType, unknown>;
-
-                if(!chart.isSegmented)
-                    selectedElems = elems.filter(d => d[keyFieldName] === keyValue);
-                else 
-                    selectedElems = elems.filter(d => d.data[keyFieldName] === keyValue);
-                    
                 selectedElems.each(function(d, i) {
                     block.getWrapper()
                         .select('.rect-shadow')

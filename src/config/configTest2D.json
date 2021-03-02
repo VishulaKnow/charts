@@ -36,7 +36,7 @@
         }
       },
       "marks": {
-        "show": false
+        "show": true
       }
     },
     "legend":{

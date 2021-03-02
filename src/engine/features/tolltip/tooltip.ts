@@ -63,17 +63,7 @@ export class Tooltip {
 
         tooltipContent.classed('tooltip-content-2d', true);
 
-        block.getWrapper()
-            .append('div')
-            .classed('rect-shadow', true)
-            .classed('shadow', true)
-            .style('position', 'absolute')
-            .style('left', 0)
-            .style('top', 0)
-            .style('width', 30 + 'px')
-            .style('height', 30 + 'px');
-
-        // this.renderShadowFilter(block, 'shadow');
+        const shadow = this.renderRectShadow(block);
 
         let currentKey: string = null;
 
@@ -82,7 +72,9 @@ export class Tooltip {
                 const index = TooltipHelper.getKeyIndex(pointer(event, this), chartOrientation, margin, blockSize, scaleKey, scaleKeyModel.type);
                 const keyValue = scaleKey.domain()[index];
 
-                if(!currentKey || currentKey !== keyValue) {
+                if (!currentKey || currentKey !== keyValue) {
+                    shadow.style('display', 'block');
+
                     currentKey = keyValue;
 
                     tooltipBlock.style('display', 'block');
@@ -112,6 +104,8 @@ export class Tooltip {
                     .attr('height', 0)
 
                 currentKey = null;
+
+                shadow.style('display', 'none');
             });
     }
 
@@ -175,7 +169,7 @@ export class Tooltip {
         let tipBox = block.getSvg()
             .select<SVGRectElement>(`rect.${this.tipBoxClass}`);
 
-        if(tipBox.empty())
+        if (tipBox.empty())
             tipBox = block.getSvg()
                 .append<SVGRectElement>('rect')
                 .attr('class', this.tipBoxClass)
@@ -190,7 +184,7 @@ export class Tooltip {
 
     private static setTooltipLineAttributes(tooltipLine: Selection<SVGLineElement, unknown, HTMLElement, any>, attributes: TooltipLineAttributes, transition: number): void {
         interrupt(tooltipLine.node());
-        
+
         if (transition && tooltipLine.style('display') === 'block') {
             tooltipLine
                 .attr('stroke-linecap', attributes.strokeLinecap)
@@ -265,10 +259,10 @@ export class Tooltip {
 
     private static setLineTooltipCoordinate(tooltipBlock: Selection<BaseType, unknown, HTMLElement, any>, tooltipCoordinate: TooltipCoordinate, chartOrientation: ChartOrientation, transition: number = null): void {
         interrupt(tooltipBlock.node());
-        
+
         if (!transition || transition <= 0)
             this.setTooltipCoordinate(tooltipBlock, tooltipCoordinate);
-            
+
         if (chartOrientation === 'vertical' && tooltipBlock.style('left') !== '0px' && tooltipBlock.style('right') !== '0px' && tooltipCoordinate.right !== '0px' && tooltipCoordinate.left !== null) {
             tooltipBlock
                 .style('right', tooltipCoordinate.right)
@@ -278,7 +272,7 @@ export class Tooltip {
                 .transition()
                 .duration(transition)
                 .ease(easeLinear)
-                    .style('left', tooltipCoordinate.left);
+                .style('left', tooltipCoordinate.left);
         } else if (chartOrientation === 'horizontal' && tooltipBlock.style('top') !== '0px' && parseInt(tooltipBlock.style('bottom')) > 0 && tooltipCoordinate.bottom === null) {
             tooltipBlock
                 .style('left', tooltipCoordinate.left)
@@ -288,7 +282,7 @@ export class Tooltip {
                 .transition()
                 .duration(transition)
                 .ease(easeLinear)
-                    .style('top', tooltipCoordinate.top);
+                .style('top', tooltipCoordinate.top);
         } else {
             this.setTooltipCoordinate(tooltipBlock, tooltipCoordinate);
         }
@@ -300,6 +294,24 @@ export class Tooltip {
 
     private static hideTooltipBlock(tooltipBlock: Selection<BaseType, unknown, HTMLElement, any>): void {
         tooltipBlock.style('display', 'none');
+    }
+
+    private static renderRectShadow(block: Block): Selection<HTMLDivElement, unknown, HTMLElement, any> {
+        let shadow = block.getWrapper()
+            .select<HTMLDivElement>('.rect-shadow');
+        if (shadow.empty())
+            shadow = block.getWrapper()
+                .append('div')
+                .classed('rect-shadow', true)
+                .classed('shadow', true)
+                .style('position', 'absolute')
+                .style('top', 0)
+                .style('left', 0)
+                .style('width', 0)
+                .style('height', 0)
+                .style('display', 'none');
+
+        return shadow;
     }
 
     private static renderShadowFilter(block: Block, filterId: string): Selection<SVGFilterElement, unknown, HTMLElement, unknown> {
@@ -328,9 +340,9 @@ export class Tooltip {
 
     private static changeDonutHighlightAppearance(segment: Selection<SVGGElement, PieArcDatum<DataRow>, BaseType, unknown>, margin: BlockMargin, blockSize: Size, donutThickness: number, on: boolean): void {
         interrupt(segment.node());
-        
+
         let scaleSize = 0;
-        if(on)
+        if (on)
             scaleSize = 5; // Если нужно выделить сегмент, то scaleSize не равен нулю и отображается увеличенным
 
         segment

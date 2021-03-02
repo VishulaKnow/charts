@@ -8,79 +8,45 @@ const configCars: Config = {
             height: 510
         }
     },
-    // options: {
-    //     type: '2d',
-    //     title: 'График по 14 показателям в 4 разрезах, название длинное в одну строчку, если не влазит, то скрываем все в 3 точки',
-    //     axis: {
-    //         keyAxis: {
-    //             position: 'start',
-    //             ticks: {
-    //                 flag: false
-    //             }
-    //         },
-    //         valueAxis: {
-    //             domain: {
-    //                 start: -1,
-    //                 end: -1
-    //             },
-    //             position: 'start',
-    //             ticks: {
-    //                 flag: false
-    //             }
-    //         }
-    //     },
-    //     additionalElements: {
-    //         gridLine: {
-    //             flag: {
-    //                 value: true,
-    //                 key: true
-    //             }
-    //         },
-    //         marks: {
-    //             show: true
-    //         }
-    //     },
-    //     legend: {
-    //         show: true
-    //     },
-    //     orientation: 'horizontal',
-    //     data: {
-    //         dataSource: 'dataSet',
-    //         keyField: {
-    //             name: 'brand',
-    //             format: 'string'
-    //         }
-    //     },
-    //     charts: [
-    //         {
-    //             title: 'Рост стоимости',
-    //             isSegmented: false,
-    //             type: 'bar',
-    //             data: {
-    //                 valueFields: [
-    //                     {
-    //                         name: 'price',
-    //                         format: 'money',
-    //                         title: 'Количество автомобилей'
-    //                     }
-    //                 ]
-    //             },
-    //             tooltip: {
-    //                 show: true
-    //             },
-    //             embeddedLabels: 'value'
-    //         }
-    //     ]
-    // }
     options: {
-        type: 'polar',
-        title: 'some title',
+        type: '2d',
+        title: 'График по 14 показателям в 4 разрезах, название длинное в одну строчку, если не влазит, то скрываем все в 3 точки',
+        axis: {
+            keyAxis: {
+                position: 'start',
+                ticks: {
+                    flag: false
+                }
+            },
+            valueAxis: {
+                domain: {
+                    start: -1,
+                    end: -1
+                },
+                position: 'start',
+                ticks: {
+                    flag: false
+                }
+            }
+        },
+        additionalElements: {
+            gridLine: {
+                flag: {
+                    value: true,
+                    key: true
+                }
+            },
+            marks: {
+                show: true
+            }
+        },
         legend: {
             show: true
         },
+        orientation: 'horizontal',
         data: {
             dataSource: 'dataSet',
-            keyField:  {
+            keyField: {
                 name: 'brand',
                 format: 'string'
             }
@@ -88,19 +54,53 @@ const configCars: Config = {
         charts: [
             {
                 title: 'Рост стоимости',
-                type: 'donut',
+                isSegmented: false,
+                type: 'bar',
                 data: {
-                    valueField: {
-                        name: 'price',
-                        format: 'money'
-                    }
+                    valueFields: [
+                        {
+                            name: 'price',
+                            format: 'money',
+                            title: 'Количество автомобилей'
+                        }
+                    ]
                 },
                 tooltip: {
                     show: true
                 },
+                embeddedLabels: 'value'
             }
         ]
     }
+    // options: {
+    //     type: 'polar',
+    //     title: 'some title',
+    //     legend: {
+    //         show: true
+    //     },
+    //     data: {
+    //         dataSource: 'dataSet',
+    //         keyField:  {
+    //             name: 'brand',
+    //             format: 'string'
+    //         }
+    //     },
+    //     charts: [
+    //         {
+    //             title: 'Рост стоимости',
+    //             type: 'donut',
+    //             data: {
+    //                 valueField: {
+    //                     name: 'price',
+    //                     format: 'money'
+    //                 }
+    //             },
+    //             tooltip: {
+    //                 show: true
+    //             },
+    //         }
+    //     ]
+    // }
 }
 
 const configDemo: Config = {
