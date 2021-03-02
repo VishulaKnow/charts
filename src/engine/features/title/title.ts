@@ -12,9 +12,6 @@ interface TitleAttributes {
 }
 export class Title {
     public static render(block: Block, text: string, titleBlockModel: TitleBlockModel, blockSize: Size): void {
-        this.renderTitleBlock(block, text, titleBlockModel, blockSize);
-    }
-    private static renderTitleBlock(block: Block, text: string, titleBlockModel: TitleBlockModel, blockSize: Size) {
         const titleBlock = block.getSvg()
             .append('text')
             .attr('class', 'chart-title');
@@ -22,8 +19,8 @@ export class Title {
         const titleCoordinate = this.getTitleAttributes(blockSize, titleBlockModel);
 
         this.fillTitleBlockAttributes(titleBlock, titleCoordinate, text);
-
     }
+
     private static fillTitleBlockAttributes(titleBlock: Selection<SVGTextElement, unknown, HTMLElement, any>, attributes: TitleAttributes, text: string) {
         titleBlock
             .attr('x', attributes.x)
@@ -35,6 +32,7 @@ export class Title {
             
         Helper.cropLabels(titleBlock, attributes.width);
     }
+
     private static getTitleAttributes(blockSize: Size, titleBlockModel: TitleBlockModel): TitleAttributes {
         const coordinate: TitleAttributes = {
             x: 0,
@@ -43,10 +41,12 @@ export class Title {
             height: 0,
             dominantBaseline: "hanging"
         };
+
         coordinate.x = titleBlockModel.margin.left;
         coordinate.y = titleBlockModel.margin.top;
         coordinate.width = blockSize.width - titleBlockModel.margin.left - titleBlockModel.margin.right;
-        coordinate.height = titleBlockModel.size
+        coordinate.height = titleBlockModel.size;
+
         return coordinate;
     }
 }

@@ -45,7 +45,7 @@ export class Block
             .attr('class', this.chartBlockClass);
     }
 
-    public getSvg(): Selection<BaseType, unknown, HTMLElement, any> {
+    public getSvg(): Selection<SVGElement, unknown, HTMLElement, any> {
         return this.getWrapper().select(`svg.${Namer.getClassName('svg-chart')}`);
     }
 
