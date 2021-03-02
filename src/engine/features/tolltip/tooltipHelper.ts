@@ -207,16 +207,8 @@ export class TooltipHelper {
                     selectedElems = elems.filter(d => d[keyFieldName] === keyValue);
                 else 
                     selectedElems = elems.filter(d => d.data[keyFieldName] === keyValue);
-                        
-                // let clones = selectedElems.clone();
-                // clones.classed('bar-clone', true);
-                // clones.classed('chart-element-highlight', true);
-                // selectedElems.style('filter', 'url(#shadow)');
-
+                    
                 selectedElems.each(function(d, i) {
-                    console.log(block.getWrapper()
-                    .select('.rect-shadow').node());
-
                     block.getWrapper()
                         .select('.rect-shadow')
                         .style('left', Helper.getSelectionNumericAttr(select(this), 'x') + 'px')

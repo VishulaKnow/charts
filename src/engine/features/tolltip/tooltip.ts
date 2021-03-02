@@ -21,14 +21,14 @@ export class Tooltip {
     private static tooltipContentClass = 'tooltip-content';
     private static tooltipArrowClass = 'tooltip-arrow';
 
-    public static renderTooltips(block: Block, model: Model, data: DataSource, scales?: Scales): void {
+    public static renderTooltips(block: Block, model: Model, data: DataSource, chartId: number, scales?: Scales): void {
         this.renderTooltipWrapper(block);
         const chartsWithTooltipIndex = model.options.charts.findIndex((chart: TwoDimensionalChartModel | PolarChartModel | IntervalChartModel) => chart.tooltip.show);
         if (chartsWithTooltipIndex !== -1) {
             if (model.options.type === '2d') {
                 this.rednerTooltipFor2DCharts(block, model.chartBlock.margin, model.options.charts, data, model.options.data, model.blockCanvas.size, model.options.orient, scales.scaleKey, model.options.scale.scaleKey, model.options.axis.keyAxis.orient);
             } else if (model.options.type === 'polar') {
-                this.renderTooltipsForDonut(block, model.options.charts, data, model.options.data, model.blockCanvas.size, model.chartBlock.margin, DonutHelper.getThickness(model.chartSettings.donut, model.blockCanvas.size, model.chartBlock.margin));
+                this.renderTooltipsForDonut(block, model.options.charts, data, model.options.data, model.blockCanvas.size, model.chartBlock.margin, DonutHelper.getThickness(model.chartSettings.donut, model.blockCanvas.size, model.chartBlock.margin), chartId);
             }
         }
     }
@@ -40,7 +40,7 @@ export class Tooltip {
         this.renderLineTooltip(block, scaleKey, margin, blockSize, charts, chartOrientation, keyAxisOrient, data, dataOptions, scaleKeyModel);
     }
 
-    private static renderTooltipsForDonut(block: Block, charts: PolarChartModel[], data: DataSource, dataOptions: OptionsModelData, blockSize: Size, margin: BlockMargin, chartThickness: number): void {
+    private static renderTooltipsForDonut(block: Block, charts: PolarChartModel[], data: DataSource, dataOptions: OptionsModelData, blockSize: Size, margin: BlockMargin, chartThickness: number, chartId: number): void {
         charts.forEach(chart => {
             const attrTransform = block.getSvg().select(`.${Donut.donutBlockClass}`).attr('transform');
             const translateNumbers = Helper.getTranslateNumbers(attrTransform);
@@ -48,7 +48,7 @@ export class Tooltip {
             const translateY = translateNumbers[1];
 
             const arcItems = Donut.getAllArcGroups(block);
-            this.renderTooltipForDonut(block, arcItems, data, dataOptions, chart, blockSize, margin, chartThickness, translateX, translateY);
+            this.renderTooltipForDonut(block, arcItems, data, dataOptions, chart, blockSize, margin, chartThickness, chartId, translateX, translateY);
         });
     }
 
@@ -115,13 +115,13 @@ export class Tooltip {
             });
     }
 
-    private static renderTooltipForDonut(block: Block, elemets: Selection<SVGGElement, PieArcDatum<DataRow>, SVGGElement, unknown>, data: DataSource, dataOptions: OptionsModelData, chart: PolarChartModel, blockSize: Size, margin: BlockMargin, donutThickness: number, translateX: number = 0, translateY: number = 0): void {
+    private static renderTooltipForDonut(block: Block, elemets: Selection<SVGGElement, PieArcDatum<DataRow>, SVGGElement, unknown>, data: DataSource, dataOptions: OptionsModelData, chart: PolarChartModel, blockSize: Size, margin: BlockMargin, donutThickness: number, chartId: number, translateX: number = 0, translateY: number = 0): void {
         const tooltipBlock = this.renderTooltipBlock(block, translateX, translateY);
         const tooltipContent = this.renderTooltipContentBlock(tooltipBlock);
         const tooltipArrow = this.renderTooltipArrow(tooltipBlock);
         const thisClass = this;
 
-        const filterId = 'shadow'
+        const filterId = 'shadow' + chartId;
         this.renderShadowFilter(block, filterId);
 
         let clone: Selection<BaseType, unknown, BaseType, unknown>;
@@ -137,7 +137,7 @@ export class Tooltip {
 
                 // Выделение выбранного сегмента с помощью тени. копия сегмента поверх оригинальногой. Оригинальный становится тенью
                 clone = select(this).clone();
-                clone.classed('donut-segmentd-clone', true);
+                clone.classed('donut-segment-clone', true);
                 select(this).style('filter', `url(#${filterId})`);
 
                 thisClass.changeDonutHighlightAppearance(select<SVGGElement, PieArcDatum<DataRow>>(this), margin, blockSize, donutThickness, true);

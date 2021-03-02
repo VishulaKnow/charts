@@ -15,7 +15,7 @@ import { BarHelper } from "./twoDimensionalNotation/bar/barHelper";
 import { Title } from "./features/title/title";
 
 export class ChartRenderer {
-    public static render2D(block: Block, model: Model, data: DataSource): void {
+    public static render2D(block: Block, model: Model, data: DataSource, chartId: number): void {
         const options = <TwoDimensionalOptionsModel>model.options;
 
         const scales = Scale.getScales(options.scale.scaleKey,
@@ -38,14 +38,13 @@ export class ChartRenderer {
             model.chartSettings.bar,
             model.blockCanvas.size,
             options.additionalElements.marks.show);
-
-
         
         Title.render(block, 
             options.title,
             model.otherComponents.titleBlock,
             model.blockCanvas.size
-            );
+        );
+
         Legend.render(block,
             data,
             options,
@@ -54,12 +53,12 @@ export class ChartRenderer {
 
 
 
-        Tooltip.renderTooltips(block, model, data, scales);
+        Tooltip.renderTooltips(block, model, data, chartId, scales);
         if (model.dataSettings.scope.hidedRecordsAmount !== 0)
             RecordOverflowAlert.render(block, model.dataSettings.scope.hidedRecordsAmount, 'top', options.orient);
     }
 
-    public static renderPolar(block: Block, model: Model, data: DataSource) {
+    public static renderPolar(block: Block, model: Model, data: DataSource, chartId: number) {
         const options = <PolarOptionsModel>model.options;
 
         block.renderSvg(model.blockCanvas.size);
@@ -78,42 +77,9 @@ export class ChartRenderer {
             );
         Legend.render(block, data, options, model.otherComponents.legendBlock, model.blockCanvas.size);
 
-        Tooltip.renderTooltips(block, model, data);
+        Tooltip.renderTooltips(block, model, data, chartId);
         if (model.dataSettings.scope.hidedRecordsAmount !== 0 && model.options.legend.position !== 'off')
             RecordOverflowAlert.render(block, model.dataSettings.scope.hidedRecordsAmount, model.options.legend.position);
-    }
-
-    public static renderInterval(block: Block, model: Model, data: DataSource): void {
-        const options = <IntervalOptionsModel>model.options;
-
-        block.renderSvg(model.blockCanvas.size);
-
-        const scales = Scale.getScales(options.scale.scaleKey,
-            options.scale.scaleValue,
-            model.chartSettings.bar);
-
-        Axis.render(block, scales, options.scale, options.axis, model.chartBlock.margin, model.blockCanvas.size);
-
-        GridLine.render(block, options.additionalElements.gridLine.flag, options.axis.keyAxis, options.axis.valueAxis, model.blockCanvas.size, model.chartBlock.margin, options.scale.scaleKey);
-
-        this.renderIntervalCharts(block,
-            options.charts,
-            scales,
-            data,
-            options.data,
-            model.chartBlock.margin,
-            options.axis.keyAxis.orient,
-            model.chartSettings);
-
-        Title.render(block, 
-            options.title,
-            model.otherComponents.titleBlock,
-            model.blockCanvas.size
-            );
-        Legend.render(block, data, options, model.otherComponents.legendBlock, model.blockCanvas.size);
-        Tooltip.renderTooltips(block, model, data);
-        if (model.dataSettings.scope.hidedRecordsAmount !== 0)
-            RecordOverflowAlert.render(block, model.dataSettings.scope.hidedRecordsAmount, 'top', options.orient);
     }
 
     private static render2DCharts(block: Block, charts: TwoDimensionalChartModel[], scales: Scales, data: DataSource, dataOptions: OptionsModelData, margin: BlockMargin, keyAxisOrient: Orient, barSettings: BarChartSettings, blockSize: Size, markFlag: boolean) {

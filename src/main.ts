@@ -5,6 +5,8 @@ import { DataSource, Model, Size } from "./model/model";
 import { assembleModel, getPreparedData } from "./model/modelOptions";
 
 class Chart {
+    public static chartCounter = 0;
+
     private config: Config;
     private designerConfig: DesignerConfig;
     private model: Model;
@@ -17,13 +19,14 @@ class Chart {
     private engine: Engine;
 
     constructor(config: Config, designerConfig: DesignerConfig, data: DataSource, isResizable: boolean = false) {
+        Chart.chartCounter++;
         this.config = config;
         this.designerConfig = designerConfig;
         this.data = data;
         this.isResizable = isResizable;
 
         this.model = assembleModel(this.config, this.data, this.designerConfig);
-        this.engine = new Engine();
+        this.engine = new Engine(Chart.chartCounter);
     }
 
     /**

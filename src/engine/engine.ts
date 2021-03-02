@@ -5,20 +5,23 @@ import { DataSource, Model } from '../model/model';
 import { Tooltip } from './features/tolltip/tooltip';
 import { Donut } from './polarNotation/donut';
 import { interrupt } from 'd3-transition';
-import { arc } from 'd3-shape';
 import { MarkDot } from './features/lineDots/markDot';
 
 export default class Engine {
     private block: Block;
+    private id: number;
+
+    constructor(id: number) {
+        this.id = id;
+    }
 
     public render(model: Model, data: DataSource, parentElement: HTMLElement): void {
         this.block = new Block(model.blockCanvas.cssClass, parentElement);
-
         this.block.renderWrapper(model.blockCanvas.size);
 
         if (model.options) {
             ValueFormatter.setFormatFunction(model.dataSettings.format.formatters);
-            this.renderCharts(model, data);
+            this.renderCharts(model, data, this.id);
         }
     }
 
@@ -44,13 +47,11 @@ export default class Engine {
         this.block.getWrapper().remove();
     }
 
-    private renderCharts(model: Model, data: DataSource): void {
+    private renderCharts(model: Model, data: DataSource, id: number): void {
         if (model.options.type === '2d')
-            ChartRenderer.render2D(this.block, model, data);
+            ChartRenderer.render2D(this.block, model, data, id);
         else if (model.options.type === 'polar')
-            ChartRenderer.renderPolar(this.block, model, data);
-        else if (model.options.type === 'interval')
-            ChartRenderer.renderInterval(this.block, model, data);
+            ChartRenderer.renderPolar(this.block, model, data, id);
     }
 
     private interruptAnimations(): void {
@@ -67,7 +68,7 @@ export default class Engine {
         tooltips.nodes().forEach(node => interrupt(node));
 
         this.block.getSvg().selectAll('.bar-clone').remove();
-        this.block.getSvg().selectAll('.donut-segmentd-clone').remove();
+        this.block.getSvg().selectAll('.donut-segment-clone').remove();
     }
 
     private removeEventListeners(): void {
