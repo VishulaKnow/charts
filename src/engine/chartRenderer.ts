@@ -73,8 +73,8 @@ export class ChartRenderer {
         Title.render(block, 
             options.title,
             model.otherComponents.titleBlock,
-            model.blockCanvas.size
-            );
+            model.blockCanvas.size);
+
         Legend.render(block, data, options, model.otherComponents.legendBlock, model.blockCanvas.size);
 
         Tooltip.renderTooltips(block, model, data, chartId);
