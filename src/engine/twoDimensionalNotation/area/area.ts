@@ -62,7 +62,7 @@ export class Area {
             Helper.setCssClasses(path, Helper.getCssClassesWithElementIndex(chart.cssClasses, index));
             Helper.setChartStyle(path, chart.style, index, 'fill');
 
-            if(markFlag)
+            if (markFlag)
                 MarkDot.render(block, data, keyAxisOrient, scales, margin, keyField.name, field.name, chart.cssClasses, index, chart.style.elementColors, false);
         });
     }
@@ -88,7 +88,7 @@ export class Area {
         this.setSegmentColor(areas, chart.style.elementColors);
 
         stackedData.forEach((sd, index) => {
-            if(markFlag)
+            if (markFlag)
                 MarkDot.render(block, sd, keyAxisOrient, scales, margin, keyField.name, '1', chart.cssClasses, index, chart.style.elementColors, true);
         });
     }
