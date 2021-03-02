@@ -14,7 +14,6 @@ export interface TooltipLineAttributes {
     x2: number;
     y1: number;
     y2: number;
-    strokeLinecap: string;
 }
 export interface TipBoxAttributes {
     x: number;
@@ -280,7 +279,7 @@ export class TooltipHelper {
     public static getTooltipLineAttributes(scaleKey: AxisScale<any>, margin: BlockMargin, key: string, chartOrientation: ChartOrientation, blockSize: Size): TooltipLineAttributes {
         const convexSize = 5;        
         const attributes: TooltipLineAttributes = {
-            x1: 0, x2: 0, y1: 0, y2: 0, strokeLinecap: 'round'
+            x1: 0, x2: 0, y1: 0, y2: 0
         }
 
         if (chartOrientation === 'vertical') {

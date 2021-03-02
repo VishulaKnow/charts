@@ -123,6 +123,7 @@
 .tooltip-line {
     stroke: #000000;
     stroke-width: 2px;
+    stroke-linecap: round;
 }
 .tooltip-content-2d {
     padding: 12px 16px;

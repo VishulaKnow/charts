@@ -77,7 +77,7 @@ export class Tooltip {
                 if (!currentKey || currentKey !== keyValue) {
                     currentKey = keyValue;
 
-                    tooltipBlock.style('display', 'block');
+                    thisClass.showTooltipBlock(tooltipBlock);
 
                     TooltipHelper.fillForMulty2DCharts(tooltipContent, charts, data, dataOptions, keyValue);
 
@@ -92,16 +92,10 @@ export class Tooltip {
                 }
             })
             .on('mouseleave', function () {
-                tooltipBlock.style('display', 'none');
+                thisClass.hideTooltipBlock(tooltipBlock);
                 tooltipLine.style('display', 'none');
 
                 TooltipHelper.remove2DElementsHighlighting(block, charts);
-
-                block.getWrapper().select('.svg-shadow').select('rect')
-                    .attr('x', 0)
-                    .attr('y', 0)
-                    .attr('width', 0)
-                    .attr('height', 0)
 
                 currentKey = null;
             });
@@ -185,7 +179,6 @@ export class Tooltip {
 
         if (transition && tooltipLine.style('display') === 'block') {
             tooltipLine
-                .attr('stroke-linecap', attributes.strokeLinecap)
                 .interrupt()
                 .transition()
                 .duration(transition)
@@ -199,8 +192,7 @@ export class Tooltip {
                 .attr('x1', attributes.x1)
                 .attr('x2', attributes.x2)
                 .attr('y1', attributes.y1)
-                .attr('y2', attributes.y2)
-                .attr('stroke-linecap', attributes.strokeLinecap);
+                .attr('y2', attributes.y2);
         }
     }
 
