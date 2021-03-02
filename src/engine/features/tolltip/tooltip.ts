@@ -205,6 +205,7 @@ export class Tooltip {
     }
 
     private static renderTooltipArrow(tooltipBlock: Selection<BaseType, unknown, HTMLElement, any>): Selection<BaseType, unknown, HTMLElement, any> {
+        let arrowSize: number = ARROW_SIZE / 2;
         let tooltipArrow = tooltipBlock.select(`.${this.tooltipArrowClass}`);
         if (tooltipArrow.empty())
             tooltipArrow = tooltipBlock
@@ -212,10 +213,10 @@ export class Tooltip {
                 .attr('class', this.tooltipArrowClass)
                 .style('position', 'absolute')
                 .style('left', `${ARROW_DEFAULT_POSITION}px`)
-                .style('bottom', '-6px')
-                .style('width', `${ARROW_SIZE}px`)
-                .style('height', `${ARROW_SIZE}px`);
-
+                .style('border-top-width', `${arrowSize}px`)
+                .style('border-right-width', `${arrowSize}px`)
+                .style('border-bottom-width', `0px`)
+                .style('border-left-width', `${arrowSize}px`);
         return tooltipArrow;
     }
 
