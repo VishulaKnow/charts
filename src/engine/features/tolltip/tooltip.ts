@@ -63,7 +63,20 @@ export class Tooltip {
 
         tooltipContent.classed('tooltip-content-2d', true);
 
-        this.renderShadowFilter(block, 'shadow');
+        const svgShadow = block.getWrapper().append('svg').attr('class', 'svg-shadow')
+            .attr('x', 0)
+            .attr('y', 0)
+            .attr('width', Helper.getSelectionNumericAttr(block.getSvg(), 'width'))
+            .attr('height', Helper.getSelectionNumericAttr(block.getSvg(), 'height'));
+
+        svgShadow.append('rect')
+            .attr('x', 0)
+            .attr('y', 0)
+            .attr('width', 0)
+            .attr('height', 0)
+            .style('fill', 'white');
+
+        // this.renderShadowFilter(block, 'shadow');
 
         let currentKey: string = null;
 
@@ -94,6 +107,12 @@ export class Tooltip {
                 tooltipLine.style('display', 'none');
 
                 TooltipHelper.remove2DElementsHighlighting(block, charts);
+
+                block.getWrapper().select('.svg-shadow').select('rect')
+                    .attr('x', 0)
+                    .attr('y', 0)
+                    .attr('width', 0)
+                    .attr('height', 0)
 
                 currentKey = null;
             });

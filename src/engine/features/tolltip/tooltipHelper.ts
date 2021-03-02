@@ -208,10 +208,19 @@ export class TooltipHelper {
                 else 
                     selectedElems = elems.filter(d => d.data[keyFieldName] === keyValue);
                         
-                let clones = selectedElems.clone();
-                clones.classed('bar-clone', true);
-                clones.classed('chart-element-highlight', true);
-                selectedElems.style('filter', 'url(#shadow)');
+                // let clones = selectedElems.clone();
+                // clones.classed('bar-clone', true);
+                // clones.classed('chart-element-highlight', true);
+                // selectedElems.style('filter', 'url(#shadow)');
+
+                selectedElems.each(function(d, i) {
+                    block.getWrapper().select('.svg-shadow')
+                        .select('rect')
+                        .attr('x', Helper.getSelectionNumericAttr(select(this), 'x'))
+                        .attr('y', Helper.getSelectionNumericAttr(select(this), 'y'))
+                        .attr('width', Helper.getSelectionNumericAttr(select(this), 'width'))
+                        .attr('height', Helper.getSelectionNumericAttr(select(this), 'height'))
+                });
             }
         });
     }
