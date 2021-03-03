@@ -24,6 +24,9 @@ export class Bar {
 
     public static updateBarChartByValueAxis(block: Block, newData: DataRow[], scales: Scales, margin: BlockMargin, keyAxisOrient: Orient, chart: TwoDimensionalChartModel, blockSize: Size, isSegmented: boolean): void {
         if (isSegmented) {
+            const keys = chart.data.valueFields.map(field => field.name);
+            const stackedData = stack().keys(keys)(newData);
+
             const bars = block.getChartBlock()
                 .selectAll<SVGRectElement, DataRow>(`.${this.barItemClass}${Helper.getCssClassesLine(chart.cssClasses)}`);
 
@@ -81,8 +84,6 @@ export class Bar {
 
             if (chart.embeddedLabels !== 'none')
                 EmbeddedLabels.render(block, bars, EmbeddedLabelsHelper.getLabelField(chart.embeddedLabels, chart.data.valueFields, keyField, index), chart.embeddedLabels, keyAxisOrient, blockSize, margin);
-                
-            
         });
 
     }
@@ -92,14 +93,15 @@ export class Bar {
         const stackedData = stack().keys(keys)(data);
 
         let groups = block.getChartBlock()
-            .selectAll<SVGGElement, DataRow>('g')
+            .selectAll<SVGGElement, DataRow>(`g.bar-segment-group${Helper.getCssClassesLine(chart.cssClasses)}`)
             .data(stackedData);
 
         if (groups.empty())
             groups = groups
                 .data(stackedData)
                 .enter()
-                .append<SVGGElement>('g');
+                .append<SVGGElement>('g')
+                .attr('class', 'bar-segment-group')
 
         const bars = groups
             .selectAll(`rect${Helper.getCssClassesLine(chart.cssClasses)}`)
@@ -124,6 +126,7 @@ export class Bar {
             .attr('width', barAttrs.width)
             .attr('height', barAttrs.height);
 
+        Helper.setCssClasses(groups, chart.cssClasses);
         Helper.setCssClasses(bars, chart.cssClasses); // Для обозначения принадлежности бара к конкретному чарту
         const thisClass = this;
         groups.each(function (d, i) {

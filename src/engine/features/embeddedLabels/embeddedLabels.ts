@@ -29,14 +29,14 @@ export class EmbeddedLabels {
             width: Helper.getSelectionNumericAttr(bar, 'width'),
             height: Helper.getSelectionNumericAttr(bar, 'height')
         }
-        
+
         const labelUnserveFlag = EmbeddedLabelsHelper.getLabelUnserveFlag(barAttrs.height); // if bar is too small to serve label inside. This flag is needed for set outside postion and change text anchor if bar wide as whole chart block
 
         const position = EmbeddedLabelsHelper.getLabelPosition(barAttrs, labelBlock.node().getBBox().width, margin, blockSize, labelUnserveFlag);
 
         const attrs = EmbeddedLabelsHelper.getLabelAttrs(barAttrs, type, position, keyAxisOrient);
 
-        if(position === 'outside') {
+        if (position === 'outside') {
             labelsGroup.append('rect')
                 .attr('class', 'outside-embedded-label-bg')
                 .attr('x', attrs.x)
@@ -56,19 +56,19 @@ export class EmbeddedLabels {
         if (position === 'inside')
             labelBlock.style('fill', '#FFFFFF');
 
-        if(labelUnserveFlag)
+        if (labelUnserveFlag)
             this.checkLabelsToResetTextAnchor(labelBlock, margin, blockSize, keyAxisOrient);
         this.cropText(labelBlock, barAttrs, position, labelUnserveFlag, margin, blockSize);
     }
 
     private static checkLabelsToResetTextAnchor(labelBlock: Selection<SVGTextElement, unknown, HTMLElement, unknown>, margin: BlockMargin, blockSize: Size, keyAxisOrient: Orient): void {
-        if(keyAxisOrient === 'left') {
+        if (keyAxisOrient === 'left') {
             if (Helper.getSelectionNumericAttr(labelBlock, 'x') + labelBlock.node().getBBox().width > blockSize.width - margin.right) {
                 labelBlock.attr('x', blockSize.width - margin.right);
                 labelBlock.attr('text-anchor', 'end');
             }
-        } else if(keyAxisOrient === 'right') {
-            if(Helper.getSelectionNumericAttr(labelBlock, 'x') - labelBlock.node().getBBox().width < margin.left) {
+        } else if (keyAxisOrient === 'right') {
+            if (Helper.getSelectionNumericAttr(labelBlock, 'x') - labelBlock.node().getBBox().width < margin.left) {
                 labelBlock.attr('x', margin.left);
                 labelBlock.attr('text-anchor', 'left');
             }
