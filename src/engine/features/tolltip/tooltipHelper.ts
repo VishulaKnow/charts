@@ -200,9 +200,6 @@ export class TooltipHelper {
                 selectedElems
                     .call(this.scaled, true);
             } else {
-                let clones = selectedElems.clone();
-                clones.classed('bar-clone', true);
-                clones.classed('chart-element-highlight', true);
                 selectedElems.style('filter', `url(#${filterId})`);
             }
         });
@@ -216,9 +213,6 @@ export class TooltipHelper {
             } else {
                 elems.classed('chart-element-highlight', false);
                 elems.style('filter', null);
-                block.getChartBlock()
-                    .selectAll('.bar-clone')
-                    .remove();
             }
         });
     }

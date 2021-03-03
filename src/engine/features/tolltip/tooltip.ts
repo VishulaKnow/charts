@@ -109,9 +109,7 @@ export class Tooltip {
 
         const filterId = NamesManager.getId('shadow', chartId);
         this.renderShadowFilter(block, filterId);
-
-        let clone: Selection<BaseType, unknown, BaseType, unknown>;
-
+        
         elemets
             .on('mouseover', function (_event, dataRow) {
                 thisClass.showTooltipBlock(tooltipBlock);
@@ -121,9 +119,6 @@ export class Tooltip {
                 const tooltipCoordinate = TooltipHelper.getTooltipCoordinate(coordinatePointer);
                 thisClass.setTooltipCoordinate(tooltipBlock, tooltipCoordinate);
 
-                // Выделение выбранного сегмента с помощью тени. копия сегмента поверх оригинальногой. Оригинальный становится тенью
-                clone = select(this).clone();
-                clone.classed('donut-segment-clone', true);
                 select(this).style('filter', `url(#${filterId})`);
 
                 thisClass.changeDonutHighlightAppearance(select<SVGGElement, PieArcDatum<DataRow>>(this), margin, blockSize, donutThickness, true);
@@ -134,7 +129,6 @@ export class Tooltip {
 
             select(this) // удаление тени с оригинального сегмента
                 .style('filter', null);
-            clone.remove(); // удаление клона
 
             thisClass.changeDonutHighlightAppearance(select<SVGGElement, PieArcDatum<DataRow>>(this), margin, blockSize, donutThickness, false);
         });
