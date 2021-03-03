@@ -499,7 +499,6 @@ export default class Listeners
             if(config.options.type === '2d') {
                 config.options.additionalElements.marks.show = this.checked;
                 thisClass.updateFull();
-                console.log(config.options.additionalElements.marks.show)
             }
         });
     }
@@ -591,7 +590,7 @@ export default class Listeners
             ListenersHelper.setCheckboxValue('#config-tick-key', config.options.axis.keyAxis.ticks.flag);
             ListenersHelper.setCheckboxValue('#config-tick-value', config.options.axis.valueAxis.ticks.flag);
             ListenersHelper.setCheckboxValue('#is-segmented', config.options.charts.findIndex(ch => ch.isSegmented) !== -1);
-            ListenersHelper.setCheckboxValue('#marksIsOn', config.options.charts.findIndex(ch => ch.isSegmented) !== -1);
+            ListenersHelper.setCheckboxValue('#marksIsOn', config.options.additionalElements.marks.show);
             ListenersHelper.setInputValue('#embedded-labels', config.options.charts[0].embeddedLabels);
         } else if(config.options.type === 'polar') {
             ListenersHelper.setInputValue('#chart-polar-type', config.options.charts[0].type);
