@@ -413,6 +413,7 @@ export default class Listeners {
                 const newData = thisClass.getDataWithRandomValues(dataCopy, max);
                 const model = getUpdatedModel(thisClass.config, newData, thisClass.designerConfig);
                 const preparedData = getPreparedData(model, newData, config);
+                
                 if (config.options.type === '2d')
                     thisClass.engine.updateValues(model, preparedData);
                 else
@@ -427,7 +428,7 @@ export default class Listeners {
                 const model = getUpdatedModel(thisClass.config, newData, thisClass.designerConfig);
                 const preparedData = getPreparedData(model, newData, config);
                 if (config.options.type === '2d')
-                    thisClass.engine.updateValues(model, preparedData);
+                    thisClass.engine.updateValues(model, newData);
                 else
                     thisClass.engine.updateFullBlock(model, preparedData);
             }
@@ -613,6 +614,13 @@ const model = assembleModel(config, data, designerConfig);
 const engine = new Engine(2);
 engine.render(model, getPreparedData(model, data, config), document.querySelector('.main-wrapper'));
 new Listeners(engine, config, designerConfig, data);
+
+// setInterval(() => {
+//     data["dataSet"][ListenersHelper.randInt(0, 8)]['price'] = ListenersHelper.randInt(0, 100);
+//     data["dataSet"][ListenersHelper.randInt(0, 8)]['count'] = ListenersHelper.randInt(0, 100);
+
+//     engine.updateValues(getUpdatedModel(config, data, designerConfig), data);
+// }, 2000);
 
 // const config3 = require('../config/configTest2D.json');
 // const model3 = assembleModel(config3, data, designerConfig);
