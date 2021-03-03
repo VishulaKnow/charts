@@ -179,6 +179,7 @@ export class ChartRenderer {
         charts.forEach((chart: TwoDimensionalChartModel) => {
             if (chart.type === 'bar') {
                 Bar.updateBarChartByValueAxis(block,
+                    data[dataOptions.dataSource],
                     scales,
                     margin,
                     keyAxisOrient,

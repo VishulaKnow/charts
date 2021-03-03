@@ -37,14 +37,14 @@ export default class Engine {
         this.render(model, data, this.block.parentElement);
     }
 
-    public updateValueAxis(model: Model, data: any): void {
-        ChartRenderer.updateByValueAxis(this.block, model, data);
-    }
-
     public destroy(): void {
         this.interruptAnimations();
         this.removeEventListeners();
         this.block.getWrapper().remove();
+    }
+
+    public updateValueAxis(model: Model, data: any): void {
+        ChartRenderer.updateByValueAxis(this.block, model, data);
     }
 
     private renderCharts(model: Model, data: DataSource, id: number): void {

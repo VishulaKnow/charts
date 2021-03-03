@@ -411,15 +411,18 @@ export default class Listeners
         document.querySelector('.btn-random').addEventListener('click', function() {
             if(config.options.type === '2d' || config.options.type === 'polar') {
                 const max = parseInt(ListenersHelper.getInputValue('#max-random-value')) || 120;
-                const copy = ListenersHelper.getCopy(thisClass.data);
-                const newData = thisClass.getDataWithRandomValues(copy, max);
+                const dataCopy = ListenersHelper.getCopy(thisClass.data);
+                const newData = thisClass.getDataWithRandomValues(dataCopy, max);
                 if(config.options.type === '2d') {
                     config.options.axis.valueAxis.domain.start = -1;
                     config.options.axis.valueAxis.domain.end = max;
                 }
                 const model = getUpdatedModel(thisClass.config, newData, thisClass.designerConfig);
                 const preparedData = getPreparedData(model, newData, config);
-                thisClass.engine.updateFullBlock(model, preparedData);
+                if(config.options.type === '2d')
+                    thisClass.engine.updateValueAxis(model, preparedData);
+                else
+                    thisClass.engine.updateFullBlock(model, preparedData);
             }
         });
         document.querySelector('#max-random-value').addEventListener('keydown', function(e: any) {
@@ -433,7 +436,10 @@ export default class Listeners
                 }
                 const model = getUpdatedModel(thisClass.config, newData, thisClass.designerConfig);
                 const preparedData = getPreparedData(model, newData, config);
-                thisClass.engine.updateFullBlock(model, preparedData);
+                if(config.options.type === '2d')
+                    thisClass.engine.updateValueAxis(model, preparedData);
+                else
+                    thisClass.engine.updateFullBlock(model, preparedData);
             }
         });
     }
