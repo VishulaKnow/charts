@@ -1,7 +1,7 @@
-import { Config, TwoDimensionalValueField, TwoDimensionalOptions, TwoDimensionalChartType, TwoDimensionalChart, TwoDimensionalAxis, PolarOptions, PolarChartType, PolarChart, NumberDomain, IntervalOptions, IntervalChartType, IntervalChart, IntervalAxis, EmbeddedLabelType, ChartType, ChartOrientation, ChartNotation, ChartBlockCanvas, AxisPosition } from "./config/config";
+import { Config, Size, TwoDimensionalChartData, PolarChartData, Legend, DataOptions, AxisOptions, TwoDimensionalAdditionalElements, TwoDimensionalValueField, TwoDimensionalOptions, TwoDimensionalChartType, TwoDimensionalChart, TwoDimensionalAxis, PolarOptions, PolarChartType, PolarChart, NumberDomain, IntervalOptions, IntervalChartType, IntervalChart, IntervalAxis, EmbeddedLabelType, ChartType, ChartOrientation, ChartNotation, ChartBlockCanvas, AxisPosition } from "./config/config";
 import { DesignerConfig, Formatter, DonutOptionsCanvas, DataTypeOptions, DataType, ChartStyleConfig, BarOptionsCanvas, AxisLabelCanvas } from "./designer/designerConfig";
 import Engine from "./engine/engine";
-import { DataSource, Model, Size } from "./model/model";
+import { DataSource, Model } from "./model/model";
 import { assembleModel, getPreparedData } from "./model/modelOptions";
 
 class Chart {
@@ -37,7 +37,7 @@ class Chart {
         this.parentElement = parentElement;
         this.engine.render(this.model, getPreparedData(this.model, this.data, this.config), this.parentElement);
 
-        if(this.isResizable)
+        if (this.isResizable)
             this.registerResizeEvent();
     }
 
@@ -47,7 +47,7 @@ class Chart {
     public destroy(): void {
         this.engine.destroy();
 
-        if(this.isResizable)
+        if (this.isResizable)
             this.removeResizeEvent();
     }
 
@@ -76,31 +76,37 @@ class Chart {
     }
 
     private registerResizeEvent(): void {
-		window.addEventListener('resize', this.resizeHandler);
-	}
+        window.addEventListener('resize', this.resizeHandler);
+    }
 
-	private removeResizeEvent(): void {
-		window.removeEventListener('resize', this.resizeHandler);
-	}
+    private removeResizeEvent(): void {
+        window.removeEventListener('resize', this.resizeHandler);
+    }
 
-	private resizeListener() {
-		this.updateSize({
-			height: null,
-			width: this.parentElement.offsetWidth
-		});
-	}
+    private resizeListener() {
+        this.updateSize({
+            height: null,
+            width: this.parentElement.offsetWidth
+        });
+    }
 }
 
-export{
+export {
     Chart,
     Engine,
     Config,
+    Size,
+    Legend,
+    DataOptions,
+    TwoDimensionalChartData,
+    TwoDimensionalAdditionalElements,
     TwoDimensionalOptions,
     TwoDimensionalChartType,
     TwoDimensionalChart,
     TwoDimensionalAxis,
     TwoDimensionalValueField,
     PolarOptions,
+    PolarChartData,
     PolarChartType,
     PolarChart,
     NumberDomain,
@@ -121,5 +127,6 @@ export{
     DataType,
     ChartStyleConfig,
     BarOptionsCanvas,
+    AxisOptions,
     AxisLabelCanvas
 }

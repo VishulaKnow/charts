@@ -20,7 +20,7 @@ export interface ChartBlockCanvas {
     size: Size;
     class: string;
 }
-interface Size {
+export interface Size {
     width: number;
     height: number;
 }
@@ -33,11 +33,11 @@ interface Options {
     title: string;
 }
 
-interface Legend {
+export interface Legend {
     show: boolean;
 }
 
-interface DataOptions {
+export interface DataOptions {
     dataSource: string;
     keyField: Field;
 }
@@ -82,7 +82,7 @@ interface GridLineFlag {
     value: boolean;
 }
 
-interface TwoDimensionalAdditionalElements extends AdditionalElements {
+export interface TwoDimensionalAdditionalElements extends AdditionalElements {
     marks: MarksOptions;
 }
 
@@ -97,7 +97,7 @@ export interface TwoDimensionalAxis {
     valueAxis: NumberAxisOptions;
 }
 
-interface AxisOptions {
+export interface AxisOptions {
     position: AxisPosition;
     ticks: AxisTicks;
 }
@@ -128,7 +128,7 @@ interface DateAxisOptions extends AxisOptions {}
 
 
 //====================================================== Charts
-interface Chart {
+interface ChartSettings {
     tooltip: Tooltip;
 }
 
@@ -136,26 +136,26 @@ interface Tooltip {
     show: boolean;
 }
 
-export interface TwoDimensionalChart extends Chart {
+export interface TwoDimensionalChart extends ChartSettings {
     type: TwoDimensionalChartType;
     data: TwoDimensionalChartData;
     embeddedLabels: EmbeddedLabelType;
     isSegmented: boolean;
 }
 
-export interface PolarChart extends Chart {
+export interface PolarChart extends ChartSettings {
     type: PolarChartType;
     data: PolarChartData;
 }
 
-export interface IntervalChart extends Chart { 
+export interface IntervalChart extends ChartSettings { 
     type: IntervalChartType;
     data: IntervalChartData;
 }
 
 
 //====================================================== TwoDimensionalChart
-interface TwoDimensionalChartData {
+export interface TwoDimensionalChartData {
     valueFields: TwoDimensionalValueField[];
 }
 
@@ -165,7 +165,7 @@ export interface TwoDimensionalValueField extends Field {
 
 
 //====================================================== PolarChart
-interface PolarChartData {
+export interface PolarChartData {
     valueField: Field;
 }
 

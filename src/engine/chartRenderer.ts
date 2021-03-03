@@ -1,4 +1,4 @@
-import { BarChartSettings, BlockMargin, ChartSettings, DataSource, DonutChartSettings, IntervalChartModel, IntervalOptionsModel, Model, OptionsModelData, Orient, PolarChartModel, PolarOptionsModel, Size, TwoDimensionalChartModel, TwoDimensionalOptionsModel } from "../model/model";
+import { BarChartSettings, BlockMargin, ChartElementsSettings, DataSource, DonutChartSettings, IntervalChartModel, IntervalOptionsModel, Model, OptionsModelData, Orient, PolarChartModel, PolarOptionsModel, Size, TwoDimensionalChartModel, TwoDimensionalOptionsModel } from "../model/model";
 import { Area } from "./twoDimensionalNotation/area/area";
 import { Axis } from "./features/axis/axis";
 import { Bar } from "./twoDimensionalNotation/bar/bar";
@@ -130,7 +130,7 @@ export class ChartRenderer {
         });
     }
 
-    private static renderIntervalCharts(block: Block, charts: IntervalChartModel[], scales: Scales, data: DataSource, dataOptions: OptionsModelData, margin: BlockMargin, keyAxisOrient: Orient, chartSettings: ChartSettings): void {
+    private static renderIntervalCharts(block: Block, charts: IntervalChartModel[], scales: Scales, data: DataSource, dataOptions: OptionsModelData, margin: BlockMargin, keyAxisOrient: Orient, chartSettings: ChartElementsSettings): void {
         block.renderChartBlock();
         charts.forEach(chart => {
             if (chart.type === 'gantt')

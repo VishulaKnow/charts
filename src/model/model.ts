@@ -27,7 +27,7 @@ export interface Model {
     options: TwoDimensionalOptionsModel | PolarOptionsModel | IntervalOptionsModel;
     otherComponents: OtherComponents;
     dataSettings: DataSettings;
-    chartSettings: ChartSettings;
+    chartSettings: ChartElementsSettings;
 }
 
 
@@ -226,8 +226,8 @@ export interface DataFormat {
 }
 
 
-//====================================================== ChartSettings
-export interface ChartSettings {
+//====================================================== ChartElementsSettings
+export interface ChartElementsSettings {
     bar: BarChartSettings;
     donut: DonutChartSettings;
 }

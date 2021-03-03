@@ -1,5 +1,5 @@
 import { Config } from '../config/config';
-import { Model, BlockCanvas, ChartBlock, TwoDimensionalOptionsModel, PolarOptionsModel, BlockMargin, DataSettings, ChartSettings, DataFormat, DataScope, DataSource, IntervalOptionsModel } from './model';
+import { Model, BlockCanvas, ChartBlock, TwoDimensionalOptionsModel, PolarOptionsModel, BlockMargin, DataSettings, ChartElementsSettings, DataFormat, DataScope, DataSource, IntervalOptionsModel } from './model';
 import { MarginModel } from './marginModel';
 import { TwoDimensionalModel } from './twoDimensionalModel';
 import { PolarModel } from './polarModel';
@@ -54,9 +54,9 @@ function getDataSettings(dataScope: DataScope, designerConfig: DesignerConfig): 
     }
 }
 
-function getChartSettings(barSettings: BarOptionsCanvas, donutSettings: DonutOptionsCanvas): ChartSettings {
+function getChartSettings(barSettings: BarOptionsCanvas, donutSettings: DonutOptionsCanvas): ChartElementsSettings {
     return {
-        bar: {...barSettings},
+        bar: { ...barSettings },
         donut: {
             padAngle: donutSettings.padAngle,
             maxThickness: donutSettings.maxThickness,
@@ -121,7 +121,7 @@ export function assembleModel(config: Config, data: DataSource, designerConfig: 
 export function getPreparedData(model: Model, data: DataSource, config: Config): DataSource {
     if(!model || Object.keys(model).length === 0 || !data || Object.keys(data).length === 0)
         return null;
-
+        
     const preparedData = DataManagerModel.getPreparedData(data, model.dataSettings.scope.allowableKeys, config);
     return preparedData;
 }
