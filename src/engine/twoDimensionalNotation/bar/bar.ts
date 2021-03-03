@@ -28,7 +28,10 @@ export class Bar {
             const stackedData = stack().keys(keys)(newData);
 
             const bars = block.getChartBlock()
-                .selectAll<SVGRectElement, DataRow>(`.${this.barItemClass}${Helper.getCssClassesLine(chart.cssClasses)}`);
+                .selectAll(`g.bar-segment-group${Helper.getCssClassesLine(chart.cssClasses)}`)
+                .data(stackedData)
+                .selectAll<SVGRectElement, DataRow>(`.${this.barItemClass}${Helper.getCssClassesLine(chart.cssClasses)}`)
+                .data(d => d);
 
             this.fillStackedBarAttrsWithTransition(bars,
                 keyAxisOrient,
@@ -101,7 +104,7 @@ export class Bar {
                 .data(stackedData)
                 .enter()
                 .append<SVGGElement>('g')
-                .attr('class', 'bar-segment-group')
+                .attr('class', 'bar-segment-group');
 
         const bars = groups
             .selectAll(`rect${Helper.getCssClassesLine(chart.cssClasses)}`)
@@ -182,7 +185,10 @@ export class Bar {
     }
 
     private static fillStackedBarAttrsWithTransition(bars: Selection<SVGRectElement, DataRow, BaseType, unknown>, axisOrient: string, scaleValue: AxisScale<any>, margin: BlockMargin, blockSize: Size, transitionDuration: number): void {
-        const barsTran = bars.transition().duration(transitionDuration);
+        const barsTran = bars
+            .interrupt()
+            .transition()
+            .duration(transitionDuration);
 
         if (axisOrient === 'top') {
             barsTran
