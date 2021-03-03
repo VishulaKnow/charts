@@ -4,7 +4,7 @@ const configCars: Config = {
     canvas: {
         class: 'outline',
         size: {
-            width: 960,
+            width: 860,
             height: 510
         }
     },
@@ -53,7 +53,6 @@ const configCars: Config = {
         },
         charts: [
             {
-                title: 'Рост стоимости',
                 isSegmented: false,
                 type: 'bar',
                 data: {
@@ -87,7 +86,6 @@ const configCars: Config = {
     //     },
     //     charts: [
     //         {
-    //             title: 'Рост стоимости',
     //             type: 'donut',
     //             data: {
     //                 valueField: {
@@ -156,7 +154,6 @@ const configDemo: Config = {
         },
         charts: [
             {
-                title: 'Рост стоимости',
                 isSegmented: false,
                 type: 'bar',
                 data: {
@@ -179,7 +176,6 @@ const configDemo: Config = {
                 embeddedLabels: 'value'
             },
             {
-                title: 'Рост стоимости',
                 isSegmented: false,
                 type: 'line',
                 data: {

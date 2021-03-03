@@ -31,14 +31,14 @@ export class ChartStyleModel
         const valueFieldsAmount = chartsValueFieldAmount[chartIndex];
 
         return {
-            elementColors: this.getColors(this.palette, chartStyleConfig.step, valueFieldsAmount, startIndex, chartStyleConfig.baseColor, isSegmented),
+            elementColors: this.getColors(this.palette, chartStyleConfig.step, valueFieldsAmount, startIndex, chartStyleConfig.baseColor),
             opacity: this.getChartOpacity(chartsAmount, chartType, chartsValueFieldAmount[chartIndex], isSegmented)
         }
     }
     
     public static getChartStyle(elementsAmount: number, chartStyleConfig: ChartStyleConfig): ChartStyle {
         return {
-            elementColors: this.getColors(this.palette, chartStyleConfig.step, elementsAmount, 0, chartStyleConfig.baseColor, false),
+            elementColors: this.getColors(this.palette, chartStyleConfig.step, elementsAmount, 0, chartStyleConfig.baseColor),
             opacity: 1
         }
     }
@@ -49,7 +49,10 @@ export class ChartStyleModel
         return 1;
     }
 
-    private static getColors(palette: ChartColors[], step: number, valueFieldsAmount: number, startIndex: number, baseColorName: string, isSegmented: boolean): Color[] {   
+    private static getColors(palette: ChartColors[], step: number, elementsAmount: number, startIndex: number, baseColorName: string): Color[] {   
+        if(elementsAmount <= 0)
+            return [];
+        
         const colorsArray: string[] = [];
         const baseColorIndex = this.getColorIndex(palette, baseColorName);
         let indexOfDesired = 0;
@@ -57,14 +60,9 @@ export class ChartStyleModel
         do {
             indexOfDesired = baseColorIndex + startIndex + colorsArray.length * step;
             indexOfDesired = indexOfDesired % palette.length;
-            // if(isSegmented) {
-            //     colorsArray.push(...this.getColorRow(palette[indexOfDesired].colorPalette, valueFieldsAmount));
-            // }
-            // else {
-            //     colorsArray.push(this.getBaseColor(palette[indexOfDesired].colorPalette));
-            // }
+
             colorsArray.push(this.getBaseColor(palette[indexOfDesired].colorPalette));
-        } while (colorsArray.length !== valueFieldsAmount);
+        } while (colorsArray.length !== elementsAmount);
 
         return colorsArray.map(elementColor => color(elementColor));
      }  

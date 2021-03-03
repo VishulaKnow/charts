@@ -129,7 +129,6 @@ interface DateAxisOptions extends AxisOptions {}
 
 //====================================================== Charts
 interface Chart {
-    title: string;
     tooltip: Tooltip;
 }
 

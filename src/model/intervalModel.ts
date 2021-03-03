@@ -86,7 +86,6 @@ export class IntervalModel {
         charts.forEach((chart, index) => {
             chartsModel.push({
                 type: chart.type,
-                title: chart.title,
                 data: { ...chart.data },
                 tooltip: chart.tooltip,
                 cssClasses: ChartStyleModel.getCssClasses(index),

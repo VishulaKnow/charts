@@ -172,7 +172,6 @@ export default class Listeners
                     {
                         data: this.getDataConfig(notationType),
                         isSegmented: false,
-                        title: this.config.options.charts[0].title,
                         tooltip: this.getTooltipConfig(),
                         type: ListenersHelper.getInputValue('#chart-2d-type') === 'barLine' ? 'bar' : ListenersHelper.getInputValue('#chart-2d-type') as 'line' | 'bar' | 'area',
                         embeddedLabels: 'none'
@@ -224,7 +223,6 @@ export default class Listeners
                 charts: [
                     {
                         data: this.getDataConfig(notationType),
-                        title: this.config.options.charts[0].title,
                         tooltip: this.getTooltipConfig(),
                         type: 'donut'
                     }
@@ -247,7 +245,6 @@ export default class Listeners
                 charts: [
                     {
                         data: this.getDataConfig(notationType),
-                        title: this.config.options.charts[0].title,
                         tooltip: this.getTooltipConfig(),
                         type: 'gantt'
                     }
@@ -414,15 +411,18 @@ export default class Listeners
         document.querySelector('.btn-random').addEventListener('click', function() {
             if(config.options.type === '2d' || config.options.type === 'polar') {
                 const max = parseInt(ListenersHelper.getInputValue('#max-random-value')) || 120;
-                const copy = ListenersHelper.getCopy(thisClass.data);
-                const newData = thisClass.getDataWithRandomValues(copy, max);
+                const dataCopy = ListenersHelper.getCopy(thisClass.data);
+                const newData = thisClass.getDataWithRandomValues(dataCopy, max);
                 if(config.options.type === '2d') {
                     config.options.axis.valueAxis.domain.start = -1;
                     config.options.axis.valueAxis.domain.end = max;
                 }
                 const model = getUpdatedModel(thisClass.config, newData, thisClass.designerConfig);
                 const preparedData = getPreparedData(model, newData, config);
-                thisClass.engine.updateFullBlock(model, preparedData);
+                if(config.options.type === '2d')
+                    thisClass.engine.updateValues(model, preparedData);
+                else
+                    thisClass.engine.updateFullBlock(model, preparedData);
             }
         });
         document.querySelector('#max-random-value').addEventListener('keydown', function(e: any) {
@@ -436,7 +436,10 @@ export default class Listeners
                 }
                 const model = getUpdatedModel(thisClass.config, newData, thisClass.designerConfig);
                 const preparedData = getPreparedData(model, newData, config);
-                thisClass.engine.updateFullBlock(model, preparedData);
+                if(config.options.type === '2d')
+                    thisClass.engine.updateValues(model, preparedData);
+                else
+                    thisClass.engine.updateFullBlock(model, preparedData);
             }
         });
     }
@@ -462,7 +465,7 @@ export default class Listeners
                 const end = ListenersHelper.getInputValue('#domain-end');
                 config.options.axis.valueAxis.domain.start = parseInt(start) || -1;
                 config.options.axis.valueAxis.domain.end = parseInt(end) || -1;
-                thisClass.engine.updateValueAxis(getUpdatedModel(thisClass.config, thisClass.data, thisClass.designerConfig), thisClass.data);
+                thisClass.engine.updateValues(getUpdatedModel(thisClass.config, thisClass.data, thisClass.designerConfig), thisClass.data);
             }
         });
         document.querySelector('#domain-start').addEventListener('keydown', function(e: any) {
@@ -472,7 +475,7 @@ export default class Listeners
                     const end = ListenersHelper.getInputValue('#domain-end');
                     config.options.axis.valueAxis.domain.start = parseInt(start) || -1;
                     config.options.axis.valueAxis.domain.end = parseInt(end) || -1;
-                    thisClass.engine.updateValueAxis(getUpdatedModel(thisClass.config, thisClass.data, thisClass.designerConfig), thisClass.data);
+                    thisClass.engine.updateValues(getUpdatedModel(thisClass.config, thisClass.data, thisClass.designerConfig), thisClass.data);
                 }
             }
         });
@@ -483,7 +486,7 @@ export default class Listeners
                     const end = ListenersHelper.getInputValue('#domain-end');
                     config.options.axis.valueAxis.domain.start = parseInt(start) || -1;
                     config.options.axis.valueAxis.domain.end = parseInt(end) || -1;
-                    thisClass.engine.updateValueAxis(getUpdatedModel(thisClass.config, thisClass.data, thisClass.designerConfig), thisClass.data);
+                    thisClass.engine.updateValues(getUpdatedModel(thisClass.config, thisClass.data, thisClass.designerConfig), thisClass.data);
                 }
             }
         });

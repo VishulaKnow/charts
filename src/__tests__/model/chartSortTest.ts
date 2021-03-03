@@ -8,7 +8,6 @@ describe('check chart sorting in order: [area, bar, line]', () => {
             {
                 type: 'line',
                 isSegmented: true,
-                title: 'Рост стоимости,',
                 data: {
                     valueFields: [
                         {
@@ -42,7 +41,6 @@ describe('check chart sorting in order: [area, bar, line]', () => {
             {
                 type: 'bar',
                 isSegmented: true,
-                title: 'Рост стоимости',
                 data: {
                     valueFields: [
                         {
@@ -83,7 +81,6 @@ describe('check chart sorting in order: [area, bar, line]', () => {
             {
                 type: 'area',
                 isSegmented: true,
-                title: 'Рост стоимости,',
                 data: {
                     valueFields: [
                         {
@@ -117,7 +114,6 @@ describe('check chart sorting in order: [area, bar, line]', () => {
             {
                 type: 'line',
                 isSegmented: true,
-                title: 'Рост стоимости',
                 data: {
                     valueFields: [
                         {
@@ -151,7 +147,6 @@ describe('check chart sorting in order: [area, bar, line]', () => {
             {
                 type: 'bar',
                 isSegmented: true,
-                title: 'Рост стоимости',
                 data: {
                     valueFields: [
                         {
@@ -185,7 +180,6 @@ describe('check chart sorting in order: [area, bar, line]', () => {
             {
                 type: 'area',
                 isSegmented: true,
-                title: 'Рост стоимости',
                 data: {
                     valueFields: [
                         {

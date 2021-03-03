@@ -130,6 +130,7 @@ export class Axis {
         const spans = axisElement.selectAll('tspan');
         axisTextBlocks.attr('text-anchor', anchor);
         spans.attr('text-anchor', anchor);
+        
         if (changeCoordinate) {
             axisTextBlocks.attr('x', -(maxLabelSize + AXIS_VERTICAL_LABEL_PADDING));
             spans.attr('x', -(maxLabelSize + AXIS_VERTICAL_LABEL_PADDING));

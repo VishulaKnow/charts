@@ -56,7 +56,7 @@ export class Legend
         } else if(options.type === 'polar') {
             return data[options.data.dataSource].map((record: DataRow) => record[options.data.keyField.name]);
         } else if(options.type === 'interval') {
-            return options.charts.map(chart => chart.title);
+            return options.charts.map(chart => chart.data.valueField1.name);
         }
     }
 

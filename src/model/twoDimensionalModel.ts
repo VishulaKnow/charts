@@ -100,7 +100,6 @@ export class TwoDimensionalModel
             chartsModel.push({
                 type: chart.type,
                 isSegmented: chart.isSegmented,
-                title: chart.title,
                 data: { ...chart.data },
                 tooltip: chart.tooltip,
                 cssClasses: ChartStyleModel.getCssClasses(index),

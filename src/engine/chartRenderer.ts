@@ -42,16 +42,13 @@ export class ChartRenderer {
         Title.render(block, 
             options.title,
             model.otherComponents.titleBlock,
-            model.blockCanvas.size
-        );
+            model.blockCanvas.size);
 
         Legend.render(block,
             data,
             options,
             model.otherComponents.legendBlock,
             model.blockCanvas.size);
-
-
 
         Tooltip.renderTooltips(block, model, data, chartId, scales);
         if (model.dataSettings.scope.hidedRecordsAmount !== 0)
@@ -73,8 +70,8 @@ export class ChartRenderer {
         Title.render(block, 
             options.title,
             model.otherComponents.titleBlock,
-            model.blockCanvas.size
-            );
+            model.blockCanvas.size);
+
         Legend.render(block, data, options, model.otherComponents.legendBlock, model.blockCanvas.size);
 
         Tooltip.renderTooltips(block, model, data, chartId);
@@ -83,7 +80,6 @@ export class ChartRenderer {
     }
 
     private static render2DCharts(block: Block, charts: TwoDimensionalChartModel[], scales: Scales, data: DataSource, dataOptions: OptionsModelData, margin: BlockMargin, keyAxisOrient: Orient, barSettings: BarChartSettings, blockSize: Size, markFlag: boolean) {
-        
         block.renderClipPath(margin, blockSize);
         block.renderChartBlock();
         charts.forEach((chart: TwoDimensionalChartModel) => {
@@ -183,6 +179,7 @@ export class ChartRenderer {
         charts.forEach((chart: TwoDimensionalChartModel) => {
             if (chart.type === 'bar') {
                 Bar.updateBarChartByValueAxis(block,
+                    data[dataOptions.dataSource],
                     scales,
                     margin,
                     keyAxisOrient,
