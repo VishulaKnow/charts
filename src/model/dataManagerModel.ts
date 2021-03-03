@@ -19,7 +19,7 @@ export class DataManagerModel
         if(config.options.type === '2d' || config.options.type === 'interval') {
             return this.getDataScopeFor2D(config.options, config.canvas.size, margin, data, designerConfig);
         } else if(config.options.type === 'polar') {
-            return this.getDataScopeForPolar(config.options, config.canvas.size, margin, data, designerConfig, legendBlock);
+            return this.getDataScopeForPolar(config.options, config.canvas.size, margin, data, legendBlock);
         }
     }
 
@@ -53,7 +53,7 @@ export class DataManagerModel
         }
     }
 
-    private static getDataScopeForPolar(configOptions: PolarOptions, blockSize: Size, margin: BlockMargin, data: DataSource, designerConfig: DesignerConfig, legendBlock: LegendBlockModel): DataScope {
+    private static getDataScopeForPolar(configOptions: PolarOptions, blockSize: Size, margin: BlockMargin, data: DataSource, legendBlock: LegendBlockModel): DataScope {
         const dataset = data[configOptions.data.dataSource];
         const keyFieldName = configOptions.data.keyField.name;
         const keys = dataset.map(dataRow => dataRow[keyFieldName]);
