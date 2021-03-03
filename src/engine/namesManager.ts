@@ -1,4 +1,4 @@
-export class Namer {
+export class NamesManager {
     private static prefix = 'charts-';
 
     public static getClassName(classOfElem: string): string {

@@ -11,7 +11,7 @@ import { Scales } from '../scale/scale';
 import { AxisScale } from 'd3-axis';
 import { easeLinear } from 'd3-ease';
 import { interrupt } from 'd3-transition';
-import { Namer } from '../../namer';
+import { NamesManager } from '../../namesManager';
 
 export class Tooltip {
     public static tipBoxClass = 'tipbox';
@@ -64,7 +64,7 @@ export class Tooltip {
 
         tooltipContent.classed('tooltip-content-2d', true);
 
-        const filterId = Namer.getId('shadow', chartId);
+        const filterId = NamesManager.getId('shadow', chartId);
         this.renderShadowFilter(block, filterId);
 
         let currentKey: string = null;
@@ -107,7 +107,7 @@ export class Tooltip {
         const tooltipArrow = this.renderTooltipArrow(tooltipBlock);
         const thisClass = this;
 
-        const filterId = Namer.getId('shadow', chartId);
+        const filterId = NamesManager.getId('shadow', chartId);
         this.renderShadowFilter(block, filterId);
 
         let clone: Selection<BaseType, unknown, BaseType, unknown>;
