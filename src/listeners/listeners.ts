@@ -616,20 +616,20 @@ const engine = new Engine(2);
 engine.render(model, getPreparedData(model, data, config), document.querySelector('.main-wrapper'));
 new Listeners(engine, config, designerConfig, data);
 
-// const config3 = require('../config/configTest2D.json');
-// const model3 = assembleModel(config3, data, designerConfig);
-// const engine3 = new Engine(3);
-// engine3.render(model3, getPreparedData(model3, data, config3), document.querySelector('.main-wrapper2'));
+const config3 = require('../config/configTest2D.json');
+const model3 = assembleModel(config3, data, designerConfig);
+const engine3 = new Engine(3);
+engine3.render(model3, getPreparedData(model3, data, config3), document.querySelector('.main-wrapper2'));
 
-// const config2 = require('../config/configTestPolar.json');
-// const model2 = assembleModel(config2, data, designerConfig);
-// const engine2 = new Engine(4);
-// engine2.render(model2, getPreparedData(model2, data, config2), document.querySelector('.main-wrapper2'));
+const config2 = require('../config/configTestPolar.json');
+const model2 = assembleModel(config2, data, designerConfig);
+const engine2 = new Engine(4);
+engine2.render(model2, getPreparedData(model2, data, config2), document.querySelector('.main-wrapper2'));
 
-setInterval(() => {
-    const newData = ListenersHelper.getCopy(data);
-    newData["dataSet"][ListenersHelper.randInt(0, 8)]['price'] = ListenersHelper.randInt(0, 100);
-    newData["dataSet"][ListenersHelper.randInt(0, 8)]['count'] = ListenersHelper.randInt(0, 100);
-    const newModel = getUpdatedModel(config, newData, designerConfig);
-    engine.updateValues(newModel, getPreparedData(newModel, newData, config));
-}, 2000);
+// setInterval(() => {
+//     const newData = ListenersHelper.getCopy(data);
+//     newData["dataSet"][ListenersHelper.randInt(0, 8)]['price'] = ListenersHelper.randInt(0, 100);
+//     newData["dataSet"][ListenersHelper.randInt(0, 8)]['count'] = ListenersHelper.randInt(0, 100);
+//     const newModel = getUpdatedModel(config, newData, designerConfig);
+//     engine.updateValues(newModel, getPreparedData(newModel, newData, config));
+// }, 2000);
