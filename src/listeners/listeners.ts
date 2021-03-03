@@ -427,6 +427,7 @@ export default class Listeners {
                 const newData = thisClass.getDataWithRandomValues(copy, max);
                 const model = getUpdatedModel(thisClass.config, newData, thisClass.designerConfig);
                 const preparedData = getPreparedData(model, newData, config);
+                
                 if (config.options.type === '2d')
                     thisClass.engine.updateValues(model, newData);
                 else

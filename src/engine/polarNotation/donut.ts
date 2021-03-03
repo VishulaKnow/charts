@@ -21,8 +21,8 @@ export class Donut {
         const thickness = DonutHelper.getThickness(donutSettings, blockSize, margin);
         const innerRadius = DonutHelper.getInnerRadius(outerRadius, thickness);
 
-        const arc = DonutHelper.getArcGenerator(outerRadius, innerRadius);
-        const pie = DonutHelper.getPieGenerator(chart.data.valueField.name, donutSettings.padAngle);
+        const arcGenerator = DonutHelper.getArcGenerator(outerRadius, innerRadius);
+        const pieGenerator = DonutHelper.getPieGenerator(chart.data.valueField.name, donutSettings.padAngle);
 
         const translate = DonutHelper.getTranslate(margin, blockSize);
 
@@ -35,19 +35,24 @@ export class Donut {
 
         const items = donutBlock
             .selectAll(`.${this.arcItemClass}`)
-            .data(pie(data))
+            .data(pieGenerator(data))
             .enter()
             .append('g')
             .attr('class', this.arcItemClass);
 
         const arcs = items
             .append('path')
-            .attr('d', arc);
+            .attr('d', arcGenerator);
 
         Helper.setCssClasses(arcs, chart.cssClasses);
         this.setElementsColor(items, chart.style.elementColors);
 
         Aggregator.render(block, data, chart.data.valueField, innerRadius, translate, thickness);
+    }
+
+    public static updateValues(chart: PolarChartModel, donutSettings: DonutChartSettings): void {
+        const pieGenerator = DonutHelper.getPieGenerator(chart.data.valueField.name, donutSettings.padAngle);
+
     }
 
     public static getAllArcGroups(block: Block): Selection<SVGGElement, PieArcDatum<DataRow>, SVGGElement, unknown> {
