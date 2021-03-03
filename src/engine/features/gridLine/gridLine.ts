@@ -1,3 +1,4 @@
+import { select } from "d3-selection";
 import { AxisModelOptions, BlockMargin, GridLineFlag, ScaleKeyModel, Size } from "../../../model/model";
 import { Block } from "../../block/block";
 
@@ -47,6 +48,7 @@ export class GridLine
             .attr('x2', lineAttributes.x2)
             .attr('y2', lineAttributes.y2)
             // .attr('shape-rendering', 'crispEdges');
+
     }
 
     private static getLineAttributes(axis: AxisModelOptions, lineLength: number): GridLineAttributes {
@@ -67,7 +69,12 @@ export class GridLine
 
     private static clear(block: Block, keyAxisClass: string, valueAxisClass: string): void {
         block.getSvg()
-            .select(`.${keyAxisClass}, .${valueAxisClass}`)
+            .selectAll(`.${keyAxisClass} `)
+            .selectAll('g.tick')
+            .selectAll(`.${this.gridLineClass}`)
+            .remove();
+        block.getSvg()
+            .selectAll(`.${valueAxisClass}`)
             .selectAll('g.tick')
             .selectAll(`.${this.gridLineClass}`)
             .remove();
