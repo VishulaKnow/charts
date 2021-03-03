@@ -21,11 +21,15 @@ export class Area {
 
     public static updateAreaChartByValueAxis(block: Block, scales: Scales, data: DataRow[], keyField: Field, margin: BlockMargin, chart: TwoDimensionalChartModel, keyAxisOrient: Orient, blockSize: Size): void {
         if (chart.isSegmented) {
+            const keys = chart.data.valueFields.map(field => field.name);
+            const stackedData = stack().keys(keys)(data);
+
             const areaGenerator = AreaHelper.getSegmentedAreaGenerator(keyAxisOrient, scales, margin, keyField.name);
             const areas = block.getChartBlock()
                 .selectAll<SVGRectElement, DataRow[]>(`path.${this.areaChartClass}${Helper.getCssClassesLine(chart.cssClasses)}`);
 
             areas
+                .data(stackedData)
                 .transition()
                 .duration(1000)
                 .attr('d', d => areaGenerator(d));
@@ -70,14 +74,14 @@ export class Area {
     private static renderSegmented(block: Block, scales: Scales, data: DataRow[], keyField: Field, margin: BlockMargin, keyAxisOrient: Orient, chart: TwoDimensionalChartModel, markFlag: boolean): void {
         const keys = chart.data.valueFields.map(field => field.name);
         const stackedData = stack().keys(keys)(data);
-        const area = AreaHelper.getSegmentedAreaGenerator(keyAxisOrient, scales, margin, keyField.name);
+        const areaGenerator = AreaHelper.getSegmentedAreaGenerator(keyAxisOrient, scales, margin, keyField.name);
 
         const areas = block.getChartBlock()
             .selectAll(`.${this.areaChartClass}${Helper.getCssClassesLine(chart.cssClasses)}`)
             .data(stackedData)
             .enter()
             .append('path')
-            .attr('d', d => area(d))
+            .attr('d', d => areaGenerator(d))
             .attr('class', this.areaChartClass)
             // .style('clip-path', `url(${block.getClipPathId()})`)
             .style('pointer-events', 'none');

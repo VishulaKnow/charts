@@ -20,11 +20,16 @@ export class Line {
 
     public static updateLineChartByValueAxis(block: Block, scales: Scales, data: DataRow[], keyField: Field, margin: BlockMargin, keyAxisOrient: Orient, chart: TwoDimensionalChartModel): void {
         if (chart.isSegmented) {
+            const keys = chart.data.valueFields.map(field => field.name);
+            const stackedData = stack().keys(keys)(data);
+
             const lineGenerator = LineHelper.getSegmentedLineGenerator(keyAxisOrient, scales, keyField.name, margin);
+
             const lines = block.getChartBlock()
                 .selectAll<SVGPathElement, DataRow[]>(`path.${this.lineChartClass}${Helper.getCssClassesLine(chart.cssClasses)}`);
 
             lines
+                .data(stackedData)
                 .transition()
                 .duration(1000)
                 .attr('d', d => lineGenerator(d));
@@ -70,6 +75,7 @@ export class Line {
     private static renderSegmented(block: Block, scales: Scales, data: DataRow[], keyField: Field, margin: BlockMargin, keyAxisOrient: Orient, chart: TwoDimensionalChartModel, markFlag: boolean): void {
         const keys = chart.data.valueFields.map(field => field.name);
         const stackedData = stack().keys(keys)(data);
+
         const lineGenerator = LineHelper.getSegmentedLineGenerator(keyAxisOrient, scales, keyField.name, margin);
 
         const lines = block.getChartBlock()
