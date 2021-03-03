@@ -420,7 +420,7 @@ export default class Listeners
                 const model = getUpdatedModel(thisClass.config, newData, thisClass.designerConfig);
                 const preparedData = getPreparedData(model, newData, config);
                 if(config.options.type === '2d')
-                    thisClass.engine.updateValueAxis(model, preparedData);
+                    thisClass.engine.updateValues(model, preparedData);
                 else
                     thisClass.engine.updateFullBlock(model, preparedData);
             }
@@ -437,7 +437,7 @@ export default class Listeners
                 const model = getUpdatedModel(thisClass.config, newData, thisClass.designerConfig);
                 const preparedData = getPreparedData(model, newData, config);
                 if(config.options.type === '2d')
-                    thisClass.engine.updateValueAxis(model, preparedData);
+                    thisClass.engine.updateValues(model, preparedData);
                 else
                     thisClass.engine.updateFullBlock(model, preparedData);
             }
@@ -465,7 +465,7 @@ export default class Listeners
                 const end = ListenersHelper.getInputValue('#domain-end');
                 config.options.axis.valueAxis.domain.start = parseInt(start) || -1;
                 config.options.axis.valueAxis.domain.end = parseInt(end) || -1;
-                thisClass.engine.updateValueAxis(getUpdatedModel(thisClass.config, thisClass.data, thisClass.designerConfig), thisClass.data);
+                thisClass.engine.updateValues(getUpdatedModel(thisClass.config, thisClass.data, thisClass.designerConfig), thisClass.data);
             }
         });
         document.querySelector('#domain-start').addEventListener('keydown', function(e: any) {
@@ -475,7 +475,7 @@ export default class Listeners
                     const end = ListenersHelper.getInputValue('#domain-end');
                     config.options.axis.valueAxis.domain.start = parseInt(start) || -1;
                     config.options.axis.valueAxis.domain.end = parseInt(end) || -1;
-                    thisClass.engine.updateValueAxis(getUpdatedModel(thisClass.config, thisClass.data, thisClass.designerConfig), thisClass.data);
+                    thisClass.engine.updateValues(getUpdatedModel(thisClass.config, thisClass.data, thisClass.designerConfig), thisClass.data);
                 }
             }
         });
@@ -486,7 +486,7 @@ export default class Listeners
                     const end = ListenersHelper.getInputValue('#domain-end');
                     config.options.axis.valueAxis.domain.start = parseInt(start) || -1;
                     config.options.axis.valueAxis.domain.end = parseInt(end) || -1;
-                    thisClass.engine.updateValueAxis(getUpdatedModel(thisClass.config, thisClass.data, thisClass.designerConfig), thisClass.data);
+                    thisClass.engine.updateValues(getUpdatedModel(thisClass.config, thisClass.data, thisClass.designerConfig), thisClass.data);
                 }
             }
         });

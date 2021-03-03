@@ -43,7 +43,7 @@ export default class Engine {
         this.block.getWrapper().remove();
     }
 
-    public updateValueAxis(model: Model, data: any): void {
+    public updateValues(model: Model, data: any): void {
         ChartRenderer.updateByValueAxis(this.block, model, data);
     }
 
