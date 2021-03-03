@@ -85,7 +85,7 @@ export class Helper {
      * @param isBigger Если параметр установлен true, лимитр возвращается, если он меньше значения, в противном случае - если больше
      */
     public static getValueWithLimiter<T>(value: T, limiter: T, isBigger: boolean): T {
-        if(isBigger)
+        if (isBigger)
             return value > limiter ? limiter : value;
         return value < limiter ? limiter : value;
     }
@@ -95,7 +95,7 @@ export class Helper {
     }
 
     public static getChartElements(block: Block, chart: TwoDimensionalChartModel): Selection<BaseType, DataRow, BaseType, unknown> {
-        if(chart.type === 'line' || chart.type === 'area')
+        if (chart.type === 'line' || chart.type === 'area')
             return MarkDot.getMarkDotForChart(block, chart.cssClasses);
         else
             return Bar.getAllBarItems(block, chart.cssClasses);

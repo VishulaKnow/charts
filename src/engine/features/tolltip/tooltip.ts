@@ -225,7 +225,7 @@ export class Tooltip {
     }
 
     private static renderTooltipContentBlock(tooltipBlock: Selection<BaseType, unknown, HTMLElement, any>): Selection<HTMLDivElement, unknown, HTMLElement, any> {
-        let tooltipContentBlock = tooltipBlock.select<HTMLDivElement>(`div.${this.tooltipContentClass}`);
+        let tooltipContentBlock = tooltipBlock.select<HTMLDivElement>(`.${this.tooltipContentClass}`);
 
         if (tooltipContentBlock.empty())
             tooltipContentBlock = tooltipBlock.append('div')
