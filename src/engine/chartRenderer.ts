@@ -14,6 +14,7 @@ import { Gantt } from "./intervalNotation/gantt";
 import { BarHelper } from "./twoDimensionalNotation/bar/barHelper";
 import { Title } from "./features/title/title";
 import Engine from "./engine";
+import { Aggregator } from "./polarNotation/aggregator";
 
 export class ChartRenderer {
     public static render2D(engine: Engine, model: Model): void {
@@ -55,28 +56,28 @@ export class ChartRenderer {
             RecordOverflowAlert.render(engine.block, model.dataSettings.scope.hidedRecordsAmount, 'top', options.orient);
     }
 
-    public static renderPolar(block: Block, model: Model, data: DataSource, chartId: number) {
+    public static renderPolar(engine: Engine, model: Model) {
         const options = <PolarOptionsModel>model.options;
 
-        block.renderSvg(model.blockCanvas.size);
+        engine.block.renderSvg(model.blockCanvas.size);
 
-        this.renderPolarCharts(block, options.charts,
-            data,
+        this.renderPolarCharts(engine.block, options.charts,
+            engine.data,
             options.data.dataSource,
             model.chartBlock.margin,
             model.blockCanvas.size,
             model.chartSettings.donut);
 
-        Title.render(block, 
+        Title.render(engine.block, 
             options.title,
             model.otherComponents.titleBlock,
             model.blockCanvas.size);
 
-        Legend.render(block, data, options, model.otherComponents.legendBlock, model.blockCanvas.size);
+        Legend.render(engine.block, engine.data, options, model.otherComponents.legendBlock, model.blockCanvas.size);
 
-        Tooltip.render(block, model, data, chartId);
+        Tooltip.render(engine.block, model, engine.data, engine.chartId);
         if (model.dataSettings.scope.hidedRecordsAmount !== 0 && model.options.legend.position !== 'off')
-            RecordOverflowAlert.render(block, model.dataSettings.scope.hidedRecordsAmount, model.options.legend.position);
+            RecordOverflowAlert.render(engine.block, model.dataSettings.scope.hidedRecordsAmount, model.options.legend.position);
     }
 
     public static renderInterval(block: Block, model: Model, data: DataSource, chartId: number): void {
@@ -209,6 +210,8 @@ export class ChartRenderer {
     public static updatePolarValues(block: Block, model: Model, data: DataSource): void {
         const options = <PolarOptionsModel>model.options;
         Donut.updateValues(block, data[options.data.dataSource], model.chartBlock.margin, options.charts[0], model.blockCanvas.size, model.chartSettings.donut);
+
+        Aggregator.update(block, data[options.data.dataSource], options.charts[0].data.valueField);
     }
 
     private static updateChartsByValueAxis(block: Block, charts: TwoDimensionalChartModel[], scales: Scales, data: DataSource, dataOptions: OptionsModelData, margin: BlockMargin, keyAxisOrient: Orient, blockSize: Size): void {

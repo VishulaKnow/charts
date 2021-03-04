@@ -61,7 +61,7 @@ export class Donut {
 
         const arcs = this.getAllArcGroups(block);
         let path = arcs.select('path');
-        path = path.data(pieGenerator);
+        path = path.data(pieGenerator(data));
         path.transition()
             .duration(1000)
             .attrTween('d', function(d) {

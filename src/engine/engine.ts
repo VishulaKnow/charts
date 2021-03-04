@@ -60,7 +60,7 @@ export default class Engine {
         if (model.options.type === '2d')
             ChartRenderer.render2D(this, model);
         else if (model.options.type === 'polar')
-            ChartRenderer.renderPolar(this.block, model, data, id);
+            ChartRenderer.renderPolar(this, model);
         else if (model.options.type === 'interval')
             ChartRenderer.renderInterval(this.block, model, data, id);
     }
