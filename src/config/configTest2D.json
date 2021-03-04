@@ -1,95 +1,95 @@
 {
-  "canvas":{
-    "class":"svg-chart outline",
-    "size":{
-      "width":800,
-      "height":400
-    }
-  },
-  "options":{
-    "title": "Количество автомобилей",
-    "type":"2d",
-    "isSegmented":false,
-    "axis":{
-      "keyAxis":{
-        "position":"end",
-        "ticks":{
-          "flag":false
+    "canvas": {
+        "class": "svg-chart outline",
+        "size": {
+            "width": 800,
+            "height": 400
         }
-      },
-      "valueAxis":{
-        "domain":{
-          "start":-1,
-          "end":-1
-        },
-        "position":"start",
-        "ticks":{
-          "flag":false
-        }
-      }
     },
-    "additionalElements":{
-      "gridLine":{
-        "flag":{
-          "value":true,
-          "key":true
-        }
-      },
-      "marks": {
-        "show": true
-      }
-    },
-    "legend":{
-      "show":true
-    },
-    "orientation":"vertical",
-    "data":{
-      "dataSource":"dataSet",
-      "keyField":{
-        "name":"brand",
-        "format":"string"
-      }
-    },
-    "charts":[
-      {
-        "title":"Рост стоимости",
-        "type":"bar",
-        "data":{
-          "valueFields":[
-            {
-              "name":"price",
-              "format":"money",
-              "title":"Количество"
+    "options": {
+        "title": "Количество автомобилей",
+        "type": "2d",
+        "isSegmented": false,
+        "axis": {
+            "keyAxis": {
+                "position": "end",
+                "ticks": {
+                    "flag": false
+                }
+            },
+            "valueAxis": {
+                "domain": {
+                    "start": -1,
+                    "end": -1
+                },
+                "position": "start",
+                "ticks": {
+                    "flag": false
+                }
             }
-          ]
         },
-        "tooltip":{
-          "show":true
+        "additionalElements": {
+            "gridLine": {
+                "flag": {
+                    "value": true,
+                    "key": true
+                }
+            },
+            "marks": {
+                "show": false
+            }
         },
-        "embeddedLabels":"key"
-      },
-      {
-        "title":"Рост стоимости",
-        "type":"line",
-        "data":{
-          "valueFields":[
+        "legend": {
+            "show": true
+        },
+        "orientation": "vertical",
+        "data": {
+            "dataSource": "dataSet",
+            "keyField": {
+                "name": "brand",
+                "format": "string"
+            }
+        },
+        "charts": [
             {
-              "name":"price",
-              "format":"money",
-              "title":"Aвтомобилей на"
+                "title": "Рост стоимости",
+                "type": "bar",
+                "data": {
+                    "valueFields": [
+                        {
+                            "name": "price",
+                            "format": "money",
+                            "title": "Количество"
+                        }
+                    ]
+                },
+                "tooltip": {
+                    "show": true
+                },
+                "embeddedLabels": "key"
             },
             {
-              "name":"count",
-              "format":"integer",
-              "title":"Количество автомобилей"
+                "title": "Рост стоимости",
+                "type": "line",
+                "data": {
+                    "valueFields": [
+                        {
+                            "name": "price",
+                            "format": "money",
+                            "title": "Aвтомобилей на"
+                        },
+                        {
+                            "name": "count",
+                            "format": "integer",
+                            "title": "Количество автомобилей"
+                        }
+                    ]
+                },
+                "tooltip": {
+                    "show": true
+                },
+                "embeddedLabels": "key"
             }
-          ]
-        },
-        "tooltip":{
-          "show":true
-        },
-        "embeddedLabels":"key"
-      }
-    ]
-  }
+        ]
+    }
 }

@@ -10,6 +10,7 @@ interface TitleAttributes {
     width: number;
     dominantBaseline: string;
 }
+
 export class Title {
     public static render(block: Block, text: string, titleBlockModel: TitleBlockModel, blockSize: Size): void {
         const titleBlock = block.getSvg()
