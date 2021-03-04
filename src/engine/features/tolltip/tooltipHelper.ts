@@ -344,7 +344,7 @@ export class TooltipHelper {
         const row = data[dataOptions.dataSource].find(d => d[dataOptions.keyField.name] === keyValue);
         let text: string;
         
-        text = `<span class="tooltip-field-title">${valueField.title}</span><span class="tooltip-field-value">${ValueFormatter.formatValue(valueField.format, row[valueField.name])}</span>`;
+        text = `<span class="tooltip-field-title">${valueField.title}</span><span class="tooltip-field-value">${ValueFormatter.formatField(valueField.format, row[valueField.name])}</span>`;
 
         return text;
     }

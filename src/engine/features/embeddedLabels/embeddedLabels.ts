@@ -21,7 +21,7 @@ export class EmbeddedLabels {
             .append('text')
             .attr('class', 'embedded-label')
             .style('pointer-events', 'none')
-            .text(ValueFormatter.formatValue(field.format, dataRow[field.name]));
+            .text(ValueFormatter.formatField(field.format, dataRow[field.name]));
 
         const barAttrs: BarAttrs = {
             x: Helper.getSelectionNumericAttr(bar, 'x'),

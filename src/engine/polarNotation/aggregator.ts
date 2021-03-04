@@ -32,7 +32,7 @@ export class Aggregator {
                 .attr('class', 'aggregator-value')
                 .style('text-align', 'center')
                 .style('font-size', `${fontSize}px`)
-                .text(ValueFormatter.formatValue(aggregator.format, aggregator.value));
+                .text(ValueFormatter.formatField(aggregator.format, aggregator.value));
 
             wrapper
                 .append('div')

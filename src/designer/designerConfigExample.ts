@@ -33,15 +33,6 @@ const designerConfig: DesignerConfig = {
             }
         }
     },
-    dataFormat: {
-        formatters: {
-            'integer': (value: any, options?: DataTypeOptions) => value.toLocaleString().replaceAll(',', ' '),
-            'decimal': (value: any, options?: DataTypeOptions) => Intl.NumberFormat().format(value),
-            'money': (value: any, options?: DataTypeOptions) => Intl.NumberFormat('ru-Ru', { minimumFractionDigits: 2 }).format(value),
-            'date': (value: any, options?: DataTypeOptions) => value.getFullYear() + '-' + (value.getMonth() + 1) + '-' + value.getDate() + ' ' + value.getHours() + ':' + value.getMinutes(),
-            'string': (value: any, options?: DataTypeOptions) => value
-        }
-    },
     chartStyle: {
         baseColor: 'red',
         step: 3
@@ -52,6 +43,26 @@ const designerConfig: DesignerConfig = {
                 value: true,
                 key: true
             }
+        }
+    },
+    dataFormat: {
+        formatters: (value: any, options: { type?: string; title?: string; empty?: string; } = {}) => {
+            var type = typeof value;
+            if ((value === undefined || value === null || value === "") && type != "boolean" && options.type != "boolean")
+                return value;
+            if (type == "boolean" || options.type == "boolean") {
+                return value.toString();
+            }
+            if (value instanceof Date) {
+                return value.getFullYear() + '-' + (value.getMonth() + 1) + '-' + value.getDate() + ' ' + value.getHours() + ':' + value.getMinutes()
+            }
+            if (options.type === "markdown") {
+                return value.toString();
+            }
+            if ((options.type === "money" || options.type === "number")) {
+                return Intl.NumberFormat('ru-Ru', { minimumFractionDigits: 2 }).format(value);
+            }
+            return value;
         }
     }
 }

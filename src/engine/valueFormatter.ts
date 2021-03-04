@@ -1,10 +1,10 @@
-import { DataType, Formatter } from '../designer/designerConfig';
+import { Formatter } from '../designer/designerConfig';
 
 export class ValueFormatter {
     private static format: Formatter;
 
-    public static formatValue(valueType: DataType, value: any): string {
-        return this.format[valueType](value);
+    public static formatField(fieldFormat: string, value: any): string {
+        return this.format(value, { type: fieldFormat });
     }
 
     public static setFormatFunction(formatFunction: Formatter): void {
