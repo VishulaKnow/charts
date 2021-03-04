@@ -186,9 +186,9 @@ export interface PolarChartModel extends ChartModel {
 
 //====================================================== TwoDimensionalChartModel
 export interface TwoDimensionalChartDataModel {
-    valueFields: TwoDimensionalValueField[];
+    valueFields: ValueField[];
 }
-export interface TwoDimensionalValueField extends Field {
+export interface ValueField extends Field {
     title: string;
 }
 
@@ -206,7 +206,7 @@ interface IntervalChartDataModel {
 
 //====================================================== PolarChartModel
 interface PolarChartDataModel {
-    valueField: Field;
+    valueField: ValueField;
 }
 
 

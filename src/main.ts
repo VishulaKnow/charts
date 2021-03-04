@@ -1,4 +1,4 @@
-import { Config, AdditionalElements, Size, TwoDimensionalChartData, PolarChartData, Legend, DataOptions, AxisOptions, TwoDimensionalValueField, TwoDimensionalOptions, TwoDimensionalChartType, TwoDimensionalChart, TwoDimensionalAxis, PolarOptions, PolarChartType, PolarChart, NumberDomain, IntervalOptions, IntervalChartType, IntervalChart, IntervalAxis, EmbeddedLabelType, ChartType, ChartOrientation, ChartNotation, ChartBlockCanvas, AxisPosition } from "./config/config";
+import { Config, ValueField, AdditionalElements, Size, TwoDimensionalChartData, PolarChartData, Legend, DataOptions, AxisOptions, TwoDimensionalOptions, TwoDimensionalChartType, TwoDimensionalChart, TwoDimensionalAxis, PolarOptions, PolarChartType, PolarChart, NumberDomain, IntervalOptions, IntervalChartType, IntervalChart, IntervalAxis, EmbeddedLabelType, ChartType, ChartOrientation, ChartNotation, ChartBlockCanvas, AxisPosition } from "./config/config";
 import { DesignerConfig, Formatter, DonutOptionsCanvas, DataTypeOptions, DataType, ChartStyleConfig, BarOptionsCanvas, AxisLabelCanvas } from "./designer/designerConfig";
 import Engine from "./engine/engine";
 import { DataSource, Model } from "./model/model";
@@ -104,7 +104,7 @@ export {
     TwoDimensionalChartType,
     TwoDimensionalChart,
     TwoDimensionalAxis,
-    TwoDimensionalValueField,
+    ValueField,
     PolarOptions,
     PolarChartData,
     PolarChartType,

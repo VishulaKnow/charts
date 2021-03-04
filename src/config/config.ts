@@ -47,6 +47,10 @@ interface Field {
     format: DataType;
 }
 
+export interface ValueField extends Field {
+    title: string;
+}
+
 export interface TwoDimensionalOptions extends Options {
     type: '2d';
     axis: TwoDimensionalAxis;
@@ -148,11 +152,7 @@ export interface IntervalChart extends ChartSettings {
 
 //====================================================== TwoDimensionalChart
 export interface TwoDimensionalChartData {
-    valueFields: TwoDimensionalValueField[];
-}
-
-export interface TwoDimensionalValueField extends Field {
-    title: string;
+    valueFields: ValueField[];
 }
 
 interface MarkersOptions {
@@ -162,7 +162,7 @@ interface MarkersOptions {
 
 //====================================================== PolarChart
 export interface PolarChartData {
-    valueField: Field;
+    valueField: ValueField;
 }
 
 
