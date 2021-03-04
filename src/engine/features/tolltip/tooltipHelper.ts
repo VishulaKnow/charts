@@ -191,8 +191,7 @@ export class TooltipHelper {
 
             if(chart.type === 'area' || chart.type === 'line') {
                 elems.call(this.scaled, false);
-                selectedElems
-                    .call(this.scaled, true);
+                selectedElems.call(this.scaled, true);
             } else {
                 selectedElems.style('filter', `url(#${filterId})`);
             }
