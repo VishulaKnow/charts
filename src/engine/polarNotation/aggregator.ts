@@ -41,7 +41,7 @@ export class Aggregator {
                 .style('font-size', '18px')
                 .text(aggregator.name);
 
-            while (aggreggatorValue.node().getBoundingClientRect().width > innerRadius * 2 - 20 && fontSize > 15) {
+            while (aggreggatorValue.node().getBoundingClientRect().width > innerRadius * 2 - 40 && fontSize > 15) {
                 aggreggatorValue
                     .style('font-size', `${fontSize -= 2}px`)
             }

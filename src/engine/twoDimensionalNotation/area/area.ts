@@ -12,11 +12,11 @@ import { AreaHelper } from './areaHelper';
 export class Area {
     private static areaChartClass = 'area';
 
-    public static render(block: Block, scales: Scales, data: DataRow[], keyField: Field, margin: BlockMargin, keyAxisOrient: Orient, chart: TwoDimensionalChartModel, blockSize: Size, markFlag: boolean): void {
+    public static render(block: Block, scales: Scales, data: DataRow[], keyField: Field, margin: BlockMargin, keyAxisOrient: Orient, chart: TwoDimensionalChartModel, blockSize: Size): void {
         if (chart.isSegmented)
-            this.renderSegmented(block, scales, data, keyField, margin, keyAxisOrient, chart, markFlag);
+            this.renderSegmented(block, scales, data, keyField, margin, keyAxisOrient, chart, chart.markersOptions.show);
         else
-            this.renderGrouped(block, scales, data, keyField, margin, keyAxisOrient, chart, blockSize, markFlag);
+            this.renderGrouped(block, scales, data, keyField, margin, keyAxisOrient, chart, blockSize, chart.markersOptions.show);
     }
 
     public static updateAreaChartByValueAxis(block: Block, scales: Scales, data: DataRow[], keyField: Field, margin: BlockMargin, chart: TwoDimensionalChartModel, keyAxisOrient: Orient, blockSize: Size): void {

@@ -107,6 +107,8 @@ export class Tooltip {
         const tooltipArrow = this.renderTooltipArrow(tooltipBlock);
         const thisClass = this;
 
+        tooltipContent.classed('tooltip-content-2d', true);
+
         const filterId = NamesManager.getId('shadow', chartId);
         this.renderShadowFilter(block, filterId);
         

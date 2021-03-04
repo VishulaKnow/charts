@@ -50,7 +50,7 @@ interface Field {
 export interface TwoDimensionalOptions extends Options {
     type: '2d';
     axis: TwoDimensionalAxis;
-    additionalElements: TwoDimensionalAdditionalElements;
+    additionalElements: AdditionalElements;
     charts: TwoDimensionalChart[];
     orientation: ChartOrientation;
 }
@@ -69,7 +69,7 @@ export interface IntervalOptions extends Options {
 }
 
 //====================================================== TwoDimensionalOptions & IntervalOptions
-interface AdditionalElements {
+export interface AdditionalElements {
     gridLine: GridLineOptions;
 }
 
@@ -81,15 +81,6 @@ interface GridLineFlag {
     key: boolean;
     value: boolean;
 }
-
-export interface TwoDimensionalAdditionalElements extends AdditionalElements {
-    marks: MarksOptions;
-}
-
-interface MarksOptions {
-    show: boolean;
-}
-
 
 //====================================================== TwoDimensionalOptions
 export interface TwoDimensionalAxis {
@@ -141,6 +132,7 @@ export interface TwoDimensionalChart extends ChartSettings {
     data: TwoDimensionalChartData;
     embeddedLabels: EmbeddedLabelType;
     isSegmented: boolean;
+    markers: MarkersOptions;
 }
 
 export interface PolarChart extends ChartSettings {
@@ -161,6 +153,10 @@ export interface TwoDimensionalChartData {
 
 export interface TwoDimensionalValueField extends Field {
     title: string;
+}
+
+interface MarkersOptions {
+    show: boolean;
 }
 
 

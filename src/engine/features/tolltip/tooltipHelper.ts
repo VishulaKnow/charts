@@ -55,19 +55,13 @@ export class TooltipHelper {
         })
     }
 
-    public static fillFor2DChart(tooltipContentBlock: Selection<BaseType, unknown, BaseType, unknown>, chart: TwoDimensionalChartModel, data: DataSource, dataOptions: OptionsModelData, keyValue: string, fieldIndex: number = null): void {
-        tooltipContentBlock.html('');
-        chart.data.valueFields.forEach((field, index) => {
-            if(fieldIndex === null || index === fieldIndex) {
-                const text = this.getTooltipItemText(data, dataOptions, keyValue, field);
-                this.fillTooltipContent(tooltipContentBlock, chart.style.elementColors[index % chart.style.elementColors.length].toString(), text);
-            }
-        });
-    }
-
     public static fillTooltipForPolarChart(tooltipContentBlock: Selection<BaseType, unknown, BaseType, unknown>, chart: PolarChartModel, data: DataSource, dataOptions: OptionsModelData, keyValue: string, markColor: string): void {
         tooltipContentBlock.html('');
-        const text = this.getTooltipItemText(data, dataOptions, keyValue, chart.data.valueField);
+        tooltipContentBlock.append('div')
+            .attr('class', 'tooltip-group tooltip-head')
+            .text(keyValue);
+            
+        const text = this.getTooltipItemText(data, dataOptions, keyValue, chart.data.valueField, false);
         this.fillTooltipContent(tooltipContentBlock, markColor, text);
     }
 

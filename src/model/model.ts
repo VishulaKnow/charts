@@ -63,7 +63,7 @@ export interface TwoDimensionalOptionsModel extends OptionsModel {
     scale: IScaleModel;
     axis: IAxisModel;
     charts: TwoDimensionalChartModel[];
-    additionalElements: TwoDimensionalAdditionalElementsOptions;
+    additionalElements: AdditionalElementsOptions;
     orient: ChartOrientation;
 }
 export interface PolarOptionsModel extends OptionsModel {
@@ -151,13 +151,6 @@ export interface GridLineFlag {
     value: boolean;
 }
 
-export interface TwoDimensionalAdditionalElementsOptions extends AdditionalElementsOptions {
-    marks: MarksOptions;
-}
-export interface MarksOptions {
-    show: boolean;
-}
-
 
 //====================================================== Charts
 interface ChartModel {
@@ -179,6 +172,7 @@ export interface TwoDimensionalChartModel extends ChartModel {
     data: TwoDimensionalChartDataModel;
     embeddedLabels: EmbeddedLabelTypeModel;
     isSegmented: boolean;
+    markersOptions: MarkersOptions;
 }
 export interface IntervalChartModel extends ChartModel {
     type: IntervalChartType;
@@ -196,6 +190,10 @@ export interface TwoDimensionalChartDataModel {
 }
 export interface TwoDimensionalValueField extends Field {
     title: string;
+}
+
+export interface MarkersOptions {
+    show: boolean;
 }
 
 

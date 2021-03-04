@@ -8,102 +8,117 @@ const configCars: Config = {
             height: 510
         }
     },
-    // options: {
-    //     type: '2d',
-    //     title: 'График по 14 показателям в 4 разрезах, название длинное в одну строчку, если не влезает, то скрываем все в 3 точки',
-    //     axis: {
-    //         keyAxis: {
-    //             position: 'start',
-    //             ticks: {
-    //                 flag: false
-    //             }
-    //         },
-    //         valueAxis: {
-    //             domain: {
-    //                 start: -1,
-    //                 end: -1
-    //             },
-    //             position: 'start',
-    //             ticks: {
-    //                 flag: false
-    //             }
-    //         }
-    //     },
-    //     additionalElements: {
-    //         gridLine: {
-    //             flag: {
-    //                 value: true,
-    //                 key: true
-    //             }
-    //         },
-    //         marks: {
-    //             show: true
-    //         }
-    //     },
-    //     legend: {
-    //         show: true
-    //     },
-    //     orientation: 'horizontal',
-    //     data: {
-    //         dataSource: 'dataSet',
-    //         keyField: {
-    //             name: 'brand',
-    //             format: 'string'
-    //         }
-    //     },
-    //     charts: [
-    //         {
-    //             isSegmented: true,
-    //             type: 'bar',
-    //             data: {
-    //                 valueFields: [
-    //                     {
-    //                         name: 'price',
-    //                         format: 'money',
-    //                         title: 'Количество автомобилей'
-    //                     },
-    //                     {
-    //                         name: 'count',
-    //                         format: 'money',
-    //                         title: 'Количество автомобилей'
-    //                     }
-    //                 ]
-    //             },
-    //             tooltip: {
-    //                 show: true
-    //             },
-    //             embeddedLabels: 'value'
-    //         }
-    //     ]
-    // }
     options: {
-        type: 'polar',
-        title: 'some title',
+        type: '2d',
+        title: 'График по 14 показателям в 4 разрезах, название длинное в одну строчку, если не влезает, то скрываем все в 3 точки',
+        axis: {
+            keyAxis: {
+                position: 'start',
+                ticks: {
+                    flag: false
+                }
+            },
+            valueAxis: {
+                domain: {
+                    start: -1,
+                    end: -1
+                },
+                position: 'start',
+                ticks: {
+                    flag: false
+                }
+            }
+        },
+        additionalElements: {
+            gridLine: {
+                flag: {
+                    value: true,
+                    key: true
+                }
+            }
+        },
         legend: {
             show: true
         },
+        orientation: 'horizontal',
         data: {
             dataSource: 'dataSet',
-            keyField:  {
+            keyField: {
                 name: 'brand',
                 format: 'string'
             }
         },
         charts: [
             {
-                type: 'donut',
+                isSegmented: false,
+                type: 'line',
                 data: {
-                    valueField: {
-                        name: 'price',
-                        format: 'money'
-                    }
+                    valueFields: [
+                        {
+                            name: 'price',
+                            format: 'integer',
+                            title: 'Количество автомобилей'
+                        }
+                    ]
                 },
                 tooltip: {
                     show: true
+                },
+                embeddedLabels: 'value',
+                markers: {
+                    show: true
+                }
+            },
+            {
+                isSegmented: false,
+                type: 'line',
+                data: {
+                    valueFields: [
+                        {
+                            name: 'count',
+                            format: 'integer',
+                            title: 'Количество автомобилей'
+                        }
+                    ]
+                },
+                tooltip: {
+                    show: true
+                },
+                embeddedLabels: 'value',
+                markers: {
+                    show: false
                 }
             }
         ]
     }
+    // options: {
+    //     type: 'polar',
+    //     title: 'some title',
+    //     legend: {
+    //         show: true
+    //     },
+    //     data: {
+    //         dataSource: 'dataSet',
+    //         keyField:  {
+    //             name: 'brand',
+    //             format: 'string'
+    //         }
+    //     },
+    //     charts: [
+    //         {
+    //             type: 'donut',
+    //             data: {
+    //                 valueField: {
+    //                     name: 'price',
+    //                     format: 'integer'
+    //                 }
+    //             },
+    //             tooltip: {
+    //                 show: true
+    //             }
+    //         }
+    //     ]
+    // }
 }
 
 const configDemo: Config = {
@@ -141,9 +156,6 @@ const configDemo: Config = {
                     value: true,
                     key: true
                 }
-            },
-            marks: {
-                show: true
             }
         },
         legend: {
@@ -178,7 +190,10 @@ const configDemo: Config = {
                 tooltip: {
                     show: true
                 },
-                embeddedLabels: 'value'
+                embeddedLabels: 'value',
+                markers: {
+                    show: true
+                }
             },
             {
                 isSegmented: false,
@@ -195,7 +210,10 @@ const configDemo: Config = {
                 tooltip: {
                     show: true
                 },
-                embeddedLabels: 'value'
+                embeddedLabels: 'value',
+                markers: {
+                    show: true
+                }
             }
         ]
     }

@@ -35,7 +35,7 @@ const designerConfig: DesignerConfig = {
     },
     dataFormat: {
         formatters: {
-            'integer': (value: any, options?: DataTypeOptions) => Intl.NumberFormat().format(value),
+            'integer': (value: any, options?: DataTypeOptions) => value.toLocaleString().replaceAll(',', ' '),
             'decimal': (value: any, options?: DataTypeOptions) => Intl.NumberFormat().format(value),
             'money': (value: any, options?: DataTypeOptions) => Intl.NumberFormat('ru-Ru', { minimumFractionDigits: 2 }).format(value),
             'date': (value: any, options?: DataTypeOptions) => value.getFullYear() + '-' + (value.getMonth() + 1) + '-' + value.getDate() + ' ' + value.getHours() + ':' + value.getMinutes(),
