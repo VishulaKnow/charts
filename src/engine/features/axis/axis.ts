@@ -3,14 +3,11 @@ import { min, max } from 'd3-array';
 import { format } from 'd3-format';
 import { axisTop, axisBottom, axisLeft, axisRight, AxisScale, Axis as IAxis } from 'd3-axis';
 import { ScaleBand } from 'd3-scale'
-import { transition } from 'd3-transition';
 import { AxisModelOptions, BlockMargin, IAxisModel, IScaleModel, Orient, ScaleKeyModel, ScaleValueModel, Size } from "../../../model/model";
 import { Helper } from "../../helper";
 import { Block } from "../../block/block";
 import { Scale, Scales } from "../scale/scale";
 import { AXIS_HORIZONTAL_LABEL_PADDING, AXIS_VERTICAL_LABEL_PADDING } from "../../../model/marginModel";
-
-
 
 type TextAnchor = 'start' | 'end' | 'middle';
 
@@ -94,6 +91,7 @@ export class Axis {
 
         // axis.tickValues(this.getRecalcedTickValuesWithLastValue(min(scale.domain), max(scale.domain), Math.floor(axisLength / MINIMAL_STEP_SIZE)));
     }
+
     private static getRecalcedTickValuesWithLastValue(minValue: number, maxValue: number, countValues: number): number[] {
         let valuesArray = [];
         let step = 1;
