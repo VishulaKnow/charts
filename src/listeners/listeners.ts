@@ -631,15 +631,13 @@ const model2 = assembleModel(config2, data, designerConfig);
 const engine2 = new Engine(4);
 engine2.render(model2, getPreparedData(model2, data, config2), document.querySelector('.main-wrapper2'));
 
-const config4 = require('../config/configTest2D.json');
-const model4 = assembleModel(config4, data, designerConfig);
-const engine4 = new Engine(5);
-engine4.render(model4, getPreparedData(model4, data, config4), document.querySelector('.main-wrapper2'));
+// setInterval(() => {
+//     const newData = ListenersHelper.getCopy(data);
+//     newData["dataSet"][ListenersHelper.randInt(0, 8)]['price'] = ListenersHelper.randInt(0, 100);
+//     newData["dataSet"][ListenersHelper.randInt(0, 8)]['count'] = ListenersHelper.randInt(0, 100);
+//     const newModel4 = getUpdatedModel(config4, newData, designerConfig);
+//     engine4.updateValues(newModel4, getPreparedData(newModel4, newData, config));
 
-setInterval(() => {
-    const newData = ListenersHelper.getCopy(data);
-    newData["dataSet"][ListenersHelper.randInt(0, 8)]['price'] = ListenersHelper.randInt(0, 100);
-    newData["dataSet"][ListenersHelper.randInt(0, 8)]['count'] = ListenersHelper.randInt(0, 100);
-    const newModel = getUpdatedModel(config4, newData, designerConfig);
-    engine4.updateValues(newModel, getPreparedData(newModel, newData, config));
-}, 2000);
+//     const newModel = getUpdatedModel(config, newData, designerConfig);
+//     engine.updateValues(newModel, getPreparedData(newModel, newData, config))
+// }, 2000);

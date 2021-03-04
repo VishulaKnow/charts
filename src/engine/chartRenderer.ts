@@ -13,25 +13,26 @@ import { RecordOverflowAlert } from "./features/recordOverflowAlert/recordOverfl
 import { Gantt } from "./intervalNotation/gantt";
 import { BarHelper } from "./twoDimensionalNotation/bar/barHelper";
 import { Title } from "./features/title/title";
+import Engine from "./engine";
 
 export class ChartRenderer {
-    public static render2D(block: Block, model: Model, data: DataSource, chartId: number): void {
+    public static render2D(engine: Engine, model: Model): void {
         const options = <TwoDimensionalOptionsModel>model.options;
 
         const scales = Scale.getScales(options.scale.scaleKey,
             options.scale.scaleValue,
             model.chartSettings.bar);
 
-        block.renderSvg(model.blockCanvas.size);
+        engine.block.renderSvg(model.blockCanvas.size);
 
-        Axis.render(block, scales, options.scale, options.axis, model.chartBlock.margin, model.blockCanvas.size);
+        Axis.render(engine.block, scales, options.scale, options.axis, model.chartBlock.margin, model.blockCanvas.size);
 
-        GridLine.render(block, options.additionalElements.gridLine.flag, options.axis.keyAxis, options.axis.valueAxis, model.blockCanvas.size, model.chartBlock.margin, options.scale.scaleKey);
+        GridLine.render(engine.block, options.additionalElements.gridLine.flag, options.axis.keyAxis, options.axis.valueAxis, model.blockCanvas.size, model.chartBlock.margin, options.scale.scaleKey);
 
-        this.render2DCharts(block,
+        this.render2DCharts(engine.block,
             options.charts,
             scales,
-            data,
+            engine.data,
             options.data,
             model.chartBlock.margin,
             options.axis.keyAxis.orient,
@@ -39,20 +40,20 @@ export class ChartRenderer {
             model.blockCanvas.size,
             options.additionalElements.marks.show);
         
-        Title.render(block, 
+        Title.render(engine.block, 
             options.title,
             model.otherComponents.titleBlock,
             model.blockCanvas.size);
 
-        Legend.render(block,
-            data,
+        Legend.render(engine.block,
+            engine.data,
             options,
             model.otherComponents.legendBlock,
             model.blockCanvas.size);
 
-        Tooltip.renderTooltips(block, model, data, chartId, scales);
+        Tooltip.render(engine.block, model, engine.data, engine.chartId, scales);
         if (model.dataSettings.scope.hidedRecordsAmount !== 0)
-            RecordOverflowAlert.render(block, model.dataSettings.scope.hidedRecordsAmount, 'top', options.orient);
+            RecordOverflowAlert.render(engine.block, model.dataSettings.scope.hidedRecordsAmount, 'top', options.orient);
     }
 
     public static renderPolar(block: Block, model: Model, data: DataSource, chartId: number) {
@@ -74,9 +75,42 @@ export class ChartRenderer {
 
         Legend.render(block, data, options, model.otherComponents.legendBlock, model.blockCanvas.size);
 
-        Tooltip.renderTooltips(block, model, data, chartId);
+        Tooltip.render(block, model, data, chartId);
         if (model.dataSettings.scope.hidedRecordsAmount !== 0 && model.options.legend.position !== 'off')
             RecordOverflowAlert.render(block, model.dataSettings.scope.hidedRecordsAmount, model.options.legend.position);
+    }
+
+    public static renderInterval(block: Block, model: Model, data: DataSource, chartId: number): void {
+        const options = <IntervalOptionsModel>model.options;
+
+        block.renderSvg(model.blockCanvas.size);
+
+        const scales = Scale.getScales(options.scale.scaleKey,
+            options.scale.scaleValue,
+            model.chartSettings.bar);
+
+        Axis.render(block, scales, options.scale, options.axis, model.chartBlock.margin, model.blockCanvas.size);
+
+        GridLine.render(block, options.additionalElements.gridLine.flag, options.axis.keyAxis, options.axis.valueAxis, model.blockCanvas.size, model.chartBlock.margin, options.scale.scaleKey);
+
+        this.renderIntervalCharts(block,
+            options.charts,
+            scales,
+            data,
+            options.data,
+            model.chartBlock.margin,
+            options.axis.keyAxis.orient,
+            model.chartSettings);
+
+        Title.render(block, 
+            options.title,
+            model.otherComponents.titleBlock,
+            model.blockCanvas.size
+            );
+        Legend.render(block, data, options, model.otherComponents.legendBlock, model.blockCanvas.size);
+        Tooltip.render(block, model, data, chartId);
+        if (model.dataSettings.scope.hidedRecordsAmount !== 0)
+            RecordOverflowAlert.render(block, model.dataSettings.scope.hidedRecordsAmount, 'top', options.orient);
     }
 
     private static render2DCharts(block: Block, charts: TwoDimensionalChartModel[], scales: Scales, data: DataSource, dataOptions: OptionsModelData, margin: BlockMargin, keyAxisOrient: Orient, barSettings: BarChartSettings, blockSize: Size, markFlag: boolean) {
@@ -173,6 +207,11 @@ export class ChartRenderer {
             model.chartBlock.margin,
             options.axis.keyAxis.orient,
             model.blockCanvas.size);
+    }
+
+    public static updatePolarValues(block: Block, model: Model, data: DataSource): void {
+        const options = <PolarOptionsModel>model.options;
+        Donut.updateValues(block, data[options.data.dataSource], model.chartBlock.margin, options.charts[0], model.blockCanvas.size, model.chartSettings.donut);
     }
 
     private static updateChartsByValueAxis(block: Block, charts: TwoDimensionalChartModel[], scales: Scales, data: DataSource, dataOptions: OptionsModelData, margin: BlockMargin, keyAxisOrient: Orient, blockSize: Size): void {

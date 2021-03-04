@@ -22,7 +22,7 @@ export class Tooltip {
     private static tooltipContentClass = 'tooltip-content';
     private static tooltipArrowClass = 'tooltip-arrow';
 
-    public static renderTooltips(block: Block, model: Model, data: DataSource, chartId: number, scales?: Scales): void {
+    public static render(block: Block, model: Model, data: DataSource, chartId: number, scales?: Scales): void {
         this.renderTooltipWrapper(block);
         const chartsWithTooltipIndex = model.options.charts.findIndex((chart: TwoDimensionalChartModel | PolarChartModel | IntervalChartModel) => chart.tooltip.show);
         if (chartsWithTooltipIndex !== -1) {
@@ -299,8 +299,8 @@ export class Tooltip {
             filter.append('feDropShadow')
                 .attr('dx', 0)
                 .attr('dy', 0)
-                .attr('flood-color', 'rgba(0, 0, 0, 0.15)')
-                .attr('stdDeviation', 10);
+                .attr('flood-color', 'rgba(0, 0, 0, 0.5)')
+                .attr('stdDeviation', 6);
 
         return filter;
     }

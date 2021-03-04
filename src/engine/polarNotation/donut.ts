@@ -1,6 +1,7 @@
 import { PieArcDatum } from 'd3-shape'
 import { Color } from "d3-color";
 import { Selection, BaseType } from 'd3-selection'
+import { interpolate } from 'd3-interpolate'
 import { BlockMargin, DataRow, DonutChartSettings, PolarChartModel, Size } from "../../model/model";
 import { Helper } from "../helper";
 import { Block } from "../block/block";
@@ -42,12 +43,35 @@ export class Donut {
 
         const arcs = items
             .append('path')
-            .attr('d', arcGenerator);
+            .attr('d', arcGenerator)
+            .each(function(d) { (this as any)._current = d; });
 
         Helper.setCssClasses(arcs, chart.cssClasses);
         this.setElementsColor(items, chart.style.elementColors);
 
         Aggregator.render(block, data, chart.data.valueField, innerRadius, translateAttribute, thickness);
+    }
+
+    public static updateValues(block: Block, data: DataRow[], margin: BlockMargin, chart: PolarChartModel, blockSize: Size, donutSettings: DonutChartSettings): void {
+        const outerRadius = DonutHelper.getOuterRadius(margin, blockSize);
+        const thickness = DonutHelper.getThickness(donutSettings, blockSize, margin);
+        const innerRadius = DonutHelper.getInnerRadius(outerRadius, thickness);
+        const arcGenerator = DonutHelper.getArcGenerator(outerRadius, innerRadius);
+        const pieGenerator = DonutHelper.getPieGenerator(chart.data.valueField.name, donutSettings.padAngle);
+
+        const arcs = this.getAllArcGroups(block);
+        let path = arcs.select('path');
+        path = path.data(pieGenerator);
+        path.transition()
+            .duration(1000)
+            .attrTween('d', function(d) {
+                const inter = interpolate((this as any)._current, d);
+                const _this = this;
+                return function(t) {
+                    (_this as any)._current = inter(t);
+                    return arcGenerator((_this as any)._current)
+                }
+            });
     }
 
     public static getAllArcGroups(block: Block): Selection<SVGGElement, PieArcDatum<DataRow>, SVGGElement, unknown> {
