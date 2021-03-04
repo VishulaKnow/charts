@@ -140,7 +140,8 @@ export default class Listeners {
             return {
                 valueField: {
                     name: 'price',
-                    format: 'money'
+                    format: 'money',
+                    title: 'Количество'
                 }
             }
         }
