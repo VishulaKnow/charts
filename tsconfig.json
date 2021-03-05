@@ -5,11 +5,16 @@
         "target": "es6",
         "jsx": "react",
         "allowJs": true,
-        "types": ["jest"],
+        "types": [
+            "jest"
+        ],
         // "declaration": true
     },
-    // "include": ["src"],
-    // "exclude": ["node_modules",
+    // "include": [
+    //     "src"
+    // ],
+    // "exclude": [
+    //     "node_modules",
     //     "**/__tests__/*",
     //     "src/listeners/*",
     //     "**/*Example.ts"
