@@ -50,7 +50,7 @@ const configCars: Config = {
         },
         charts: [
             {
-                isSegmented: false,
+                isSegmented: true,
                 type: 'line',
                 data: {
                     valueFields: [
@@ -58,6 +58,11 @@ const configCars: Config = {
                             name: 'price',
                             format: 'money',
                             title: 'Количество автомобилей'
+                        },
+                        {
+                            name: 'count',
+                            format: 'integer',
+                            title: 'Some amount'
                         }
                     ]
                 },

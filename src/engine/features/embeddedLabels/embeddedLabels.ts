@@ -58,6 +58,7 @@ export class EmbeddedLabels {
 
         if (labelUnserveFlag)
             this.checkLabelsToResetTextAnchor(labelBlock, margin, blockSize, keyAxisOrient);
+
         this.cropText(labelBlock, barAttrs, position, labelUnserveFlag, margin, blockSize);
     }
 

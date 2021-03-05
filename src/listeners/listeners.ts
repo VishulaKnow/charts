@@ -407,32 +407,27 @@ export default class Listeners {
             config.options.legend.show = this.checked;
             thisClass.updateFull();
         });
-        document.querySelector('.btn-random').addEventListener('click', function () {
+        const randomFunc = function () {
             if (config.options.type === '2d' || config.options.type === 'polar') {
                 const max = parseInt(ListenersHelper.getInputValue('#max-random-value')) || 120;
                 const dataCopy = ListenersHelper.getCopy(thisClass.data);
                 const newData = thisClass.getDataWithRandomValues(dataCopy, max);
+
+                if (config.options.type === '2d' && config.options.axis.valueAxis.domain.end < max)
+                    config.options.axis.valueAxis.domain.end = -1;
+
                 const model = getUpdatedModel(thisClass.config, newData, thisClass.designerConfig);
                 const preparedData = getPreparedData(model, newData, config);
 
-                if (config.options.type === '2d' && config.options.axis.valueAxis.domain.end < max) {
-                    config.options.axis.valueAxis.domain.end = max;
-                }
                 thisClass.engine.updateValues(model, preparedData);
             }
+        }
+        document.querySelector('.btn-random').addEventListener('click', function () {
+            randomFunc();
         });
         document.querySelector('#max-random-value').addEventListener('keydown', function (e: any) {
-            if (e.code === 'Enter' && (config.options.type === '2d' || config.options.type === 'polar')) {
-                const max = parseInt(ListenersHelper.getInputValue('#max-random-value')) || 120;
-                const copy = ListenersHelper.getCopy(thisClass.data);
-                const newData = thisClass.getDataWithRandomValues(copy, max);
-                const model = getUpdatedModel(thisClass.config, newData, thisClass.designerConfig);
-                const preparedData = getPreparedData(model, newData, config);
-
-                if (config.options.type === '2d' && config.options.axis.valueAxis.domain.end < max) {
-                    config.options.axis.valueAxis.domain.end = max;
-                }
-                thisClass.engine.updateValues(model, preparedData);
+            if (e.code === 'Enter') {
+                randomFunc();
             }
         });
     }
@@ -487,6 +482,14 @@ export default class Listeners {
             if (config.options.type === '2d') {
                 config.options.charts.forEach(chart => {
                     chart.isSegmented = this.checked;
+                });
+                thisClass.updateFull();
+            }
+        });
+        document.querySelector('#markers').addEventListener('change', function () {
+            if (config.options.type === '2d') {
+                config.options.charts.forEach(chart => {
+                    chart.markers.show = this.checked;
                 });
                 thisClass.updateFull();
             }
@@ -580,6 +583,7 @@ export default class Listeners {
             ListenersHelper.setCheckboxValue('#config-tick-key', config.options.axis.keyAxis.ticks.flag);
             ListenersHelper.setCheckboxValue('#config-tick-value', config.options.axis.valueAxis.ticks.flag);
             ListenersHelper.setCheckboxValue('#is-segmented', config.options.charts.findIndex(ch => ch.isSegmented) !== -1);
+            ListenersHelper.setCheckboxValue('#markers', config.options.charts.findIndex(ch => ch.markers.show) !== -1);
             ListenersHelper.setInputValue('#embedded-labels', config.options.charts[0].embeddedLabels);
         } else if (config.options.type === 'polar') {
             ListenersHelper.setInputValue('#chart-polar-type', config.options.charts[0].type);
@@ -623,4 +627,4 @@ engine2.render(model2, getPreparedData(model2, data, config2), document.querySel
 
 //     const newModel = getUpdatedModel(config, newData, designerConfig);
 //     engine.updateValues(newModel, getPreparedData(newModel, newData, config));
-// }, 1050);
+// }, 2000);
