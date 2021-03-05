@@ -30,6 +30,7 @@ export class Line {
 
             lines
                 .data(stackedData)
+                .interrupt()
                 .transition()
                 .duration(1000)
                 .attr('d', d => lineGenerator(d));
@@ -43,6 +44,7 @@ export class Line {
 
                 block.getChartBlock()
                     .select(`.${this.lineChartClass}${Helper.getCssClassesLine(chart.cssClasses)}.chart-element-${index}`)
+                    .interrupt()
                     .transition()
                     .duration(1000)
                     .attr('d', line(data));

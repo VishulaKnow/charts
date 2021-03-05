@@ -30,6 +30,7 @@ export class Area {
 
             areas
                 .data(stackedData)
+                .interrupt()
                 .transition()
                 .duration(1000)
                 .attr('d', d => areaGenerator(d));
@@ -43,6 +44,7 @@ export class Area {
 
                 block.getChartBlock()
                     .select(`.${this.areaChartClass}${Helper.getCssClassesLine(chart.cssClasses)}.chart-element-${index}`)
+                    .interrupt()
                     .transition()
                     .duration(1000)
                     .attr('d', area(data));
