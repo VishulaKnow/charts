@@ -51,7 +51,7 @@ const configCars: Config = {
         charts: [
             {
                 isSegmented: true,
-                type: 'line',
+                type: 'bar',
                 data: {
                     valueFields: [
                         {
