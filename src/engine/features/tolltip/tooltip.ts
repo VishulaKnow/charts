@@ -308,7 +308,9 @@ export class Tooltip {
     }
 
     private static changeDonutHighlightAppearance(segment: Selection<SVGGElement, PieArcDatum<DataRow>, BaseType, unknown>, margin: BlockMargin, blockSize: Size, donutThickness: number, on: boolean): void {
-        interrupt(segment.node());
+        const animationName = 'hover-scaling';
+
+        interrupt(segment.node(), animationName);
 
         let scaleSize = 0;
         if (on)
@@ -316,8 +318,8 @@ export class Tooltip {
 
         segment
             .select('path')
-            .interrupt()
-            .transition()
+            .interrupt(animationName)
+            .transition(animationName)
             .duration(200)
             .ease(easeLinear)
             .attr('d', (d, i) => DonutHelper.getArcGeneratorObject(blockSize, margin, donutThickness)
