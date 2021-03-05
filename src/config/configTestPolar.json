@@ -1,38 +1,39 @@
 {
-  "canvas":{
-    "class":"svg-chart outline",
-    "size":{
-      "width":800,
-      "height":510
-    }
-  },
-  "options":{
-    "title": "Рост стоимости",
-    "type":"polar",
-    "legend":{
-      "show":true
-    },
-    "data":{
-      "dataSource":"dataSet",
-      "keyField":{
-        "name":"brand",
-        "format":"string"
-      }
-    },
-    "charts":[
-      {
-        "title":"Рост стоимости",
-        "type":"donut",
-        "data":{
-          "valueField":{
-            "name":"price",
-            "format":"money"
-          }
-        },
-        "tooltip":{
-          "show":true
+    "canvas": {
+        "class": "svg-chart outline",
+        "size": {
+            "width": 800,
+            "height": 510
         }
-      }
-    ]
-  }
+    },
+    "options": {
+        "title": "Рост стоимости",
+        "type": "polar",
+        "legend": {
+            "show": true
+        },
+        "data": {
+            "dataSource": "dataSet",
+            "keyField": {
+                "name": "brand",
+                "format": "string"
+            }
+        },
+        "charts": [
+            {
+                "title": "Рост стоимости",
+                "type": "donut",
+                "data": {
+                    "valueField": {
+                        "name": "price",
+                        "format": "money",
+                        "title": "Стоимость"
+                    }
+                },
+                "tooltip": {
+                    "show": true
+                }
+            }
+        ]
+    }
 }
