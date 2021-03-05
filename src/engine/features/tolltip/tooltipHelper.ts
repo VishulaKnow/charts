@@ -172,15 +172,13 @@ export class TooltipHelper {
     }
 
     private static scaled(elementSelection: Selection<BaseType, DataRow, BaseType, unknown>, isScaled: boolean): void {
-        const animationName = 'scaling';
-
         elementSelection.nodes().forEach(node => {
-            interrupt(node, animationName);
+            interrupt(node);
         });
 
         elementSelection
-            .interrupt(animationName)
-            .transition(animationName)
+            .interrupt()
+            .transition()
             .duration(50)
             .ease(easeLinear)
             .attr('r', isScaled ? 6 : 4)

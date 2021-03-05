@@ -128,7 +128,7 @@ export class Axis {
         const spans = axisElement.selectAll('tspan');
         axisTextBlocks.attr('text-anchor', anchor);
         spans.attr('text-anchor', anchor);
-        
+
         if (changeCoordinate) {
             axisTextBlocks.attr('x', -(maxLabelSize + AXIS_VERTICAL_LABEL_PADDING));
             spans.attr('x', -(maxLabelSize + AXIS_VERTICAL_LABEL_PADDING));
@@ -148,13 +148,13 @@ export class Axis {
         const labelBlocks = axisElement.selectAll('text');
         labelBlocks.attr('transform', 'rotate(-90)');
 
-        if(keyAxisOrient === 'bottom') {
+        if (keyAxisOrient === 'bottom') {
             labelBlocks
                 .attr('text-anchor', 'end')
                 .attr('x', -AXIS_HORIZONTAL_LABEL_PADDING)
                 .attr('y', -4);
         }
-        else if(keyAxisOrient === 'top') {
+        else if (keyAxisOrient === 'top') {
             labelBlocks
                 .attr('text-anchor', 'start')
                 .attr('x', AXIS_HORIZONTAL_LABEL_PADDING)

@@ -36,6 +36,7 @@ export class Area {
                 .attr('d', d => areaGenerator(d));
 
             areas.each((d, i) => {
+                // '1' - атрибут, показывающий координаты согласно полю значения
                 MarkDot.updateDotsCoordinateByValueAxis(block, d, keyAxisOrient, scales, margin, keyField.name, '1', chart.cssClasses, i, chart.isSegmented);
             });
         } else {
