@@ -627,8 +627,8 @@ new Listeners(engine, config, designerConfig, data);
 
 setInterval(() => {
     const newData = ListenersHelper.getCopy(data);
-    newData["dataSet"][ListenersHelper.randInt(0, 1)]['price'] = ListenersHelper.randInt(0, 1000000);
-    newData["dataSet"][ListenersHelper.randInt(0, 1)]['count'] = ListenersHelper.randInt(0, 1000000);
+    newData["dataSet"][ListenersHelper.randInt(0, 8)]['price'] = ListenersHelper.randInt(0, 100);
+    newData["dataSet"][ListenersHelper.randInt(0, 8)]['count'] = ListenersHelper.randInt(0, 100);
 
     // const newModel4 = getUpdatedModel(config4, newData, designerConfig);
     // engine4.updateValues(newModel4, getPreparedData(newModel4, newData, config));

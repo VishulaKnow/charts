@@ -44,7 +44,7 @@ export class Donut {
         const arcs = items
             .append('path')
             .attr('d', arcGenerator)
-            .each(function(d) { (this as any)._current = d; });
+            .each(function (d) { (this as any)._current = d; });
 
         Helper.setCssClasses(arcs, chart.cssClasses);
         this.setElementsColor(items, chart.style.elementColors);
@@ -59,16 +59,18 @@ export class Donut {
         const arcGenerator = DonutHelper.getArcGenerator(outerRadius, innerRadius);
         const pieGenerator = DonutHelper.getPieGenerator(chart.data.valueField.name, donutSettings.padAngle);
 
-        const arcs = this.getAllArcGroups(block);
-        let path = arcs.select('path');
-        path = path.data(pieGenerator(data));
-        path.transition()
+        const items = this.getAllArcGroups(block)
+            .data(pieGenerator(data));
+        let path = items.select<SVGPathElement>('path');
+
+        path
+            .transition()
             .duration(1000)
-            .attrTween('d', function(d) {
-                const inter = interpolate((this as any)._current, d);
+            .attrTween('d', function (d) {
+                const interpolateFunc = interpolate((this as any)._current, d);
                 const _this = this;
-                return function(t) {
-                    (_this as any)._current = inter(t);
+                return function (t) {
+                    (_this as any)._current = interpolateFunc(t);
                     return arcGenerator((_this as any)._current)
                 }
             });

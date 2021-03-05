@@ -1,18 +1,25 @@
 {
     "dataSet": [
         { "brand": "BMW", "price": 10, "count": 12 },
-        { "brand": "LADA", "price": 50, "count": 10 }
+        { "brand": "LADA", "price": 50, "count": 10 },
+        { "brand": "MERCEDES", "price": 15, "count": 12 },
+        { "brand": "AUDI", "price": 20, "count": 5 },
+        { "brand": "VOLKSWAGEN", "price": 115, "count": 6 },
+        { "brand": "DODGE", "price": 115, "count": 4 },
+        { "brand": "SAAB", "price": 50, "count": 11 },
+        { "brand": "HONDA", "price": 20, "count": 2 },
+        { "brand": "TOYOTA", "price": 117, "count": 15 }
     ],
     "dataSet2": [
-        { "brand": "BMW", "price": 100, "count": 5 },
-        { "brand": "LADA", "price": 25, "count": 2 },
-        { "brand": "MERCEDES", "price": 28, "count": 0 },
-        { "brand": "AUDI", "price": 16, "count": 4 },
-        { "brand": "VOLKSWAGEN", "price": 85, "count": 13 },
-        { "brand": "DODGE", "price": 100, "count": 4 },
-        { "brand": "SAAB", "price": 100, "count": 11 },
-        { "brand": "HONDA", "price": 15, "count": 11 },
-        { "brand": "TOYOTA", "price": 60, "count": 0 }
+        { "brand": "BMW", "price": 10, "count": 12 },
+        { "brand": "LADA", "price": 50, "count": 10 },
+        { "brand": "MERCEDES", "price": 15, "count": 12 },
+        { "brand": "AUDI", "price": 20, "count": 5 },
+        { "brand": "VOLKSWAGEN", "price": 115, "count": 6 },
+        { "brand": "DODGE", "price": 115, "count": 4 },
+        { "brand": "SAAB", "price": 50, "count": 11 },
+        { "brand": "HONDA", "price": 20, "count": 2 },
+        { "brand": "TOYOTA", "price": 117, "count": 15 }
     ],
     "dataSet_large": [
         { "brand": "BMW", "price": 120, "count": 12 },
