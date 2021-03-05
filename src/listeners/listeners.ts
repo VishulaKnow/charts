@@ -601,10 +601,6 @@ const data = require('../assets/dataSet.json');
 // const ch = new Chart(require('../config/configTestPolar.json'), designerConfig, data, false);
 // ch.render(document.querySelector('.main-wrapper2'));
 
-// setTimeout(() => {
-//     chart.destroy();
-// }, 10000);
-
 const model = assembleModel(config, data, designerConfig);
 const engine = new Engine(2);
 engine.render(model, getPreparedData(model, data, config), document.querySelector('.main-wrapper'));
@@ -625,9 +621,6 @@ engine2.render(model2, getPreparedData(model2, data, config2), document.querySel
 //     newData["dataSet"][ListenersHelper.randInt(0, 8)]['price'] = ListenersHelper.randInt(0, 100);
 //     newData["dataSet"][ListenersHelper.randInt(0, 8)]['count'] = ListenersHelper.randInt(0, 100);
 
-//     // const newModel4 = getUpdatedModel(config4, newData, designerConfig);
-//     // engine4.updateValues(newModel4, getPreparedData(newModel4, newData, config));
-
 //     const newModel = getUpdatedModel(config, newData, designerConfig);
-//     engine.updateValues(newModel, getPreparedData(newModel, newData, config))
-// }, 5000);
+//     engine.updateValues(newModel, getPreparedData(newModel, newData, config));
+// }, 1050);

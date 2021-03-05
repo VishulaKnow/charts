@@ -39,8 +39,8 @@ export class ChartRenderer {
             options.axis.keyAxis.orient,
             model.chartSettings.bar,
             model.blockCanvas.size);
-        
-        Title.render(engine.block, 
+
+        Title.render(engine.block,
             options.title,
             model.otherComponents.titleBlock,
             model.blockCanvas.size);
@@ -51,8 +51,8 @@ export class ChartRenderer {
             model.otherComponents.legendBlock,
             model.blockCanvas.size);
 
-        Tooltip.render(engine.block, model, engine.data, engine.chartId, scales);
-        
+        Tooltip.render(engine.block, model, engine.data, scales);
+
         if (model.dataSettings.scope.hidedRecordsAmount !== 0)
             RecordOverflowAlert.render(engine.block, model.dataSettings.scope.hidedRecordsAmount, 'top', options.orient);
     }
@@ -69,20 +69,20 @@ export class ChartRenderer {
             model.blockCanvas.size,
             model.chartSettings.donut);
 
-        Title.render(engine.block, 
+        Title.render(engine.block,
             options.title,
             model.otherComponents.titleBlock,
             model.blockCanvas.size);
 
         Legend.render(engine.block, engine.data, options, model.otherComponents.legendBlock, model.blockCanvas.size);
 
-        Tooltip.render(engine.block, model, engine.data, engine.chartId);
+        Tooltip.render(engine.block, model, engine.data);
 
         if (model.dataSettings.scope.hidedRecordsAmount !== 0 && model.options.legend.position !== 'off')
             RecordOverflowAlert.render(engine.block, model.dataSettings.scope.hidedRecordsAmount, model.options.legend.position);
     }
 
-    public static renderInterval(block: Block, model: Model, data: DataSource, chartId: number): void {
+    public static renderInterval(block: Block, model: Model, data: DataSource): void {
         const options = <IntervalOptionsModel>model.options;
 
         block.renderSvg(model.blockCanvas.size);
@@ -104,14 +104,14 @@ export class ChartRenderer {
             options.axis.keyAxis.orient,
             model.chartSettings);
 
-        Title.render(block, 
+        Title.render(block,
             options.title,
             model.otherComponents.titleBlock,
             model.blockCanvas.size);
 
         Legend.render(block, data, options, model.otherComponents.legendBlock, model.blockCanvas.size);
 
-        Tooltip.render(block, model, data, chartId);
+        Tooltip.render(block, model, data);
 
         if (model.dataSettings.scope.hidedRecordsAmount !== 0)
             RecordOverflowAlert.render(block, model.dataSettings.scope.hidedRecordsAmount, 'top', options.orient);

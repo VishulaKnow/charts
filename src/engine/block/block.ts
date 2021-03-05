@@ -4,22 +4,23 @@ import { Helper } from "../helper";
 import { NamesManager } from "../namesManager";
 import { BlockHelper } from "./blockHelper";
 
-export class Block
-{
+export class Block {
+    public parentElement: HTMLElement;
+    public id: number;
+
     private svgCssClasses: string[];
     private wrapperCssClasses: string[];
     private parentElementSelection: Selection<BaseType, any, HTMLElement, any>;
     private wrapper: Selection<BaseType, any, HTMLElement, any>;
     private chartBlockClass = 'chart-block';
 
-    public parentElement: HTMLElement;
-
-    constructor(cssClass: string, parentElement: HTMLElement) {
+    constructor(cssClass: string, parentElement: HTMLElement, blockId: number) {
         this.wrapperCssClasses = Helper.getCssClassesArray(cssClass);
         this.svgCssClasses = Helper.getCssClassesArray(cssClass);
         this.wrapperCssClasses = BlockHelper.getFormattedCssClassesForWrapper(this.wrapperCssClasses);
         this.parentElement = parentElement;
         this.parentElementSelection = select(parentElement);
+        this.id = blockId;
     }
 
     public renderSvg(blockSize: Size): void {
@@ -56,8 +57,8 @@ export class Block
     public getChartBlock(): Selection<SVGGElement, unknown, HTMLElement, any> {
         return this.getSvg()
             .select(`.${this.chartBlockClass}`);
-    } 
-    
+    }
+
     public renderClipPath(margin: BlockMargin, blockSize: Size): void {
         const attributes = BlockHelper.getChartBlockAttributes(blockSize, margin);
         this.renderDefs()
@@ -73,10 +74,10 @@ export class Block
     public renderDefs(): Selection<SVGDefsElement, unknown, HTMLElement, unknown> {
         let defs = this.getSvg()
             .select<SVGDefsElement>('defs');
-        if(defs.empty())
+        if (defs.empty())
             defs = this.getSvg()
                 .append<SVGDefsElement>('defs');
-    
+
         return defs;
     }
 

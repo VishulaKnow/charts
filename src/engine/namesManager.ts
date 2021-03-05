@@ -5,7 +5,7 @@ export class NamesManager {
         return this.prefix + classOfElem;
     }
 
-    public static getId(idName: string, chartId: number): string {
-        return this.prefix + idName + '-' + chartId;
+    public static getId(idName: string, blockId: number): string {
+        return this.prefix + idName + '-' + blockId;
     }
 }
