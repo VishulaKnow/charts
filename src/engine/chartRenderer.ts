@@ -52,6 +52,7 @@ export class ChartRenderer {
             model.blockCanvas.size);
 
         Tooltip.render(engine.block, model, engine.data, engine.chartId, scales);
+        
         if (model.dataSettings.scope.hidedRecordsAmount !== 0)
             RecordOverflowAlert.render(engine.block, model.dataSettings.scope.hidedRecordsAmount, 'top', options.orient);
     }
@@ -76,6 +77,7 @@ export class ChartRenderer {
         Legend.render(engine.block, engine.data, options, model.otherComponents.legendBlock, model.blockCanvas.size);
 
         Tooltip.render(engine.block, model, engine.data, engine.chartId);
+
         if (model.dataSettings.scope.hidedRecordsAmount !== 0 && model.options.legend.position !== 'off')
             RecordOverflowAlert.render(engine.block, model.dataSettings.scope.hidedRecordsAmount, model.options.legend.position);
     }
@@ -105,10 +107,12 @@ export class ChartRenderer {
         Title.render(block, 
             options.title,
             model.otherComponents.titleBlock,
-            model.blockCanvas.size
-            );
+            model.blockCanvas.size);
+
         Legend.render(block, data, options, model.otherComponents.legendBlock, model.blockCanvas.size);
+
         Tooltip.render(block, model, data, chartId);
+
         if (model.dataSettings.scope.hidedRecordsAmount !== 0)
             RecordOverflowAlert.render(block, model.dataSettings.scope.hidedRecordsAmount, 'top', options.orient);
     }

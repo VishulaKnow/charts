@@ -4,7 +4,7 @@ import { AxisModel, LabelSize } from "./axisModel";
 import { DataManagerModel } from "./dataManagerModel";
 import { LegendModel, MIN_DONUT_BLOCK_SIZE } from "./legendModel/legendModel";
 import { BlockMargin, DataScope, DataSource, LegendBlockModel, Orient, OtherComponents, PolarOptionsModel, Size, TitleBlockModel } from "./model";
-import { AxisType } from "./modelOptions";
+import { AxisType } from "./modelBuilder";
 import { OtherComponentsModel } from "./otherComponents";
 import { TwoDimensionalModel } from "./twoDimensionalModel";
 

@@ -1,5 +1,5 @@
 import Engine from '../engine/engine';
-import { assembleModel, getPreparedData, getUpdatedModel } from '../model/modelOptions';
+import { assembleModel, getPreparedData, getUpdatedModel } from '../model/modelBuilder';
 import { Config, IntervalOptions, PolarChart, PolarOptions, TwoDimensionalChart, TwoDimensionalOptions } from '../config/config'
 import { DesignerConfig } from '../designer/designerConfig';
 import { DataSource } from '../model/model';
@@ -625,14 +625,14 @@ new Listeners(engine, config, designerConfig, data);
 // const engine2 = new Engine(4);
 // engine2.render(model2, getPreparedData(model2, data, config2), document.querySelector('.main-wrapper2'));
 
-setInterval(() => {
-    const newData = ListenersHelper.getCopy(data);
-    newData["dataSet"][ListenersHelper.randInt(0, 8)]['price'] = ListenersHelper.randInt(0, 100);
-    newData["dataSet"][ListenersHelper.randInt(0, 8)]['count'] = ListenersHelper.randInt(0, 100);
+// setInterval(() => {
+//     const newData = ListenersHelper.getCopy(data);
+//     newData["dataSet"][ListenersHelper.randInt(0, 8)]['price'] = ListenersHelper.randInt(0, 100);
+//     newData["dataSet"][ListenersHelper.randInt(0, 8)]['count'] = ListenersHelper.randInt(0, 100);
 
-    // const newModel4 = getUpdatedModel(config4, newData, designerConfig);
-    // engine4.updateValues(newModel4, getPreparedData(newModel4, newData, config));
+//     // const newModel4 = getUpdatedModel(config4, newData, designerConfig);
+//     // engine4.updateValues(newModel4, getPreparedData(newModel4, newData, config));
 
-    const newModel = getUpdatedModel(config, newData, designerConfig);
-    engine.updateValues(newModel, getPreparedData(newModel, newData, config))
-}, 5000);
+//     const newModel = getUpdatedModel(config, newData, designerConfig);
+//     engine.updateValues(newModel, getPreparedData(newModel, newData, config))
+// }, 5000);

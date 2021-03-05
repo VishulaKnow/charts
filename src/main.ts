@@ -2,7 +2,7 @@ import { Config, ValueField, AdditionalElements, Size, TwoDimensionalChartData, 
 import { DesignerConfig, Formatter, DonutOptionsCanvas, DataTypeOptions, DataType, ChartStyleConfig, BarOptionsCanvas, AxisLabelCanvas } from "./designer/designerConfig";
 import Engine from "./engine/engine";
 import { DataSource, Model } from "./model/model";
-import { assembleModel, getPreparedData } from "./model/modelOptions";
+import { assembleModel, getPreparedData } from "./model/modelBuilder";
 
 class Chart {
     public static chartCounter = 0;

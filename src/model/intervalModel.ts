@@ -6,7 +6,7 @@ import { DataManagerModel } from "./dataManagerModel";
 import { GridLineModel } from "./gridLineModel";
 import { LegendModel } from "./legendModel/legendModel";
 import { AdditionalElementsOptions, BlockMargin, DataScope, DataSource, IntervalChartModel, IntervalOptionsModel } from "./model";
-import { AxisType } from "./modelOptions";
+import { AxisType } from "./modelBuilder";
 import { ScaleModel, ScaleType } from "./scaleModel";
 
 export class IntervalModel {

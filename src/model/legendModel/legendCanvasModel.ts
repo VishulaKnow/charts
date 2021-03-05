@@ -1,5 +1,5 @@
 import { LegendPosition } from "../model";
-import { CLASSES } from "../modelOptions";
+import { CLASSES } from "../modelBuilder";
 import { LegendModel } from "./legendModel";
 
 export type LegendItemsDirection = 'row' | 'column'

@@ -64,6 +64,7 @@ export class Donut {
         let path = items.select<SVGPathElement>('path');
 
         path
+            .interrupt()
             .transition()
             .duration(1000)
             .attrTween('d', function (d) {
