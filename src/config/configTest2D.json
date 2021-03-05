@@ -34,9 +34,6 @@
                     "value": true,
                     "key": true
                 }
-            },
-            "marks": {
-                "show": false
             }
         },
         "legend": {
@@ -66,6 +63,9 @@
                 "tooltip": {
                     "show": true
                 },
+                "markers": {
+                    "show": true
+                },
                 "embeddedLabels": "key"
             },
             {
@@ -87,6 +87,9 @@
                 },
                 "tooltip": {
                     "show": true
+                },
+                "markers": {
+                    "show": false
                 },
                 "embeddedLabels": "key"
             }
