@@ -31,7 +31,8 @@ export class MarkDot {
             .attr('cy', d => attrs.cy(d))
             .attr('r', this.dotRadius)
             .style('stroke-width', '3px')
-            .style('fill', 'white');
+            .style('fill', 'white')
+            .style('clip-path', `url(#${block.getClipPathId()})`);
 
         Helper.setCssClasses(dots, Helper.getCssClassesWithElementIndex(cssClasses, itemIndex));
         Helper.setChartElementColor(dots, colorPalette, itemIndex, 'stroke');

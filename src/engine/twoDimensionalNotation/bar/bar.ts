@@ -68,7 +68,7 @@ export class Bar {
                 .data(data)
                 .append('rect')
                 .attr('class', this.barItemClass)
-            // .style('clip-path', `url(${block.getClipPathId()})`);
+                .style('clip-path', `url(#${block.getClipPathId()})`);
 
             const barAttrs = BarHelper.getGroupedBarAttrs(keyAxisOrient,
                 scales,
@@ -111,7 +111,7 @@ export class Bar {
             .enter()
             .append('rect')
             .attr('class', this.barItemClass)
-        // .style('clip-path', `url(${block.getClipPathId()})`);
+            .style('clip-path', `url(#${block.getClipPathId()})`);
 
         const barAttrs = BarHelper.getStackedBarAttr(keyAxisOrient,
             scales,
@@ -130,7 +130,7 @@ export class Bar {
 
         Helper.setCssClasses(groups, chart.cssClasses);
         Helper.setCssClasses(bars, chart.cssClasses); // Для обозначения принадлежности бара к конкретному чарту
-        
+
         const thisClass = this;
         groups.each(function (d, i) {
             Helper.setCssClasses(select(this).selectAll(`rect${Helper.getCssClassesLine(chart.cssClasses)}`), Helper.getCssClassesWithElementIndex(chart.cssClasses, i)); // Для обозначения принадлежности бара к конкретной части стака
@@ -167,7 +167,7 @@ export class Bar {
         }
 
         BarHelper.setGroupedBarAttrsByValueAxis(barAttrs, axisOrient, margin, scaleValue, valueField, blockSize);
-        
+
         const barsTran = bars
             .data(newData)
             .interrupt()

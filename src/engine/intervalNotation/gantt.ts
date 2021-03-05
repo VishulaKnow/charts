@@ -21,7 +21,7 @@ export class Gantt {
             .enter()
             .append('rect')
             .attr('class', this.ganttItemClass)
-            .style('clip-path', `url(${block.getClipPathId()})`);
+            .style('clip-path', `url(#${block.getClipPathId()})`);
 
         const itemsAttrs = this.getItemsAttrsByKeyOrient(keyAxisOrient,
             scales,

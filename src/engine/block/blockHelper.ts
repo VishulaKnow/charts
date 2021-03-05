@@ -8,10 +8,9 @@ export interface GAttributes {
     height: number;
 }
 
-export class BlockHelper
-{
-    public static getChartBlockAttributes(blockSize: Size, margin: BlockMargin): GAttributes {
-        const outSize = 5.5;
+export class BlockHelper {
+    public static getClipPathAttributes(blockSize: Size, margin: BlockMargin): GAttributes {
+        const outSize = 9;
         return {
             x: margin.left - outSize,
             y: margin.top - outSize,
@@ -22,10 +21,10 @@ export class BlockHelper
 
     public static getFormattedCssClassesForWrapper(cssClasses: string[]): string[] {
         const wrapperClasses: string[] = [];
-        cssClasses.forEach(cssClass =>{
+        cssClasses.forEach(cssClass => {
             wrapperClasses.push(cssClass + '-wrapper');
         });
-        
+
         return wrapperClasses
     }
 }

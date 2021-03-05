@@ -61,13 +61,13 @@ export class Line {
                 .attr('d', lineGenerator(data))
                 .attr('class', this.lineChartClass)
                 .style('fill', 'none')
-                // .style('clip-path', `url(${block.getClipPathId()})`)
+                .style('clip-path', `url(#${block.getClipPathId()})`)
                 .style('pointer-events', 'none');
 
             Helper.setCssClasses(path, Helper.getCssClassesWithElementIndex(chart.cssClasses, index));
             Helper.setChartStyle(path, chart.style, index, 'stroke');
 
-            if(markFlag)
+            if (markFlag)
                 MarkDot.render(block, data, keyAxisOrient, scales, margin, keyField.name, valueField.name, chart.cssClasses, index, chart.style.elementColors, false);
         });
     }
@@ -86,7 +86,7 @@ export class Line {
             .attr('d', d => lineGenerator(d))
             .attr('class', this.lineChartClass)
             .style('fill', 'none')
-            // .style('clip-path', `url(${block.getClipPathId()})`)
+            .style('clip-path', `url(#${block.getClipPathId()})`)
             .style('pointer-events', 'none');
 
         lines.each(function (d, i) {
@@ -96,7 +96,7 @@ export class Line {
         this.setSegmentColor(lines, chart.style.elementColors);
 
         stackedData.forEach((sd, index) => {
-            if(markFlag)
+            if (markFlag)
                 MarkDot.render(block, sd, keyAxisOrient, scales, margin, keyField.name, '1', chart.cssClasses, index, chart.style.elementColors, true);
         });
     }
