@@ -120,6 +120,7 @@ export interface IAxisModel {
     valueAxis: AxisModelOptions;
 }
 export interface AxisModelOptions {
+    visibility: boolean;
     type: AxisType;
     orient: Orient;
     translate: TranslateModel;
@@ -260,5 +261,5 @@ export interface LegendBlockModel {
     right: LegendBlockCanvas;
 }
 
-export interface TitleBlockModel extends ComponentBlockModel {}
-interface LegendBlockCanvas extends ComponentBlockModel {}
+export interface TitleBlockModel extends ComponentBlockModel { }
+interface LegendBlockCanvas extends ComponentBlockModel { }

@@ -9,8 +9,7 @@ import { BlockMargin, DataScope, DataSource, AdditionalElementsOptions, TwoDimen
 import { AxisType } from "./modelBuilder";
 import { ScaleModel, ScaleType } from "./scaleModel";
 
-export class TwoDimensionalModel
-{
+export class TwoDimensionalModel {
     public static getOptions(config: Config, designerConfig: DesignerConfig, margin: BlockMargin, dataScope: DataScope, data: DataSource): TwoDimensionalOptionsModel {
         const configOptions = <TwoDimensionalOptions>config.options;
 
@@ -51,7 +50,8 @@ export class TwoDimensionalModel
                         maxSize: AxisModel.getLabelSize(designerConfig.canvas.axisLabel.maxSize.main, data[configOptions.data.dataSource].map(d => d[configOptions.data.keyField.name])).width,
                         positition: AxisModel.getKeyAxisLabelPosition(margin, config.canvas.size, DataManagerModel.getDataValuesByKeyField(data, configOptions.data.dataSource, configOptions.data.keyField.name).length),
                         visible: !TwoDimensionalModel.getChartsEmbeddedLabelsFlag(configOptions.charts, configOptions.orientation)
-                    }
+                    },
+                    visibility: configOptions.axis.keyAxis.visibility
                 },
                 valueAxis: {
                     type: 'value',
@@ -59,14 +59,15 @@ export class TwoDimensionalModel
                     translate: {
                         translateX: AxisModel.getAxisTranslateX(AxisType.Value, configOptions.orientation, configOptions.axis.valueAxis.position, margin, config.canvas.size.width),
                         translateY: AxisModel.getAxisTranslateY(AxisType.Value, configOptions.orientation, configOptions.axis.valueAxis.position, margin, config.canvas.size.height)
-                    },          
+                    },
                     cssClass: 'value-axis',
                     ticks: configOptions.axis.valueAxis.ticks,
                     labels: {
                         maxSize: designerConfig.canvas.axisLabel.maxSize.main,
                         positition: 'straight',
                         visible: true
-                    }
+                    },
+                    visibility: configOptions.axis.valueAxis.visibility
                 }
             },
             type: configOptions.type,
@@ -79,7 +80,7 @@ export class TwoDimensionalModel
     public static getChartsEmbeddedLabelsFlag(charts: TwoDimensionalChart[], chartOrientation: ChartOrientation): boolean {
         // Если НЕ найден хотя бы один чарт, который сегментированный или хотя бы один НЕ бар чарт, то лейблы можно прятать
         return charts.findIndex(chart => chart.isSegmented || chart.type !== 'bar') === -1
-            && chartOrientation === 'horizontal' 
+            && chartOrientation === 'horizontal'
             && charts.length === this.findChartsWithEmbeddedKeyLabels(charts).length;
     }
 
@@ -109,7 +110,7 @@ export class TwoDimensionalModel
                 index
             });
         });
-        
+
         return chartsModel;
     }
 
@@ -117,7 +118,7 @@ export class TwoDimensionalModel
         const chartsWithEmbeddedLabels: TwoDimensionalChart[] = [];
 
         charts.forEach(chart => {
-            if(chart.type === 'bar' && chart.embeddedLabels === 'key')
+            if (chart.type === 'bar' && chart.embeddedLabels === 'key')
                 chartsWithEmbeddedLabels.push(chart);
         });
 
@@ -125,7 +126,7 @@ export class TwoDimensionalModel
     }
 
     private static getEmbeddedLabelType(currentChart: TwoDimensionalChart, chartOrientation: ChartOrientation): EmbeddedLabelTypeModel {
-        if(chartOrientation === 'horizontal' && currentChart.type === 'bar')
+        if (chartOrientation === 'horizontal' && currentChart.type === 'bar')
             return currentChart.embeddedLabels;
         return 'none';
     }

@@ -515,9 +515,21 @@ export default class Listeners {
                 thisClass.updateFull();
             }
         });
+        document.querySelector('#key-axis-visibility').addEventListener('change', function () {
+            if (config.options.type === '2d' || config.options.type === 'interval') {
+                config.options.axis.keyAxis.visibility = this.checked;
+                thisClass.updateFull();
+            }
+        });
         document.querySelector('#value-axis-orient').addEventListener('change', function () {
             if (config.options.type === '2d' || config.options.type === 'interval') {
                 config.options.axis.valueAxis.position = this.value;
+                thisClass.updateFull();
+            }
+        });
+        document.querySelector('#value-axis-visibility').addEventListener('change', function () {
+            if (config.options.type === '2d' || config.options.type === 'interval') {
+                config.options.axis.valueAxis.visibility = this.checked;
                 thisClass.updateFull();
             }
         });
@@ -589,6 +601,8 @@ export default class Listeners {
             ListenersHelper.setCheckboxValue('#is-segmented', config.options.charts.findIndex(ch => ch.isSegmented) !== -1);
             ListenersHelper.setCheckboxValue('#markers', config.options.charts.findIndex(ch => ch.markers.show) !== -1);
             ListenersHelper.setInputValue('#embedded-labels', config.options.charts[0].embeddedLabels);
+            ListenersHelper.setCheckboxValue('#key-axis-visibility', config.options.axis.keyAxis.visibility);
+            ListenersHelper.setCheckboxValue('#value-axis-visibility', config.options.axis.valueAxis.visibility);
         } else if (config.options.type === 'polar') {
             ListenersHelper.setInputValue('#chart-polar-type', config.options.charts[0].type);
         }

@@ -12,7 +12,7 @@ import { ScaleModel, ScaleType } from "./scaleModel";
 export class IntervalModel {
     public static getOptions(config: Config, designerConfig: DesignerConfig, margin: BlockMargin, dataScope: DataScope, data: DataSource): IntervalOptionsModel {
         const configOptions = <IntervalOptions>config.options;
-        
+
         return {
             legend: LegendModel.getLegendModel(config.options.type, config.options.legend.show, config.canvas.size, margin),
             title: configOptions.title,
@@ -38,7 +38,7 @@ export class IntervalModel {
             },
             axis: {
                 keyAxis: {
-                    type:  'key',
+                    type: 'key',
                     orient: AxisModel.getAxisOrient(AxisType.Key, configOptions.orientation, configOptions.axis.keyAxis.position),
                     translate: {
                         translateX: AxisModel.getAxisTranslateX(AxisType.Key, configOptions.orientation, configOptions.axis.keyAxis.position, margin, config.canvas.size.width),
@@ -50,7 +50,8 @@ export class IntervalModel {
                         maxSize: AxisModel.getLabelSize(designerConfig.canvas.axisLabel.maxSize.main, data[configOptions.data.dataSource].map(d => d[configOptions.data.keyField.name])).width,
                         positition: AxisModel.getKeyAxisLabelPosition(margin, config.canvas.size, DataManagerModel.getDataValuesByKeyField(data, configOptions.data.dataSource, configOptions.data.keyField.name).length),
                         visible: true
-                    }
+                    },
+                    visibility: configOptions.axis.keyAxis.visibility
                 },
                 valueAxis: {
                     type: 'value',
@@ -58,14 +59,15 @@ export class IntervalModel {
                     translate: {
                         translateX: AxisModel.getAxisTranslateX(AxisType.Value, configOptions.orientation, configOptions.axis.valueAxis.position, margin, config.canvas.size.width),
                         translateY: AxisModel.getAxisTranslateY(AxisType.Value, configOptions.orientation, configOptions.axis.valueAxis.position, margin, config.canvas.size.height)
-                    },          
-                    cssClass: 'value-axis',                    
+                    },
+                    cssClass: 'value-axis',
                     ticks: configOptions.axis.valueAxis.ticks,
                     labels: {
                         maxSize: designerConfig.canvas.axisLabel.maxSize.main,
                         positition: 'straight',
                         visible: true
-                    }
+                    },
+                    visibility: configOptions.axis.valueAxis.visibility
                 }
             },
             data: { ...configOptions.data },
