@@ -181,12 +181,14 @@ export default class Listeners {
                 ],
                 axis: {
                     keyAxis: {
+                        visibility: true,
                         position: ListenersHelper.getInputValue('#key-axis-orient') as 'start' | 'end',
                         ticks: {
                             flag: false
                         }
                     },
                     valueAxis: {
+                        visibility: true,
                         domain: {
                             start: -1,
                             end: -1
@@ -250,12 +252,14 @@ export default class Listeners {
                 ],
                 axis: {
                     keyAxis: {
+                        visibility: true,
                         position: ListenersHelper.getInputValue('#key-axis-orient') as "start" | "end",
                         ticks: {
                             flag: false
                         }
                     },
                     valueAxis: {
+                        visibility: true,
                         position: ListenersHelper.getInputValue('#value-axis-orient') as "start" | "end",
                         ticks: {
                             flag: false
@@ -622,11 +626,11 @@ engine2.render(model2, getPreparedData(model2, data, config2), document.querySel
 
 import { interval } from 'd3-timer'
 
-interval(() => {
-    const newData = ListenersHelper.getCopy(data);
-    // newData["dataSet"][ListenersHelper.randInt(0, 8)]['price'] = ListenersHelper.randInt(0, 100);
-    // newData["dataSet"][ListenersHelper.randInt(0, 8)]['count'] = ListenersHelper.randInt(0, 100);
+// interval(() => {
+//     const newData = ListenersHelper.getCopy(data);
+//     newData["dataSet"][ListenersHelper.randInt(0, 8)]['price'] = ListenersHelper.randInt(0, 100);
+//     newData["dataSet"][ListenersHelper.randInt(0, 8)]['count'] = ListenersHelper.randInt(0, 100);
 
-    const newModel = getUpdatedModel(config, newData, designerConfig);
-    engine.updateValues(newModel, getPreparedData(newModel, newData, config));
-}, 2000, 2000);
+//     const newModel = getUpdatedModel(config, newData, designerConfig);
+//     engine.updateValues(newModel, getPreparedData(newModel, newData, config));
+// }, 2000, 2000);

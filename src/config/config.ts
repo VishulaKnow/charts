@@ -93,6 +93,7 @@ export interface TwoDimensionalAxis {
 }
 
 export interface AxisOptions {
+    visibility: boolean;
     position: AxisPosition;
     ticks: AxisTicks;
 }
@@ -110,7 +111,7 @@ export interface NumberDomain {
     end: number;
 }
 
-interface DiscreteAxisOptions extends AxisOptions {}
+interface DiscreteAxisOptions extends AxisOptions { }
 
 
 //====================================================== IntervalOptions
@@ -119,7 +120,7 @@ export interface IntervalAxis {
     valueAxis: DateAxisOptions;
 }
 
-interface DateAxisOptions extends AxisOptions {}
+interface DateAxisOptions extends AxisOptions { }
 
 
 //====================================================== Charts
@@ -144,7 +145,7 @@ export interface PolarChart extends ChartSettings {
     data: PolarChartData;
 }
 
-export interface IntervalChart extends ChartSettings { 
+export interface IntervalChart extends ChartSettings {
     type: IntervalChartType;
     data: IntervalChartData;
 }

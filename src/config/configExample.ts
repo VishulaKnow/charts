@@ -4,7 +4,7 @@ const configCars: Config = {
     canvas: {
         class: 'outline',
         size: {
-            width: 860,
+            width: 960,
             height: 510
         }
     },
@@ -13,12 +13,14 @@ const configCars: Config = {
         title: 'График по 14 показателям в 4 разрезах, название длинное в одну строчку, если не влезает, то скрываем все в 3 точки',
         axis: {
             keyAxis: {
+                visibility: true,
                 position: 'start',
                 ticks: {
                     flag: false
                 }
             },
             valueAxis: {
+                visibility: true,
                 domain: {
                     start: -1,
                     end: -1
@@ -120,12 +122,14 @@ const configDemo: Config = {
         type: '2d',
         axis: {
             keyAxis: {
+                visibility: true,
                 position: 'end',
                 ticks: {
                     flag: false
                 }
             },
             valueAxis: {
+                visibility: true,
                 domain: {
                     start: -1,
                     end: -1
