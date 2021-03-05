@@ -60,7 +60,7 @@ export class TooltipHelper {
         tooltipContentBlock.append('div')
             .attr('class', 'tooltip-group tooltip-head')
             .text(keyValue);
-            
+
         const text = this.getTooltipItemText(data, dataOptions, keyValue, chart.data.valueField, false);
         this.fillTooltipContent(tooltipContentBlock, markColor, text);
     }
@@ -135,22 +135,22 @@ export class TooltipHelper {
         this.setTooltipArrowCoordinate(tooltipArrow, this.getTooltipArrowPadding(tooltipBlockNode, horizontalPad));
 
         return [coordinate[0] - TOOLTIP_ARROW_PADDING_X - horizontalPad,
-            coordinate[1] - TOOLTIP_ARROW_PADDING_Y - tooltipBlockNode.getBoundingClientRect().height - verticalPad];
+        coordinate[1] - TOOLTIP_ARROW_PADDING_Y - tooltipBlockNode.getBoundingClientRect().height - verticalPad];
     }
 
-    public static highlight2DElements(block: Block, keyFieldName: string, keyValue: string, charts: TwoDimensionalChartModel[], filterId: string): void {     
+    public static highlight2DElements(block: Block, keyFieldName: string, keyValue: string, charts: TwoDimensionalChartModel[], filterId: string): void {
         this.remove2DElementsHighlighting(block, charts);
 
         charts.forEach(chart => {
             const elems = Helper.getChartElements(block, chart);
 
             let selectedElems: Selection<BaseType, DataRow, BaseType, unknown>;
-            if(!chart.isSegmented)
+            if (!chart.isSegmented)
                 selectedElems = elems.filter(d => d[keyFieldName] === keyValue);
-            else 
+            else
                 selectedElems = elems.filter(d => d.data[keyFieldName] === keyValue);
 
-            if(chart.type === 'area' || chart.type === 'line') {
+            if (chart.type === 'area' || chart.type === 'line') {
                 elems.call(this.scaled, false);
                 selectedElems.call(this.scaled, true);
             } else {
@@ -162,7 +162,7 @@ export class TooltipHelper {
     public static remove2DElementsHighlighting(block: Block, charts: TwoDimensionalChartModel[]): void {
         charts.forEach(chart => {
             const elems = Helper.getChartElements(block, chart);
-            if(chart.type === 'area' || chart.type === 'line') {
+            if (chart.type === 'area' || chart.type === 'line') {
                 elems.call(this.scaled, false);
             } else {
                 elems.classed('chart-element-highlight', false);
@@ -171,14 +171,14 @@ export class TooltipHelper {
         });
     }
 
-    private static scaled(elementSelection: Selection<BaseType, DataRow, BaseType, unknown>, isScaled: boolean) : void {
+    private static scaled(elementSelection: Selection<BaseType, DataRow, BaseType, unknown>, isScaled: boolean): void {
         elementSelection.nodes().forEach(node => {
-            interrupt(node);
+            interrupt(node, 'scaling');
         });
-        
+
         elementSelection
-            .interrupt()
-            .transition()
+            .interrupt('scaling')
+            .transition('scaling')
             .duration(50)
             .ease(easeLinear)
             .attr('r', isScaled ? 6 : 4)
@@ -225,7 +225,7 @@ export class TooltipHelper {
     }
 
     public static getTooltipLineAttributes(scaleKey: AxisScale<any>, margin: BlockMargin, key: string, chartOrientation: ChartOrientation, blockSize: Size): TooltipLineAttributes {
-        const convexSize = 5;        
+        const convexSize = 5;
         const attributes: TooltipLineAttributes = {
             x1: 0, x2: 0, y1: 0, y2: 0
         }
@@ -269,7 +269,7 @@ export class TooltipHelper {
     private static getTooltipItemText(data: DataSource, dataOptions: OptionsModelData, keyValue: string, valueField: ValueField, showKey: boolean = true): string {
         const row = data[dataOptions.dataSource].find(d => d[dataOptions.keyField.name] === keyValue);
         let text: string;
-        
+
         text = `<span class="tooltip-field-title">${valueField.title}</span><span class="tooltip-field-value">${ValueFormatter.formatField(valueField.format, row[valueField.name])}</span>`;
 
         return text;

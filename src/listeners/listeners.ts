@@ -414,16 +414,11 @@ export default class Listeners {
                 const newData = thisClass.getDataWithRandomValues(dataCopy, max);
                 const model = getUpdatedModel(thisClass.config, newData, thisClass.designerConfig);
                 const preparedData = getPreparedData(model, newData, config);
-                
-                if (config.options.type === '2d') {
-                    if(config.options.axis.valueAxis.domain.end < max)
-                        config.options.axis.valueAxis.domain.end = max;
 
-                    thisClass.engine.updateValues(model, preparedData);
+                if (config.options.type === '2d' && config.options.axis.valueAxis.domain.end < max) {
+                    config.options.axis.valueAxis.domain.end = max;
                 }
-                else {
-                    thisClass.engine.updateFullBlock(model, preparedData);
-                }
+                thisClass.engine.updateValues(model, preparedData);
             }
         });
         document.querySelector('#max-random-value').addEventListener('keydown', function (e: any) {
@@ -433,11 +428,11 @@ export default class Listeners {
                 const newData = thisClass.getDataWithRandomValues(copy, max);
                 const model = getUpdatedModel(thisClass.config, newData, thisClass.designerConfig);
                 const preparedData = getPreparedData(model, newData, config);
-                
-                if (config.options.type === '2d')
-                    thisClass.engine.updateValues(model, newData);
-                else
-                    thisClass.engine.updateFullBlock(model, preparedData);
+
+                if (config.options.type === '2d' && config.options.axis.valueAxis.domain.end < max) {
+                    config.options.axis.valueAxis.domain.end = max;
+                }
+                thisClass.engine.updateValues(model, preparedData);
             }
         });
     }

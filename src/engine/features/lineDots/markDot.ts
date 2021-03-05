@@ -8,13 +8,12 @@ import { Scale, Scales } from "../scale/scale";
 
 export interface DotAttrs {
     cx: (data: DataRow) => number;
-    cy: (data: DataRow) => number; 
+    cy: (data: DataRow) => number;
 }
 
 select.prototype.transition = transition;
 
-export class MarkDot
-{
+export class MarkDot {
     public static dotClass = 'dot';
     private static dotRadius = 4;
 
@@ -33,7 +32,7 @@ export class MarkDot
             .attr('r', this.dotRadius)
             .style('stroke-width', '3px')
             .style('fill', 'white');
-        
+
         Helper.setCssClasses(dots, Helper.getCssClassesWithElementIndex(cssClasses, itemIndex));
         Helper.setChartElementColor(dots, colorPalette, itemIndex, 'stroke');
     }
@@ -51,25 +50,26 @@ export class MarkDot
         const dots = block.getChartBlock()
             .selectAll(`.${this.dotClass}${Helper.getCssClassesLine(cssClasses)}.chart-element-${index}`)
             .data(data);
-        
+
         const attrs = this.getDotAttrs(keyAxisOrient, scales, margin, keyField, valueField, isSegmented);
-        
+
         dots
+            .interrupt()
             .transition()
             .duration(1000)
-                .attr('cx', d => attrs.cx(d))
-                .attr('cy', d => attrs.cy(d));
+            .attr('cx', d => attrs.cx(d))
+            .attr('cy', d => attrs.cy(d));
     }
 
     private static getDotAttrs(keyAxisOrient: Orient, scales: Scales, margin: BlockMargin, keyField: string, valueField: string, isSegmented: boolean): DotAttrs {
         const attrs: DotAttrs = { cx: null, cy: null }
 
-        if(keyAxisOrient === 'left' || keyAxisOrient === 'right') {
+        if (keyAxisOrient === 'left' || keyAxisOrient === 'right') {
             attrs.cx = d => scales.scaleValue(d[valueField]) + margin.left;
             attrs.cy = d => Scale.getScaledValue(scales.scaleKey, this.getKeyFieldValue(d, keyField, isSegmented)) + margin.top;
-        } else if(keyAxisOrient === 'bottom' || keyAxisOrient === 'top') {
-            attrs.cx = d => Scale.getScaledValue(scales.scaleKey, this.getKeyFieldValue(d, keyField, isSegmented)) + margin.left,
-            attrs.cy = d => scales.scaleValue(d[valueField]) + margin.top
+        } else if (keyAxisOrient === 'bottom' || keyAxisOrient === 'top') {
+            attrs.cx = d => Scale.getScaledValue(scales.scaleKey, this.getKeyFieldValue(d, keyField, isSegmented)) + margin.left;
+            attrs.cy = d => scales.scaleValue(d[valueField]) + margin.top;
         }
 
         return attrs;

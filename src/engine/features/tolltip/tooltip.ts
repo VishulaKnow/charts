@@ -111,7 +111,7 @@ export class Tooltip {
 
         const filterId = NamesManager.getId('shadow', chartId);
         this.renderShadowFilter(block, filterId);
-        
+
         elemets
             .on('mouseover', function (_event, dataRow) {
                 thisClass.showTooltipBlock(tooltipBlock);
