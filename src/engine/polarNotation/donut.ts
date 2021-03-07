@@ -15,6 +15,8 @@ export interface Translate {
 
 export class Donut {
     public static donutBlockClass = 'donut-block';
+    public static arcPathClass = 'arc-path';
+
     private static arcItemClass = 'arc';
 
     public static render(block: Block, data: DataRow[], margin: BlockMargin, chart: PolarChartModel, blockSize: Size, donutSettings: DonutChartSettings): void {
@@ -44,6 +46,7 @@ export class Donut {
         const arcs = items
             .append('path')
             .attr('d', arcGenerator)
+            .attr('class', this.arcPathClass)
             .each(function (d) { (this as any)._current = d; });
 
         Helper.setCssClasses(arcs, chart.cssClasses);

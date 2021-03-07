@@ -8,12 +8,15 @@ import { Helper } from "../../helper";
 import { Block } from "../../block/block";
 import { Scale, Scales } from "../scale/scale";
 import { AXIS_HORIZONTAL_LABEL_PADDING, AXIS_VERTICAL_LABEL_PADDING } from "../../../model/marginModel";
+import { NamesManager } from '../../namesManager';
 
 type TextAnchor = 'start' | 'end' | 'middle';
 
 const MINIMAL_STEP_SIZE = 40;
 
 export class Axis {
+    public static axesClass = NamesManager.getClassName('axis');
+
     public static render(block: Block, scales: Scales, scaleModel: IScaleModel, axisModel: IAxisModel, margin: BlockMargin, blockSize: Size): void {
         if (axisModel.valueAxis.visibility)
             this.renderAxis(block, scales.scaleValue, scaleModel.scaleValue, axisModel.valueAxis, margin, blockSize);
@@ -54,7 +57,7 @@ export class Axis {
         const axisElement = block.getSvg()
             .append('g')
             .attr('transform', `translate(${axisOptions.translate.translateX}, ${axisOptions.translate.translateY})`)
-            .attr('class', `axis ${axisOptions.cssClass} data-label`)
+            .attr('class', `${this.axesClass} ${axisOptions.cssClass} data-label`)
             .call(axis);
 
         if (axisOptions.labels.visible) {

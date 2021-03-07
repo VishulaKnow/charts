@@ -14,7 +14,7 @@ import { sum } from "d3-array";
 import { Transition } from "d3-transition";
 
 export class Bar {
-    private static barItemClass = 'bar-item';
+    public static barItemClass = 'bar-item';
     private static barSegmentGroupClass = 'bar-segment-group';
 
     public static render(block: Block, scales: Scales, data: DataRow[], keyField: Field, margin: BlockMargin, keyAxisOrient: Orient, chart: TwoDimensionalChartModel, blockSize: Size, barSettings: BarChartSettings, barsAmounts: number[], isSegmented: boolean, firstBarIndex: number): void {

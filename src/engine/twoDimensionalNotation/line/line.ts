@@ -5,11 +5,11 @@ import { BlockMargin, DataRow, Field, Orient, TwoDimensionalChartModel } from ".
 import { Helper } from "../../helper";
 import { Scales } from "../../features/scale/scale";
 import { Block } from "../../block/block";
-import { MarkDot } from "../../features/lineDots/markDot";
+import { MarkDot } from "../../features/markDots/markDot";
 import { LineHelper } from './lineHelper';
 
 export class Line {
-    private static lineChartClass = 'line';
+    public static lineChartClass = 'line';
 
     public static render(block: Block, scales: Scales, data: DataRow[], keyField: Field, margin: BlockMargin, keyAxisOrient: Orient, chart: TwoDimensionalChartModel): void {
         if (chart.isSegmented)

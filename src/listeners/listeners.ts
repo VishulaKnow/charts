@@ -640,11 +640,11 @@ engine2.render(model2, getPreparedData(model2, data, config2), document.querySel
 
 import { interval } from 'd3-timer'
 
-// interval(() => {
+// setInterval(() => {
 //     const newData = ListenersHelper.getCopy(data);
 //     newData["dataSet"][ListenersHelper.randInt(0, 8)]['price'] = ListenersHelper.randInt(0, 100);
 //     newData["dataSet"][ListenersHelper.randInt(0, 8)]['count'] = ListenersHelper.randInt(0, 100);
 
 //     const newModel = getUpdatedModel(config, newData, designerConfig);
 //     engine.updateValues(newModel, getPreparedData(newModel, newData, config));
-// }, 2000, 2000);
+// }, 2000);

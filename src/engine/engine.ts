@@ -5,7 +5,7 @@ import { DataSource, Model } from '../model/model';
 import { Tooltip } from './features/tolltip/tooltip';
 import { Donut } from './polarNotation/donut';
 import { interrupt } from 'd3-transition';
-import { MarkDot } from './features/lineDots/markDot';
+import { MarkDot } from './features/markDots/markDot';
 
 export default class Engine {
     public block: Block;

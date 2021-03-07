@@ -14,19 +14,19 @@ export interface DotAttrs {
 select.prototype.transition = transition;
 
 export class MarkDot {
-    public static dotClass = 'dot';
+    public static markerDotClass = 'dot';
     private static dotRadius = 4;
 
     public static render(block: Block, data: DataRow[], keyAxisOrient: Orient, scales: Scales, margin: BlockMargin, keyField: string, valueField: string, cssClasses: string[], itemIndex: number, colorPalette: Color[], isSegmented: boolean): void {
         const dotsWrapper = block.getChartBlock()
-            .selectAll(`.${this.dotClass}${Helper.getCssClassesLine(cssClasses)}.chart-index-${itemIndex}`)
+            .selectAll(`.${this.markerDotClass}${Helper.getCssClassesLine(cssClasses)}.chart-index-${itemIndex}`)
             .data(data)
             .enter();
 
         const attrs = this.getDotAttrs(keyAxisOrient, scales, margin, keyField, valueField, isSegmented);
 
         const dots = dotsWrapper.append('circle')
-            .attr('class', this.dotClass)
+            .attr('class', this.markerDotClass)
             .attr('cx', d => attrs.cx(d))
             .attr('cy', d => attrs.cy(d))
             .attr('r', this.dotRadius)
@@ -39,17 +39,17 @@ export class MarkDot {
     }
 
     public static getAllDots(block: Block): Selection<BaseType, DataRow, BaseType, unknown> {
-        return block.getSvg().selectAll(`.${this.dotClass}`);
+        return block.getSvg().selectAll(`.${this.markerDotClass}`);
     }
 
     public static getMarkDotForChart(block: Block, chartCssClasses: string[]): Selection<BaseType, DataRow, BaseType, unknown> {
         return block.getSvg()
-            .selectAll(`.${this.dotClass}${Helper.getCssClassesLine(chartCssClasses)}`);
+            .selectAll(`.${this.markerDotClass}${Helper.getCssClassesLine(chartCssClasses)}`);
     }
 
     public static updateDotsCoordinateByValueAxis(block: Block, data: DataRow[], keyAxisOrient: Orient, scales: Scales, margin: BlockMargin, keyField: string, valueField: string, cssClasses: string[], index: number, isSegmented: boolean): void {
         const dots = block.getChartBlock()
-            .selectAll(`.${this.dotClass}${Helper.getCssClassesLine(cssClasses)}.chart-element-${index}`)
+            .selectAll(`.${this.markerDotClass}${Helper.getCssClassesLine(cssClasses)}.chart-element-${index}`)
             .data(data);
 
         const attrs = this.getDotAttrs(keyAxisOrient, scales, margin, keyField, valueField, isSegmented);

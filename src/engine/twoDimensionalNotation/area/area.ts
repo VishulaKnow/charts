@@ -5,12 +5,12 @@ import { BlockMargin, DataRow, Field, Orient, Size, TwoDimensionalChartModel } f
 import { Helper } from "../../helper";
 import { Scales } from "../../features/scale/scale";
 import { Block } from "../../block/block";
-import { MarkDot } from "../../features/lineDots/markDot";
+import { MarkDot } from "../../features/markDots/markDot";
 import { AreaHelper } from './areaHelper';
 
 
 export class Area {
-    private static areaChartClass = 'area';
+    public static areaChartClass = 'area';
 
     public static render(block: Block, scales: Scales, data: DataRow[], keyField: Field, margin: BlockMargin, keyAxisOrient: Orient, chart: TwoDimensionalChartModel, blockSize: Size): void {
         if (chart.isSegmented)

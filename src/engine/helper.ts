@@ -2,7 +2,7 @@ import { Color } from "d3-color";
 import { Selection, BaseType } from 'd3-selection'
 import { ChartStyle, DataRow, TwoDimensionalChartModel } from "../model/model";
 import { Block } from "./block/block";
-import { MarkDot } from "./features/lineDots/markDot";
+import { MarkDot } from "./features/markDots/markDot";
 import { Bar } from "./twoDimensionalNotation/bar/bar";
 
 type StyleColorType = 'fill' | 'stroke';

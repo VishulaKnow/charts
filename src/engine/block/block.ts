@@ -2,11 +2,13 @@ import { select, Selection, BaseType } from "d3-selection";
 import { BlockMargin, Size } from "../../model/model";
 import { Helper } from "../helper";
 import { NamesManager } from "../namesManager";
+import { TransitionManager } from "../transitionManager";
 import { BlockHelper } from "./blockHelper";
 
 export class Block {
     public parentElement: HTMLElement;
     public id: number;
+    public transitionManager: TransitionManager;
 
     private svgCssClasses: string[];
     private wrapperCssClasses: string[];
@@ -21,6 +23,8 @@ export class Block {
         this.parentElement = parentElement;
         this.parentElementSelection = select(parentElement);
         this.id = blockId;
+
+        this.transitionManager = new TransitionManager(this);
     }
 
     public renderSvg(blockSize: Size): void {
