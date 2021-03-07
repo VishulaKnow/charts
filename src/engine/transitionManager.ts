@@ -15,6 +15,7 @@ export class TransitionManager {
     public updateChartsDuration = 1000;
     public twoDimensionalTooltipDuration = 75;
     public donutArcHoverDuration = 200;
+    public markerHoverDuration = 50;
 
     private block: Block;
     /**

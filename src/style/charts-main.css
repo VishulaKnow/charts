@@ -162,10 +162,10 @@
 
 
 /*========================================================================= Additional */
-.axis .domain {
+.charts-axis .domain {
     stroke: #D2D2D2;
 }
-.axis .tick line:first-of-type {
+.charts-axis .tick line:first-of-type {
     stroke: #D2D2D2;
 }
 

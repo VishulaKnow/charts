@@ -138,8 +138,8 @@ export class TooltipHelper {
         coordinate[1] - TOOLTIP_ARROW_PADDING_Y - tooltipBlockNode.getBoundingClientRect().height - verticalPad];
     }
 
-    public static highlight2DElements(block: Block, keyFieldName: string, keyValue: string, charts: TwoDimensionalChartModel[], filterId: string): void {
-        this.remove2DElementsHighlighting(block, charts);
+    public static highlight2DElements(block: Block, keyFieldName: string, keyValue: string, charts: TwoDimensionalChartModel[], filterId: string, transitionDuration: number): void {
+        this.remove2DElementsHighlighting(block, charts, transitionDuration);
 
         charts.forEach(chart => {
             const elems = Helper.getChartElements(block, chart);
@@ -151,19 +151,19 @@ export class TooltipHelper {
                 selectedElems = elems.filter(d => d.data[keyFieldName] === keyValue);
 
             if (chart.type === 'area' || chart.type === 'line') {
-                elems.call(this.scaled, false);
-                selectedElems.call(this.scaled, true);
+                elems.call(this.scaled, false, transitionDuration);
+                selectedElems.call(this.scaled, true, transitionDuration);
             } else {
                 selectedElems.style('filter', `url(#${filterId})`);
             }
         });
     }
 
-    public static remove2DElementsHighlighting(block: Block, charts: TwoDimensionalChartModel[]): void {
+    public static remove2DElementsHighlighting(block: Block, charts: TwoDimensionalChartModel[], transitionDuration: number): void {
         charts.forEach(chart => {
             const elems = Helper.getChartElements(block, chart);
             if (chart.type === 'area' || chart.type === 'line') {
-                elems.call(this.scaled, false);
+                elems.call(this.scaled, false, transitionDuration);
             } else {
                 elems.classed('chart-element-highlight', false);
                 elems.style('filter', null);
@@ -171,7 +171,7 @@ export class TooltipHelper {
         });
     }
 
-    private static scaled(elementSelection: Selection<BaseType, DataRow, BaseType, unknown>, isScaled: boolean): void {
+    private static scaled(elementSelection: Selection<BaseType, DataRow, BaseType, unknown>, isScaled: boolean, transitionDuration: number): void {
         elementSelection.nodes().forEach(node => {
             interrupt(node);
         });
@@ -179,7 +179,7 @@ export class TooltipHelper {
         elementSelection
             .interrupt()
             .transition()
-            .duration(50)
+            .duration(transitionDuration)
             .ease(easeLinear)
             .attr('r', isScaled ? 6 : 4)
             .style('stroke-width', (isScaled ? 4.3 : 3) + 'px')

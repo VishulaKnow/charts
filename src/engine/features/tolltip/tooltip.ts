@@ -82,20 +82,20 @@ export class Tooltip {
                     TooltipHelper.fillForMulty2DCharts(tooltipContent, charts, data, dataOptions, keyValue);
 
                     const tooltipCoordinate = TooltipHelper.getTooltipFixedCoordinate(scaleKey, margin, blockSize, keyValue, tooltipContent.node(), keyAxisOrient);
-                    thisClass.setLineTooltipCoordinate(tooltipBlock, tooltipCoordinate, chartOrientation, 75);
+                    thisClass.setLineTooltipCoordinate(tooltipBlock, tooltipCoordinate, chartOrientation, block.transitionManager.twoDimensionalTooltipDuration);
 
                     const tooltipLineAttributes = TooltipHelper.getTooltipLineAttributes(scaleKey, margin, keyValue, chartOrientation, blockSize);
-                    thisClass.setTooltipLineAttributes(tooltipLine, tooltipLineAttributes, 75);
+                    thisClass.setTooltipLineAttributes(tooltipLine, tooltipLineAttributes, block.transitionManager.twoDimensionalTooltipDuration);
                     tooltipLine.style('display', 'block');
 
-                    TooltipHelper.highlight2DElements(block, dataOptions.keyField.name, keyValue, charts, filterId);
+                    TooltipHelper.highlight2DElements(block, dataOptions.keyField.name, keyValue, charts, filterId, block.transitionManager.markerHoverDuration);
                 }
             })
             .on('mouseleave', function () {
                 thisClass.hideTooltipBlock(tooltipBlock);
                 tooltipLine.style('display', 'none');
 
-                TooltipHelper.remove2DElementsHighlighting(block, charts);
+                TooltipHelper.remove2DElementsHighlighting(block, charts, block.transitionManager.markerHoverDuration);
 
                 currentKey = null;
             });
@@ -123,7 +123,7 @@ export class Tooltip {
 
                 select(this).style('filter', `url(#${filterId})`);
 
-                thisClass.changeDonutHighlightAppearance(select<SVGGElement, PieArcDatum<DataRow>>(this), margin, blockSize, donutThickness, true);
+                thisClass.changeDonutHighlightAppearance(select<SVGGElement, PieArcDatum<DataRow>>(this), margin, blockSize, donutThickness, block.transitionManager.donutArcHoverDuration, true);
             });
 
         elemets.on('mouseleave', function () {
@@ -132,7 +132,7 @@ export class Tooltip {
             select(this) // удаление тени с оригинального сегмента
                 .style('filter', null);
 
-            thisClass.changeDonutHighlightAppearance(select<SVGGElement, PieArcDatum<DataRow>>(this), margin, blockSize, donutThickness, false);
+            thisClass.changeDonutHighlightAppearance(select<SVGGElement, PieArcDatum<DataRow>>(this), margin, blockSize, donutThickness, block.transitionManager.donutArcHoverDuration, false);
         });
     }
 
@@ -307,7 +307,7 @@ export class Tooltip {
         return filter;
     }
 
-    private static changeDonutHighlightAppearance(segment: Selection<SVGGElement, PieArcDatum<DataRow>, BaseType, unknown>, margin: BlockMargin, blockSize: Size, donutThickness: number, on: boolean): void {
+    private static changeDonutHighlightAppearance(segment: Selection<SVGGElement, PieArcDatum<DataRow>, BaseType, unknown>, margin: BlockMargin, blockSize: Size, donutThickness: number, transitionDuration: number, on: boolean): void {
         interrupt(segment.node());
 
         let scaleSize = 0;
@@ -318,7 +318,7 @@ export class Tooltip {
             .select('path')
             .interrupt()
             .transition()
-            .duration(200)
+            .duration(transitionDuration)
             .ease(easeLinear)
             .attr('d', (d, i) => DonutHelper.getArcGeneratorObject(blockSize, margin, donutThickness)
                 .outerRadius(DonutHelper.getOuterRadius(margin, blockSize) + scaleSize)
