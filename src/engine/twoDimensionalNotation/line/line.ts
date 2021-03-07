@@ -32,7 +32,7 @@ export class Line {
                 .data(stackedData)
                 .interrupt()
                 .transition()
-                .duration(1000)
+                .duration(block.transitionManager.updateChartsDuration)
                 .attr('d', d => lineGenerator(d));
 
             lines.each((d, i) => {
@@ -46,7 +46,7 @@ export class Line {
                     .select(`.${this.lineChartClass}${Helper.getCssClassesLine(chart.cssClasses)}.chart-element-${index}`)
                     .interrupt()
                     .transition()
-                    .duration(1000)
+                    .duration(block.transitionManager.updateChartsDuration)
                     .attr('d', line(data));
 
                 MarkDot.updateDotsCoordinateByValueAxis(block, data, keyAxisOrient, scales, margin, keyField.name, valueField.name, chart.cssClasses, index, false);

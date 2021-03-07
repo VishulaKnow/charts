@@ -40,7 +40,7 @@ export default class Engine {
     }
 
     public destroy(): void {
-        this.interruptAnimations();
+        this.block.transitionManager.interruptTransitions();
         this.removeEventListeners();
         this.block.getWrapper().remove();
     }
@@ -63,20 +63,6 @@ export default class Engine {
             ChartRenderer.renderPolar(this, model);
         else if (model.options.type === 'interval')
             ChartRenderer.renderInterval(this.block, model, data);
-    }
-
-    private interruptAnimations(): void {
-        const arcItems = Donut.getAllArcGroups(this.block);
-        arcItems.select('path').nodes().forEach(node => interrupt(node));
-
-        const dots = MarkDot.getAllDots(this.block);
-        dots.nodes().forEach(node => interrupt(node));
-
-        const lines = this.block.getSvg().selectAll(`.${Tooltip.tooltipLineClass}`);
-        lines.nodes().forEach(node => interrupt(node));
-
-        const tooltips = this.block.getWrapper().selectAll(`.${Tooltip.tooltipBlockClass}`);
-        tooltips.nodes().forEach(node => interrupt(node));
     }
 
     private removeEventListeners(): void {

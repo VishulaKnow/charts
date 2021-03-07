@@ -32,7 +32,7 @@ export class Area {
                 .data(stackedData)
                 .interrupt()
                 .transition()
-                .duration(1000)
+                .duration(block.transitionManager.updateChartsDuration)
                 .attr('d', d => areaGenerator(d));
 
             areas.each((d, i) => {
@@ -47,7 +47,7 @@ export class Area {
                     .select(`.${this.areaChartClass}${Helper.getCssClassesLine(chart.cssClasses)}.chart-element-${index}`)
                     .interrupt()
                     .transition()
-                    .duration(1000)
+                    .duration(block.transitionManager.updateChartsDuration)
                     .attr('d', area(data));
 
                 MarkDot.updateDotsCoordinateByValueAxis(block, data, keyAxisOrient, scales, margin, keyField.name, field.name, chart.cssClasses, index, chart.isSegmented);

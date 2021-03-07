@@ -40,7 +40,7 @@ export class Bar {
                 scales.scaleValue,
                 margin,
                 blockSize,
-                1000);
+                block.transitionManager.updateChartsDuration);
         } else {
             chart.data.valueFields.forEach((field, index) => {
                 const bars = block.getChartBlock()
@@ -53,7 +53,7 @@ export class Bar {
                     field.name,
                     blockSize,
                     newData,
-                    1000);
+                    block.transitionManager.updateChartsDuration);
             });
         }
     }

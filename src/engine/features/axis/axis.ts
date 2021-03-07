@@ -37,7 +37,7 @@ export class Axis {
             .select(`g.${axisOptions.cssClass}`)
             .interrupt()
             .transition()
-            .duration(1000)
+            .duration(block.transitionManager.updateChartsDuration)
             .call(axis.bind(this));
     }
 

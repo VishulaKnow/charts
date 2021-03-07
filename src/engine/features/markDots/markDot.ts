@@ -57,7 +57,7 @@ export class MarkDot {
         dots
             .interrupt()
             .transition()
-            .duration(1000)
+            .duration(block.transitionManager.updateChartsDuration)
             .attr('cx', d => attrs.cx(d))
             .attr('cy', d => attrs.cy(d));
     }

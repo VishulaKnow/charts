@@ -69,7 +69,7 @@ export class Donut {
         path
             .interrupt()
             .transition()
-            .duration(1000)
+            .duration(block.transitionManager.updateChartsDuration)
             .attrTween('d', function (d) {
                 const interpolateFunc = interpolate((this as any)._current, d);
                 const _this = this;
