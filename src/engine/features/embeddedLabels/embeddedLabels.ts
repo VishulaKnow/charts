@@ -39,6 +39,7 @@ export class EmbeddedLabels {
                     curretLabel = select(this)
                 }
             })
+            curretLabel.transition().duration(transitionDuration)
             const barAttrs: BarAttrs = {
             x: BarAttrsHelper.x == null? Helper.getSelectionNumericAttr(select(this), 'x') : BarAttrsHelper.x(d),
             y: BarAttrsHelper.y == null? Helper.getSelectionNumericAttr(select(this), 'y') : BarAttrsHelper.y(d),
@@ -48,7 +49,7 @@ export class EmbeddedLabels {
             const labelUnserveFlag = EmbeddedLabelsHelper.getLabelUnserveFlag(barAttrs.height); // if bar is too small to serve label inside. This flag is needed for set outside postion and change text anchor if bar wide as whole chart block
             const position = EmbeddedLabelsHelper.getLabelPosition(barAttrs, curretLabel.node().getBBox().width, margin, blockSize, labelUnserveFlag);
             const attrs = EmbeddedLabelsHelper.getLabelAttrs(barAttrs, type, position, axisOrient);
-
+            curretLabel.style('fill', 'rgba(0, 0, 0)')
             if (axisOrient === 'top' || axisOrient === 'bottom')
                 select(this).transition().duration(transitionDuration)
                     .attr('y', barAttrs.y)
@@ -62,20 +63,20 @@ export class EmbeddedLabels {
                 .attr('y', attrs.y)
                 .attr('text-anchor', attrs.textAnchor)
                 .attr('dominant-baseline', 'middle');
-            // if (position === 'outside') {
-            //     labels.append('rect')
-            //         .attr('class', 'outside-embedded-label-bg')
-            //         .attr('x', attrs.x) 
-            //         .attr('y', attrs.y - curretLabel.node().getBBox().height / 2)
-            //         .attr('width', curretLabel.node().getBBox().width)
-            //         .attr('height', curretLabel.node().getBBox().height)
-            //         .style('fill', 'rgba(255, 255, 255, 0.8)')
-            //         .lower();
-            //     }
-            // curretLabel.style('fill', 'rgba(0, 0, 0)')
-            // if(position === 'inside'){
-            //     curretLabel.style('fill', 'rgba(255, 255, 255, 0.8)')
-            // }
+            if (position === 'outside') {
+                labels.append('rect')
+                    .attr('class', 'outside-embedded-label-bg')
+                    .attr('x', attrs.x) 
+                    .attr('y', attrs.y - curretLabel.node().getBBox().height / 2)
+                    .attr('width', curretLabel.node().getBBox().width)
+                    .attr('height', curretLabel.node().getBBox().height)
+                    .style('fill', 'rgba(255, 255, 255, 0.8)')
+                    .lower();
+                }
+            
+            if(position === 'inside'){
+                curretLabel.style('fill', 'rgba(255, 255, 255, 0.8)')
+            }
             // if (position === 'inside')
             //     curretLabel.style('fill', '#FFFFFF');
             if (labelUnserveFlag)
