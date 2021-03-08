@@ -16,7 +16,7 @@ export interface BarAttrs {
 }
 
 export const LABEL_BAR_PADDING = 6;
-const MIN_BAR_HEIGHT_FOR_LABEL_SERVE = 12;
+export const MIN_BAR_HEIGHT_FOR_LABEL_SERVE = 12;
 
 export class EmbeddedLabelsHelper {
     public static getLabelPosition(barAttrs: BarAttrs, labelBlockWidth: number, margin: BlockMargin, blockSize: Size, labelUnserveFlag: boolean): EmbeddedLabelPosition {
