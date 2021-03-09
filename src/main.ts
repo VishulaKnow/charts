@@ -64,7 +64,7 @@ class Chart {
     public updateData(data: DataSource): void {
         this.model = assembleModel(this.config, data, this.designerConfig);
         this.data = data;
-        this.engine.updateData(this.model, getPreparedData(this.model, this.data, this.config), this.parentElement);
+        this.engine.updateData(this.model, getPreparedData(this.model, this.data, this.config));
     }
 
     /**

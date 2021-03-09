@@ -182,7 +182,7 @@ export class Tooltip {
                 .attr('x1', attributes.x1)
                 .attr('x2', attributes.x2)
                 .attr('y1', attributes.y1)
-                .attr('y2', attributes.y2)
+                .attr('y2', attributes.y2);
         } else {
             tooltipLine
                 .attr('x1', attributes.x1)
@@ -205,6 +205,7 @@ export class Tooltip {
                 .style('border-right-width', `${arrowSize}px`)
                 .style('border-bottom-width', `0px`)
                 .style('border-left-width', `${arrowSize}px`);
+
         return tooltipArrow;
     }
 

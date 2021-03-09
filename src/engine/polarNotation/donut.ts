@@ -64,14 +64,14 @@ export class Donut {
 
         const items = this.getAllArcGroups(block)
             .data(pieGenerator(data));
-        let path = items.select<SVGPathElement>('path');
+        const path = items.select<SVGPathElement>('path');
 
         path
             .interrupt()
             .transition()
             .duration(block.transitionManager.updateChartsDuration)
             .attrTween('d', function (d) {
-                const interpolateFunc = interpolate((this as any)._current, d);
+                const interpolateFunc = interpolate((this as any)._current, d); // current - старые данные до обновления, задаются во время рендера
                 const _this = this;
                 return function (t) {
                     (_this as any)._current = interpolateFunc(t);

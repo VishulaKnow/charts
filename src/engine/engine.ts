@@ -5,7 +5,6 @@ import { DataSource, Model } from '../model/model';
 import { Tooltip } from './features/tolltip/tooltip';
 import { Donut } from './polarNotation/donut';
 import { interrupt } from 'd3-transition';
-import { MarkDot } from './features/markDots/markDot';
 
 export default class Engine {
     public block: Block;
@@ -27,11 +26,9 @@ export default class Engine {
         }
     }
 
-    public updateData(newModel: Model, newData: DataSource, parentElement: HTMLElement): void {
+    public updateData(newModel: Model, newData: DataSource): void {
         this.destroy();
-        this.render(newModel, newData, parentElement);
-        // this.block.getSvg().remove();
-        // this.renderCharts(newModel, newData);
+        this.render(newModel, newData, this.block.parentElement);
     }
 
     public updateFullBlock(model: Model, data: DataSource): void {
