@@ -15,7 +15,8 @@
                 "position": "end",
                 "ticks": {
                     "flag": false
-                }
+                },
+                "visibility": true
             },
             "valueAxis": {
                 "domain": {
@@ -25,7 +26,8 @@
                 "position": "start",
                 "ticks": {
                     "flag": false
-                }
+                },
+                "visibility": true
             }
         },
         "additionalElements": {

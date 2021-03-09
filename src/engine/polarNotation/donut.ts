@@ -47,7 +47,7 @@ export class Donut {
             .append('path')
             .attr('d', arcGenerator)
             .attr('class', this.arcPathClass)
-            .each(function (d) { (this as any)._current = d; });
+            .each(function (d) { (this as any)._currentData = d; });
 
         Helper.setCssClasses(arcs, chart.cssClasses);
         this.setElementsColor(items, chart.style.elementColors);
@@ -71,11 +71,11 @@ export class Donut {
             .transition()
             .duration(block.transitionManager.updateChartsDuration)
             .attrTween('d', function (d) {
-                const interpolateFunc = interpolate((this as any)._current, d); // current - старые данные до обновления, задаются во время рендера
+                const interpolateFunc = interpolate((this as any)._currentData, d); // current - старые данные до обновления, задаются во время рендера
                 const _this = this;
                 return function (t) {
-                    (_this as any)._current = interpolateFunc(t);
-                    return arcGenerator((_this as any)._current)
+                    (_this as any)._currentData = interpolateFunc(t);
+                    return arcGenerator((_this as any)._currentData);
                 }
             });
     }
