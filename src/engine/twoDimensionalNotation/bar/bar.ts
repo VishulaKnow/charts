@@ -57,13 +57,13 @@ export class Bar {
                 if (chart.embeddedLabels !== 'none'){
                     const labelsGroup = block.getChartBlock()
                     .selectAll<SVGGElement, unknown>(`.${EmbeddedLabels.EmbeddedLabelsGroupClass}${Helper.getCssClassesLine(chart.cssClasses)}.chart-element-${index}`);
-                    EmbeddedLabels.fillGroupedBarAndLablesAttrsWithTranisiton( 
+                    EmbeddedLabels.fillGroupedBarAndLablesAttrsWithTranisiton(block,
                         bars,
                         labelsGroup,
                         keyAxisOrient,
                         scales.scaleValue,
                         margin,
-                        field.name,
+                        field,
                         chart.embeddedLabels,
                         blockSize,
                         newData,

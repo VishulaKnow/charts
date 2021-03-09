@@ -102,7 +102,7 @@ export class EmbeddedLabels {
     }
 
 
-    static fillGroupedBarAndLablesAttrsWithTranisiton(bars: Selection<SVGRectElement, DataRow, SVGGElement, unknown>, labelsGroup: Selection<SVGGElement, DataRow, SVGGElement, unknown>, axisOrient: Orient, scaleValue: AxisScale<any>, margin: BlockMargin, valueField: string, type: EmbeddedLabelTypeModel, blockSize: Size, newData: DataRow[], transitionDuration: number, cssClasses: string[]) {
+    static fillGroupedBarAndLablesAttrsWithTranisiton(block: Block, bars: Selection<SVGRectElement, DataRow, SVGGElement, unknown>, labelsGroup: Selection<SVGGElement, DataRow, SVGGElement, unknown>, axisOrient: Orient, scaleValue: AxisScale<any>, margin: BlockMargin, valueField: Field, type: EmbeddedLabelTypeModel, blockSize: Size, newData: DataRow[], transitionDuration: number, cssClasses: string[]) {
         const labels = labelsGroup.selectAll<SVGTextElement, DataRow>(`text`)
         const rectangles = labelsGroup.selectAll<SVGRectElement, DataRow>(`rect`)
         rectangles.remove()
@@ -112,14 +112,15 @@ export class EmbeddedLabels {
             width: null,
             height: null
         }
-        BarHelper.setGroupedBarAttrsByValueAxis(BarAttrsHelper, axisOrient, margin, scaleValue, valueField, blockSize);
+        BarHelper.setGroupedBarAttrsByValueAxis(BarAttrsHelper, axisOrient, margin, scaleValue, valueField.name, blockSize);
         let barsTran: Selection<SVGRectElement, DataRow, BaseType, unknown> | Transition<SVGRectElement, DataRow, BaseType, unknown> = bars;
         let labelsSelection: Selection<SVGTextElement, DataRow, BaseType, unknown>  = labels.data(newData);
-        barsTran.each(function (d, indexBar, g) {
+        barsTran.each(function (d, indexBar) {
             let curretLabel: Selection<SVGTextElement, DataRow, BaseType, unknown> = null
-            labelsSelection.each(function (d, indexLabel, g) {
+            labelsSelection.each(function (d, indexLabel) {
                 if (indexBar === indexLabel) {
-                    curretLabel = select(this);
+                    curretLabel = select(this).datum(d)
+                    .text(ValueFormatter.formatField(valueField.format, d[valueField.name]))
                 }
             })
             const barAttrs: BarAttrs = {
@@ -139,7 +140,7 @@ export class EmbeddedLabels {
                         .attr('class', 'outside-embedded-label-bg')
                         .attr('x', attrs.x)
                         .attr('y', attrs.y - curretLabel.node().getBBox().height / 2)
-                        .attr('width', curretLabel.node().getBBox().width)
+                        .attr('width', curretLabel.node().getBBox().width + 1)
                         .attr('height', curretLabel.node().getBBox().height)
                         .style('fill', 'rgba(255, 255, 255, 0.8)')
                         .lower();
