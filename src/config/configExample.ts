@@ -44,9 +44,9 @@ const configCars: Config = {
         },
         orientation: 'horizontal',
         data: {
-            dataSource: 'dataSet',
+            dataSource: 'data',
             keyField: {
-                name: 'brand',
+                name: 'x',
                 format: 'string'
             }
         },
@@ -57,7 +57,7 @@ const configCars: Config = {
                 data: {
                     valueFields: [
                         {
-                            name: 'price',
+                            name: 'y',
                             format: 'money',
                             title: 'Количество автомобилей'
                         }

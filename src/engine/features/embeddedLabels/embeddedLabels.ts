@@ -39,7 +39,7 @@ export class EmbeddedLabels {
         if (position === 'outside') {
             labelsGroup.append('rect')
                 .attr('class', 'outside-embedded-label-bg')
-                .attr('x', attrs.x)
+                .attr('x', attrs.textAnchor === 'start' ? attrs.x : attrs.x - labelBlock.node().getBBox().width)
                 .attr('y', attrs.y - labelBlock.node().getBBox().height / 2)
                 .attr('width', labelBlock.node().getBBox().width)
                 .attr('height', labelBlock.node().getBBox().height)
