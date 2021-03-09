@@ -9,7 +9,7 @@ import { Scales } from "../../features/scale/scale";
 import { Block } from "../../block/block";
 import { EmbeddedLabels } from "../../features/embeddedLabels/embeddedLabels";
 import { EmbeddedLabelsHelper } from "../../features/embeddedLabels/embeddedLabelsHelper";
-import { BarAttrs, BarHelper } from "./barHelper";
+import { BarAttrsHelper, BarHelper } from "./barHelper";
 import { sum } from "d3-array";
 import { Transition } from "d3-transition";
 
@@ -54,9 +54,27 @@ export class Bar {
                     blockSize,
                     newData,
                     block.transitionManager.updateChartsDuration);
-            });
+
+                if (chart.embeddedLabels !== 'none') {
+                    const labelsGroup = block.getChartBlock()
+                        .selectAll<SVGGElement, unknown>(`.${EmbeddedLabels.embeddedLabelsGroupClass}${Helper.getCssClassesLine(chart.cssClasses)}.chart-element-${index}`);
+                    EmbeddedLabels.updateLabelsCoordinate(block,
+                        bars,
+                        labelsGroup,
+                        keyAxisOrient,
+                        scales.scaleValue,
+                        margin,
+                        field,
+                        chart.embeddedLabels,
+                        blockSize,
+                        newData,
+                        1000,
+                        chart.cssClasses);
+                }
+            })
         }
     }
+
 
     public static getAllBarItems(block: Block, chartCssClasses: string[]): Selection<BaseType, DataRow, BaseType, unknown> {
         return block.getSvg().selectAll(`rect.${this.barItemClass}${Helper.getCssClassesLine(chartCssClasses)}`);
@@ -88,7 +106,7 @@ export class Bar {
             Helper.setChartStyle(bars, chart.style, index, 'fill');
 
             if (chart.embeddedLabels !== 'none')
-                EmbeddedLabels.render(block, bars, EmbeddedLabelsHelper.getLabelField(chart.embeddedLabels, chart.data.valueFields, keyField, index), chart.embeddedLabels, keyAxisOrient, blockSize, margin);
+                EmbeddedLabels.render(block, bars, EmbeddedLabelsHelper.getLabelField(chart.embeddedLabels, chart.data.valueFields, keyField, index), chart.embeddedLabels, keyAxisOrient, blockSize, margin, index, chart.cssClasses);
         });
     }
 
@@ -149,7 +167,7 @@ export class Bar {
                 .attr('class', 'bar-group');
     }
 
-    private static fillBarAttrs(bars: Selection<SVGRectElement, DataRow, BaseType, unknown>, barAttrs: BarAttrs): void {
+    private static fillBarAttrs(bars: Selection<SVGRectElement, DataRow, BaseType, unknown>, barAttrs: BarAttrsHelper): void {
         bars.attr('x', d => barAttrs.x(d))
             .attr('y', d => barAttrs.y(d))
             .attr('height', d => barAttrs.height(d))
@@ -157,7 +175,7 @@ export class Bar {
     }
 
     private static updateGroupedBarAttrs(bars: Selection<SVGRectElement, DataRow, BaseType, unknown>, axisOrient: Orient, scaleValue: AxisScale<any>, margin: BlockMargin, valueField: string, blockSize: Size, newData: DataRow[], transitionDuration: number = 0): void {
-        const barAttrs: BarAttrs = {
+        const barAttrs: BarAttrsHelper = {
             x: null,
             y: null,
             width: null,

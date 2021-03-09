@@ -18,6 +18,13 @@ class Chart {
 
     private engine: Engine;
 
+    /**
+     * 
+     * @param config Объект конфигуратора
+     * @param designerConfig Объект конфигуратора дизайнера
+     * @param data Данные
+     * @param isResizable 
+     */
     constructor(config: Config, designerConfig: DesignerConfig, data: DataSource, isResizable: boolean = false) {
         Chart.chartCounter++;
         this.config = config;
