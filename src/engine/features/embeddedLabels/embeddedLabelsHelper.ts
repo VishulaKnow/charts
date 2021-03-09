@@ -16,7 +16,7 @@ export interface BarAttrs {
 }
 
 export const LABEL_BAR_PADDING = 6;
-const MIN_BAR_HEIGHT_FOR_LABEL_SERVE = 12;
+export const MIN_BAR_HEIGHT_FOR_LABEL_SERVE = 12;
 
 export class EmbeddedLabelsHelper {
     public static getLabelPosition(barAttrs: BarAttrs, labelBlockWidth: number, margin: BlockMargin, blockSize: Size, labelUnserveFlag: boolean): EmbeddedLabelPosition {
@@ -34,11 +34,20 @@ export class EmbeddedLabelsHelper {
         return barWidth - LABEL_BAR_PADDING * 2;
     }
 
-    public static getLabelAttrs(barAttrs: BarAttrs, type: EmbeddedLabelTypeModel, position: EmbeddedLabelPosition, keyAxisOrient: Orient): LabelAttrs {
+    public static getLabelAttrs(barAttrs: BarAttrs, type: EmbeddedLabelTypeModel, position: EmbeddedLabelPosition, keyAxisOrient: Orient, labelWidth: number): LabelAttrs {
+        let textAnchor = this.getTextAnchor(type, position, keyAxisOrient)
+        let x = this.getLabelAttrX(barAttrs, type, position, keyAxisOrient)
+        let y = this.getLabelAttrY(barAttrs.y, barAttrs.height)
+        
+
+        if(textAnchor === 'end')
+        {
+            x = x- labelWidth;
+        }
         return {
-            x: this.getLabelAttrX(barAttrs, type, position, keyAxisOrient),
-            y: this.getLabelAttrY(barAttrs.y, barAttrs.height),
-            textAnchor: this.getTextAnchor(type, position, keyAxisOrient)
+            x: x,
+            y: y,
+            textAnchor: textAnchor
         }
     }
 

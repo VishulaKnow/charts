@@ -4,7 +4,7 @@ import { Scale, Scales } from "../../features/scale/scale";
 import { Helper } from "../../helper";
 import { ValueFormatter } from "../../valueFormatter";
 
-export interface BarAttrs {
+export interface BarAttrsHelper {
     x: (dataRow: DataRow) => number;
     y: (dataRow: DataRow) => number;
     width: (dataRow: DataRow) => number;
@@ -12,8 +12,8 @@ export interface BarAttrs {
 }
 
 export class BarHelper {
-    public static getGroupedBarAttrs(keyAxisOrient: Orient, scales: Scales, margin: BlockMargin, keyField: string, valueFieldName: string, blockSize: Size, barIndex: number, barsAmount: number, barSettings: BarChartSettings): BarAttrs {
-        const attrs: BarAttrs = {
+    public static getGroupedBarAttrs(keyAxisOrient: Orient, scales: Scales, margin: BlockMargin, keyField: string, valueFieldName: string, blockSize: Size, barIndex: number, barsAmount: number, barSettings: BarChartSettings): BarAttrsHelper {
+        const attrs: BarAttrsHelper = {
             x: null,
             y: null,
             width: null,
@@ -26,7 +26,7 @@ export class BarHelper {
         return attrs;
     }
 
-    public static setGroupedBarAttrsByValueAxis(attrs: BarAttrs, keyAxisOrient: Orient, margin: BlockMargin, scaleValue: AxisScale<any>, valueFieldName: string, blockSize: Size): void {
+    public static setGroupedBarAttrsByValueAxis(attrs: BarAttrsHelper, keyAxisOrient: Orient, margin: BlockMargin, scaleValue: AxisScale<any>, valueFieldName: string, blockSize: Size): void {
         if (keyAxisOrient === 'top') {
             attrs.y = d => margin.top;
             attrs.height = d => Helper.getValueWithLimiter(ValueFormatter.getValueOrZero(scaleValue(d[valueFieldName])), blockSize.height - margin.top - margin.bottom, true);
@@ -45,8 +45,8 @@ export class BarHelper {
         }
     }
 
-    public static getStackedBarAttr(keyAxisOrient: Orient, scales: Scales, margin: BlockMargin, keyField: string, blockSize: Size, barIndex: number, barsAmount: number, barSettings: BarChartSettings): BarAttrs {
-        const attrs: BarAttrs = {
+    public static getStackedBarAttr(keyAxisOrient: Orient, scales: Scales, margin: BlockMargin, keyField: string, blockSize: Size, barIndex: number, barsAmount: number, barSettings: BarChartSettings): BarAttrsHelper {
+        const attrs: BarAttrsHelper = {
             x: null,
             y: null,
             width: null,
@@ -105,7 +105,7 @@ export class BarHelper {
         return index;
     }
 
-    private static setGroupedBarAttrsByKeyAxis(attrs: BarAttrs, keyAxisOrient: Orient, scales: Scales, margin: BlockMargin, keyField: string, barIndex: number, barsAmount: number, barSettings: BarChartSettings, isSegmented: boolean): void {
+    private static setGroupedBarAttrsByKeyAxis(attrs: BarAttrsHelper, keyAxisOrient: Orient, scales: Scales, margin: BlockMargin, keyField: string, barIndex: number, barsAmount: number, barSettings: BarChartSettings, isSegmented: boolean): void {
         const barDistance = barSettings.barDistance;
         const barStep = (Scale.getScaleBandWidth(scales.scaleKey) - barDistance * (barsAmount - 1)) / barsAmount; // Space for one bar
         const barSize = barStep > barSettings.maxBarWidth ? barSettings.maxBarWidth : barStep;
