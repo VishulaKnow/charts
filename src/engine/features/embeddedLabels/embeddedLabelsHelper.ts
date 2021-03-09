@@ -34,11 +34,19 @@ export class EmbeddedLabelsHelper {
         return barWidth - LABEL_BAR_PADDING * 2;
     }
 
-    public static getLabelAttrs(barAttrs: BarAttrs, type: EmbeddedLabelTypeModel, position: EmbeddedLabelPosition, keyAxisOrient: Orient): LabelAttrs {
+    public static getLabelAttrs(barAttrs: BarAttrs, type: EmbeddedLabelTypeModel, position: EmbeddedLabelPosition, keyAxisOrient: Orient, labelWidth: number): LabelAttrs {
+        let textAnchor = this.getTextAnchor(type, position, keyAxisOrient)
+        let x = this.getLabelAttrX(barAttrs, type, position, keyAxisOrient)
+        let y = this.getLabelAttrY(barAttrs.y, barAttrs.height)
+
+        if(textAnchor === 'end')
+        {
+            x = x- labelWidth;
+        }
         return {
-            x: this.getLabelAttrX(barAttrs, type, position, keyAxisOrient),
-            y: this.getLabelAttrY(barAttrs.y, barAttrs.height),
-            textAnchor: this.getTextAnchor(type, position, keyAxisOrient)
+            x: x,
+            y: y,
+            textAnchor: textAnchor
         }
     }
 

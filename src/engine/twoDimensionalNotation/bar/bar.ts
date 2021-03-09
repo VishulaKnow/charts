@@ -46,24 +46,26 @@ export class Bar {
                 const bars = block.getChartBlock()
                     .selectAll<SVGRectElement, DataRow>(`.${this.barItemClass}${Helper.getCssClassesLine(chart.cssClasses)}.chart-element-${index}`);
 
-                // this.updateGroupedBarAttrs(bars,
-                //     keyAxisOrient,
-                //     scales.scaleValue,
-                //     margin,
-                //     field.name,
-                //     blockSize,
-                //     newData,
-                //     block.transitionManager.updateChartsDuration);
+                this.updateGroupedBarAttrs(bars,
+                    keyAxisOrient,
+                    scales.scaleValue,
+                    margin,
+                    field.name,
+                    blockSize,
+                    newData,
+                    block.transitionManager.updateChartsDuration);
                 if (chart.embeddedLabels !== 'none'){
-                    let string = `.${EmbeddedLabels.EmbeddedLabelClass}${Helper.getCssClassesLine(chart.cssClasses)}.chart-element-${index}`;
-                    const labels = block.getChartBlock()
-                    .selectAll<SVGTextElement, DataRow>(string);
-                    const rectangles = block.getChartBlock()
-                    .selectAll<SVGTextElement, DataRow>(`.${EmbeddedLabels.EmbeddedLabelRectClass}`);
-                    rectangles.remove()
-                    EmbeddedLabels.fillGroupedBarAndLablesAttrsWithTranisiton(block,
+                    // console.log(`.${EmbeddedLabels.EmbeddedLabelsGroupClass}${Helper.getCssClassesLine(chart.cssClasses)}.chart-element-${index}${EmbeddedLabels.EmbeddedLabelClass}`)
+                    // const labels = block.getChartBlock()
+                    // .selectAll<SVGTextElement, DataRow>(`.${EmbeddedLabels.EmbeddedLabelsGroupClass}${Helper.getCssClassesLine(chart.cssClasses)}.chart-element-${index} ${EmbeddedLabels.EmbeddedLabelClass}`);
+
+                    
+                    
+                    const labelsGroup = block.getChartBlock()
+                    .selectAll<SVGGElement, unknown>(`.${EmbeddedLabels.EmbeddedLabelsGroupClass}${Helper.getCssClassesLine(chart.cssClasses)}.chart-element-${index}`);
+                    EmbeddedLabels.fillGroupedBarAndLablesAttrsWithTranisiton( 
                         bars,
-                        labels,
+                        labelsGroup,
                         keyAxisOrient,
                         scales.scaleValue,
                         margin,
