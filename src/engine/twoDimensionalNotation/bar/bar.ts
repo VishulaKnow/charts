@@ -68,7 +68,7 @@ export class Bar {
                         chart.embeddedLabels,
                         blockSize,
                         newData,
-                        1000,
+                        block.transitionManager.updateChartsDuration,
                         chart.cssClasses);
                 }
             })

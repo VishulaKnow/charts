@@ -67,7 +67,7 @@ export class EmbeddedLabels {
 
             EmbeddedLabels.cropText(curretLabel, barAttrs, position, labelUnserveFlag, margin, blockSize);
 
-            let transitionEndHandler = () => {
+            const transitionEndHandler = () => {
                 if (position === 'outside') {
                     thisClass.renderBackground(labelsGroup, curretLabel, attrs);
                 }
