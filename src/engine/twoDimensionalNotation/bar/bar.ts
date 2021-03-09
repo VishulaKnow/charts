@@ -55,12 +55,6 @@ export class Bar {
                     newData,
                     block.transitionManager.updateChartsDuration);
                 if (chart.embeddedLabels !== 'none'){
-                    // console.log(`.${EmbeddedLabels.EmbeddedLabelsGroupClass}${Helper.getCssClassesLine(chart.cssClasses)}.chart-element-${index}${EmbeddedLabels.EmbeddedLabelClass}`)
-                    // const labels = block.getChartBlock()
-                    // .selectAll<SVGTextElement, DataRow>(`.${EmbeddedLabels.EmbeddedLabelsGroupClass}${Helper.getCssClassesLine(chart.cssClasses)}.chart-element-${index} ${EmbeddedLabels.EmbeddedLabelClass}`);
-
-                    
-                    
                     const labelsGroup = block.getChartBlock()
                     .selectAll<SVGGElement, unknown>(`.${EmbeddedLabels.EmbeddedLabelsGroupClass}${Helper.getCssClassesLine(chart.cssClasses)}.chart-element-${index}`);
                     EmbeddedLabels.fillGroupedBarAndLablesAttrsWithTranisiton( 
@@ -75,8 +69,8 @@ export class Bar {
                         newData,
                         1000,
                         chart.cssClasses);
-                }
-                })
+                    }
+            })
         }
     }
 

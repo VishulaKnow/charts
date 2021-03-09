@@ -6,7 +6,7 @@ import { Block } from "../../block/block";
 import { Helper } from "../../helper";
 import { BarAttrsHelper, BarHelper } from '../../twoDimensionalNotation/bar/barHelper';
 import { ValueFormatter } from "../../valueFormatter";
-import { BarAttrs, EmbeddedLabelPosition, EmbeddedLabelsHelper, LabelAttrs } from "./embeddedLabelsHelper";
+import { BarAttrs, EmbeddedLabelPosition, EmbeddedLabelsHelper } from "./embeddedLabelsHelper";
 
 export class EmbeddedLabels {
 
@@ -58,7 +58,6 @@ export class EmbeddedLabels {
         labelBlock
             .attr('x', attrs.x)
             .attr('y', attrs.y)
-            // .attr('text-anchor', attrs.textAnchor)
             .attr('dominant-baseline', 'middle');
 
         if (position === 'inside')
@@ -120,7 +119,7 @@ export class EmbeddedLabels {
             let curretLabel: Selection<SVGTextElement, DataRow, BaseType, unknown> = null
             labelsSelection.each(function (d, indexLabel, g) {
                 if (indexBar === indexLabel) {
-                    curretLabel = select(this)
+                    curretLabel = select(this);
                 }
             })
             const barAttrs: BarAttrs = {
@@ -135,7 +134,6 @@ export class EmbeddedLabels {
             EmbeddedLabels.cropText(curretLabel, barAttrs, position, labelUnserveFlag, margin, blockSize);
 
             let fun = function () {
-                console.log(1)
                 if (position === 'outside') {
                     labelsGroup.append('rect')
                         .attr('class', 'outside-embedded-label-bg')
@@ -146,36 +144,28 @@ export class EmbeddedLabels {
                         .style('fill', 'rgba(255, 255, 255, 0.8)')
                         .lower();
                 }
-                if (position === 'inside') {
-                    curretLabel.style('fill', 'rgba(255, 255, 255')
-                }
+                if (position === 'inside')
+                    curretLabel.style('fill', 'rgba(255, 255, 255');
             }
             if (position === 'outside') {
-                curretLabel.style('fill', 'rgba(0, 0, 0')
+                curretLabel.style('fill', 'rgba(0, 0, 0');
             }
             if(transitionDuration > 0){
                 curretLabel.transition().duration(transitionDuration)
                     .on('end', fun)
                     .attr('x', attrs.x)
                     .attr('y', attrs.y)
-                    .attr('dominant-baseline', 'middle')
+                    .attr('dominant-baseline', 'middle');
             }
             else{
                 curretLabel
                     .attr('x', attrs.x)
                     .attr('y', attrs.y)
-                    .attr('dominant-baseline', 'middle')
+                    .attr('dominant-baseline', 'middle');
             }
-
 
             if (labelUnserveFlag)
                 EmbeddedLabels.checkLabelsToResetTextAnchor(curretLabel, margin, blockSize, axisOrient);
-
         })
     }
-
-
-
-
-
 }
