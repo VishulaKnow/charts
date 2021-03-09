@@ -30,7 +30,7 @@ export class TransitionManager {
         Line.lineChartClass,
         MarkDot.markerDotClass,
         Donut.arcPathClass
-    ]
+    ];
 
     constructor(block: Block) {
         this.block = block;
