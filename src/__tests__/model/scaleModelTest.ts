@@ -1,6 +1,6 @@
 import { TwoDimensionalChart } from "../../config/config";
 import { DataSource } from "../../model/model";
-import { ScaleModel } from "../../model/scaleModel";
+import { ScaleModel } from "../../model/featuresModel/scaleModel";
 
 describe('getScaleMaxValue test', () => {
     let charts: TwoDimensionalChart[];
@@ -23,7 +23,7 @@ describe('getScaleMaxValue test', () => {
                             name: 'count',
                             format: 'integer',
                             title: 'Количество автомобилей на душу населения'
-                        }             
+                        }
                     ]
                 },
                 tooltip: {
@@ -44,12 +44,12 @@ describe('getScaleMaxValue test', () => {
             beforeEach(() => {
                 charts[0].isSegmented = false;
             });
-    
+
             test('should return 120 (max of all dataSet) for not-segmnted charts', () => {
                 const result = ScaleModel.getScaleMaxValue(charts, dataSource, data);
                 expect(result).toBe(120);
             });
-        
+
             test('should return 20 (max of count) for not-segmnted charts', () => {
                 charts[0].data.valueFields = charts[0].data.valueFields.slice(1, 2);
                 const result = ScaleModel.getScaleMaxValue(charts, dataSource, data);
@@ -67,17 +67,17 @@ describe('getScaleMaxValue test', () => {
                 expect(result).toBe(500);
             });
         });
-        
+
         describe('segmnted', () => {
             beforeEach(() => {
                 charts[0].isSegmented = true;
             });
-    
+
             test('should return 140 (max of all sums) for segmented chart', () => {
                 const result = ScaleModel.getScaleMaxValue(charts, dataSource, data);
                 expect(result).toBe(140);
             });
-        
+
             test('should return 527', () => {
                 dataSource = "dataSet_poor";
                 charts[0].data.valueFields.push({
@@ -110,7 +110,7 @@ describe('getScaleMaxValue test', () => {
                                     name: 'count',
                                     format: 'integer',
                                     title: 'Количество автомобилей на душу населения'
-                                }             
+                                }
                             ]
                         },
                         tooltip: {
@@ -130,7 +130,7 @@ describe('getScaleMaxValue test', () => {
                                     format: 'integer',
                                     name: 'simple',
                                     title: ''
-                                }            
+                                }
                             ]
                         },
                         tooltip: {
@@ -163,7 +163,7 @@ describe('getScaleMaxValue test', () => {
                                     name: 'count',
                                     format: 'integer',
                                     title: 'Количество автомобилей на душу населения'
-                                }             
+                                }
                             ]
                         },
                         tooltip: {
@@ -183,7 +183,7 @@ describe('getScaleMaxValue test', () => {
                                     format: 'integer',
                                     name: 'simple',
                                     title: ''
-                                }            
+                                }
                             ]
                         },
                         tooltip: {
@@ -221,7 +221,7 @@ describe('getScaleMaxValue test', () => {
                                     name: 'count',
                                     format: 'integer',
                                     title: 'Количество автомобилей на душу населения'
-                                }             
+                                }
                             ]
                         },
                         tooltip: {
@@ -241,7 +241,7 @@ describe('getScaleMaxValue test', () => {
                                     format: 'integer',
                                     name: 'simple',
                                     title: ''
-                                }            
+                                }
                             ]
                         },
                         tooltip: {
@@ -274,7 +274,7 @@ describe('getScaleMaxValue test', () => {
                                     name: 'count',
                                     format: 'integer',
                                     title: 'Количество автомобилей на душу населения'
-                                }             
+                                }
                             ]
                         },
                         tooltip: {
@@ -299,7 +299,7 @@ describe('getScaleMaxValue test', () => {
                                     name: 'count',
                                     format: 'integer',
                                     title: 'Количество автомобилей на душу населения'
-                                }         
+                                }
                             ]
                         },
                         tooltip: {
@@ -332,7 +332,7 @@ describe('getScaleMaxValue test', () => {
                                     name: 'count',
                                     format: 'integer',
                                     title: 'Количество автомобилей на душу населения'
-                                }             
+                                }
                             ]
                         },
                         tooltip: {
@@ -352,7 +352,7 @@ describe('getScaleMaxValue test', () => {
                                     name: 'count',
                                     format: 'integer',
                                     title: 'Количество автомобилей на душу населения'
-                                }         
+                                }
                             ]
                         },
                         tooltip: {
@@ -382,7 +382,7 @@ describe('getScaleMaxValue test', () => {
                                     name: 'price',
                                     format: 'money',
                                     title: 'Количество автомобилей на душу населения'
-                                }      
+                                }
                             ]
                         },
                         tooltip: {

@@ -7,7 +7,7 @@ import { GridLineModel } from "./featuresModel/gridLineModel";
 import { LegendModel } from "./featuresModel/legendModel/legendModel";
 import { BlockMargin, DataScope, DataSource, AdditionalElementsOptions, TwoDimensionalChartModel, TwoDimensionalOptionsModel, EmbeddedLabelTypeModel } from "./model";
 import { AxisType } from "./modelBuilder";
-import { ScaleModel, ScaleType } from "./scaleModel";
+import { ScaleModel, ScaleType } from "./featuresModel/scaleModel";
 
 export class TwoDimensionalModel {
     public static getOptions(config: Config, designerConfig: DesignerConfig, margin: BlockMargin, dataScope: DataScope, data: DataSource): TwoDimensionalOptionsModel {
