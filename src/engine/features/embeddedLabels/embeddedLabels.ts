@@ -45,10 +45,11 @@ export class EmbeddedLabels {
         const thisClass = this;
 
         bars.each(function (d, indexBar) {
-            let curretLabel: Selection<SVGTextElement, DataRow, HTMLElement, unknown>;
+            let labelBlock: Selection<SVGTextElement, DataRow, HTMLElement, unknown>;
+
             labelsSelection.each(function (d, indexLabel) {
                 if (indexBar === indexLabel) {
-                    curretLabel = select(this)
+                    labelBlock = select(this)
                         .text(ValueFormatter.formatField(valueField.format, d[valueField.name]));
                 }
             });
@@ -61,24 +62,28 @@ export class EmbeddedLabels {
             }
 
             const labelUnserveFlag = EmbeddedLabelsHelper.getLabelUnserveFlag(barAttrs.height); // if bar is too small to serve label inside. This flag is needed for set outside postion and change text anchor if bar wide as whole chart block
-            const position = EmbeddedLabelsHelper.getLabelPosition(barAttrs, curretLabel.node().getBBox().width, margin, blockSize, labelUnserveFlag);
-            const attrs = EmbeddedLabelsHelper.getLabelAttrs(barAttrs, type, position, keyAxisOrient, curretLabel.node().getBBox().width);
+            const position = EmbeddedLabelsHelper.getLabelPosition(barAttrs, labelBlock.node().getBBox().width, margin, blockSize, labelUnserveFlag);
+            const attrs = EmbeddedLabelsHelper.getLabelAttrs(barAttrs, type, position, keyAxisOrient, labelBlock.node().getBBox().width);
 
-            EmbeddedLabels.cropText(curretLabel, barAttrs, position, labelUnserveFlag, margin, blockSize);
+
+            EmbeddedLabels.cropText(labelBlock, barAttrs, position, labelUnserveFlag, margin, blockSize);
+
+            attrs.x = thisClass.checkLabelToResetTextAnchor(attrs.x, labelBlock.node().getBBox().width, margin, blockSize, keyAxisOrient, position);
 
             const transitionEndHandler = () => {
                 if (position === 'outside')
-                    thisClass.renderBackground(labelsGroup, curretLabel, attrs);
+                    thisClass.renderBackground(labelsGroup, labelBlock, attrs);
+
                 if (position === 'inside')
-                    curretLabel.style('fill', thisClass.innerLabelColor);
+                    labelBlock.style('fill', thisClass.innerLabelColor);
             }
 
             if (position === 'outside') {
-                curretLabel.style('fill', thisClass.outerLabelColor);
+                labelBlock.style('fill', thisClass.outerLabelColor);
             }
 
             if (transitionDuration > 0) {
-                curretLabel
+                labelBlock
                     .interrupt()
                     .transition()
                     .duration(transitionDuration)
@@ -86,15 +91,13 @@ export class EmbeddedLabels {
                     .attr('x', attrs.x)
                     .attr('y', attrs.y)
                     .attr('dominant-baseline', 'middle');
-            } else {
-                curretLabel
+            }
+            else {
+                labelBlock
                     .attr('x', attrs.x)
                     .attr('y', attrs.y)
                     .attr('dominant-baseline', 'middle');
             }
-
-            if (labelUnserveFlag)
-                EmbeddedLabels.checkLabelsToResetTextAnchor(curretLabel, margin, blockSize, keyAxisOrient);
         })
     }
 
@@ -118,10 +121,10 @@ export class EmbeddedLabels {
         const position = EmbeddedLabelsHelper.getLabelPosition(barAttrs, labelBlock.node().getBBox().width, margin, blockSize, labelUnserveFlag);
 
         const attrs = EmbeddedLabelsHelper.getLabelAttrs(barAttrs, type, position, keyAxisOrient, labelBlock.node().getBBox().width);
+        attrs.x = this.checkLabelToResetTextAnchor(attrs.x, labelBlock.node().getBBox().width, margin, blockSize, keyAxisOrient, position);
         if (position === 'outside') {
             this.renderBackground(labelsGroup, labelBlock, attrs);
         }
-
         labelBlock
             .attr('x', attrs.x)
             .attr('y', attrs.y)
@@ -130,22 +133,27 @@ export class EmbeddedLabels {
         if (position === 'inside')
             labelBlock.style('fill', this.innerLabelColor);
 
-        if (labelUnserveFlag)
-            this.checkLabelsToResetTextAnchor(labelBlock, margin, blockSize, keyAxisOrient);
-
         this.cropText(labelBlock, barAttrs, position, labelUnserveFlag, margin, blockSize);
+
     }
 
-    private static checkLabelsToResetTextAnchor(labelBlock: Selection<SVGTextElement, DataRow, BaseType, unknown> | Transition<SVGTextElement, DataRow, BaseType, unknown>, margin: BlockMargin, blockSize: Size, keyAxisOrient: Orient): void {
+    private static checkLabelToResetTextAnchor(x: number, width: number, margin: BlockMargin, blockSize: Size, keyAxisOrient: Orient, position: EmbeddedLabelPosition): number {
         if (keyAxisOrient === 'left') {
-            if (labelBlock.node().getBBox().x + labelBlock.node().getBBox().width > blockSize.width - margin.right - margin.left) {
-                labelBlock.attr('x', blockSize.width - margin.right - labelBlock.node().getBBox().width);
+            if (x + (position === 'inside' ? -width : width) > blockSize.width + margin.right - margin.left) {
+                return blockSize.width - margin.right - width;
+            }
+            else {
+                return x
             }
         } else if (keyAxisOrient === 'right') {
-            if (labelBlock.node().getBBox().x - labelBlock.node().getBBox().width < margin.left) {
-                labelBlock.attr('x', margin.left);
+            if (x - width < margin.left) {
+                return margin.left;
+            }
+            else {
+                return x
             }
         }
+
     }
 
     private static cropText(labelBlock: Selection<SVGGraphicsElement, unknown, BaseType, unknown>, barAttrs: BarAttrs, position: EmbeddedLabelPosition, labelUnserveFlag: boolean, margin: BlockMargin, blockSize: Size): void {
