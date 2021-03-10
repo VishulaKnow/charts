@@ -50,8 +50,17 @@ export class Axis {
 
         this.setAxisLabelPaddingByOrient(axis, axisOptions);
 
+        if (axisOptions.labels.positition === 'rotated') {
+            if (axisOptions.orient === 'bottom')
+                axis.tickPadding(-4);
+            else if (axisOptions.orient === 'top')
+                axis.tickPadding(-6);
+        }
+
         const axisElement = block.getSvg()
-            .select(`g.${axisOptions.cssClass}`)
+            .select<SVGGElement>(`g.${axisOptions.cssClass}`)
+
+        axisElement
             .interrupt()
             .transition()
             .on('end', () => {
@@ -64,6 +73,8 @@ export class Axis {
 
         if (axisOptions.orient === 'bottom' || axisOptions.orient === 'top') {
             axisElement.selectAll('.tick > text').attr('text-anchor', 'center');
+            if (axisOptions.labels.positition === 'rotated')
+                this.rotateLabels(axisElement, axisOptions.orient);
             this.cropLabels(block, scaleKey, scaleOptions, axisOptions, blockSize);
         }
     }
