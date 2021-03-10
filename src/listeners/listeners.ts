@@ -648,16 +648,21 @@ setInterval(() => {
 }, 4000);
 
 function changeData(newData: DataSource): void {
-    newData['dataSet'].push({
-        brand: 'newBrand',
-        price: 130
-    });
-    newData['dataSet_large'].push({
-        brand: 'newBrand',
-        price: 130
-    });
-    // newData["dataSet"].pop();
-    // newData["dataSet"][3]['brand'] = 'someBrand';
+    const random = Math.random();
+    if (random > 0.66) {
+        newData['dataSet'].push({
+            brand: 'newBrand',
+            price: 130,
+            count: 10
+        });
+        newData['dataSet_large'].push({
+            brand: 'newBrand',
+            price: 130,
+            count: 10
+        });
+    } else if (random < 0.33) {
+        newData["dataSet"].pop();
+    }
 
     newData["dataSet"][ListenersHelper.randInt(0, 8)]['price'] = ListenersHelper.randInt(0, 100);
     newData["dataSet"][ListenersHelper.randInt(0, 8)]['count'] = ListenersHelper.randInt(0, 100);

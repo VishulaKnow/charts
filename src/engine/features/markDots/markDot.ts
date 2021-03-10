@@ -4,7 +4,7 @@ import { transition } from 'd3-transition';
 import { BlockMargin, DataRow, Orient } from "../../../model/model";
 import { Block } from "../../block/block";
 import { Helper } from "../../helper";
-import { Scale, Scales } from "../scale/scale";
+import { Scales } from "../scale/scale";
 import { MarkDotHelper } from "./markDotsHelper";
 
 export interface DotAttrs {
@@ -43,12 +43,26 @@ export class MarkDot {
         return block.getSvg().selectAll(`.${this.markerDotClass}`);
     }
 
-    public static updateDotsCoordinateByValueAxis(block: Block, data: DataRow[], keyAxisOrient: Orient, scales: Scales, margin: BlockMargin, keyField: string, valueField: string, cssClasses: string[], index: number, isSegmented: boolean): void {
+    public static updateDotsCoordinateByValueAxis(block: Block, newData: DataRow[], keyAxisOrient: Orient, scales: Scales, margin: BlockMargin, keyField: string, valueField: string, cssClasses: string[], itemIndex: number, colorPalette: Color[], isSegmented: boolean): void {
         const dots = block.getChartBlock()
-            .selectAll(`.${this.markerDotClass}${Helper.getCssClassesLine(cssClasses)}.chart-element-${index}`)
-            .data(data);
+            .selectAll(`.${this.markerDotClass}${Helper.getCssClassesLine(cssClasses)}.chart-element-${itemIndex}`)
+            .data(newData);
 
         const attrs = MarkDotHelper.getDotAttrs(keyAxisOrient, scales, margin, keyField, valueField, isSegmented);
+
+        const newDots = dots
+            .enter()
+            .append('circle')
+            .attr('class', this.markerDotClass)
+            .attr('cx', d => attrs.cx(d))
+            .attr('cy', d => attrs.cy(d))
+            .attr('r', this.dotRadius)
+            .style('stroke-width', '3px')
+            .style('fill', 'white')
+            .style('clip-path', `url(#${block.getClipPathId()})`);
+
+        Helper.setCssClasses(newDots, Helper.getCssClassesWithElementIndex(cssClasses, itemIndex));
+        Helper.setChartElementColor(newDots, colorPalette, itemIndex, 'stroke');
 
         dots
             .interrupt()

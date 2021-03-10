@@ -35,8 +35,8 @@ export class Line {
                 .duration(block.transitionManager.updateChartsDuration)
                 .attr('d', d => lineGenerator(d));
 
-            lines.each((d, i) => {
-                MarkDot.updateDotsCoordinateByValueAxis(block, d, keyAxisOrient, scales, margin, keyField.name, '1', chart.cssClasses, i, chart.isSegmented);
+            lines.each((d, index) => {
+                MarkDot.updateDotsCoordinateByValueAxis(block, d, keyAxisOrient, scales, margin, keyField.name, '1', chart.cssClasses, index, chart.style.elementColors, chart.isSegmented);
             });
         } else {
             chart.data.valueFields.forEach((valueField, index) => {
@@ -49,7 +49,7 @@ export class Line {
                     .duration(block.transitionManager.updateChartsDuration)
                     .attr('d', line(data));
 
-                MarkDot.updateDotsCoordinateByValueAxis(block, data, keyAxisOrient, scales, margin, keyField.name, valueField.name, chart.cssClasses, index, false);
+                MarkDot.updateDotsCoordinateByValueAxis(block, data, keyAxisOrient, scales, margin, keyField.name, valueField.name, chart.cssClasses, index, chart.style.elementColors, false);
             });
         }
     }
