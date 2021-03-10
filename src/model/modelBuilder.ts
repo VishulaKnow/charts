@@ -7,7 +7,7 @@ import { PolarModel } from './polarModel';
 import { DataManagerModel } from './dataManagerModel';
 import { BarOptionsCanvas, DesignerConfig, DonutOptionsCanvas } from '../designer/designerConfig';
 import { IntervalModel } from './intervalModel';
-import { OtherComponentsModel } from './otherComponents';
+import { OtherComponentsModel } from './featuresModel/otherComponents';
 
 
 export enum AxisType {
@@ -38,14 +38,14 @@ function getChartBlock(margin: BlockMargin): ChartBlock {
 }
 
 function getOptions(config: Config, designerConfig: DesignerConfig, margin: BlockMargin, dataScope: DataScope, data: DataSource): TwoDimensionalOptionsModel | PolarOptionsModel | IntervalOptionsModel {
-    if(config.options.type === '2d') {
+    if (config.options.type === '2d') {
         return TwoDimensionalModel.getOptions(config, designerConfig, margin, dataScope, data);
-    } else if(config.options.type === 'polar') {
+    } else if (config.options.type === 'polar') {
         return PolarModel.getOptions(config, data, margin, designerConfig);
-    } else if(config.options.type === 'interval') {
+    } else if (config.options.type === 'interval') {
         return IntervalModel.getOptions(config, designerConfig, margin, dataScope, data)
     }
-} 
+}
 
 function getDataSettings(dataScope: DataScope, designerConfig: DesignerConfig): DataSettings {
     return {
@@ -79,7 +79,7 @@ function roundMargin(margin: BlockMargin): void {
 }
 
 export function assembleModel(config: Config, data: DataSource, designerConfig: DesignerConfig): Model {
-    if(!data || Object.keys(data).length === 0)
+    if (!data || Object.keys(data).length === 0)
         return {
             blockCanvas: getBlockCanvas(config),
             chartBlock: null,
@@ -92,9 +92,9 @@ export function assembleModel(config: Config, data: DataSource, designerConfig: 
     const otherComponents = OtherComponentsModel.getOtherComponentsModel();
     const margin = MarginModel.getMargin(designerConfig, config, otherComponents, data);
     const dataScope = DataManagerModel.getDataScope(config, margin, data, designerConfig, otherComponents.legendBlock);
-    const preparedData = DataManagerModel.getPreparedData(data, dataScope.allowableKeys, config); 
-    
-    if(config.options.type === '2d' || config.options.type === 'interval')
+    const preparedData = DataManagerModel.getPreparedData(data, dataScope.allowableKeys, config);
+
+    if (config.options.type === '2d' || config.options.type === 'interval')
         MarginModel.recalcMargnWitVerticalAxisLabel(margin, data, config, designerConfig, dataScope);
 
     const blockCanvas = getBlockCanvas(config);
@@ -103,7 +103,7 @@ export function assembleModel(config: Config, data: DataSource, designerConfig: 
     const dataSettings = getDataSettings(dataScope, designerConfig);
     const chartSettings = getChartSettings(designerConfig.canvas.chartOptions.bar, designerConfig.canvas.chartOptions.donut);
 
-    if(options.type === 'polar')
+    if (options.type === 'polar')
         MarginModel.recalcPolarMarginWithScopedData(margin, config.canvas.size, designerConfig, config, otherComponents.legendBlock, dataScope, options);
 
     roundMargin(margin);
@@ -119,9 +119,9 @@ export function assembleModel(config: Config, data: DataSource, designerConfig: 
 }
 
 export function getPreparedData(model: Model, data: DataSource, config: Config): DataSource {
-    if(!model || Object.keys(model).length === 0 || !data || Object.keys(data).length === 0)
+    if (!model || Object.keys(model).length === 0 || !data || Object.keys(data).length === 0)
         return null;
-        
+
     const preparedData = DataManagerModel.getPreparedData(data, model.dataSettings.scope.allowableKeys, config);
     return preparedData;
 }

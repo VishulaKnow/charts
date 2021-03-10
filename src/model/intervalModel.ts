@@ -1,13 +1,13 @@
 import { Config, IntervalChart, IntervalOptions } from "../config/config";
 import { ChartStyleConfig, DesignerConfig } from "../designer/designerConfig";
-import { AxisModel } from "./axisModel";
+import { AxisModel } from "./featuresModel/axisModel";
 import { ChartStyleModel } from "./chartStyleModel";
 import { DataManagerModel } from "./dataManagerModel";
-import { GridLineModel } from "./gridLineModel";
-import { LegendModel } from "./legendModel/legendModel";
+import { GridLineModel } from "./featuresModel/gridLineModel";
+import { LegendModel } from "./featuresModel/legendModel/legendModel";
 import { AdditionalElementsOptions, BlockMargin, DataScope, DataSource, IntervalChartModel, IntervalOptionsModel } from "./model";
 import { AxisType } from "./modelBuilder";
-import { ScaleModel, ScaleType } from "./scaleModel";
+import { ScaleModel, ScaleType } from "./featuresModel/scaleModel";
 
 export class IntervalModel {
     public static getOptions(config: Config, designerConfig: DesignerConfig, margin: BlockMargin, dataScope: DataScope, data: DataSource): IntervalOptionsModel {
