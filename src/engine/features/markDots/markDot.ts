@@ -50,6 +50,8 @@ export class MarkDot {
 
         const attrs = MarkDotHelper.getDotAttrs(keyAxisOrient, scales, margin, keyField, valueField, isSegmented);
 
+        dots.exit().remove();
+
         const newDots = dots
             .enter()
             .append('circle')

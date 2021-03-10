@@ -24,7 +24,7 @@ export class AxisHelper {
                     lineNumber = 0,
                     y = textBlock.attr("y"),
                     dy = 1.4,
-                    tspan = textBlock.text(null).append("tspan").attr("y", y).attr("dy", dy + "em");
+                    tspan = textBlock.text(null).append("tspan").attr("dy", dy + "em");
 
                 while (letter = letters.pop()) {
                     line.push(letter);
@@ -40,7 +40,7 @@ export class AxisHelper {
                                 tspan.text(tspan.text().substr(0, tspan.text().length - 1) + '...')
                             break;
                         }
-                        tspan = textBlock.append("tspan").attr("y", y).attr("dy", dy * lineNumber + 1 + "em").text(letter);
+                        tspan = textBlock.append("tspan").attr("dy", dy * lineNumber + 1 + "em").text(letter);
                         lineNumber++;
                     }
                 }

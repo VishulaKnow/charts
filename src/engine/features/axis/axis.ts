@@ -14,6 +14,7 @@ import { AxisHelper } from './axisHelper';
 type TextAnchor = 'start' | 'end' | 'middle';
 
 const MINIMAL_STEP_SIZE = 40;
+const MINIMAL_STEP_SIZE_FOR_WRAPPING = 38;
 
 export class Axis {
     public static axesClass = NamesManager.getClassName('axis');
@@ -60,9 +61,12 @@ export class Axis {
         const axisElement = block.getSvg()
             .select<SVGGElement>(`g.${axisOptions.cssClass}`);
 
-        if (axisOptions.orient === 'left' || axisOptions.orient === 'right') {
-            axisElement.selectAll<SVGGElement, unknown>('.tick text').attr('y', 0);
+        if (axisOptions.orient === 'left') {
+            axis.tickPadding(axisOptions.labels.maxSize + AXIS_VERTICAL_LABEL_PADDING);
+            axisElement.selectAll('.tick text').attr('y', null);
         }
+
+        console.log(axisElement.selectAll('.tick text').nodes());
 
         axisElement
             .interrupt()
@@ -71,23 +75,33 @@ export class Axis {
                 if (axisOptions.orient === 'bottom' || axisOptions.orient === 'top') {
                     this.cropLabels(block, scaleKey, scaleOptions, axisOptions, blockSize);
                 }
+                if (axisOptions.orient === 'left' || axisOptions.orient === 'right') {
+                    if (Scale.getScaleStep(scaleKey) >= MINIMAL_STEP_SIZE_FOR_WRAPPING)
+                        axisElement.selectAll<SVGGElement, unknown>('.tick text').call(AxisHelper.wrapHandler, axisOptions.labels.maxSize);
+                    else
+                        this.cropLabels(block, scaleKey, scaleOptions, axisOptions, blockSize);
+
+                    if (axisOptions.orient === 'left')
+                        this.alignLabelsInVerticalAxis(axisElement, 'start', axisOptions.labels.maxSize, true);
+                    else if (axisOptions.orient === 'right')
+                        this.alignLabelsInVerticalAxis(axisElement, 'start', axisOptions.labels.maxSize, false);
+                }
             })
             .duration(block.transitionManager.updateChartsDuration)
             .call(axis.bind(this));
+
+        if (axisOptions.orient === 'left' || axisOptions.orient === 'right') {
+            if (axisOptions.orient === 'left')
+                this.alignLabelsInVerticalAxis(axisElement, 'start', axisOptions.labels.maxSize, true);
+            else if (axisOptions.orient === 'right')
+                this.alignLabelsInVerticalAxis(axisElement, 'start', axisOptions.labels.maxSize, false);
+        }
 
         if (axisOptions.orient === 'bottom' || axisOptions.orient === 'top') {
             axisElement.selectAll('.tick > text').attr('text-anchor', 'center');
             if (axisOptions.labels.positition === 'rotated')
                 this.rotateLabels(axisElement, axisOptions.orient);
             this.cropLabels(block, scaleKey, scaleOptions, axisOptions, blockSize);
-        }
-
-        if (axisOptions.orient === 'left' || axisOptions.orient === 'right') {
-            axisElement.selectAll<SVGGElement, unknown>('.tick text').call(AxisHelper.wrapHandler, axisOptions.labels.maxSize);
-            if (axisOptions.orient === 'left')
-                this.alignLabelsInVerticalAxis(axisElement, 'start', axisOptions.labels.maxSize, true);
-            else if (axisOptions.orient === 'right')
-                this.alignLabelsInVerticalAxis(axisElement, 'start', axisOptions.labels.maxSize, false);
         }
     }
 
@@ -114,7 +128,7 @@ export class Axis {
             if (axisOptions.type === 'key' && axisOptions.labels.positition === 'rotated' && (axisOptions.orient === 'top' || axisOptions.orient === 'bottom'))
                 this.rotateLabels(axisElement, axisOptions.orient);
 
-            if ((axisOptions.orient === 'left' || axisOptions.orient === 'right') && axisOptions.type === 'key' && Scale.getScaleStep(scale) >= 38) {
+            if ((axisOptions.orient === 'left' || axisOptions.orient === 'right') && axisOptions.type === 'key' && Scale.getScaleStep(scale) >= MINIMAL_STEP_SIZE_FOR_WRAPPING) {
                 axisElement.selectAll<SVGGElement, unknown>('.tick text').call(AxisHelper.wrapHandler, axisOptions.labels.maxSize);
             } else {
                 this.cropLabels(block, scale, scaleOptions, axisOptions, blockSize);

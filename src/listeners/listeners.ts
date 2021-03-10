@@ -647,23 +647,24 @@ setInterval(() => {
     engine.updateValues(newModel, getPreparedData(newModel, newData, config));
 }, 4000);
 
+
 function changeData(newData: DataSource): void {
     const random = Math.random();
     if (random > 0.66) {
         newData['dataSet'].push({
-            brand: 'newBrand',
-            price: 130,
-            count: 10
+            brand: 'NEWBRAAND',
+            price: ListenersHelper.randInt(0, 150),
+            count: ListenersHelper.randInt(0, 50)
         });
         newData['dataSet_large'].push({
-            brand: 'newBrand',
-            price: 130,
-            count: 10
+            brand: 'NEWBRAAND',
+            price: ListenersHelper.randInt(0, 150),
+            count: ListenersHelper.randInt(0, 50)
         });
     } else if (random < 0.33) {
         newData["dataSet"].pop();
     }
 
-    newData["dataSet"][ListenersHelper.randInt(0, 8)]['price'] = ListenersHelper.randInt(0, 100);
-    newData["dataSet"][ListenersHelper.randInt(0, 8)]['count'] = ListenersHelper.randInt(0, 100);
+    newData["dataSet"][ListenersHelper.randInt(0, newData["dataSet"].length - 1)]['price'] = ListenersHelper.randInt(0, 100);
+    newData["dataSet"][ListenersHelper.randInt(0, newData["dataSet"].length - 1)]['count'] = ListenersHelper.randInt(0, 100);
 }
