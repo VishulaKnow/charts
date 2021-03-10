@@ -1,4 +1,4 @@
-import { TitleBlockModel } from "./model";
+import { TitleBlockModel } from "../model";
 
 export class TitleModel {
     public static getTitleModel(): TitleBlockModel {

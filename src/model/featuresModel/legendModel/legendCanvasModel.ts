@@ -1,15 +1,14 @@
-import { LegendPosition } from "../model";
-import { CLASSES } from "../modelBuilder";
+import { LegendPosition } from "../../model";
+import { CLASSES } from "../../modelBuilder";
 import { LegendModel } from "./legendModel";
 
 export type LegendItemsDirection = 'row' | 'column'
 
-export class LegendCanvasModel
-{
+export class LegendCanvasModel {
     public static getLegendHeight(texts: string[], blockWidth: number, marginLeft: number, marginRight: number, itemsPosition: LegendItemsDirection, legendPosition: LegendPosition): number {
         const legendWrapper = document.createElement('div');
         legendWrapper.style.display = 'flex';
-        if(itemsPosition === 'column')
+        if (itemsPosition === 'column')
             legendWrapper.style.flexDirection = 'column';
         legendWrapper.style.position = 'absolute';
         legendWrapper.style.width = blockWidth - marginLeft - marginRight + 'px';
@@ -18,7 +17,7 @@ export class LegendCanvasModel
             const colorBlock = document.createElement('span');
             const textBlock = document.createElement('span');
             itemWrapper.classList.add(LegendModel.getLegendItemClass(itemsPosition));
-            if(itemsPosition === 'column') {
+            if (itemsPosition === 'column') {
                 itemWrapper.style.whiteSpace = 'nowrap';
                 itemWrapper.classList.add(LegendModel.getMarginClass(legendPosition));
             }
@@ -33,7 +32,7 @@ export class LegendCanvasModel
         legendWrapper.remove();
         return height;
     }
-    
+
     public static getLegendItemWidth(text: string): number {
         const itemWrapper = document.createElement('div');
         const colorBlock = document.createElement('span');
@@ -49,10 +48,10 @@ export class LegendCanvasModel
 
         document.body.append(itemWrapper);
 
-        const sumWidth = itemWrapper.getBoundingClientRect().width 
+        const sumWidth = itemWrapper.getBoundingClientRect().width
             + parseFloat(window.getComputedStyle(itemWrapper, null).getPropertyValue('margin-left'))
             + parseFloat(window.getComputedStyle(itemWrapper, null).getPropertyValue('margin-right'));
-            
+
         itemWrapper.remove();
         return sumWidth;
     }
@@ -67,13 +66,13 @@ export class LegendCanvasModel
         document.body.append(legendWrapper);
         let amount = 0;
 
-        for(let i = 0; i < texts.length; i++) {
+        for (let i = 0; i < texts.length; i++) {
             const itemWrapper = document.createElement('div');
             const colorBlock = document.createElement('span');
             const textBlock = document.createElement('span');
             itemWrapper.classList.add('legend-item-row');
-            
-            if(position === 'bottom')
+
+            if (position === 'bottom')
                 textBlock.classList.add('legend-label-nowrap', 'mt-10');
             else
                 itemWrapper.classList.add('mt-15');
@@ -84,18 +83,18 @@ export class LegendCanvasModel
             itemWrapper.append(colorBlock, textBlock);
             legendWrapper.append(itemWrapper);
 
-            if(legendWrapper.offsetHeight > legendBlockHeight) {
+            if (legendWrapper.offsetHeight > legendBlockHeight) {
                 itemWrapper.remove();
-                if(legendBlockHeight - legendWrapper.offsetHeight >= 15 && position !== 'bottom')
+                if (legendBlockHeight - legendWrapper.offsetHeight >= 15 && position !== 'bottom')
                     amount = i;
-                else 
+                else
                     amount = i - 1;
                 break;
             }
             amount++;
         }
         legendWrapper.remove();
-        
+
         return amount < 0 ? 0 : amount;
     }
 }

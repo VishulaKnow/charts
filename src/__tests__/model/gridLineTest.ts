@@ -1,4 +1,4 @@
-import { GridLineModel } from "../../model/gridLineModel";
+import { GridLineModel } from "../../model/featuresModel/gridLineModel";
 import { GridLineOptions } from "../../model/model";
 
 test('Designer config has bigger priority than userConfig', () => {
