@@ -638,14 +638,14 @@ const model2 = assembleModel(config2, data, designerConfig);
 const engine2 = new Engine(4);
 engine2.render(model2, getPreparedData(model2, data, config2), document.querySelector('.main-wrapper2'));
 
-setInterval(() => {
+setTimeout(() => {
     const newData = ListenersHelper.getCopy(data);
     newData['dataSet'].push({
         brand: 'newBrand',
-        price: 130
+        price: 20
     });
-    newData["dataSet"][ListenersHelper.randInt(0, 8)]['price'] = ListenersHelper.randInt(0, 100);
-    newData["dataSet"][ListenersHelper.randInt(0, 8)]['count'] = ListenersHelper.randInt(0, 100);
+    // newData["dataSet"][ListenersHelper.randInt(0, 8)]['price'] = ListenersHelper.randInt(0, 100);
+    // newData["dataSet"][ListenersHelper.randInt(0, 8)]['count'] = ListenersHelper.randInt(0, 100);
 
     const newModel = getUpdatedModel(config, newData, designerConfig);
     engine.updateValues(newModel, getPreparedData(newModel, newData, config));
