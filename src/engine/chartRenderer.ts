@@ -181,7 +181,7 @@ export class ChartRenderer {
         });
     }
 
-    public static updateByValueAxis(block: Block, model: Model, data: DataSource) {
+    public static updateDataFor2D(block: Block, model: Model, data: DataSource) {
         const options = <TwoDimensionalOptionsModel>model.options;
 
         const scales = Scale.getScales(options.scale.scaleKey,
@@ -192,6 +192,12 @@ export class ChartRenderer {
             scales.scaleValue,
             options.scale.scaleValue,
             options.axis.valueAxis);
+
+        Axis.updateKeyAxisDomain(block,
+            scales.scaleKey,
+            options.scale.scaleKey,
+            options.axis.keyAxis,
+            model.blockCanvas.size);
 
         GridLine.rerender(block,
             options.additionalElements.gridLine.flag,
