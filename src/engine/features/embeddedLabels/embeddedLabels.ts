@@ -1,6 +1,5 @@
 import { AxisScale } from 'd3-axis';
 import { BaseType, select, Selection } from 'd3-selection';
-import { Transition } from 'd3-transition';
 import { BlockMargin, DataRow, EmbeddedLabelTypeModel, Field, Orient, Size } from "../../../model/model";
 import { Block } from "../../block/block";
 import { Helper } from "../../helper";
@@ -65,7 +64,6 @@ export class EmbeddedLabels {
             const position = EmbeddedLabelsHelper.getLabelPosition(barAttrs, labelBlock.node().getBBox().width, margin, blockSize, labelUnserveFlag);
             const attrs = EmbeddedLabelsHelper.getLabelAttrs(barAttrs, type, position, keyAxisOrient, labelBlock.node().getBBox().width);
 
-
             EmbeddedLabels.cropText(labelBlock, barAttrs, position, labelUnserveFlag, margin, blockSize);
 
             attrs.x = thisClass.checkLabelToResetTextAnchor(attrs.x, labelBlock.node().getBBox().width, margin, blockSize, keyAxisOrient, position);
@@ -91,8 +89,7 @@ export class EmbeddedLabels {
                     .attr('x', attrs.x)
                     .attr('y', attrs.y)
                     .attr('dominant-baseline', 'middle');
-            }
-            else {
+            } else {
                 labelBlock
                     .attr('x', attrs.x)
                     .attr('y', attrs.y)
@@ -121,10 +118,13 @@ export class EmbeddedLabels {
         const position = EmbeddedLabelsHelper.getLabelPosition(barAttrs, labelBlock.node().getBBox().width, margin, blockSize, labelUnserveFlag);
 
         const attrs = EmbeddedLabelsHelper.getLabelAttrs(barAttrs, type, position, keyAxisOrient, labelBlock.node().getBBox().width);
+
         attrs.x = this.checkLabelToResetTextAnchor(attrs.x, labelBlock.node().getBBox().width, margin, blockSize, keyAxisOrient, position);
+
         if (position === 'outside') {
             this.renderBackground(labelsGroup, labelBlock, attrs);
         }
+
         labelBlock
             .attr('x', attrs.x)
             .attr('y', attrs.y)
@@ -134,7 +134,6 @@ export class EmbeddedLabels {
             labelBlock.style('fill', this.innerLabelColor);
 
         this.cropText(labelBlock, barAttrs, position, labelUnserveFlag, margin, blockSize);
-
     }
 
     private static checkLabelToResetTextAnchor(x: number, width: number, margin: BlockMargin, blockSize: Size, keyAxisOrient: Orient, position: EmbeddedLabelPosition): number {
