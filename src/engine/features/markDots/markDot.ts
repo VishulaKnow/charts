@@ -5,6 +5,7 @@ import { BlockMargin, DataRow, Orient } from "../../../model/model";
 import { Block } from "../../block/block";
 import { Helper } from "../../helper";
 import { Scale, Scales } from "../scale/scale";
+import { MarkDotHelper } from "./markDotsHelper";
 
 export interface DotAttrs {
     cx: (data: DataRow) => number;
@@ -23,7 +24,7 @@ export class MarkDot {
             .data(data)
             .enter();
 
-        const attrs = this.getDotAttrs(keyAxisOrient, scales, margin, keyField, valueField, isSegmented);
+        const attrs = MarkDotHelper.getDotAttrs(keyAxisOrient, scales, margin, keyField, valueField, isSegmented);
 
         const dots = dotsWrapper.append('circle')
             .attr('class', this.markerDotClass)
@@ -42,17 +43,12 @@ export class MarkDot {
         return block.getSvg().selectAll(`.${this.markerDotClass}`);
     }
 
-    public static getMarkDotForChart(block: Block, chartCssClasses: string[]): Selection<BaseType, DataRow, BaseType, unknown> {
-        return block.getSvg()
-            .selectAll(`.${this.markerDotClass}${Helper.getCssClassesLine(chartCssClasses)}`);
-    }
-
     public static updateDotsCoordinateByValueAxis(block: Block, data: DataRow[], keyAxisOrient: Orient, scales: Scales, margin: BlockMargin, keyField: string, valueField: string, cssClasses: string[], index: number, isSegmented: boolean): void {
         const dots = block.getChartBlock()
             .selectAll(`.${this.markerDotClass}${Helper.getCssClassesLine(cssClasses)}.chart-element-${index}`)
             .data(data);
 
-        const attrs = this.getDotAttrs(keyAxisOrient, scales, margin, keyField, valueField, isSegmented);
+        const attrs = MarkDotHelper.getDotAttrs(keyAxisOrient, scales, margin, keyField, valueField, isSegmented);
 
         dots
             .interrupt()
@@ -60,23 +56,5 @@ export class MarkDot {
             .duration(block.transitionManager.updateChartsDuration)
             .attr('cx', d => attrs.cx(d))
             .attr('cy', d => attrs.cy(d));
-    }
-
-    private static getDotAttrs(keyAxisOrient: Orient, scales: Scales, margin: BlockMargin, keyField: string, valueField: string, isSegmented: boolean): DotAttrs {
-        const attrs: DotAttrs = { cx: null, cy: null }
-
-        if (keyAxisOrient === 'left' || keyAxisOrient === 'right') {
-            attrs.cx = d => scales.scaleValue(d[valueField]) + margin.left;
-            attrs.cy = d => Scale.getScaledValue(scales.scaleKey, this.getKeyFieldValue(d, keyField, isSegmented)) + margin.top;
-        } else if (keyAxisOrient === 'bottom' || keyAxisOrient === 'top') {
-            attrs.cx = d => Scale.getScaledValue(scales.scaleKey, this.getKeyFieldValue(d, keyField, isSegmented)) + margin.left;
-            attrs.cy = d => scales.scaleValue(d[valueField]) + margin.top;
-        }
-
-        return attrs;
-    }
-
-    private static getKeyFieldValue(row: DataRow, keyFieldName: string, isSegmented: boolean): string {
-        return isSegmented ? row.data[keyFieldName] : row[keyFieldName]
     }
 }

@@ -215,6 +215,8 @@ export class ChartRenderer {
             model.chartBlock.margin,
             options.axis.keyAxis.orient,
             model.blockCanvas.size);
+
+        Tooltip.render(block, model, data, scales);
     }
 
     public static updatePolarValues(block: Block, model: Model, data: DataSource): void {

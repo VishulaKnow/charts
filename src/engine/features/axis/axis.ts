@@ -58,7 +58,11 @@ export class Axis {
         }
 
         const axisElement = block.getSvg()
-            .select<SVGGElement>(`g.${axisOptions.cssClass}`)
+            .select<SVGGElement>(`g.${axisOptions.cssClass}`);
+
+        if (axisOptions.orient === 'left' || axisOptions.orient === 'right') {
+            axisElement.selectAll<SVGGElement, unknown>('.tick text').attr('y', 0);
+        }
 
         axisElement
             .interrupt()
@@ -76,6 +80,14 @@ export class Axis {
             if (axisOptions.labels.positition === 'rotated')
                 this.rotateLabels(axisElement, axisOptions.orient);
             this.cropLabels(block, scaleKey, scaleOptions, axisOptions, blockSize);
+        }
+
+        if (axisOptions.orient === 'left' || axisOptions.orient === 'right') {
+            axisElement.selectAll<SVGGElement, unknown>('.tick text').call(AxisHelper.wrapHandler, axisOptions.labels.maxSize);
+            if (axisOptions.orient === 'left')
+                this.alignLabelsInVerticalAxis(axisElement, 'start', axisOptions.labels.maxSize, true);
+            else if (axisOptions.orient === 'right')
+                this.alignLabelsInVerticalAxis(axisElement, 'start', axisOptions.labels.maxSize, false);
         }
     }
 

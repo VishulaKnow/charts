@@ -42,7 +42,7 @@ const configCars: Config = {
         legend: {
             show: true
         },
-        orientation: 'horizontal',
+        orientation: 'vertical',
         data: {
             dataSource: 'dataSet',
             keyField: {
@@ -53,7 +53,7 @@ const configCars: Config = {
         charts: [
             {
                 isSegmented: false,
-                type: 'line',
+                type: 'area',
                 data: {
                     valueFields: [
                         {

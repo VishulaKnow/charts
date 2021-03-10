@@ -147,10 +147,16 @@ export class Tooltip {
     }
 
     private static renderTooltipLine(block: Block): Selection<SVGLineElement, unknown, HTMLElement, any> {
-        return block.getChartBlock()
-            .append('line')
-            .attr('class', this.tooltipLineClass)
-            .lower();
+        let tooltipLine = block.getChartBlock()
+            .select<SVGLineElement>(`.${this.tooltipLineClass}`)
+
+        if (tooltipLine.empty())
+            tooltipLine = block.getChartBlock()
+                .append('line')
+                .attr('class', this.tooltipLineClass)
+                .lower();
+
+        return tooltipLine;
     }
 
     private static renderTipBox(block: Block, attributes: TipBoxAttributes): Selection<SVGRectElement, unknown, HTMLElement, any> {
