@@ -58,8 +58,7 @@ export class Bar {
                 if (chart.embeddedLabels !== 'none') {
                     const labelsGroup = block.getChartBlock()
                         .selectAll<SVGGElement, unknown>(`.${EmbeddedLabels.embeddedLabelsGroupClass}${Helper.getCssClassesLine(chart.cssClasses)}.chart-element-${index}`);
-                    EmbeddedLabels.updateLabelsCoordinate(block,
-                        bars,
+                    EmbeddedLabels.updateLabelsCoordinate(bars,
                         labelsGroup,
                         keyAxisOrient,
                         scales.scaleValue,
@@ -68,8 +67,7 @@ export class Bar {
                         chart.embeddedLabels,
                         blockSize,
                         newData,
-                        block.transitionManager.updateChartsDuration,
-                        chart.cssClasses);
+                        block.transitionManager.updateChartsDuration);
                 }
             })
         }

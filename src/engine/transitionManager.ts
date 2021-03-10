@@ -1,6 +1,7 @@
 import { interrupt } from "d3-transition";
 import { Block } from "./block/block";
 import { Axis } from "./features/axis/axis";
+import { EmbeddedLabels } from "./features/embeddedLabels/embeddedLabels";
 import { MarkDot } from "./features/markDots/markDot";
 import { Tooltip } from "./features/tolltip/tooltip";
 import { Donut } from "./polarNotation/donut";
@@ -29,7 +30,8 @@ export class TransitionManager {
         Bar.barItemClass,
         Line.lineChartClass,
         MarkDot.markerDotClass,
-        Donut.arcPathClass
+        Donut.arcPathClass,
+        EmbeddedLabels.embeddedLabelClass
     ];
 
     constructor(block: Block) {
