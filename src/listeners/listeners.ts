@@ -638,6 +638,8 @@ const model2 = assembleModel(config2, data, designerConfig);
 const engine2 = new Engine(4);
 engine2.render(model2, getPreparedData(model2, data, config2), document.querySelector('.main-wrapper2'));
 
+
+//====================================================================================================== Data updating
 startDataChanging(4000);
 
 function startDataChanging(ms: number): void {
@@ -656,7 +658,7 @@ function changeData(newData: DataSource): void {
     if (random > 0.66) {
         for (let i = 0; i < ListenersHelper.randInt(1, 4); i++) {
             newData['dataSet'].push({
-                brand: makeHASH(ListenersHelper.randInt(4, 10)),
+                brand: makeHASH(ListenersHelper.randInt(4, 10)).toUpperCase(),
                 price: ListenersHelper.randInt(0, 150),
                 count: ListenersHelper.randInt(0, 50)
             });
@@ -670,7 +672,7 @@ function changeData(newData: DataSource): void {
     newData["dataSet"][ListenersHelper.randInt(0, newData["dataSet"].length - 1)]['count'] = ListenersHelper.randInt(0, 100);
 }
 
-function makeHASH(length: number) {
+function makeHASH(length: number): string {
     var result = '';
     var characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
     var charactersLength = characters.length;
