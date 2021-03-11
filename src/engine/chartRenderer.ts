@@ -226,7 +226,7 @@ export class ChartRenderer {
         const options = <PolarOptionsModel>model.options;
 
         Donut.updateValues(block, data[options.data.dataSource], model.chartBlock.margin, options.charts[0], model.blockCanvas.size, model.chartSettings.donut, options.data.keyField.name);
-
+        Legend.updateValues(block, data, options);
         Aggregator.update(block, data[options.data.dataSource], options.charts[0].data.valueField);
 
         Tooltip.render(block, model, data);
