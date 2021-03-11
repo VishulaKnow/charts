@@ -218,6 +218,8 @@ export class ChartRenderer {
             model.chartSettings.bar);
 
         Tooltip.render(block, model, data, scales);
+
+        RecordOverflowAlert.update(block, model.dataSettings.scope.hidedRecordsAmount, 'top', options.orient);
     }
 
     public static updatePolarValues(block: Block, model: Model, data: DataSource): void {
