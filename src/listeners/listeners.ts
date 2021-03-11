@@ -654,21 +654,23 @@ function startDataChanging(ms: number): void {
 function changeData(newData: DataSource): void {
     // const random = Math.random();
     // if (random > 0.66) {
-    //     //
+    //     newData['dataSet'].push({
+    //         brand: 'NEWBRAAND',
+    //         price: ListenersHelper.randInt(0, 150),
+    //         count: ListenersHelper.randInt(0, 50)
+    //     });
+    //     newData['dataSet_large'].push({
+    //         brand: 'NEWBRAAND',
+    //         price: ListenersHelper.randInt(0, 150),
+    //         count: ListenersHelper.randInt(0, 50)
+    //     });
     // } else if (random < 0.33) {
-    //     newData["dataSet"].pop();
+    //     // newData["dataSet"].pop();
+    //     newData["dataSet"].splice(ListenersHelper.randInt(0, 4), 1);
     // }
-    newData['dataSet'].push({
-        brand: 'NEWBRAAND',
-        price: ListenersHelper.randInt(0, 150),
-        count: ListenersHelper.randInt(0, 50)
-    });
-    newData['dataSet_large'].push({
-        brand: 'NEWBRAAND',
-        price: ListenersHelper.randInt(0, 150),
-        count: ListenersHelper.randInt(0, 50)
-    });
 
-    newData["dataSet"][ListenersHelper.randInt(0, newData["dataSet"].length - 1)]['price'] = ListenersHelper.randInt(0, 100);
-    newData["dataSet"][ListenersHelper.randInt(0, newData["dataSet"].length - 1)]['count'] = ListenersHelper.randInt(0, 100);
+    newData["dataSet"].splice(ListenersHelper.randInt(0, 4), 1);
+
+    // newData["dataSet"][ListenersHelper.randInt(0, newData["dataSet"].length - 1)]['price'] = ListenersHelper.randInt(0, 100);
+    // newData["dataSet"][ListenersHelper.randInt(0, newData["dataSet"].length - 1)]['count'] = ListenersHelper.randInt(0, 100);
 }
