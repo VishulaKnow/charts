@@ -18,10 +18,10 @@ export class Line {
             this.renderGrouped(block, scales, data, keyField, margin, keyAxisOrient, chart, chart.markersOptions.show);
     }
 
-    public static updateLineChartByValueAxis(block: Block, scales: Scales, data: DataRow[], keyField: Field, margin: BlockMargin, keyAxisOrient: Orient, chart: TwoDimensionalChartModel): void {
+    public static updateData(block: Block, scales: Scales, newData: DataRow[], keyField: Field, margin: BlockMargin, keyAxisOrient: Orient, chart: TwoDimensionalChartModel): void {
         if (chart.isSegmented) {
             const keys = chart.data.valueFields.map(field => field.name);
-            const stackedData = stack().keys(keys)(data);
+            const stackedData = stack().keys(keys)(newData);
 
             const lineGenerator = LineHelper.getSegmentedLineGenerator(keyAxisOrient, scales, keyField.name, margin);
 
@@ -49,10 +49,10 @@ export class Line {
                     .interrupt()
                     .transition()
                     .duration(block.transitionManager.updateChartsDuration)
-                    .attr('d', line(data));
+                    .attr('d', line(newData));
 
                 if (chart.markersOptions.show) {
-                    MarkDot.updateDotsCoordinateByValueAxis(block, data, keyAxisOrient, scales, margin, keyField.name, valueField.name, chart.cssClasses, index, chart.style.elementColors, false);
+                    MarkDot.updateDotsCoordinateByValueAxis(block, newData, keyAxisOrient, scales, margin, keyField.name, valueField.name, chart.cssClasses, index, chart.style.elementColors, false);
                 }
             });
         }

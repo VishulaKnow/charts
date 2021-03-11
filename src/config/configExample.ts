@@ -14,7 +14,7 @@ const configCars: Config = {
         axis: {
             keyAxis: {
                 visibility: true,
-                position: 'start',
+                position: 'end',
                 ticks: {
                     flag: false
                 }
@@ -42,7 +42,7 @@ const configCars: Config = {
         legend: {
             show: true
         },
-        orientation: 'horizontal',
+        orientation: 'vertical',
         data: {
             dataSource: 'dataSet',
             keyField: {
@@ -53,16 +53,11 @@ const configCars: Config = {
         charts: [
             {
                 isSegmented: false,
-                type: 'line',
+                type: 'bar',
                 data: {
                     valueFields: [
                         {
                             name: 'price',
-                            format: 'money',
-                            title: 'Количество автомобилей'
-                        },
-                        {
-                            name: 'count',
                             format: 'money',
                             title: 'Количество автомобилей'
                         }

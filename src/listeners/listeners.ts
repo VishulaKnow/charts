@@ -638,32 +638,36 @@ const model2 = assembleModel(config2, data, designerConfig);
 const engine2 = new Engine(4);
 engine2.render(model2, getPreparedData(model2, data, config2), document.querySelector('.main-wrapper2'));
 
-setInterval(() => {
-    const newData = ListenersHelper.getCopy(data);
+startDataChanging(4000);
 
-    changeData(newData);
+function startDataChanging(ms: number): void {
+    setInterval(() => {
+        const newData = ListenersHelper.getCopy(data);
 
-    const newModel = getUpdatedModel(config, newData, designerConfig);
-    engine.updateValues(newModel, getPreparedData(newModel, newData, config));
-}, 4000);
+        changeData(newData);
 
+        const newModel = getUpdatedModel(config, newData, designerConfig);
+        engine.updateValues(newModel, getPreparedData(newModel, newData, config));
+    }, ms);
+}
 
 function changeData(newData: DataSource): void {
-    const random = Math.random();
-    if (random > 0.66) {
-        newData['dataSet'].push({
-            brand: 'NEWBRAAND',
-            price: ListenersHelper.randInt(0, 150),
-            count: ListenersHelper.randInt(0, 50)
-        });
-        newData['dataSet_large'].push({
-            brand: 'NEWBRAAND',
-            price: ListenersHelper.randInt(0, 150),
-            count: ListenersHelper.randInt(0, 50)
-        });
-    } else if (random < 0.33) {
-        newData["dataSet"].pop();
-    }
+    // const random = Math.random();
+    // if (random > 0.66) {
+    //     //
+    // } else if (random < 0.33) {
+    //     newData["dataSet"].pop();
+    // }
+    newData['dataSet'].push({
+        brand: 'NEWBRAAND',
+        price: ListenersHelper.randInt(0, 150),
+        count: ListenersHelper.randInt(0, 50)
+    });
+    newData['dataSet_large'].push({
+        brand: 'NEWBRAAND',
+        price: ListenersHelper.randInt(0, 150),
+        count: ListenersHelper.randInt(0, 50)
+    });
 
     newData["dataSet"][ListenersHelper.randInt(0, newData["dataSet"].length - 1)]['price'] = ListenersHelper.randInt(0, 100);
     newData["dataSet"][ListenersHelper.randInt(0, newData["dataSet"].length - 1)]['count'] = ListenersHelper.randInt(0, 100);
