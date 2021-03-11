@@ -1,5 +1,7 @@
 import { sum } from 'd3-array'
+import { interpolate, interpolateNumber, interpolateRound, interpolateString } from 'd3-interpolate';
 import { Selection } from 'd3-selection'
+import { Transition } from 'd3-transition';
 import { DataType } from '../../designer/designerConfig';
 import { DataRow, Field } from "../../model/model";
 import { Block } from "../block/block";
@@ -69,9 +71,20 @@ export class Aggregator {
 
         const wrapperSize = Helper.getSelectionNumericAttr(wrapper, 'width');   
 
-        const aggreggatorValue = block.getSvg()
+
+        let aggreggatorValue: Selection<HTMLDivElement, unknown, HTMLElement, any> | Transition<HTMLDivElement, unknown, HTMLElement, any> = block.getSvg()
+        .select<HTMLDivElement>(`.${this.aggregatorValueClass}`)
+        .transition()
+        .duration(block.transitionManager.updateChartsDuration)
+        .tween("text", function(){
+          var i = interpolate(this.textContent, aggregator.value.toString());
+          return function(t) {
+            this.textContent = ValueFormatter.formatField(aggregator.format, i(t));            
+          };
+        });
+
+        aggreggatorValue = block.getSvg()
             .select<HTMLDivElement>(`.${this.aggregatorValueClass}`)
-            .text(ValueFormatter.formatField(aggregator.format, aggregator.value));
 
         let fontSize = parseInt(aggreggatorValue.style('font-size'));
 
