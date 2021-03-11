@@ -15,6 +15,7 @@ interface LegendCoordinate {
 export class Legend {
     private static legendBlockClass = 'legend-block';
     private static legendObjectClass = 'legend-object';
+    private static legendLabelClass = 'legend-label'
 
     public static render(block: Block, data: DataSource, options: TwoDimensionalOptionsModel | PolarOptionsModel | IntervalOptionsModel, legendBlockModel: LegendBlockModel, blockSize: Size): void {
         if (options.legend.position !== 'off') {
@@ -153,7 +154,7 @@ export class Legend {
         let loopFlag = true; // if at least one label has no text, loop ends
         while (sumOfItemsWidth > maxWidth && loopFlag) {
             items.nodes().forEach(node => {
-                const textBlock = node.querySelector('.legend-label');
+                const textBlock = node.querySelector(`.${this.legendLabelClass}`);
                 if (node.getBoundingClientRect().width > maxItemWidth && textBlock.textContent) {
                     let labelText = index > 0
                         ? textBlock.textContent.substr(0, textBlock.textContent.length - 3)
@@ -178,7 +179,7 @@ export class Legend {
 
         items.nodes().forEach(node => {
             if (node.getBoundingClientRect().width > maxItemWidth) {
-                const text = node.querySelector('.legend-label');
+                const text = node.querySelector(`.${this.legendLabelClass}`);
                 let labelText = text.textContent;
                 while (node.getBoundingClientRect().width > maxItemWidth && labelText.length > 3) {
                     labelText = labelText.substr(0, labelText.length - 1);
