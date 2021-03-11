@@ -184,18 +184,24 @@ export class Bar {
         const keys = chart.data.valueFields.map(field => field.name);
         const stackedData = stack().keys(keys)(newData);
 
-        const bars = block.getChartBlock()
+        const groups = block.getChartBlock()
             .selectAll(`g.${this.barSegmentGroupClass}${Helper.getCssClassesLine(chart.cssClasses)}`)
-            .data(stackedData)
+            .data(stackedData);
+
+        const bars = groups
             .selectAll<SVGRectElement, DataRow>(`.${this.barItemClass}${Helper.getCssClassesLine(chart.cssClasses)}`)
             .data(d => d);
 
-        this.updateStackedBarAttrs(bars,
-            keyAxisOrient,
-            scales.scaleValue,
+        const barAttrs = BarHelper.getStackedBarAttr(keyAxisOrient,
+            scales,
             margin,
+            keyField.name,
             blockSize,
-            block.transitionManager.updateChartsDuration);
+            BarHelper.getBarIndex(barsAmounts, chart.index) - firstBarIndex,
+            sum(barsAmounts),
+            barSettings);
+
+        this.fillBarAttrs(bars, barAttrs, block.transitionManager.updateChartsDuration);
     }
 
     private static renderBarGroups(block: Block, data: DataRow[]): Selection<BaseType, unknown, SVGGElement, unknown> {
