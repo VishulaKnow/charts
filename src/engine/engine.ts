@@ -2,9 +2,6 @@ import { Block } from './block/block';
 import { ValueFormatter } from './valueFormatter';
 import { ChartRenderer } from './chartRenderer';
 import { DataSource, Model } from '../model/model';
-import { Tooltip } from './features/tolltip/tooltip';
-import { Donut } from './polarNotation/donut';
-import { interrupt } from 'd3-transition';
 
 export default class Engine {
     public block: Block;
@@ -38,7 +35,7 @@ export default class Engine {
 
     public destroy(): void {
         this.block.transitionManager.interruptTransitions();
-        this.removeEventListeners();
+        this.block.removeEventListeners();
         this.block.getWrapper().remove();
     }
 
@@ -49,7 +46,7 @@ export default class Engine {
         if (model.options.type === '2d') {
             ChartRenderer.updateDataFor2D(this.block, model, newData);
         } else if (model.options.type === 'polar') {
-            ChartRenderer.updatePolarData(this.block, model, newData);
+            ChartRenderer.updateDataForPolar(this.block, model, newData);
         }
     }
 
@@ -60,16 +57,5 @@ export default class Engine {
             ChartRenderer.renderPolar(this, model);
         else if (model.options.type === 'interval')
             ChartRenderer.renderInterval(this.block, model, data);
-    }
-
-    private removeEventListeners(): void {
-        const tipBoxes = this.block.getSvg().selectAll(`.${Tooltip.tipBoxClass}`)
-        tipBoxes.on('mousemove', null);
-        tipBoxes.on('mouseleave', null);
-
-        const arcItems = Donut.getAllArcGroups(this.block);
-        arcItems.on('mouseover', null);
-        arcItems.on('mouseleave', null);
-        arcItems.select('path').nodes().forEach(node => interrupt(node));
     }
 }

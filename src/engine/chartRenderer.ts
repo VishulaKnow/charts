@@ -224,16 +224,16 @@ export class ChartRenderer {
         RecordOverflowAlert.update(block, model.dataSettings.scope.hidedRecordsAmount, 'top', options.orient);
     }
 
-    public static updatePolarData(block: Block, model: Model, data: DataSource): void {
+    public static updateDataForPolar(block: Block, model: Model, data: DataSource): void {
         block.transitionManager.interruptTransitions();
+        block.removeEventListeners();
 
         const options = <PolarOptionsModel>model.options;
 
-        Donut.updateValues(block, data[options.data.dataSource], model.chartBlock.margin, options.charts[0], model.blockCanvas.size, model.chartSettings.donut, options.data.keyField.name);
+        Donut.updateValues(block, data[options.data.dataSource], model.chartBlock.margin, options.charts[0], model.blockCanvas.size, model.chartSettings.donut, options.data.keyField.name)
+            .then(re => Tooltip.render(block, model, data));
 
         Aggregator.update(block, data[options.data.dataSource], options.charts[0].data.valueField);
-
-        Tooltip.render(block, model, data);
 
         Legend.update(block, data, model.options);
 

@@ -1,7 +1,9 @@
 import { select, Selection, BaseType } from "d3-selection";
 import { BlockMargin, Size } from "../../model/model";
+import { Tooltip } from "../features/tolltip/tooltip";
 import { Helper } from "../helper";
 import { NamesManager } from "../namesManager";
+import { Donut } from "../polarNotation/donut";
 import { TransitionManager } from "../transitionManager";
 import { BlockHelper } from "./blockHelper";
 
@@ -87,5 +89,17 @@ export class Block {
 
     public getClipPathId(): string {
         return NamesManager.getId('clip-path', this.id);
+    }
+
+    public removeEventListeners(): void {
+        const tipBoxes = this.getSvg().selectAll(`.${Tooltip.tipBoxClass}`)
+        tipBoxes.on('mousemove', null);
+        tipBoxes.on('mouseover', null);
+        tipBoxes.on('mouseleave', null);
+
+        const arcItems = Donut.getAllArcGroups(this);
+        arcItems.on('mouseover', null);
+        arcItems.on('mouseleave', null);
+        arcItems.on('mousemove', null);
     }
 }
