@@ -182,6 +182,8 @@ export class ChartRenderer {
     }
 
     public static updateDataFor2D(block: Block, model: Model, data: DataSource) {
+        block.transitionManager.interruptTransitions();
+
         const options = <TwoDimensionalOptionsModel>model.options;
 
         const scales = Scale.getScales(options.scale.scaleKey,
@@ -223,6 +225,8 @@ export class ChartRenderer {
     }
 
     public static updatePolarValues(block: Block, model: Model, data: DataSource): void {
+        block.transitionManager.interruptTransitions();
+
         const options = <PolarOptionsModel>model.options;
 
         Donut.updateValues(block, data[options.data.dataSource], model.chartBlock.margin, options.charts[0], model.blockCanvas.size, model.chartSettings.donut, options.data.keyField.name);
@@ -250,8 +254,7 @@ export class ChartRenderer {
                     charts.findIndex(ch => ch.type === 'bar'),
                     barSettings,
                     chart.isSegmented);
-            }
-            else if (chart.type === 'line') {
+            } else if (chart.type === 'line') {
                 Line.updateData(block,
                     scales,
                     data[dataOptions.dataSource],

@@ -640,7 +640,7 @@ engine2.render(model2, getPreparedData(model2, data, config2), document.querySel
 
 
 //====================================================================================================== Data updating
-// startDataChanging(4000);
+startDataChanging(4000);
 
 function startDataChanging(ms: number): void {
     const run = () => {

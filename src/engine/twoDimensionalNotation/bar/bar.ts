@@ -158,11 +158,10 @@ export class Bar {
             this.fillBarAttrs(bars, barAttrs, block.transitionManager.updateChartsDuration)
                 .on('end', () => {
                     this.fillBarAttrs(newBars, barAttrs);
-
-                    Helper.setCssClasses(newBars, Helper.getCssClassesWithElementIndex(chart.cssClasses, index));
-                    Helper.setChartStyle(newBars, chart.style, index, 'fill');
                 });
 
+            Helper.setCssClasses(newBars, Helper.getCssClassesWithElementIndex(chart.cssClasses, index));
+            Helper.setChartStyle(newBars, chart.style, index, 'fill');
 
             if (chart.embeddedLabels !== 'none') {
                 EmbeddedLabels.updateLabelsCoordinate(block,
