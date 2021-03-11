@@ -52,7 +52,7 @@ export class TooltipHelper {
                 const text = this.getTooltipItemText(data, dataOptions, keyValue, field, false);
                 this.fillTooltipContent(tooltipContentBlock, chart.style.elementColors[index % chart.style.elementColors.length].toString(), text);
             });
-        })
+        });
     }
 
     public static fillTooltipForPolarChart(tooltipContentBlock: Selection<BaseType, unknown, BaseType, unknown>, chart: PolarChartModel, data: DataSource, dataOptions: OptionsModelData, keyValue: string, markColor: string): void {

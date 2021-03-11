@@ -167,7 +167,7 @@ export class Bar {
                 EmbeddedLabels.updateLabelsCoordinate(block,
                     bars,
                     keyAxisOrient,
-                    scales.scaleValue,
+                    barAttrs,
                     margin,
                     field,
                     chart.embeddedLabels,

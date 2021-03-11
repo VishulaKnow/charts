@@ -25,20 +25,12 @@ export class EmbeddedLabels {
         });
     }
 
-    public static updateLabelsCoordinate(block: Block, bars: Selection<SVGRectElement, DataRow, SVGGElement, unknown>, keyAxisOrient: Orient, scaleValue: AxisScale<any>, margin: BlockMargin, valueField: Field, type: EmbeddedLabelTypeModel, blockSize: Size, newData: DataRow[], index: number, cssClasses: string[], transitionDuration: number) {
+    public static updateLabelsCoordinate(block: Block, bars: Selection<SVGRectElement, DataRow, SVGGElement, unknown>, keyAxisOrient: Orient, barAttrsHelper: BarAttrsHelper, margin: BlockMargin, valueField: Field, type: EmbeddedLabelTypeModel, blockSize: Size, newData: DataRow[], index: number, cssClasses: string[], transitionDuration: number) {
         const labelsGroup = block.getChartBlock()
             .selectAll<SVGGElement, unknown>(`.${EmbeddedLabels.embeddedLabelsGroupClass}${Helper.getCssClassesLine(cssClasses)}.chart-element-${index}`);
 
         labelsGroup.selectAll<SVGRectElement, DataRow>(`rect`)
             .remove();
-
-        const barAttrsHelper: BarAttrsHelper = {
-            x: null,
-            y: null,
-            width: null,
-            height: null
-        }
-        BarHelper.setGroupedBarAttrsByValue(barAttrsHelper, keyAxisOrient, margin, scaleValue, valueField.name, blockSize);
 
         const labelsSelection = labelsGroup
             .selectAll<SVGTextElement, DataRow>(`.${this.embeddedLabelClass}`)
