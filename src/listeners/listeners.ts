@@ -637,16 +637,30 @@ const config2 = require('../config/configTestPolar.json');
 const model2 = assembleModel(config2, data, designerConfig);
 const engine2 = new Engine(4);
 engine2.render(model2, getPreparedData(model2, data, config2), document.querySelector('.main-wrapper2'));
-
-setTimeout(() => {
-    const newData = ListenersHelper.getCopy(data);
-    newData['dataSet'].push({
-        brand: 'newBrand',
-        price: 20
-    });
-    // newData["dataSet"][ListenersHelper.randInt(0, 8)]['price'] = ListenersHelper.randInt(0, 100);
+const newData = ListenersHelper.getCopy(data);
+setInterval(() => {
+    if(!ListenersHelper.randInt(0, 1))
+        newData['dataSet'].pop()
+    else
+            newData['dataSet'].push({
+                brand: makeHASH(ListenersHelper.randInt(3, 10)),
+                price: ListenersHelper.randInt(0, 100)
+            });
+    newData["dataSet"][ListenersHelper.randInt(0, newData['dataSet'].length - 1)]['price'] = ListenersHelper.randInt(0, 100);
     // newData["dataSet"][ListenersHelper.randInt(0, 8)]['count'] = ListenersHelper.randInt(0, 100);
 
     const newModel = getUpdatedModel(config, newData, designerConfig);
     engine.updateValues(newModel, getPreparedData(newModel, newData, config));
 }, 2000);
+
+
+function makeHASH(length: number) {
+    var result           = '';
+    var characters       = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    var charactersLength = characters.length;
+    for ( var i = 0; i < length; i++ ) {
+       result += characters.charAt(Math.floor(Math.random() * charactersLength));
+    }
+    return result;
+ }
+ 

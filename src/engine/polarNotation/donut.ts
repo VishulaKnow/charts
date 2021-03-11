@@ -8,7 +8,6 @@ import { Block } from "../block/block";
 import { Aggregator } from "./aggregator";
 import { DonutHelper } from './DonutHelper';
 import { ascending, index, merge } from 'd3-array';
-import{set} from 'd3-collection';
 import { ResolvePlugin } from 'webpack';
 
 export interface Translate {
@@ -65,28 +64,14 @@ export class Donut {
         const arcGenerator = DonutHelper.getArcGenerator(outerRadius, innerRadius);
         const pieGenerator = DonutHelper.getPieGenerator(chart.data.valueField.name, donutSettings.padAngle);
     
-        interface dataTemplateDonut {
-            data: DataRow,
-            endAngle: number,
-            index: number,
-            padAngle: number,
-            startAngle: number
-            value: number
-        }
         var oldData = block.getSvg().selectAll(`.${this.donutBlockClass}`)
             .selectAll("path")
             .data().map(function(d) {
-                return (d  as dataTemplateDonut).data
+                return (d  as any).data
             });
-        console.log(data)
-        // const was = data
-        // const is = data
-        const was = this.mergeWithFirstEqualZero(data, oldData, chart.data.valueField.name, keyField)
-        const is = this.mergeWithFirstEqualZero(data, oldData, chart.data.valueField.name, keyField)
-        // console.log(was)
-        // console.log(is)
-        // console.log(data)
 
+        const was = this.mergeWithFirstEqualZero(data, oldData, chart.data.valueField.name, keyField)
+        const is = this.mergeWithFirstEqualZero(oldData, data, chart.data.valueField.name, keyField)
         //append new path
         let donutBlock = block.getSvg()
         .selectAll(`.${this.donutBlockClass}`)
@@ -104,12 +89,13 @@ export class Donut {
             .attr('class', this.arcPathClass)
         .each(function (d) {(this as any)._currentData = d;});
 
-        // Helper.setCssClasses(arcs, chart.cssClasses);
+        Helper.setCssClasses(arcs, chart.cssClasses);
         this.setElementsColor(items, chart.style.elementColors);
 
         // add transition
         items = this.getAllArcGroups(block)
-        .data(pieGenerator(is))
+    
+        .data(pieGenerator(is));
         const path = items.select<SVGPathElement>('path');
             path
                 .interrupt()
@@ -125,14 +111,15 @@ export class Donut {
                 });
         // remove   
         items = this.getAllArcGroups(block)
-        .select<SVGPathElement>('path')
+        // .select<SVGPathElement>('path')
         .data(pieGenerator(data))
-
         items.exit()
             .transition()
             .delay(block.transitionManager.updateChartsDuration)
             .duration(0)
             .remove();
+
+        
 
     
     }
@@ -146,27 +133,24 @@ export class Donut {
             .select('path')
             .style('fill', (d, i) => colorPalette[i % colorPalette.length].toString());
     }
-    private static mergeWithFirstEqualZero(f: DataRow[], s: DataRow[], valueField: string, keyField: string): DataRow[] {
-        
-        let first = f.slice()
-        let second = s.slice()
-        let secondSet = set();
+    private static mergeWithFirstEqualZero(first: DataRow[], second: DataRow[], valueField: string, keyField: string): DataRow[] {
 
-
+        let secondSet = new Set()
         second.forEach(function(d) {
             secondSet.add(d[keyField]);
         });
-
         let onlyFirst = first
             .filter(function(d) {
                 return !secondSet.has(d[keyField])
             })
-            .map(function(d) {
-                d[valueField] = 0
-                return d
+            .map(function(d,index, array) {
+                let data: DataRow = {
+                    keyField: array[index][keyField],
+                    valueField: 0
+                }
+                return data
             });
         let sortedMerge = merge([second, onlyFirst])
-
         return sortedMerge;
 
     }
