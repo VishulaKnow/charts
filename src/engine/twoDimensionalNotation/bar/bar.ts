@@ -1,9 +1,7 @@
 import { Color } from "d3-color";
 import { stack } from 'd3-shape';
 import { select, Selection, BaseType } from 'd3-selection';
-import { AxisScale } from 'd3-axis'
 import { BarChartSettings, BlockMargin, DataRow, Field, Orient, Size, TwoDimensionalChartModel } from "../../../model/model";
-import { ValueFormatter } from "../../valueFormatter";
 import { Helper } from "../../helper";
 import { Scales } from "../../features/scale/scale";
 import { Block } from "../../block/block";
@@ -16,6 +14,7 @@ import { Transition } from "d3-transition";
 export class Bar {
     public static barItemClass = 'bar-item';
     private static barSegmentGroupClass = 'bar-segment-group';
+    private static barGroupClass = 'bar-group';
 
     public static render(block: Block, scales: Scales, data: DataRow[], keyField: Field, margin: BlockMargin, keyAxisOrient: Orient, chart: TwoDimensionalChartModel, blockSize: Size, barSettings: BarChartSettings, barsAmounts: number[], isSegmented: boolean, firstBarIndex: number): void {
         if (isSegmented)
@@ -60,7 +59,7 @@ export class Bar {
         this.renderBarGroups(block, data);
         chart.data.valueFields.forEach((field, index) => {
             const bars = block.getChartBlock()
-                .selectAll('.bar-group')
+                .selectAll(`.${this.barGroupClass}`)
                 .data(data)
                 .append('rect')
                 .attr('class', this.barItemClass)
@@ -137,11 +136,15 @@ export class Bar {
                 .filter(d => newData.findIndex(row => row[keyField.name] === d[keyField.name]) === -1)
                 .remove();
 
+            this.updateBarGroups(block);
+
             const bars = block.getChartBlock()
                 .selectAll<SVGRectElement, DataRow>(`.${this.barItemClass}${Helper.getCssClassesLine(chart.cssClasses)}.chart-element-${index}`)
                 .data(newData);
 
-            const newBars = bars
+            const newBars = block.getChartBlock()
+                .selectAll(`.${this.barGroupClass}`)
+                .data(newData)
                 .enter()
                 .append('rect')
                 .attr('class', this.barItemClass)
@@ -157,11 +160,14 @@ export class Bar {
                 sum(barsAmounts),
                 barSettings);
 
-            this.fillBarAttrs(bars, barAttrs, block.transitionManager.updateChartsDuration);
-            this.fillBarAttrs(newBars, barAttrs);
+            this.fillBarAttrs(bars, barAttrs, block.transitionManager.updateChartsDuration)
+                .on('end', () => {
+                    this.fillBarAttrs(newBars, barAttrs);
 
-            Helper.setCssClasses(newBars, Helper.getCssClassesWithElementIndex(chart.cssClasses, index));
-            Helper.setChartStyle(newBars, chart.style, index, 'fill');
+                    Helper.setCssClasses(newBars, Helper.getCssClassesWithElementIndex(chart.cssClasses, index));
+                    Helper.setChartStyle(newBars, chart.style, index, 'fill');
+                });
+
 
             if (chart.embeddedLabels !== 'none') {
                 EmbeddedLabels.updateLabelsCoordinate(block,
@@ -226,20 +232,31 @@ export class Bar {
 
     private static renderBarGroups(block: Block, data: DataRow[]): Selection<BaseType, unknown, SVGGElement, unknown> {
         let groups = block.getChartBlock()
-            .selectAll('.bar-group');
+            .selectAll(`.${this.barGroupClass}`);
 
-        if (groups.empty())
+        if (groups.size() < data.length)
             groups = block.getChartBlock()
-                .selectAll('.bar-group')
+                .selectAll(`.${this.barGroupClass}`)
                 .data(data)
                 .enter()
                 .append('g')
-                .attr('class', 'bar-group');
+                .attr('class', this.barGroupClass);
 
         return groups;
     }
 
-    private static fillBarAttrs(bars: Selection<SVGRectElement, DataRow, BaseType, unknown>, barAttrs: BarAttrsHelper, transitionDuration: number = 0): void {
+    private static updateBarGroups(block: Block): void {
+        const thisClass = this;
+
+        block.getChartBlock()
+            .selectAll(`.${this.barGroupClass}`)
+            .each(function (d) {
+                if (select(this).selectAll(`.${thisClass.barItemClass}`).empty())
+                    select(this).remove();
+            });
+    }
+
+    private static fillBarAttrs(bars: Selection<SVGRectElement, DataRow, BaseType, unknown>, barAttrs: BarAttrsHelper, transitionDuration: number = 0): Selection<SVGRectElement, DataRow, BaseType, unknown> | Transition<SVGRectElement, DataRow, BaseType, unknown> {
         let barsHander: Selection<SVGRectElement, DataRow, BaseType, unknown> | Transition<SVGRectElement, DataRow, BaseType, unknown> = bars;
         if (transitionDuration > 0) {
             barsHander = barsHander
@@ -252,6 +269,8 @@ export class Bar {
             .attr('y', d => barAttrs.y(d))
             .attr('height', d => barAttrs.height(d))
             .attr('width', d => barAttrs.width(d));
+
+        return barsHander;
     }
 
     private static setSegmentColor(segments: Selection<SVGGElement, any, BaseType, unknown>, colorPalette: Color[], segmentedIndex: number): void {
