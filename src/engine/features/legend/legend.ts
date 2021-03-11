@@ -1,10 +1,9 @@
 import { Color } from "d3-color";
 import { Selection, BaseType, select } from 'd3-selection'
-import { ChartNotation } from "../../../config/config";
 import { LegendItemsDirection } from "../../../model/featuresModel/legendModel/legendCanvasModel";
-import { DataRow, DataSource, IntervalOptionsModel, LegendBlockModel, LegendPosition, Orient, PolarOptionsModel, Size, TwoDimensionalOptionsModel } from "../../../model/model";
+import { DataSource, IntervalOptionsModel, LegendBlockModel, LegendPosition, Orient, PolarOptionsModel, Size, TwoDimensionalOptionsModel } from "../../../model/model";
 import { Block } from "../../block/block";
-import { Helper } from "../../helper";
+import { LegendHelper } from "./legendHelper";
 
 interface LegendCoordinate {
     x: number;
@@ -14,13 +13,16 @@ interface LegendCoordinate {
 }
 
 export class Legend {
+    private static legendBlockClass = 'legend-block';
+    private static legendObjectClass = 'legend-object';
+
     public static render(block: Block, data: DataSource, options: TwoDimensionalOptionsModel | PolarOptionsModel | IntervalOptionsModel, legendBlockModel: LegendBlockModel, blockSize: Size): void {
         if (options.legend.position !== 'off') {
-            const legendItemsContent = this.getLegendItemsContent(options, data);
-            const chartElementsColor = this.getMarksColor(options);
-            const legendItemsDirection = this.getLegendItemsDirection(options.type, options.legend.position);
+            const legendItemsContent = LegendHelper.getLegendItemsContent(options, data);
+            const chartElementsColor = LegendHelper.getMarksColor(options);
+            const legendItemsDirection = LegendHelper.getLegendItemsDirection(options.type, options.legend.position);
 
-            this.renderLegendBlock(block,
+            this.renderLegendObject(block,
                 legendItemsContent,
                 options.legend.position,
                 legendBlockModel,
@@ -30,10 +32,25 @@ export class Legend {
         }
     }
 
-    private static renderLegendBlock(block: Block, items: string[], legendPosition: Orient, legendBlockModel: LegendBlockModel, colorPalette: Color[], blockSize: Size, itemsDirection: LegendItemsDirection): void {
+    public static update(block: Block, data: DataSource, options: TwoDimensionalOptionsModel | PolarOptionsModel | IntervalOptionsModel): void {
+        if (options.legend.position !== 'off') {
+            const legendObject = block.getSvg()
+                .select<SVGForeignObjectElement>(`foreignObject.${this.legendObjectClass}`);
+
+            const legendItemsContent = LegendHelper.getLegendItemsContent(options, data);
+            const chartElementsColor = LegendHelper.getMarksColor(options);
+            const legendItemsDirection = LegendHelper.getLegendItemsDirection(options.type, options.legend.position);
+
+            legendObject.select(`.${this.legendBlockClass}`).remove();
+
+            this.renderLegendContent(legendObject, legendItemsContent, chartElementsColor, legendItemsDirection, options.legend.position);
+        }
+    }
+
+    private static renderLegendObject(block: Block, items: string[], legendPosition: Orient, legendBlockModel: LegendBlockModel, colorPalette: Color[], blockSize: Size, itemsDirection: LegendItemsDirection): void {
         const legendBlock = block.getSvg()
             .append('foreignObject')
-            .attr('class', 'legend-object');
+            .attr('class', this.legendObjectClass);
 
         const legendCoordinate = this.getLegendCoordinateByPosition(legendPosition, legendBlockModel, blockSize);
         this.fillLegendCoordinate(legendBlock, legendCoordinate);
@@ -43,34 +60,6 @@ export class Legend {
             colorPalette,
             itemsDirection,
             legendPosition);
-    }
-
-    private static getLegendItemsContent(options: TwoDimensionalOptionsModel | PolarOptionsModel | IntervalOptionsModel, data: DataSource): string[] {
-        if (options.type === '2d') {
-            let texts: string[] = [];
-            options.charts.forEach(chart => {
-                texts = texts.concat(chart.data.valueFields.map(field => field.title));
-            });
-            return texts;
-        } else if (options.type === 'polar') {
-            return data[options.data.dataSource].map((record: DataRow) => record[options.data.keyField.name]);
-        } else if (options.type === 'interval') {
-            return options.charts.map(chart => chart.data.valueField1.name);
-        }
-    }
-
-    private static getMarksColor(options: TwoDimensionalOptionsModel | PolarOptionsModel | IntervalOptionsModel): Color[] {
-        if (options.type === '2d') {
-            let colors: Color[] = [];
-            options.charts.forEach(chart => {
-                colors = colors.concat(chart.style.elementColors);
-            });
-            return colors;
-        } else if (options.type === 'polar') {
-            return options.charts.map(chart => chart.style.elementColors)[0];
-        } else if (options.type === 'interval') {
-            return options.charts.map(chart => chart.style.elementColors[0]);
-        }
     }
 
     private static getLegendCoordinateByPosition(legendPosition: Orient, legendBlockModel: LegendBlockModel, blockSize: Size): LegendCoordinate {
@@ -112,9 +101,9 @@ export class Legend {
             .attr('height', coordinate.height);
     }
 
-    private static renderLegendContent(legendBlock: Selection<SVGForeignObjectElement, unknown, HTMLElement, any>, items: string[], colorPalette: Color[], itemsDirection: LegendItemsDirection, position: LegendPosition): void {
-        const wrapper = legendBlock.append('xhtml:div')
-            .attr('class', 'legend-block');
+    private static renderLegendContent(legendObject: Selection<SVGForeignObjectElement, unknown, HTMLElement, any>, items: string[], colorPalette: Color[], itemsDirection: LegendItemsDirection, position: LegendPosition): void {
+        const wrapper = legendObject.append('xhtml:div')
+            .attr('class', this.legendBlockClass);
 
         wrapper
             .style('height', '100%')
@@ -134,9 +123,8 @@ export class Legend {
             .enter()
             .append('div');
 
-        const thisClass = this;
         itemWrappers.each(function (d, i) {
-            select(this).attr('class', thisClass.getItemClasses(itemsDirection, position, i));
+            select(this).attr('class', LegendHelper.getItemClasses(itemsDirection, position, i));
         });
 
         itemWrappers
@@ -147,19 +135,19 @@ export class Legend {
         itemWrappers
             .data(items)
             .append('span')
-            .attr('class', this.getLegendLabelClassByPosition(position))
+            .attr('class', LegendHelper.getLegendLabelClassByPosition(position))
             .text(d => d.toString());
 
         if (itemsDirection === 'column' && position === 'bottom')
-            this.cropColumnLabels(legendBlock, itemWrappers, itemsDirection);
+            this.cropColumnLabels(legendObject, itemWrappers, itemsDirection);
         if (itemsDirection === 'row')
-            this.cropRowLabels(legendBlock, itemWrappers);
+            this.cropRowLabels(legendObject, itemWrappers);
     }
 
     private static cropRowLabels(legendBlock: Selection<SVGForeignObjectElement, unknown, HTMLElement, any>, items: Selection<HTMLDivElement, string, BaseType, unknown>): void {
         const maxWidth = legendBlock.node().getBoundingClientRect().width;
-        let sumOfItemsWidth = this.getSumOfItemsWidths(items);
-        const maxItemWidth = this.getMaxItemWidth(legendBlock, items, 'row');
+        let sumOfItemsWidth = LegendHelper.getSumOfItemsWidths(items);
+        const maxItemWidth = LegendHelper.getMaxItemWidth(legendBlock, items, 'row');
 
         let index = 0;
         let loopFlag = true; // if at least one label has no text, loop ends
@@ -173,7 +161,7 @@ export class Legend {
 
                     labelText = labelText.substr(0, labelText.length - 1);
                     textBlock.textContent = labelText + '...';
-                    sumOfItemsWidth = this.getSumOfItemsWidths(items);
+                    sumOfItemsWidth = LegendHelper.getSumOfItemsWidths(items);
 
                     if (labelText.length === 0) {
                         textBlock.textContent = '';
@@ -186,7 +174,7 @@ export class Legend {
     }
 
     private static cropColumnLabels(legendBlock: Selection<SVGForeignObjectElement, unknown, HTMLElement, any>, items: Selection<HTMLDivElement, string, BaseType, unknown>, itemsDirection: LegendItemsDirection): void {
-        const maxItemWidth = this.getMaxItemWidth(legendBlock, items, itemsDirection);
+        const maxItemWidth = LegendHelper.getMaxItemWidth(legendBlock, items, itemsDirection);
 
         items.nodes().forEach(node => {
             if (node.getBoundingClientRect().width > maxItemWidth) {
@@ -198,48 +186,5 @@ export class Legend {
                 }
             }
         });
-    }
-
-    private static getMaxItemWidth(legendBlock: Selection<SVGForeignObjectElement, unknown, HTMLElement, any>, items: Selection<HTMLDivElement, string, BaseType, unknown>, itemsDirection: LegendItemsDirection): number {
-        if (itemsDirection === 'row') {
-            const margins = items.nodes().map(node => Helper.getPXValueFromString(Helper.getCssPropertyValue(node, 'margin-left')));
-            const sumOfMargins = Helper.getSumOfNumbers(margins);
-            return (parseFloat(legendBlock.attr('width')) - sumOfMargins) / items.size();
-        }
-        return parseFloat(legendBlock.attr('width'));
-    }
-
-    private static getItemClasses(itemsDirection: LegendItemsDirection, position: LegendPosition, index: number): string {
-        let cssClasses = this.getLegendItemClassByDirection(itemsDirection);
-        if (itemsDirection === 'column' && index !== 0)
-            cssClasses += ` ${this.getLegendItemsMarginClass(position)}`;
-        return cssClasses;
-    }
-
-    private static getLegendItemClassByDirection(itemsDirection: LegendItemsDirection): string {
-        return itemsDirection === 'column' ? 'legend-item-row' : 'legend-item-inline';
-    }
-
-    private static getLegendItemsMarginClass(legendPosition: LegendPosition): string {
-        return legendPosition === 'right' ? 'mt-15' : 'mt-10';
-    }
-
-    private static getLegendLabelClassByPosition(position: LegendPosition): string {
-        if (position === 'top' || position === 'bottom')
-            return 'legend-label legend-label-nowrap';
-        return 'legend-label';
-    }
-
-    private static getLegendItemsDirection(chartNotation: ChartNotation, legendPosition: LegendPosition): LegendItemsDirection {
-        if (legendPosition === 'right' || legendPosition === 'left')
-            return 'column';
-        else
-            return chartNotation === 'polar' ? 'column' : 'row';
-    }
-
-    private static getSumOfItemsWidths(items: Selection<HTMLDivElement, string, BaseType, unknown>): number {
-        let sumOfItemsWidth = Helper.getSumOfNumbers(items.nodes().map(node => node.getBoundingClientRect().width));
-        sumOfItemsWidth += Helper.getSumOfNumbers(items.nodes().map(node => Helper.getPXValueFromString(Helper.getCssPropertyValue(node, 'margin-left'))));
-        return sumOfItemsWidth;
     }
 }

@@ -172,8 +172,7 @@ export class Bar {
                     blockSize,
                     newData,
                     index,
-                    chart.cssClasses,
-                    block.transitionManager.updateChartsDuration);
+                    chart.cssClasses);
             }
         });
     }

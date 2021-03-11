@@ -224,7 +224,7 @@ export class ChartRenderer {
         RecordOverflowAlert.update(block, model.dataSettings.scope.hidedRecordsAmount, 'top', options.orient);
     }
 
-    public static updatePolarValues(block: Block, model: Model, data: DataSource): void {
+    public static updatePolarData(block: Block, model: Model, data: DataSource): void {
         block.transitionManager.interruptTransitions();
 
         const options = <PolarOptionsModel>model.options;
@@ -234,6 +234,8 @@ export class ChartRenderer {
         Aggregator.update(block, data[options.data.dataSource], options.charts[0].data.valueField);
 
         Tooltip.render(block, model, data);
+
+        Legend.update(block, data, model.options);
 
         if (model.options.legend.position !== 'off')
             RecordOverflowAlert.update(block, model.dataSettings.scope.hidedRecordsAmount, model.options.legend.position);
