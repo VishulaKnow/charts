@@ -66,9 +66,11 @@ export class MarkDot {
         Helper.setCssClasses(newDots, Helper.getCssClassesWithElementIndex(cssClasses, itemIndex));
         Helper.setChartElementColor(newDots, colorPalette, itemIndex, 'stroke');
 
+        const animationName = 'data-updating'
+
         dots
-            .interrupt()
-            .transition()
+            .interrupt(animationName)
+            .transition(animationName)
             .duration(block.transitionManager.updateChartsDuration)
             .attr('cx', d => attrs.cx(d))
             .attr('cy', d => attrs.cy(d));
