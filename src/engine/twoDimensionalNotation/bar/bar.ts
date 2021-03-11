@@ -155,10 +155,8 @@ export class Bar {
                 sum(barsAmounts),
                 barSettings);
 
-            this.fillBarAttrs(bars, barAttrs, block.transitionManager.updateChartsDuration)
-                .on('end', () => {
-                    this.fillBarAttrs(newBars, barAttrs);
-                });
+            this.fillBarAttrs(bars, barAttrs, block.transitionManager.updateChartsDuration);
+            this.fillBarAttrs(newBars, barAttrs);
 
             Helper.setCssClasses(newBars, Helper.getCssClassesWithElementIndex(chart.cssClasses, index));
             Helper.setChartStyle(newBars, chart.style, index, 'fill');

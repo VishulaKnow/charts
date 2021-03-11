@@ -1,17 +1,17 @@
-import { AxisScale } from 'd3-axis';
 import { BaseType, select, Selection } from 'd3-selection';
+import { Transition } from 'd3-transition';
 import { BlockMargin, DataRow, EmbeddedLabelTypeModel, Field, Orient, Size } from "../../../model/model";
 import { Block } from "../../block/block";
 import { Helper } from "../../helper";
-import { BarAttrsHelper, BarHelper } from '../../twoDimensionalNotation/bar/barHelper';
+import { BarAttrsHelper } from '../../twoDimensionalNotation/bar/barHelper';
 import { ValueFormatter } from "../../valueFormatter";
 import { BarAttrs, EmbeddedLabelPosition, EmbeddedLabelsHelper, LabelAttrs } from "./embeddedLabelsHelper";
 
 export class EmbeddedLabels {
-    public static readonly embeddedLabelsGroupClass: string = 'embedded-labels-group';
-    public static readonly embeddedLabelRectClass: string = 'embedded-label-bg';
-    public static readonly embeddedLabelClass: string = 'embedded-label';
+    public static embeddedLabelsGroupClass: string = 'embedded-labels-group';
+    public static embeddedLabelClass: string = 'embedded-label';
 
+    private static embeddedLabelBgClass: string = 'embedded-label-bg';
     private static innerLabelColor = '#FFFFFF';
     private static outerLabelColor = '#000000';
 
@@ -29,7 +29,7 @@ export class EmbeddedLabels {
         const labelsGroup = block.getChartBlock()
             .selectAll<SVGGElement, unknown>(`.${EmbeddedLabels.embeddedLabelsGroupClass}${Helper.getCssClassesLine(cssClasses)}.chart-element-${index}`);
 
-        labelsGroup.selectAll<SVGRectElement, DataRow>(`rect`)
+        labelsGroup.selectAll<SVGRectElement, DataRow>(`.${this.embeddedLabelBgClass}`)
             .remove();
 
         const labelsSelection = labelsGroup
@@ -38,59 +38,9 @@ export class EmbeddedLabels {
 
         const thisClass = this;
 
-        bars.each(function (d, indexBar) {
-            let labelBlock: Selection<SVGTextElement, DataRow, HTMLElement, unknown>;
-
-            labelsSelection.each(function (d, indexLabel) {
-                if (indexBar === indexLabel) {
-                    labelBlock = select(this)
-                        .text(ValueFormatter.formatField(valueField.format, d[valueField.name]));
-                }
-            });
-
-            const barAttrs: BarAttrs = {
-                x: barAttrsHelper.x(d),
-                width: barAttrsHelper.width(d),
-                y: Helper.getSelectionNumericAttr(select(this), 'y'),
-                height: Helper.getSelectionNumericAttr(select(this), 'height')
-            }
-
-            const labelUnserveFlag = EmbeddedLabelsHelper.getLabelUnserveFlag(barAttrs.height); // if bar is too small to serve label inside. This flag is needed for set outside postion and change text anchor if bar wide as whole chart block
-            const position = EmbeddedLabelsHelper.getLabelPosition(barAttrs, labelBlock.node().getBBox().width, margin, blockSize, labelUnserveFlag);
-            const attrs = EmbeddedLabelsHelper.getLabelAttrs(barAttrs, type, position, keyAxisOrient, labelBlock.node().getBBox().width);
-
-            EmbeddedLabels.cropText(labelBlock, barAttrs, position, labelUnserveFlag, margin, blockSize);
-
-            attrs.x = thisClass.checkLabelToResetTextAnchor(attrs.x, labelBlock.node().getBBox().width, margin, blockSize, keyAxisOrient, position);
-
-            const transitionEndHandler = () => {
-                if (position === 'outside')
-                    thisClass.renderBackground(labelsGroup, labelBlock, attrs);
-
-                if (position === 'inside')
-                    labelBlock.style('fill', thisClass.innerLabelColor);
-            }
-
-            if (position === 'outside') {
-                labelBlock.style('fill', thisClass.outerLabelColor);
-            }
-
-            if (transitionDuration > 0) {
-                labelBlock
-                    .interrupt()
-                    .transition()
-                    .duration(transitionDuration)
-                    .on('end', transitionEndHandler)
-                    .attr('x', attrs.x)
-                    .attr('y', attrs.y)
-                    .attr('dominant-baseline', 'middle');
-            } else {
-                labelBlock
-                    .attr('x', attrs.x)
-                    .attr('y', attrs.y)
-                    .attr('dominant-baseline', 'middle');
-            }
-        })
+        bars.each(function (d, barIndex) {
+            thisClass.updateLabel(block, select(this), d, keyAxisOrient, barAttrsHelper, margin, valueField, type, blockSize, barIndex, labelsSelection, labelsGroup);
+        });
     }
 
     private static renderLabel(labelsGroup: Selection<SVGGElement, unknown, HTMLElement, unknown>, bar: Selection<SVGRectElement, DataRow, HTMLElement, any>, dataRow: DataRow, field: Field, type: EmbeddedLabelTypeModel, keyAxisOrient: Orient, blockSize: Size, margin: BlockMargin): void {
@@ -120,10 +70,7 @@ export class EmbeddedLabels {
             this.renderBackground(labelsGroup, labelBlock, attrs);
         }
 
-        labelBlock
-            .attr('x', attrs.x)
-            .attr('y', attrs.y)
-            .attr('dominant-baseline', 'middle');
+        this.setLabelBlockAttrs(attrs, labelBlock);
 
         if (position === 'inside')
             labelBlock.style('fill', this.innerLabelColor);
@@ -131,23 +78,51 @@ export class EmbeddedLabels {
         this.cropText(labelBlock, barAttrs, position, labelUnserveFlag, margin, blockSize);
     }
 
-    private static checkLabelToResetTextAnchor(x: number, width: number, margin: BlockMargin, blockSize: Size, keyAxisOrient: Orient, position: EmbeddedLabelPosition): number {
-        if (keyAxisOrient === 'left') {
-            if (x + (position === 'inside' ? -width : width) > blockSize.width + margin.right - margin.left) {
-                return blockSize.width - margin.right - width;
-            }
-            else {
-                return x
-            }
-        } else if (keyAxisOrient === 'right') {
-            if (x - width < margin.left) {
-                return margin.left;
-            }
-            else {
-                return x
-            }
+    private static updateLabel(block: Block, bar: Selection<SVGRectElement, DataRow, SVGGElement, unknown>, dataRow: DataRow, keyAxisOrient: Orient, barAttrsHelper: BarAttrsHelper, margin: BlockMargin, valueField: Field, type: EmbeddedLabelTypeModel, blockSize: Size, barIndex: number, labelsSelection: Selection<SVGTextElement, DataRow, SVGGElement, unknown>, labelsGroup: Selection<SVGGElement, unknown, SVGGElement, unknown>): void {
+        const labelBlock = this.getLabelByIndex(labelsSelection, barIndex, valueField);
+
+        const barAttrs: BarAttrs = {
+            x: barAttrsHelper.x(dataRow),
+            width: barAttrsHelper.width(dataRow),
+            y: Helper.getSelectionNumericAttr(bar, 'y'),
+            height: Helper.getSelectionNumericAttr(bar, 'height')
         }
 
+        const labelUnserveFlag = EmbeddedLabelsHelper.getLabelUnserveFlag(barAttrs.height); // if bar is too small to serve label inside. This flag is needed for set outside postion and change text anchor if bar wide as whole chart block
+        const position = EmbeddedLabelsHelper.getLabelPosition(barAttrs, labelBlock.node().getBBox().width, margin, blockSize, labelUnserveFlag);
+        const attrs = EmbeddedLabelsHelper.getLabelAttrs(barAttrs, type, position, keyAxisOrient, labelBlock.node().getBBox().width);
+
+        EmbeddedLabels.cropText(labelBlock, barAttrs, position, labelUnserveFlag, margin, blockSize);
+
+        attrs.x = this.checkLabelToResetTextAnchor(attrs.x, labelBlock.node().getBBox().width, margin, blockSize, keyAxisOrient, position);
+
+        if (position === 'outside') {
+            labelBlock.style('fill', this.outerLabelColor);
+        }
+
+        const transitionEndHandler = () => {
+            if (position === 'outside')
+                this.renderBackground(labelsGroup, labelBlock, attrs);
+
+            if (position === 'inside')
+                labelBlock.style('fill', this.innerLabelColor);
+        }
+
+        this.setLabelBlockAttrs(attrs, labelBlock, block.transitionManager.updateChartsDuration)
+            .on('end', transitionEndHandler);
+    }
+
+    private static checkLabelToResetTextAnchor(x: number, width: number, margin: BlockMargin, blockSize: Size, keyAxisOrient: Orient, position: EmbeddedLabelPosition): number {
+        if (keyAxisOrient === 'left') {
+            if (x + (position === 'inside' ? -width : width) > blockSize.width + margin.right - margin.left)
+                return blockSize.width - margin.right - width;
+            return x;
+        }
+        if (keyAxisOrient === 'right') {
+            if (x - width < margin.left)
+                return margin.left;
+            return x;
+        }
     }
 
     private static cropText(labelBlock: Selection<SVGGraphicsElement, unknown, BaseType, unknown>, barAttrs: BarAttrs, position: EmbeddedLabelPosition, labelUnserveFlag: boolean, margin: BlockMargin, blockSize: Size): void {
@@ -169,12 +144,43 @@ export class EmbeddedLabels {
 
     private static renderBackground(labelsGroup: Selection<SVGGElement, unknown, BaseType, unknown>, labelBlock: Selection<SVGTextElement, DataRow, HTMLElement, unknown>, attrs: LabelAttrs): void {
         labelsGroup.append('rect')
-            .attr('class', this.embeddedLabelRectClass)
+            .attr('class', this.embeddedLabelBgClass)
             .attr('x', attrs.textAnchor === 'start' ? attrs.x : attrs.x - labelBlock.node().getBBox().width)
             .attr('y', attrs.y - labelBlock.node().getBBox().height / 2)
             .attr('width', labelBlock.node().getBBox().width)
             .attr('height', labelBlock.node().getBBox().height)
             .style('fill', 'rgba(255, 255, 255, 0.8)')
             .lower();
+    }
+
+    private static setLabelBlockAttrs(attrs: LabelAttrs, labelBlock: Selection<SVGTextElement, DataRow, HTMLElement, unknown>, transitionDuration: number = 0): Selection<SVGTextElement, DataRow, HTMLElement, unknown> | Transition<SVGTextElement, DataRow, HTMLElement, unknown> {
+        let labelBlockHandler: Selection<SVGTextElement, DataRow, HTMLElement, unknown> | Transition<SVGTextElement, DataRow, HTMLElement, unknown> = labelBlock;
+
+        if (transitionDuration > 0) {
+            labelBlockHandler = labelBlockHandler
+                .interrupt()
+                .transition()
+                .duration(transitionDuration);
+        }
+
+        labelBlockHandler
+            .attr('x', attrs.x)
+            .attr('y', attrs.y)
+            .attr('dominant-baseline', 'middle');
+
+        return labelBlockHandler;
+    }
+
+    private static getLabelByIndex(labelsSelection: Selection<SVGTextElement, DataRow, SVGGElement, unknown>, barIndex: number, valueField: Field): Selection<SVGTextElement, DataRow, HTMLElement, unknown> {
+        let labelBlock: Selection<SVGTextElement, DataRow, HTMLElement, unknown>;
+
+        labelsSelection.each(function (d, indexLabel) {
+            if (barIndex === indexLabel) {
+                labelBlock = select(this)
+                    .text(ValueFormatter.formatField(valueField.format, d[valueField.name]));
+            }
+        });
+
+        return labelBlock;
     }
 }
