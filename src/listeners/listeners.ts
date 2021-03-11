@@ -640,7 +640,7 @@ engine2.render(model2, getPreparedData(model2, data, config2), document.querySel
 const newData = ListenersHelper.getCopy(data);
 setInterval(() => {
     if(!ListenersHelper.randInt(0, 1))
-        newData['dataSet'].pop()
+        newData['dataSet'].pop();
     else
             newData['dataSet'].push({
                 brand: makeHASH(ListenersHelper.randInt(3, 10)),
