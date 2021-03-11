@@ -14,7 +14,6 @@ import { Transition } from "d3-transition";
 export class Bar {
     public static barItemClass = 'bar-item';
     private static barSegmentGroupClass = 'bar-segment-group';
-    private static barGroupClass = 'bar-group';
 
     public static render(block: Block, scales: Scales, data: DataRow[], keyField: Field, margin: BlockMargin, keyAxisOrient: Orient, chart: TwoDimensionalChartModel, blockSize: Size, barSettings: BarChartSettings, barsAmounts: number[], isSegmented: boolean, firstBarIndex: number): void {
         if (isSegmented)
@@ -56,11 +55,11 @@ export class Bar {
     }
 
     private static renderGrouped(block: Block, scales: Scales, data: DataRow[], keyField: Field, margin: BlockMargin, keyAxisOrient: Orient, chart: TwoDimensionalChartModel, barsAmounts: number[], blockSize: Size, firstBarIndex: number, barSettings: BarChartSettings): void {
-        this.renderBarGroups(block, data);
         chart.data.valueFields.forEach((field, index) => {
             const bars = block.getChartBlock()
-                .selectAll(`.${this.barGroupClass}`)
+                .selectAll(`.${this.barItemClass}${Helper.getCssClassesLine(chart.cssClasses)}${Helper.getCssClassesLine(Helper.getCssClassesWithElementIndex(chart.cssClasses, index))}`)
                 .data(data)
+                .enter()
                 .append('rect')
                 .attr('class', this.barItemClass)
                 .style('clip-path', `url(#${block.getClipPathId()})`);
@@ -136,15 +135,11 @@ export class Bar {
                 .filter(d => newData.findIndex(row => row[keyField.name] === d[keyField.name]) === -1)
                 .remove();
 
-            this.updateBarGroups(block);
-
             const bars = block.getChartBlock()
                 .selectAll<SVGRectElement, DataRow>(`.${this.barItemClass}${Helper.getCssClassesLine(chart.cssClasses)}.chart-element-${index}`)
                 .data(newData);
 
-            const newBars = block.getChartBlock()
-                .selectAll(`.${this.barGroupClass}`)
-                .data(newData)
+            const newBars = bars
                 .enter()
                 .append('rect')
                 .attr('class', this.barItemClass)
@@ -228,32 +223,6 @@ export class Bar {
             Helper.setCssClasses(select(this).selectAll(`rect${Helper.getCssClassesLine(chart.cssClasses)}`), Helper.getCssClassesWithElementIndex(chart.cssClasses, i)); // Для обозначения принадлежности бара к конкретной части стака
             thisClass.setSegmentColor(select(this).selectAll(Helper.getCssClassesLine(chart.cssClasses)), chart.style.elementColors, i);
         });
-    }
-
-    private static renderBarGroups(block: Block, data: DataRow[]): Selection<BaseType, unknown, SVGGElement, unknown> {
-        let groups = block.getChartBlock()
-            .selectAll(`.${this.barGroupClass}`);
-
-        if (groups.size() < data.length)
-            groups = block.getChartBlock()
-                .selectAll(`.${this.barGroupClass}`)
-                .data(data)
-                .enter()
-                .append('g')
-                .attr('class', this.barGroupClass);
-
-        return groups;
-    }
-
-    private static updateBarGroups(block: Block): void {
-        const thisClass = this;
-
-        block.getChartBlock()
-            .selectAll(`.${this.barGroupClass}`)
-            .each(function (d) {
-                if (select(this).selectAll(`.${thisClass.barItemClass}`).empty())
-                    select(this).remove();
-            });
     }
 
     private static fillBarAttrs(bars: Selection<SVGRectElement, DataRow, BaseType, unknown>, barAttrs: BarAttrsHelper, transitionDuration: number = 0): Selection<SVGRectElement, DataRow, BaseType, unknown> | Transition<SVGRectElement, DataRow, BaseType, unknown> {
