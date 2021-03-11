@@ -643,14 +643,19 @@ engine2.render(model2, getPreparedData(model2, data, config2), document.querySel
 startDataChanging(4000);
 
 function startDataChanging(ms: number): void {
-    setInterval(() => {
-        const newData = ListenersHelper.getCopy(data);
+    const run = () => {
+        setTimeout(() => {
+            const newData = ListenersHelper.getCopy(data);
 
-        changeData(newData);
+            changeData(newData);
 
-        const newModel = getUpdatedModel(config, newData, designerConfig);
-        engine.updateValues(newModel, getPreparedData(newModel, newData, config));
-    }, ms);
+            const newModel = getUpdatedModel(config, newData, designerConfig);
+            engine.updateValues(newModel, getPreparedData(newModel, newData, config));
+
+            run();
+        }, 4000)
+    }
+    run();
 }
 
 function changeData(newData: DataSource): void {

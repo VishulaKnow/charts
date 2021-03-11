@@ -230,6 +230,9 @@ export class ChartRenderer {
         Aggregator.update(block, data[options.data.dataSource], options.charts[0].data.valueField);
 
         Tooltip.render(block, model, data);
+
+        if (model.options.legend.position !== 'off')
+            RecordOverflowAlert.update(block, model.dataSettings.scope.hidedRecordsAmount, model.options.legend.position);
     }
 
     private static updateChartsByValueAxis(block: Block, charts: TwoDimensionalChartModel[], scales: Scales, data: DataSource, dataOptions: OptionsModelData, margin: BlockMargin, keyAxisOrient: Orient, blockSize: Size, barSettings: BarChartSettings): void {
