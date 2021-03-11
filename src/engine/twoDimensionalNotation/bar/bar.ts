@@ -132,9 +132,9 @@ export class Bar {
 
     private static updateDataForGrouped(block: Block, newData: DataRow[], scales: Scales, margin: BlockMargin, keyAxisOrient: Orient, chart: TwoDimensionalChartModel, blockSize: Size, barsAmounts: number[], keyField: Field, firstBarIndex: number, barSettings: BarChartSettings): void {
         chart.data.valueFields.forEach((field, index) => {
-            const oldBars = block.getChartBlock()
-                .selectAll<SVGRectElement, DataRow>(`.${this.barItemClass}${Helper.getCssClassesLine(chart.cssClasses)}.chart-element-${index}`);
-            oldBars.filter((d, i) => newData.findIndex(row => row[keyField.name] === d[keyField.name]) === -1)
+            block.getChartBlock()
+                .selectAll<SVGRectElement, DataRow>(`.${this.barItemClass}${Helper.getCssClassesLine(chart.cssClasses)}.chart-element-${index}`)
+                .filter(d => newData.findIndex(row => row[keyField.name] === d[keyField.name]) === -1)
                 .remove();
 
             const bars = block.getChartBlock()
@@ -184,6 +184,11 @@ export class Bar {
         const keys = chart.data.valueFields.map(field => field.name);
         const stackedData = stack().keys(keys)(newData);
 
+        block.getChartBlock()
+            .selectAll<SVGRectElement, DataRow>(`.${this.barItemClass}${Helper.getCssClassesLine(chart.cssClasses)}`)
+            .filter(d => newData.findIndex(row => row[keyField.name] === d.data[keyField.name]) === -1)
+            .remove();
+
         const groups = block.getChartBlock()
             .selectAll(`g.${this.barSegmentGroupClass}${Helper.getCssClassesLine(chart.cssClasses)}`)
             .data(stackedData);
@@ -232,37 +237,6 @@ export class Bar {
             .attr('y', d => barAttrs.y(d))
             .attr('height', d => barAttrs.height(d))
             .attr('width', d => barAttrs.width(d));
-    }
-
-    private static updateStackedBarAttrs(bars: Selection<SVGRectElement, DataRow, BaseType, unknown>, axisOrient: string, scaleValue: AxisScale<any>, margin: BlockMargin, blockSize: Size, transitionDuration: number = 0): void {
-        let barsSelection: Selection<SVGRectElement, DataRow, BaseType, unknown> | Transition<SVGRectElement, DataRow, BaseType, unknown> = bars;
-
-        if (transitionDuration > 0)
-            barsSelection = bars
-                .interrupt()
-                .transition()
-                .duration(transitionDuration);
-
-        if (axisOrient === 'top') {
-            barsSelection
-                .attr('y', d => margin.top + scaleValue(d[0]))
-                .attr('height', d => ValueFormatter.getValueOrZero(scaleValue(d[1] - d[0])));
-        }
-        if (axisOrient === 'bottom') {
-            barsSelection
-                .attr('y', d => margin.top + scaleValue(d[1]))
-                .attr('height', d => blockSize.height - margin.top - margin.bottom - scaleValue(d[1] - d[0]));
-        }
-        if (axisOrient === 'left') {
-            barsSelection
-                .attr('x', d => margin.left + scaleValue(d[0]) + 1) // 1px - ось
-                .attr('width', d => ValueFormatter.getValueOrZero(scaleValue(d[1] - d[0])));
-        }
-        if (axisOrient === 'right') {
-            barsSelection
-                .attr('x', d => margin.left + scaleValue(d[1]))
-                .attr('width', d => ValueFormatter.getValueOrZero(blockSize.width - margin.left - margin.right - scaleValue(d[1] - d[0])));
-        }
     }
 
     private static setSegmentColor(segments: Selection<SVGGElement, any, SVGGElement, unknown>, colorPalette: Color[], segmentedIndex: number): void {

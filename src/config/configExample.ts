@@ -75,6 +75,31 @@ const configCars: Config = {
                 markers: {
                     show: false
                 }
+            },
+            {
+                isSegmented: true,
+                type: 'bar',
+                data: {
+                    valueFields: [
+                        {
+                            name: 'count',
+                            format: 'money',
+                            title: 'Количество автомобилей'
+                        },
+                        {
+                            name: 'price',
+                            format: 'money',
+                            title: 'Количество автомобилей'
+                        }
+                    ]
+                },
+                tooltip: {
+                    show: true
+                },
+                embeddedLabels: 'value',
+                markers: {
+                    show: false
+                }
             }
         ]
     }

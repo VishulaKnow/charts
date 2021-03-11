@@ -654,19 +654,27 @@ function startDataChanging(ms: number): void {
 }
 
 function changeData(newData: DataSource): void {
-    // const random = Math.random();
-    // if (random > 0.66) {
-    //     for (let i = 0; i < ListenersHelper.randInt(1, 4); i++) {
-    //         newData['dataSet'].push({
-    //             brand: makeHASH(ListenersHelper.randInt(4, 10)).toUpperCase(),
-    //             price: ListenersHelper.randInt(0, 150),
-    //             count: ListenersHelper.randInt(0, 50)
-    //         });
-    //     }
-    // } else if (random < 0.33) {
-    //     // newData["dataSet"].pop();
-    //     newData["dataSet"].splice(ListenersHelper.randInt(0, 4), ListenersHelper.randInt(1, 3));
-    // }
+    const random = Math.random();
+    if (random > 0.66) {
+        for (let i = 0; i < ListenersHelper.randInt(1, 4); i++) {
+            newData['dataSet'].push({
+                brand: makeHASH(ListenersHelper.randInt(4, 10)).toUpperCase(),
+                price: ListenersHelper.randInt(0, 150),
+                count: ListenersHelper.randInt(0, 50)
+            });
+        }
+    } else if (random < 0.33) {
+        // newData["dataSet"].pop();
+        newData["dataSet"].splice(ListenersHelper.randInt(0, 4), ListenersHelper.randInt(1, 3));
+    }
+
+    for (let i = 0; i < ListenersHelper.randInt(1, 4); i++) {
+        newData['dataSet'].push({
+            brand: makeHASH(ListenersHelper.randInt(4, 10)).toUpperCase(),
+            price: ListenersHelper.randInt(0, 150),
+            count: ListenersHelper.randInt(0, 50)
+        });
+    }
 
     newData["dataSet"][ListenersHelper.randInt(0, newData["dataSet"].length - 1)]['price'] = ListenersHelper.randInt(0, 100);
     newData["dataSet"][ListenersHelper.randInt(0, newData["dataSet"].length - 1)]['count'] = ListenersHelper.randInt(0, 100);
