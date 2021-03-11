@@ -94,9 +94,10 @@ export class Donut {
             .data(pieGenerator(is));
 
         const path = items.select<SVGPathElement>('path');
+        const tranName = 'update'
         path
-            .interrupt()
-            .transition()
+            .interrupt(tranName)
+            .transition(tranName)
             .duration(block.transitionManager.updateChartsDuration)
             .attrTween('d', function (d) {
                 const interpolateFunc = interpolate((this as any)._currentData, d); // current - старые данные до обновления, задаются во время рендера

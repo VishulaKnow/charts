@@ -315,6 +315,13 @@ export class Tooltip {
     }
 
     private static changeDonutHighlightAppearance(segment: Selection<SVGGElement, PieArcDatum<DataRow>, BaseType, unknown>, margin: BlockMargin, blockSize: Size, donutThickness: number, transitionDuration: number, on: boolean): void {
+        segment.transition().each(function (d) {
+            for (let i = 0; i < Object.keys((this as any).__transition).length; i++) {
+                console.log('g');
+                console.log((this as any).__transition[Object.keys((this as any).__transition)[i]]);
+            }
+        })
+
         interrupt(segment.node());
 
         let scaleSize = 0;
