@@ -24,7 +24,7 @@ export class Bar {
             this.renderGrouped(block, scales, data, keyField, margin, keyAxisOrient, chart, barsAmounts, blockSize, firstBarIndex, barSettings);
     }
 
-    public static updateBarChartByValueAxis(block: Block, newData: DataRow[], scales: Scales, margin: BlockMargin, keyAxisOrient: Orient, chart: TwoDimensionalChartModel, blockSize: Size, isSegmented: boolean): void {
+    public static updateData(block: Block, newData: DataRow[], scales: Scales, margin: BlockMargin, keyAxisOrient: Orient, chart: TwoDimensionalChartModel, blockSize: Size, barsAmounts: number[], keyField: Field, firstBarIndex: number, barSettings: BarChartSettings, isSegmented: boolean): void {
         if (isSegmented) {
             const keys = chart.data.valueFields.map(field => field.name);
             const stackedData = stack().keys(keys)(newData);
@@ -44,22 +44,24 @@ export class Bar {
         } else {
             chart.data.valueFields.forEach((field, index) => {
                 const bars = block.getChartBlock()
-                    .selectAll<SVGRectElement, DataRow>(`.${this.barItemClass}${Helper.getCssClassesLine(chart.cssClasses)}.chart-element-${index}`);
+                    .selectAll<SVGRectElement, DataRow>(`.${this.barItemClass}${Helper.getCssClassesLine(chart.cssClasses)}.chart-element-${index}`)
+                    .data(newData);
 
-                this.updateGroupedBarAttrs(bars,
-                    keyAxisOrient,
-                    scales.scaleValue,
+                const barAttrs = BarHelper.getGroupedBarAttrs(keyAxisOrient,
+                    scales,
                     margin,
+                    keyField.name,
                     field.name,
                     blockSize,
-                    newData,
-                    block.transitionManager.updateChartsDuration);
+                    BarHelper.getBarIndex(barsAmounts, chart.index) + index - firstBarIndex,
+                    sum(barsAmounts),
+                    barSettings);
+
+                this.fillBarAttrs(bars, barAttrs, block.transitionManager.updateChartsDuration);
 
                 if (chart.embeddedLabels !== 'none') {
-                    const labelsGroup = block.getChartBlock()
-                        .selectAll<SVGGElement, unknown>(`.${EmbeddedLabels.embeddedLabelsGroupClass}${Helper.getCssClassesLine(chart.cssClasses)}.chart-element-${index}`);
-                    EmbeddedLabels.updateLabelsCoordinate(bars,
-                        labelsGroup,
+                    EmbeddedLabels.updateLabelsCoordinate(block,
+                        bars,
                         keyAxisOrient,
                         scales.scaleValue,
                         margin,
@@ -67,12 +69,13 @@ export class Bar {
                         chart.embeddedLabels,
                         blockSize,
                         newData,
+                        index,
+                        chart.cssClasses,
                         block.transitionManager.updateChartsDuration);
                 }
             })
         }
     }
-
 
     public static getAllBarItems(block: Block, chartCssClasses: string[]): Selection<BaseType, DataRow, BaseType, unknown> {
         return block.getSvg().selectAll(`rect.${this.barItemClass}${Helper.getCssClassesLine(chartCssClasses)}`);
@@ -165,8 +168,16 @@ export class Bar {
                 .attr('class', 'bar-group');
     }
 
-    private static fillBarAttrs(bars: Selection<SVGRectElement, DataRow, BaseType, unknown>, barAttrs: BarAttrsHelper): void {
-        bars.attr('x', d => barAttrs.x(d))
+    private static fillBarAttrs(bars: Selection<SVGRectElement, DataRow, BaseType, unknown>, barAttrs: BarAttrsHelper, transitionDuration: number = 0): void {
+        let barsHander: Selection<SVGRectElement, DataRow, BaseType, unknown> | Transition<SVGRectElement, DataRow, BaseType, unknown> = bars;
+        if (transitionDuration > 0) {
+            barsHander = barsHander
+                .interrupt()
+                .transition()
+                .duration(transitionDuration);
+        }
+
+        barsHander.attr('x', d => barAttrs.x(d))
             .attr('y', d => barAttrs.y(d))
             .attr('height', d => barAttrs.height(d))
             .attr('width', d => barAttrs.width(d));
@@ -180,7 +191,7 @@ export class Bar {
             height: null
         }
 
-        BarHelper.setGroupedBarAttrsByValueAxis(barAttrs, axisOrient, margin, scaleValue, valueField, blockSize);
+        BarHelper.setGroupedBarAttrsByValue(barAttrs, axisOrient, margin, scaleValue, valueField, blockSize);
 
         let barsTran: Selection<SVGRectElement, DataRow, BaseType, unknown> | Transition<SVGRectElement, DataRow, BaseType, unknown> = bars;
         if (transitionDuration > 0)

@@ -47,7 +47,7 @@ export default class Engine {
             this.data[source] = newData[source];
         }
         if (model.options.type === '2d') {
-            ChartRenderer.updateByValueAxis(this.block, model, newData);
+            ChartRenderer.updateDataFor2D(this.block, model, newData);
         } else if (model.options.type === 'polar') {
             ChartRenderer.updatePolarValues(this.block, model, newData);
         }

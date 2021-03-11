@@ -1,7 +1,7 @@
-import { select, Selection, BaseType } from 'd3-selection';
+import { Selection, BaseType } from 'd3-selection';
 import { min, max } from 'd3-array';
 import { format } from 'd3-format';
-import { axisTop, axisBottom, axisLeft, axisRight, AxisScale, Axis as IAxis } from 'd3-axis';
+import { AxisScale, Axis as IAxis } from 'd3-axis';
 import { ScaleBand } from 'd3-scale'
 import { AxisModelOptions, BlockMargin, IAxisModel, IScaleModel, Orient, ScaleKeyModel, ScaleValueModel, Size } from "../../../model/model";
 import { Helper } from "../../helper";
@@ -9,10 +9,12 @@ import { Block } from "../../block/block";
 import { Scale, Scales } from "../scale/scale";
 import { AXIS_HORIZONTAL_LABEL_PADDING, AXIS_VERTICAL_LABEL_PADDING } from "../../../model/marginModel";
 import { NamesManager } from '../../namesManager';
+import { AxisHelper } from './axisHelper';
 
 type TextAnchor = 'start' | 'end' | 'middle';
 
 const MINIMAL_STEP_SIZE = 40;
+const MINIMAL_STEP_SIZE_FOR_WRAPPING = 38;
 
 export class Axis {
     public static axesClass = NamesManager.getClassName('axis');
@@ -25,7 +27,7 @@ export class Axis {
     }
 
     public static updateValueAxisDomain(block: Block, scaleValue: AxisScale<any>, scaleOptions: ScaleValueModel, axisOptions: AxisModelOptions): void {
-        const axis = this.getAxisByOrient(axisOptions.orient, scaleValue);
+        const axis = AxisHelper.getAxisByOrient(axisOptions.orient, scaleValue);
 
         this.setAxisFormat(scaleValue, scaleOptions, axis);
         if (!axisOptions.ticks.flag)
@@ -41,8 +43,70 @@ export class Axis {
             .call(axis.bind(this));
     }
 
+    public static updateKeyAxisDomain(block: Block, scaleKey: AxisScale<any>, scaleOptions: ScaleKeyModel, axisOptions: AxisModelOptions, blockSize: Size): void {
+        const axis = AxisHelper.getAxisByOrient(axisOptions.orient, scaleKey);
+
+        if (!axisOptions.ticks.flag)
+            this.removeTicks(axis);
+
+        this.setAxisLabelPaddingByOrient(axis, axisOptions);
+
+        if (axisOptions.labels.positition === 'rotated') {
+            if (axisOptions.orient === 'bottom')
+                axis.tickPadding(-4);
+            else if (axisOptions.orient === 'top')
+                axis.tickPadding(-6);
+        }
+
+        const axisElement = block.getSvg()
+            .select<SVGGElement>(`g.${axisOptions.cssClass}`);
+
+        if (axisOptions.orient === 'left') {
+            axis.tickPadding(axisOptions.labels.maxSize + AXIS_VERTICAL_LABEL_PADDING);
+            axisElement.selectAll('.tick text').attr('y', null);
+        }
+
+        console.log(axisElement.selectAll('.tick text').nodes());
+
+        axisElement
+            .interrupt()
+            .transition()
+            .on('end', () => {
+                if (axisOptions.orient === 'bottom' || axisOptions.orient === 'top') {
+                    this.cropLabels(block, scaleKey, scaleOptions, axisOptions, blockSize);
+                }
+                if (axisOptions.orient === 'left' || axisOptions.orient === 'right') {
+                    if (Scale.getScaleStep(scaleKey) >= MINIMAL_STEP_SIZE_FOR_WRAPPING)
+                        axisElement.selectAll<SVGGElement, unknown>('.tick text').call(AxisHelper.wrapHandler, axisOptions.labels.maxSize);
+                    else
+                        this.cropLabels(block, scaleKey, scaleOptions, axisOptions, blockSize);
+
+                    if (axisOptions.orient === 'left')
+                        this.alignLabelsInVerticalAxis(axisElement, 'start', axisOptions.labels.maxSize, true);
+                    else if (axisOptions.orient === 'right')
+                        this.alignLabelsInVerticalAxis(axisElement, 'start', axisOptions.labels.maxSize, false);
+                }
+            })
+            .duration(block.transitionManager.updateChartsDuration)
+            .call(axis.bind(this));
+
+        if (axisOptions.orient === 'left' || axisOptions.orient === 'right') {
+            if (axisOptions.orient === 'left')
+                this.alignLabelsInVerticalAxis(axisElement, 'start', axisOptions.labels.maxSize, true);
+            else if (axisOptions.orient === 'right')
+                this.alignLabelsInVerticalAxis(axisElement, 'start', axisOptions.labels.maxSize, false);
+        }
+
+        if (axisOptions.orient === 'bottom' || axisOptions.orient === 'top') {
+            axisElement.selectAll('.tick > text').attr('text-anchor', 'center');
+            if (axisOptions.labels.positition === 'rotated')
+                this.rotateLabels(axisElement, axisOptions.orient);
+            this.cropLabels(block, scaleKey, scaleOptions, axisOptions, blockSize);
+        }
+    }
+
     private static renderAxis(block: Block, scale: AxisScale<any>, scaleOptions: ScaleKeyModel | ScaleValueModel, axisOptions: AxisModelOptions, margin: BlockMargin, blockSize: Size): void {
-        const axis = this.getAxisByOrient(axisOptions.orient, scale);
+        const axis = AxisHelper.getAxisByOrient(axisOptions.orient, scale);
 
         this.setAxisFormat(scale, scaleOptions, axis);
 
@@ -64,17 +128,17 @@ export class Axis {
             if (axisOptions.type === 'key' && axisOptions.labels.positition === 'rotated' && (axisOptions.orient === 'top' || axisOptions.orient === 'bottom'))
                 this.rotateLabels(axisElement, axisOptions.orient);
 
-            if ((axisOptions.orient === 'left' || axisOptions.orient === 'right') && axisOptions.type === 'key' && Scale.getScaleStep(scale) >= 38) {
-                axisElement.selectAll<SVGGElement, unknown>('.tick text').call(this.wrap, axisOptions.labels.maxSize);
+            if ((axisOptions.orient === 'left' || axisOptions.orient === 'right') && axisOptions.type === 'key' && Scale.getScaleStep(scale) >= MINIMAL_STEP_SIZE_FOR_WRAPPING) {
+                axisElement.selectAll<SVGGElement, unknown>('.tick text').call(AxisHelper.wrapHandler, axisOptions.labels.maxSize);
             } else {
                 this.cropLabels(block, scale, scaleOptions, axisOptions, blockSize);
             }
 
             if (axisOptions.type === 'key') {
                 if (axisOptions.orient === 'left')
-                    this.alignLabels(axisElement, 'start', axisOptions.labels.maxSize, true);
+                    this.alignLabelsInVerticalAxis(axisElement, 'start', axisOptions.labels.maxSize, true);
                 else if (axisOptions.orient === 'right')
-                    this.alignLabels(axisElement, 'start', axisOptions.labels.maxSize, false);
+                    this.alignLabelsInVerticalAxis(axisElement, 'start', axisOptions.labels.maxSize, false);
             }
         } else {
             this.hideLabels(axisElement);
@@ -97,38 +161,7 @@ export class Axis {
         // axis.tickValues(this.getRecalcedTickValuesWithLastValue(min(scale.domain), max(scale.domain), Math.floor(axisLength / MINIMAL_STEP_SIZE)));
     }
 
-    private static getRecalcedTickValuesWithLastValue(minValue: number, maxValue: number, countValues: number): number[] {
-        let valuesArray = [];
-        let step = 1;
-        let numbers = [1, 2, 5];
-        let numberIndex = 0;
-
-        // В случае если количество интервалов полученных при разбиении отрезка от 0 до максимального значения
-        // будет меньше или равно количеству возможных для отрисовки интервалов поиск подходящего шага завершится
-        while ((maxValue / step) > countValues) {
-            step = numbers[(numberIndex % numbers.length)]; // получение числа 1, 2 или 5 по очередно с каждым проходом цикла
-            step = step * Math.pow(10, Math.floor(numberIndex / numbers.length)); // произведение шага на 10-ки 
-            numberIndex++;
-        }
-
-        valuesArray.push(minValue);
-        let currentValue = 0;
-
-        // Если цикл дошел до предпоследнего элемента, цикл завершается
-        while (currentValue + step * 2 < maxValue) {
-            currentValue += step;
-            valuesArray.push(currentValue);
-        }
-        currentValue += step; // получение значения предпоследнего элемента
-        if (maxValue - currentValue > step / 3) // Если расстояние между последним и предпоследним больше, чем 1/3 шага
-            valuesArray.push(currentValue);
-
-        valuesArray.push(maxValue);
-        valuesArray = valuesArray.reverse(); // Reverse массива для корректного отображения гридов
-        return valuesArray;
-    }
-
-    private static alignLabels(axisElement: Selection<SVGGElement, unknown, HTMLElement, any>, anchor: TextAnchor, maxLabelSize: number, changeCoordinate: boolean): void {
+    private static alignLabelsInVerticalAxis(axisElement: Selection<SVGGElement, unknown, HTMLElement, any>, anchor: TextAnchor, maxLabelSize: number, changeCoordinate: boolean): void {
         const axisTextBlocks = axisElement.selectAll('text');
         const spans = axisElement.selectAll('tspan');
         axisTextBlocks.attr('text-anchor', anchor);
@@ -169,17 +202,6 @@ export class Axis {
 
     private static removeTicks(axis: IAxis<any>): void {
         axis.tickSize(0);
-    }
-
-    private static getAxisByOrient(orient: Orient, scale: AxisScale<any>): IAxis<any> {
-        if (orient === 'top')
-            return axisTop(scale);
-        if (orient === 'bottom')
-            return axisBottom(scale);
-        if (orient === 'left')
-            return axisLeft(scale);
-        if (orient === 'right')
-            return axisRight(scale);
     }
 
     private static setAxisFormat(scale: AxisScale<any>, scaleOptions: ScaleValueModel | ScaleKeyModel, axis: IAxis<any>): void {
@@ -231,43 +253,5 @@ export class Axis {
     private static hideLabels(axisElement: Selection<SVGGElement, unknown, BaseType, unknown>): void {
         axisElement.selectAll('.tick text')
             .style('display', 'none');
-    }
-
-    private static wrap(textBlocks: Selection<SVGGElement, unknown, BaseType, any>, maxWidth: number) {
-        textBlocks.each(function () {
-            let textBlock = select(this);
-            if (textBlock.node().getBBox().width > maxWidth) {
-                let letters = textBlock.text().split('').reverse(), // split text to letters.
-                    letter,
-                    line: string[] = [], // one line. letters from this var into tpsans.
-                    lineNumber = 0,
-                    y = textBlock.attr("y"),
-                    dy = 1.4,
-                    tspan = textBlock.text(null).append("tspan").attr("y", y).attr("dy", dy + "em");
-
-                while (letter = letters.pop()) {
-                    line.push(letter);
-                    tspan.text(line.join(''));
-                    if (tspan.node().getComputedTextLength() > maxWidth && line.length > 1 && letters.length > 0) {
-                        line.pop();
-                        tspan.text(line.join(''));
-                        if (lineNumber === 0 && line[line.length - 1] !== ' ')
-                            tspan.text(tspan.text() + '-');
-                        line = [letter];
-                        if (lineNumber >= 1) { // If text block has 2 lines, text cropped.
-                            if (letters.length > 0)
-                                tspan.text(tspan.text().substr(0, tspan.text().length - 1) + '...')
-                            break;
-                        }
-                        tspan = textBlock.append("tspan").attr("y", y).attr("dy", dy * lineNumber + 1 + "em").text(letter);
-                        lineNumber++;
-                    }
-                }
-
-                if (!textBlock.selectAll('tspan').empty()) {
-                    textBlock.attr('y', -(textBlock.node().getBBox().height / 2 + 4.8));
-                }
-            }
-        });
     }
 }

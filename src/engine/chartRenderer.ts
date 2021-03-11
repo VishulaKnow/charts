@@ -181,7 +181,7 @@ export class ChartRenderer {
         });
     }
 
-    public static updateByValueAxis(block: Block, model: Model, data: DataSource) {
+    public static updateDataFor2D(block: Block, model: Model, data: DataSource) {
         const options = <TwoDimensionalOptionsModel>model.options;
 
         const scales = Scale.getScales(options.scale.scaleKey,
@@ -192,6 +192,12 @@ export class ChartRenderer {
             scales.scaleValue,
             options.scale.scaleValue,
             options.axis.valueAxis);
+
+        Axis.updateKeyAxisDomain(block,
+            scales.scaleKey,
+            options.scale.scaleKey,
+            options.axis.keyAxis,
+            model.blockCanvas.size);
 
         GridLine.rerender(block,
             options.additionalElements.gridLine.flag,
@@ -208,7 +214,10 @@ export class ChartRenderer {
             model.options.data,
             model.chartBlock.margin,
             options.axis.keyAxis.orient,
-            model.blockCanvas.size);
+            model.blockCanvas.size,
+            model.chartSettings.bar);
+
+        Tooltip.render(block, model, data, scales);
     }
 
     public static updatePolarValues(block: Block, model: Model, data: DataSource): void {
@@ -219,20 +228,24 @@ export class ChartRenderer {
         Aggregator.update(block, data[options.data.dataSource], options.charts[0].data.valueField);
     }
 
-    private static updateChartsByValueAxis(block: Block, charts: TwoDimensionalChartModel[], scales: Scales, data: DataSource, dataOptions: OptionsModelData, margin: BlockMargin, keyAxisOrient: Orient, blockSize: Size): void {
+    private static updateChartsByValueAxis(block: Block, charts: TwoDimensionalChartModel[], scales: Scales, data: DataSource, dataOptions: OptionsModelData, margin: BlockMargin, keyAxisOrient: Orient, blockSize: Size, barSettings: BarChartSettings): void {
         charts.forEach((chart: TwoDimensionalChartModel) => {
             if (chart.type === 'bar') {
-                Bar.updateBarChartByValueAxis(block,
+                Bar.updateData(block,
                     data[dataOptions.dataSource],
                     scales,
                     margin,
                     keyAxisOrient,
                     chart,
                     blockSize,
+                    BarHelper.getBarsInGroupAmount(charts),
+                    dataOptions.keyField,
+                    charts.findIndex(ch => ch.type === 'bar'),
+                    barSettings,
                     chart.isSegmented);
             }
             else if (chart.type === 'line') {
-                Line.updateLineChartByValueAxis(block,
+                Line.updateData(block,
                     scales,
                     data[dataOptions.dataSource],
                     dataOptions.keyField,
@@ -241,7 +254,7 @@ export class ChartRenderer {
                     chart);
             }
             else if (chart.type === 'area') {
-                Area.updateAreaChartByValueAxis(block,
+                Area.updateData(block,
                     scales,
                     data[dataOptions.dataSource],
                     dataOptions.keyField,

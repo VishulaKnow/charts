@@ -25,7 +25,10 @@ export class EmbeddedLabels {
         });
     }
 
-    public static updateLabelsCoordinate(bars: Selection<SVGRectElement, DataRow, SVGGElement, unknown>, labelsGroup: Selection<SVGGElement, unknown, SVGGElement, unknown>, keyAxisOrient: Orient, scaleValue: AxisScale<any>, margin: BlockMargin, valueField: Field, type: EmbeddedLabelTypeModel, blockSize: Size, newData: DataRow[], transitionDuration: number) {
+    public static updateLabelsCoordinate(block: Block, bars: Selection<SVGRectElement, DataRow, SVGGElement, unknown>, keyAxisOrient: Orient, scaleValue: AxisScale<any>, margin: BlockMargin, valueField: Field, type: EmbeddedLabelTypeModel, blockSize: Size, newData: DataRow[], index: number, cssClasses: string[], transitionDuration: number) {
+        const labelsGroup = block.getChartBlock()
+            .selectAll<SVGGElement, unknown>(`.${EmbeddedLabels.embeddedLabelsGroupClass}${Helper.getCssClassesLine(cssClasses)}.chart-element-${index}`);
+
         labelsGroup.selectAll<SVGRectElement, DataRow>(`rect`)
             .remove();
 
@@ -35,7 +38,7 @@ export class EmbeddedLabels {
             width: null,
             height: null
         }
-        BarHelper.setGroupedBarAttrsByValueAxis(barAttrsHelper, keyAxisOrient, margin, scaleValue, valueField.name, blockSize);
+        BarHelper.setGroupedBarAttrsByValue(barAttrsHelper, keyAxisOrient, margin, scaleValue, valueField.name, blockSize);
 
         const labelsSelection = labelsGroup
             .selectAll<SVGTextElement, DataRow>(`.${this.embeddedLabelClass}`)
