@@ -67,11 +67,11 @@ export class Donut {
             .selectAll("path")
             .data().map((d) => (d as any).data);
 
-        const was = this.mergeWithFirstEqualZero(data, oldData, chart.data.valueField.name, keyField)
-        const is = this.mergeWithFirstEqualZero(oldData, data, chart.data.valueField.name, keyField)
+        const was = this.mergeWithFirstEqualZero(data, oldData, keyField);
+        const is = this.mergeWithFirstEqualZero(oldData, data, keyField);
         //append new path
         let donutBlock = block.getSvg()
-            .selectAll(`.${this.donutBlockClass}`)
+            .selectAll(`.${this.donutBlockClass}`);
 
         let items = donutBlock
             .selectAll(`.${this.arcItemClass}`)
@@ -108,7 +108,7 @@ export class Donut {
             });
         // remove   
         items = this.getAllArcGroups(block)
-            .data(pieGenerator(data))
+            .data(pieGenerator(data));
         items.exit()
             .transition()
             .delay(block.transitionManager.updateChartsDuration)
@@ -127,21 +127,19 @@ export class Donut {
             .style('fill', (d, i) => colorPalette[i % colorPalette.length].toString());
     }
 
-    private static mergeWithFirstEqualZero(first: DataRow[], second: DataRow[], valueField: string, keyField: string): DataRow[] {
+    private static mergeWithFirstEqualZero(first: DataRow[], second: DataRow[], keyField: string): DataRow[] {
         const secondSet = new Set()
         second.forEach(function (d) {
             secondSet.add(d[keyField]);
         });
         const onlyFirst = first
-            .filter(function (d) {
-                return !secondSet.has(d[keyField])
-            })
-            .map(function (d, index, array) {
-                let data: DataRow = {
+            .filter(d => !secondSet.has(d[keyField]))
+            .map((d, index, array) => {
+                const data: DataRow = {
                     keyField: array[index][keyField],
                     valueField: 0
                 }
-                return data
+                return data;
             });
         const sortedMerge = merge([second, onlyFirst])
         return sortedMerge;

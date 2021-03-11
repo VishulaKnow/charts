@@ -66,8 +66,6 @@ export class Axis {
             axisElement.selectAll('.tick text').attr('y', null);
         }
 
-        console.log(axisElement.selectAll('.tick text').nodes());
-
         axisElement
             .interrupt()
             .transition()

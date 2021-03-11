@@ -222,10 +222,12 @@ export class ChartRenderer {
 
     public static updatePolarValues(block: Block, model: Model, data: DataSource): void {
         const options = <PolarOptionsModel>model.options;
-        
+
         Donut.updateValues(block, data[options.data.dataSource], model.chartBlock.margin, options.charts[0], model.blockCanvas.size, model.chartSettings.donut, options.data.keyField.name);
 
         Aggregator.update(block, data[options.data.dataSource], options.charts[0].data.valueField);
+
+        Tooltip.render(block, model, data);
     }
 
     private static updateChartsByValueAxis(block: Block, charts: TwoDimensionalChartModel[], scales: Scales, data: DataSource, dataOptions: OptionsModelData, margin: BlockMargin, keyAxisOrient: Orient, blockSize: Size, barSettings: BarChartSettings): void {
