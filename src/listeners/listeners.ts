@@ -669,8 +669,16 @@ function changeData(newData: DataSource): void {
     //     newData["dataSet"].splice(ListenersHelper.randInt(0, 4), 1);
     // }
 
-    newData["dataSet"].splice(ListenersHelper.randInt(0, 4), 1);
+    newData["dataSet"][ListenersHelper.randInt(0, newData["dataSet"].length - 1)]['price'] = ListenersHelper.randInt(0, 100);
+    newData["dataSet"][ListenersHelper.randInt(0, newData["dataSet"].length - 1)]['count'] = ListenersHelper.randInt(0, 100);
+}
 
-    // newData["dataSet"][ListenersHelper.randInt(0, newData["dataSet"].length - 1)]['price'] = ListenersHelper.randInt(0, 100);
-    // newData["dataSet"][ListenersHelper.randInt(0, newData["dataSet"].length - 1)]['count'] = ListenersHelper.randInt(0, 100);
+function makeHASH(length: number) {
+    var result = '';
+    var characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    var charactersLength = characters.length;
+    for (var i = 0; i < length; i++) {
+        result += characters.charAt(Math.floor(Math.random() * charactersLength));
+    }
+    return result;
 }
