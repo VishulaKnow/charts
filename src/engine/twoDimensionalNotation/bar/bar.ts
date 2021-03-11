@@ -197,6 +197,11 @@ export class Bar {
             .selectAll<SVGRectElement, DataRow>(`.${this.barItemClass}${Helper.getCssClassesLine(chart.cssClasses)}`)
             .data(d => d);
 
+        const newBars = bars.enter()
+            .append('rect')
+            .attr('class', this.barItemClass)
+            .style('clip-path', `url(#${block.getClipPathId()})`);
+
         const barAttrs = BarHelper.getStackedBarAttr(keyAxisOrient,
             scales,
             margin,
@@ -207,6 +212,16 @@ export class Bar {
             barSettings);
 
         this.fillBarAttrs(bars, barAttrs, block.transitionManager.updateChartsDuration);
+        this.fillBarAttrs(newBars, barAttrs);
+
+        Helper.setCssClasses(newBars, chart.cssClasses);
+
+        const thisClass = this;
+
+        groups.each(function (d, i) {
+            Helper.setCssClasses(select(this).selectAll(`rect${Helper.getCssClassesLine(chart.cssClasses)}`), Helper.getCssClassesWithElementIndex(chart.cssClasses, i)); // Для обозначения принадлежности бара к конкретной части стака
+            thisClass.setSegmentColor(select(this).selectAll(Helper.getCssClassesLine(chart.cssClasses)), chart.style.elementColors, i);
+        });
     }
 
     private static renderBarGroups(block: Block, data: DataRow[]): Selection<BaseType, unknown, SVGGElement, unknown> {
@@ -239,7 +254,7 @@ export class Bar {
             .attr('width', d => barAttrs.width(d));
     }
 
-    private static setSegmentColor(segments: Selection<SVGGElement, any, SVGGElement, unknown>, colorPalette: Color[], segmentedIndex: number): void {
+    private static setSegmentColor(segments: Selection<SVGGElement, any, BaseType, unknown>, colorPalette: Color[], segmentedIndex: number): void {
         segments.style('fill', colorPalette[segmentedIndex % colorPalette.length].toString());
     }
 }
