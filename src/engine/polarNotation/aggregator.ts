@@ -60,56 +60,43 @@ export class Aggregator {
                 .style('font-size', '18px')
                 .text(aggregatorInfo.name);
 
-            while (aggreggatorValue.node().getBoundingClientRect().width > innerRadius * 2 - 40 && fontSize > 15) {
-                aggreggatorValue
-                    .style('font-size', `${fontSize -= 2}px`)
-            }
+            this.reCalculateAggregatorFontSize(aggregatorObject.node().getBoundingClientRect().width, block);
         }
     }
 
     private static updateText(block: Block, aggregator: AggregatorInfo): void {
-        const wrapper = block.getSvg()
-            .select(`.${this.aggregatorObjectClass}`);
+        const aggregatorObject = block.getSvg()
+            .select<SVGForeignObjectElement>(`.${this.aggregatorObjectClass}`);
 
-        const wrapperSize = Helper.getSelectionNumericAttr(wrapper, 'width');
+        const thisClass = this;
 
-        const thisClass = this
-        let aggregatorValue: Selection<HTMLDivElement, unknown, HTMLElement, any> | Transition<HTMLDivElement, unknown, HTMLElement, any> = block.getSvg()
+        block.getSvg()
             .select<HTMLDivElement>(`.${this.aggregatorValueClass}`)
             .transition()
             .duration(1000)
             .tween("text", function () {
-                const oldTextPrecision = thisClass.calcDigitsAfterDot(this.textContent)
-                const precision = thisClass.calcDigitsAfterDot(aggregator.value.toString()) < oldTextPrecision ? oldTextPrecision : thisClass.calcDigitsAfterDot(aggregator.value.toString())
+                const oldTextPrecision = Helper.calcDigitsAfterDot(this.textContent)
+                const precision = Helper.calcDigitsAfterDot(aggregator.value.toString()) < oldTextPrecision ? oldTextPrecision : Helper.calcDigitsAfterDot(aggregator.value.toString())
                 var interpolateFunc = interpolate(this.textContent, aggregator.value.toString());
                 return function (t) {
                     this.textContent = ValueFormatter.formatField(aggregator.format, (+interpolateFunc(t)).toFixed(precision));
-                    thisClass.reCalculateAggregatorFontSize(aggregatorValue, block, wrapperSize)
+                    thisClass.reCalculateAggregatorFontSize(aggregatorObject.node().getBoundingClientRect().width, block);
                 };
             });
-
     }
 
-    private static calcDigitsAfterDot(value: string): number {
-        const newValue: string = value.toString();
-        let dotIndex: number = newValue.lastIndexOf(',') === -1 ? newValue.lastIndexOf('.') : newValue.lastIndexOf(',');
-        dotIndex = dotIndex === -1 ? newValue.length : dotIndex + 1;
-        let precision: number = newValue.substring(dotIndex).length;
-        return precision;
-    }
-
-    private static reCalculateAggregatorFontSize(aggreggatorValue: Selection<HTMLDivElement, unknown, HTMLElement, any> | Transition<HTMLDivElement, unknown, HTMLElement, any>, block: Block, wrapperSize: number): void {
-        aggreggatorValue = block.getSvg()
+    private static reCalculateAggregatorFontSize(wrapperSize: number, block: Block): void {
+        const aggreggatorValue = block.getSvg()
             .select<HTMLDivElement>(`.${this.aggregatorValueClass}`);
 
         let fontSize = parseInt(aggreggatorValue.style('font-size'));
 
-        while (aggreggatorValue.node().getBoundingClientRect().width > wrapperSize - 40 && fontSize > 15) {
+        while (aggreggatorValue.node().getBoundingClientRect().width > wrapperSize - 120 && fontSize > 15) {
             aggreggatorValue
                 .style('font-size', `${fontSize -= 2}px`)
         }
 
-        while (aggreggatorValue.node().getBoundingClientRect().width < wrapperSize - 50 && fontSize < 60) {
+        while (aggreggatorValue.node().getBoundingClientRect().width < wrapperSize - 120 && fontSize < 60) {
             aggreggatorValue
                 .style('font-size', `${fontSize += 2}px`)
         }

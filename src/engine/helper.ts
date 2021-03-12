@@ -101,6 +101,14 @@ export class Helper {
             return Bar.getAllBarItems(block, chart.cssClasses);
     }
 
+    public static calcDigitsAfterDot(value: string): number {
+        const newValue: string = value.toString();
+        let dotIndex: number = newValue.lastIndexOf(',') === -1 ? newValue.lastIndexOf('.') : newValue.lastIndexOf(',');
+        dotIndex = dotIndex === -1 ? newValue.length : dotIndex + 1;
+        let precision: number = newValue.substring(dotIndex).length;
+        return precision;
+    }
+
     private static setChartOpacity(elements: Selection<BaseType, unknown, BaseType, unknown>, opacity: number): void {
         elements.attr('opacity', opacity);
     }
