@@ -9,19 +9,20 @@ import { Helper } from '../helper';
 import { ValueFormatter } from '../valueFormatter';
 import { Translate } from "./donut";
 
-export interface IAggregator {
+export interface AggregatorInfo {
     name: string;
     value: number;
     format: DataType;
 }
 
 export class Aggregator {
+    public static aggregatorValueClass = 'aggregator-value';
+
     private static aggregatorNameClass = 'aggregator-name';
-    private static aggregatorValueClass = 'aggregator-value';
     private static aggregatorObjectClass = 'aggregator-object';
 
     public static render(block: Block, data: DataRow[], valueField: Field, innerRadius: number, translate: Translate, fontSize: number): void {
-        const aggregator: IAggregator = {
+        const aggregator: AggregatorInfo = {
             name: 'Сумма',
             value: sum(data.map(d => d[valueField.name])),
             format: valueField.format
@@ -31,7 +32,7 @@ export class Aggregator {
     }
 
     public static update(block: Block, data: DataRow[], valueField: Field): void {
-        const aggregator: IAggregator = {
+        const aggregator: AggregatorInfo = {
             name: 'Сумма',
             value: sum(data.map(d => d[valueField.name])),
             format: valueField.format
@@ -40,7 +41,7 @@ export class Aggregator {
         this.updateText(block, aggregator);
     }
 
-    private static renderText(block: Block, innerRadius: number, aggregator: IAggregator, translate: Translate, fontSize: number): void {
+    private static renderText(block: Block, innerRadius: number, aggregatorInfo: AggregatorInfo, translate: Translate, fontSize: number): void {
         if (innerRadius > 50) {
             const aggregatorObject = this.renderAggregatorObject(block, innerRadius, translate);
             const wrapper = this.renderWrapper(aggregatorObject);
@@ -50,14 +51,14 @@ export class Aggregator {
                 .attr('class', this.aggregatorValueClass)
                 .style('text-align', 'center')
                 .style('font-size', `${fontSize}px`)
-                .text(ValueFormatter.formatField(aggregator.format, aggregator.value));
+                .text(ValueFormatter.formatField(aggregatorInfo.format, aggregatorInfo.value));
 
             wrapper
                 .append('div')
                 .attr('class', this.aggregatorNameClass)
                 .style('text-align', 'center')
                 .style('font-size', '18px')
-                .text(aggregator.name);
+                .text(aggregatorInfo.name);
 
             while (aggreggatorValue.node().getBoundingClientRect().width > innerRadius * 2 - 40 && fontSize > 15) {
                 aggreggatorValue
@@ -66,7 +67,7 @@ export class Aggregator {
         }
     }
 
-    private static updateText(block: Block, aggregator: IAggregator): void {
+    private static updateText(block: Block, aggregator: AggregatorInfo): void {
         const wrapper = block.getSvg()
             .select(`.${this.aggregatorObjectClass}`);
 
@@ -77,7 +78,7 @@ export class Aggregator {
             .select<HTMLDivElement>(`.${this.aggregatorValueClass}`)
             .transition()
             .duration(block.transitionManager.updateChartsDuration)
-            .tween("text", function () {
+            .tween('text', function () {
                 const interpolateFunc = interpolate(this.textContent, aggregator.value.toString());
                 return t => this.textContent = ValueFormatter.formatField(aggregator.format, interpolateFunc(t));
             });
