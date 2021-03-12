@@ -69,20 +69,34 @@ export class Aggregator {
         const wrapper = block.getSvg()
             .select(`.${this.aggregatorObjectClass}`);
 
-        const wrapperSize = Helper.getSelectionNumericAttr(wrapper, 'width');   
+        const wrapperSize = Helper.getSelectionNumericAttr(wrapper, 'width');
+
+        const thisClass = this
+        let aggregatorValue: Selection<HTMLDivElement, unknown, HTMLElement, any> | Transition<HTMLDivElement, unknown, HTMLElement, any> = block.getSvg()
+            .select<HTMLDivElement>(`.${this.aggregatorValueClass}`)
+            .transition()
+            .duration(1000)
+            .tween("text", function () {
+                const oldTextPrecision = thisClass.calcDigitsAfterDot(this.textContent)
+                console.log(oldTextPrecision)
+                const precision = thisClass.calcDigitsAfterDot(aggregator.value.toString()) < oldTextPrecision ? oldTextPrecision : thisClass.calcDigitsAfterDot(aggregator.value.toString())
+                var interpolateFunc = interpolate(this.textContent, aggregator.value.toString());
+                return function (t) {
+                    this.textContent = ValueFormatter.formatField(aggregator.format, (+interpolateFunc(t)).toFixed(precision));
+                    thisClass.reCalculateAggregatorFontSize(aggregatorValue, block, wrapperSize)
+                };
+            });
 
 
-        let aggreggatorValue: Selection<HTMLDivElement, unknown, HTMLElement, any> | Transition<HTMLDivElement, unknown, HTMLElement, any> = block.getSvg()
-        .select<HTMLDivElement>(`.${this.aggregatorValueClass}`)
-        .transition()
-        .duration(block.transitionManager.updateChartsDuration)
-        .tween("text", function(){
-          var i = interpolate(this.textContent, aggregator.value.toString());
-          return function(t) {
-            this.textContent = ValueFormatter.formatField(aggregator.format, i(t));            
-          };
-        });
-
+    }
+    private static calcDigitsAfterDot(value: string): number {
+        const newValue: string = value.toString();
+        let dotIndex: number = newValue.lastIndexOf(',') === -1 ? newValue.lastIndexOf('.') : newValue.lastIndexOf(',');
+        dotIndex = dotIndex === -1 ? newValue.length : dotIndex + 1;
+        let precision: number = newValue.substring(dotIndex).length;
+        return precision;
+    }
+    private static reCalculateAggregatorFontSize(aggreggatorValue: Selection<HTMLDivElement, unknown, HTMLElement, any> | Transition<HTMLDivElement, unknown, HTMLElement, any>, block: Block, wrapperSize: number): void {
         aggreggatorValue = block.getSvg()
             .select<HTMLDivElement>(`.${this.aggregatorValueClass}`)
 
