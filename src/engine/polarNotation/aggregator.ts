@@ -1,5 +1,5 @@
 import { sum } from 'd3-array'
-import { interpolate, interpolateNumber, interpolateRound, interpolateString } from 'd3-interpolate';
+import { interpolate } from 'd3-interpolate';
 import { Selection } from 'd3-selection'
 import { Transition } from 'd3-transition';
 import { DataType } from '../../designer/designerConfig';
@@ -26,6 +26,7 @@ export class Aggregator {
             value: sum(data.map(d => d[valueField.name])),
             format: valueField.format
         }
+
         this.renderText(block, innerRadius, aggregator, translate, fontSize);
     }
 
@@ -69,22 +70,20 @@ export class Aggregator {
         const wrapper = block.getSvg()
             .select(`.${this.aggregatorObjectClass}`);
 
-        const wrapperSize = Helper.getSelectionNumericAttr(wrapper, 'width');   
-
+        const wrapperSize = Helper.getSelectionNumericAttr(wrapper, 'width');
 
         let aggreggatorValue: Selection<HTMLDivElement, unknown, HTMLElement, any> | Transition<HTMLDivElement, unknown, HTMLElement, any> = block.getSvg()
-        .select<HTMLDivElement>(`.${this.aggregatorValueClass}`)
-        .transition()
-        .duration(block.transitionManager.updateChartsDuration)
-        .tween("text", function(){
-          var i = interpolate(this.textContent, aggregator.value.toString());
-          return function(t) {
-            this.textContent = ValueFormatter.formatField(aggregator.format, i(t));            
-          };
-        });
+            .select(`.${this.aggregatorObjectClass}`)
+            .select<HTMLDivElement>(`.${this.aggregatorValueClass}`)
+            .transition()
+            .duration(block.transitionManager.updateChartsDuration)
+            .tween("text", function () {
+                const interpolateFunc = interpolate(this.textContent, aggregator.value.toString());
+                return t => this.textContent = ValueFormatter.formatField(aggregator.format, interpolateFunc(t));
+            });
 
         aggreggatorValue = block.getSvg()
-            .select<HTMLDivElement>(`.${this.aggregatorValueClass}`)
+            .select<HTMLDivElement>(`.${this.aggregatorValueClass}`);
 
         let fontSize = parseInt(aggreggatorValue.style('font-size'));
 

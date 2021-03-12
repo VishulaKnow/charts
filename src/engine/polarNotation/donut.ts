@@ -1,4 +1,4 @@
-import { PieArcDatum } from 'd3-shape'
+import { Arc, Pie, PieArcDatum } from 'd3-shape'
 import { Color } from "d3-color";
 import { Selection, BaseType } from 'd3-selection'
 import { interpolate } from 'd3-interpolate'
@@ -37,21 +37,7 @@ export class Donut {
             .attr('y', translateAttribute.y)
             .attr('transform', `translate(${translateAttribute.x}, ${translateAttribute.y})`);
 
-        const items = donutBlock
-            .selectAll(`.${this.arcItemClass}`)
-            .data(pieGenerator(data))
-            .enter()
-            .append('g')
-            .attr('class', this.arcItemClass);
-
-        const arcs = items
-            .append('path')
-            .attr('d', arcGenerator)
-            .attr('class', this.arcPathClass)
-            .each(function (d) { (this as any)._currentData = d; });
-
-        Helper.setCssClasses(arcs, chart.cssClasses);
-        this.setElementsColor(items, chart.style.elementColors);
+        this.renderNewArcItems(arcGenerator, pieGenerator, donutBlock, data, chart);
 
         Aggregator.render(block, data, chart.data.valueField, innerRadius, translateAttribute, thickness);
     }
@@ -60,50 +46,36 @@ export class Donut {
         const outerRadius = DonutHelper.getOuterRadius(margin, blockSize);
         const thickness = DonutHelper.getThickness(donutSettings, blockSize, margin);
         const innerRadius = DonutHelper.getInnerRadius(outerRadius, thickness);
+
         const arcGenerator = DonutHelper.getArcGenerator(outerRadius, innerRadius);
         const pieGenerator = DonutHelper.getPieGenerator(chart.data.valueField.name, donutSettings.padAngle);
 
         var oldData = block.getSvg().selectAll(`.${this.donutBlockClass}`)
-            .selectAll("path")
-            .data().map((d) => (d as any).data);
+            .selectAll('path')
+            .data()
+            .map((d) => (d as any).data);
 
         const was = this.mergeWithFirstEqualZero(data, oldData, keyField);
         const is = this.mergeWithFirstEqualZero(oldData, data, keyField);
 
-        const donutBlock = block.getSvg()
-            .selectAll(`.${this.donutBlockClass}`);
+        const donutBlock = block.getSvg().select<SVGGElement>(`.${this.donutBlockClass}`)
 
-        let items = donutBlock
-            .selectAll(`.${this.arcItemClass}`)
-            .data(pieGenerator(was))
-            .enter()
-            .append('g')
-            .attr('class', this.arcItemClass);
+        this.renderNewArcItems(arcGenerator, pieGenerator, donutBlock, was, chart);
 
-        const arcs = items
-            .append('path')
-            .attr('d', arcGenerator)
-            .attr('class', this.arcPathClass)
-            .each(function (d) { (this as any)._currentData = d; });
+        const path = this.getAllArcGroups(block)
+            .data(pieGenerator(is))
+            .select<SVGPathElement>('path');
 
-        Helper.setCssClasses(arcs, chart.cssClasses);
-        this.setElementsColor(items, chart.style.elementColors);
-
-        // add transition
-        items = this.getAllArcGroups(block)
-            .data(pieGenerator(is));
-
-        const path = items.select<SVGPathElement>('path');
-
-        items = this.getAllArcGroups(block)
+        const items = this.getAllArcGroups(block)
             .data(pieGenerator(data));
+
         items.exit()
             .transition()
             .delay(block.transitionManager.updateChartsDuration)
             .duration(0)
             .remove();
 
-        return new Promise((resolve, reject) => {
+        return new Promise((resolve) => {
             path
                 .interrupt()
                 .transition()
@@ -125,18 +97,36 @@ export class Donut {
             .selectAll(`.${this.arcItemClass}`) as Selection<SVGGElement, PieArcDatum<DataRow>, SVGGElement, unknown>;
     }
 
+    private static renderNewArcItems(arcGenerator: Arc<any, PieArcDatum<DataRow>>, pieGenerator: Pie<any, DataRow>, donutBlock: Selection<SVGGElement, unknown, HTMLElement, any>, data: DataRow[], chart: PolarChartModel): void {
+        const items = donutBlock
+            .selectAll(`.${this.arcItemClass}`)
+            .data(pieGenerator(data))
+            .enter()
+            .append('g')
+            .attr('class', this.arcItemClass);
+
+        const arcs = items
+            .append('path')
+            .attr('d', arcGenerator)
+            .attr('class', this.arcPathClass)
+            .each(function (d) { (this as any)._currentData = d; });
+
+        Helper.setCssClasses(arcs, chart.cssClasses);
+        this.setElementsColor(items, chart.style.elementColors);
+    }
+
     private static setElementsColor(arcItems: Selection<SVGGElement, unknown, BaseType, unknown>, colorPalette: Color[]): void {
         arcItems
             .select('path')
             .style('fill', (d, i) => colorPalette[i % colorPalette.length].toString());
     }
 
-    private static mergeWithFirstEqualZero(first: DataRow[], second: DataRow[], keyField: string): DataRow[] {
+    private static mergeWithFirstEqualZero(firstDataset: DataRow[], secondDataset: DataRow[], keyField: string): DataRow[] {
         const secondSet = new Set()
-        second.forEach(function (d) {
+        secondDataset.forEach(function (d) {
             secondSet.add(d[keyField]);
         });
-        const onlyFirst = first
+        const onlyFirst = firstDataset
             .filter(d => !secondSet.has(d[keyField]))
             .map((d, index, array) => {
                 const data: DataRow = {
@@ -145,7 +135,7 @@ export class Donut {
                 }
                 return data;
             });
-        const sortedMerge = merge([second, onlyFirst])
+        const sortedMerge = merge([secondDataset, onlyFirst])
         return sortedMerge;
     }
 }
