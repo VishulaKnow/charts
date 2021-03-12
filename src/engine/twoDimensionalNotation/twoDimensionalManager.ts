@@ -137,7 +137,7 @@ export class TwoDimensionalManager {
     private static update2DChartsData(block: Block, charts: TwoDimensionalChartModel[], scales: Scales, data: DataSource, dataOptions: OptionsModelData, margin: BlockMargin, keyAxisOrient: Orient, blockSize: Size, barSettings: BarChartSettings): void {
         charts.forEach((chart: TwoDimensionalChartModel) => {
             if (chart.type === 'bar') {
-                Bar.updateData(block,
+                Bar.update(block,
                     data[dataOptions.dataSource],
                     scales,
                     margin,

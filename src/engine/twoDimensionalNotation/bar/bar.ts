@@ -22,7 +22,7 @@ export class Bar {
             this.renderGrouped(block, scales, data, keyField, margin, keyAxisOrient, chart, barsAmounts, blockSize, firstBarIndex, barSettings);
     }
 
-    public static updateData(block: Block, newData: DataRow[], scales: Scales, margin: BlockMargin, keyAxisOrient: Orient, chart: TwoDimensionalChartModel, blockSize: Size, barsAmounts: number[], keyField: Field, firstBarIndex: number, barSettings: BarChartSettings, isSegmented: boolean): void {
+    public static update(block: Block, newData: DataRow[], scales: Scales, margin: BlockMargin, keyAxisOrient: Orient, chart: TwoDimensionalChartModel, blockSize: Size, barsAmounts: number[], keyField: Field, firstBarIndex: number, barSettings: BarChartSettings, isSegmented: boolean): void {
         if (isSegmented) {
             this.updateDataForSegmented(block,
                 newData,
@@ -130,9 +130,17 @@ export class Bar {
 
     private static updateDataForGrouped(block: Block, newData: DataRow[], scales: Scales, margin: BlockMargin, keyAxisOrient: Orient, chart: TwoDimensionalChartModel, blockSize: Size, barsAmounts: number[], keyField: Field, firstBarIndex: number, barSettings: BarChartSettings): void {
         chart.data.valueFields.forEach((valueField, index) => {
+            const indexesOfRemoved: number[] = [];
+
             block.getChartBlock()
                 .selectAll<SVGRectElement, DataRow>(`.${this.barItemClass}${Helper.getCssClassesLine(chart.cssClasses)}.chart-element-${index}`)
-                .filter(d => newData.findIndex(row => row[keyField.name] === d[keyField.name]) === -1)
+                .filter((d, i) => {
+                    if (newData.findIndex(row => row[keyField.name] === d[keyField.name]) === -1) {
+                        indexesOfRemoved.push(i);
+                        return true;
+                    }
+                    return false;
+                })
                 .remove();
 
             const bars = block.getChartBlock()
@@ -162,6 +170,7 @@ export class Bar {
             Helper.setChartStyle(newBars, chart.style, index, 'fill');
 
             if (chart.embeddedLabels !== 'none') {
+                EmbeddedLabels.removeByIndexes(block, chart.cssClasses, index, indexesOfRemoved);
                 EmbeddedLabels.update(block,
                     bars,
                     keyAxisOrient,

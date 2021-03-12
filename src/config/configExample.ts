@@ -60,6 +60,11 @@ const configCars: Config = {
                             name: 'price',
                             format: 'money',
                             title: 'Количество автомобилей'
+                        },
+                        {
+                            name: 'count',
+                            format: 'money',
+                            title: 'Количество автомобилей'
                         }
                     ]
                 },
