@@ -64,8 +64,6 @@ export class Tooltip {
         const tipBoxAttributes = TooltipHelper.getTipBoxAttributes(margin, blockSize);
         const tipBox = TooltipComponentsManager.renderTipBox(block, tipBoxAttributes);
 
-        tooltipContent.classed('tooltip-content-2d', true);
-
         const filterId = NamesManager.getId('shadow', block.id);
         ElementHighlighter.renderShadowFilter(block, filterId);
 
@@ -106,8 +104,6 @@ export class Tooltip {
         const tooltipBlock = TooltipComponentsManager.renderTooltipBlock(block, translateX, translateY);
         const tooltipContent = TooltipComponentsManager.renderTooltipContentBlock(tooltipBlock);
         const tooltipArrow = TooltipComponentsManager.renderTooltipArrow(tooltipBlock);
-
-        tooltipContent.classed('tooltip-content-2d', true);
 
         const filterId = NamesManager.getId('shadow', block.id);
         ElementHighlighter.renderShadowFilter(block, filterId);
