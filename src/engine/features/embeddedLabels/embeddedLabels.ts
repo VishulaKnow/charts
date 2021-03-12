@@ -39,11 +39,11 @@ export class EmbeddedLabels {
         const thisClass = this;
 
         bars.each(function (d, barIndex) {
-            thisClass.updateLabel(block, select(this), d, keyAxisOrient, barAttrsHelper, margin, valueField, type, blockSize, barIndex, labelsSelection, labelsGroup);
+            thisClass.updateLabel(block, d, keyAxisOrient, barAttrsHelper, margin, valueField, type, blockSize, barIndex, labelsSelection, labelsGroup);
         });
     }
 
-    private static updateLabel(block: Block, bar: Selection<SVGRectElement, DataRow, SVGGElement, unknown>, dataRow: DataRow, keyAxisOrient: Orient, barAttrsHelper: BarAttrsHelper, margin: BlockMargin, valueField: Field, type: EmbeddedLabelTypeModel, blockSize: Size, barIndex: number, labelsSelection: Selection<SVGTextElement, DataRow, SVGGElement, unknown>, labelsGroup: Selection<SVGGElement, unknown, SVGGElement, unknown>): void {
+    private static updateLabel(block: Block, dataRow: DataRow, keyAxisOrient: Orient, barAttrsHelper: BarAttrsHelper, margin: BlockMargin, valueField: Field, type: EmbeddedLabelTypeModel, blockSize: Size, barIndex: number, labelsSelection: Selection<SVGTextElement, DataRow, SVGGElement, unknown>, labelsGroup: Selection<SVGGElement, unknown, SVGGElement, unknown>): void {
         const labelBlock = this.getLabelByIndex(labelsSelection, barIndex, valueField);
 
         const barAttrs: BarAttrs = {

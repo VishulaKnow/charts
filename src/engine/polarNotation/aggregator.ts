@@ -89,6 +89,7 @@ export class Aggregator {
             });
 
     }
+
     private static calcDigitsAfterDot(value: string): number {
         const newValue: string = value.toString();
         let dotIndex: number = newValue.lastIndexOf(',') === -1 ? newValue.lastIndexOf('.') : newValue.lastIndexOf(',');
@@ -96,6 +97,7 @@ export class Aggregator {
         let precision: number = newValue.substring(dotIndex).length;
         return precision;
     }
+
     private static reCalculateAggregatorFontSize(aggreggatorValue: Selection<HTMLDivElement, unknown, HTMLElement, any> | Transition<HTMLDivElement, unknown, HTMLElement, any>, block: Block, wrapperSize: number): void {
         aggreggatorValue = block.getSvg()
             .select<HTMLDivElement>(`.${this.aggregatorValueClass}`);
