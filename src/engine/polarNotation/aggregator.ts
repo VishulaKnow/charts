@@ -80,7 +80,6 @@ export class Aggregator {
             .duration(1000)
             .tween("text", function () {
                 const oldTextPrecision = thisClass.calcDigitsAfterDot(this.textContent)
-                console.log(oldTextPrecision)
                 const precision = thisClass.calcDigitsAfterDot(aggregator.value.toString()) < oldTextPrecision ? oldTextPrecision : thisClass.calcDigitsAfterDot(aggregator.value.toString())
                 var interpolateFunc = interpolate(this.textContent, aggregator.value.toString());
                 return function (t) {

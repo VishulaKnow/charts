@@ -78,7 +78,7 @@ export class TooltipComponentsManager {
     }
 
     public static hideTooltipLine(tooltipLine: Selection<SVGLineElement, unknown, HTMLElement, any>): void {
-        tooltipLine.style('display', 'hide');
+        tooltipLine.style('display', 'none');
     }
 
     public static setTooltipLineAttributes(tooltipLine: Selection<SVGLineElement, unknown, HTMLElement, any>, attributes: TooltipLineAttributes, transition: number): void {

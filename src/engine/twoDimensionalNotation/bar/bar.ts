@@ -162,7 +162,7 @@ export class Bar {
             Helper.setChartStyle(newBars, chart.style, index, 'fill');
 
             if (chart.embeddedLabels !== 'none') {
-                EmbeddedLabels.updateLabelsCoordinate(block,
+                EmbeddedLabels.update(block,
                     bars,
                     keyAxisOrient,
                     barAttrs,

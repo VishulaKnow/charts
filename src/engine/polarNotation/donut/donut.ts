@@ -50,7 +50,7 @@ export class Donut {
         const arcGenerator = DonutHelper.getArcGenerator(outerRadius, innerRadius);
         const pieGenerator = DonutHelper.getPieGenerator(chart.data.valueField.name, donutSettings.padAngle);
 
-        var oldData = block.getSvg().selectAll(`.${this.donutBlockClass}`)
+        const oldData = block.getSvg().selectAll(`.${this.donutBlockClass}`)
             .selectAll<SVGPathElement, PieArcDatum<DataRow>>('path')
             .data()
             .map((d) => d.data);
@@ -135,7 +135,7 @@ export class Donut {
                 }
                 return data;
             });
-        const sortedMerge = merge([secondDataset, onlyNew])
+        const sortedMerge = merge([secondDataset, onlyNew]);
         return sortedMerge;
     }
 }
