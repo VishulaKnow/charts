@@ -51,19 +51,19 @@ export class Donut {
         const pieGenerator = DonutHelper.getPieGenerator(chart.data.valueField.name, donutSettings.padAngle);
 
         var oldData = block.getSvg().selectAll(`.${this.donutBlockClass}`)
-            .selectAll('path')
+            .selectAll<SVGPathElement, PieArcDatum<DataRow>>('path')
             .data()
-            .map((d) => (d as any).data);
+            .map((d) => d.data);
 
-        const was = this.mergeWithFirstEqualZero(data, oldData, keyField);
-        const is = this.mergeWithFirstEqualZero(oldData, data, keyField);
+        const dataNewZeroRows = this.mergeWithFirstEqualZero(data, oldData, keyField);
+        const dataExtraZeroRows = this.mergeWithFirstEqualZero(oldData, data, keyField);
 
         const donutBlock = block.getSvg().select<SVGGElement>(`.${this.donutBlockClass}`)
 
-        this.renderNewArcItems(arcGenerator, pieGenerator, donutBlock, was, chart);
+        this.renderNewArcItems(arcGenerator, pieGenerator, donutBlock, dataNewZeroRows, chart);
 
         const path = this.getAllArcGroups(block)
-            .data(pieGenerator(is))
+            .data(pieGenerator(dataExtraZeroRows))
             .select<SVGPathElement>('path');
 
         const items = this.getAllArcGroups(block)
@@ -126,7 +126,7 @@ export class Donut {
         secondDataset.forEach(function (d) {
             secondSet.add(d[keyField]);
         });
-        const onlyFirst = firstDataset
+        const onlyNew = firstDataset
             .filter(d => !secondSet.has(d[keyField]))
             .map((d, index, array) => {
                 const data: DataRow = {
@@ -135,7 +135,7 @@ export class Donut {
                 }
                 return data;
             });
-        const sortedMerge = merge([secondDataset, onlyFirst])
+        const sortedMerge = merge([secondDataset, onlyNew])
         return sortedMerge;
     }
 }
