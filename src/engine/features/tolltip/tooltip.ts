@@ -1,4 +1,4 @@
-import { select, Selection, BaseType, pointer } from 'd3-selection';
+import { select, Selection, pointer } from 'd3-selection';
 import { PieArcDatum } from 'd3-shape'
 import { BlockMargin, DataRow, DataSource, IntervalChartModel, Model, OptionsModelData, Orient, PolarChartModel, ScaleKeyModel, Size, TwoDimensionalChartModel } from "../../../model/model";
 import { Helper } from "../../helper";
@@ -9,10 +9,9 @@ import { ChartOrientation } from "../../../config/config";
 import { DonutHelper } from '../../polarNotation/DonutHelper';
 import { Scales } from '../scale/scale';
 import { AxisScale } from 'd3-axis';
-import { easeLinear } from 'd3-ease';
-import { interrupt } from 'd3-transition';
 import { NamesManager } from '../../namesManager';
 import { TooltipComponentsManager } from './tooltipComponentsManager';
+import { ElementHighlighter } from './elementHighlighter';
 
 export class Tooltip {
     public static tipBoxClass = 'tipbox';
@@ -64,7 +63,7 @@ export class Tooltip {
         tooltipContent.classed('tooltip-content-2d', true);
 
         const filterId = NamesManager.getId('shadow', block.id);
-        this.renderShadowFilter(block, filterId);
+        ElementHighlighter.renderShadowFilter(block, filterId);
 
         let currentKey: string = null;
 
@@ -85,18 +84,17 @@ export class Tooltip {
 
                     const tooltipLineAttributes = TooltipHelper.getTooltipLineAttributes(scaleKey, margin, keyValue, chartOrientation, blockSize);
                     TooltipComponentsManager.setTooltipLineAttributes(tooltipLine, tooltipLineAttributes, block.transitionManager.twoDimensionalTooltipDuration);
-                    tooltipLine.style('display', 'block');
+                    TooltipComponentsManager.showTooltipLine(tooltipLine);
 
-                    TooltipHelper.highlight2DElements(block, dataOptions.keyField.name, keyValue, charts, filterId, block.transitionManager.markerHoverDuration);
+                    ElementHighlighter.highlight2DElements(block, dataOptions.keyField.name, keyValue, charts, filterId, block.transitionManager.markerHoverDuration);
                 }
             })
             .on('mouseleave', function () {
                 TooltipComponentsManager.hideTooltipBlock(tooltipBlock);
-                tooltipLine.style('display', 'none');
-
-                TooltipHelper.remove2DElementsHighlighting(block, charts, block.transitionManager.markerHoverDuration);
-
+                TooltipComponentsManager.hideTooltipLine(tooltipLine);
                 currentKey = null;
+
+                ElementHighlighter.remove2DElementsHighlighting(block, charts, block.transitionManager.markerHoverDuration);
             });
     }
 
@@ -104,12 +102,11 @@ export class Tooltip {
         const tooltipBlock = TooltipComponentsManager.renderTooltipBlock(block, translateX, translateY);
         const tooltipContent = TooltipComponentsManager.renderTooltipContentBlock(tooltipBlock);
         const tooltipArrow = TooltipComponentsManager.renderTooltipArrow(tooltipBlock);
-        const thisClass = this;
 
         tooltipContent.classed('tooltip-content-2d', true);
 
         const filterId = NamesManager.getId('shadow', block.id);
-        this.renderShadowFilter(block, filterId);
+        ElementHighlighter.renderShadowFilter(block, filterId);
 
         elemets
             .on('mouseover', function (_event, dataRow) {
@@ -122,16 +119,14 @@ export class Tooltip {
 
                 select(this).style('filter', `url(#${filterId})`);
 
-                thisClass.changeDonutHighlightAppearance(select<SVGGElement, PieArcDatum<DataRow>>(this), margin, blockSize, donutThickness, block.transitionManager.donutArcHoverDuration, true);
+                ElementHighlighter.changeDonutHighlightAppearance(select<SVGGElement, PieArcDatum<DataRow>>(this), margin, blockSize, donutThickness, block.transitionManager.donutArcHoverDuration, true);
             });
 
         elemets.on('mouseleave', function () {
             TooltipComponentsManager.hideTooltipBlock(tooltipBlock);
+            ElementHighlighter.removeElementsFilter(select(this));
 
-            select(this) // удаление тени с оригинального сегмента
-                .style('filter', null);
-
-            thisClass.changeDonutHighlightAppearance(select<SVGGElement, PieArcDatum<DataRow>>(this), margin, blockSize, donutThickness, block.transitionManager.donutArcHoverDuration, false);
+            ElementHighlighter.changeDonutHighlightAppearance(select<SVGGElement, PieArcDatum<DataRow>>(this), margin, blockSize, donutThickness, block.transitionManager.donutArcHoverDuration, false);
         });
     }
 
@@ -143,47 +138,5 @@ export class Tooltip {
             block.getWrapper()
                 .append('div')
                 .attr('class', this.tooltipWrapperClass);
-    }
-
-    private static renderShadowFilter(block: Block, filterId: string): Selection<SVGFilterElement, unknown, HTMLElement, unknown> {
-        let filter = block.renderDefs()
-            .select<SVGFilterElement>(`filter#${filterId}`);
-
-        if (filter.empty())
-            filter = block.renderDefs()
-                .append('filter')
-                .attr('id', filterId)
-                .attr('width', '300%')
-                .attr('height', '300%')
-                .attr('x', '-100%')
-                .attr('y', '-100%')
-                .style('outline', '1px solid red');
-
-        if (filter.select('feDropShadow').empty())
-            filter.append('feDropShadow')
-                .attr('dx', 0)
-                .attr('dy', 0)
-                .attr('flood-color', 'rgba(0, 0, 0, 0.5)')
-                .attr('stdDeviation', 6);
-
-        return filter;
-    }
-
-    private static changeDonutHighlightAppearance(segment: Selection<SVGGElement, PieArcDatum<DataRow>, BaseType, unknown>, margin: BlockMargin, blockSize: Size, donutThickness: number, transitionDuration: number, on: boolean): void {
-        interrupt(segment.node());
-
-        let scaleSize = 0;
-        if (on)
-            scaleSize = 5; // Если нужно выделить сегмент, то scaleSize не равен нулю и отображается увеличенным
-
-        segment
-            .select('path')
-            .interrupt()
-            .transition()
-            .duration(transitionDuration)
-            .ease(easeLinear)
-            .attr('d', (d, i) => DonutHelper.getArcGeneratorObject(blockSize, margin, donutThickness)
-                .outerRadius(DonutHelper.getOuterRadius(margin, blockSize) + scaleSize)
-                .innerRadius(DonutHelper.getOuterRadius(margin, blockSize) - donutThickness - scaleSize)(d, i));
     }
 }
