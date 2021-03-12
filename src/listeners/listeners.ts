@@ -411,6 +411,15 @@ export default class Listeners {
             config.options.legend.show = this.checked;
             thisClass.updateFull();
         });
+        document.querySelector('#refresh').addEventListener('input', function () {
+            DataUpdater.updateRefreshValue(parseFloat(ListenersHelper.getInputValue('#refresh')) || 0);
+            thisClass.updateFull();
+        });
+        document.querySelector('#update-enabler').addEventListener('change', function () {
+            DataUpdater.updateIsOn(this.checked)
+            thisClass.updateFull()
+            this.checked ? document.querySelector('#refresh').setAttribute('disabled', 'disabled') : document.querySelector('#refresh').removeAttribute('disabled')
+        });
         const randomFunc = function () {
             if (config.options.type === '2d' || config.options.type === 'polar') {
                 const max = parseInt(ListenersHelper.getInputValue('#max-random-value')) || 120;
@@ -640,49 +649,88 @@ engine2.render(model2, getPreparedData(model2, data, config2), document.querySel
 
 
 //====================================================================================================== Data updating
-startDataChanging(4000);
+class DataUpdater {
 
-function startDataChanging(ms: number): void {
-    const run = () => {
-        setTimeout(() => {
-            const newData = ListenersHelper.getCopy(data);
+    private static _updateIsOn: boolean = true;
+    private static timeOut: any = null;
+    private static refresh: number = 2000;
 
-            changeData(newData);
-
-            const newModel = getUpdatedModel(config, newData, designerConfig);
-            engine.updateValues(newModel, getPreparedData(newModel, newData, config));
-
-            run();
-        }, ms)
+    public static updateIsOn(value: boolean) {
+        DataUpdater._updateIsOn = value;
+        if (value)
+            DataUpdater.startDataChanging(DataUpdater.refresh);
+        else
+            DataUpdater.destroyDataChanging();
     }
-    run();
-}
+    public static updateRefreshValue(value: number) {
+        if (value) {
+            DataUpdater.refresh = value
+            DataUpdater.startDataChanging(DataUpdater.refresh);
+        }
 
-function changeData(newData: DataSource): void {
-    const random = Math.random();
-    if (random > 0.66) {
+    }
+
+    private static startDataChanging(ms: number) {
+        const run = () => {
+            DataUpdater.timeOut = setTimeout(() => {
+                const newData = ListenersHelper.getCopy(data);
+
+                this.changeData(newData);
+
+                const newModel = getUpdatedModel(config, newData, designerConfig);
+                engine.updateValues(newModel, getPreparedData(newModel, newData, config));
+
+                run();
+            }, ms)
+        }
+        run();
+    }
+
+    private static destroyDataChanging() {
+        clearTimeout(DataUpdater.timeOut)
+    }
+
+    private static changeData(newData: DataSource) {
+        // const random = Math.random();
+        // if (random > 0.66) {
+        //     for (let i = 0; i < ListenersHelper.randInt(1, 4); i++) {
+        //         newData['dataSet'].push({
+        //             brand: makeHASH(ListenersHelper.randInt(4, 10)).toUpperCase(),
+        //             price: ListenersHelper.randInt(0, 150),
+        //             count: ListenersHelper.randInt(0, 50)
+        //         });
+        //     }
+        // } else if (random < 0.33) {
+        //     // newData["dataSet"].pop();
+        //     newData["dataSet"].splice(ListenersHelper.randInt(0, 4), ListenersHelper.randInt(1, 3));
+        // }
+
         for (let i = 0; i < ListenersHelper.randInt(1, 4); i++) {
             newData['dataSet'].push({
-                brand: makeHASH(ListenersHelper.randInt(4, 10)).toUpperCase(),
+                brand: this.makeHASH(ListenersHelper.randInt(4, 10)).toUpperCase(),
                 price: ListenersHelper.randInt(0, 150),
                 count: ListenersHelper.randInt(0, 50)
             });
         }
-    } else if (random < 0.33) {
-        // newData["dataSet"].pop();
-        newData["dataSet"].splice(ListenersHelper.randInt(0, 4), ListenersHelper.randInt(1, 3));
+
+        newData["dataSet"][ListenersHelper.randInt(0, newData["dataSet"].length - 1)]['price'] = ListenersHelper.randInt(0, 100);
+        newData["dataSet"][ListenersHelper.randInt(0, newData["dataSet"].length - 1)]['count'] = ListenersHelper.randInt(0, 100);
+
     }
 
-    newData["dataSet"][ListenersHelper.randInt(0, newData["dataSet"].length - 1)]['price'] = ListenersHelper.randInt(0, 100);
-    newData["dataSet"][ListenersHelper.randInt(0, newData["dataSet"].length - 1)]['count'] = ListenersHelper.randInt(0, 100);
+    private static makeHASH(length: number): string {
+        var result = '';
+        var characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+        var charactersLength = characters.length;
+        for (var i = 0; i < length; i++) {
+            result += characters.charAt(Math.floor(Math.random() * charactersLength));
+        }
+        return result;
+    }
 }
 
-function makeHASH(length: number): string {
-    var result = '';
-    var characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-    var charactersLength = characters.length;
-    for (var i = 0; i < length; i++) {
-        result += characters.charAt(Math.floor(Math.random() * charactersLength));
-    }
-    return result;
-}
+
+
+
+
+
