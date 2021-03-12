@@ -670,7 +670,6 @@ class DataUpdater {
 
     }
 
-
     private static startDataChanging(ms: number) {
         const run = () => {
             DataUpdater.timeOut = setTimeout(() => {
@@ -729,8 +728,6 @@ class DataUpdater {
         return result;
     }
 }
-//
-// document.querySelector('#update-enabler')
 
 
 

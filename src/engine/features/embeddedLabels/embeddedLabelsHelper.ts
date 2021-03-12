@@ -35,14 +35,14 @@ export class EmbeddedLabelsHelper {
     }
 
     public static getLabelAttrs(barAttrs: BarAttrs, type: EmbeddedLabelTypeModel, position: EmbeddedLabelPosition, keyAxisOrient: Orient, labelWidth: number): LabelAttrs {
-        let textAnchor = this.getTextAnchor(type, position, keyAxisOrient)
-        let x = this.getLabelAttrX(barAttrs, type, position, keyAxisOrient)
-        let y = this.getLabelAttrY(barAttrs.y, barAttrs.height)
-
+        const textAnchor = this.getTextAnchor(type, position, keyAxisOrient);
+        const y = this.getLabelAttrY(barAttrs.y, barAttrs.height);
+        let x = this.getLabelAttrX(barAttrs, type, position, keyAxisOrient);
 
         if (textAnchor === 'end') {
             x = x - labelWidth;
         }
+
         return {
             x,
             y,
@@ -53,7 +53,7 @@ export class EmbeddedLabelsHelper {
     public static getLabelField(type: EmbeddedLabelTypeModel, valueFields: Field[], keyField: Field, index: number): Field {
         if (type === 'key')
             return keyField;
-        else if (type === 'value')
+        if (type === 'value')
             return valueFields[index];
 
         return null;

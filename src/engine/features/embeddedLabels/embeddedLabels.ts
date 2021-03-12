@@ -1,4 +1,3 @@
-import { groups } from 'd3-array';
 import { BaseType, select, Selection } from 'd3-selection';
 import { Transition } from 'd3-transition';
 import { BlockMargin, DataRow, EmbeddedLabelTypeModel, Field, Orient, Size } from "../../../model/model";
@@ -17,13 +16,20 @@ export class EmbeddedLabels {
     private static outerLabelColor = '#000000';
 
     public static render(block: Block, bars: Selection<SVGRectElement, DataRow, SVGGElement, any>, barAttrsHelper: BarAttrsHelper, field: Field, type: EmbeddedLabelTypeModel, keyAxisOrient: Orient, blockSize: Size, margin: BlockMargin, index: number, cssClasses: string[]): void {
-        const thisClass = this;
-
         const labelsGroup = this.renderGroup(block, Helper.getCssClassesWithElementIndex(cssClasses, index));
         Helper.setCssClasses(labelsGroup, Helper.getCssClassesWithElementIndex(cssClasses, index));
-        bars.each(function (dataRow) {
-            thisClass.renderLabel(labelsGroup, barAttrsHelper, dataRow, field, type, keyAxisOrient, blockSize, margin);
+
+        bars.each((dataRow) => {
+            this.renderLabel(labelsGroup, barAttrsHelper, dataRow, field, type, keyAxisOrient, blockSize, margin);
         });
+    }
+
+    public static removeByIndexes(block: Block, chartCssClasses: string[], fieldIndex: number, indexesOfRemoved: number[]): void {
+        block.getChartBlock()
+            .selectAll<SVGGElement, unknown>(`.${EmbeddedLabels.embeddedLabelsGroupClass}${Helper.getCssClassesLine(chartCssClasses)}.chart-element-${fieldIndex}`)
+            .selectAll<SVGTextElement, DataRow>(`.${this.embeddedLabelClass}`)
+            .filter((d, i) => indexesOfRemoved.findIndex(ior => ior === i) !== -1)
+            .remove();
     }
 
     public static update(block: Block, bars: Selection<SVGRectElement, DataRow, SVGGElement, unknown>, keyAxisOrient: Orient, barAttrsHelper: BarAttrsHelper, margin: BlockMargin, valueField: Field, type: EmbeddedLabelTypeModel, blockSize: Size, newData: DataRow[], index: number, cssClasses: string[]) {
@@ -37,11 +43,43 @@ export class EmbeddedLabels {
             .selectAll<SVGTextElement, DataRow>(`.${this.embeddedLabelClass}`)
             .data(newData);
 
-        const thisClass = this;
-
-        bars.each(function (d, barIndex) {
-            thisClass.updateLabel(block, d, keyAxisOrient, barAttrsHelper, margin, valueField, type, blockSize, barIndex, labelsSelection, labelsGroup);
+        bars.each((d, barIndex) => {
+            this.updateLabel(block, d, keyAxisOrient, barAttrsHelper, margin, valueField, type, blockSize, barIndex, labelsSelection, labelsGroup);
         });
+    }
+
+    private static renderLabel(labelsGroup: Selection<SVGGElement, unknown, HTMLElement, unknown>, barAttrsHelper: BarAttrsHelper, dataRow: DataRow, field: Field, type: EmbeddedLabelTypeModel, keyAxisOrient: Orient, blockSize: Size, margin: BlockMargin): void {
+        const labelBlock = labelsGroup.append('text').datum(dataRow);
+
+        labelBlock
+            .classed(EmbeddedLabels.embeddedLabelClass, true)
+            .style('pointer-events', 'none')
+            .text(ValueFormatter.formatField(field.format, dataRow[field.name]));
+
+        const barAttrs: BarAttrs = {
+            x: barAttrsHelper.x(dataRow),
+            width: barAttrsHelper.width(dataRow),
+            y: barAttrsHelper.y(dataRow),
+            height: barAttrsHelper.height(dataRow)
+        }
+
+        const labelUnserveFlag = EmbeddedLabelsHelper.getLabelUnserveFlag(barAttrs.height); // if bar is too small to serve label inside. This flag is needed for set outside postion and change text anchor if bar wide as whole chart block
+        const position = EmbeddedLabelsHelper.getLabelPosition(barAttrs, labelBlock.node().getBBox().width, margin, blockSize, labelUnserveFlag);
+        const attrs = EmbeddedLabelsHelper.getLabelAttrs(barAttrs, type, position, keyAxisOrient, labelBlock.node().getBBox().width);
+
+        if (position === 'outside')
+            attrs.x = this.checkLabelToResetTextAnchor(attrs.x, labelBlock.node().getBBox().width, margin, blockSize, keyAxisOrient, position);
+
+        if (position === 'outside') {
+            this.renderBackground(labelsGroup, labelBlock, attrs);
+        }
+
+        this.setLabelBlockAttrs(attrs, labelBlock);
+
+        if (position === 'inside')
+            labelBlock.style('fill', this.innerLabelColor);
+
+        this.cropText(labelBlock, barAttrs, position, labelUnserveFlag, margin, blockSize);
     }
 
     private static updateLabel(block: Block, dataRow: DataRow, keyAxisOrient: Orient, barAttrsHelper: BarAttrsHelper, margin: BlockMargin, valueField: Field, type: EmbeddedLabelTypeModel, blockSize: Size, barIndex: number, labelsSelection: Selection<SVGTextElement, DataRow, SVGGElement, unknown>, labelsGroup: Selection<SVGGElement, unknown, SVGGElement, unknown>): void {
@@ -76,39 +114,6 @@ export class EmbeddedLabels {
 
         this.setLabelBlockAttrs(attrs, labelBlock, block.transitionManager.updateChartsDuration)
             .on('end', transitionEndHandler);
-    }
-
-    private static renderLabel(labelsGroup: Selection<SVGGElement, unknown, HTMLElement, unknown>, barAttrsHelper: BarAttrsHelper, dataRow: DataRow, field: Field, type: EmbeddedLabelTypeModel, keyAxisOrient: Orient, blockSize: Size, margin: BlockMargin): void {
-        const labelBlock = labelsGroup.append('text').datum(dataRow);
-
-        labelBlock
-            .classed(EmbeddedLabels.embeddedLabelClass, true)
-            .style('pointer-events', 'none')
-            .text(ValueFormatter.formatField(field.format, dataRow[field.name]));
-
-        const barAttrs: BarAttrs = {
-            x: barAttrsHelper.x(dataRow),
-            width: barAttrsHelper.width(dataRow),
-            y: barAttrsHelper.y(dataRow),
-            height: barAttrsHelper.height(dataRow)
-        }
-
-        const labelUnserveFlag = EmbeddedLabelsHelper.getLabelUnserveFlag(barAttrs.height); // if bar is too small to serve label inside. This flag is needed for set outside postion and change text anchor if bar wide as whole chart block
-        const position = EmbeddedLabelsHelper.getLabelPosition(barAttrs, labelBlock.node().getBBox().width, margin, blockSize, labelUnserveFlag);
-        const attrs = EmbeddedLabelsHelper.getLabelAttrs(barAttrs, type, position, keyAxisOrient, labelBlock.node().getBBox().width);
-
-        attrs.x = this.checkLabelToResetTextAnchor(attrs.x, labelBlock.node().getBBox().width, margin, blockSize, keyAxisOrient, position);
-
-        if (position === 'outside') {
-            this.renderBackground(labelsGroup, labelBlock, attrs);
-        }
-
-        this.setLabelBlockAttrs(attrs, labelBlock);
-
-        if (position === 'inside')
-            labelBlock.style('fill', this.innerLabelColor);
-
-        this.cropText(labelBlock, barAttrs, position, labelUnserveFlag, margin, blockSize);
     }
 
     private static checkLabelToResetTextAnchor(x: number, width: number, margin: BlockMargin, blockSize: Size, keyAxisOrient: Orient, position: EmbeddedLabelPosition): number {
@@ -152,7 +157,7 @@ export class EmbeddedLabels {
     private static renderBackground(labelsGroup: Selection<SVGGElement, unknown, BaseType, unknown>, labelBlock: Selection<SVGTextElement, DataRow, HTMLElement, unknown>, attrs: LabelAttrs): void {
         labelsGroup.append('rect')
             .attr('class', this.embeddedLabelBgClass)
-            .attr('x', attrs.textAnchor === 'start' ? attrs.x : attrs.x - labelBlock.node().getBBox().width)
+            .attr('x', attrs.x)
             .attr('y', attrs.y - labelBlock.node().getBBox().height / 2)
             .attr('width', labelBlock.node().getBBox().width)
             .attr('height', labelBlock.node().getBBox().height)
