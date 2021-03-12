@@ -1,6 +1,6 @@
 import { Block } from './block/block';
 import { ValueFormatter } from './valueFormatter';
-import { ChartRenderer } from './chartRenderer';
+import { ContentManager } from './contentManager';
 import { DataSource, Model } from '../model/model';
 
 export default class Engine {
@@ -43,19 +43,10 @@ export default class Engine {
         for (let source in newData) {
             this.data[source] = newData[source];
         }
-        if (model.options.type === '2d') {
-            ChartRenderer.updateDataFor2D(this.block, model, newData);
-        } else if (model.options.type === 'polar') {
-            ChartRenderer.updateDataForPolar(this.block, model, newData);
-        }
+        ContentManager.updateData(this.block, model, newData);
     }
 
     private renderCharts(model: Model, data: DataSource): void {
-        if (model.options.type === '2d')
-            ChartRenderer.render2D(this, model);
-        else if (model.options.type === 'polar')
-            ChartRenderer.renderPolar(this, model);
-        else if (model.options.type === 'interval')
-            ChartRenderer.renderInterval(this.block, model, data);
+        ContentManager.render(model, data, this);
     }
 }

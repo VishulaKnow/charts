@@ -1,5 +1,5 @@
 import { sum } from 'd3-array'
-import { interpolate, interpolateNumber, interpolateRound, interpolateString } from 'd3-interpolate';
+import { interpolate } from 'd3-interpolate';
 import { Selection } from 'd3-selection'
 import { Transition } from 'd3-transition';
 import { DataType } from '../../designer/designerConfig';
@@ -7,30 +7,32 @@ import { DataRow, Field } from "../../model/model";
 import { Block } from "../block/block";
 import { Helper } from '../helper';
 import { ValueFormatter } from '../valueFormatter';
-import { Translate } from "./donut";
+import { Translate } from "./donut/donut";
 
-export interface IAggregator {
+export interface AggregatorInfo {
     name: string;
     value: number;
     format: DataType;
 }
 
 export class Aggregator {
+    public static aggregatorValueClass = 'aggregator-value';
+
     private static aggregatorNameClass = 'aggregator-name';
-    private static aggregatorValueClass = 'aggregator-value';
     private static aggregatorObjectClass = 'aggregator-object';
 
     public static render(block: Block, data: DataRow[], valueField: Field, innerRadius: number, translate: Translate, fontSize: number): void {
-        const aggregator: IAggregator = {
+        const aggregator: AggregatorInfo = {
             name: 'Сумма',
             value: sum(data.map(d => d[valueField.name])),
             format: valueField.format
         }
+
         this.renderText(block, innerRadius, aggregator, translate, fontSize);
     }
 
     public static update(block: Block, data: DataRow[], valueField: Field): void {
-        const aggregator: IAggregator = {
+        const aggregator: AggregatorInfo = {
             name: 'Сумма',
             value: sum(data.map(d => d[valueField.name])),
             format: valueField.format
@@ -39,7 +41,7 @@ export class Aggregator {
         this.updateText(block, aggregator);
     }
 
-    private static renderText(block: Block, innerRadius: number, aggregator: IAggregator, translate: Translate, fontSize: number): void {
+    private static renderText(block: Block, innerRadius: number, aggregatorInfo: AggregatorInfo, translate: Translate, fontSize: number): void {
         if (innerRadius > 50) {
             const aggregatorObject = this.renderAggregatorObject(block, innerRadius, translate);
             const wrapper = this.renderWrapper(aggregatorObject);
@@ -49,14 +51,14 @@ export class Aggregator {
                 .attr('class', this.aggregatorValueClass)
                 .style('text-align', 'center')
                 .style('font-size', `${fontSize}px`)
-                .text(ValueFormatter.formatField(aggregator.format, aggregator.value));
+                .text(ValueFormatter.formatField(aggregatorInfo.format, aggregatorInfo.value));
 
             wrapper
                 .append('div')
                 .attr('class', this.aggregatorNameClass)
                 .style('text-align', 'center')
                 .style('font-size', '18px')
-                .text(aggregator.name);
+                .text(aggregatorInfo.name);
 
             while (aggreggatorValue.node().getBoundingClientRect().width > innerRadius * 2 - 40 && fontSize > 15) {
                 aggreggatorValue
@@ -65,7 +67,7 @@ export class Aggregator {
         }
     }
 
-    private static updateText(block: Block, aggregator: IAggregator): void {
+    private static updateText(block: Block, aggregator: AggregatorInfo): void {
         const wrapper = block.getSvg()
             .select(`.${this.aggregatorObjectClass}`);
 
@@ -87,7 +89,6 @@ export class Aggregator {
                 };
             });
 
-
     }
     private static calcDigitsAfterDot(value: string): number {
         const newValue: string = value.toString();
@@ -98,7 +99,7 @@ export class Aggregator {
     }
     private static reCalculateAggregatorFontSize(aggreggatorValue: Selection<HTMLDivElement, unknown, HTMLElement, any> | Transition<HTMLDivElement, unknown, HTMLElement, any>, block: Block, wrapperSize: number): void {
         aggreggatorValue = block.getSvg()
-            .select<HTMLDivElement>(`.${this.aggregatorValueClass}`)
+            .select<HTMLDivElement>(`.${this.aggregatorValueClass}`);
 
         let fontSize = parseInt(aggreggatorValue.style('font-size'));
 

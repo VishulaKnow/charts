@@ -138,55 +138,6 @@ export class TooltipHelper {
         coordinate[1] - TOOLTIP_ARROW_PADDING_Y - tooltipBlockNode.getBoundingClientRect().height - verticalPad];
     }
 
-    public static highlight2DElements(block: Block, keyFieldName: string, keyValue: string, charts: TwoDimensionalChartModel[], filterId: string, transitionDuration: number): void {
-        this.remove2DElementsHighlighting(block, charts, transitionDuration);
-
-        charts.forEach(chart => {
-            const elems = Helper.getChartElements(block, chart);
-
-            let selectedElems: Selection<BaseType, DataRow, BaseType, unknown>;
-            if (!chart.isSegmented)
-                selectedElems = elems.filter(d => d[keyFieldName] === keyValue);
-            else
-                selectedElems = elems.filter(d => d.data[keyFieldName] === keyValue);
-
-            if (chart.type === 'area' || chart.type === 'line') {
-                elems.call(this.scaled, false, transitionDuration);
-                selectedElems.call(this.scaled, true, transitionDuration);
-            } else {
-                selectedElems.style('filter', `url(#${filterId})`);
-            }
-        });
-    }
-
-    public static remove2DElementsHighlighting(block: Block, charts: TwoDimensionalChartModel[], transitionDuration: number): void {
-        charts.forEach(chart => {
-            const elems = Helper.getChartElements(block, chart);
-            if (chart.type === 'area' || chart.type === 'line') {
-                elems.call(this.scaled, false, transitionDuration);
-            } else {
-                elems.classed('chart-element-highlight', false);
-                elems.style('filter', null);
-            }
-        });
-    }
-
-    private static scaled(elementSelection: Selection<BaseType, DataRow, BaseType, unknown>, isScaled: boolean, transitionDuration: number): void {
-        const animationName = 'size-scale'
-
-        elementSelection.nodes().forEach(node => {
-            interrupt(node, animationName);
-        });
-
-        elementSelection
-            .interrupt(animationName)
-            .transition(animationName)
-            .duration(transitionDuration)
-            .ease(easeLinear)
-            .attr('r', isScaled ? 6 : 4)
-            .style('stroke-width', (isScaled ? 4.3 : 3) + 'px')
-    }
-
     public static getKeyIndex(pointer: [number, number], orient: ChartOrientation, margin: BlockMargin, blockSize: Size, scaleKey: AxisScale<any>, scaleKeyType: ScaleKeyType): number {
         const pointerAxisType = orient === 'vertical' ? 0 : 1; // 0 - координата поинтера по оси x, 1 - по оси y
         const marginByOrient = orient === 'vertical' ? margin.left : margin.top;

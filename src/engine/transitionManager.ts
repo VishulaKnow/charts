@@ -4,7 +4,8 @@ import { Axis } from "./features/axis/axis";
 import { EmbeddedLabels } from "./features/embeddedLabels/embeddedLabels";
 import { MarkDot } from "./features/markDots/markDot";
 import { Tooltip } from "./features/tolltip/tooltip";
-import { Donut } from "./polarNotation/donut";
+import { Aggregator } from "./polarNotation/aggregator";
+import { Donut } from "./polarNotation/donut/donut";
 import { Area } from "./twoDimensionalNotation/area/area";
 import { Bar } from "./twoDimensionalNotation/bar/bar";
 import { Line } from "./twoDimensionalNotation/line/line";
@@ -30,8 +31,9 @@ export class TransitionManager {
         Bar.barItemClass,
         Line.lineChartClass,
         MarkDot.markerDotClass,
+        EmbeddedLabels.embeddedLabelClass,
         Donut.arcPathClass,
-        EmbeddedLabels.embeddedLabelClass
+        Aggregator.aggregatorValueClass
     ];
 
     constructor(block: Block) {
