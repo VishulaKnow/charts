@@ -18,6 +18,7 @@ export class TransitionManager {
     public twoDimensionalTooltipDuration = 75;
     public donutArcHoverDuration = 200;
     public markerHoverDuration = 50;
+    public elementRemovingFadeOut = 400;
 
     private block: Block;
     /**

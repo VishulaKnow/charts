@@ -141,10 +141,14 @@ export class Bar {
                     }
                     return false;
                 })
+                .transition()
+                .duration(block.transitionManager.elementRemovingFadeOut)
+                .style('opacity', 0)
                 .remove();
 
             const bars = block.getChartBlock()
                 .selectAll<SVGRectElement, DataRow>(`.${this.barItemClass}${Helper.getCssClassesLine(chart.cssClasses)}.chart-element-${index}`)
+                .filter(d => newData.findIndex(row => row[keyField.name] === d[keyField.name]) !== -1)
                 .data(newData);
 
             const newBars = bars

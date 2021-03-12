@@ -39,8 +39,6 @@ export class EmbeddedLabelsHelper {
         const y = this.getLabelAttrY(barAttrs.y, barAttrs.height);
         let x = this.getLabelAttrX(barAttrs, type, position, keyAxisOrient);
 
-        console.log(x);
-
         if (textAnchor === 'end') {
             x = x - labelWidth;
         }
