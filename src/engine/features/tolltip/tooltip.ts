@@ -10,7 +10,7 @@ import { Scales } from '../scale/scale';
 import { AxisScale } from 'd3-axis';
 import { NamesManager } from '../../namesManager';
 import { TooltipComponentsManager } from './tooltipComponentsManager';
-import { ElementHighlighter } from './elementHighlighter';
+import { ElementHighlighter } from '../../elementHighlighter';
 import { DonutHelper } from '../../polarNotation/donut/DonutHelper';
 
 export class Tooltip {

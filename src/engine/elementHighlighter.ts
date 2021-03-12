@@ -1,11 +1,11 @@
 import { Selection, BaseType } from 'd3-selection';
 import { PieArcDatum } from 'd3-shape'
-import { BlockMargin, DataRow, Size, TwoDimensionalChartModel } from "../../../model/model";
-import { Helper } from "../../helper";
-import { Block } from "../../block/block";
+import { BlockMargin, DataRow, Size, TwoDimensionalChartModel } from "../model/model";
+import { Helper } from "./helper";
+import { Block } from "./block/block";
 import { easeLinear } from 'd3-ease';
 import { interrupt } from 'd3-transition';
-import { DonutHelper } from '../../polarNotation/donut/DonutHelper';
+import { DonutHelper } from './polarNotation/donut/DonutHelper';
 
 export class ElementHighlighter {
     public static renderShadowFilter(block: Block, filterId: string): Selection<SVGFilterElement, unknown, HTMLElement, unknown> {
