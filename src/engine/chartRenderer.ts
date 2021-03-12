@@ -13,8 +13,8 @@ import { RecordOverflowAlert } from "./features/recordOverflowAlert/recordOverfl
 import { Gantt } from "./intervalNotation/gantt";
 import { BarHelper } from "./twoDimensionalNotation/bar/barHelper";
 import { Title } from "./features/title/title";
-import Engine from "./engine";
 import { Aggregator } from "./polarNotation/aggregator";
+import Engine from "./engine";
 
 export class ChartRenderer {
     public static render2D(engine: Engine, model: Model): void {
@@ -209,7 +209,7 @@ export class ChartRenderer {
             model.chartBlock.margin,
             options.scale.scaleKey);
 
-        this.updateChartsByValueAxis(block,
+        this.update2DChartsData(block,
             options.charts,
             scales,
             data,
@@ -231,7 +231,7 @@ export class ChartRenderer {
         const options = <PolarOptionsModel>model.options;
 
         Donut.updateValues(block, data[options.data.dataSource], model.chartBlock.margin, options.charts[0], model.blockCanvas.size, model.chartSettings.donut, options.data.keyField.name)
-            .then(re => Tooltip.render(block, model, data));
+            .then(() => Tooltip.render(block, model, data));
 
         Aggregator.update(block, data[options.data.dataSource], options.charts[0].data.valueField);
 
@@ -241,7 +241,7 @@ export class ChartRenderer {
             RecordOverflowAlert.update(block, model.dataSettings.scope.hidedRecordsAmount, model.options.legend.position);
     }
 
-    private static updateChartsByValueAxis(block: Block, charts: TwoDimensionalChartModel[], scales: Scales, data: DataSource, dataOptions: OptionsModelData, margin: BlockMargin, keyAxisOrient: Orient, blockSize: Size, barSettings: BarChartSettings): void {
+    private static update2DChartsData(block: Block, charts: TwoDimensionalChartModel[], scales: Scales, data: DataSource, dataOptions: OptionsModelData, margin: BlockMargin, keyAxisOrient: Orient, blockSize: Size, barSettings: BarChartSettings): void {
         charts.forEach((chart: TwoDimensionalChartModel) => {
             if (chart.type === 'bar') {
                 Bar.updateData(block,

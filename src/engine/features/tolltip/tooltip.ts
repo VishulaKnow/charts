@@ -3,7 +3,7 @@ import { PieArcDatum } from 'd3-shape'
 import { BlockMargin, DataRow, DataSource, IntervalChartModel, Model, OptionsModelData, Orient, PolarChartModel, ScaleKeyModel, Size, TwoDimensionalChartModel } from "../../../model/model";
 import { Helper } from "../../helper";
 import { Block } from "../../block/block";
-import { ARROW_DEFAULT_POSITION, ARROW_SIZE, TipBoxAttributes, TooltipCoordinate, TooltipHelper, TooltipLineAttributes } from "./tooltipHelper";
+import { TooltipHelper } from "./tooltipHelper";
 import { Donut } from "../../polarNotation/donut";
 import { ChartOrientation } from "../../../config/config";
 import { DonutHelper } from '../../polarNotation/DonutHelper';
@@ -12,15 +12,15 @@ import { AxisScale } from 'd3-axis';
 import { easeLinear } from 'd3-ease';
 import { interrupt } from 'd3-transition';
 import { NamesManager } from '../../namesManager';
+import { TooltipComponentsManager } from './tooltipComponentsManager';
 
 export class Tooltip {
     public static tipBoxClass = 'tipbox';
     public static tooltipBlockClass = 'tooltip-block';
     public static tooltipLineClass = 'tooltip-line';
-
-    private static tooltipWrapperClass = 'tooltip-wrapper';
-    private static tooltipContentClass = 'tooltip-content';
-    private static tooltipArrowClass = 'tooltip-arrow';
+    public static tooltipWrapperClass = 'tooltip-wrapper';
+    public static tooltipContentClass = 'tooltip-content';
+    public static tooltipArrowClass = 'tooltip-arrow';
 
     public static render(block: Block, model: Model, data: DataSource, scales?: Scales): void {
         this.renderTooltipWrapper(block);
@@ -54,13 +54,12 @@ export class Tooltip {
     }
 
     private static renderLineTooltip(block: Block, scaleKey: AxisScale<any>, margin: BlockMargin, blockSize: Size, charts: TwoDimensionalChartModel[], chartOrientation: ChartOrientation, keyAxisOrient: Orient, data: DataSource, dataOptions: OptionsModelData, scaleKeyModel: ScaleKeyModel): void {
-        const tooltipBlock = this.renderTooltipBlock(block);
-        const tooltipContent = this.renderTooltipContentBlock(tooltipBlock);
-        const thisClass = this;
+        const tooltipBlock = TooltipComponentsManager.renderTooltipBlock(block);
+        const tooltipContent = TooltipComponentsManager.renderTooltipContentBlock(tooltipBlock);
 
-        const tooltipLine = this.renderTooltipLine(block);
+        const tooltipLine = TooltipComponentsManager.renderTooltipLine(block);
         const tipBoxAttributes = TooltipHelper.getTipBoxAttributes(margin, blockSize);
-        const tipBox = this.renderTipBox(block, tipBoxAttributes);
+        const tipBox = TooltipComponentsManager.renderTipBox(block, tipBoxAttributes);
 
         tooltipContent.classed('tooltip-content-2d', true);
 
@@ -77,22 +76,22 @@ export class Tooltip {
                 if (!currentKey || currentKey !== keyValue) {
                     currentKey = keyValue;
 
-                    thisClass.showTooltipBlock(tooltipBlock);
+                    TooltipComponentsManager.showTooltipBlock(tooltipBlock);
 
                     TooltipHelper.fillForMulty2DCharts(tooltipContent, charts, data, dataOptions, keyValue);
 
                     const tooltipCoordinate = TooltipHelper.getTooltipFixedCoordinate(scaleKey, margin, blockSize, keyValue, tooltipContent.node(), keyAxisOrient);
-                    thisClass.setLineTooltipCoordinate(tooltipBlock, tooltipCoordinate, chartOrientation, block.transitionManager.twoDimensionalTooltipDuration);
+                    TooltipComponentsManager.setLineTooltipCoordinate(tooltipBlock, tooltipCoordinate, chartOrientation, block.transitionManager.twoDimensionalTooltipDuration);
 
                     const tooltipLineAttributes = TooltipHelper.getTooltipLineAttributes(scaleKey, margin, keyValue, chartOrientation, blockSize);
-                    thisClass.setTooltipLineAttributes(tooltipLine, tooltipLineAttributes, block.transitionManager.twoDimensionalTooltipDuration);
+                    TooltipComponentsManager.setTooltipLineAttributes(tooltipLine, tooltipLineAttributes, block.transitionManager.twoDimensionalTooltipDuration);
                     tooltipLine.style('display', 'block');
 
                     TooltipHelper.highlight2DElements(block, dataOptions.keyField.name, keyValue, charts, filterId, block.transitionManager.markerHoverDuration);
                 }
             })
             .on('mouseleave', function () {
-                thisClass.hideTooltipBlock(tooltipBlock);
+                TooltipComponentsManager.hideTooltipBlock(tooltipBlock);
                 tooltipLine.style('display', 'none');
 
                 TooltipHelper.remove2DElementsHighlighting(block, charts, block.transitionManager.markerHoverDuration);
@@ -102,9 +101,9 @@ export class Tooltip {
     }
 
     private static renderTooltipForDonut(block: Block, elemets: Selection<SVGGElement, PieArcDatum<DataRow>, SVGGElement, unknown>, data: DataSource, dataOptions: OptionsModelData, chart: PolarChartModel, blockSize: Size, margin: BlockMargin, donutThickness: number, translateX: number = 0, translateY: number = 0): void {
-        const tooltipBlock = this.renderTooltipBlock(block, translateX, translateY);
-        const tooltipContent = this.renderTooltipContentBlock(tooltipBlock);
-        const tooltipArrow = this.renderTooltipArrow(tooltipBlock);
+        const tooltipBlock = TooltipComponentsManager.renderTooltipBlock(block, translateX, translateY);
+        const tooltipContent = TooltipComponentsManager.renderTooltipContentBlock(tooltipBlock);
+        const tooltipArrow = TooltipComponentsManager.renderTooltipArrow(tooltipBlock);
         const thisClass = this;
 
         tooltipContent.classed('tooltip-content-2d', true);
@@ -114,12 +113,12 @@ export class Tooltip {
 
         elemets
             .on('mouseover', function (_event, dataRow) {
-                thisClass.showTooltipBlock(tooltipBlock);
+                TooltipComponentsManager.showTooltipBlock(tooltipBlock);
                 TooltipHelper.fillTooltipForPolarChart(tooltipContent, chart, data, dataOptions, dataRow.data[dataOptions.keyField.name], select(this).select('path').style('fill'))
 
                 const coordinatePointer: [number, number] = TooltipHelper.getRecalcedCoordinateByArrow(DonutHelper.getArcCentroid(blockSize, margin, dataRow, donutThickness), tooltipBlock, blockSize, tooltipArrow, translateX, translateY);
                 const tooltipCoordinate = TooltipHelper.getTooltipCoordinate(coordinatePointer);
-                thisClass.setTooltipCoordinate(tooltipBlock, tooltipCoordinate);
+                TooltipComponentsManager.setTooltipBlockCoordinate(tooltipBlock, tooltipCoordinate);
 
                 select(this).style('filter', `url(#${filterId})`);
 
@@ -127,7 +126,7 @@ export class Tooltip {
             });
 
         elemets.on('mouseleave', function () {
-            thisClass.hideTooltipBlock(tooltipBlock);
+            TooltipComponentsManager.hideTooltipBlock(tooltipBlock);
 
             select(this) // удаление тени с оригинального сегмента
                 .style('filter', null);
@@ -144,150 +143,6 @@ export class Tooltip {
             block.getWrapper()
                 .append('div')
                 .attr('class', this.tooltipWrapperClass);
-    }
-
-    private static renderTooltipLine(block: Block): Selection<SVGLineElement, unknown, HTMLElement, any> {
-        let tooltipLine = block.getChartBlock()
-            .select<SVGLineElement>(`.${this.tooltipLineClass}`)
-
-        if (tooltipLine.empty())
-            tooltipLine = block.getChartBlock()
-                .append('line')
-                .attr('class', this.tooltipLineClass)
-                .lower();
-
-        return tooltipLine;
-    }
-
-    private static renderTipBox(block: Block, attributes: TipBoxAttributes): Selection<SVGRectElement, unknown, HTMLElement, any> {
-        let tipBox = block.getSvg()
-            .select<SVGRectElement>(`rect.${this.tipBoxClass}`);
-
-        if (tipBox.empty())
-            tipBox = block.getSvg()
-                .append<SVGRectElement>('rect')
-                .attr('class', this.tipBoxClass)
-                .attr('x', attributes.x)
-                .attr('y', attributes.y)
-                .attr('width', attributes.width)
-                .attr('height', attributes.height)
-                .style('opacity', 0);
-
-        return tipBox;
-    }
-
-    private static setTooltipLineAttributes(tooltipLine: Selection<SVGLineElement, unknown, HTMLElement, any>, attributes: TooltipLineAttributes, transition: number): void {
-        interrupt(tooltipLine.node());
-
-        if (transition && tooltipLine.style('display') === 'block') {
-            tooltipLine
-                .interrupt()
-                .transition()
-                .duration(transition)
-                .ease(easeLinear)
-                .attr('x1', attributes.x1)
-                .attr('x2', attributes.x2)
-                .attr('y1', attributes.y1)
-                .attr('y2', attributes.y2);
-        } else {
-            tooltipLine
-                .attr('x1', attributes.x1)
-                .attr('x2', attributes.x2)
-                .attr('y1', attributes.y1)
-                .attr('y2', attributes.y2);
-        }
-    }
-
-    private static renderTooltipArrow(tooltipBlock: Selection<BaseType, unknown, HTMLElement, any>): Selection<BaseType, unknown, HTMLElement, any> {
-        let arrowSize: number = ARROW_SIZE / 2;
-        let tooltipArrow = tooltipBlock.select(`.${this.tooltipArrowClass}`);
-        if (tooltipArrow.empty())
-            tooltipArrow = tooltipBlock
-                .append('div')
-                .attr('class', this.tooltipArrowClass)
-                .style('position', 'absolute')
-                .style('left', `${ARROW_DEFAULT_POSITION}px`)
-                .style('border-top-width', `${arrowSize}px`)
-                .style('border-right-width', `${arrowSize}px`)
-                .style('border-bottom-width', `0px`)
-                .style('border-left-width', `${arrowSize}px`);
-
-        return tooltipArrow;
-    }
-
-    private static renderTooltipBlock(block: Block, translateX: number = 0, translateY: number = 0): Selection<HTMLElement, unknown, HTMLElement, any> {
-        const wrapper = block.getWrapper().select<HTMLElement>(`.${this.tooltipWrapperClass}`);
-
-        let tooltipBlock = wrapper.select<HTMLElement>(`.${this.tooltipBlockClass}`);
-        if (tooltipBlock.empty()) {
-            tooltipBlock = wrapper
-                .append('div')
-                .attr('class', this.tooltipBlockClass)
-                .style('position', 'absolute')
-                .style('display', 'none');
-        }
-
-        if (translateX !== 0 || translateY !== 0)
-            tooltipBlock.style('transform', `translate(${translateX}px, ${translateY}px)`);
-
-        return tooltipBlock;
-    }
-
-    private static renderTooltipContentBlock(tooltipBlock: Selection<BaseType, unknown, HTMLElement, any>): Selection<HTMLDivElement, unknown, HTMLElement, any> {
-        let tooltipContentBlock = tooltipBlock.select<HTMLDivElement>(`.${this.tooltipContentClass}`);
-
-        if (tooltipContentBlock.empty())
-            tooltipContentBlock = tooltipBlock.append('div')
-                .attr('class', this.tooltipContentClass);
-
-        return tooltipContentBlock;
-    }
-
-    private static setTooltipCoordinate(tooltipBlock: Selection<BaseType, unknown, HTMLElement, any>, tooltipCoordinate: TooltipCoordinate): void {
-        tooltipBlock
-            .style('right', tooltipCoordinate.right)
-            .style('bottom', tooltipCoordinate.bottom)
-            .style('left', tooltipCoordinate.left)
-            .style('top', tooltipCoordinate.top);
-    }
-
-    private static setLineTooltipCoordinate(tooltipBlock: Selection<BaseType, unknown, HTMLElement, any>, tooltipCoordinate: TooltipCoordinate, chartOrientation: ChartOrientation, transition: number = null): void {
-        interrupt(tooltipBlock.node());
-
-        if (!transition || transition <= 0)
-            this.setTooltipCoordinate(tooltipBlock, tooltipCoordinate);
-
-        if (chartOrientation === 'vertical' && tooltipBlock.style('left') !== '0px' && tooltipBlock.style('right') !== '0px' && tooltipCoordinate.right !== '0px' && tooltipCoordinate.left !== null) {
-            tooltipBlock
-                .style('right', tooltipCoordinate.right)
-                .style('bottom', tooltipCoordinate.bottom)
-                .style('top', tooltipCoordinate.top)
-                .interrupt()
-                .transition()
-                .duration(transition)
-                .ease(easeLinear)
-                .style('left', tooltipCoordinate.left);
-        } else if (chartOrientation === 'horizontal' && tooltipBlock.style('top') !== '0px' && parseInt(tooltipBlock.style('bottom')) > 0 && tooltipCoordinate.bottom === null) {
-            tooltipBlock
-                .style('left', tooltipCoordinate.left)
-                .style('bottom', tooltipCoordinate.bottom)
-                .style('right', tooltipCoordinate.right)
-                .interrupt()
-                .transition()
-                .duration(transition)
-                .ease(easeLinear)
-                .style('top', tooltipCoordinate.top);
-        } else {
-            this.setTooltipCoordinate(tooltipBlock, tooltipCoordinate);
-        }
-    }
-
-    private static showTooltipBlock(tooltipBlock: Selection<BaseType, unknown, HTMLElement, any>): void {
-        tooltipBlock.style('display', 'block');
-    }
-
-    private static hideTooltipBlock(tooltipBlock: Selection<BaseType, unknown, HTMLElement, any>): void {
-        tooltipBlock.style('display', 'none');
     }
 
     private static renderShadowFilter(block: Block, filterId: string): Selection<SVGFilterElement, unknown, HTMLElement, unknown> {
