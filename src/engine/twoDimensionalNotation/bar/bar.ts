@@ -80,7 +80,7 @@ export class Bar {
             Helper.setChartStyle(bars, chart.style, index, 'fill');
 
             if (chart.embeddedLabels !== 'none')
-                EmbeddedLabels.render(block, bars, EmbeddedLabelsHelper.getLabelField(chart.embeddedLabels, chart.data.valueFields, keyField, index), chart.embeddedLabels, keyAxisOrient, blockSize, margin, index, chart.cssClasses);
+                EmbeddedLabels.render(block, bars, barAttrs, EmbeddedLabelsHelper.getLabelField(chart.embeddedLabels, chart.data.valueFields, keyField, index), chart.embeddedLabels, keyAxisOrient, blockSize, margin, index, chart.cssClasses);
         });
     }
 
@@ -129,7 +129,7 @@ export class Bar {
     }
 
     private static updateDataForGrouped(block: Block, newData: DataRow[], scales: Scales, margin: BlockMargin, keyAxisOrient: Orient, chart: TwoDimensionalChartModel, blockSize: Size, barsAmounts: number[], keyField: Field, firstBarIndex: number, barSettings: BarChartSettings): void {
-        chart.data.valueFields.forEach((field, index) => {
+        chart.data.valueFields.forEach((valueField, index) => {
             block.getChartBlock()
                 .selectAll<SVGRectElement, DataRow>(`.${this.barItemClass}${Helper.getCssClassesLine(chart.cssClasses)}.chart-element-${index}`)
                 .filter(d => newData.findIndex(row => row[keyField.name] === d[keyField.name]) === -1)
@@ -149,7 +149,7 @@ export class Bar {
                 scales,
                 margin,
                 keyField.name,
-                field.name,
+                valueField.name,
                 blockSize,
                 BarHelper.getBarIndex(barsAmounts, chart.index) + index - firstBarIndex,
                 sum(barsAmounts),
@@ -167,12 +167,13 @@ export class Bar {
                     keyAxisOrient,
                     barAttrs,
                     margin,
-                    field,
+                    valueField,
                     chart.embeddedLabels,
                     blockSize,
                     newData,
                     index,
                     chart.cssClasses);
+                EmbeddedLabels.render(block, newBars, barAttrs, valueField, chart.embeddedLabels, keyAxisOrient, blockSize, margin, index, chart.cssClasses);
             }
         });
     }
