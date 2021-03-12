@@ -1,11 +1,11 @@
 const path = require('path')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
-const {CleanWebpackPlugin} = require('clean-webpack-plugin')
+const { CleanWebpackPlugin } = require('clean-webpack-plugin')
 
 module.exports = {
     entry: {
         main: './src/main.ts',
-        listeners: './src/listeners/listeners.ts'
+        listeners: './src/playground/listeners.ts'
     },
     output: {
         filename: '[name].[contenthash].js',
