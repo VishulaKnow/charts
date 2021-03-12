@@ -81,7 +81,6 @@ export class ElementHighlighter {
             if (chart.type === 'area' || chart.type === 'line') {
                 elems.call(this.scaleElement, false, transitionDuration);
             } else {
-                elems.classed('chart-element-highlight', false);
                 this.removeElementsFilter(elems);
             }
         });

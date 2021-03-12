@@ -86,6 +86,7 @@ export class Axis {
                 }
             })
             .duration(block.transitionManager.updateChartsDuration)
+            .attr('transform', `translate(${axisOptions.translate.translateX}, ${axisOptions.translate.translateY})`)
             .call(axis.bind(this));
 
         if (axisOptions.orient === 'left' || axisOptions.orient === 'right') {

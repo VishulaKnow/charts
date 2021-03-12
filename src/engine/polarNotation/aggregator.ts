@@ -91,12 +91,14 @@ export class Aggregator {
 
         let fontSize = parseInt(aggreggatorValue.style('font-size'));
 
-        while (aggreggatorValue.node().getBoundingClientRect().width > wrapperSize - 120 && fontSize > 15) {
+        const pad = 40;
+
+        while (aggreggatorValue.node().getBoundingClientRect().width > wrapperSize - pad && fontSize > 15) {
             aggreggatorValue
                 .style('font-size', `${fontSize -= 2}px`)
         }
 
-        while (aggreggatorValue.node().getBoundingClientRect().width < wrapperSize - 120 && fontSize < 60) {
+        while (aggreggatorValue.node().getBoundingClientRect().width < wrapperSize - pad && fontSize < 60) {
             aggreggatorValue
                 .style('font-size', `${fontSize += 2}px`)
         }
