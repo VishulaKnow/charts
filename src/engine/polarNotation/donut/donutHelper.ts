@@ -1,5 +1,5 @@
 import { PieArcDatum, Arc, arc, Pie, pie } from "d3-shape";
-import { DonutChartSettings, Size, BlockMargin, DataRow } from "../../model/model";
+import { BlockMargin, DataRow, DonutChartSettings, Size } from "../../../model/model";
 import { Translate } from "./donut";
 
 export class DonutHelper {

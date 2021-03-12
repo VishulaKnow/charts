@@ -7,7 +7,7 @@ import { Title } from "../features/title/title";
 import { ElementHighlighter } from "../features/tolltip/elementHighlighter";
 import { Tooltip } from "../features/tolltip/tooltip";
 import { Aggregator } from "./aggregator";
-import { Donut } from "./donut";
+import { Donut } from "./donut/donut";
 
 export class PolarManager {
     public static renderPolar(engine: Engine, model: Model) {

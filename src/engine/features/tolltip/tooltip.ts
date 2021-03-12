@@ -4,14 +4,14 @@ import { BlockMargin, DataRow, DataSource, IntervalChartModel, Model, OptionsMod
 import { Helper } from "../../helper";
 import { Block } from "../../block/block";
 import { TooltipHelper } from "./tooltipHelper";
-import { Donut } from "../../polarNotation/donut";
+import { Donut } from "../../polarNotation/donut/donut";
 import { ChartOrientation } from "../../../config/config";
-import { DonutHelper } from '../../polarNotation/DonutHelper';
 import { Scales } from '../scale/scale';
 import { AxisScale } from 'd3-axis';
 import { NamesManager } from '../../namesManager';
 import { TooltipComponentsManager } from './tooltipComponentsManager';
 import { ElementHighlighter } from './elementHighlighter';
+import { DonutHelper } from '../../polarNotation/donut/DonutHelper';
 
 export class Tooltip {
     public static tipBoxClass = 'tipbox';

@@ -7,7 +7,7 @@ import { DataRow, Field } from "../../model/model";
 import { Block } from "../block/block";
 import { Helper } from '../helper';
 import { ValueFormatter } from '../valueFormatter';
-import { Translate } from "./donut";
+import { Translate } from "./donut/donut";
 
 export interface AggregatorInfo {
     name: string;

@@ -3,7 +3,7 @@ import { BlockMargin, Size } from "../../model/model";
 import { Tooltip } from "../features/tolltip/tooltip";
 import { Helper } from "../helper";
 import { NamesManager } from "../namesManager";
-import { Donut } from "../polarNotation/donut";
+import { Donut } from "../polarNotation/donut/donut";
 import { TransitionManager } from "../transitionManager";
 import { BlockHelper } from "./blockHelper";
 

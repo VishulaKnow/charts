@@ -1,6 +1,6 @@
 import { Block } from './block/block';
 import { ValueFormatter } from './valueFormatter';
-import { ContentManager } from './renderer';
+import { ContentManager } from './contentManager';
 import { DataSource, Model } from '../model/model';
 
 export default class Engine {
