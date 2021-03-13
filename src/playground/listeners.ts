@@ -647,6 +647,7 @@ const model2 = assembleModel(config2, data, designerConfig);
 const engine2 = new Engine(4);
 engine2.render(model2, getPreparedData(model2, data, config2), document.querySelector('.main-wrapper2'));
 
+import { interval } from 'd3-timer'
 
 //====================================================================================================== Data updating
 class DataUpdater {
@@ -664,26 +665,30 @@ class DataUpdater {
         if (value < 1)
             return;
 
-        if (value) {
-            DataUpdater.refresh = value;
-        }
+        DataUpdater.refresh = value;
     }
 
     private static startDataChanging(ms: number) {
         this.destroyDataChanging();
-        const run = () => {
-            DataUpdater.timeOut = setTimeout(() => {
-                const newData = ListenersHelper.getCopy(data);
+        // const run = () => {
+        //     DataUpdater.timeOut = setTimeout(() => {
+        //         const newData = ListenersHelper.getCopy(data);
 
-                this.changeData(newData);
+        //         this.changeData(newData);
 
-                const newModel = getUpdatedModel(config, newData, designerConfig);
-                engine.updateValues(newModel, getPreparedData(newModel, newData, config));
+        //         const newModel = getUpdatedModel(config, newData, designerConfig);
+        //         engine.updateValues(newModel, getPreparedData(newModel, newData, config));
 
-                run();
-            }, ms)
-        }
-        run();
+        //         run();
+        //     }, ms)
+        // }
+        // run();
+        interval(() => {
+            const newData = ListenersHelper.getCopy(data);
+            this.changeData(newData);
+            const newModel = getUpdatedModel(config, newData, designerConfig);
+            engine.updateValues(newModel, getPreparedData(newModel, newData, config));
+        }, ms);
     }
 
     private static destroyDataChanging() {
