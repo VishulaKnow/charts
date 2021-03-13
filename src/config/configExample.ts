@@ -14,7 +14,7 @@ const configCars: Config = {
         axis: {
             keyAxis: {
                 visibility: true,
-                position: 'end',
+                position: 'start',
                 ticks: {
                     flag: false
                 }
@@ -42,7 +42,7 @@ const configCars: Config = {
         legend: {
             show: true
         },
-        orientation: 'vertical',
+        orientation: 'horizontal',
         data: {
             dataSource: 'dataSet',
             keyField: {
@@ -53,7 +53,7 @@ const configCars: Config = {
         charts: [
             {
                 isSegmented: false,
-                type: 'line',
+                type: 'bar',
                 data: {
                     valueFields: [
                         {
@@ -78,7 +78,7 @@ const configCars: Config = {
             },
             {
                 isSegmented: true,
-                type: 'area',
+                type: 'line',
                 data: {
                     valueFields: [
                         {

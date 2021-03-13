@@ -48,6 +48,10 @@ export class EmbeddedLabels {
         });
     }
 
+    public static raiseGroups(block: Block): void {
+        block.getChartBlock().selectAll(`.${this.embeddedLabelsGroupClass}`).raise();
+    }
+
     private static renderLabel(labelsGroup: Selection<SVGGElement, unknown, HTMLElement, unknown>, barAttrsHelper: BarAttrsHelper, dataRow: DataRow, field: Field, type: EmbeddedLabelTypeModel, keyAxisOrient: Orient, blockSize: Size, margin: BlockMargin): void {
         const labelBlock = labelsGroup.append('text').datum(dataRow);
 
