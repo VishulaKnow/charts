@@ -5,7 +5,6 @@ import { DataManagerModel } from "./dataManagerModel";
 import { LegendModel, MIN_DONUT_BLOCK_SIZE } from "./featuresModel/legendModel/legendModel";
 import { BlockMargin, DataScope, DataSource, LegendBlockModel, Orient, OtherComponents, PolarOptionsModel, Size, TitleBlockModel } from "./model";
 import { AxisType } from "./modelBuilder";
-import { OtherComponentsModel } from "./featuresModel/otherComponents";
 import { TwoDimensionalModel } from "./twoDimensionalModel";
 
 export const AXIS_HORIZONTAL_LABEL_PADDING = 15;
