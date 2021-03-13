@@ -53,7 +53,7 @@ const configCars: Config = {
         charts: [
             {
                 isSegmented: false,
-                type: 'bar',
+                type: 'line',
                 data: {
                     valueFields: [
                         {
@@ -73,7 +73,32 @@ const configCars: Config = {
                 },
                 embeddedLabels: 'value',
                 markers: {
-                    show: false
+                    show: true
+                }
+            },
+            {
+                isSegmented: true,
+                type: 'area',
+                data: {
+                    valueFields: [
+                        {
+                            name: 'price',
+                            format: 'money',
+                            title: 'Количество автомобилей'
+                        },
+                        {
+                            name: 'count',
+                            format: 'money',
+                            title: 'Количество автомобилей'
+                        }
+                    ]
+                },
+                tooltip: {
+                    show: true
+                },
+                embeddedLabels: 'value',
+                markers: {
+                    show: true
                 }
             }
         ]

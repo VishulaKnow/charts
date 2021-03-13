@@ -25,7 +25,7 @@ export class Line {
 
             const lineGenerator = LineHelper.getSegmentedLineGenerator(keyAxisOrient, scales, keyField.name, margin);
 
-            const lines = block.getChartBlock()
+            const lines = block.getChartGroup(chart.index)
                 .selectAll<SVGPathElement, DataRow[]>(`path.${this.lineChartClass}${Helper.getCssClassesLine(chart.cssClasses)}`);
 
             lines
@@ -36,33 +36,33 @@ export class Line {
                 .attr('d', d => lineGenerator(d));
 
             if (chart.markersOptions.show) {
-                lines.each((d, index) => {
-                    MarkDot.updateDotsCoordinateByValueAxis(block, d, keyAxisOrient, scales, margin, keyField.name, '1', chart.cssClasses, index, chart.style.elementColors, chart.isSegmented);
+                lines.each((dataset, index) => {
+                    MarkDot.updateDotsCoordinateByValueAxis(block, dataset, keyAxisOrient, scales, margin, keyField.name, index, '1', chart);
                 });
             }
         } else {
-            chart.data.valueFields.forEach((valueField, index) => {
+            chart.data.valueFields.forEach((valueField, valueFieldIndex) => {
                 const line = LineHelper.getLineGenerator(keyAxisOrient, scales, keyField.name, valueField.name, margin);
 
-                block.getChartBlock()
-                    .select(`.${this.lineChartClass}${Helper.getCssClassesLine(chart.cssClasses)}.chart-element-${index}`)
+                block.getChartGroup(chart.index)
+                    .select(`.${this.lineChartClass}${Helper.getCssClassesLine(chart.cssClasses)}.chart-element-${valueFieldIndex}`)
                     .interrupt()
                     .transition()
                     .duration(block.transitionManager.updateChartsDuration)
                     .attr('d', line(newData));
 
                 if (chart.markersOptions.show) {
-                    MarkDot.updateDotsCoordinateByValueAxis(block, newData, keyAxisOrient, scales, margin, keyField.name, valueField.name, chart.cssClasses, index, chart.style.elementColors, false);
+                    MarkDot.updateDotsCoordinateByValueAxis(block, newData, keyAxisOrient, scales, margin, keyField.name, valueFieldIndex, valueField.name, chart);
                 }
             });
         }
     }
 
     private static renderGrouped(block: Block, scales: Scales, data: DataRow[], keyField: Field, margin: BlockMargin, keyAxisOrient: Orient, chart: TwoDimensionalChartModel, markFlag: boolean): void {
-        chart.data.valueFields.forEach((valueField, index) => {
+        chart.data.valueFields.forEach((valueField, valueFieldIndex) => {
             const lineGenerator = LineHelper.getLineGenerator(keyAxisOrient, scales, keyField.name, valueField.name, margin);
 
-            const path = block.getChartBlock()
+            const path = block.getChartGroup(chart.index)
                 .append('path')
                 .attr('d', lineGenerator(data))
                 .attr('class', this.lineChartClass)
@@ -70,11 +70,11 @@ export class Line {
                 .style('clip-path', `url(#${block.getClipPathId()})`)
                 .style('pointer-events', 'none');
 
-            Helper.setCssClasses(path, Helper.getCssClassesWithElementIndex(chart.cssClasses, index));
-            Helper.setChartStyle(path, chart.style, index, 'stroke');
+            Helper.setCssClasses(path, Helper.getCssClassesWithElementIndex(chart.cssClasses, valueFieldIndex));
+            Helper.setChartStyle(path, chart.style, valueFieldIndex, 'stroke');
 
             if (markFlag)
-                MarkDot.render(block, data, keyAxisOrient, scales, margin, keyField.name, valueField.name, chart.cssClasses, index, chart.style.elementColors, false);
+                MarkDot.render(block, data, keyAxisOrient, scales, margin, keyField.name, valueFieldIndex, valueField.name, chart);
         });
     }
 
@@ -84,7 +84,7 @@ export class Line {
 
         const lineGenerator = LineHelper.getSegmentedLineGenerator(keyAxisOrient, scales, keyField.name, margin);
 
-        const lines = block.getChartBlock()
+        const lines = block.getChartGroup(chart.index)
             .selectAll(`.${this.lineChartClass}${Helper.getCssClassesLine(chart.cssClasses)}`)
             .data(stackedData)
             .enter()
@@ -101,9 +101,9 @@ export class Line {
 
         this.setSegmentColor(lines, chart.style.elementColors);
 
-        stackedData.forEach((sd, index) => {
+        stackedData.forEach((dataset, index) => {
             if (markFlag)
-                MarkDot.render(block, sd, keyAxisOrient, scales, margin, keyField.name, '1', chart.cssClasses, index, chart.style.elementColors, true);
+                MarkDot.render(block, dataset, keyAxisOrient, scales, margin, keyField.name, index, '1', chart);
         });
     }
 

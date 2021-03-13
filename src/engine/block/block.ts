@@ -105,12 +105,7 @@ export class Block {
     }
 
     public getChartGroup(chartIndex: number): Selection<SVGGElement, any, BaseType, any> {
-        return this.getChartBlock()
-            .select(`.${this.chartGroupClass}-${chartIndex}`);
-    }
-
-    public renderChartGroup(chartIndex: number): Selection<SVGGElement, any, BaseType, any> {
-        let group: Selection<SVGGElement, any, BaseType, any> = this.getChartGroup(chartIndex);
+        let group: Selection<SVGGElement, any, BaseType, any> = this.getChartBlock().select(`.${this.chartGroupClass}-${chartIndex}`);
         if (group.empty()) {
             group = this.getChartBlock()
                 .append('g')
