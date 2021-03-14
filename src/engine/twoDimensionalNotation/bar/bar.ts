@@ -198,6 +198,9 @@ export class Bar {
         block.getChartGroup(chart.index)
             .selectAll<SVGRectElement, DataRow>(`.${this.barItemClass}${Helper.getCssClassesLine(chart.cssClasses)}`)
             .filter(d => newData.findIndex(row => row[keyField.name] === d.data[keyField.name]) === -1)
+            .transition()
+            .duration(block.transitionManager.elementRemovingFadeOut)
+            .style('opacity', 0)
             .remove();
 
         const groups = block.getChartGroup(chart.index)
@@ -206,6 +209,7 @@ export class Bar {
 
         const bars = groups
             .selectAll<SVGRectElement, DataRow>(`.${this.barItemClass}${Helper.getCssClassesLine(chart.cssClasses)}`)
+            .filter(d => newData.findIndex(row => row[keyField.name] === d.data[keyField.name]) !== -1)
             .data(d => d);
 
         const newBars = bars.enter()

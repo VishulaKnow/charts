@@ -76,31 +76,31 @@ const configCars: Config = {
                     show: true
                 }
             },
-            {
-                isSegmented: true,
-                type: 'line',
-                data: {
-                    valueFields: [
-                        {
-                            name: 'price',
-                            format: 'money',
-                            title: 'Количество автомобилей'
-                        },
-                        {
-                            name: 'count',
-                            format: 'money',
-                            title: 'Количество автомобилей'
-                        }
-                    ]
-                },
-                tooltip: {
-                    show: true
-                },
-                embeddedLabels: 'value',
-                markers: {
-                    show: true
-                }
-            }
+            // {
+            //     isSegmented: true,
+            //     type: 'line',
+            //     data: {
+            //         valueFields: [
+            //             {
+            //                 name: 'price',
+            //                 format: 'money',
+            //                 title: 'Количество автомобилей'
+            //             },
+            //             {
+            //                 name: 'count',
+            //                 format: 'money',
+            //                 title: 'Количество автомобилей'
+            //             }
+            //         ]
+            //     },
+            //     tooltip: {
+            //         show: true
+            //     },
+            //     embeddedLabels: 'value',
+            //     markers: {
+            //         show: true
+            //     }
+            // }
         ]
     }
     // options: {
