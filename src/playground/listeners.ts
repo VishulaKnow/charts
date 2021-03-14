@@ -670,25 +670,25 @@ class DataUpdater {
 
     private static startDataChanging(ms: number) {
         this.destroyDataChanging();
-        // const run = () => {
-        //     DataUpdater.timeOut = setTimeout(() => {
-        //         const newData = ListenersHelper.getCopy(data);
+        const run = () => {
+            DataUpdater.timeOut = setTimeout(() => {
+                const newData = ListenersHelper.getCopy(data);
 
-        //         this.changeData(newData);
+                this.changeData(newData);
 
-        //         const newModel = getUpdatedModel(config, newData, designerConfig);
-        //         engine.updateValues(newModel, getPreparedData(newModel, newData, config));
+                const newModel = getUpdatedModel(config, newData, designerConfig);
+                engine.updateValues(newModel, getPreparedData(newModel, newData, config));
 
-        //         run();
-        //     }, ms)
-        // }
-        // run();
-        interval(() => {
-            const newData = ListenersHelper.getCopy(data);
-            this.changeData(newData);
-            const newModel = getUpdatedModel(config, newData, designerConfig);
-            engine.updateValues(newModel, getPreparedData(newModel, newData, config));
-        }, ms);
+                run();
+            }, ms)
+        }
+        run();
+        // interval(() => {
+        //     const newData = ListenersHelper.getCopy(data);
+        //     this.changeData(newData);
+        //     const newModel = getUpdatedModel(config, newData, designerConfig);
+        //     engine.updateValues(newModel, getPreparedData(newModel, newData, config));
+        // }, ms);
     }
 
     private static destroyDataChanging() {
