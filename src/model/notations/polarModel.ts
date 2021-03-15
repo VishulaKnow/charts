@@ -1,8 +1,9 @@
-import { Config, PolarChart, PolarOptions } from "../config/config";
-import { ChartStyleConfig, DesignerConfig } from "../designer/designerConfig";
-import { ChartStyleModel } from "./chartStyleModel";
-import { LegendModel } from "./featuresModel/legendModel/legendModel";
-import { BlockMargin, DataSource, PolarChartModel, PolarOptionsModel } from "./model";
+import { Config, PolarChart, PolarOptions } from "../../config/config";
+import { ChartStyleConfig, DesignerConfig } from "../../designer/designerConfig";
+import { ChartStyleModel } from "../chartStyleModel";
+import { LegendModel } from "../featuresModel/legendModel/legendModel";
+import { DataSource, BlockMargin, PolarOptionsModel, PolarChartModel } from "../model";
+
 
 export class PolarModel {
     public static getOptions(config: Config, data: DataSource, margin: BlockMargin, designerConfig: DesignerConfig): PolarOptionsModel {

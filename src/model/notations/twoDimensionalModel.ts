@@ -1,13 +1,14 @@
-import { ChartOrientation, Config, TwoDimensionalChart, TwoDimensionalChartType, TwoDimensionalOptions } from "../config/config";
-import { ChartStyleConfig, DesignerConfig } from "../designer/designerConfig";
-import { AxisModel } from "./featuresModel/axisModel";
-import { ChartStyleModel } from "./chartStyleModel";
-import { DataManagerModel } from "./dataManagerModel";
-import { GridLineModel } from "./featuresModel/gridLineModel";
-import { LegendModel } from "./featuresModel/legendModel/legendModel";
-import { BlockMargin, DataScope, DataSource, AdditionalElementsOptions, TwoDimensionalChartModel, TwoDimensionalOptionsModel, EmbeddedLabelTypeModel } from "./model";
-import { AxisType } from "./modelBuilder";
-import { ScaleModel, ScaleType } from "./featuresModel/scaleModel";
+import { ChartOrientation, Config, TwoDimensionalChart, TwoDimensionalChartType, TwoDimensionalOptions } from "../../config/config";
+import { ChartStyleConfig, DesignerConfig } from "../../designer/designerConfig";
+import { ChartStyleModel } from "../chartStyleModel";
+import { DataManagerModel } from "../dataManagerModel";
+import { AxisModel } from "../featuresModel/axisModel";
+import { GridLineModel } from "../featuresModel/gridLineModel";
+import { LegendModel } from "../featuresModel/legendModel/legendModel";
+import { ScaleModel, ScaleType } from "../featuresModel/scaleModel";
+import { BlockMargin, DataScope, DataSource, TwoDimensionalOptionsModel, TwoDimensionalChartModel, EmbeddedLabelTypeModel, AdditionalElementsOptions } from "../model";
+import { AxisType } from "../modelBuilder";
+
 
 export class TwoDimensionalModel {
     public static getOptions(config: Config, designerConfig: DesignerConfig, margin: BlockMargin, dataScope: DataScope, data: DataSource): TwoDimensionalOptionsModel {

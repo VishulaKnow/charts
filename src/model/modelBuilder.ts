@@ -1,12 +1,12 @@
 import { Config } from '../config/config';
 import { Model, BlockCanvas, ChartBlock, TwoDimensionalOptionsModel, PolarOptionsModel, BlockMargin, DataSettings, ChartElementsSettings, DataFormat, DataScope, DataSource, IntervalOptionsModel } from './model';
 import { MarginModel } from './marginModel';
-import { TwoDimensionalModel } from './twoDimensionalModel';
-import { PolarModel } from './polarModel';
+import { TwoDimensionalModel } from './notations/twoDimensionalModel';
+import { PolarModel } from './notations/polarModel';
 
 import { DataManagerModel } from './dataManagerModel';
 import { BarOptionsCanvas, DesignerConfig, DonutOptionsCanvas, Transitions } from '../designer/designerConfig';
-import { IntervalModel } from './intervalModel';
+import { IntervalModel } from './notations/intervalModel';
 import { OtherComponentsModel } from './featuresModel/otherComponents';
 
 
