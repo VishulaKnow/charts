@@ -100,10 +100,12 @@ export class Helper {
         else
             return Bar.getAllBarItems(block, chart.cssClasses);
     }
-
-    public static calcDigitsAfterDot(value: string): number {
-        const newValue: string = value.toString();
-        let dotIndex: number = newValue.lastIndexOf(',') === -1 ? newValue.lastIndexOf('.') : newValue.lastIndexOf(',');
+    public static parseFormattedValue(value: string): number {
+        return parseFloat(value.replace(',', '.').split(/\s/).join(''))
+    }
+    public static calcDigitsAfterDot(value: number): number {
+        const newValue: string = value.toString()
+        let dotIndex: number = newValue.lastIndexOf('.')
         dotIndex = dotIndex === -1 ? newValue.length : dotIndex + 1;
         let precision: number = newValue.substring(dotIndex).length;
         return precision;

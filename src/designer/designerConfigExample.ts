@@ -60,7 +60,7 @@ const designerConfig: DesignerConfig = {
                 return value.toString();
             }
             if ((options.type === "money" || options.type === "number")) {
-                return Intl.NumberFormat('ru-Ru', { minimumFractionDigits: 2 }).format(value);
+                return Intl.NumberFormat('ru-Ru', { minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(value);
             }
             return value;
         }
