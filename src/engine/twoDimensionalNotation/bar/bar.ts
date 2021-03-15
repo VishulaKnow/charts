@@ -141,9 +141,9 @@ export class Bar {
                     }
                     return false;
                 })
-                .transition()
-                .duration(block.transitionManager.durations.elementFadeOut)
-                .style('opacity', 0)
+                // .transition()
+                // .duration(block.transitionManager.durations.elementFadeOut)
+                // .style('opacity', 0)
                 .remove();
 
             const bars = block.getChartGroup(chart.index)
@@ -175,7 +175,7 @@ export class Bar {
             Helper.setChartStyle(newBars, chart.style, index, 'fill');
 
             if (chart.embeddedLabels !== 'none') {
-                EmbeddedLabels.removeByIndexes(block, chart.cssClasses, index, indexesOfRemoved);
+                EmbeddedLabels.removeUnused(block, chart.cssClasses, index, newData, keyField.name);
                 EmbeddedLabels.update(block,
                     bars,
                     keyAxisOrient,
@@ -187,7 +187,8 @@ export class Bar {
                     newData,
                     index,
                     chart.cssClasses);
-                EmbeddedLabels.render(block, newBars, barAttrs, valueField, chart.embeddedLabels, keyAxisOrient, blockSize, margin, index, chart.cssClasses);
+                if (!newBars.empty())
+                    EmbeddedLabels.render(block, newBars, barAttrs, valueField, chart.embeddedLabels, keyAxisOrient, blockSize, margin, index, chart.cssClasses);
             }
         });
     }

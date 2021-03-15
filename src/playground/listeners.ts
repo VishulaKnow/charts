@@ -676,7 +676,7 @@ engine2.render(model2, getPreparedData(model2, data, config2), document.querySel
 //====================================================================================================== Data updating
 class DataUpdater {
     private static timeOut: any = null;
-    private static refresh: number = 2000;
+    private static refresh: number = 4000;
 
     private static dataSetName = 'dataSet';
 

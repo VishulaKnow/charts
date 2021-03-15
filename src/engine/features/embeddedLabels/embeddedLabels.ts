@@ -19,16 +19,16 @@ export class EmbeddedLabels {
         const labelsGroup = this.renderGroup(block, Helper.getCssClassesWithElementIndex(cssClasses, index));
         Helper.setCssClasses(labelsGroup, Helper.getCssClassesWithElementIndex(cssClasses, index));
 
-        bars.each((dataRow) => {
+        bars.each(dataRow => {
             this.renderLabel(labelsGroup, barAttrsHelper, dataRow, field, type, keyAxisOrient, blockSize, margin);
         });
     }
 
-    public static removeByIndexes(block: Block, chartCssClasses: string[], fieldIndex: number, indexesOfRemoved: number[]): void {
+    public static removeUnused(block: Block, chartCssClasses: string[], fieldIndex: number, newData: DataRow[], keyFieldName: string): void {
         block.getChartBlock()
             .selectAll<SVGGElement, unknown>(`.${EmbeddedLabels.embeddedLabelsGroupClass}${Helper.getCssClassesLine(chartCssClasses)}.chart-element-${fieldIndex}`)
             .selectAll<SVGTextElement, DataRow>(`.${this.embeddedLabelClass}`)
-            .filter((d, i) => indexesOfRemoved.findIndex(ior => ior === i) !== -1)
+            .filter((d, i) => newData.findIndex(row => row[keyFieldName] === d[keyFieldName]) === -1)
             .remove();
     }
 
@@ -105,16 +105,14 @@ export class EmbeddedLabels {
             labelBlock.style('fill', this.outerLabelColor);
         }
 
-        const transitionEndHandler = () => {
-            if (position === 'outside')
-                this.renderBackground(labelsGroup, labelBlock, attrs);
-
-            if (position === 'inside')
-                labelBlock.style('fill', this.innerLabelColor);
-        }
-
         this.setLabelBlockAttrs(attrs, labelBlock, block.transitionManager.durations.chartUpdate)
-            .on('end', transitionEndHandler);
+            .on('end', () => {
+                if (position === 'outside')
+                    this.renderBackground(labelsGroup, labelBlock, attrs);
+
+                if (position === 'inside')
+                    labelBlock.style('fill', this.innerLabelColor);
+            });
     }
 
     private static checkLabelToResetTextAnchor(x: number, width: number, margin: BlockMargin, blockSize: Size, keyAxisOrient: Orient, position: EmbeddedLabelPosition): number {
