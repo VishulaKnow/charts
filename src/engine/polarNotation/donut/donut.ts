@@ -69,21 +69,20 @@ export class Donut {
         const items = this.getAllArcGroups(block)
             .data(pieGenerator(data));
 
-        items.exit()
-            .transition()
-            .delay(block.transitionManager.updateChartsDuration)
-            .duration(0)
-            .remove();
 
         return new Promise((resolve) => {
             path
                 .interrupt()
                 .transition()
                 .duration(block.transitionManager.updateChartsDuration)
-                .on('end', () => resolve(''))
+                .on('end', () => {
+                    items.exit()
+                        .remove();
+                    resolve('');
+                })
                 .attrTween('d', function (d) {
                     const interpolateFunc = interpolate((this as any)._currentData, d); // current - старые данные до обновления, задаются во время рендера
-                    return (t) => {
+                    return t => {
                         (this as any)._currentData = interpolateFunc(t);
                         return arcGenerator((this as any)._currentData);
                     }
@@ -122,8 +121,8 @@ export class Donut {
 
     private static mergeWithFirstEqualZero(firstDataset: DataRow[], secondDataset: DataRow[], keyField: string): DataRow[] {
         const secondSet = new Set()
-        secondDataset.forEach(function (d) {
-            secondSet.add(d[keyField]);
+        secondDataset.forEach(dataRow => {
+            secondSet.add(dataRow[keyField]);
         });
         const onlyNew = firstDataset
             .filter(d => !secondSet.has(d[keyField]))
