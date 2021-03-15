@@ -134,17 +134,16 @@ export class Bar {
 
             block.getChartGroup(chart.index)
                 .selectAll<SVGRectElement, DataRow>(`.${this.barItemClass}${Helper.getCssClassesLine(chart.cssClasses)}.chart-element-${index}`)
-                .filter((dataRow, i) => {
-                    if (newData.findIndex(row => row[keyField.name] === dataRow[keyField.name]) === -1) {
+                .filter((d, i) => {
+                    if (newData.findIndex(row => row[keyField.name] === d[keyField.name]) === -1) {
                         indexesOfRemoved.push(i);
-                        // EmbeddedLabels.removeUnusedLabel(block, chart.cssClasses, index, dataRow[keyField.name], keyField.name, block.transitionManager.durations.elementFadeOut);
                         return true;
                     }
                     return false;
                 })
-                .transition()
-                .duration(block.transitionManager.durations.elementFadeOut)
-                .style('opacity', 0)
+                // .transition()
+                // .duration(block.transitionManager.durations.elementFadeOut)
+                // .style('opacity', 0)
                 .remove();
 
             const bars = block.getChartGroup(chart.index)
@@ -176,13 +175,13 @@ export class Bar {
             Helper.setChartStyle(newBars, chart.style, index, 'fill');
 
             if (chart.embeddedLabels !== 'none') {
+                EmbeddedLabels.removeUnused(block, chart.cssClasses, index, newData, keyField.name);
                 EmbeddedLabels.update(block,
                     bars,
                     keyAxisOrient,
                     barAttrs,
                     margin,
                     valueField,
-                    keyField,
                     chart.embeddedLabels,
                     blockSize,
                     newData,
