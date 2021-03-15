@@ -1,7 +1,7 @@
 import Engine from '../engine/engine';
 import { assembleModel, getPreparedData, getUpdatedModel } from '../model/modelBuilder';
 import { Config, IntervalOptions, PolarChart, PolarOptions, TwoDimensionalChart, TwoDimensionalOptions } from '../config/config'
-import { DesignerConfig } from '../designer/designerConfig';
+import { DesignerConfig, Transitions } from '../designer/designerConfig';
 import { DataSource } from '../model/model';
 
 class ListenersHelper {
@@ -46,7 +46,7 @@ export default class Listeners {
     private config: Config;
     private designerConfig: DesignerConfig;
     private data: DataSource
-
+    private transition: Transitions = {};
     constructor(engine: Engine, config: Config, designerConfig: DesignerConfig, data: DataSource) {
         this.engine = engine;
         this.config = config;
@@ -342,6 +342,34 @@ export default class Listeners {
             thisClass.designerConfig.canvas.chartBlockMargin.right = parseFloat(ListenersHelper.getInputValue('#chart-block-margin-right')) || 0;
             thisClass.updateFull();
         });
+
+        document.querySelector('#chart-block-transition-chartUpdate').addEventListener('input', function () {
+            thisClass.transition.chartUpdate = parseFloat(ListenersHelper.getInputValue('#chart-block-transition-chartUpdate'));
+            thisClass.designerConfig.transitions = thisClass.transition;
+            thisClass.updateFull();
+        });
+        document.querySelector('#chart-block-transition-elementFadeOut').addEventListener('input', function () {
+            thisClass.transition.elementFadeOut = parseFloat(ListenersHelper.getInputValue('#chart-block-transition-elementFadeOut'));
+            thisClass.designerConfig.transitions = thisClass.transition;
+            thisClass.updateFull();
+        });
+        document.querySelector('#chart-block-transition-tooltipSlide').addEventListener('input', function () {
+            thisClass.transition.tooltipSlide = parseFloat(ListenersHelper.getInputValue('#chart-block-transition-tooltipSlide'));
+            thisClass.designerConfig.transitions = thisClass.transition;
+            thisClass.updateFull();
+        });
+        document.querySelector('#chart-block-transition-donutHover').addEventListener('input', function () {
+            thisClass.transition.donutHover = parseFloat(ListenersHelper.getInputValue('#chart-block-transition-donutHover'));
+            thisClass.designerConfig.transitions = thisClass.transition;
+            thisClass.updateFull();
+        });
+        document.querySelector('#chart-block-transition-markerHover').addEventListener('input', function () {
+            thisClass.transition.markerHover = parseFloat(ListenersHelper.getInputValue('#chart-block-transition-markerHover'));
+            thisClass.designerConfig.transitions = thisClass.transition;
+            thisClass.updateFull();
+        });
+
+
         document.querySelector('#bar-distance').addEventListener('input', function () {
             thisClass.designerConfig.canvas.chartOptions.bar.barDistance = parseFloat(ListenersHelper.getInputValue('#bar-distance')) || 0;
             thisClass.updateFull();
@@ -622,6 +650,7 @@ import '../style/develop.css'
 import config from '../config/configExample';
 import designerConfig from '../designer/designerConfigExample';
 import { Chart } from '../main';
+import { transition, Transition } from 'd3-transition';
 
 const data = require('../assets/dataSet.json');
 
