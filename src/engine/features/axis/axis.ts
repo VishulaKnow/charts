@@ -72,13 +72,13 @@ export class Axis {
             .transition()
             .on('end', () => {
                 if (axisOptions.orient === 'bottom' || axisOptions.orient === 'top') {
-                    this.cropLabels(block, scaleKey, scaleOptions, axisOptions, blockSize);
                     if (axisOptions.labels.positition === 'straight') {
                         axisElement.selectAll('.tick text')
                             .attr('transform', null)
                             .attr('text-anchor', 'middle')
                             .attr('x', null);
                     }
+                    this.cropLabels(block, scaleKey, scaleOptions, axisOptions, blockSize);
                 }
                 if (axisOptions.orient === 'left' || axisOptions.orient === 'right') {
                     if (Scale.getScaleStep(scaleKey) >= MINIMAL_STEP_SIZE_FOR_WRAPPING)
