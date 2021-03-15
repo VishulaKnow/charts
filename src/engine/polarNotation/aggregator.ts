@@ -1,7 +1,6 @@
 import { sum } from 'd3-array'
-import { interpolate, interpolateNumber } from 'd3-interpolate';
+import { interpolateNumber } from 'd3-interpolate';
 import { Selection } from 'd3-selection'
-import { Transition } from 'd3-transition';
 import { DataType } from '../../designer/designerConfig';
 import { DataRow, Field } from "../../model/model";
 import { Block } from "../block/block";
@@ -46,7 +45,7 @@ export class Aggregator {
             const aggregatorObject = this.renderAggregatorObject(block, innerRadius, translate);
             const wrapper = this.renderWrapper(aggregatorObject);
 
-            const aggreggatorValue = wrapper
+            wrapper
                 .append<HTMLDivElement>('div')
                 .attr('class', this.aggregatorValueClass)
                 .style('text-align', 'center')
@@ -69,19 +68,15 @@ export class Aggregator {
             .select<SVGForeignObjectElement>(`.${this.aggregatorObjectClass}`);
 
         const thisClass = this;
-
         block.getSvg()
             .select<HTMLDivElement>(`.${this.aggregatorValueClass}`)
             .transition()
             .duration(1000)
             .tween("text", function () {
-                const oldValue: number = Helper.parseFormattedValue(this.textContent);
-                const oldTextPrecision: number = Helper.calcDigitsAfterDot(oldValue);
-                const precision = Helper.calcDigitsAfterDot(aggregator.value) < oldTextPrecision ? oldTextPrecision : Helper.calcDigitsAfterDot(aggregator.value)
-                var interpolateFunc = interpolateNumber(oldValue, aggregator.value);
-                console.log(oldValue + '   ' + aggregator.value)
-
-                // console.log('19 500.55'.toString().replace(',', '.').split(' '));
+                const oldValue = Helper.parseFormattedToNumber(this.textContent);
+                const oldTextPrecision = Helper.calcDigitsAfterDot(oldValue);
+                const precision = Helper.calcDigitsAfterDot(aggregator.value) < oldTextPrecision ? oldTextPrecision : Helper.calcDigitsAfterDot(aggregator.value);
+                const interpolateFunc = interpolateNumber(oldValue, aggregator.value);
 
                 return function (t) {
                     this.textContent = ValueFormatter.formatField(aggregator.format, (+interpolateFunc(t)).toFixed(precision));
