@@ -40,6 +40,7 @@ export class Axis {
             .interrupt()
             .transition()
             .duration(block.transitionManager.updateChartsDuration)
+            .attr('transform', `translate(${axisOptions.translate.translateX}, ${axisOptions.translate.translateY})`)
             .call(axis.bind(this));
     }
 
@@ -72,6 +73,12 @@ export class Axis {
             .on('end', () => {
                 if (axisOptions.orient === 'bottom' || axisOptions.orient === 'top') {
                     this.cropLabels(block, scaleKey, scaleOptions, axisOptions, blockSize);
+                    if (axisOptions.labels.positition === 'straight') {
+                        axisElement.selectAll('.tick text')
+                            .attr('transform', null)
+                            .attr('text-anchor', 'middle')
+                            .attr('x', null);
+                    }
                 }
                 if (axisOptions.orient === 'left' || axisOptions.orient === 'right') {
                     if (Scale.getScaleStep(scaleKey) >= MINIMAL_STEP_SIZE_FOR_WRAPPING)
