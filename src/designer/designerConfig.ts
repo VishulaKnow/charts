@@ -10,6 +10,7 @@ export interface DesignerConfig {
     additionalElements: Elements;
     dataFormat: DataFormat;
     chartStyle: ChartStyleConfig;
+    transitions?: Transitions;
 }
 
 export interface ChartStyleConfig {
@@ -34,6 +35,14 @@ export interface DonutOptionsCanvas {
 
 export interface AxisLabelCanvas {
     maxSize: AxisLabelSize;
+}
+
+export interface Transitions {
+    chartUpdate?: number;
+    elementFadeOut?: number;
+    tooltipSlide?: number;
+    donutHover?: number;
+    markerHover?: number;
 }
 
 interface Elements {

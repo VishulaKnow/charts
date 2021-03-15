@@ -31,7 +31,7 @@ export class Area {
                 .data(stackedData)
                 .interrupt()
                 .transition()
-                .duration(block.transitionManager.updateChartsDuration)
+                .duration(block.transitionManager.durations.updateChartsDuration)
                 .attr('d', d => areaGenerator(d));
 
             if (chart.markersOptions.show) {
@@ -48,7 +48,7 @@ export class Area {
                     .select(`.${this.areaChartClass}${Helper.getCssClassesLine(chart.cssClasses)}.chart-element-${valueFieldIndex}`)
                     .interrupt()
                     .transition()
-                    .duration(block.transitionManager.updateChartsDuration)
+                    .duration(block.transitionManager.durations.updateChartsDuration)
                     .attr('d', area(data));
 
                 if (chart.markersOptions.show) {

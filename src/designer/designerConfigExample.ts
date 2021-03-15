@@ -1,4 +1,4 @@
-import { DesignerConfig, DataTypeOptions } from './designerConfig'
+import { DesignerConfig } from './designerConfig'
 
 const designerConfig: DesignerConfig = {
     canvas: {

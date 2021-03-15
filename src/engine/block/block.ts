@@ -62,8 +62,7 @@ export class Block {
     }
 
     public getChartBlock(): Selection<SVGGElement, unknown, HTMLElement, any> {
-        return this.getSvg()
-            .select(`.${this.chartBlockClass}`);
+        return this.getSvg().select(`.${this.chartBlockClass}`);
     }
 
     public renderClipPath(margin: BlockMargin, blockSize: Size): void {
@@ -113,5 +112,9 @@ export class Block {
         }
 
         return group;
+    }
+
+    public clearWrapper(): void {
+        this.getWrapper().selectAll('*').remove();
     }
 }

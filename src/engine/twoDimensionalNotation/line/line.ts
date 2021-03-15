@@ -32,7 +32,7 @@ export class Line {
                 .data(stackedData)
                 .interrupt()
                 .transition()
-                .duration(block.transitionManager.updateChartsDuration)
+                .duration(block.transitionManager.durations.updateChartsDuration)
                 .attr('d', d => lineGenerator(d));
 
             if (chart.markersOptions.show) {
@@ -48,7 +48,7 @@ export class Line {
                     .select(`.${this.lineChartClass}${Helper.getCssClassesLine(chart.cssClasses)}.chart-element-${valueFieldIndex}`)
                     .interrupt()
                     .transition()
-                    .duration(block.transitionManager.updateChartsDuration)
+                    .duration(block.transitionManager.durations.updateChartsDuration)
                     .attr('d', line(newData));
 
                 if (chart.markersOptions.show) {

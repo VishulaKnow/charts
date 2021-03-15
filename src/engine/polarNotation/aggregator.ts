@@ -95,12 +95,12 @@ export class Aggregator {
 
         while (aggreggatorValue.node().getBoundingClientRect().width > wrapperSize - pad && fontSize > 15) {
             aggreggatorValue
-                .style('font-size', `${fontSize -= 2}px`)
+                .style('font-size', `${fontSize -= 2}px`);
         }
 
         while (aggreggatorValue.node().getBoundingClientRect().width < wrapperSize - pad && fontSize < 60) {
             aggreggatorValue
-                .style('font-size', `${fontSize += 2}px`)
+                .style('font-size', `${fontSize += 2}px`);
         }
     }
 

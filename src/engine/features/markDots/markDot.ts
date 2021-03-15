@@ -70,7 +70,7 @@ export class MarkDot {
         dots
             .interrupt(animationName)
             .transition(animationName)
-            .duration(block.transitionManager.updateChartsDuration)
+            .duration(block.transitionManager.durations.updateChartsDuration)
             .attr('cx', d => attrs.cx(d))
             .attr('cy', d => attrs.cy(d));
     }

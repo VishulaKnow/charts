@@ -39,7 +39,7 @@ export class Axis {
             .select(`g.${axisOptions.cssClass}`)
             .interrupt()
             .transition()
-            .duration(block.transitionManager.updateChartsDuration)
+            .duration(block.transitionManager.durations.updateChartsDuration)
             .attr('transform', `translate(${axisOptions.translate.translateX}, ${axisOptions.translate.translateY})`)
             .call(axis.bind(this));
     }
@@ -92,7 +92,7 @@ export class Axis {
                         this.alignLabelsInVerticalAxis(axisElement, 'start', axisOptions.labels.maxSize, false);
                 }
             })
-            .duration(block.transitionManager.updateChartsDuration)
+            .duration(block.transitionManager.durations.updateChartsDuration)
             .attr('transform', `translate(${axisOptions.translate.translateX}, ${axisOptions.translate.translateY})`)
             .call(axis.bind(this));
 

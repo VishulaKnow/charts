@@ -142,7 +142,7 @@ export class Bar {
                     return false;
                 })
                 .transition()
-                .duration(block.transitionManager.elementRemovingFadeOut)
+                .duration(block.transitionManager.durations.elementFadeOut)
                 .style('opacity', 0)
                 .remove();
 
@@ -167,7 +167,7 @@ export class Bar {
                 sum(barsAmounts),
                 barSettings);
 
-            this.fillBarAttrs(bars, barAttrs, block.transitionManager.updateChartsDuration);
+            this.fillBarAttrs(bars, barAttrs, block.transitionManager.durations.updateChartsDuration);
             this.fillBarAttrs(newBars, barAttrs);
 
             Helper.setCssClasses(newBars, Helper.getCssClassesWithElementIndex(chart.cssClasses, index));
@@ -199,7 +199,7 @@ export class Bar {
             .selectAll<SVGRectElement, DataRow>(`.${this.barItemClass}${Helper.getCssClassesLine(chart.cssClasses)}`)
             .filter(d => newData.findIndex(row => row[keyField.name] === d.data[keyField.name]) === -1)
             .transition()
-            .duration(block.transitionManager.elementRemovingFadeOut)
+            .duration(block.transitionManager.durations.elementFadeOut)
             .style('opacity', 0)
             .remove();
 
@@ -226,7 +226,7 @@ export class Bar {
             sum(barsAmounts),
             barSettings);
 
-        this.fillBarAttrs(bars, barAttrs, block.transitionManager.updateChartsDuration);
+        this.fillBarAttrs(bars, barAttrs, block.transitionManager.durations.updateChartsDuration);
         this.fillBarAttrs(newBars, barAttrs);
 
         Helper.setCssClasses(newBars, chart.cssClasses);

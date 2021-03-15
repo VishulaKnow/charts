@@ -35,10 +35,20 @@ export default class Engine {
     }
 
     public updateData(model: Model, newData: DataSource): void {
-        for (let source in newData) {
-            this.data[source] = newData[source];
+        if (!newData) {
+            this.data = newData
+            this.block.clearWrapper();
+        } else {
+            if (!this.data) {
+                this.data = newData;
+                this.updateFullBlock(model, this.data);
+            } else {
+                for (let source in newData) {
+                    this.data[source] = newData[source];
+                }
+                ContentManager.updateData(this.block, model, newData);
+            }
         }
-        ContentManager.updateData(this.block, model, newData);
     }
 
     private renderCharts(model: Model, data: DataSource): void {

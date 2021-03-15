@@ -163,6 +163,7 @@
 }
 .aggregator-value {
     margin-top: 20px;
+    pointer-events: auto;
 }
 .aggregator-name {
     margin-top: 10px;

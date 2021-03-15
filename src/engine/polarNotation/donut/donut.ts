@@ -74,7 +74,7 @@ export class Donut {
             path
                 .interrupt()
                 .transition()
-                .duration(block.transitionManager.updateChartsDuration)
+                .duration(block.transitionManager.durations.updateChartsDuration)
                 .on('end', () => {
                     items.exit()
                         .remove();

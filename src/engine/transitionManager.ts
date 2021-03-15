@@ -14,11 +14,13 @@ export class TransitionManager {
     /**
      * Анимация обновления в ms.
      */
-    public updateChartsDuration = 1000;
-    public twoDimensionalTooltipDuration = 75;
-    public donutArcHoverDuration = 200;
-    public markerHoverDuration = 50;
-    public elementRemovingFadeOut = 400;
+    public durations = {
+        updateChartsDuration: 1000,
+        twoDimensionalTooltipDuration: 75,
+        donutArcHoverDuration: 200,
+        markerHoverDuration: 50,
+        elementFadeOut: 400
+    }
 
     private block: Block;
     /**
