@@ -701,7 +701,6 @@ class DataUpdater {
                 });
             }
         } else if (random < 0.33) {
-            // newData["dataSet"].pop();
             newData["dataSet"].splice(ListenersHelper.randInt(0, 4), ListenersHelper.randInt(1, 3));
         }
 
