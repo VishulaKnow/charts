@@ -8,18 +8,18 @@ import { Block } from "./block/block";
 export class ContentManager {
     public static render(model: Model, data: DataSource, engine: Engine): void {
         if (model.options.type === '2d')
-            TwoDimensionalManager.render2D(engine, model);
+            TwoDimensionalManager.render(engine, model);
         else if (model.options.type === 'polar')
-            PolarManager.renderPolar(engine, model);
+            PolarManager.render(engine, model);
         else if (model.options.type === 'interval')
-            IntervalManager.renderInterval(engine.block, model, data);
+            IntervalManager.render(engine.block, model, data);
     }
 
     public static updateData(block: Block, model: Model, newData: DataSource): void {
         if (model.options.type === '2d') {
-            TwoDimensionalManager.updateDataFor2D(block, model, newData);
+            TwoDimensionalManager.updateData(block, model, newData);
         } else if (model.options.type === 'polar') {
-            PolarManager.updateDataForPolar(block, model, newData);
+            PolarManager.updateData(block, model, newData);
         }
     }
 }

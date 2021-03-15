@@ -15,7 +15,7 @@ import { BarHelper } from "./bar/barHelper";
 import { Line } from "./line/line";
 
 export class TwoDimensionalManager {
-    public static render2D(engine: Engine, model: Model): void {
+    public static render(engine: Engine, model: Model): void {
         const options = <TwoDimensionalOptionsModel>model.options;
 
         const scales = Scale.getScales(options.scale.scaleKey,
@@ -28,7 +28,7 @@ export class TwoDimensionalManager {
 
         GridLine.render(engine.block, options.additionalElements.gridLine.flag, options.axis.keyAxis, options.axis.valueAxis, model.blockCanvas.size, model.chartBlock.margin, options.scale.scaleKey);
 
-        this.render2DCharts(engine.block,
+        this.renderCharts(engine.block,
             options.charts,
             scales,
             engine.data,
@@ -55,7 +55,50 @@ export class TwoDimensionalManager {
             RecordOverflowAlert.render(engine.block, model.dataSettings.scope.hidedRecordsAmount, 'top', options.orient);
     }
 
-    private static render2DCharts(block: Block, charts: TwoDimensionalChartModel[], scales: Scales, data: DataSource, dataOptions: OptionsModelData, margin: BlockMargin, keyAxisOrient: Orient, barSettings: BarChartSettings, blockSize: Size) {
+    public static updateData(block: Block, model: Model, data: DataSource) {
+        block.transitionManager.interruptTransitions();
+
+        const options = <TwoDimensionalOptionsModel>model.options;
+
+        const scales = Scale.getScales(options.scale.scaleKey,
+            options.scale.scaleValue,
+            model.chartSettings.bar);
+
+        Axis.updateValueAxisDomain(block,
+            scales.scaleValue,
+            options.scale.scaleValue,
+            options.axis.valueAxis);
+
+        Axis.updateKeyAxisDomain(block,
+            scales.scaleKey,
+            options.scale.scaleKey,
+            options.axis.keyAxis,
+            model.blockCanvas.size);
+
+        GridLine.rerender(block,
+            options.additionalElements.gridLine.flag,
+            options.axis.keyAxis,
+            options.axis.valueAxis,
+            model.blockCanvas.size,
+            model.chartBlock.margin,
+            options.scale.scaleKey);
+
+        this.updateChartsData(block,
+            options.charts,
+            scales,
+            data,
+            model.options.data,
+            model.chartBlock.margin,
+            options.axis.keyAxis.orient,
+            model.blockCanvas.size,
+            model.chartSettings.bar);
+
+        Tooltip.render(block, model, data, scales);
+
+        RecordOverflowAlert.update(block, model.dataSettings.scope.hidedRecordsAmount, 'top', options.orient);
+    }
+
+    private static renderCharts(block: Block, charts: TwoDimensionalChartModel[], scales: Scales, data: DataSource, dataOptions: OptionsModelData, margin: BlockMargin, keyAxisOrient: Orient, barSettings: BarChartSettings, blockSize: Size) {
         block.renderClipPath(margin, blockSize);
         block.renderChartBlock();
         charts.forEach((chart: TwoDimensionalChartModel) => {
@@ -93,50 +136,7 @@ export class TwoDimensionalManager {
         EmbeddedLabels.raiseGroups(block);
     }
 
-    public static updateDataFor2D(block: Block, model: Model, data: DataSource) {
-        block.transitionManager.interruptTransitions();
-
-        const options = <TwoDimensionalOptionsModel>model.options;
-
-        const scales = Scale.getScales(options.scale.scaleKey,
-            options.scale.scaleValue,
-            model.chartSettings.bar);
-
-        Axis.updateValueAxisDomain(block,
-            scales.scaleValue,
-            options.scale.scaleValue,
-            options.axis.valueAxis);
-
-        Axis.updateKeyAxisDomain(block,
-            scales.scaleKey,
-            options.scale.scaleKey,
-            options.axis.keyAxis,
-            model.blockCanvas.size);
-
-        GridLine.rerender(block,
-            options.additionalElements.gridLine.flag,
-            options.axis.keyAxis,
-            options.axis.valueAxis,
-            model.blockCanvas.size,
-            model.chartBlock.margin,
-            options.scale.scaleKey);
-
-        this.update2DChartsData(block,
-            options.charts,
-            scales,
-            data,
-            model.options.data,
-            model.chartBlock.margin,
-            options.axis.keyAxis.orient,
-            model.blockCanvas.size,
-            model.chartSettings.bar);
-
-        Tooltip.render(block, model, data, scales);
-
-        RecordOverflowAlert.update(block, model.dataSettings.scope.hidedRecordsAmount, 'top', options.orient);
-    }
-
-    private static update2DChartsData(block: Block, charts: TwoDimensionalChartModel[], scales: Scales, data: DataSource, dataOptions: OptionsModelData, margin: BlockMargin, keyAxisOrient: Orient, blockSize: Size, barSettings: BarChartSettings): void {
+    private static updateChartsData(block: Block, charts: TwoDimensionalChartModel[], scales: Scales, data: DataSource, dataOptions: OptionsModelData, margin: BlockMargin, keyAxisOrient: Orient, blockSize: Size, barSettings: BarChartSettings): void {
         charts.forEach((chart: TwoDimensionalChartModel) => {
             if (chart.type === 'bar') {
                 Bar.update(block,

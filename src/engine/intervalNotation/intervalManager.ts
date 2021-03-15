@@ -10,7 +10,7 @@ import { Tooltip } from "../features/tolltip/tooltip";
 import { Gantt } from "./gantt";
 
 export class IntervalManager {
-    public static renderInterval(block: Block, model: Model, data: DataSource): void {
+    public static render(block: Block, model: Model, data: DataSource): void {
         const options = <IntervalOptionsModel>model.options;
 
         block.renderSvg(model.blockCanvas.size);
@@ -23,7 +23,7 @@ export class IntervalManager {
 
         GridLine.render(block, options.additionalElements.gridLine.flag, options.axis.keyAxis, options.axis.valueAxis, model.blockCanvas.size, model.chartBlock.margin, options.scale.scaleKey);
 
-        this.renderIntervalCharts(block,
+        this.renderCharts(block,
             options.charts,
             scales,
             data,
@@ -45,7 +45,7 @@ export class IntervalManager {
             RecordOverflowAlert.render(block, model.dataSettings.scope.hidedRecordsAmount, 'top', options.orient);
     }
 
-    private static renderIntervalCharts(block: Block, charts: IntervalChartModel[], scales: Scales, data: DataSource, dataOptions: OptionsModelData, margin: BlockMargin, keyAxisOrient: Orient, chartSettings: ChartElementsSettings): void {
+    private static renderCharts(block: Block, charts: IntervalChartModel[], scales: Scales, data: DataSource, dataOptions: OptionsModelData, margin: BlockMargin, keyAxisOrient: Orient, chartSettings: ChartElementsSettings): void {
         block.renderChartBlock();
         charts.forEach(chart => {
             if (chart.type === 'gantt')

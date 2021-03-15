@@ -10,12 +10,12 @@ import { Aggregator } from "./aggregator";
 import { Donut } from "./donut/donut";
 
 export class PolarManager {
-    public static renderPolar(engine: Engine, model: Model) {
+    public static render(engine: Engine, model: Model) {
         const options = <PolarOptionsModel>model.options;
 
         engine.block.renderSvg(model.blockCanvas.size);
 
-        this.renderPolarCharts(engine.block, options.charts,
+        this.renderCharts(engine.block, options.charts,
             engine.data,
             options.data.dataSource,
             model.chartBlock.margin,
@@ -35,7 +35,7 @@ export class PolarManager {
             RecordOverflowAlert.render(engine.block, model.dataSettings.scope.hidedRecordsAmount, model.options.legend.position);
     }
 
-    private static renderPolarCharts(block: Block, charts: PolarChartModel[], data: DataSource, dataSource: string, margin: BlockMargin, blockSize: Size, donutSettings: DonutChartSettings) {
+    private static renderCharts(block: Block, charts: PolarChartModel[], data: DataSource, dataSource: string, margin: BlockMargin, blockSize: Size, donutSettings: DonutChartSettings) {
         charts.forEach((chart: PolarChartModel) => {
             if (chart.type === 'donut')
                 Donut.render(block,
@@ -47,7 +47,7 @@ export class PolarManager {
         });
     }
 
-    public static updateDataForPolar(block: Block, model: Model, data: DataSource): void {
+    public static updateData(block: Block, model: Model, data: DataSource): void {
         block.transitionManager.interruptTransitions();
         block.removeEventListeners();
         ElementHighlighter.removeElementsFilter(Donut.getAllArcGroups(block));
