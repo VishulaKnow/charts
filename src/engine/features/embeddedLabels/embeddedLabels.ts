@@ -24,19 +24,35 @@ export class EmbeddedLabels {
         });
     }
 
-    public static removeUnused(block: Block, chartCssClasses: string[], fieldIndex: number, newData: DataRow[], keyFieldName: string): void {
-        block.getChartBlock()
-            .selectAll<SVGGElement, unknown>(`.${EmbeddedLabels.embeddedLabelsGroupClass}${Helper.getCssClassesLine(chartCssClasses)}.chart-element-${fieldIndex}`)
-            .selectAll<SVGTextElement, DataRow>(`.${this.embeddedLabelClass}`)
-            .filter((d, i) => newData.findIndex(row => row[keyFieldName] === d[keyFieldName]) === -1)
-            .remove();
+    public static removeUnusedLabel(block: Block, chartCssClasses: string[], fieldIndex: number, extraKey: string, keyFieldName: string, transitionDuration: number = 0): void {
+        if (transitionDuration > 0) {
+            block.getChartBlock()
+                .selectAll<SVGGElement, unknown>(`.${EmbeddedLabels.embeddedLabelsGroupClass}${Helper.getCssClassesLine(chartCssClasses)}.chart-element-${fieldIndex}`)
+                .selectAll<SVGTextElement, DataRow>(`.${this.embeddedLabelClass}`)
+                .filter((d, i) => d[keyFieldName] === extraKey)
+                .transition()
+                .duration(transitionDuration)
+                .style('opacity', 0)
+                .remove();
+        } else {
+            block.getChartBlock()
+                .selectAll<SVGGElement, unknown>(`.${EmbeddedLabels.embeddedLabelsGroupClass}${Helper.getCssClassesLine(chartCssClasses)}.chart-element-${fieldIndex}`)
+                .selectAll<SVGTextElement, DataRow>(`.${this.embeddedLabelClass}`)
+                .filter((d, i) => d[keyFieldName] === extraKey)
+                .remove();
+        }
     }
 
-    public static update(block: Block, bars: Selection<SVGRectElement, DataRow, SVGGElement, unknown>, keyAxisOrient: Orient, barAttrsHelper: BarAttrsHelper, margin: BlockMargin, valueField: Field, type: EmbeddedLabelTypeModel, blockSize: Size, newData: DataRow[], index: number, cssClasses: string[]) {
+    public static update(block: Block, bars: Selection<SVGRectElement, DataRow, SVGGElement, unknown>, keyAxisOrient: Orient, barAttrsHelper: BarAttrsHelper, margin: BlockMargin, valueField: Field, keyField: Field, type: EmbeddedLabelTypeModel, blockSize: Size, newData: DataRow[], index: number, cssClasses: string[]) {
         const labelsGroup = block.getChartBlock()
             .selectAll<SVGGElement, unknown>(`.${EmbeddedLabels.embeddedLabelsGroupClass}${Helper.getCssClassesLine(cssClasses)}.chart-element-${index}`);
 
         labelsGroup.selectAll<SVGRectElement, DataRow>(`.${this.embeddedLabelBgClass}`)
+            .remove();
+
+        labelsGroup
+            .selectAll<SVGTextElement, DataRow>(`.${this.embeddedLabelClass}`)
+            .filter(dataRow => newData.findIndex(row => row[keyField.name] === dataRow[keyField.name]) === -1)
             .remove();
 
         const labelsSelection = labelsGroup
