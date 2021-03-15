@@ -45,9 +45,11 @@ export class AxisHelper {
                     }
                 }
 
-                if (!textBlock.selectAll('tspan').empty()) {
+                if (textBlock.selectAll('tspan').size() === 1)
+                    textBlock.text(tspan.text()).attr('y', null);
+
+                if (!textBlock.selectAll('tspan').empty())
                     textBlock.attr('y', -(textBlock.node().getBBox().height / 2 + 4.8));
-                }
             }
         });
     }

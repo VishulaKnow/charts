@@ -62,9 +62,10 @@ export class Axis {
         const axisElement = block.getSvg()
             .select<SVGGElement>(`g.${axisOptions.cssClass}`);
 
-        if (axisOptions.orient === 'left') {
-            axis.tickPadding(axisOptions.labels.maxSize + AXIS_VERTICAL_LABEL_PADDING);
+        if (axisOptions.orient === 'left' || axisOptions.orient === 'right') {
             axisElement.selectAll('.tick text').attr('y', null);
+            if (axisOptions.orient === 'left')
+                axis.tickPadding(axisOptions.labels.maxSize + AXIS_VERTICAL_LABEL_PADDING);
         }
 
         axisElement

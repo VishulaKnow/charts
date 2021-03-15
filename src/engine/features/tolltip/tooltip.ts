@@ -95,7 +95,6 @@ export class Tooltip {
                 TooltipComponentsManager.hideTooltipBlock(tooltipBlock);
                 TooltipComponentsManager.hideTooltipLine(tooltipLine);
                 currentKey = null;
-
                 ElementHighlighter.remove2DElementsHighlighting(block, charts, block.transitionManager.durations.markerHover);
             });
     }
@@ -125,7 +124,6 @@ export class Tooltip {
         elemets.on('mouseleave', function () {
             TooltipComponentsManager.hideTooltipBlock(tooltipBlock);
             ElementHighlighter.removeElementsFilter(select(this));
-
             ElementHighlighter.changeDonutHighlightAppearance(select<SVGGElement, PieArcDatum<DataRow>>(this), margin, blockSize, donutThickness, block.transitionManager.durations.donutHover, false);
         });
     }
