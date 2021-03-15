@@ -14,7 +14,7 @@ const configCars: Config = {
         axis: {
             keyAxis: {
                 visibility: true,
-                position: 'start',
+                position: 'end',
                 ticks: {
                     flag: false
                 }
@@ -42,9 +42,9 @@ const configCars: Config = {
         legend: {
             show: true
         },
-        orientation: 'horizontal',
+        orientation: 'vertical',
         data: {
-            dataSource: 'dataSet',
+            dataSource: 'dataSet_72',
             keyField: {
                 name: 'brand',
                 format: 'string'

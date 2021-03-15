@@ -654,6 +654,8 @@ class DataUpdater {
     private static timeOut: any = null;
     private static refresh: number = 2000;
 
+    private static dataSetName = 'dataSet_72';
+
     public static updateIsOn(value: boolean) {
         if (value)
             DataUpdater.startDataChanging(DataUpdater.refresh);
@@ -699,18 +701,18 @@ class DataUpdater {
         const random = Math.random();
         if (random > 0.66) {
             for (let i = 0; i < ListenersHelper.randInt(1, 4); i++) {
-                newData['dataSet'].push({
+                newData[this.dataSetName].push({
                     brand: this.makeHASH(ListenersHelper.randInt(4, 10)).toUpperCase(),
                     price: ListenersHelper.randInt(0, 150),
                     count: ListenersHelper.randInt(0, 50)
                 });
             }
         } else if (random < 0.33) {
-            newData["dataSet"].splice(ListenersHelper.randInt(0, 4), ListenersHelper.randInt(1, 3));
+            newData[this.dataSetName].splice(ListenersHelper.randInt(0, 4), ListenersHelper.randInt(1, 3));
         }
 
-        newData["dataSet"][ListenersHelper.randInt(0, newData["dataSet"].length - 1)]['price'] = ListenersHelper.randInt(0, 100);
-        newData["dataSet"][ListenersHelper.randInt(0, newData["dataSet"].length - 1)]['count'] = ListenersHelper.randInt(0, 100);
+        newData[this.dataSetName][ListenersHelper.randInt(0, newData[this.dataSetName].length - 1)]['price'] = ListenersHelper.randInt(0, 100);
+        newData[this.dataSetName][ListenersHelper.randInt(0, newData[this.dataSetName].length - 1)]['count'] = ListenersHelper.randInt(0, 100);
     }
 
     private static makeHASH(length: number): string {
