@@ -83,10 +83,9 @@ export class Donut {
                 .on('end', () => resolve(''))
                 .attrTween('d', function (d) {
                     const interpolateFunc = interpolate((this as any)._currentData, d); // current - старые данные до обновления, задаются во время рендера
-                    const _this = this;
-                    return function (t) {
-                        (_this as any)._currentData = interpolateFunc(t);
-                        return arcGenerator((_this as any)._currentData);
+                    return (t) => {
+                        (this as any)._currentData = interpolateFunc(t);
+                        return arcGenerator((this as any)._currentData);
                     }
                 });
         });
@@ -109,7 +108,7 @@ export class Donut {
             .append('path')
             .attr('d', arcGenerator)
             .attr('class', this.arcPathClass)
-            .each(function (d) { (this as any)._currentData = d; });
+            .each(function (d) { (this as any)._currentData = d; }); // _currentData используется для получения текущих данных внутри функции обновления.
 
         Helper.setCssClasses(arcs, chart.cssClasses);
         this.setElementsColor(items, chart.style.elementColors);
