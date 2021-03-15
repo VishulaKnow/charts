@@ -163,8 +163,6 @@ export class Axis {
             else
                 axis.tickValues([min(scale.domain), max(scale.domain)]);
         }
-
-        // axis.tickValues(this.getRecalcedTickValuesWithLastValue(min(scale.domain), max(scale.domain), Math.floor(axisLength / MINIMAL_STEP_SIZE)));
     }
 
     private static alignLabelsInVerticalAxis(axisElement: Selection<SVGGElement, unknown, HTMLElement, any>, anchor: TextAnchor, maxLabelSize: number, changeCoordinate: boolean): void {
