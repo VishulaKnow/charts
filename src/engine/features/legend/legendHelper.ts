@@ -38,7 +38,7 @@ export class LegendHelper {
     public static getMaxItemWidth(legendBlock: Selection<SVGForeignObjectElement, unknown, HTMLElement, any>, items: Selection<HTMLDivElement, string, BaseType, unknown>, itemsDirection: LegendItemsDirection): number {
         if (itemsDirection === 'row') {
             const margins = items.nodes().map(node => Helper.getPXValueFromString(Helper.getCssPropertyValue(node, 'margin-left')));
-            const sumOfMargins = Helper.getSumOfNumbers(margins);
+            const sumOfMargins = Helper.getSumOfNumeric(margins);
             return (parseFloat(legendBlock.attr('width')) - sumOfMargins) / items.size();
         }
         return parseFloat(legendBlock.attr('width'));
@@ -73,8 +73,8 @@ export class LegendHelper {
     }
 
     public static getSumOfItemsWidths(items: Selection<HTMLDivElement, string, BaseType, unknown>): number {
-        let sumOfItemsWidth = Helper.getSumOfNumbers(items.nodes().map(node => node.getBoundingClientRect().width));
-        sumOfItemsWidth += Helper.getSumOfNumbers(items.nodes().map(node => Helper.getPXValueFromString(Helper.getCssPropertyValue(node, 'margin-left'))));
+        let sumOfItemsWidth = Helper.getSumOfNumeric(items.nodes().map(node => node.getBoundingClientRect().width));
+        sumOfItemsWidth += Helper.getSumOfNumeric(items.nodes().map(node => Helper.getPXValueFromString(Helper.getCssPropertyValue(node, 'margin-left'))));
         return sumOfItemsWidth;
     }
 }

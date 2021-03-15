@@ -29,7 +29,7 @@ export class BarHelper {
     public static setGroupedBarAttrsByValue(attrs: BarAttrsHelper, keyAxisOrient: Orient, margin: BlockMargin, scaleValue: AxisScale<any>, valueFieldName: string, blockSize: Size): void {
         if (keyAxisOrient === 'top') {
             attrs.y = d => margin.top;
-            attrs.height = d => Helper.getValueWithLimiter(ValueFormatter.getValueOrZero(scaleValue(d[valueFieldName])), blockSize.height - margin.top - margin.bottom, true);
+            attrs.height = d => ValueFormatter.getValueOrZero(scaleValue(d[valueFieldName]));
         }
         if (keyAxisOrient === 'bottom') {
             attrs.y = d => scaleValue(d[valueFieldName]) + margin.top;

@@ -60,10 +60,8 @@ export class Helper {
         return [translateX, translateY];
     }
 
-    public static getSumOfNumbers(numbers: number[]): number {
-        let sum = 0;
-        numbers.forEach(num => sum += num);
-        return sum;
+    public static getSumOfNumeric(numbers: number[]): number {
+        return numbers.reduce((acc, value) => acc + value, 0);
     }
 
     public static getCssPropertyValue(node: Element, propertyName: string): string {
@@ -76,18 +74,6 @@ export class Helper {
 
     public static getSelectionNumericAttr(selection: Selection<BaseType, unknown, BaseType, unknown>, attrName: string): number {
         return parseFloat(selection.attr(attrName));
-    }
-
-    /**
-     * Если значение больше лимитера, то возвращается лимитер, иначе возвращается само значение
-     * @param value 
-     * @param limiter 
-     * @param isBigger Если параметр установлен true, лимитр возвращается, если он меньше значения, в противном случае - если больше
-     */
-    public static getValueWithLimiter<T>(value: T, limiter: T, isBigger: boolean): T {
-        if (isBigger)
-            return value > limiter ? limiter : value;
-        return value < limiter ? limiter : value;
     }
 
     public static getCssClassesWithElementIndex(cssClasses: string[], index: number): string[] {
