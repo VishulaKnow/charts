@@ -101,7 +101,7 @@ export class Helper {
             return Bar.getAllBarItems(block, chart.cssClasses);
     }
     public static parseFormattedValue(value: string): number {
-        return parseFloat(value.replace(',', '.').split(' ').join())
+        return parseFloat(value.replace(',', '.').split(/\s/).join(''))
     }
     public static calcDigitsAfterDot(value: number): number {
         const newValue: string = value.toString()

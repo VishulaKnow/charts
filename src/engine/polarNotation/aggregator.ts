@@ -79,6 +79,10 @@ export class Aggregator {
                 const oldTextPrecision: number = Helper.calcDigitsAfterDot(oldValue);
                 const precision = Helper.calcDigitsAfterDot(aggregator.value) < oldTextPrecision ? oldTextPrecision : Helper.calcDigitsAfterDot(aggregator.value)
                 var interpolateFunc = interpolateNumber(oldValue, aggregator.value);
+                console.log(oldValue + '   ' + aggregator.value)
+
+                // console.log('19 500.55'.toString().replace(',', '.').split(' '));
+
                 return function (t) {
                     this.textContent = ValueFormatter.formatField(aggregator.format, (+interpolateFunc(t)).toFixed(precision));
                     thisClass.reCalculateAggregatorFontSize(aggregatorObject.node().getBoundingClientRect().width, block);
