@@ -167,7 +167,7 @@ export class Bar {
                 sum(barsAmounts),
                 barSettings);
 
-            this.fillBarAttrs(bars, barAttrs, block.transitionManager.durations.updateChartsDuration);
+            this.fillBarAttrs(bars, barAttrs, block.transitionManager.durations.chartUpdate);
             this.fillBarAttrs(newBars, barAttrs);
 
             Helper.setCssClasses(newBars, Helper.getCssClassesWithElementIndex(chart.cssClasses, index));
@@ -226,7 +226,7 @@ export class Bar {
             sum(barsAmounts),
             barSettings);
 
-        this.fillBarAttrs(bars, barAttrs, block.transitionManager.durations.updateChartsDuration);
+        this.fillBarAttrs(bars, barAttrs, block.transitionManager.durations.chartUpdate);
         this.fillBarAttrs(newBars, barAttrs);
 
         Helper.setCssClasses(newBars, chart.cssClasses);

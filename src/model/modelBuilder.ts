@@ -5,7 +5,7 @@ import { TwoDimensionalModel } from './twoDimensionalModel';
 import { PolarModel } from './polarModel';
 
 import { DataManagerModel } from './dataManagerModel';
-import { BarOptionsCanvas, DesignerConfig, DonutOptionsCanvas } from '../designer/designerConfig';
+import { BarOptionsCanvas, DesignerConfig, DonutOptionsCanvas, Transitions } from '../designer/designerConfig';
 import { IntervalModel } from './intervalModel';
 import { OtherComponentsModel } from './featuresModel/otherComponents';
 
@@ -71,6 +71,10 @@ function getDataFormat(designerConfig: DesignerConfig): DataFormat {
     }
 }
 
+function getTransitions(designerConfig: DesignerConfig): Transitions {
+    return designerConfig.transitions;
+}
+
 function roundMargin(margin: BlockMargin): void {
     margin.top = Math.ceil(margin.top);
     margin.bottom = Math.ceil(margin.bottom);
@@ -102,6 +106,7 @@ export function assembleModel(config: Config, data: DataSource, designerConfig: 
     const options = getOptions(config, designerConfig, margin, dataScope, preparedData);
     const dataSettings = getDataSettings(dataScope, designerConfig);
     const chartSettings = getChartSettings(designerConfig.canvas.chartOptions.bar, designerConfig.canvas.chartOptions.donut);
+    const transitions = getTransitions(designerConfig);
 
     if (options.type === 'polar')
         MarginModel.recalcPolarMarginWithScopedData(margin, config.canvas.size, designerConfig, config, otherComponents.legendBlock, dataScope, options);
@@ -114,7 +119,8 @@ export function assembleModel(config: Config, data: DataSource, designerConfig: 
         otherComponents,
         options,
         dataSettings,
-        chartSettings
+        chartSettings,
+        transitions
     }
 }
 

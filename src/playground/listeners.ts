@@ -626,38 +626,30 @@ import { Chart } from '../main';
 const data = require('../assets/dataSet.json');
 
 
-const chart = new Chart(config, designerConfig, data, false);
-chart.render(document.querySelector('.main-wrapper'));
-
-setTimeout(() => {
-    chart.updateData(null);
-}, 2000);
-
-setTimeout(() => {
-    chart.updateData(data);
-}, 5000);
+// const chart = new Chart(config, designerConfig, data, false);
+// chart.render(document.querySelector('.main-wrapper'));
 
 const engine = new Engine(2);
-// const model = assembleModel(config, data, designerConfig);
-// engine.render(model, getPreparedData(model, data, config), document.querySelector('.main-wrapper'));
-// new Listeners(engine, config, designerConfig, data);
+const model = assembleModel(config, data, designerConfig);
+engine.render(model, getPreparedData(model, data, config), document.querySelector('.main-wrapper'));
+new Listeners(engine, config, designerConfig, data);
 
-// const config3 = require('../config/configTest2D.json');
-// const model3 = assembleModel(config3, data, designerConfig);
-// const engine3 = new Engine(3);
-// engine3.render(model3, getPreparedData(model3, data, config3), document.querySelector('.main-wrapper2'));
+const config3 = require('../config/configTest2D.json');
+const model3 = assembleModel(config3, data, designerConfig);
+const engine3 = new Engine(3);
+engine3.render(model3, getPreparedData(model3, data, config3), document.querySelector('.main-wrapper2'));
 
-// const config2 = require('../config/configTestPolar.json');
-// const model2 = assembleModel(config2, data, designerConfig);
-// const engine2 = new Engine(4);
-// engine2.render(model2, getPreparedData(model2, data, config2), document.querySelector('.main-wrapper2'));
+const config2 = require('../config/configTestPolar.json');
+const model2 = assembleModel(config2, data, designerConfig);
+const engine2 = new Engine(4);
+engine2.render(model2, getPreparedData(model2, data, config2), document.querySelector('.main-wrapper2'));
 
 //====================================================================================================== Data updating
 class DataUpdater {
     private static timeOut: any = null;
     private static refresh: number = 2000;
 
-    private static dataSetName = 'dataSet_72';
+    private static dataSetName = 'dataSet';
 
     public static updateIsOn(value: boolean) {
         if (value)

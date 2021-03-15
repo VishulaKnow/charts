@@ -13,7 +13,7 @@ export default class Engine {
     }
 
     public render(model: Model, data: DataSource, parentElement: HTMLElement): void {
-        this.block = new Block(model.blockCanvas.cssClass, parentElement, this.chartId);
+        this.block = new Block(model.blockCanvas.cssClass, parentElement, this.chartId, model.transitions);
         this.block.renderWrapper(model.blockCanvas.size);
         this.data = data;
 

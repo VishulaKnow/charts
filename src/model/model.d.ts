@@ -1,6 +1,6 @@
 import { Color } from "d3-color";
 import { ChartOrientation, IntervalChartType, PolarChartType, TwoDimensionalChartType } from "../config/config";
-import { DataType, Formatter } from "../designer/designerConfig";
+import { DataType, Formatter, Transitions } from "../designer/designerConfig";
 
 type AxisType = 'key' | 'value';
 
@@ -28,6 +28,7 @@ export interface Model {
     otherComponents: OtherComponents;
     dataSettings: DataSettings;
     chartSettings: ChartElementsSettings;
+    transitions?: Transitions;
 }
 
 
@@ -263,3 +264,6 @@ export interface LegendBlockModel {
 
 export interface TitleBlockModel extends ComponentBlockModel { }
 interface LegendBlockCanvas extends ComponentBlockModel { }
+
+
+//====================================================== Transitions

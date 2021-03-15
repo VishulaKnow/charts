@@ -1,4 +1,5 @@
 import { select, Selection, BaseType } from "d3-selection";
+import { Transitions } from "../../designer/designerConfig";
 import { BlockMargin, Size } from "../../model/model";
 import { Tooltip } from "../features/tolltip/tooltip";
 import { Helper } from "../helper";
@@ -19,7 +20,7 @@ export class Block {
     private chartBlockClass = 'chart-block';
     private chartGroupClass = 'chart-group';
 
-    constructor(cssClass: string, parentElement: HTMLElement, blockId: number) {
+    constructor(cssClass: string, parentElement: HTMLElement, blockId: number, transitions: Transitions = null) {
         this.wrapperCssClasses = Helper.getCssClassesArray(cssClass);
         this.svgCssClasses = Helper.getCssClassesArray(cssClass);
         this.wrapperCssClasses = BlockHelper.getFormattedCssClassesForWrapper(this.wrapperCssClasses);
@@ -27,7 +28,7 @@ export class Block {
         this.parentElementSelection = select(parentElement);
         this.id = blockId;
 
-        this.transitionManager = new TransitionManager(this);
+        this.transitionManager = new TransitionManager(this, transitions);
     }
 
     public renderSvg(blockSize: Size): void {

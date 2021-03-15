@@ -116,7 +116,7 @@ export class EmbeddedLabels {
                 labelBlock.style('fill', this.innerLabelColor);
         }
 
-        this.setLabelBlockAttrs(attrs, labelBlock, block.transitionManager.durations.updateChartsDuration)
+        this.setLabelBlockAttrs(attrs, labelBlock, block.transitionManager.durations.chartUpdate)
             .on('end', transitionEndHandler);
     }
 

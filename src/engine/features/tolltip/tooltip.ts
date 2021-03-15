@@ -82,13 +82,13 @@ export class Tooltip {
                     TooltipHelper.fillForMulty2DCharts(tooltipContent, charts, data, dataOptions, keyValue);
 
                     const tooltipCoordinate = TooltipHelper.getTooltipFixedCoordinate(scaleKey, margin, blockSize, keyValue, tooltipContent.node(), keyAxisOrient);
-                    TooltipComponentsManager.setLineTooltipCoordinate(tooltipBlock, tooltipCoordinate, chartOrientation, block.transitionManager.durations.twoDimensionalTooltipDuration);
+                    TooltipComponentsManager.setLineTooltipCoordinate(tooltipBlock, tooltipCoordinate, chartOrientation, block.transitionManager.durations.tooltipSlide);
 
                     const tooltipLineAttributes = TooltipHelper.getTooltipLineAttributes(scaleKey, margin, keyValue, chartOrientation, blockSize);
-                    TooltipComponentsManager.setTooltipLineAttributes(tooltipLine, tooltipLineAttributes, block.transitionManager.durations.twoDimensionalTooltipDuration);
+                    TooltipComponentsManager.setTooltipLineAttributes(tooltipLine, tooltipLineAttributes, block.transitionManager.durations.tooltipSlide);
                     TooltipComponentsManager.showTooltipLine(tooltipLine);
 
-                    ElementHighlighter.highlight2DElements(block, dataOptions.keyField.name, keyValue, charts, filterId, block.transitionManager.durations.markerHoverDuration);
+                    ElementHighlighter.highlight2DElements(block, dataOptions.keyField.name, keyValue, charts, filterId, block.transitionManager.durations.markerHover);
                 }
             })
             .on('mouseleave', function () {
@@ -96,7 +96,7 @@ export class Tooltip {
                 TooltipComponentsManager.hideTooltipLine(tooltipLine);
                 currentKey = null;
 
-                ElementHighlighter.remove2DElementsHighlighting(block, charts, block.transitionManager.durations.markerHoverDuration);
+                ElementHighlighter.remove2DElementsHighlighting(block, charts, block.transitionManager.durations.markerHover);
             });
     }
 
@@ -119,14 +119,14 @@ export class Tooltip {
 
                 select(this).style('filter', `url(#${filterId})`);
 
-                ElementHighlighter.changeDonutHighlightAppearance(select<SVGGElement, PieArcDatum<DataRow>>(this), margin, blockSize, donutThickness, block.transitionManager.durations.donutArcHoverDuration, true);
+                ElementHighlighter.changeDonutHighlightAppearance(select<SVGGElement, PieArcDatum<DataRow>>(this), margin, blockSize, donutThickness, block.transitionManager.durations.donutHover, true);
             });
 
         elemets.on('mouseleave', function () {
             TooltipComponentsManager.hideTooltipBlock(tooltipBlock);
             ElementHighlighter.removeElementsFilter(select(this));
 
-            ElementHighlighter.changeDonutHighlightAppearance(select<SVGGElement, PieArcDatum<DataRow>>(this), margin, blockSize, donutThickness, block.transitionManager.durations.donutArcHoverDuration, false);
+            ElementHighlighter.changeDonutHighlightAppearance(select<SVGGElement, PieArcDatum<DataRow>>(this), margin, blockSize, donutThickness, block.transitionManager.durations.donutHover, false);
         });
     }
 
