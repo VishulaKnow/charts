@@ -23,11 +23,6 @@ export default class Engine {
         }
     }
 
-    public updateData(newModel: Model, newData: DataSource): void {
-        this.destroy();
-        this.render(newModel, newData, this.block.parentElement);
-    }
-
     public updateFullBlock(model: Model, data: DataSource): void {
         this.destroy();
         this.render(model, data, this.block.parentElement);
@@ -39,7 +34,7 @@ export default class Engine {
         this.block.getWrapper().remove();
     }
 
-    public updateValues(model: Model, newData: DataSource): void {
+    public updateData(model: Model, newData: DataSource): void {
         for (let source in newData) {
             this.data[source] = newData[source];
         }

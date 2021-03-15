@@ -432,7 +432,7 @@ export default class Listeners {
                 const model = getUpdatedModel(thisClass.config, newData, thisClass.designerConfig);
                 const preparedData = getPreparedData(model, newData, config);
 
-                thisClass.engine.updateValues(model, preparedData);
+                thisClass.engine.updateData(model, preparedData);
             }
         }
         document.querySelector('.btn-random').addEventListener('click', function () {
@@ -466,7 +466,7 @@ export default class Listeners {
                 const end = ListenersHelper.getInputValue('#domain-end');
                 config.options.axis.valueAxis.domain.start = parseInt(start) || -1;
                 config.options.axis.valueAxis.domain.end = parseInt(end) || -1;
-                thisClass.engine.updateValues(getUpdatedModel(thisClass.config, thisClass.data, thisClass.designerConfig), thisClass.data);
+                thisClass.engine.updateData(getUpdatedModel(thisClass.config, thisClass.data, thisClass.designerConfig), thisClass.data);
             }
         });
         document.querySelector('#domain-start').addEventListener('keydown', function (e: any) {
@@ -476,7 +476,7 @@ export default class Listeners {
                     const end = ListenersHelper.getInputValue('#domain-end');
                     config.options.axis.valueAxis.domain.start = parseInt(start) || -1;
                     config.options.axis.valueAxis.domain.end = parseInt(end) || -1;
-                    thisClass.engine.updateValues(getUpdatedModel(thisClass.config, thisClass.data, thisClass.designerConfig), thisClass.data);
+                    thisClass.engine.updateData(getUpdatedModel(thisClass.config, thisClass.data, thisClass.designerConfig), thisClass.data);
                 }
             }
         });
@@ -487,7 +487,7 @@ export default class Listeners {
                     const end = ListenersHelper.getInputValue('#domain-end');
                     config.options.axis.valueAxis.domain.start = parseInt(start) || -1;
                     config.options.axis.valueAxis.domain.end = parseInt(end) || -1;
-                    thisClass.engine.updateValues(getUpdatedModel(thisClass.config, thisClass.data, thisClass.designerConfig), thisClass.data);
+                    thisClass.engine.updateData(getUpdatedModel(thisClass.config, thisClass.data, thisClass.designerConfig), thisClass.data);
                 }
             }
         });
@@ -629,9 +629,6 @@ const data = require('../assets/dataSet.json');
 // const chart = new Chart(config, designerConfig, data, false);
 // chart.render(document.querySelector('.main-wrapper'));
 
-// const ch = new Chart(require('../config/configTestPolar.json'), designerConfig, data, false);
-// ch.render(document.querySelector('.main-wrapper2'));
-
 const model = assembleModel(config, data, designerConfig);
 const engine = new Engine(2);
 engine.render(model, getPreparedData(model, data, config), document.querySelector('.main-wrapper'));
@@ -646,8 +643,6 @@ const config2 = require('../config/configTestPolar.json');
 const model2 = assembleModel(config2, data, designerConfig);
 const engine2 = new Engine(4);
 engine2.render(model2, getPreparedData(model2, data, config2), document.querySelector('.main-wrapper2'));
-
-import { interval } from 'd3-timer'
 
 //====================================================================================================== Data updating
 class DataUpdater {
@@ -679,18 +674,12 @@ class DataUpdater {
                 this.changeData(newData);
 
                 const newModel = getUpdatedModel(config, newData, designerConfig);
-                engine.updateValues(newModel, getPreparedData(newModel, newData, config));
+                engine.updateData(newModel, getPreparedData(newModel, newData, config));
 
                 run();
             }, ms)
         }
         run();
-        // interval(() => {
-        //     const newData = ListenersHelper.getCopy(data);
-        //     this.changeData(newData);
-        //     const newModel = getUpdatedModel(config, newData, designerConfig);
-        //     engine.updateValues(newModel, getPreparedData(newModel, newData, config));
-        // }, ms);
     }
 
     private static destroyDataChanging() {
