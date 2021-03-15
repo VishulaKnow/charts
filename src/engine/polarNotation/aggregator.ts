@@ -1,5 +1,5 @@
 import { sum } from 'd3-array'
-import { interpolate } from 'd3-interpolate';
+import { interpolate, interpolateNumber } from 'd3-interpolate';
 import { Selection } from 'd3-selection'
 import { Transition } from 'd3-transition';
 import { DataType } from '../../designer/designerConfig';
@@ -75,9 +75,10 @@ export class Aggregator {
             .transition()
             .duration(1000)
             .tween("text", function () {
-                const oldTextPrecision = Helper.calcDigitsAfterDot(this.textContent)
-                const precision = Helper.calcDigitsAfterDot(aggregator.value.toString()) < oldTextPrecision ? oldTextPrecision : Helper.calcDigitsAfterDot(aggregator.value.toString())
-                var interpolateFunc = interpolate(this.textContent, aggregator.value.toString());
+                const oldValue: number = Helper.parseFormattedValue(this.textContent);
+                const oldTextPrecision: number = Helper.calcDigitsAfterDot(oldValue);
+                const precision = Helper.calcDigitsAfterDot(aggregator.value) < oldTextPrecision ? oldTextPrecision : Helper.calcDigitsAfterDot(aggregator.value)
+                var interpolateFunc = interpolateNumber(oldValue, aggregator.value);
                 return function (t) {
                     this.textContent = ValueFormatter.formatField(aggregator.format, (+interpolateFunc(t)).toFixed(precision));
                     thisClass.reCalculateAggregatorFontSize(aggregatorObject.node().getBoundingClientRect().width, block);

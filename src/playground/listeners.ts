@@ -654,7 +654,7 @@ class DataUpdater {
     private static timeOut: any = null;
     private static refresh: number = 2000;
 
-    private static dataSetName = 'dataSet_72';
+    private static dataSetName = 'dataSet';
 
     public static updateIsOn(value: boolean) {
         if (value)
