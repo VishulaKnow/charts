@@ -43,8 +43,10 @@ export class EmbeddedLabels {
             .selectAll<SVGTextElement, DataRow>(`.${this.embeddedLabelClass}`)
             .data(newData);
 
-        bars.each((d, barIndex) => {
-            this.updateLabel(block, d, keyAxisOrient, barAttrsHelper, margin, valueField, type, blockSize, barIndex, labelsSelection, labelsGroup);
+        bars.each((dataRow, barIndex) => {
+            const labelBlock = this.getLabelByIndex(labelsSelection, barIndex, valueField);
+            if (labelBlock)
+                this.updateLabel(block, dataRow, keyAxisOrient, barAttrsHelper, margin, type, blockSize, labelBlock, labelsGroup);
         });
     }
 
@@ -71,10 +73,8 @@ export class EmbeddedLabels {
         const position = EmbeddedLabelsHelper.getLabelPosition(barAttrs, labelBlock.node().getBBox().width, margin, blockSize, labelUnserveFlag);
         const attrs = EmbeddedLabelsHelper.getLabelAttrs(barAttrs, type, position, keyAxisOrient, labelBlock.node().getBBox().width);
 
-        if (position === 'outside')
-            attrs.x = this.checkLabelToResetTextAnchor(attrs.x, labelBlock.node().getBBox().width, margin, blockSize, keyAxisOrient, position);
-
         if (position === 'outside') {
+            attrs.x = this.checkLabelToResetTextAnchor(attrs.x, labelBlock.node().getBBox().width, margin, blockSize, keyAxisOrient, position);
             this.renderBackground(labelsGroup, labelBlock, attrs);
         }
 
@@ -86,9 +86,7 @@ export class EmbeddedLabels {
         this.cropText(labelBlock, barAttrs, position, labelUnserveFlag, margin, blockSize);
     }
 
-    private static updateLabel(block: Block, dataRow: DataRow, keyAxisOrient: Orient, barAttrsHelper: BarAttrsHelper, margin: BlockMargin, valueField: Field, type: EmbeddedLabelTypeModel, blockSize: Size, barIndex: number, labelsSelection: Selection<SVGTextElement, DataRow, SVGGElement, unknown>, labelsGroup: Selection<SVGGElement, unknown, SVGGElement, unknown>): void {
-        const labelBlock = this.getLabelByIndex(labelsSelection, barIndex, valueField);
-
+    private static updateLabel(block: Block, dataRow: DataRow, keyAxisOrient: Orient, barAttrsHelper: BarAttrsHelper, margin: BlockMargin, type: EmbeddedLabelTypeModel, blockSize: Size, labelBlock: Selection<SVGTextElement, DataRow, HTMLElement, unknown>, labelsGroup: Selection<SVGGElement, unknown, SVGGElement, unknown>): void {
         const barAttrs: BarAttrs = {
             x: barAttrsHelper.x(dataRow),
             width: barAttrsHelper.width(dataRow),
@@ -102,9 +100,8 @@ export class EmbeddedLabels {
 
         this.cropText(labelBlock, barAttrs, position, labelUnserveFlag, margin, blockSize);
 
-        attrs.x = this.checkLabelToResetTextAnchor(attrs.x, labelBlock.node().getBBox().width, margin, blockSize, keyAxisOrient, position);
-
         if (position === 'outside') {
+            attrs.x = this.checkLabelToResetTextAnchor(attrs.x, labelBlock.node().getBBox().width, margin, blockSize, keyAxisOrient, position);
             labelBlock.style('fill', this.outerLabelColor);
         }
 
@@ -122,12 +119,12 @@ export class EmbeddedLabels {
 
     private static checkLabelToResetTextAnchor(x: number, width: number, margin: BlockMargin, blockSize: Size, keyAxisOrient: Orient, position: EmbeddedLabelPosition): number {
         if (keyAxisOrient === 'left') {
-            if (x + (position === 'inside' ? -width : width) > blockSize.width + margin.right - margin.left)
+            if (x + width > blockSize.width - margin.right)
                 return blockSize.width - margin.right - width;
             return x;
         }
         if (keyAxisOrient === 'right') {
-            if (x - width < margin.left)
+            if (x < margin.left)
                 return margin.left;
             return x;
         }
