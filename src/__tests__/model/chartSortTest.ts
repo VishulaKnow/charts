@@ -1,5 +1,5 @@
 import { TwoDimensionalChart } from "../../config/config";
-import { TwoDimensionalModel } from "../../model/twoDimensionalModel";
+import { TwoDimensionalModel } from "../../model/notations/twoDimensionalModel";
 
 describe('check chart sorting in order: [area, bar, line]', () => {
     test('charts must be sorted', () => {

@@ -5,12 +5,10 @@ import { DataManagerModel } from "./dataManagerModel";
 import { LegendModel, MIN_DONUT_BLOCK_SIZE } from "./featuresModel/legendModel/legendModel";
 import { BlockMargin, DataScope, DataSource, LegendBlockModel, Orient, OtherComponents, PolarOptionsModel, Size, TitleBlockModel } from "./model";
 import { AxisType } from "./modelBuilder";
-import { TwoDimensionalModel } from "./twoDimensionalModel";
+import { TwoDimensionalModel } from "./notations/twoDimensionalModel";
 
 export const AXIS_HORIZONTAL_LABEL_PADDING = 15;
 export const AXIS_VERTICAL_LABEL_PADDING = 10;
-
-
 
 export class MarginModel {
     public static getMargin(designerConfig: DesignerConfig, config: Config, otherComponents: OtherComponents, data: DataSource): BlockMargin {
