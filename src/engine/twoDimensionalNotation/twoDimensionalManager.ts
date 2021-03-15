@@ -2,6 +2,7 @@ import { BarChartSettings, BlockMargin, DataSource, Model, OptionsModelData, Ori
 import { Block } from "../block/block";
 import Engine from "../engine";
 import { Axis } from "../features/axis/axis";
+import { EmbeddedLabels } from "../features/embeddedLabels/embeddedLabels";
 import { GridLine } from "../features/gridLine/gridLine";
 import { Legend } from "../features/legend/legend";
 import { RecordOverflowAlert } from "../features/recordOverflowAlert/recordOverflowAlert";
@@ -89,6 +90,7 @@ export class TwoDimensionalManager {
                     chart,
                     blockSize);
         });
+        EmbeddedLabels.raiseGroups(block);
     }
 
     public static updateDataFor2D(block: Block, model: Model, data: DataSource) {

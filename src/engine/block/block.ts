@@ -17,6 +17,7 @@ export class Block {
     private parentElementSelection: Selection<BaseType, any, HTMLElement, any>;
     private wrapper: Selection<BaseType, any, HTMLElement, any>;
     private chartBlockClass = 'chart-block';
+    private chartGroupClass = 'chart-group';
 
     constructor(cssClass: string, parentElement: HTMLElement, blockId: number) {
         this.wrapperCssClasses = Helper.getCssClassesArray(cssClass);
@@ -101,5 +102,16 @@ export class Block {
         arcItems.on('mouseover', null);
         arcItems.on('mouseleave', null);
         arcItems.on('mousemove', null);
+    }
+
+    public getChartGroup(chartIndex: number): Selection<SVGGElement, any, BaseType, any> {
+        let group: Selection<SVGGElement, any, BaseType, any> = this.getChartBlock().select(`.${this.chartGroupClass}-${chartIndex}`);
+        if (group.empty()) {
+            group = this.getChartBlock()
+                .append('g')
+                .attr('class', `${this.chartGroupClass}-${chartIndex}`);
+        }
+
+        return group;
     }
 }

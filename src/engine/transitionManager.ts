@@ -45,9 +45,11 @@ export class TransitionManager {
         this.transitionableElemClasses.forEach(elemClass => {
             const elementsSelection = this.block
                 .getSvg()
-                .selectAll(`.${elemClass}`);
+                .selectAll(`.${elemClass}`)
+                .interrupt();
 
             elementsSelection.nodes().forEach(node => interrupt(node));
         });
+        this.block.getSvg().selectAll(`.${Axis.axesClass}`).selectAll('*').interrupt();
     }
 }

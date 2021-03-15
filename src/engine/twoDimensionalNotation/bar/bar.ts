@@ -56,7 +56,7 @@ export class Bar {
 
     private static renderGrouped(block: Block, scales: Scales, data: DataRow[], keyField: Field, margin: BlockMargin, keyAxisOrient: Orient, chart: TwoDimensionalChartModel, barsAmounts: number[], blockSize: Size, firstBarIndex: number, barSettings: BarChartSettings): void {
         chart.data.valueFields.forEach((field, index) => {
-            const bars = block.getChartBlock()
+            const bars = block.getChartGroup(chart.index)
                 .selectAll(`.${this.barItemClass}${Helper.getCssClassesLine(chart.cssClasses)}${Helper.getCssClassesLine(Helper.getCssClassesWithElementIndex(chart.cssClasses, index))}`)
                 .data(data)
                 .enter()
@@ -88,7 +88,7 @@ export class Bar {
         const keys = chart.data.valueFields.map(field => field.name);
         const stackedData = stack().keys(keys)(data);
 
-        let groups = block.getChartBlock()
+        let groups = block.getChartGroup(chart.index)
             .selectAll<SVGGElement, DataRow>(`g.${this.barSegmentGroupClass}${Helper.getCssClassesLine(chart.cssClasses)}`)
             .data(stackedData);
 
@@ -132,7 +132,7 @@ export class Bar {
         chart.data.valueFields.forEach((valueField, index) => {
             const indexesOfRemoved: number[] = [];
 
-            block.getChartBlock()
+            block.getChartGroup(chart.index)
                 .selectAll<SVGRectElement, DataRow>(`.${this.barItemClass}${Helper.getCssClassesLine(chart.cssClasses)}.chart-element-${index}`)
                 .filter((d, i) => {
                     if (newData.findIndex(row => row[keyField.name] === d[keyField.name]) === -1) {
@@ -146,7 +146,7 @@ export class Bar {
                 .style('opacity', 0)
                 .remove();
 
-            const bars = block.getChartBlock()
+            const bars = block.getChartGroup(chart.index)
                 .selectAll<SVGRectElement, DataRow>(`.${this.barItemClass}${Helper.getCssClassesLine(chart.cssClasses)}.chart-element-${index}`)
                 .filter(d => newData.findIndex(row => row[keyField.name] === d[keyField.name]) !== -1)
                 .data(newData);
@@ -195,17 +195,21 @@ export class Bar {
         const keys = chart.data.valueFields.map(field => field.name);
         const stackedData = stack().keys(keys)(newData);
 
-        block.getChartBlock()
+        block.getChartGroup(chart.index)
             .selectAll<SVGRectElement, DataRow>(`.${this.barItemClass}${Helper.getCssClassesLine(chart.cssClasses)}`)
             .filter(d => newData.findIndex(row => row[keyField.name] === d.data[keyField.name]) === -1)
+            .transition()
+            .duration(block.transitionManager.elementRemovingFadeOut)
+            .style('opacity', 0)
             .remove();
 
-        const groups = block.getChartBlock()
+        const groups = block.getChartGroup(chart.index)
             .selectAll(`g.${this.barSegmentGroupClass}${Helper.getCssClassesLine(chart.cssClasses)}`)
             .data(stackedData);
 
         const bars = groups
             .selectAll<SVGRectElement, DataRow>(`.${this.barItemClass}${Helper.getCssClassesLine(chart.cssClasses)}`)
+            .filter(d => newData.findIndex(row => row[keyField.name] === d.data[keyField.name]) !== -1)
             .data(d => d);
 
         const newBars = bars.enter()
