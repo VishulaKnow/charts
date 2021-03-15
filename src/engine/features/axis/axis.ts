@@ -27,13 +27,7 @@ export class Axis {
     }
 
     public static updateValueAxisDomain(block: Block, scaleValue: AxisScale<any>, scaleOptions: ScaleValueModel, axisOptions: AxisModelOptions): void {
-        const axis = AxisHelper.getAxisByOrient(axisOptions.orient, scaleValue);
-
-        this.setAxisFormat(scaleValue, scaleOptions, axis);
-        if (!axisOptions.ticks.flag)
-            this.removeTicks(axis);
-
-        this.setAxisLabelPaddingByOrient(axis, axisOptions);
+        const axisGenerator = this.getBaseAxisGenerator(axisOptions, scaleValue, scaleOptions);
 
         block.getSvg()
             .select(`g.${axisOptions.cssClass}`)
@@ -41,22 +35,17 @@ export class Axis {
             .transition()
             .duration(block.transitionManager.durations.chartUpdate)
             .attr('transform', `translate(${axisOptions.translate.translateX}, ${axisOptions.translate.translateY})`)
-            .call(axis.bind(this));
+            .call(axisGenerator.bind(this));
     }
 
     public static updateKeyAxisDomain(block: Block, scaleKey: AxisScale<any>, scaleOptions: ScaleKeyModel, axisOptions: AxisModelOptions, blockSize: Size): void {
-        const axis = AxisHelper.getAxisByOrient(axisOptions.orient, scaleKey);
-
-        if (!axisOptions.ticks.flag)
-            this.removeTicks(axis);
-
-        this.setAxisLabelPaddingByOrient(axis, axisOptions);
+        const axisGenerator = this.getBaseAxisGenerator(axisOptions, scaleKey, scaleOptions);
 
         if (axisOptions.labels.positition === 'rotated') {
             if (axisOptions.orient === 'bottom')
-                axis.tickPadding(-4);
+                axisGenerator.tickPadding(-4);
             else if (axisOptions.orient === 'top')
-                axis.tickPadding(-6);
+                axisGenerator.tickPadding(-6);
         }
 
         const axisElement = block.getSvg()
@@ -65,7 +54,7 @@ export class Axis {
         if (axisOptions.orient === 'left' || axisOptions.orient === 'right') {
             axisElement.selectAll('.tick text').attr('y', null);
             if (axisOptions.orient === 'left')
-                axis.tickPadding(axisOptions.labels.maxSize + AXIS_VERTICAL_LABEL_PADDING);
+                axisGenerator.tickPadding(axisOptions.labels.maxSize + AXIS_VERTICAL_LABEL_PADDING);
         }
 
         axisElement
@@ -95,7 +84,7 @@ export class Axis {
             })
             .duration(block.transitionManager.durations.chartUpdate)
             .attr('transform', `translate(${axisOptions.translate.translateX}, ${axisOptions.translate.translateY})`)
-            .call(axis.bind(this));
+            .call(axisGenerator.bind(this));
 
         if (axisOptions.orient === 'left' || axisOptions.orient === 'right') {
             if (axisOptions.orient === 'left')
@@ -113,23 +102,16 @@ export class Axis {
     }
 
     private static renderAxis(block: Block, scale: AxisScale<any>, scaleOptions: ScaleKeyModel | ScaleValueModel, axisOptions: AxisModelOptions, margin: BlockMargin, blockSize: Size): void {
-        const axis = AxisHelper.getAxisByOrient(axisOptions.orient, scale);
-
-        this.setAxisFormat(scale, scaleOptions, axis);
-
-        if (!axisOptions.ticks.flag)
-            this.removeTicks(axis);
+        const axisGenerator = this.getBaseAxisGenerator(axisOptions, scale, scaleOptions);
 
         if (axisOptions.type === 'value')
-            this.setStepSize(blockSize, margin, axis, axisOptions, scaleOptions);
-
-        this.setAxisLabelPaddingByOrient(axis, axisOptions);
+            this.setStepSize(blockSize, margin, axisGenerator, axisOptions, scaleOptions);
 
         const axisElement = block.getSvg()
             .append('g')
             .attr('transform', `translate(${axisOptions.translate.translateX}, ${axisOptions.translate.translateY})`)
             .attr('class', `${this.axesClass} ${axisOptions.cssClass} data-label`)
-            .call(axis);
+            .call(axisGenerator);
 
         if (axisOptions.labels.visible) {
             if (axisOptions.type === 'key' && axisOptions.labels.positition === 'rotated' && (axisOptions.orient === 'top' || axisOptions.orient === 'bottom'))
@@ -150,6 +132,16 @@ export class Axis {
         } else {
             this.hideLabels(axisElement);
         }
+    }
+
+    private static getBaseAxisGenerator(axisOptions: AxisModelOptions, scale: AxisScale<any>, scaleOptions: ScaleKeyModel | ScaleValueModel): IAxis<any> {
+        const axis = AxisHelper.getAxisByOrient(axisOptions.orient, scale);
+        if (!axisOptions.ticks.flag)
+            this.removeTicks(axis);
+        this.setAxisLabelPaddingByOrient(axis, axisOptions);
+        this.setAxisFormat(scale, scaleOptions, axis);
+
+        return axis;
     }
 
     private static setStepSize(blockSize: Size, margin: BlockMargin, axis: IAxis<any>, axisOptions: AxisModelOptions, scale: ScaleKeyModel | ScaleValueModel): void {
