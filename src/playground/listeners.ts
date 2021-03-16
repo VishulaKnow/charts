@@ -707,18 +707,18 @@ class DataUpdater {
     }
 
     private static changeData(newData: DataSource) {
-        // const random = Math.random();
-        // if (random > 0.66) {
-        //     for (let i = 0; i < ListenersHelper.randInt(1, 4); i++) {
-        //         newData[this.dataSetName].push({
-        //             brand: this.makeHASH(ListenersHelper.randInt(4, 10)).toUpperCase(),
-        //             price: ListenersHelper.randInt(0, 150),
-        //             count: ListenersHelper.randInt(0, 50)
-        //         });
-        //     }
-        // } else if (random < 0.33) {
-        //     newData[this.dataSetName].splice(ListenersHelper.randInt(0, 4), ListenersHelper.randInt(1, 3));
-        // }
+        const random = Math.random();
+        if (random > 0.66) {
+            for (let i = 0; i < ListenersHelper.randInt(1, 4); i++) {
+                newData[this.dataSetName].push({
+                    brand: this.makeHASH(ListenersHelper.randInt(4, 10)).toUpperCase(),
+                    price: ListenersHelper.randInt(0, 150),
+                    count: ListenersHelper.randInt(0, 50)
+                });
+            }
+        } else if (random < 0.33) {
+            newData[this.dataSetName].splice(ListenersHelper.randInt(0, 4), ListenersHelper.randInt(1, 3));
+        }
 
         // for (let i = 0; i < this.counter; i++) {
         //     newData[this.dataSetName].pop();

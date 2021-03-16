@@ -29,8 +29,8 @@ export class Axis {
     public static update(block: Block, scales: Scales, scalesOptions: IScaleModel, axisModel: IAxisModel, blockSize: Size, keyDomainsEquality: boolean): void {
         if (axisModel.valueAxis.visibility)
             this.updateValueAxis(block, scales.scaleValue, scalesOptions.scaleValue, axisModel.valueAxis);
-        if (axisModel.keyAxis.visibility && !keyDomainsEquality)
-            this.updateKeyAxis(block, scales.scaleKey, scalesOptions.scaleKey, axisModel.keyAxis, blockSize);
+        if (axisModel.keyAxis.visibility)
+            this.updateKeyAxis(block, scales.scaleKey, scalesOptions.scaleKey, axisModel.keyAxis, blockSize, keyDomainsEquality);
     }
 
     private static updateValueAxis(block: Block, scaleValue: AxisScale<any>, scaleOptions: ScaleValueModel, axisOptions: AxisModelOptions): void {
@@ -45,7 +45,7 @@ export class Axis {
             .call(axisGenerator.bind(this));
     }
 
-    private static updateKeyAxis(block: Block, scaleKey: AxisScale<any>, scaleOptions: ScaleKeyModel, axisOptions: AxisModelOptions, blockSize: Size): void {
+    private static updateKeyAxis(block: Block, scaleKey: AxisScale<any>, scaleOptions: ScaleKeyModel, axisOptions: AxisModelOptions, blockSize: Size, domainUpdated: boolean): void {
         const axisGenerator = this.getBaseAxisGenerator(axisOptions, scaleKey, scaleOptions);
 
         if (axisOptions.labels.positition === 'rotated') {
@@ -67,7 +67,7 @@ export class Axis {
         axisElement
             .interrupt()
             .transition()
-            .duration(block.transitionManager.durations.chartUpdate)
+            .duration(domainUpdated ? block.transitionManager.durations.chartUpdate : 0)
             .on('end', () => {
                 if (axisOptions.orient === 'bottom' || axisOptions.orient === 'top') {
                     // Обратное выравнивание лейблов, если они были перевернуты, но теперь могут отображаться прямо
