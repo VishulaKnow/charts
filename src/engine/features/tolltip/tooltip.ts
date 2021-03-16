@@ -71,8 +71,11 @@ export class Tooltip {
 
         tipBox
             .on('mousemove', function (event) {
+                // TODO: Убрать костыль
                 const index = TooltipHelper.getKeyIndex(pointer(event, this), chartOrientation, margin, blockSize, scaleKey, scaleKeyModel.type);
-                const keyValue = scaleKey.domain()[index];
+                let keyValue = scaleKey.domain()[index];
+                if (index >= scaleKey.domain().length)
+                    keyValue = scaleKey.domain()[scaleKey.domain().length - 1];
 
                 if (!currentKey || currentKey !== keyValue) {
                     currentKey = keyValue;
