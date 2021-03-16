@@ -24,11 +24,12 @@ export class EmbeddedLabels {
         });
     }
 
-    public static removeUnused(block: Block, chartCssClasses: string[], fieldIndex: number, newData: DataRow[], keyFieldName: string): void {
+    public static removeUnused(block: Block, chartCssClasses: string[], fieldIndex: number, newData: DataRow[], indexes: number[], keyFieldName: string): void {
         block.getChartBlock()
             .selectAll<SVGGElement, unknown>(`.${EmbeddedLabels.embeddedLabelsGroupClass}${Helper.getCssClassesLine(chartCssClasses)}.chart-element-${fieldIndex}`)
             .selectAll<SVGTextElement, DataRow>(`.${this.embeddedLabelClass}`)
-            .filter((d, i) => newData.findIndex(row => row[keyFieldName] === d[keyFieldName]) === -1)
+            // .filter((d, i) => newData.findIndex(row => row[keyFieldName] === d[keyFieldName]) === -1)
+            .filter((d, i) => indexes.findIndex(ind => ind === i) !== -1)
             .remove();
     }
 
@@ -44,7 +45,7 @@ export class EmbeddedLabels {
             .data(newData);
 
         bars.each((dataRow, barIndex) => {
-            const labelBlock = this.getLabelByIndex(labelsSelection, barIndex, valueField);
+            const labelBlock = this.getLabelByIndex(labelsSelection, barIndex, valueField, dataRow);
             if (labelBlock)
                 this.updateLabel(block, dataRow, keyAxisOrient, barAttrsHelper, margin, type, blockSize, labelBlock, labelsGroup);
         });
@@ -182,12 +183,13 @@ export class EmbeddedLabels {
         return labelBlockHandler;
     }
 
-    private static getLabelByIndex(labelsSelection: Selection<SVGTextElement, DataRow, SVGGElement, unknown>, barIndex: number, valueField: Field): Selection<SVGTextElement, DataRow, HTMLElement, unknown> {
+    private static getLabelByIndex(labelsSelection: Selection<SVGTextElement, DataRow, SVGGElement, unknown>, barIndex: number, valueField: Field, dataRow: DataRow): Selection<SVGTextElement, DataRow, HTMLElement, unknown> {
         let labelBlock: Selection<SVGTextElement, DataRow, HTMLElement, unknown>;
 
         labelsSelection.each(function (d, indexLabel) {
             if (barIndex === indexLabel) {
                 labelBlock = select(this)
+                    .datum(dataRow)
                     .text(ValueFormatter.formatField(valueField.format, d[valueField.name]));
             }
         });
