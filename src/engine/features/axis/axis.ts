@@ -3,13 +3,14 @@ import { min, max } from 'd3-array';
 import { format } from 'd3-format';
 import { AxisScale, Axis as IAxis } from 'd3-axis';
 import { ScaleBand } from 'd3-scale'
-import { AxisModelOptions, BlockMargin, IAxisModel, IScaleModel, Orient, ScaleKeyModel, ScaleValueModel, Size } from "../../../model/model";
+import { AxisModelOptions, BlockMargin, IAxisModel, IScaleModel, Orient, ScaleKeyModel, ScaleValueModel, Size, TranslateModel } from "../../../model/model";
 import { Helper } from "../../helper";
 import { Block } from "../../block/block";
 import { Scale, Scales } from "../scale/scale";
 import { AXIS_HORIZONTAL_LABEL_PADDING, AXIS_VERTICAL_LABEL_PADDING } from "../../../model/marginModel";
 import { NamesManager } from '../../namesManager';
 import { AxisHelper } from './axisHelper';
+import { Transition } from 'd3-transition';
 
 type TextAnchor = 'start' | 'end' | 'middle';
 
@@ -36,13 +37,9 @@ export class Axis {
     private static updateValueAxis(block: Block, scaleValue: AxisScale<any>, scaleOptions: ScaleValueModel, axisOptions: AxisModelOptions): void {
         const axisGenerator = this.getBaseAxisGenerator(axisOptions, scaleValue, scaleOptions);
 
-        block.getSvg()
-            .select(`g.${axisOptions.cssClass}`)
-            .interrupt()
-            .transition()
-            .duration(block.transitionManager.durations.chartUpdate)
-            .attr('transform', `translate(${axisOptions.translate.translateX}, ${axisOptions.translate.translateY})`)
-            .call(axisGenerator.bind(this));
+        const axisElement = block.getSvg()
+            .select(`g.${axisOptions.cssClass}`);
+        this.updateAxisElement(axisGenerator, axisElement, axisOptions.translate, block.transitionManager.durations.chartUpdate);
     }
 
     private static updateKeyAxis(block: Block, scaleKey: AxisScale<any>, scaleOptions: ScaleKeyModel, axisOptions: AxisModelOptions, blockSize: Size, domainNotUpdated: boolean): void {
@@ -64,11 +61,9 @@ export class Axis {
                 axisGenerator.tickPadding(axisOptions.labels.maxSize + AXIS_VERTICAL_LABEL_PADDING);
         }
 
-        axisElement
-            .interrupt()
-            .transition()
-            .duration(!domainNotUpdated ? block.transitionManager.durations.chartUpdate : 0)
-            .on('end', () => {
+        // Если ключи оси не меняются, то обновление происходит без анимации
+        this.updateAxisElement(axisGenerator, axisElement, axisOptions.translate, domainNotUpdated ? 0 : block.transitionManager.durations.chartUpdate)
+            .then(() => {
                 if (axisOptions.orient === 'bottom' || axisOptions.orient === 'top') {
                     // Обратное выравнивание лейблов, если они были перевернуты, но теперь могут отображаться прямо
                     if (axisOptions.labels.positition === 'straight') {
@@ -87,9 +82,7 @@ export class Axis {
 
                     this.alignLabelsInKeyAxis(axisOptions, axisElement);
                 }
-            })
-            .attr('transform', `translate(${axisOptions.translate.translateX}, ${axisOptions.translate.translateY})`)
-            .call(axisGenerator.bind(this));
+            });
 
         if (axisOptions.orient === 'left' || axisOptions.orient === 'right') {
             this.alignLabelsInKeyAxis(axisOptions, axisElement);
@@ -111,9 +104,9 @@ export class Axis {
 
         const axisElement = block.getSvg()
             .append('g')
-            .attr('transform', `translate(${axisOptions.translate.translateX}, ${axisOptions.translate.translateY})`)
             .attr('class', `${this.axesClass} ${axisOptions.cssClass} data-label`)
-            .call(axisGenerator);
+
+        this.updateAxisElement(axisGenerator, axisElement, axisOptions.translate);
 
         if (axisOptions.labels.visible) {
             if (axisOptions.type === 'key' && axisOptions.labels.positition === 'rotated' && (axisOptions.orient === 'top' || axisOptions.orient === 'bottom'))
@@ -131,6 +124,24 @@ export class Axis {
         } else {
             this.hideLabels(axisElement);
         }
+    }
+
+    private static updateAxisElement(axisGenerator: IAxis<any>, axisElement: Selection<BaseType, any, BaseType, any>, translate: TranslateModel, transitionDuration: number = 0): Promise<string> {
+        return new Promise(resolve => {
+            let axisHandler: Selection<BaseType, any, BaseType, any> | Transition<BaseType, any, BaseType, any> = axisElement;
+            if (transitionDuration > 0) {
+                axisHandler = axisHandler
+                    .interrupt()
+                    .transition()
+                    .duration(transitionDuration)
+                    .on('end', () => resolve('updated'));
+            }
+            axisHandler.attr('transform', `translate(${translate.translateX}, ${translate.translateY})`)
+                .call(axisGenerator.bind(this));
+
+            if (transitionDuration <= 0)
+                resolve('updated');
+        });
     }
 
     private static getBaseAxisGenerator(axisOptions: AxisModelOptions, scale: AxisScale<any>, scaleOptions: ScaleKeyModel | ScaleValueModel): IAxis<any> {
