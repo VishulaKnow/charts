@@ -3,7 +3,6 @@ import { ChartStyleConfig, DesignerConfig } from "../../designer/designerConfig"
 import { AxisModel } from "../featuresModel/axisModel";
 import { ChartStyleModel } from "../chartStyleModel";
 import { DataManagerModel } from "../dataManagerModel";
-import { GridLineModel } from "../featuresModel/gridLineModel";
 import { LegendModel } from "../featuresModel/legendModel/legendModel";
 import { AdditionalElementsOptions, BlockMargin, DataScope, DataSource, IntervalChartModel, IntervalOptionsModel } from "../model";
 import { AxisType } from "../modelBuilder";
@@ -73,13 +72,13 @@ export class IntervalModel {
             data: { ...configOptions.data },
             type: configOptions.type,
             charts: this.getChartsModel(configOptions.charts, designerConfig.chartStyle),
-            additionalElements: this.getAdditionalElements(configOptions, designerConfig)
+            additionalElements: this.getAdditionalElements(configOptions)
         }
     }
 
-    public static getAdditionalElements(options: IntervalOptions, designerConfig: DesignerConfig): AdditionalElementsOptions {
+    public static getAdditionalElements(options: IntervalOptions): AdditionalElementsOptions {
         return {
-            gridLine: GridLineModel.getGridLineOptions(options.additionalElements.gridLine, designerConfig.additionalElements.gridLine)
+            gridLine: options.additionalElements.gridLine
         }
     }
 

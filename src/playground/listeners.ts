@@ -394,14 +394,6 @@ export default class Listeners {
             thisClass.designerConfig.canvas.chartOptions.donut.minPartSize = parseFloat(ListenersHelper.getInputValue('#min-donut-part-size')) || 0;
             thisClass.updateFull();
         });
-        document.querySelector('#designer-key-grid').addEventListener('change', function () {
-            thisClass.designerConfig.additionalElements.gridLine.flag.key = this.checked;
-            thisClass.updateFull();
-        });
-        document.querySelector('#designer-value-grid').addEventListener('change', function () {
-            thisClass.designerConfig.additionalElements.gridLine.flag.value = this.checked;
-            thisClass.updateFull();
-        });
         document.querySelector('#pad-angle').addEventListener('input', function () {
             thisClass.designerConfig.canvas.chartOptions.donut.padAngle = parseFloat(ListenersHelper.getInputValue('#pad-angle'));
             thisClass.updateFull();
@@ -620,8 +612,6 @@ export default class Listeners {
         ListenersHelper.setInputValue('#base-color', designerConfig.chartStyle.baseColor);
         ListenersHelper.setInputValue('#color-step', designerConfig.chartStyle.step);
         ListenersHelper.setInputValue('#min-donut-part-size', designerConfig.canvas.chartOptions.donut.minPartSize);
-        ListenersHelper.setCheckboxValue('#designer-key-grid', designerConfig.additionalElements.gridLine.flag.key);
-        ListenersHelper.setCheckboxValue('#designer-value-grid', designerConfig.additionalElements.gridLine.flag.value);
         ListenersHelper.setInputValue('#pad-angle', designerConfig.canvas.chartOptions.donut.padAngle);
         ListenersHelper.setInputValue('#donut-min-thickness', designerConfig.canvas.chartOptions.donut.minThickness);
         ListenersHelper.setInputValue('#donut-max-thickness', designerConfig.canvas.chartOptions.donut.maxThickness);
@@ -650,7 +640,6 @@ import '../style/develop.css'
 import config from '../config/configExample';
 import designerConfig from '../designer/designerConfigExample';
 import { Chart } from '../main';
-import { transition, Transition } from 'd3-transition';
 
 const data = require('../assets/dataSet.json');
 

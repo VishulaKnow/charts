@@ -3,7 +3,6 @@ import { ChartStyleConfig, DesignerConfig } from "../../designer/designerConfig"
 import { ChartStyleModel } from "../chartStyleModel";
 import { DataManagerModel } from "../dataManagerModel";
 import { AxisModel } from "../featuresModel/axisModel";
-import { GridLineModel } from "../featuresModel/gridLineModel";
 import { LegendModel } from "../featuresModel/legendModel/legendModel";
 import { ScaleModel, ScaleType } from "../featuresModel/scaleModel";
 import { BlockMargin, DataScope, DataSource, TwoDimensionalOptionsModel, TwoDimensionalChartModel, EmbeddedLabelTypeModel, AdditionalElementsOptions } from "../model";
@@ -74,7 +73,7 @@ export class TwoDimensionalModel {
             type: configOptions.type,
             data: { ...configOptions.data },
             charts: this.getChartsModel(configOptions.charts, configOptions.orientation, designerConfig.chartStyle),
-            additionalElements: this.getAdditionalElements(configOptions, designerConfig)
+            additionalElements: this.getAdditionalElements(configOptions)
         }
     }
 
@@ -132,9 +131,9 @@ export class TwoDimensionalModel {
         return 'none';
     }
 
-    private static getAdditionalElements(options: TwoDimensionalOptions, designerConfig: DesignerConfig): AdditionalElementsOptions {
+    private static getAdditionalElements(options: TwoDimensionalOptions): AdditionalElementsOptions {
         return {
-            gridLine: GridLineModel.getGridLineOptions(options.additionalElements.gridLine, designerConfig.additionalElements.gridLine)
+            gridLine: options.additionalElements.gridLine
         }
     }
 

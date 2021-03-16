@@ -7,15 +7,42 @@ export type Formatter = (value: any, options?: any) => string;
 
 export interface DesignerConfig {
     canvas: Canvas;
-    additionalElements: Elements;
     dataFormat: DataFormat;
     chartStyle: ChartStyleConfig;
     transitions?: Transitions;
 }
 
-export interface ChartStyleConfig {
-    baseColor: string;
-    step: number;
+
+// ========================================================================================= Canvas
+interface Canvas {
+    axisLabel: AxisLabelCanvas;
+    chartBlockMargin: BlockMargin;
+    legendBlock: LegendBlockCanvas;
+    chartOptions: ChartOptionsCanvas;
+}
+
+export interface AxisLabelCanvas {
+    maxSize: AxisLabelSize;
+}
+interface AxisLabelSize {
+    main: number;
+    orthogonal: number;
+}
+
+interface BlockMargin {
+    top: number;
+    bottom: number;
+    left: number;
+    right: number;
+}
+
+interface LegendBlockCanvas {
+    maxWidth: number;
+}
+
+interface ChartOptionsCanvas {
+    bar: BarOptionsCanvas;
+    donut: DonutOptionsCanvas;
 }
 
 export interface BarOptionsCanvas {
@@ -33,59 +60,25 @@ export interface DonutOptionsCanvas {
     maxThickness: number;
 }
 
-export interface AxisLabelCanvas {
-    maxSize: AxisLabelSize;
+
+// ========================================================================================= DataFormat
+interface DataFormat {
+    formatters: Formatter;
 }
 
+
+// ========================================================================================= ChartStyle
+export interface ChartStyleConfig {
+    baseColor: string;
+    step: number;
+}
+
+
+// ========================================================================================= Transitions
 export interface Transitions {
     chartUpdate?: number;
     elementFadeOut?: number;
     tooltipSlide?: number;
     donutHover?: number;
     markerHover?: number;
-}
-
-interface Elements {
-    gridLine: GridLineOptions;
-}
-
-interface GridLineOptions {
-    flag: GridLineFlag;
-}
-
-interface GridLineFlag {
-    key: boolean;
-    value: boolean;
-}
-
-interface BlockMargin {
-    top: number;
-    bottom: number;
-    left: number;
-    right: number;
-}
-
-interface Canvas {
-    axisLabel: AxisLabelCanvas;
-    chartBlockMargin: BlockMargin;
-    legendBlock: LegendBlockCanvas;
-    chartOptions: ChartOptionsCanvas;
-}
-
-interface ChartOptionsCanvas {
-    bar: BarOptionsCanvas;
-    donut: DonutOptionsCanvas;
-}
-
-interface LegendBlockCanvas {
-    maxWidth: number;
-}
-
-interface AxisLabelSize {
-    main: number;
-    orthogonal: number;
-}
-
-interface DataFormat {
-    formatters: Formatter;
 }

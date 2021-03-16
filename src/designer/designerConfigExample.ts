@@ -37,14 +37,6 @@ const designerConfig: DesignerConfig = {
         baseColor: 'red',
         step: 3
     },
-    additionalElements: {
-        gridLine: {
-            flag: {
-                value: true,
-                key: true
-            }
-        }
-    },
     dataFormat: {
         formatters: (value: any, options: { type?: string; title?: string; empty?: string; } = {}) => {
             var type = typeof value;
