@@ -44,7 +44,6 @@ export class TransitionManager {
         this.block = block;
         if (transitionsDurations)
             this.setDurations(transitionsDurations);
-        console.log(this.durations);
     }
 
     public interruptTransitions(): void {

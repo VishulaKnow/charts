@@ -64,7 +64,6 @@ export class Axis {
                 axisGenerator.tickPadding(axisOptions.labels.maxSize + AXIS_VERTICAL_LABEL_PADDING);
         }
 
-        console.log(block.transitionManager.durations.chartUpdate);
         axisElement
             .interrupt()
             .transition()
