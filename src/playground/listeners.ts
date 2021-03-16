@@ -720,11 +720,6 @@ class DataUpdater {
             newData[this.dataSetName].splice(ListenersHelper.randInt(0, 4), ListenersHelper.randInt(1, 3));
         }
 
-        // for (let i = 0; i < this.counter; i++) {
-        //     newData[this.dataSetName].pop();
-        // }
-        // this.counter++;
-
         newData[this.dataSetName][ListenersHelper.randInt(0, newData[this.dataSetName].length - 1)]['price'] = ListenersHelper.randInt(0, 100);
         newData[this.dataSetName][ListenersHelper.randInt(0, newData[this.dataSetName].length - 1)]['count'] = ListenersHelper.randInt(0, 100);
     }

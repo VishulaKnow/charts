@@ -99,6 +99,6 @@ export class ElementHighlighter {
             .duration(transitionDuration)
             .ease(easeLinear)
             .attr('r', isScaled ? 6 : 4)
-            .style('stroke-width', (isScaled ? 4.3 : 3) + 'px')
+            .style('stroke-width', (isScaled ? 4.3 : 3) + 'px');
     }
 }

@@ -112,11 +112,10 @@ export class Axis {
             if (axisOptions.type === 'key' && axisOptions.labels.positition === 'rotated' && (axisOptions.orient === 'top' || axisOptions.orient === 'bottom'))
                 this.rotateLabels(axisElement, axisOptions.orient);
 
-            if ((axisOptions.orient === 'left' || axisOptions.orient === 'right') && axisOptions.type === 'key' && Scale.getScaleStep(scale) >= MINIMAL_STEP_SIZE_FOR_WRAPPING) {
+            if ((axisOptions.orient === 'left' || axisOptions.orient === 'right') && axisOptions.type === 'key' && Scale.getScaleStep(scale) >= MINIMAL_STEP_SIZE_FOR_WRAPPING)
                 axisElement.selectAll<SVGGElement, unknown>('.tick text').call(AxisHelper.wrapHandler, axisOptions.labels.maxSize);
-            } else {
+            else
                 this.cropLabels(block, scale, scaleOptions, axisOptions, blockSize);
-            }
 
             if (axisOptions.type === 'key') {
                 this.alignLabelsInKeyAxis(axisOptions, axisElement);
