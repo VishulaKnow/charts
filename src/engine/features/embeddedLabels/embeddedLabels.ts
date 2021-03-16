@@ -24,11 +24,24 @@ export class EmbeddedLabels {
         });
     }
 
-    public static removeUnused(block: Block, chartCssClasses: string[], fieldIndex: number, newData: DataRow[], indexes: number[], keyFieldName: string): void {
+    public static restoreRemoved(block: Block, bars: Selection<SVGRectElement, DataRow, SVGGElement, any>, barAttrsHelper: BarAttrsHelper, field: Field, type: EmbeddedLabelTypeModel, keyAxisOrient: Orient, blockSize: Size, margin: BlockMargin, index: number, cssClasses: string[], keyFieldName: string): void {
+        const untaggedBars = bars.filter((d, i) => {
+            return block.getChartBlock()
+                .selectAll<SVGGElement, unknown>(`.${EmbeddedLabels.embeddedLabelsGroupClass}${Helper.getCssClassesLine(cssClasses)}.chart-element-${index}`)
+                .selectAll<SVGTextElement, DataRow>(`.${this.embeddedLabelClass}`)
+                .filter(row => row[keyFieldName] === d[keyFieldName])
+                .empty()
+        });
+
+        if (!untaggedBars.empty()) {
+            this.render(block, untaggedBars, barAttrsHelper, field, type, keyAxisOrient, blockSize, margin, index, cssClasses);
+        }
+    }
+
+    public static removeUnused(block: Block, chartCssClasses: string[], fieldIndex: number, indexes: number[]): void {
         block.getChartBlock()
             .selectAll<SVGGElement, unknown>(`.${EmbeddedLabels.embeddedLabelsGroupClass}${Helper.getCssClassesLine(chartCssClasses)}.chart-element-${fieldIndex}`)
             .selectAll<SVGTextElement, DataRow>(`.${this.embeddedLabelClass}`)
-            // .filter((d, i) => newData.findIndex(row => row[keyFieldName] === d[keyFieldName]) === -1)
             .filter((d, i) => indexes.findIndex(ind => ind === i) !== -1)
             .remove();
     }

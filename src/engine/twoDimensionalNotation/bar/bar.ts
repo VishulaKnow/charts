@@ -175,10 +175,11 @@ export class Bar {
             Helper.setChartStyle(newBars, chart.style, index, 'fill');
 
             if (chart.embeddedLabels !== 'none') {
-                EmbeddedLabels.removeUnused(block, chart.cssClasses, index, newData, indexesOfRemoved, keyField.name);
+                EmbeddedLabels.removeUnused(block, chart.cssClasses, index, indexesOfRemoved);
                 EmbeddedLabels.update(block, bars, keyAxisOrient, barAttrs, margin, valueField, chart.embeddedLabels, blockSize, newData, index, chart.cssClasses);
                 if (!newBars.empty())
                     EmbeddedLabels.render(block, newBars, barAttrs, valueField, chart.embeddedLabels, keyAxisOrient, blockSize, margin, index, chart.cssClasses);
+                EmbeddedLabels.restoreRemoved(block, bars, barAttrs, valueField, chart.embeddedLabels, keyAxisOrient, blockSize, margin, index, chart.cssClasses, keyField.name);
             }
         });
     }
