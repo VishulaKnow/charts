@@ -44,6 +44,7 @@ export class TransitionManager {
         this.block = block;
         if (transitionsDurations)
             this.setDurations(transitionsDurations);
+        console.log(this.durations);
     }
 
     public interruptTransitions(): void {
@@ -59,10 +60,10 @@ export class TransitionManager {
     }
 
     private setDurations(durations: Transitions): void {
-        if (durations.chartUpdate && durations.chartUpdate > 0) this.durations.chartUpdate = durations.chartUpdate;
-        if (durations.donutHover && durations.donutHover > 0) this.durations.donutHover = durations.donutHover;
-        if (durations.elementFadeOut && durations.elementFadeOut > 0) this.durations.elementFadeOut = durations.elementFadeOut;
-        if (durations.markerHover && durations.markerHover > 0) this.durations.markerHover = durations.markerHover;
-        if (durations.tooltipSlide && durations.tooltipSlide > 0) this.durations.tooltipSlide = durations.tooltipSlide;
+        if (durations.chartUpdate !== undefined && durations.chartUpdate >= 0) this.durations.chartUpdate = durations.chartUpdate;
+        if (durations.donutHover !== undefined && durations.donutHover >= 0) this.durations.donutHover = durations.donutHover;
+        if (durations.elementFadeOut !== undefined && durations.elementFadeOut >= 0) this.durations.elementFadeOut = durations.elementFadeOut;
+        if (durations.markerHover !== undefined && durations.markerHover >= 0) this.durations.markerHover = durations.markerHover;
+        if (durations.tooltipSlide !== undefined && durations.tooltipSlide >= 0) this.durations.tooltipSlide = durations.tooltipSlide;
     }
 }

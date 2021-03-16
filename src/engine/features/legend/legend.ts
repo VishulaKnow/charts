@@ -13,8 +13,9 @@ interface LegendCoordinate {
 }
 
 export class Legend {
+    public static legendObjectClass = 'legend-object';
+
     private static legendBlockClass = 'legend-block';
-    private static legendObjectClass = 'legend-object';
     private static legendLabelClass = 'legend-label'
 
     public static render(block: Block, data: DataSource, options: TwoDimensionalOptionsModel | PolarOptionsModel | IntervalOptionsModel, legendBlockModel: LegendBlockModel, blockSize: Size): void {
@@ -56,11 +57,7 @@ export class Legend {
         const legendCoordinate = this.getLegendCoordinateByPosition(legendPosition, legendBlockModel, blockSize);
         this.fillLegendCoordinate(legendBlock, legendCoordinate);
 
-        this.renderLegendContent(legendBlock,
-            items,
-            colorPalette,
-            itemsDirection,
-            legendPosition);
+        this.renderLegendContent(legendBlock, items, colorPalette, itemsDirection, legendPosition);
     }
 
     private static getLegendCoordinateByPosition(legendPosition: Orient, legendBlockModel: LegendBlockModel, blockSize: Size): LegendCoordinate {
@@ -112,10 +109,8 @@ export class Legend {
 
         if (itemsDirection === 'column') {
             wrapper.style('flex-direction', 'column');
-        }
-
-        if (itemsDirection === 'column' && position === 'right') {
-            wrapper.style('justify-content', 'center');
+            if (position === 'right')
+                wrapper.style('justify-content', 'center');
         }
 
         const itemWrappers = wrapper

@@ -15,7 +15,8 @@ export class PolarManager {
 
         engine.block.renderSvg(model.blockCanvas.size);
 
-        this.renderCharts(engine.block, options.charts,
+        this.renderCharts(engine.block,
+            options.charts,
             engine.data,
             options.data.dataSource,
             model.chartBlock.margin,
@@ -50,6 +51,7 @@ export class PolarManager {
     public static updateData(block: Block, model: Model, data: DataSource): void {
         block.transitionManager.interruptTransitions();
         block.removeEventListeners();
+
         ElementHighlighter.removeElementsFilter(Donut.getAllArcGroups(block));
         Tooltip.hide(block);
 

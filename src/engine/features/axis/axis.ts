@@ -64,9 +64,11 @@ export class Axis {
                 axisGenerator.tickPadding(axisOptions.labels.maxSize + AXIS_VERTICAL_LABEL_PADDING);
         }
 
+        console.log(block.transitionManager.durations.chartUpdate);
         axisElement
             .interrupt()
             .transition()
+            .duration(block.transitionManager.durations.chartUpdate)
             .on('end', () => {
                 if (axisOptions.orient === 'bottom' || axisOptions.orient === 'top') {
                     // Обратное выравнивание лейблов, если они были перевернуты, но теперь могут отображаться прямо
@@ -87,7 +89,6 @@ export class Axis {
                     this.alignLabelsInKeyAxis(axisOptions, axisElement);
                 }
             })
-            .duration(block.transitionManager.durations.chartUpdate)
             .attr('transform', `translate(${axisOptions.translate.translateX}, ${axisOptions.translate.translateY})`)
             .call(axisGenerator.bind(this));
 

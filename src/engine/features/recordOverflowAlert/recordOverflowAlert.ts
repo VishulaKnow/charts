@@ -2,6 +2,7 @@ import { Selection } from 'd3-selection'
 import { ChartOrientation } from "../../../config/config";
 import { Block } from "../../block/block";
 import { Helper } from "../../helper";
+import { Legend } from '../legend/legend';
 
 interface AlertBlockPositionAttrs {
     top: string;
@@ -112,7 +113,7 @@ export class RecordOverflowAlert {
     }
 
     private static getLeftAttrForRightBlock(block: Block): number {
-        const legendBlock = block.getSvg().select('.legend-object');
+        const legendBlock = block.getSvg().select(`.${Legend.legendObjectClass}`);
         if (legendBlock.empty())
             return null;
 

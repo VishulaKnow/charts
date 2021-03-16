@@ -69,7 +69,6 @@ export class Donut {
         const items = this.getAllArcGroups(block)
             .data(pieGenerator(data));
 
-
         return new Promise((resolve) => {
             path
                 .interrupt()
@@ -77,12 +76,12 @@ export class Donut {
                 .duration(block.transitionManager.durations.chartUpdate)
                 .on('end', () => {
                     items.exit().remove();
-                    resolve('');
+                    resolve('updated');
                 })
                 .attrTween('d', function (d) {
-                    const interpolateFunc = interpolate((this as any)._currentData, d); // current - старые данные до обновления, задаются во время рендера
+                    const interpolateFunc = interpolate((this as any)._currentData, d);
                     return t => {
-                        (this as any)._currentData = interpolateFunc(t);
+                        (this as any)._currentData = interpolateFunc(t); // _current - старые данные до обновления, задаются во время рендера
                         return arcGenerator((this as any)._currentData);
                     }
                 });
