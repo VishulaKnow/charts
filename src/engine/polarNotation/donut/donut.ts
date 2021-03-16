@@ -53,12 +53,12 @@ export class Donut {
         const oldData = block.getSvg().selectAll(`.${this.donutBlockClass}`)
             .selectAll<SVGPathElement, PieArcDatum<DataRow>>('path')
             .data()
-            .map((d) => d.data);
+            .map(d => d.data);
 
         const dataNewZeroRows = this.mergeWithFirstEqualZero(data, oldData, keyField);
         const dataExtraZeroRows = this.mergeWithFirstEqualZero(oldData, data, keyField);
 
-        const donutBlock = block.getSvg().select<SVGGElement>(`.${this.donutBlockClass}`)
+        const donutBlock = block.getSvg().select<SVGGElement>(`.${this.donutBlockClass}`);
 
         this.renderNewArcItems(arcGenerator, pieGenerator, donutBlock, dataNewZeroRows, chart);
 
@@ -69,7 +69,7 @@ export class Donut {
         const items = this.getAllArcGroups(block)
             .data(pieGenerator(data));
 
-        return new Promise((resolve) => {
+        return new Promise(resolve => {
             path
                 .interrupt()
                 .transition()

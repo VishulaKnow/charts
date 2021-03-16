@@ -63,7 +63,7 @@ export class Aggregator {
         }
     }
 
-    private static updateText(block: Block, aggregator: AggregatorInfo): void {
+    private static updateText(block: Block, newAggregator: AggregatorInfo): void {
         const aggregatorObject = block.getSvg()
             .select<SVGForeignObjectElement>(`.${this.aggregatorObjectClass}`);
 
@@ -74,12 +74,11 @@ export class Aggregator {
             .duration(1000)
             .tween("text", function () {
                 const oldValue = Helper.parseFormattedToNumber(this.textContent);
-                const oldTextPrecision = Helper.calcDigitsAfterDot(oldValue);
-                const precision = Helper.calcDigitsAfterDot(aggregator.value) < oldTextPrecision ? oldTextPrecision : Helper.calcDigitsAfterDot(aggregator.value);
-                const interpolateFunc = interpolateNumber(oldValue, aggregator.value);
+                const precision = Helper.calcDigitsAfterDot(newAggregator.value);
+                const interpolateFunc = interpolateNumber(oldValue, newAggregator.value);
 
                 return t => {
-                    this.textContent = ValueFormatter.formatField(aggregator.format, (+interpolateFunc(t)).toFixed(precision));
+                    this.textContent = ValueFormatter.formatField(newAggregator.format, (interpolateFunc(t)).toFixed(precision));
                     thisClass.reCalculateAggregatorFontSize(aggregatorObject.node().getBoundingClientRect().width, block);
                 }
             });
@@ -94,13 +93,11 @@ export class Aggregator {
         const pad = 40;
 
         while (aggreggatorValue.node().getBoundingClientRect().width > wrapperSize - pad && fontSize > 15) {
-            aggreggatorValue
-                .style('font-size', `${fontSize -= 2}px`);
+            aggreggatorValue.style('font-size', `${fontSize -= 2}px`);
         }
 
         while (aggreggatorValue.node().getBoundingClientRect().width < wrapperSize - pad && fontSize < 60) {
-            aggreggatorValue
-                .style('font-size', `${fontSize += 2}px`);
+            aggreggatorValue.style('font-size', `${fontSize += 2}px`);
         }
     }
 
