@@ -78,10 +78,10 @@ export class Aggregator {
                 const precision = Helper.calcDigitsAfterDot(aggregator.value) < oldTextPrecision ? oldTextPrecision : Helper.calcDigitsAfterDot(aggregator.value);
                 const interpolateFunc = interpolateNumber(oldValue, aggregator.value);
 
-                return function (t) {
+                return t => {
                     this.textContent = ValueFormatter.formatField(aggregator.format, (+interpolateFunc(t)).toFixed(precision));
                     thisClass.reCalculateAggregatorFontSize(aggregatorObject.node().getBoundingClientRect().width, block);
-                };
+                }
             });
     }
 

@@ -76,8 +76,7 @@ export class Donut {
                 .transition()
                 .duration(block.transitionManager.durations.chartUpdate)
                 .on('end', () => {
-                    items.exit()
-                        .remove();
+                    items.exit().remove();
                     resolve('');
                 })
                 .attrTween('d', function (d) {

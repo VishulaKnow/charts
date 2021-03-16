@@ -26,9 +26,11 @@ export class Axis {
             this.renderAxis(block, scales.scaleKey, scaleModel.scaleKey, axisModel.keyAxis, margin, blockSize);
     }
 
-    public static update(block: Block, scales: Scales, scalesOptions: IScaleModel, axesOptions: IAxisModel, blockSize: Size): void {
-        this.updateValueAxisDomain(block, scales.scaleValue, scalesOptions.scaleValue, axesOptions.valueAxis);
-        this.updateKeyAxisDomain(block, scales.scaleKey, scalesOptions.scaleKey, axesOptions.keyAxis, blockSize);
+    public static update(block: Block, scales: Scales, scalesOptions: IScaleModel, axisModel: IAxisModel, blockSize: Size): void {
+        if (axisModel.valueAxis.visibility)
+            this.updateValueAxisDomain(block, scales.scaleValue, scalesOptions.scaleValue, axisModel.valueAxis);
+        if (axisModel.keyAxis.visibility)
+            this.updateKeyAxisDomain(block, scales.scaleKey, scalesOptions.scaleKey, axisModel.keyAxis, blockSize);
     }
 
     private static updateValueAxisDomain(block: Block, scaleValue: AxisScale<any>, scaleOptions: ScaleValueModel, axisOptions: AxisModelOptions): void {
@@ -67,7 +69,8 @@ export class Axis {
             .transition()
             .on('end', () => {
                 if (axisOptions.orient === 'bottom' || axisOptions.orient === 'top') {
-                    if (axisOptions.labels.positition === 'straight') { // Обратное выравнивание лейблов, если они были перевернуты, но теперь могут отображаться прямо
+                    // Обратное выравнивание лейблов, если они были перевернуты, но теперь могут отображаться прямо
+                    if (axisOptions.labels.positition === 'straight') {
                         axisElement.selectAll('.tick text')
                             .attr('transform', null)
                             .attr('text-anchor', 'middle')
