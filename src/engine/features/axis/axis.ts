@@ -45,7 +45,7 @@ export class Axis {
             .call(axisGenerator.bind(this));
     }
 
-    private static updateKeyAxis(block: Block, scaleKey: AxisScale<any>, scaleOptions: ScaleKeyModel, axisOptions: AxisModelOptions, blockSize: Size, domainUpdated: boolean): void {
+    private static updateKeyAxis(block: Block, scaleKey: AxisScale<any>, scaleOptions: ScaleKeyModel, axisOptions: AxisModelOptions, blockSize: Size, domainNotUpdated: boolean): void {
         const axisGenerator = this.getBaseAxisGenerator(axisOptions, scaleKey, scaleOptions);
 
         if (axisOptions.labels.positition === 'rotated') {
@@ -67,7 +67,7 @@ export class Axis {
         axisElement
             .interrupt()
             .transition()
-            .duration(domainUpdated ? block.transitionManager.durations.chartUpdate : 0)
+            .duration(!domainNotUpdated ? block.transitionManager.durations.chartUpdate : 0)
             .on('end', () => {
                 if (axisOptions.orient === 'bottom' || axisOptions.orient === 'top') {
                     // Обратное выравнивание лейблов, если они были перевернуты, но теперь могут отображаться прямо
