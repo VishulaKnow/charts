@@ -120,7 +120,7 @@ export class EmbeddedLabels {
         }
 
         this.setLabelBlockAttrs(attrs, labelBlock, block.transitionManager.durations.chartUpdate)
-            .on('end', () => {
+            .then(() => {
                 if (position === 'outside')
                     this.renderBackground(labelsGroup, labelBlock, attrs);
 
@@ -178,22 +178,25 @@ export class EmbeddedLabels {
             .lower();
     }
 
-    private static setLabelBlockAttrs(attrs: LabelAttrs, labelBlock: Selection<SVGTextElement, DataRow, HTMLElement, unknown>, transitionDuration: number = 0): Selection<SVGTextElement, DataRow, HTMLElement, unknown> | Transition<SVGTextElement, DataRow, HTMLElement, unknown> {
-        let labelBlockHandler: Selection<SVGTextElement, DataRow, HTMLElement, unknown> | Transition<SVGTextElement, DataRow, HTMLElement, unknown> = labelBlock;
+    private static setLabelBlockAttrs(attrs: LabelAttrs, labelBlock: Selection<SVGTextElement, DataRow, HTMLElement, unknown>, transitionDuration: number = 0): Promise<any> {
+        return new Promise((resolve) => {
+            let labelBlockHandler: Selection<SVGTextElement, DataRow, HTMLElement, unknown> | Transition<SVGTextElement, DataRow, HTMLElement, unknown> = labelBlock;
 
-        if (transitionDuration > 0) {
-            labelBlockHandler = labelBlockHandler
-                .interrupt()
-                .transition()
-                .duration(transitionDuration);
-        }
+            if (transitionDuration > 0) {
+                labelBlockHandler = labelBlockHandler
+                    .interrupt()
+                    .transition()
+                    .duration(transitionDuration)
+                    .on('end', () => resolve('updated'));
+            }
+            labelBlockHandler
+                .attr('x', attrs.x)
+                .attr('y', attrs.y)
+                .attr('dominant-baseline', 'middle');
 
-        labelBlockHandler
-            .attr('x', attrs.x)
-            .attr('y', attrs.y)
-            .attr('dominant-baseline', 'middle');
-
-        return labelBlockHandler;
+            if (transitionDuration <= 0)
+                resolve('updated');
+        });
     }
 
     private static getLabelByIndex(labelsSelection: Selection<SVGTextElement, DataRow, SVGGElement, unknown>, barIndex: number, valueField: Field, dataRow: DataRow): Selection<SVGTextElement, DataRow, HTMLElement, unknown> {
