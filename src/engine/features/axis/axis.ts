@@ -26,14 +26,14 @@ export class Axis {
             this.renderAxis(block, scales.scaleKey, scaleModel.scaleKey, axisModel.keyAxis, margin, blockSize);
     }
 
-    public static update(block: Block, scales: Scales, scalesOptions: IScaleModel, axisModel: IAxisModel, blockSize: Size): void {
+    public static update(block: Block, scales: Scales, scalesOptions: IScaleModel, axisModel: IAxisModel, blockSize: Size, keyDomainsEquality: boolean): void {
         if (axisModel.valueAxis.visibility)
-            this.updateValueAxisDomain(block, scales.scaleValue, scalesOptions.scaleValue, axisModel.valueAxis);
-        if (axisModel.keyAxis.visibility)
-            this.updateKeyAxisDomain(block, scales.scaleKey, scalesOptions.scaleKey, axisModel.keyAxis, blockSize);
+            this.updateValueAxis(block, scales.scaleValue, scalesOptions.scaleValue, axisModel.valueAxis);
+        if (axisModel.keyAxis.visibility && !keyDomainsEquality)
+            this.updateKeyAxis(block, scales.scaleKey, scalesOptions.scaleKey, axisModel.keyAxis, blockSize);
     }
 
-    private static updateValueAxisDomain(block: Block, scaleValue: AxisScale<any>, scaleOptions: ScaleValueModel, axisOptions: AxisModelOptions): void {
+    private static updateValueAxis(block: Block, scaleValue: AxisScale<any>, scaleOptions: ScaleValueModel, axisOptions: AxisModelOptions): void {
         const axisGenerator = this.getBaseAxisGenerator(axisOptions, scaleValue, scaleOptions);
 
         block.getSvg()
@@ -45,7 +45,7 @@ export class Axis {
             .call(axisGenerator.bind(this));
     }
 
-    private static updateKeyAxisDomain(block: Block, scaleKey: AxisScale<any>, scaleOptions: ScaleKeyModel, axisOptions: AxisModelOptions, blockSize: Size): void {
+    private static updateKeyAxis(block: Block, scaleKey: AxisScale<any>, scaleOptions: ScaleKeyModel, axisOptions: AxisModelOptions, blockSize: Size): void {
         const axisGenerator = this.getBaseAxisGenerator(axisOptions, scaleKey, scaleOptions);
 
         if (axisOptions.labels.positition === 'rotated') {

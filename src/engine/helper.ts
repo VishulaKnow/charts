@@ -97,6 +97,18 @@ export class Helper {
         return valueInString.substring(dotIndex).length;
     }
 
+    public static checkDomainsEqual(oldDomain: string[], newDomain: string[]): boolean {
+        if (oldDomain.length !== newDomain.length)
+            return false;
+
+        let isEqual = true;
+        oldDomain.forEach((keyValue, index) => {
+            if (keyValue !== newDomain[index])
+                isEqual = false;
+        });
+        return isEqual;
+    }
+
     private static setChartOpacity(elements: Selection<BaseType, unknown, BaseType, unknown>, opacity: number): void {
         elements.attr('opacity', opacity);
     }

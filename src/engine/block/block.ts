@@ -1,6 +1,7 @@
 import { select, Selection, BaseType } from "d3-selection";
 import { Transitions } from "../../designer/designerConfig";
 import { BlockMargin, Size } from "../../model/model";
+import { Scales } from "../features/scale/scale";
 import { Tooltip } from "../features/tolltip/tooltip";
 import { Helper } from "../helper";
 import { NamesManager } from "../namesManager";
@@ -12,6 +13,7 @@ export class Block {
     public parentElement: HTMLElement;
     public id: number;
     public transitionManager: TransitionManager;
+    public scales: Scales;
 
     private svgCssClasses: string[];
     private wrapperCssClasses: string[];

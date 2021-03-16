@@ -9,6 +9,7 @@ import { RecordOverflowAlert } from "../features/recordOverflowAlert/recordOverf
 import { Scale, Scales } from "../features/scale/scale";
 import { Title } from "../features/title/title";
 import { Tooltip } from "../features/tolltip/tooltip";
+import { Helper } from "../helper";
 import { Area } from "./area/area";
 import { Bar } from "./bar/bar";
 import { BarHelper } from "./bar/barHelper";
@@ -21,6 +22,8 @@ export class TwoDimensionalManager {
         const scales = Scale.getScales(options.scale.scaleKey,
             options.scale.scaleValue,
             model.chartSettings.bar);
+
+        engine.block.scales = scales;
 
         engine.block.renderSvg(model.blockCanvas.size);
 
@@ -64,7 +67,10 @@ export class TwoDimensionalManager {
             options.scale.scaleValue,
             model.chartSettings.bar);
 
-        Axis.update(block, scales, options.scale, options.axis, model.blockCanvas.size);
+        const keyDomainEquality = Helper.checkDomainsEqual(block.scales.scaleKey.domain(), scales.scaleKey.domain());
+        block.scales = scales;
+
+        Axis.update(block, scales, options.scale, options.axis, model.blockCanvas.size, keyDomainEquality);
 
         GridLine.rerender(block,
             options.additionalElements.gridLine.flag,
