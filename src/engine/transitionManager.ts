@@ -3,6 +3,7 @@ import { Transitions } from "../designer/designerConfig";
 import { Block } from "./block/block";
 import { Axis } from "./features/axis/axis";
 import { EmbeddedLabels } from "./features/embeddedLabels/embeddedLabels";
+import { Legend } from "./features/legend/legend";
 import { MarkDot } from "./features/markDots/markDot";
 import { Tooltip } from "./features/tolltip/tooltip";
 import { Aggregator } from "./polarNotation/aggregator";
@@ -37,7 +38,8 @@ export class TransitionManager {
         MarkDot.markerDotClass,
         EmbeddedLabels.embeddedLabelClass,
         Donut.arcPathClass,
-        Aggregator.aggregatorValueClass
+        Aggregator.aggregatorValueClass,
+        Legend.legendBlockClass
     ];
 
     constructor(block: Block, transitionsDurations: Transitions = null) {

@@ -70,6 +70,7 @@ export class Aggregator {
         const thisClass = this;
         block.getSvg()
             .select<HTMLDivElement>(`.${this.aggregatorValueClass}`)
+            .interrupt()
             .transition()
             .duration(1000)
             .tween("text", function () {

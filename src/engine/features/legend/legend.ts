@@ -1,5 +1,6 @@
 import { Color } from "d3-color";
 import { Selection, BaseType, select } from 'd3-selection'
+import { transition } from "d3-transition";
 import { LegendItemsDirection } from "../../../model/featuresModel/legendModel/legendCanvasModel";
 import { DataSource, IntervalOptionsModel, LegendBlockModel, LegendPosition, Orient, PolarOptionsModel, Size, TwoDimensionalOptionsModel } from "../../../model/model";
 import { Block } from "../../block/block";
@@ -13,7 +14,7 @@ interface LegendCoordinate {
 }
 
 export class Legend {
-    private static legendBlockClass = 'legend-block';
+    public static legendBlockClass = 'legend-block';
     private static legendObjectClass = 'legend-object';
     private static legendLabelClass = 'legend-label'
 
@@ -42,9 +43,15 @@ export class Legend {
             const chartElementsColor = LegendHelper.getMarksColor(options);
             const legendItemsDirection = LegendHelper.getLegendItemsDirection(options.type, options.legend.position);
 
-            legendObject.select(`.${this.legendBlockClass}`).remove();
+            legendObject.select(`.${this.legendBlockClass}`)
+            .style('opacity', 1)
+            .interrupt()
+            .transition()
+            .duration(block.transitionManager.durations.chartUpdate / 2)
+            .style('opacity', 0)
+            .remove();
 
-            this.renderLegendContent(legendObject, legendItemsContent, chartElementsColor, legendItemsDirection, options.legend.position);
+            this.renderLegendContent(block, legendObject, legendItemsContent, chartElementsColor, legendItemsDirection, options.legend.position);
         }
     }
 
@@ -56,7 +63,7 @@ export class Legend {
         const legendCoordinate = this.getLegendCoordinateByPosition(legendPosition, legendBlockModel, blockSize);
         this.fillLegendCoordinate(legendBlock, legendCoordinate);
 
-        this.renderLegendContent(legendBlock,
+        this.renderLegendContent(block, legendBlock,
             items,
             colorPalette,
             itemsDirection,
@@ -102,7 +109,7 @@ export class Legend {
             .attr('height', coordinate.height);
     }
 
-    private static renderLegendContent(legendObject: Selection<SVGForeignObjectElement, unknown, HTMLElement, any>, items: string[], colorPalette: Color[], itemsDirection: LegendItemsDirection, position: LegendPosition): void {
+    private static renderLegendContent(block: Block, legendObject: Selection<SVGForeignObjectElement, unknown, HTMLElement, any>, items: string[], colorPalette: Color[], itemsDirection: LegendItemsDirection, position: LegendPosition): void {
         const wrapper = legendObject.append('xhtml:div')
             .attr('class', this.legendBlockClass);
 
@@ -122,8 +129,7 @@ export class Legend {
             .selectAll('.legend-item')
             .data(items)
             .enter()
-            .append('div');
-
+            .append('div')
         itemWrappers.each(function (d, i) {
             select(this).attr('class', LegendHelper.getItemClasses(itemsDirection, position, i));
         });
@@ -131,16 +137,30 @@ export class Legend {
         itemWrappers
             .append('span')
             .attr('class', 'legend-circle')
-            .style('background-color', (d, i) => colorPalette[i % colorPalette.length].toString());
+            .style('background-color', (d, i) => colorPalette[i % colorPalette.length].toString())
+            .style('opacity', 0)
+            .interrupt()
+            .transition()
+            .delay(block.transitionManager.durations.chartUpdate / 2)
+            .duration(block.transitionManager.durations.chartUpdate / 2)
+            .style('opacity', 1)
+
 
         itemWrappers
             .data(items)
             .append('span')
             .attr('class', LegendHelper.getLegendLabelClassByPosition(position))
-            .text(d => d.toString());
-
-        if (itemsDirection === 'column' && position === 'bottom')
-            this.cropColumnLabels(legendObject, itemWrappers, itemsDirection);
+            .interrupt()
+            .transition()
+            .delay(block.transitionManager.durations.chartUpdate / 2)
+            .duration(block.transitionManager.durations.chartUpdate / 2)
+            .tween('text', function(d){
+                var textLength = d.length;
+                return function(t){
+                    this.textContent = d.substr(0, Math.round(t * textLength));
+                }
+            })
+            // .text(d => d.toString())
         if (itemsDirection === 'row')
             this.cropRowLabels(legendObject, itemWrappers);
     }
@@ -179,6 +199,7 @@ export class Legend {
 
         items.nodes().forEach(node => {
             if (node.getBoundingClientRect().width > maxItemWidth) {
+                console.log(1)
                 const text = node.querySelector(`.${this.legendLabelClass}`);
                 let labelText = text.textContent;
                 while (node.getBoundingClientRect().width > maxItemWidth && labelText.length > 3) {
