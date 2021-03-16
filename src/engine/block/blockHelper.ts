@@ -1,7 +1,7 @@
 import { BlockMargin, Size } from "../../model/model";
 import { ValueFormatter } from "../valueFormatter";
 
-export interface GAttributes {
+export interface ClipPathAttributes {
     x: number;
     y: number;
     width: number;
@@ -9,7 +9,7 @@ export interface GAttributes {
 }
 
 export class BlockHelper {
-    public static getClipPathAttributes(blockSize: Size, margin: BlockMargin): GAttributes {
+    public static getClipPathAttributes(blockSize: Size, margin: BlockMargin): ClipPathAttributes {
         const outSize = 9;
         return {
             x: margin.left - outSize,
