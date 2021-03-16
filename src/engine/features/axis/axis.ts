@@ -26,7 +26,12 @@ export class Axis {
             this.renderAxis(block, scales.scaleKey, scaleModel.scaleKey, axisModel.keyAxis, margin, blockSize);
     }
 
-    public static updateValueAxisDomain(block: Block, scaleValue: AxisScale<any>, scaleOptions: ScaleValueModel, axisOptions: AxisModelOptions): void {
+    public static update(block: Block, scales: Scales, scalesOptions: IScaleModel, axesOptions: IAxisModel, blockSize: Size): void {
+        this.updateValueAxisDomain(block, scales.scaleValue, scalesOptions.scaleValue, axesOptions.valueAxis);
+        this.updateKeyAxisDomain(block, scales.scaleKey, scalesOptions.scaleKey, axesOptions.keyAxis, blockSize);
+    }
+
+    private static updateValueAxisDomain(block: Block, scaleValue: AxisScale<any>, scaleOptions: ScaleValueModel, axisOptions: AxisModelOptions): void {
         const axisGenerator = this.getBaseAxisGenerator(axisOptions, scaleValue, scaleOptions);
 
         block.getSvg()
@@ -38,7 +43,7 @@ export class Axis {
             .call(axisGenerator.bind(this));
     }
 
-    public static updateKeyAxisDomain(block: Block, scaleKey: AxisScale<any>, scaleOptions: ScaleKeyModel, axisOptions: AxisModelOptions, blockSize: Size): void {
+    private static updateKeyAxisDomain(block: Block, scaleKey: AxisScale<any>, scaleOptions: ScaleKeyModel, axisOptions: AxisModelOptions, blockSize: Size): void {
         const axisGenerator = this.getBaseAxisGenerator(axisOptions, scaleKey, scaleOptions);
 
         if (axisOptions.labels.positition === 'rotated') {
@@ -62,7 +67,7 @@ export class Axis {
             .transition()
             .on('end', () => {
                 if (axisOptions.orient === 'bottom' || axisOptions.orient === 'top') {
-                    if (axisOptions.labels.positition === 'straight') {
+                    if (axisOptions.labels.positition === 'straight') { // Обратное выравнивание лейблов, если они были перевернуты, но теперь могут отображаться прямо
                         axisElement.selectAll('.tick text')
                             .attr('transform', null)
                             .attr('text-anchor', 'middle')
@@ -76,10 +81,7 @@ export class Axis {
                     else
                         this.cropLabels(block, scaleKey, scaleOptions, axisOptions, blockSize);
 
-                    if (axisOptions.orient === 'left')
-                        this.alignLabelsInVerticalAxis(axisElement, 'start', axisOptions.labels.maxSize, true);
-                    else if (axisOptions.orient === 'right')
-                        this.alignLabelsInVerticalAxis(axisElement, 'start', axisOptions.labels.maxSize, false);
+                    this.alignLabelsInKeyAxis(axisOptions, axisElement);
                 }
             })
             .duration(block.transitionManager.durations.chartUpdate)
@@ -87,10 +89,7 @@ export class Axis {
             .call(axisGenerator.bind(this));
 
         if (axisOptions.orient === 'left' || axisOptions.orient === 'right') {
-            if (axisOptions.orient === 'left')
-                this.alignLabelsInVerticalAxis(axisElement, 'start', axisOptions.labels.maxSize, true);
-            else if (axisOptions.orient === 'right')
-                this.alignLabelsInVerticalAxis(axisElement, 'start', axisOptions.labels.maxSize, false);
+            this.alignLabelsInKeyAxis(axisOptions, axisElement);
         }
 
         if (axisOptions.orient === 'bottom' || axisOptions.orient === 'top') {
@@ -124,10 +123,7 @@ export class Axis {
             }
 
             if (axisOptions.type === 'key') {
-                if (axisOptions.orient === 'left')
-                    this.alignLabelsInVerticalAxis(axisElement, 'start', axisOptions.labels.maxSize, true);
-                else if (axisOptions.orient === 'right')
-                    this.alignLabelsInVerticalAxis(axisElement, 'start', axisOptions.labels.maxSize, false);
+                this.alignLabelsInKeyAxis(axisOptions, axisElement);
             }
         } else {
             this.hideLabels(axisElement);
@@ -156,6 +152,13 @@ export class Axis {
             else
                 axis.tickValues([min(scale.domain), max(scale.domain)]);
         }
+    }
+
+    private static alignLabelsInKeyAxis(axisOptions: AxisModelOptions, axisElement: Selection<SVGGElement, unknown, HTMLElement, any>): void {
+        if (axisOptions.orient === 'left')
+            this.alignLabelsInVerticalAxis(axisElement, 'start', axisOptions.labels.maxSize, true);
+        else if (axisOptions.orient === 'right')
+            this.alignLabelsInVerticalAxis(axisElement, 'start', axisOptions.labels.maxSize, false);
     }
 
     private static alignLabelsInVerticalAxis(axisElement: Selection<SVGGElement, unknown, HTMLElement, any>, anchor: TextAnchor, maxLabelSize: number, changeCoordinate: boolean): void {

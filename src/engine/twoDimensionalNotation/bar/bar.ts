@@ -136,7 +136,7 @@ export class Bar {
                 .selectAll<SVGRectElement, DataRow>(`.${this.barItemClass}${Helper.getCssClassesLine(chart.cssClasses)}.chart-element-${index}`)
                 .filter((d, i) => {
                     if (newData.findIndex(row => row[keyField.name] === d[keyField.name]) === -1) {
-                        indexesOfRemoved.push(i);
+                        indexesOfRemoved.push(i); // Набор индексов для встроенных лейблов
                         return true;
                     }
                     return false;

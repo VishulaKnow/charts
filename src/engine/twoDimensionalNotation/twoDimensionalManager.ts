@@ -64,16 +64,7 @@ export class TwoDimensionalManager {
             options.scale.scaleValue,
             model.chartSettings.bar);
 
-        Axis.updateValueAxisDomain(block,
-            scales.scaleValue,
-            options.scale.scaleValue,
-            options.axis.valueAxis);
-
-        Axis.updateKeyAxisDomain(block,
-            scales.scaleKey,
-            options.scale.scaleKey,
-            options.axis.keyAxis,
-            model.blockCanvas.size);
+        Axis.update(block, scales, options.scale, options.axis, model.blockCanvas.size);
 
         GridLine.rerender(block,
             options.additionalElements.gridLine.flag,

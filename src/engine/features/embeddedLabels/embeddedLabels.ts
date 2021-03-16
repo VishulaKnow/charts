@@ -25,7 +25,7 @@ export class EmbeddedLabels {
     }
 
     public static restoreRemoved(block: Block, bars: Selection<SVGRectElement, DataRow, SVGGElement, any>, barAttrsHelper: BarAttrsHelper, field: Field, type: EmbeddedLabelTypeModel, keyAxisOrient: Orient, blockSize: Size, margin: BlockMargin, index: number, cssClasses: string[], keyFieldName: string): void {
-        const untaggedBars = bars.filter((d, i) => {
+        const untaggedBars = bars.filter(d => {
             return block.getChartBlock()
                 .selectAll<SVGGElement, unknown>(`.${EmbeddedLabels.embeddedLabelsGroupClass}${Helper.getCssClassesLine(cssClasses)}.chart-element-${index}`)
                 .selectAll<SVGTextElement, DataRow>(`.${this.embeddedLabelClass}`)
@@ -88,7 +88,7 @@ export class EmbeddedLabels {
         const attrs = EmbeddedLabelsHelper.getLabelAttrs(barAttrs, type, position, keyAxisOrient, labelBlock.node().getBBox().width);
 
         if (position === 'outside') {
-            attrs.x = this.checkLabelToResetTextAnchor(attrs.x, labelBlock.node().getBBox().width, margin, blockSize, keyAxisOrient, position);
+            attrs.x = this.checkLabelToResetTextAnchor(attrs.x, labelBlock.node().getBBox().width, margin, blockSize, keyAxisOrient);
             this.renderBackground(labelsGroup, labelBlock, attrs);
         }
 
@@ -115,7 +115,7 @@ export class EmbeddedLabels {
         this.cropText(labelBlock, barAttrs, position, labelUnserveFlag, margin, blockSize);
 
         if (position === 'outside') {
-            attrs.x = this.checkLabelToResetTextAnchor(attrs.x, labelBlock.node().getBBox().width, margin, blockSize, keyAxisOrient, position);
+            attrs.x = this.checkLabelToResetTextAnchor(attrs.x, labelBlock.node().getBBox().width, margin, blockSize, keyAxisOrient);
             labelBlock.style('fill', this.outerLabelColor);
         }
 
@@ -129,7 +129,7 @@ export class EmbeddedLabels {
             });
     }
 
-    private static checkLabelToResetTextAnchor(x: number, width: number, margin: BlockMargin, blockSize: Size, keyAxisOrient: Orient, position: EmbeddedLabelPosition): number {
+    private static checkLabelToResetTextAnchor(x: number, width: number, margin: BlockMargin, blockSize: Size, keyAxisOrient: Orient): number {
         if (keyAxisOrient === 'left') {
             if (x + width > blockSize.width - margin.right)
                 return blockSize.width - margin.right - width;
