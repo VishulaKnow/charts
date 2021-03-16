@@ -93,6 +93,8 @@ export function assembleModel(config: Config, data: DataSource, designerConfig: 
             chartSettings: null
         }
 
+    resetFalsyValues(data, config.options.data.keyField.name);
+
     const otherComponents = OtherComponentsModel.getOtherComponentsModel();
     const margin = MarginModel.getMargin(designerConfig, config, otherComponents, data);
     const dataScope = DataManagerModel.getDataScope(config, margin, data, designerConfig, otherComponents.legendBlock);
@@ -124,7 +126,23 @@ export function assembleModel(config: Config, data: DataSource, designerConfig: 
     }
 }
 
+function resetFalsyValues(data: DataSource, keyFieldName: string): void {
+    for (let setName in data) {
+        data[setName].forEach(dataRow => {
+            for (let fieldName in dataRow) {
+                if (fieldName === keyFieldName && !dataRow[fieldName]) {
+                    dataRow[fieldName] = '';
+                } else if (dataRow[fieldName] !== 0 && !dataRow[fieldName]) {
+                    dataRow[fieldName] = 0;
+                }
+            }
+        });
+    }
+}
+
 export function getPreparedData(model: Model, data: DataSource, config: Config): DataSource {
+    resetFalsyValues(data, config.options.data.keyField.name);
+
     if (!model || Object.keys(model).length === 0 || !data || Object.keys(data).length === 0)
         return null;
 

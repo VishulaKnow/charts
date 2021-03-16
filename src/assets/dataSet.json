@@ -44,6 +44,11 @@
             "brand": "TOYOTA",
             "price": 40,
             "count": 15
+        },
+        {
+            "brand": "",
+            "price": 40,
+            "count": 15
         }
     ],
     "dataSet2": [
