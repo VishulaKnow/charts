@@ -21,7 +21,8 @@ export class TransitionManager {
         tooltipSlide: 75,
         donutHover: 200,
         markerHover: 50,
-        elementFadeOut: 400
+        elementFadeOut: 400,
+        legendUpdate: 500
     }
 
     private block: Block;
@@ -39,7 +40,8 @@ export class TransitionManager {
         EmbeddedLabels.embeddedLabelClass,
         Donut.arcPathClass,
         Aggregator.aggregatorValueClass,
-        Legend.legendBlockClass
+        Legend.legendCircleCLass,
+        Legend.legendLabelClass
     ];
 
     constructor(block: Block, transitionsDurations: Transitions = null) {

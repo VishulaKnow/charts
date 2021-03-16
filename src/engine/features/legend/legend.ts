@@ -5,6 +5,7 @@ import { LegendItemsDirection } from "../../../model/featuresModel/legendModel/l
 import { DataSource, IntervalOptionsModel, LegendBlockModel, LegendPosition, Orient, PolarOptionsModel, Size, TwoDimensionalOptionsModel } from "../../../model/model";
 import { Block } from "../../block/block";
 import { LegendHelper } from "./legendHelper";
+import { CLASSES } from "../../../model/modelBuilder";
 
 interface LegendCoordinate {
     x: number;
@@ -14,9 +15,10 @@ interface LegendCoordinate {
 }
 
 export class Legend {
-    public static legendBlockClass = 'legend-block';
+    public static legendLabelClass = CLASSES.legendLabel;
+    public static legendCircleCLass = CLASSES.legendColor;
+    private static legendBlockClass = 'legend-block';
     private static legendObjectClass = 'legend-object';
-    private static legendLabelClass = 'legend-label'
 
     public static render(block: Block, data: DataSource, options: TwoDimensionalOptionsModel | PolarOptionsModel | IntervalOptionsModel, legendBlockModel: LegendBlockModel, blockSize: Size): void {
         if (options.legend.position !== 'off') {
@@ -47,7 +49,7 @@ export class Legend {
             .style('opacity', 1)
             .interrupt()
             .transition()
-            .duration(block.transitionManager.durations.chartUpdate / 2)
+            .duration(block.transitionManager.durations.legendUpdate)
             .style('opacity', 0)
             .remove();
 
@@ -136,13 +138,13 @@ export class Legend {
 
         itemWrappers
             .append('span')
-            .attr('class', 'legend-circle')
+            .attr('class', this.legendCircleCLass)
             .style('background-color', (d, i) => colorPalette[i % colorPalette.length].toString())
             .style('opacity', 0)
             .interrupt()
             .transition()
-            .delay(block.transitionManager.durations.chartUpdate / 2)
-            .duration(block.transitionManager.durations.chartUpdate / 2)
+            .delay(block.transitionManager.durations.legendUpdate)
+            .duration(block.transitionManager.durations.legendUpdate)
             .style('opacity', 1)
 
 
