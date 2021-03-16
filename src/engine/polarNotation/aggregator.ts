@@ -71,7 +71,7 @@ export class Aggregator {
         block.getSvg()
             .select<HTMLDivElement>(`.${this.aggregatorValueClass}`)
             .transition()
-            .duration(1000)
+            .duration(block.transitionManager.durations.chartUpdate)
             .tween("text", function () {
                 const oldValue = Helper.parseFormattedToNumber(this.textContent);
                 const precision = Helper.calcDigitsAfterDot(newAggregator.value);
