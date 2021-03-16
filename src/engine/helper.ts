@@ -92,7 +92,7 @@ export class Helper {
     }
 
     public static calcDigitsAfterDot(value: number): number {
-        const valueInString: string = value.toString();
+        const valueInString = value.toString();
         const dotIndex = valueInString.lastIndexOf('.') === -1 ? valueInString.length : valueInString.lastIndexOf('.') + 1;
         return valueInString.substring(dotIndex).length;
     }
