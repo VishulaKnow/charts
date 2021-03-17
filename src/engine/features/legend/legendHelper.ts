@@ -4,6 +4,7 @@ import { LegendItemsDirection } from "../../../model/featuresModel/legendModel/l
 import { Helper } from "../../helper";
 import { Color } from "d3-color";
 import { DataRow, DataSource, IntervalOptionsModel, LegendPosition, PolarOptionsModel, TwoDimensionalOptionsModel } from "../../../model/model";
+import { DomHelper } from '../../domHelper';
 
 
 export class LegendHelper {
@@ -37,7 +38,7 @@ export class LegendHelper {
 
     public static getMaxItemWidth(legendBlock: Selection<SVGForeignObjectElement, unknown, HTMLElement, any>, items: Selection<HTMLDivElement, string, BaseType, unknown>, itemsDirection: LegendItemsDirection): number {
         if (itemsDirection === 'row') {
-            const margins = items.nodes().map(node => Helper.getPXValueFromString(Helper.getCssPropertyValue(node, 'margin-left')));
+            const margins = items.nodes().map(node => DomHelper.getPXValueFromString(DomHelper.getCssPropertyValue(node, 'margin-left')));
             const sumOfMargins = Helper.getSumOfNumeric(margins);
             return (parseFloat(legendBlock.attr('width')) - sumOfMargins) / items.size();
         }
@@ -74,7 +75,7 @@ export class LegendHelper {
 
     public static getSumOfItemsWidths(items: Selection<HTMLDivElement, string, BaseType, unknown>): number {
         let sumOfItemsWidth = Helper.getSumOfNumeric(items.nodes().map(node => node.getBoundingClientRect().width));
-        sumOfItemsWidth += Helper.getSumOfNumeric(items.nodes().map(node => Helper.getPXValueFromString(Helper.getCssPropertyValue(node, 'margin-left'))));
+        sumOfItemsWidth += Helper.getSumOfNumeric(items.nodes().map(node => DomHelper.getPXValueFromString(DomHelper.getCssPropertyValue(node, 'margin-left'))));
         return sumOfItemsWidth;
     }
 }

@@ -1,11 +1,12 @@
 import { Selection, BaseType } from 'd3-selection';
 import { PieArcDatum } from 'd3-shape'
 import { BlockMargin, DataRow, Size, TwoDimensionalChartModel } from "../../model/model";
-import { Helper, SelectionCondition } from "../helper";
+import { Helper } from "../helper";
 import { Block } from "../block/block";
 import { easeLinear } from 'd3-ease';
 import { interrupt, Transition } from 'd3-transition';
 import { DonutHelper } from '../polarNotation/donut/DonutHelper';
+import { DomHelper, SelectionCondition } from '../domHelper';
 
 export class ElementHighlighter {
     public static renderShadowFilter(block: Block, filterId: string): Selection<SVGFilterElement, unknown, HTMLElement, unknown> {
@@ -55,14 +56,14 @@ export class ElementHighlighter {
     }
 
     public static removeDonutHighlightingByKeys(arcSegments: Selection<SVGGElement, PieArcDatum<DataRow>, BaseType, unknown>, keyFieldName: string, keyValues: string[], margin: BlockMargin, blockSize: Size, donutThickness: number): void {
-        const segments = Helper.getChartElementsByKeys(arcSegments, true, keyFieldName, keyValues, SelectionCondition.Exclude);
+        const segments = DomHelper.getChartElementsByKeys(arcSegments, true, keyFieldName, keyValues, SelectionCondition.Exclude);
         this.changeDonutHighlightAppearance(segments, margin, blockSize, donutThickness, 0, false);
         this.removeFilter(segments);
     }
 
     public static remove2DChartsFullHighlighting(block: Block, charts: TwoDimensionalChartModel[], transitionDuration: number = 0): void {
         charts.forEach(chart => {
-            const elems = Helper.getChartElements(block, chart);
+            const elems = DomHelper.getChartElements(block, chart);
             if (chart.type === 'area' || chart.type === 'line') {
                 elems.call(this.scaleElement, false, transitionDuration);
             } else {
@@ -79,9 +80,9 @@ export class ElementHighlighter {
 
     public static removeUnselected2DHighlight(block: Block, keyFieldName: string, charts: TwoDimensionalChartModel[], transitionDuration: number): void {
         charts.forEach(chart => {
-            const elems = Helper.getChartElements(block, chart);
+            const elems = DomHelper.getChartElements(block, chart);
 
-            const selectedElems = Helper.getChartElementsByKeys(elems, chart.isSegmented, keyFieldName, block.filterEventManager.getSelectedKeys(), SelectionCondition.Exclude);
+            const selectedElems = DomHelper.getChartElementsByKeys(elems, chart.isSegmented, keyFieldName, block.filterEventManager.getSelectedKeys(), SelectionCondition.Exclude);
 
             if (chart.type === 'area' || chart.type === 'line') {
                 selectedElems.call(this.scaleElement, false, transitionDuration);
@@ -93,9 +94,9 @@ export class ElementHighlighter {
 
     public static highlightElementsOf2D(block: Block, keyFieldName: string, keyValue: string, charts: TwoDimensionalChartModel[], filterId: string, transitionDuration: number): void {
         charts.forEach(chart => {
-            const elems = Helper.getChartElements(block, chart);
+            const elems = DomHelper.getChartElements(block, chart);
 
-            const selectedElems = Helper.get2DElementsByKey(elems, chart.isSegmented, keyFieldName, keyValue);
+            const selectedElems = DomHelper.get2DElementsByKey(elems, chart.isSegmented, keyFieldName, keyValue);
 
             if (chart.type === 'area' || chart.type === 'line') {
                 selectedElems.call(this.scaleElement, true, transitionDuration);
@@ -108,9 +109,9 @@ export class ElementHighlighter {
     //TODO: убрать дублирование
     public static remove2DHighlightingByKey(block: Block, keyFieldName: string, keyValue: string, charts: TwoDimensionalChartModel[], transitionDuration: number): void {
         charts.forEach(chart => {
-            const elems = Helper.getChartElements(block, chart);
+            const elems = DomHelper.getChartElements(block, chart);
 
-            const selectedElems = Helper.get2DElementsByKey(elems, chart.isSegmented, keyFieldName, keyValue);
+            const selectedElems = DomHelper.get2DElementsByKey(elems, chart.isSegmented, keyFieldName, keyValue);
 
             if (chart.type === 'area' || chart.type === 'line') {
                 selectedElems.call(this.scaleElement, false, transitionDuration);

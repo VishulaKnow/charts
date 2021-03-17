@@ -2,6 +2,7 @@ import { BaseType, select, Selection } from 'd3-selection';
 import { Transition } from 'd3-transition';
 import { BlockMargin, DataRow, EmbeddedLabelTypeModel, Field, Orient, Size } from "../../../model/model";
 import { Block } from "../../block/block";
+import { DomHelper } from '../../domHelper';
 import { Helper } from "../../helper";
 import { BarAttrsHelper } from '../../twoDimensionalNotation/bar/barHelper';
 import { ValueFormatter } from "../../valueFormatter";
@@ -17,7 +18,7 @@ export class EmbeddedLabels {
 
     public static render(block: Block, bars: Selection<SVGRectElement, DataRow, SVGGElement, any>, barAttrsHelper: BarAttrsHelper, field: Field, type: EmbeddedLabelTypeModel, keyAxisOrient: Orient, blockSize: Size, margin: BlockMargin, index: number, cssClasses: string[]): void {
         const labelsGroup = this.renderGroup(block, Helper.getCssClassesWithElementIndex(cssClasses, index));
-        Helper.setCssClasses(labelsGroup, Helper.getCssClassesWithElementIndex(cssClasses, index));
+        DomHelper.setCssClasses(labelsGroup, Helper.getCssClassesWithElementIndex(cssClasses, index));
 
         bars.each(dataRow => {
             this.renderLabel(labelsGroup, barAttrsHelper, dataRow, field, type, keyAxisOrient, blockSize, margin);
@@ -150,7 +151,7 @@ export class EmbeddedLabels {
         else
             labelTextSpace = EmbeddedLabelsHelper.getSpaceSizeForType(position, barAttrs.width, margin, blockSize);
 
-        Helper.cropSvgLabels(labelBlock, labelTextSpace);
+        DomHelper.cropSvgLabels(labelBlock, labelTextSpace);
     }
 
     private static renderGroup(block: Block, cssClasses: string[]): Selection<SVGGElement, unknown, HTMLElement, unknown> {

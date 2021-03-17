@@ -2,7 +2,7 @@ import { AxisScale } from 'd3-axis';
 import { Selection, BaseType } from 'd3-selection'
 import { ChartOrientation, ValueField } from "../../../config/config";
 import { BlockMargin, DataSource, OptionsModelData, Orient, PolarChartModel, ScaleKeyType, Size, TwoDimensionalChartModel } from "../../../model/model";
-import { Helper } from '../../helper';
+import { DomHelper } from '../../domHelper';
 import { ValueFormatter, } from "../../valueFormatter";
 import { Scale } from '../scale/scale';
 
@@ -76,10 +76,10 @@ export class TooltipHelper {
                 right: null
             }
 
-            if (Helper.getPXValueFromString(coordinate.left) < 0)
+            if (DomHelper.getPXValueFromString(coordinate.left) < 0)
                 coordinate.left = 0 + 'px';
 
-            if (Helper.getPXValueFromString(coordinate.left) + tooltipBlockElement.getBoundingClientRect().width > blockSize.width) {
+            if (DomHelper.getPXValueFromString(coordinate.left) + tooltipBlockElement.getBoundingClientRect().width > blockSize.width) {
                 coordinate.left = null;
                 coordinate.right = 0 + 'px';
             }
@@ -98,10 +98,10 @@ export class TooltipHelper {
                 right: null
             }
 
-            if (Helper.getPXValueFromString(coordinate.top) < 0)
+            if (DomHelper.getPXValueFromString(coordinate.top) < 0)
                 coordinate.top = 0 + 'px';
 
-            if (Helper.getPXValueFromString(coordinate.top) + tooltipBlockElement.getBoundingClientRect().height > blockSize.height) {
+            if (DomHelper.getPXValueFromString(coordinate.top) + tooltipBlockElement.getBoundingClientRect().height > blockSize.height) {
                 coordinate.top = null;
                 coordinate.bottom = 0 + 'px';
             }

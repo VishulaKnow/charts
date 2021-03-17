@@ -3,6 +3,7 @@ import { BarChartSettings, BlockMargin, DataRow, IntervalChartModel, OptionsMode
 import { Block } from "../block/block";
 import { Helper } from "../helper";
 import { Scale, Scales } from "../features/scale/scale";
+import { DomHelper } from '../domHelper';
 
 interface GanttItemsAttrs {
     x: (data: DataRow) => number;
@@ -33,8 +34,8 @@ export class Gantt {
 
         this.fillItemsAttrs(ganttItems, itemsAttrs);
 
-        Helper.setCssClasses(ganttItems, chart.cssClasses);
-        Helper.setChartStyle(ganttItems, chart.style, 0, 'fill');
+        DomHelper.setCssClasses(ganttItems, chart.cssClasses);
+        DomHelper.setChartStyle(ganttItems, chart.style, 0, 'fill');
     }
 
     private static fillItemsAttrs(ganttItems: Selection<SVGRectElement, DataRow, BaseType, unknown>, attrs: GanttItemsAttrs): void {

@@ -7,6 +7,7 @@ import { Scales } from "../../features/scale/scale";
 import { Block } from "../../block/block";
 import { MarkDot } from "../../features/markDots/markDot";
 import { LineHelper } from './lineHelper';
+import { DomHelper } from '../../domHelper';
 
 export class Line {
     public static lineChartClass = 'line';
@@ -38,8 +39,8 @@ export class Line {
                 .style('clip-path', `url(#${block.getClipPathId()})`)
                 .style('pointer-events', 'none');
 
-            Helper.setCssClasses(path, Helper.getCssClassesWithElementIndex(chart.cssClasses, valueFieldIndex));
-            Helper.setChartStyle(path, chart.style, valueFieldIndex, 'stroke');
+            DomHelper.setCssClasses(path, Helper.getCssClassesWithElementIndex(chart.cssClasses, valueFieldIndex));
+            DomHelper.setChartStyle(path, chart.style, valueFieldIndex, 'stroke');
 
             if (markFlag)
                 MarkDot.render(block, data, keyAxisOrient, scales, margin, keyField.name, valueFieldIndex, valueField.name, chart);
@@ -64,7 +65,7 @@ export class Line {
             .style('pointer-events', 'none');
 
         lines.each(function (d, i) {
-            Helper.setCssClasses(select(this), Helper.getCssClassesWithElementIndex(chart.cssClasses, i));
+            DomHelper.setCssClasses(select(this), Helper.getCssClassesWithElementIndex(chart.cssClasses, i));
         });
 
         this.setSegmentColor(lines, chart.style.elementColors);

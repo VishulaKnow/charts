@@ -1,7 +1,7 @@
 import { Selection } from 'd3-selection'
 import { ChartOrientation } from "../../../config/config";
 import { Block } from "../../block/block";
-import { Helper } from "../../helper";
+import { DomHelper } from '../../domHelper';
 import { Legend } from '../legend/legend';
 
 interface AlertBlockPositionAttrs {
@@ -117,6 +117,6 @@ export class RecordOverflowAlert {
         if (legendBlock.empty())
             return null;
 
-        return Helper.getSelectionNumericAttr(legendBlock, 'x');
+        return DomHelper.getSelectionNumericAttr(legendBlock, 'x');
     }
 }

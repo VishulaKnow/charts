@@ -1,6 +1,7 @@
 import { Selection } from 'd3-selection'
 import { Size, TitleBlockModel } from "../../../model/model";
 import { Block } from "../../block/block";
+import { DomHelper } from '../../domHelper';
 import { Helper } from "../../helper";
 
 interface TitleAttributes {
@@ -31,7 +32,7 @@ export class Title {
             .attr('dominant-baseline', attributes.dominantBaseline)
             .text(text);
 
-        Helper.cropSvgLabels(titleBlock, attributes.width);
+        DomHelper.cropSvgLabels(titleBlock, attributes.width);
     }
 
     private static getTitleAttributes(blockSize: Size, titleBlockModel: TitleBlockModel): TitleAttributes {

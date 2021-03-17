@@ -2,6 +2,7 @@ import { select, Selection, BaseType } from 'd3-selection';
 import { transition } from 'd3-transition';
 import { BlockMargin, DataRow, Orient, TwoDimensionalChartModel } from "../../../model/model";
 import { Block } from "../../block/block";
+import { DomHelper } from '../../domHelper';
 import { Helper } from "../../helper";
 import { Scales } from "../scale/scale";
 import { MarkDotHelper } from "./markDotsHelper";
@@ -34,8 +35,8 @@ export class MarkDot {
             .style('fill', 'white')
             .style('clip-path', `url(#${block.getClipPathId()})`);
 
-        Helper.setCssClasses(dots, Helper.getCssClassesWithElementIndex(chart.cssClasses, valueFieldIndex));
-        Helper.setChartElementColor(dots, chart.style.elementColors, valueFieldIndex, 'stroke');
+        DomHelper.setCssClasses(dots, Helper.getCssClassesWithElementIndex(chart.cssClasses, valueFieldIndex));
+        DomHelper.setChartElementColor(dots, chart.style.elementColors, valueFieldIndex, 'stroke');
     }
 
     public static getAllDots(block: Block): Selection<BaseType, DataRow, BaseType, unknown> {
@@ -62,8 +63,8 @@ export class MarkDot {
             .style('fill', 'white')
             .style('clip-path', `url(#${block.getClipPathId()})`);
 
-        Helper.setCssClasses(newDots, Helper.getCssClassesWithElementIndex(chart.cssClasses, valueFieldIndex));
-        Helper.setChartElementColor(newDots, chart.style.elementColors, valueFieldIndex, 'stroke');
+        DomHelper.setCssClasses(newDots, Helper.getCssClassesWithElementIndex(chart.cssClasses, valueFieldIndex));
+        DomHelper.setChartElementColor(newDots, chart.style.elementColors, valueFieldIndex, 'stroke');
 
         const animationName = 'data-updating'
 

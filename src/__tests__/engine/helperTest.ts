@@ -10,21 +10,3 @@ test('getTranslateNumbers should return tuple of two numbers which equal transal
 test('getTranslateNumbers should return tuple of zeros if transform attr is null', () => {
     expect(Helper.getTranslateNumbers(null)).toEqual([0, 0]);
 });
-
-test('getPXpropertyValue should return number from string: "[number]px"', () => {
-    expect(Helper.getPXValueFromString('12px')).toBe(12);
-    expect(Helper.getPXValueFromString('12123123123123px')).toBe(12123123123123);
-    expect(Helper.getPXValueFromString('12px123')).toBe(12);
-});
-
-test('getPropertyValue should return value of property of HTMLElement param', () => {
-    const elem = document.createElement('div');
-    elem.style.margin = '12px'
-    expect(Helper.getCssPropertyValue(elem, 'margin')).toEqual('12px');
-});
-
-test('getPropertyValue should return value of property of SVGElement param', () => {
-    const elem = document.createElement('circle');
-    elem.style.fill = 'red'
-    expect(Helper.getCssPropertyValue(elem, 'fill')).toEqual('red');
-});

@@ -10,6 +10,7 @@ import { EmbeddedLabelsHelper } from "../../features/embeddedLabels/embeddedLabe
 import { BarAttrsHelper, BarHelper } from "./barHelper";
 import { sum } from "d3-array";
 import { Transition } from "d3-transition";
+import { DomHelper } from "../../domHelper";
 
 export class Bar {
     public static barItemClass = 'bar-item';
@@ -76,8 +77,8 @@ export class Bar {
 
             this.fillBarAttrs(bars, barAttrs);
 
-            Helper.setCssClasses(bars, Helper.getCssClassesWithElementIndex(chart.cssClasses, index));
-            Helper.setChartStyle(bars, chart.style, index, 'fill');
+            DomHelper.setCssClasses(bars, Helper.getCssClassesWithElementIndex(chart.cssClasses, index));
+            DomHelper.setChartStyle(bars, chart.style, index, 'fill');
 
             if (chart.embeddedLabels !== 'none')
                 EmbeddedLabels.render(block, bars, barAttrs, EmbeddedLabelsHelper.getLabelField(chart.embeddedLabels, chart.data.valueFields, keyField, index), chart.embeddedLabels, keyAxisOrient, blockSize, margin, index, chart.cssClasses);
@@ -118,12 +119,12 @@ export class Bar {
 
         this.fillBarAttrs(bars, barAttrs);
 
-        Helper.setCssClasses(groups, chart.cssClasses);
-        Helper.setCssClasses(bars, chart.cssClasses); // Для обозначения принадлежности бара к конкретному чарту
+        DomHelper.setCssClasses(groups, chart.cssClasses);
+        DomHelper.setCssClasses(bars, chart.cssClasses); // Для обозначения принадлежности бара к конкретному чарту
 
         const thisClass = this;
         groups.each(function (d, i) {
-            Helper.setCssClasses(select(this).selectAll(`rect${Helper.getCssClassesLine(chart.cssClasses)}`), Helper.getCssClassesWithElementIndex(chart.cssClasses, i)); // Для обозначения принадлежности бара к конкретной части стака
+            DomHelper.setCssClasses(select(this).selectAll(`rect${Helper.getCssClassesLine(chart.cssClasses)}`), Helper.getCssClassesWithElementIndex(chart.cssClasses, i)); // Для обозначения принадлежности бара к конкретной части стака
             thisClass.setSegmentColor(select(this).selectAll(Helper.getCssClassesLine(chart.cssClasses)), chart.style.elementColors, i);
         });
     }
@@ -171,8 +172,8 @@ export class Bar {
             this.fillBarAttrs(bars, barAttrs, block.transitionManager.durations.chartUpdate);
             this.fillBarAttrs(newBars, barAttrs);
 
-            Helper.setCssClasses(newBars, Helper.getCssClassesWithElementIndex(chart.cssClasses, index));
-            Helper.setChartStyle(newBars, chart.style, index, 'fill');
+            DomHelper.setCssClasses(newBars, Helper.getCssClassesWithElementIndex(chart.cssClasses, index));
+            DomHelper.setChartStyle(newBars, chart.style, index, 'fill');
 
             if (chart.embeddedLabels !== 'none') {
                 EmbeddedLabels.removeUnused(block, chart.cssClasses, index, indexesOfRemoved);
@@ -223,12 +224,12 @@ export class Bar {
         this.fillBarAttrs(bars, barAttrs, block.transitionManager.durations.chartUpdate);
         this.fillBarAttrs(newBars, barAttrs);
 
-        Helper.setCssClasses(newBars, chart.cssClasses);
+        DomHelper.setCssClasses(newBars, chart.cssClasses);
 
         const thisClass = this;
 
         groups.each(function (d, i) {
-            Helper.setCssClasses(select(this).selectAll(`rect${Helper.getCssClassesLine(chart.cssClasses)}`), Helper.getCssClassesWithElementIndex(chart.cssClasses, i)); // Для обозначения принадлежности бара к конкретной части стака
+            DomHelper.setCssClasses(select(this).selectAll(`rect${Helper.getCssClassesLine(chart.cssClasses)}`), Helper.getCssClassesWithElementIndex(chart.cssClasses, i)); // Для обозначения принадлежности бара к конкретной части стака
             thisClass.setSegmentColor(select(this).selectAll(Helper.getCssClassesLine(chart.cssClasses)), chart.style.elementColors, i);
         });
     }

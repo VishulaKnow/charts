@@ -7,6 +7,7 @@ import { Scales } from "../../features/scale/scale";
 import { Block } from "../../block/block";
 import { MarkDot } from "../../features/markDots/markDot";
 import { AreaHelper } from './areaHelper';
+import { DomHelper } from '../../domHelper';
 
 export class Area {
     public static areaChartClass = 'area';
@@ -37,8 +38,8 @@ export class Area {
                 .style('clip-path', `url(#${block.getClipPathId()})`)
                 .style('pointer-events', 'none');
 
-            Helper.setCssClasses(path, Helper.getCssClassesWithElementIndex(chart.cssClasses, valueFieldIndex));
-            Helper.setChartStyle(path, chart.style, valueFieldIndex, 'fill');
+            DomHelper.setCssClasses(path, Helper.getCssClassesWithElementIndex(chart.cssClasses, valueFieldIndex));
+            DomHelper.setChartStyle(path, chart.style, valueFieldIndex, 'fill');
 
             if (chart.markersOptions.show)
                 MarkDot.render(block, data, keyAxisOrient, scales, margin, keyField.name, valueFieldIndex, field.name, chart);
@@ -61,7 +62,7 @@ export class Area {
             .style('pointer-events', 'none');
 
         areas.each(function (d, i) {
-            Helper.setCssClasses(select(this), Helper.getCssClassesWithElementIndex(chart.cssClasses, i));
+            DomHelper.setCssClasses(select(this), Helper.getCssClassesWithElementIndex(chart.cssClasses, i));
         });
 
         this.setSegmentColor(areas, chart.style.elementColors);

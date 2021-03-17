@@ -5,6 +5,7 @@ import { AxisModelOptions, Orient, ScaleKeyModel, ScaleValueModel, Size } from "
 import { Helper } from "../../helper";
 import { Block } from "../../block/block";
 import { AXIS_HORIZONTAL_LABEL_PADDING, AXIS_VERTICAL_LABEL_PADDING } from "../../../model/marginModel";
+import { DomHelper } from '../../domHelper';
 
 type TextAnchor = 'start' | 'end' | 'middle';
 
@@ -50,7 +51,7 @@ export class AxisLabelHelper {
             else
                 labelSize = (scale as ScaleBand<string>).step();
 
-            Helper.cropSvgLabels(axisTextBlocks, labelSize);
+            DomHelper.cropSvgLabels(axisTextBlocks, labelSize);
 
             if (scaleOptions.type === 'point' && axisOptions.labels.positition === 'straight' && (axisOptions.orient === 'top' || axisOptions.orient === 'bottom')) {
                 this.cropAndAlignExtremeLabels(block, labelSize, axisOptions, blockSize);
@@ -84,7 +85,7 @@ export class AxisLabelHelper {
 
         if (translateX + lastLabel.node().getBBox().width + axisOptions.translate.translateX > blockSize.width) {
             lastLabel.attr('text-anchor', 'end');
-            Helper.cropSvgLabels(lastLabel, labelSize / 2);
+            DomHelper.cropSvgLabels(lastLabel, labelSize / 2);
         }
 
         const firtsLabel = block.getSvg()
@@ -94,7 +95,7 @@ export class AxisLabelHelper {
 
         if (axisOptions.translate.translateX - firtsLabel.node().getBBox().width < 0) {
             firtsLabel.attr('text-anchor', 'start');
-            Helper.cropSvgLabels(firtsLabel, labelSize / 2);
+            DomHelper.cropSvgLabels(firtsLabel, labelSize / 2);
         }
     }
 }

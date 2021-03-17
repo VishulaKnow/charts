@@ -7,6 +7,7 @@ import { Helper } from "../../helper";
 import { Block } from "../../block/block";
 import { Aggregator } from "../aggregator";
 import { DonutHelper } from './DonutHelper';
+import { DomHelper } from '../../domHelper';
 
 export interface Translate {
     x: number;
@@ -107,7 +108,7 @@ export class Donut {
             .attr('class', this.arcPathClass)
             .each(function (d) { (this as any)._currentData = d; }); // _currentData используется для получения текущих данных внутри функции обновления.
 
-        Helper.setCssClasses(arcs, chart.cssClasses);
+        DomHelper.setCssClasses(arcs, chart.cssClasses);
         this.setElementsColor(items, chart.style.elementColors);
     }
 
