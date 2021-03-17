@@ -117,16 +117,15 @@ export class Helper {
             return initialSelection.filter(d => d.data[keyFieldName] === keyValue);
     }
 
-    public static get2DElementsByKeys(initialSelection: Selection<BaseType, DataRow, BaseType, unknown>, isSegmented: boolean, keyFieldName: string, keyValues: string[], condition: SelectionCondition): Selection<BaseType, DataRow, BaseType, unknown> {
-        if (!isSegmented) {
+    public static getChartElementsByKeys<T extends BaseType>(initialSelection: Selection<T, DataRow, BaseType, unknown>, dataWrapped: boolean, keyFieldName: string, keyValues: string[], condition: SelectionCondition): Selection<T, any, BaseType, unknown> {
+        if (!dataWrapped) {
             return initialSelection.filter(d => {
                 if (condition === SelectionCondition.Exclude) {
                     return keyValues.findIndex(kv => kv === d[keyFieldName]) === -1;
                 }
                 return keyValues.findIndex(kv => kv === d[keyFieldName]) !== -1;
             });
-        }
-        else {
+        } else {
             return initialSelection.filter(d => {
                 if (condition === SelectionCondition.Exclude) {
                     return keyValues.findIndex(kv => kv === d.data[keyFieldName]) === -1;

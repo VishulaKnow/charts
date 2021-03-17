@@ -32,7 +32,7 @@ export class ElementHighlighter {
         return filter;
     }
 
-    public static removeElementsFilter(elemSelection: Selection<BaseType, any, BaseType, any>): void {
+    public static removeFilter(elemSelection: Selection<BaseType, any, BaseType, any>): void {
         elemSelection.style('filter', null);
     }
 
@@ -54,13 +54,19 @@ export class ElementHighlighter {
                 .innerRadius(DonutHelper.getOuterRadius(margin, blockSize) - donutThickness - scaleSize)(d, i));
     }
 
+    public static removeDonutHighlightingByKeys(arcSegments: Selection<SVGGElement, PieArcDatum<DataRow>, BaseType, unknown>, keyFieldName: string, keyValues: string[], margin: BlockMargin, blockSize: Size, donutThickness: number): void {
+        const segments = Helper.getChartElementsByKeys(arcSegments, true, keyFieldName, keyValues, SelectionCondition.Exclude);
+        this.changeDonutHighlightAppearance(segments, margin, blockSize, donutThickness, 0, false);
+        this.removeFilter(segments);
+    }
+
     public static remove2DChartsFullHighlighting(block: Block, charts: TwoDimensionalChartModel[], transitionDuration: number = 0): void {
         charts.forEach(chart => {
             const elems = Helper.getChartElements(block, chart);
             if (chart.type === 'area' || chart.type === 'line') {
                 elems.call(this.scaleElement, false, transitionDuration);
             } else {
-                this.removeElementsFilter(elems);
+                this.removeFilter(elems);
             }
         });
     }
@@ -75,12 +81,12 @@ export class ElementHighlighter {
         charts.forEach(chart => {
             const elems = Helper.getChartElements(block, chart);
 
-            const selectedElems = Helper.get2DElementsByKeys(elems, chart.isSegmented, keyFieldName, block.filterEventManager.getSelectedKeys(), SelectionCondition.Exclude);
+            const selectedElems = Helper.getChartElementsByKeys(elems, chart.isSegmented, keyFieldName, block.filterEventManager.getSelectedKeys(), SelectionCondition.Exclude);
 
             if (chart.type === 'area' || chart.type === 'line') {
                 selectedElems.call(this.scaleElement, false, transitionDuration);
             } else {
-                selectedElems.style('filter', null);
+                this.removeFilter(selectedElems);
             }
         });
     }
@@ -109,7 +115,7 @@ export class ElementHighlighter {
             if (chart.type === 'area' || chart.type === 'line') {
                 selectedElems.call(this.scaleElement, false, transitionDuration);
             } else {
-                selectedElems.style('filter', null);
+                this.removeFilter(elems);
             }
         });
     }

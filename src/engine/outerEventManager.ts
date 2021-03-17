@@ -22,6 +22,14 @@ export class OuterEventManager {
         return this.selectedKeys;
     }
 
+    public clearKeys(): void {
+        this.selectedKeys = [];
+    }
+
+    public isSelected(keyValue: string): boolean {
+        return this.selectedKeys.findIndex(key => key === keyValue) !== -1;
+    }
+
     public registerEventFor2D(scaleKey: AxisScale<any>, margin: BlockMargin, blockSize: Size, options: TwoDimensionalOptionsModel): void {
         const tipBoxAttributes = TipBox.getTipBoxAttributes(margin, blockSize);
         const tipBox = TipBox.renderTipBox(this.block, tipBoxAttributes);
@@ -64,21 +72,27 @@ export class OuterEventManager {
 
         const thisClass = this;
 
-        arcItems.on('click', function (event, dataRow) {
+        arcItems.on('click', function (event: MouseEvent, dataRow) {
             const keyValue = dataRow.data[options.data.keyField.name];
 
-            if (thisClass.selectedKeys.findIndex(key => key === keyValue) === -1) {
-                thisClass.addKey(keyValue);
-                ElementHighlighter.changeDonutHighlightAppearance(select(this), margin, blockSize, donutThickness, thisClass.block.transitionManager.durations.donutHover, true);
+            if (event.ctrlKey) {
+                if (thisClass.selectedKeys.findIndex(key => key === keyValue) === -1) {
+                    thisClass.addKey(keyValue);
+                    ElementHighlighter.changeDonutHighlightAppearance(select(this), margin, blockSize, donutThickness, thisClass.block.transitionManager.durations.donutHover, true);
+                } else {
+                    thisClass.removeKey(keyValue);
+                    ElementHighlighter.changeDonutHighlightAppearance(select(this), margin, blockSize, donutThickness, thisClass.block.transitionManager.durations.donutHover, false);
+                }
             } else {
-                thisClass.removeKey(keyValue);
-                ElementHighlighter.changeDonutHighlightAppearance(select(this), margin, blockSize, donutThickness, thisClass.block.transitionManager.durations.donutHover, false);
+                if (thisClass.selectedKeys[0] === keyValue && thisClass.selectedKeys.length === 1) {
+                    thisClass.removeKey(keyValue);
+                    ElementHighlighter.changeDonutHighlightAppearance(select(this), margin, blockSize, donutThickness, thisClass.block.transitionManager.durations.donutHover, false);
+                } else {
+                    thisClass.setKey(keyValue);
+                    ElementHighlighter.removeDonutHighlightingByKeys(arcItems, options.data.keyField.name, thisClass.getSelectedKeys(), margin, blockSize, donutThickness);
+                }
             }
         });
-    }
-
-    public clearKeys(): void {
-        this.selectedKeys = [];
     }
 
     private setKey(keyValue: string): void {

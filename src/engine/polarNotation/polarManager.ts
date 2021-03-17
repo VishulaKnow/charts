@@ -54,7 +54,7 @@ export class PolarManager {
         block.transitionManager.interruptTransitions();
         block.removeEventListeners();
 
-        ElementHighlighter.removeElementsFilter(Donut.getAllArcGroups(block));
+        ElementHighlighter.removeFilter(Donut.getAllArcGroups(block));
         Tooltip.hide(block);
 
         const options = <PolarOptionsModel>model.options;

@@ -125,10 +125,12 @@ export class Tooltip {
                 ElementHighlighter.changeDonutHighlightAppearance(select<SVGGElement, PieArcDatum<DataRow>>(this), margin, blockSize, donutThickness, block.transitionManager.durations.donutHover, true);
             });
 
-        elemets.on('mouseleave', function () {
+        elemets.on('mouseleave', function (_event, dataRow) {
             TooltipComponentsManager.hideTooltipBlock(tooltipBlock);
-            ElementHighlighter.removeElementsFilter(select(this));
-            ElementHighlighter.changeDonutHighlightAppearance(select<SVGGElement, PieArcDatum<DataRow>>(this), margin, blockSize, donutThickness, block.transitionManager.durations.donutHover, false);
+            if (!block.filterEventManager.isSelected(dataRow.data[dataOptions.keyField.name])) {
+                ElementHighlighter.removeFilter(select(this));
+                ElementHighlighter.changeDonutHighlightAppearance(select<SVGGElement, PieArcDatum<DataRow>>(this), margin, blockSize, donutThickness, block.transitionManager.durations.donutHover, false);
+            }
         });
     }
 
