@@ -15,7 +15,7 @@ export class TransitionManager {
     /**
      * Анимации обновления в ms.
      */
-    public durations = {
+    public durations: Transitions = {
         chartUpdate: 1000,
         tooltipSlide: 75,
         donutHover: 200,

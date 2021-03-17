@@ -50,13 +50,14 @@ export class Donut {
         const arcGenerator = DonutHelper.getArcGenerator(outerRadius, innerRadius);
         const pieGenerator = DonutHelper.getPieGenerator(chart.data.valueField.name, donutSettings.padAngle);
 
-        const oldData = block.getSvg().selectAll(`.${this.donutBlockClass}`)
+        const oldData = block.getSvg()
+            .selectAll(`.${this.donutBlockClass}`)
             .selectAll<SVGPathElement, PieArcDatum<DataRow>>('path')
             .data()
             .map(d => d.data);
 
-        const dataNewZeroRows = this.mergeWithFirstEqualZero(data, oldData, keyField);
-        const dataExtraZeroRows = this.mergeWithFirstEqualZero(oldData, data, keyField);
+        const dataNewZeroRows = this.mergeDataWithZeros(data, oldData, keyField);
+        const dataExtraZeroRows = this.mergeDataWithZeros(oldData, data, keyField);
 
         const donutBlock = block.getSvg().select<SVGGElement>(`.${this.donutBlockClass}`);
 
@@ -117,7 +118,7 @@ export class Donut {
             .style('fill', (d, i) => colorPalette[i % colorPalette.length].toString());
     }
 
-    private static mergeWithFirstEqualZero(firstDataset: DataRow[], secondDataset: DataRow[], keyField: string): DataRow[] {
+    private static mergeDataWithZeros(firstDataset: DataRow[], secondDataset: DataRow[], keyField: string): DataRow[] {
         const secondSet = new Set()
         secondDataset.forEach(dataRow => {
             secondSet.add(dataRow[keyField]);
