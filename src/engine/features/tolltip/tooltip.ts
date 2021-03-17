@@ -13,6 +13,7 @@ import { TooltipComponentsManager } from './tooltipComponentsManager';
 import { ElementHighlighter } from '../../elementHighlighter';
 import { DonutHelper } from '../../polarNotation/donut/DonutHelper';
 import { TipBox } from '../tipBox/tipBox';
+import { TipBoxHelper } from '../tipBox/tipBoxHelper';
 
 export class Tooltip {
     public static tooltipBlockClass = 'tooltip-block';
@@ -72,7 +73,7 @@ export class Tooltip {
 
         tipBox
             .on('mousemove', function (event) {
-                const index = TooltipHelper.getKeyIndex(pointer(event, this), chartOrientation, margin, blockSize, scaleKey, scaleKeyModel.type);
+                const index = TipBoxHelper.getKeyIndex(pointer(event, this), chartOrientation, margin, blockSize, scaleKey, scaleKeyModel.type);
                 let keyValue = scaleKey.domain()[index];
                 if (index >= scaleKey.domain().length)
                     keyValue = scaleKey.domain()[scaleKey.domain().length - 1];
@@ -91,14 +92,14 @@ export class Tooltip {
                     TooltipComponentsManager.setTooltipLineAttributes(tooltipLine, tooltipLineAttributes, block.transitionManager.durations.tooltipSlide);
                     TooltipComponentsManager.showTooltipLine(tooltipLine);
 
-                    ElementHighlighter.highlight2DElementsHover(block, dataOptions.keyField.name, keyValue, charts, filterId, block.transitionManager.durations.markerHover);
+                    // ElementHighlighter.highlight2DElementsHover(block, dataOptions.keyField.name, keyValue, charts, filterId, block.transitionManager.durations.markerHover);
                 }
             })
             .on('mouseleave', function () {
                 TooltipComponentsManager.hideTooltipBlock(tooltipBlock);
                 TooltipComponentsManager.hideTooltipLine(tooltipLine);
                 currentKey = null;
-                ElementHighlighter.remove2DElementsHighlighting(block, charts, block.transitionManager.durations.markerHover);
+                // ElementHighlighter.remove2DElementsHighlighting(block, charts, block.transitionManager.durations.markerHover);
             });
     }
 
@@ -107,6 +108,7 @@ export class Tooltip {
         const tooltipContent = TooltipComponentsManager.renderTooltipContentBlock(tooltipBlock);
         const tooltipArrow = TooltipComponentsManager.renderTooltipArrow(tooltipBlock);
 
+        //TODO: выделить в отдельную прослойку
         const filterId = NamesManager.getId('shadow', block.id);
         ElementHighlighter.renderShadowFilter(block, filterId);
 
