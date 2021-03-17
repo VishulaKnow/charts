@@ -28,24 +28,6 @@ export class OuterEventManager {
             this.registerEventFor2D(scaleKey, margin, blockSize, options.charts, options.orient, options.data, options.scale.scaleKey)
         }
     }
-    public registerEventToDonut(model: Model, margin: BlockMargin, blockSize: Size): void {
-        const thisClass = this
-        const arcItems = Donut.getAllArcGroups(this.block);
-        const donutThickness = DonutHelper.getThickness(model.chartSettings.donut, model.blockCanvas.size, model.chartBlock.margin)
-
-        arcItems.on('click', function (event, dataRow) {
-            const keyValue = dataRow.data[Object.keys(dataRow.data)[0]];
-
-            if (thisClass.selectedKeys.findIndex(key => key === keyValue) === -1) {
-                thisClass.addKey(keyValue);
-                ElementHighlighter.changeDonutHighlightAppearance(select(this), margin, blockSize, donutThickness, thisClass.block.transitionManager.durations.donutHover, true);
-
-            } else {
-                thisClass.removeKey(keyValue);
-                // ElementHighlighter.remove2DElementHighlighting(thisClass.block, dataOptions.keyField.name, keyValue, charts, filterId, 0);
-            }
-        })
-    }
 
     private registerEventFor2D(scaleKey: AxisScale<any>, margin: BlockMargin, blockSize: Size, charts: TwoDimensionalChartModel[], chartOrientation: ChartOrientation, dataOptions: OptionsModelData, scaleKeyModel: ScaleKeyModel): void {
         const tipBoxAttributes = TipBox.getTipBoxAttributes(margin, blockSize);
@@ -77,14 +59,30 @@ export class OuterEventManager {
                     ElementHighlighter.remove2DHighlightingByKey(thisClass.block, dataOptions.keyField.name, keyValue, charts, 0);
                 } else {
                     thisClass.setKey(keyValue);
-                    // ElementHighlighter.removeUnselected2DHighlight()
+                    ElementHighlighter.removeUnselected2DHighlight(thisClass.block, dataOptions.keyField.name, charts, 0);
                 }
             }
         });
     }
 
-    private registerEventForPolar(): void {
+    public registerEventToDonut(model: Model, margin: BlockMargin, blockSize: Size): void {
+        const arcItems = Donut.getAllArcGroups(this.block);
+        const donutThickness = DonutHelper.getThickness(model.chartSettings.donut, model.blockCanvas.size, model.chartBlock.margin);
 
+        const thisClass = this;
+
+        arcItems.on('click', function (event, dataRow) {
+            const keyValue = dataRow.data[model.options.data.keyField.name];
+
+            if (thisClass.selectedKeys.findIndex(key => key === keyValue) === -1) {
+                thisClass.addKey(keyValue);
+                ElementHighlighter.changeDonutHighlightAppearance(select(this), margin, blockSize, donutThickness, thisClass.block.transitionManager.durations.donutHover, true);
+
+            } else {
+                thisClass.removeKey(keyValue);
+                // ElementHighlighter.remove2DElementHighlighting(thisClass.block, dataOptions.keyField.name, keyValue, charts, filterId, 0);
+            }
+        })
     }
 
     private setKey(keyValue: string): void {
