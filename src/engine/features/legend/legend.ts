@@ -44,16 +44,15 @@ export class Legend {
             const legendItemsContent = LegendHelper.getLegendItemsContent(options, data);
             const chartElementsColor = LegendHelper.getMarksColor(options);
             const legendItemsDirection = LegendHelper.getLegendItemsDirection(options.type, options.legend.position);
-
-            legendObject.select(`.${this.legendBlockClass}`)
+            const legendPosition = options.legend.position
+            const thisClass = this
+            const items = legendObject.select(`.${this.legendBlockClass}`)
             .style('opacity', 1)
-            .interrupt()
             .transition()
             .duration(block.transitionManager.durations.legendUpdate)
             .style('opacity', 0)
-            .remove();
-
-            this.renderLegendContent(block, legendObject, legendItemsContent, chartElementsColor, legendItemsDirection, options.legend.position);
+            .remove()
+            thisClass.updateLegendContent(block, legendObject, legendItemsContent, chartElementsColor, legendItemsDirection, legendPosition);
         }
     }
 
@@ -135,34 +134,66 @@ export class Legend {
         itemWrappers.each(function (d, i) {
             select(this).attr('class', LegendHelper.getItemClasses(itemsDirection, position, i));
         });
-
         itemWrappers
             .append('span')
             .attr('class', this.legendCircleCLass)
             .style('background-color', (d, i) => colorPalette[i % colorPalette.length].toString())
-            .style('opacity', 0)
-            .interrupt()
-            .transition()
-            .delay(block.transitionManager.durations.legendUpdate)
-            .duration(block.transitionManager.durations.legendUpdate)
-            .style('opacity', 1)
-
 
         itemWrappers
             .data(items)
             .append('span')
             .attr('class', LegendHelper.getLegendLabelClassByPosition(position))
-            .interrupt()
+            .text(d => d.toString());
+        if (itemsDirection === 'row')
+            this.cropRowLabels(legendObject, itemWrappers);
+    }
+    static updateLegendContent(block: Block, legendObject: Selection<SVGForeignObjectElement, unknown, HTMLElement, any>, items: string[], colorPalette: Color[], itemsDirection: LegendItemsDirection, position: LegendPosition) {
+        const wrapper = legendObject.append('xhtml:div')
+        .attr('class', this.legendBlockClass);
+        wrapper
+            .style('height', '100%')
+            .style('display', 'flex');
+
+        if (itemsDirection === 'column') {
+            wrapper.style('flex-direction', 'column');
+        }
+
+        if (itemsDirection === 'column' && position === 'right') 
+            wrapper.style('justify-content', 'center');
+
+        const itemWrappers = wrapper
+            .selectAll('.legend-item')
+            .data(items)
+            .enter()
+            .append('div');
+
+        itemWrappers.each(function (d, i) {
+            select(this).attr('class', LegendHelper.getItemClasses(itemsDirection, position, i));
+        });
+        itemWrappers
+            .append('span')
+            .attr('class', this.legendCircleCLass)
+            .style('background-color', (d, i) => colorPalette[i % colorPalette.length].toString())
+            .style('opacity', 0)
             .transition()
-            .delay(block.transitionManager.durations.chartUpdate / 2)
-            .duration(block.transitionManager.durations.chartUpdate / 2)
+            .delay(block.transitionManager.durations.legendUpdate)
+            .duration(block.transitionManager.durations.legendUpdate)
+            .style('opacity', 1);
+
+        itemWrappers
+            .data(items)
+            .append('span')
+            .attr('class', LegendHelper.getLegendLabelClassByPosition(position))
+            .transition()
+            .delay(block.transitionManager.durations.legendUpdate)
+            .duration(block.transitionManager.durations.legendUpdate)
             .tween('text', function(d){
                 var textLength = d.length;
                 return function(t){
                     this.textContent = d.substr(0, Math.round(t * textLength));
                 }
             })
-            // .text(d => d.toString())
+            
         if (itemsDirection === 'row')
             this.cropRowLabels(legendObject, itemWrappers);
     }
