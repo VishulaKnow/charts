@@ -92,30 +92,26 @@ export class ElementHighlighter {
     }
 
     public static highlightElementsOf2D(block: Block, keyFieldName: string, keyValue: string, charts: TwoDimensionalChartModel[], filterId: string, transitionDuration: number): void {
-        charts.forEach(chart => {
-            const elems = DomHelper.getChartElements(block, chart);
-
-            const selectedElems = DomHelper.get2DElementsByKey(elems, chart.isSegmented, keyFieldName, keyValue);
-
-            if (chart.type === 'area' || chart.type === 'line') {
-                selectedElems.call(this.scaleElement, true, transitionDuration);
-            } else {
-                selectedElems.style('filter', `url(#${filterId})`);
-            }
-        });
+        this.change2DHighlightState(block, keyFieldName, keyValue, charts, true, filterId, transitionDuration);
     }
 
-    //TODO: убрать дублирование
     public static remove2DHighlightingByKey(block: Block, keyFieldName: string, keyValue: string, charts: TwoDimensionalChartModel[], transitionDuration: number): void {
+        this.change2DHighlightState(block, keyFieldName, keyValue, charts, false, null, transitionDuration);
+    }
+
+    private static change2DHighlightState(block: Block, keyFieldName: string, keyValue: string, charts: TwoDimensionalChartModel[], isHighlight: boolean, filterId: string, transitionDuration: number): void {
         charts.forEach(chart => {
             const elems = DomHelper.getChartElements(block, chart);
 
             const selectedElems = DomHelper.get2DElementsByKey(elems, chart.isSegmented, keyFieldName, keyValue);
 
             if (chart.type === 'area' || chart.type === 'line') {
-                selectedElems.call(this.scaleElement, false, transitionDuration);
+                selectedElems.call(this.scaleElement, isHighlight, transitionDuration);
             } else {
-                this.removeFilter(selectedElems);
+                if (isHighlight)
+                    selectedElems.style('filter', `url(#${filterId})`);
+                else
+                    this.removeFilter(selectedElems);
             }
         });
     }
