@@ -5,6 +5,7 @@ import { Scales } from "../features/scale/scale";
 import { TipBox } from "../features/tipBox/tipBox";
 import { Helper } from "../helper";
 import { NamesManager } from "../namesManager";
+import { OuterEventManager } from "../outerEventManager";
 import { Donut } from "../polarNotation/donut/donut";
 import { TransitionManager } from "../transitionManager";
 import { BlockHelper } from "./blockHelper";
@@ -14,6 +15,7 @@ export class Block {
     public id: number;
     public transitionManager: TransitionManager;
     public scales: Scales;
+    public filterEventManager: OuterEventManager;
 
     private svgCssClasses: string[];
     private wrapperCssClasses: string[];
@@ -31,6 +33,7 @@ export class Block {
         this.id = blockId;
 
         this.transitionManager = new TransitionManager(this, transitions);
+        this.filterEventManager = new OuterEventManager(this);
     }
 
     public renderSvg(blockSize: Size): void {

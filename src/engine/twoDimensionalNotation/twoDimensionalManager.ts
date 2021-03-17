@@ -41,6 +41,8 @@ export class TwoDimensionalManager {
             model.chartSettings.bar,
             model.blockCanvas.size);
 
+        engine.block.filterEventManager.registerEvents(options, scales.scaleKey, model.chartBlock.margin, model.blockCanvas.size);
+
         Title.render(engine.block,
             options.title,
             model.otherComponents.titleBlock,

@@ -4,7 +4,7 @@ import { BlockMargin, DataRow, Size, TwoDimensionalChartModel } from "../model/m
 import { Helper } from "./helper";
 import { Block } from "./block/block";
 import { easeLinear } from 'd3-ease';
-import { interrupt } from 'd3-transition';
+import { interrupt, Transition } from 'd3-transition';
 import { DonutHelper } from './polarNotation/donut/DonutHelper';
 
 export class ElementHighlighter {
@@ -55,12 +55,12 @@ export class ElementHighlighter {
     }
 
     public static highlight2DElementsHover(block: Block, keyFieldName: string, keyValue: string, charts: TwoDimensionalChartModel[], filterId: string, transitionDuration: number): void {
-        this.remove2DElementsHighlighting(block, charts, transitionDuration);
+        this.remove2DChartsHighlighting(block, charts, transitionDuration);
 
         this.highlightElementsOf2D(block, keyFieldName, keyValue, charts, filterId, transitionDuration);
     }
 
-    public static remove2DElementsHighlighting(block: Block, charts: TwoDimensionalChartModel[], transitionDuration: number): void {
+    public static remove2DChartsHighlighting(block: Block, charts: TwoDimensionalChartModel[], transitionDuration: number): void {
         charts.forEach(chart => {
             const elems = Helper.getChartElements(block, chart);
             if (chart.type === 'area' || chart.type === 'line') {
@@ -82,7 +82,6 @@ export class ElementHighlighter {
                 selectedElems = elems.filter(d => d.data[keyFieldName] === keyValue);
 
             if (chart.type === 'area' || chart.type === 'line') {
-                elems.call(this.scaleElement, false, transitionDuration);
                 selectedElems.call(this.scaleElement, true, transitionDuration);
             } else {
                 selectedElems.style('filter', `url(#${filterId})`);
@@ -90,18 +89,41 @@ export class ElementHighlighter {
         });
     }
 
-    private static scaleElement(elementSelection: Selection<BaseType, DataRow, BaseType, unknown>, isScaled: boolean, transitionDuration: number): void {
+    //TODO: убрать дублирование
+    public static remove2DElementHighlighting(block: Block, keyFieldName: string, keyValue: string, charts: TwoDimensionalChartModel[], filterId: string, transitionDuration: number): void {
+        charts.forEach(chart => {
+            const elems = Helper.getChartElements(block, chart);
+
+            let selectedElems: Selection<BaseType, DataRow, BaseType, unknown>;
+            if (!chart.isSegmented)
+                selectedElems = elems.filter(d => d[keyFieldName] === keyValue);
+            else
+                selectedElems = elems.filter(d => d.data[keyFieldName] === keyValue);
+
+            if (chart.type === 'area' || chart.type === 'line') {
+                selectedElems.call(this.scaleElement, false, transitionDuration);
+            } else {
+                selectedElems.style('filter', null);
+            }
+        });
+    }
+
+    private static scaleElement(elementSelection: Selection<BaseType, DataRow, BaseType, unknown>, isScaled: boolean, transitionDuration: number = 0): void {
         const animationName = 'size-scale';
 
         elementSelection.nodes().forEach(node => {
             interrupt(node, animationName);
         });
 
-        elementSelection
-            .interrupt(animationName)
-            .transition(animationName)
-            .duration(transitionDuration)
-            .ease(easeLinear)
+        let elementsHandler: Selection<BaseType, DataRow, BaseType, unknown> | Transition<BaseType, DataRow, BaseType, unknown> = elementSelection;
+
+        if (transitionDuration > 0) {
+            elementsHandler = elementsHandler.interrupt().transition(animationName)
+                .duration(transitionDuration)
+                .ease(easeLinear);
+        }
+
+        elementsHandler
             .attr('r', isScaled ? 6 : 4)
             .style('stroke-width', (isScaled ? 4.3 : 3) + 'px');
     }

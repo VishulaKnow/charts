@@ -12,13 +12,18 @@ export class OuterEventManager {
     private block: Block;
     private selectedKeys: string[];
 
+    constructor(block: Block) {
+        this.block = block;
+        this.selectedKeys = [];
+    }
+
     public registerEvents(options: TwoDimensionalOptionsModel | PolarOptionsModel, scaleKey: AxisScale<any>, margin: BlockMargin, blockSize: Size): void {
         if (options.type === '2d') {
             this.registerEventFor2D(scaleKey, margin, blockSize, options.charts, options.orient, options.data, options.scale.scaleKey)
         }
     }
 
-    private registerEventFor2D(scaleKey: AxisScale<any>, margin: BlockMargin, blockSize: Size, charts: TwoDimensionalChartModel[], chartOrientation: ChartOrientation, dataOptions: OptionsModelData, scaleKeyModel: ScaleKeyModel): void {
+    public registerEventFor2D(scaleKey: AxisScale<any>, margin: BlockMargin, blockSize: Size, charts: TwoDimensionalChartModel[], chartOrientation: ChartOrientation, dataOptions: OptionsModelData, scaleKeyModel: ScaleKeyModel): void {
         const tipBoxAttributes = TipBox.getTipBoxAttributes(margin, blockSize);
         const tipBox = TipBox.renderTipBox(this.block, tipBoxAttributes);
 
@@ -30,13 +35,14 @@ export class OuterEventManager {
 
         tipBox.on('click', function (event) {
             const index = TipBoxHelper.getKeyIndex(pointer(event, this), chartOrientation, margin, blockSize, scaleKey, scaleKeyModel.type);
-            let keyValue = scaleKey.domain()[index];
+            const keyValue = scaleKey.domain()[index];
 
             if (thisClass.selectedKeys.findIndex(key => key === keyValue) === -1) {
                 thisClass.addKey(keyValue);
-                ElementHighlighter.highlightElementsOf2D(thisClass.block, dataOptions.keyField.name, keyValue, charts, filterId, thisClass.block.transitionManager.durations.clickHighlight);
+                ElementHighlighter.highlightElementsOf2D(thisClass.block, dataOptions.keyField.name, keyValue, charts, filterId, 0);
             } else {
                 thisClass.removeKey(keyValue);
+                ElementHighlighter.remove2DElementHighlighting(thisClass.block, dataOptions.keyField.name, keyValue, charts, filterId, 0);
             }
         });
     }
