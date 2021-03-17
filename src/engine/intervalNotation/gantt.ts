@@ -1,9 +1,8 @@
 import { Selection, BaseType } from 'd3-selection'
 import { BarChartSettings, BlockMargin, DataRow, IntervalChartModel, OptionsModelData, Orient } from "../../model/model";
 import { Block } from "../block/block";
-import { Helper } from "../helper";
 import { Scale, Scales } from "../features/scale/scale";
-import { DomHelper } from '../domHelper';
+import { DomHelper } from '../helpers/domHelper';
 
 interface GanttItemsAttrs {
     x: (data: DataRow) => number;

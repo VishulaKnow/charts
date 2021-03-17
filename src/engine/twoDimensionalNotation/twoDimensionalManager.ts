@@ -10,7 +10,7 @@ import { RecordOverflowAlert } from "../features/recordOverflowAlert/recordOverf
 import { Scale, Scales } from "../features/scale/scale";
 import { Title } from "../features/title/title";
 import { Tooltip } from "../features/tolltip/tooltip";
-import { Helper } from "../helper";
+import { Helper } from "../helpers/helper";
 import { Area } from "./area/area";
 import { Bar } from "./bar/bar";
 import { BarHelper } from "./bar/barHelper";

@@ -1,7 +1,7 @@
 import { Selection } from 'd3-selection'
 import { ChartOrientation } from "../../../config/config";
 import { Block } from "../../block/block";
-import { DomHelper } from '../../domHelper';
+import { DomHelper } from '../../helpers/domHelper';
 import { Legend } from '../legend/legend';
 
 interface AlertBlockPositionAttrs {

@@ -4,7 +4,7 @@ import { Selection } from 'd3-selection'
 import { DataType } from '../../designer/designerConfig';
 import { DataRow, Field } from "../../model/model";
 import { Block } from "../block/block";
-import { Helper } from '../helper';
+import { Helper } from '../helpers/helper';
 import { ValueFormatter } from '../valueFormatter';
 import { Translate } from "./donut/donut";
 

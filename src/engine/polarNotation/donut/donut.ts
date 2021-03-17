@@ -3,11 +3,10 @@ import { Color } from "d3-color";
 import { Selection, BaseType } from 'd3-selection'
 import { interpolate } from 'd3-interpolate'
 import { BlockMargin, DataRow, DonutChartSettings, PolarChartModel, Size } from "../../../model/model";
-import { Helper } from "../../helper";
 import { Block } from "../../block/block";
 import { Aggregator } from "../aggregator";
 import { DonutHelper } from './DonutHelper';
-import { DomHelper } from '../../domHelper';
+import { DomHelper } from '../../helpers/domHelper';
 
 export interface Translate {
     x: number;

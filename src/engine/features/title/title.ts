@@ -1,8 +1,7 @@
 import { Selection } from 'd3-selection'
 import { Size, TitleBlockModel } from "../../../model/model";
 import { Block } from "../../block/block";
-import { DomHelper } from '../../domHelper';
-import { Helper } from "../../helper";
+import { DomHelper } from '../../helpers/domHelper';
 
 interface TitleAttributes {
     x: number;

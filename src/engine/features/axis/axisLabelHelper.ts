@@ -2,10 +2,10 @@ import { Selection, BaseType } from 'd3-selection';
 import { AxisScale, Axis as IAxis } from 'd3-axis';
 import { ScaleBand } from 'd3-scale'
 import { AxisModelOptions, Orient, ScaleKeyModel, ScaleValueModel, Size } from "../../../model/model";
-import { Helper } from "../../helper";
 import { Block } from "../../block/block";
 import { AXIS_HORIZONTAL_LABEL_PADDING, AXIS_VERTICAL_LABEL_PADDING } from "../../../model/marginModel";
-import { DomHelper } from '../../domHelper';
+import { DomHelper } from '../../helpers/domHelper';
+import { Helper } from '../../helpers/helper';
 
 type TextAnchor = 'start' | 'end' | 'middle';
 

@@ -2,7 +2,7 @@ import { AxisScale } from 'd3-axis';
 import { Selection, BaseType } from 'd3-selection'
 import { ChartOrientation, ValueField } from "../../../config/config";
 import { BlockMargin, DataSource, OptionsModelData, Orient, PolarChartModel, ScaleKeyType, Size, TwoDimensionalChartModel } from "../../../model/model";
-import { DomHelper } from '../../domHelper';
+import { DomHelper } from '../../helpers/domHelper';
 import { ValueFormatter, } from "../../valueFormatter";
 import { Scale } from '../scale/scale';
 

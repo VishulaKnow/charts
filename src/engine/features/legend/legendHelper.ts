@@ -1,10 +1,10 @@
 import { Selection, BaseType } from 'd3-selection'
 import { ChartNotation } from "../../../config/config";
 import { LegendItemsDirection } from "../../../model/featuresModel/legendModel/legendCanvasModel";
-import { Helper } from "../../helper";
 import { Color } from "d3-color";
 import { DataRow, DataSource, IntervalOptionsModel, LegendPosition, PolarOptionsModel, TwoDimensionalOptionsModel } from "../../../model/model";
-import { DomHelper } from '../../domHelper';
+import { DomHelper } from '../../helpers/domHelper';
+import { Helper } from '../../helpers/helper';
 
 
 export class LegendHelper {

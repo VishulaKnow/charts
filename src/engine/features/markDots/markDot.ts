@@ -2,8 +2,9 @@ import { select, Selection, BaseType } from 'd3-selection';
 import { transition } from 'd3-transition';
 import { BlockMargin, DataRow, Orient, TwoDimensionalChartModel } from "../../../model/model";
 import { Block } from "../../block/block";
-import { DomHelper } from '../../domHelper';
-import { Helper } from "../../helper";
+import { DomHelper } from '../../helpers/domHelper';
+import { Helper } from '../../helpers/helper';
+
 import { Scales } from "../scale/scale";
 import { MarkDotHelper } from "./markDotsHelper";
 

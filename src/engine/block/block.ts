@@ -3,7 +3,7 @@ import { Transitions } from "../../designer/designerConfig";
 import { BlockMargin, Size } from "../../model/model";
 import { Scales } from "../features/scale/scale";
 import { TipBox } from "../features/tipBox/tipBox";
-import { Helper } from "../helper";
+import { Helper } from "../helpers/helper";
 import { NamesManager } from "../namesManager";
 import { OuterEventManager } from "../outerEventManager";
 import { Donut } from "../polarNotation/donut/donut";

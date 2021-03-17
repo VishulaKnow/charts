@@ -1,4 +1,4 @@
-import { Helper } from "../../engine/helper";
+import { Helper } from "../../engine/helpers/helper";
 
 test('getTranslateNumbers should return tuple of two numbers which equal transaleX and translateY', () => {
     expect(Helper.getTranslateNumbers('translate(14, 34)')).toEqual([14, 34]);

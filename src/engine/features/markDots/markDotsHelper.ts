@@ -1,7 +1,7 @@
 import { Selection, BaseType } from 'd3-selection';
 import { BlockMargin, DataRow, Orient } from "../../../model/model";
 import { Block } from "../../block/block";
-import { Helper } from "../../helper";
+import { Helper } from '../../helpers/helper';
 import { Scale, Scales } from "../scale/scale";
 import { DotAttrs, MarkDot } from "./markDot";
 

@@ -1,7 +1,6 @@
 import { select, Selection, pointer } from 'd3-selection';
 import { PieArcDatum } from 'd3-shape'
 import { BlockMargin, DataRow, DataSource, IntervalChartModel, Model, OptionsModelData, Orient, PolarChartModel, ScaleKeyModel, Size, TwoDimensionalChartModel } from "../../../model/model";
-import { Helper } from "../../helper";
 import { Block } from "../../block/block";
 import { TooltipHelper } from "./tooltipHelper";
 import { Donut } from "../../polarNotation/donut/donut";
@@ -14,6 +13,7 @@ import { ElementHighlighter } from '../../elementHighlighter/elementHighlighter'
 import { DonutHelper } from '../../polarNotation/donut/DonutHelper';
 import { TipBox } from '../tipBox/tipBox';
 import { TipBoxHelper } from '../tipBox/tipBoxHelper';
+import { Helper } from '../../helpers/helper';
 
 export class Tooltip {
     public static tooltipBlockClass = 'tooltip-block';

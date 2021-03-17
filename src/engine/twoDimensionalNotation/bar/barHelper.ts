@@ -1,7 +1,6 @@
 import { AxisScale } from "d3-axis";
 import { BarChartSettings, BlockMargin, DataRow, Orient, Size, TwoDimensionalChartModel } from "../../../model/model";
 import { Scale, Scales } from "../../features/scale/scale";
-import { Helper } from "../../helper";
 import { ValueFormatter } from "../../valueFormatter";
 
 export interface BarAttrsHelper {

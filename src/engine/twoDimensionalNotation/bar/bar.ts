@@ -2,7 +2,6 @@ import { Color } from "d3-color";
 import { stack } from 'd3-shape';
 import { select, Selection, BaseType } from 'd3-selection';
 import { BarChartSettings, BlockMargin, DataRow, Field, Orient, Size, TwoDimensionalChartModel } from "../../../model/model";
-import { Helper } from "../../helper";
 import { Scales } from "../../features/scale/scale";
 import { Block } from "../../block/block";
 import { EmbeddedLabels } from "../../features/embeddedLabels/embeddedLabels";
@@ -10,7 +9,8 @@ import { EmbeddedLabelsHelper } from "../../features/embeddedLabels/embeddedLabe
 import { BarAttrsHelper, BarHelper } from "./barHelper";
 import { sum } from "d3-array";
 import { Transition } from "d3-transition";
-import { DomHelper } from "../../domHelper";
+import { DomHelper } from "../../helpers/domHelper";
+import { Helper } from "../../helpers/helper";
 
 export class Bar {
     public static barItemClass = 'bar-item';
