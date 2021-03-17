@@ -6,9 +6,12 @@ import { easeLinear } from 'd3-ease';
 import { interrupt, Transition } from 'd3-transition';
 import { DonutHelper } from '../polarNotation/donut/DonutHelper';
 import { DomHelper, SelectionCondition } from '../helpers/domHelper';
+import { NamesManager } from '../namesManager';
 
 export class ElementHighlighter {
-    public static renderShadowFilter(block: Block, filterId: string): Selection<SVGFilterElement, unknown, HTMLElement, unknown> {
+    public static renderShadowFilter(block: Block): Selection<SVGFilterElement, unknown, HTMLElement, unknown> {
+        const filterId = NamesManager.getId('shadow', block.id);
+
         let filter = block.renderDefs()
             .select<SVGFilterElement>(`filter#${filterId}`);
 
@@ -34,6 +37,10 @@ export class ElementHighlighter {
 
     public static removeFilter(elemSelection: Selection<BaseType, any, BaseType, any>): void {
         elemSelection.style('filter', null);
+    }
+
+    public static setFilter(elemSelection: Selection<BaseType, any, BaseType, any>, block: Block): void {
+        elemSelection.style('filter', `url(#${NamesManager.getId('shadow', block.id)})`);
     }
 
     public static changeDonutHighlightAppearance(segment: Selection<SVGGElement, PieArcDatum<DataRow>, BaseType, unknown>, margin: BlockMargin, blockSize: Size, donutThickness: number, transitionDuration: number, on: boolean): void {
@@ -71,10 +78,10 @@ export class ElementHighlighter {
         });
     }
 
-    public static highlight2DElementsHover(block: Block, keyFieldName: string, keyValue: string, charts: TwoDimensionalChartModel[], filterId: string, transitionDuration: number): void {
+    public static highlight2DElementsHover(block: Block, keyFieldName: string, keyValue: string, charts: TwoDimensionalChartModel[], transitionDuration: number): void {
         this.removeUnselected2DHighlight(block, keyFieldName, charts, transitionDuration);
 
-        this.highlightElementsOf2D(block, keyFieldName, keyValue, charts, filterId, transitionDuration);
+        this.highlightElementsOf2D(block, keyFieldName, keyValue, charts, transitionDuration);
     }
 
     public static removeUnselected2DHighlight(block: Block, keyFieldName: string, charts: TwoDimensionalChartModel[], transitionDuration: number): void {
@@ -91,7 +98,8 @@ export class ElementHighlighter {
         });
     }
 
-    public static highlightElementsOf2D(block: Block, keyFieldName: string, keyValue: string, charts: TwoDimensionalChartModel[], filterId: string, transitionDuration: number): void {
+    public static highlightElementsOf2D(block: Block, keyFieldName: string, keyValue: string, charts: TwoDimensionalChartModel[], transitionDuration: number): void {
+        const filterId = NamesManager.getId('shadow', block.id);
         this.change2DHighlightState(block, keyFieldName, keyValue, charts, true, filterId, transitionDuration);
     }
 

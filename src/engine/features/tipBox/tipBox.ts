@@ -12,7 +12,12 @@ export interface TipBoxAttributes {
 export class TipBox {
     public static tipBoxClass = 'tipbox';
 
-    public static renderTipBox(block: Block, attributes: TipBoxAttributes): Selection<SVGRectElement, unknown, HTMLElement, any> {
+    public static render(block: Block, margin: BlockMargin, blockSize: Size): Selection<SVGRectElement, unknown, HTMLElement, any> {
+        const attributes = this.getAttributes(margin, blockSize);
+        return this.renderBlock(block, attributes);
+    }
+
+    private static renderBlock(block: Block, attributes: TipBoxAttributes): Selection<SVGRectElement, unknown, HTMLElement, any> {
         let tipBox = block.getSvg()
             .select<SVGRectElement>(`rect.${this.tipBoxClass}`);
 
@@ -29,7 +34,7 @@ export class TipBox {
         return tipBox;
     }
 
-    public static getTipBoxAttributes(margin: BlockMargin, blockSize: Size): TipBoxAttributes {
+    private static getAttributes(margin: BlockMargin, blockSize: Size): TipBoxAttributes {
         const pad = 5;
         return {
             x: margin.left - pad,

@@ -31,12 +31,9 @@ export class OuterEventManager {
     }
 
     public registerEventFor2D(scaleKey: AxisScale<any>, margin: BlockMargin, blockSize: Size, options: TwoDimensionalOptionsModel): void {
-        const tipBoxAttributes = TipBox.getTipBoxAttributes(margin, blockSize);
-        const tipBox = TipBox.renderTipBox(this.block, tipBoxAttributes);
+        const tipBox = TipBox.render(this.block, margin, blockSize);
 
-        //TODO: выделить в отдельную прослойку
-        const filterId = NamesManager.getId('shadow', this.block.id);
-        ElementHighlighter.renderShadowFilter(this.block, filterId);
+        ElementHighlighter.renderShadowFilter(this.block);
 
         const thisClass = this;
 
@@ -49,7 +46,7 @@ export class OuterEventManager {
             if (event.ctrlKey) {
                 if (thisClass.selectedKeys.findIndex(key => key === keyValue) === -1) {
                     thisClass.addKey(keyValue);
-                    ElementHighlighter.highlightElementsOf2D(thisClass.block, options.data.keyField.name, keyValue, options.charts, filterId, 0);
+                    ElementHighlighter.highlightElementsOf2D(thisClass.block, options.data.keyField.name, keyValue, options.charts, 0);
                 } else {
                     thisClass.removeKey(keyValue);
                     ElementHighlighter.remove2DHighlightingByKey(thisClass.block, options.data.keyField.name, keyValue, options.charts, 0);

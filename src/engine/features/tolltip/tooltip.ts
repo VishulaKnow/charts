@@ -62,12 +62,10 @@ export class Tooltip {
         const tooltipContent = TooltipComponentsManager.renderTooltipContentBlock(tooltipBlock);
 
         const tooltipLine = TooltipComponentsManager.renderTooltipLine(block);
-        //TODO: объединить
-        const tipBoxAttributes = TipBox.getTipBoxAttributes(margin, blockSize);
-        const tipBox = TipBox.renderTipBox(block, tipBoxAttributes);
 
-        const filterId = NamesManager.getId('shadow', block.id);
-        ElementHighlighter.renderShadowFilter(block, filterId);
+        const tipBox = TipBox.render(block, margin, blockSize);
+
+        ElementHighlighter.renderShadowFilter(block);
 
         let currentKey: string = null;
 
@@ -92,7 +90,7 @@ export class Tooltip {
                     TooltipComponentsManager.setTooltipLineAttributes(tooltipLine, tooltipLineAttributes, block.transitionManager.durations.tooltipSlide);
                     TooltipComponentsManager.showTooltipLine(tooltipLine);
 
-                    ElementHighlighter.highlight2DElementsHover(block, dataOptions.keyField.name, keyValue, charts, filterId, block.transitionManager.durations.markerHover);
+                    ElementHighlighter.highlight2DElementsHover(block, dataOptions.keyField.name, keyValue, charts, block.transitionManager.durations.markerHover);
                 }
             })
             .on('mouseleave', function () {
@@ -108,9 +106,7 @@ export class Tooltip {
         const tooltipContent = TooltipComponentsManager.renderTooltipContentBlock(tooltipBlock);
         const tooltipArrow = TooltipComponentsManager.renderTooltipArrow(tooltipBlock);
 
-        //TODO: выделить в отдельную прослойку
-        const filterId = NamesManager.getId('shadow', block.id);
-        ElementHighlighter.renderShadowFilter(block, filterId);
+        ElementHighlighter.renderShadowFilter(block);
 
         elemets
             .on('mouseover', function (_event, dataRow) {
@@ -121,7 +117,7 @@ export class Tooltip {
                 const tooltipCoordinate = TooltipHelper.getTooltipCoordinate(coordinatePointer);
                 TooltipComponentsManager.setTooltipBlockCoordinate(tooltipBlock, tooltipCoordinate);
 
-                select(this).style('filter', `url(#${filterId})`);
+                ElementHighlighter.setFilter(select(this), block);
                 ElementHighlighter.changeDonutHighlightAppearance(select<SVGGElement, PieArcDatum<DataRow>>(this), margin, blockSize, donutThickness, block.transitionManager.durations.donutHover, true);
             });
 
