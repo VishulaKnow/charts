@@ -54,6 +54,17 @@ export class ElementHighlighter {
                 .innerRadius(DonutHelper.getOuterRadius(margin, blockSize) - donutThickness - scaleSize)(d, i));
     }
 
+    public static remove2DChartsFullHighlighting(block: Block, charts: TwoDimensionalChartModel[], transitionDuration: number = 0): void {
+        charts.forEach(chart => {
+            const elems = Helper.getChartElements(block, chart);
+            if (chart.type === 'area' || chart.type === 'line') {
+                elems.call(this.scaleElement, false, transitionDuration);
+            } else {
+                this.removeElementsFilter(elems);
+            }
+        });
+    }
+
     public static highlight2DElementsHover(block: Block, keyFieldName: string, keyValue: string, charts: TwoDimensionalChartModel[], filterId: string, transitionDuration: number): void {
         this.removeUnselected2DHighlight(block, keyFieldName, charts, transitionDuration);
 
@@ -121,16 +132,5 @@ export class ElementHighlighter {
         elementsHandler
             .attr('r', isScaled ? 6 : 4)
             .style('stroke-width', (isScaled ? 4.3 : 3) + 'px');
-    }
-
-    private static remove2DChartsFullHighlighting(block: Block, charts: TwoDimensionalChartModel[], transitionDuration: number): void {
-        charts.forEach(chart => {
-            const elems = Helper.getChartElements(block, chart);
-            if (chart.type === 'area' || chart.type === 'line') {
-                elems.call(this.scaleElement, false, transitionDuration);
-            } else {
-                this.removeElementsFilter(elems);
-            }
-        });
     }
 }

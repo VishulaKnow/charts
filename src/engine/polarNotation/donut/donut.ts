@@ -7,7 +7,6 @@ import { Helper } from "../../helper";
 import { Block } from "../../block/block";
 import { Aggregator } from "../aggregator";
 import { DonutHelper } from './DonutHelper';
-import { merge } from 'd3-array';
 
 export interface Translate {
     x: number;
@@ -56,8 +55,8 @@ export class Donut {
             .data()
             .map(d => d.data);
 
-        const dataNewZeroRows = this.mergeDataWithZeros(data, oldData, keyField);
-        const dataExtraZeroRows = this.mergeDataWithZeros(oldData, data, keyField);
+        const dataNewZeroRows = DonutHelper.mergeDataWithZeros(data, oldData, keyField);
+        const dataExtraZeroRows = DonutHelper.mergeDataWithZeros(oldData, data, keyField);
 
         const donutBlock = block.getSvg().select<SVGGElement>(`.${this.donutBlockClass}`);
 
@@ -116,23 +115,5 @@ export class Donut {
         arcItems
             .select('path')
             .style('fill', (d, i) => colorPalette[i % colorPalette.length].toString());
-    }
-
-    private static mergeDataWithZeros(firstDataset: DataRow[], secondDataset: DataRow[], keyField: string): DataRow[] {
-        const secondSet = new Set()
-        secondDataset.forEach(dataRow => {
-            secondSet.add(dataRow[keyField]);
-        });
-        const onlyNew = firstDataset
-            .filter(d => !secondSet.has(d[keyField]))
-            .map((d, index, array) => {
-                const data: DataRow = {
-                    keyField: array[index][keyField],
-                    valueField: 0
-                }
-                return data;
-            });
-        const sortedMerge = merge([secondDataset, onlyNew]);
-        return sortedMerge;
     }
 }

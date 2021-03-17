@@ -1,3 +1,4 @@
+import { merge } from "d3-array";
 import { PieArcDatum, Arc, arc, Pie, pie } from "d3-shape";
 import { BlockMargin, DataRow, DonutChartSettings, Size } from "../../../model/model";
 import { Translate } from "./donut";
@@ -49,5 +50,23 @@ export class DonutHelper {
             .padAngle(padAngle)
             .sort(null)
             .value(d => d[valueField]);
+    }
+
+    public static mergeDataWithZeros(firstDataset: DataRow[], secondDataset: DataRow[], keyField: string): DataRow[] {
+        const secondSet = new Set()
+        secondDataset.forEach(dataRow => {
+            secondSet.add(dataRow[keyField]);
+        });
+        const onlyNew = firstDataset
+            .filter(d => !secondSet.has(d[keyField]))
+            .map((d, index, array) => {
+                const data: DataRow = {
+                    keyField: array[index][keyField],
+                    valueField: 0
+                }
+                return data;
+            });
+        const sortedMerge = merge([secondDataset, onlyNew]);
+        return sortedMerge;
     }
 }

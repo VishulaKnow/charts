@@ -121,14 +121,14 @@ export class Tooltip {
                 const tooltipCoordinate = TooltipHelper.getTooltipCoordinate(coordinatePointer);
                 TooltipComponentsManager.setTooltipBlockCoordinate(tooltipBlock, tooltipCoordinate);
 
-                // select(this).style('filter', `url(#${filterId})`);
-                // ElementHighlighter.changeDonutHighlightAppearance(select<SVGGElement, PieArcDatum<DataRow>>(this), margin, blockSize, donutThickness, block.transitionManager.durations.donutHover, true);
+                select(this).style('filter', `url(#${filterId})`);
+                ElementHighlighter.changeDonutHighlightAppearance(select<SVGGElement, PieArcDatum<DataRow>>(this), margin, blockSize, donutThickness, block.transitionManager.durations.donutHover, true);
             });
 
         elemets.on('mouseleave', function () {
             TooltipComponentsManager.hideTooltipBlock(tooltipBlock);
-            // ElementHighlighter.removeElementsFilter(select(this));
-            // ElementHighlighter.changeDonutHighlightAppearance(select<SVGGElement, PieArcDatum<DataRow>>(this), margin, blockSize, donutThickness, block.transitionManager.durations.donutHover, false);
+            ElementHighlighter.removeElementsFilter(select(this));
+            ElementHighlighter.changeDonutHighlightAppearance(select<SVGGElement, PieArcDatum<DataRow>>(this), margin, blockSize, donutThickness, block.transitionManager.durations.donutHover, false);
         });
     }
 

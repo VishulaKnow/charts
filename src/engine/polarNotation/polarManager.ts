@@ -23,7 +23,7 @@ export class PolarManager {
             model.blockCanvas.size,
             model.chartSettings.donut);
 
-        engine.block.filterEventManager.registerEvents(options, null, model.chartBlock.margin, model.blockCanvas.size);
+        engine.block.filterEventManager.registerEventToDonut(model.chartBlock.margin, model.blockCanvas.size, options, model.chartSettings.donut);
 
         Title.render(engine.block,
             options.title,

@@ -1,5 +1,6 @@
 import { BarChartSettings, BlockMargin, DataSource, Model, OptionsModelData, Orient, Size, TwoDimensionalChartModel, TwoDimensionalOptionsModel } from "../../model/model";
 import { Block } from "../block/block";
+import { ElementHighlighter } from "../elementHighlighter/elementHighlighter";
 import Engine from "../engine";
 import { Axis } from "../features/axis/axis";
 import { EmbeddedLabels } from "../features/embeddedLabels/embeddedLabels";
@@ -22,7 +23,6 @@ export class TwoDimensionalManager {
         const scales = Scale.getScales(options.scale.scaleKey,
             options.scale.scaleValue,
             model.chartSettings.bar);
-
         engine.block.scales = scales;
 
         engine.block.renderSvg(model.blockCanvas.size);
@@ -41,7 +41,7 @@ export class TwoDimensionalManager {
             model.chartSettings.bar,
             model.blockCanvas.size);
 
-        engine.block.filterEventManager.registerEvents(options, scales.scaleKey, model.chartBlock.margin, model.blockCanvas.size);
+        engine.block.filterEventManager.registerEventFor2D(scales.scaleKey, model.chartBlock.margin, model.blockCanvas.size, options);
 
         Title.render(engine.block,
             options.title,
@@ -62,8 +62,11 @@ export class TwoDimensionalManager {
 
     public static updateData(block: Block, model: Model, data: DataSource) {
         block.transitionManager.interruptTransitions();
+        block.filterEventManager.clearKeys();
 
         const options = <TwoDimensionalOptionsModel>model.options;
+
+        ElementHighlighter.remove2DChartsFullHighlighting(block, options.charts);
 
         const scales = Scale.getScales(options.scale.scaleKey,
             options.scale.scaleValue,
@@ -91,6 +94,8 @@ export class TwoDimensionalManager {
             options.axis.keyAxis.orient,
             model.blockCanvas.size,
             model.chartSettings.bar);
+
+        block.filterEventManager.registerEventFor2D(scales.scaleKey, model.chartBlock.margin, model.blockCanvas.size, options);
 
         Tooltip.render(block, model, data, scales);
 
