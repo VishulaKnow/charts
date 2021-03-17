@@ -115,7 +115,7 @@ export class ElementHighlighter {
             if (chart.type === 'area' || chart.type === 'line') {
                 selectedElems.call(this.scaleElement, false, transitionDuration);
             } else {
-                this.removeFilter(elems);
+                this.removeFilter(selectedElems);
             }
         });
     }

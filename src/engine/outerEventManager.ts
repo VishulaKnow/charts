@@ -52,6 +52,7 @@ export class OuterEventManager {
                     ElementHighlighter.highlightElementsOf2D(thisClass.block, options.data.keyField.name, keyValue, options.charts, filterId, 0);
                 } else {
                     thisClass.removeKey(keyValue);
+                    console.log(keyValue, thisClass.getSelectedKeys());
                     ElementHighlighter.remove2DHighlightingByKey(thisClass.block, options.data.keyField.name, keyValue, options.charts, 0);
                 }
             } else {
