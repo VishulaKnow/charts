@@ -1,6 +1,6 @@
 import { Selection, BaseType } from 'd3-selection';
 import { Block } from "../../block/block";
-import { ARROW_DEFAULT_POSITION, ARROW_SIZE, TipBoxAttributes, TooltipCoordinate, TooltipLineAttributes } from "./tooltipHelper";
+import { ARROW_DEFAULT_POSITION, ARROW_SIZE, TooltipCoordinate, TooltipLineAttributes } from "./tooltipHelper";
 import { ChartOrientation } from "../../../config/config";
 import { easeLinear } from 'd3-ease';
 import { interrupt } from 'd3-transition';
@@ -41,23 +41,6 @@ export class TooltipComponentsManager {
                 .attr('class', Tooltip.tooltipContentClass);
 
         return tooltipContentBlock;
-    }
-
-    public static renderTipBox(block: Block, attributes: TipBoxAttributes): Selection<SVGRectElement, unknown, HTMLElement, any> {
-        let tipBox = block.getSvg()
-            .select<SVGRectElement>(`rect.${Tooltip.tipBoxClass}`);
-
-        if (tipBox.empty())
-            tipBox = block.getSvg()
-                .append<SVGRectElement>('rect')
-                .attr('class', Tooltip.tipBoxClass)
-                .attr('x', attributes.x)
-                .attr('y', attributes.y)
-                .attr('width', attributes.width)
-                .attr('height', attributes.height)
-                .style('opacity', 0);
-
-        return tipBox;
     }
 
     public static renderTooltipLine(block: Block): Selection<SVGLineElement, unknown, HTMLElement, any> {

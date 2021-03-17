@@ -2,7 +2,7 @@ import { select, Selection, BaseType } from "d3-selection";
 import { Transitions } from "../../designer/designerConfig";
 import { BlockMargin, Size } from "../../model/model";
 import { Scales } from "../features/scale/scale";
-import { Tooltip } from "../features/tolltip/tooltip";
+import { TipBox } from "../features/tipBox/tipBox";
 import { Helper } from "../helper";
 import { NamesManager } from "../namesManager";
 import { Donut } from "../polarNotation/donut/donut";
@@ -117,7 +117,7 @@ export class Block {
     }
 
     public removeEventListeners(): void {
-        const tipBoxes = this.getSvg().selectAll(`.${Tooltip.tipBoxClass}`)
+        const tipBoxes = this.getSvg().selectAll(`.${TipBox.tipBoxClass}`)
         tipBoxes.on('mousemove', null);
         tipBoxes.on('mouseover', null);
         tipBoxes.on('mouseleave', null);

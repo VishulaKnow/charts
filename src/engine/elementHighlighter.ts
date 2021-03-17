@@ -54,9 +54,24 @@ export class ElementHighlighter {
                 .innerRadius(DonutHelper.getOuterRadius(margin, blockSize) - donutThickness - scaleSize)(d, i));
     }
 
-    public static highlight2DElements(block: Block, keyFieldName: string, keyValue: string, charts: TwoDimensionalChartModel[], filterId: string, transitionDuration: number): void {
+    public static highlight2DElementsHover(block: Block, keyFieldName: string, keyValue: string, charts: TwoDimensionalChartModel[], filterId: string, transitionDuration: number): void {
         this.remove2DElementsHighlighting(block, charts, transitionDuration);
 
+        this.highlightElementsOf2D(block, keyFieldName, keyValue, charts, filterId, transitionDuration);
+    }
+
+    public static remove2DElementsHighlighting(block: Block, charts: TwoDimensionalChartModel[], transitionDuration: number): void {
+        charts.forEach(chart => {
+            const elems = Helper.getChartElements(block, chart);
+            if (chart.type === 'area' || chart.type === 'line') {
+                elems.call(this.scaleElement, false, transitionDuration);
+            } else {
+                this.removeElementsFilter(elems);
+            }
+        });
+    }
+
+    public static highlightElementsOf2D(block: Block, keyFieldName: string, keyValue: string, charts: TwoDimensionalChartModel[], filterId: string, transitionDuration: number): void {
         charts.forEach(chart => {
             const elems = Helper.getChartElements(block, chart);
 
@@ -75,19 +90,8 @@ export class ElementHighlighter {
         });
     }
 
-    public static remove2DElementsHighlighting(block: Block, charts: TwoDimensionalChartModel[], transitionDuration: number): void {
-        charts.forEach(chart => {
-            const elems = Helper.getChartElements(block, chart);
-            if (chart.type === 'area' || chart.type === 'line') {
-                elems.call(this.scaleElement, false, transitionDuration);
-            } else {
-                this.removeElementsFilter(elems);
-            }
-        });
-    }
-
-    public static scaleElement(elementSelection: Selection<BaseType, DataRow, BaseType, unknown>, isScaled: boolean, transitionDuration: number): void {
-        const animationName = 'size-scale'
+    private static scaleElement(elementSelection: Selection<BaseType, DataRow, BaseType, unknown>, isScaled: boolean, transitionDuration: number): void {
+        const animationName = 'size-scale';
 
         elementSelection.nodes().forEach(node => {
             interrupt(node, animationName);

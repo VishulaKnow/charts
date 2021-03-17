@@ -11,16 +11,21 @@ import { Area } from "./twoDimensionalNotation/area/area";
 import { Bar } from "./twoDimensionalNotation/bar/bar";
 import { Line } from "./twoDimensionalNotation/line/line";
 
+interface Durations extends Transitions {
+    clickHighlight: number;
+}
+
 export class TransitionManager {
     /**
      * Анимации обновления в ms.
      */
-    public durations: Transitions = {
+    public durations: Durations = {
         chartUpdate: 1000,
         tooltipSlide: 75,
         donutHover: 200,
         markerHover: 50,
-        elementFadeOut: 400
+        elementFadeOut: 400,
+        clickHighlight: 700
     }
 
     private block: Block;

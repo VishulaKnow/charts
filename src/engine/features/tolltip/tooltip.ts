@@ -12,9 +12,9 @@ import { NamesManager } from '../../namesManager';
 import { TooltipComponentsManager } from './tooltipComponentsManager';
 import { ElementHighlighter } from '../../elementHighlighter';
 import { DonutHelper } from '../../polarNotation/donut/DonutHelper';
+import { TipBox } from '../tipBox/tipBox';
 
 export class Tooltip {
-    public static tipBoxClass = 'tipbox';
     public static tooltipBlockClass = 'tooltip-block';
     public static tooltipLineClass = 'tooltip-line';
     public static tooltipWrapperClass = 'tooltip-wrapper';
@@ -61,8 +61,9 @@ export class Tooltip {
         const tooltipContent = TooltipComponentsManager.renderTooltipContentBlock(tooltipBlock);
 
         const tooltipLine = TooltipComponentsManager.renderTooltipLine(block);
-        const tipBoxAttributes = TooltipHelper.getTipBoxAttributes(margin, blockSize);
-        const tipBox = TooltipComponentsManager.renderTipBox(block, tipBoxAttributes);
+        //TODO: объединить
+        const tipBoxAttributes = TipBox.getTipBoxAttributes(margin, blockSize);
+        const tipBox = TipBox.renderTipBox(block, tipBoxAttributes);
 
         const filterId = NamesManager.getId('shadow', block.id);
         ElementHighlighter.renderShadowFilter(block, filterId);
@@ -71,7 +72,6 @@ export class Tooltip {
 
         tipBox
             .on('mousemove', function (event) {
-                // TODO: Убрать костыль
                 const index = TooltipHelper.getKeyIndex(pointer(event, this), chartOrientation, margin, blockSize, scaleKey, scaleKeyModel.type);
                 let keyValue = scaleKey.domain()[index];
                 if (index >= scaleKey.domain().length)
@@ -91,7 +91,7 @@ export class Tooltip {
                     TooltipComponentsManager.setTooltipLineAttributes(tooltipLine, tooltipLineAttributes, block.transitionManager.durations.tooltipSlide);
                     TooltipComponentsManager.showTooltipLine(tooltipLine);
 
-                    ElementHighlighter.highlight2DElements(block, dataOptions.keyField.name, keyValue, charts, filterId, block.transitionManager.durations.markerHover);
+                    ElementHighlighter.highlight2DElementsHover(block, dataOptions.keyField.name, keyValue, charts, filterId, block.transitionManager.durations.markerHover);
                 }
             })
             .on('mouseleave', function () {
@@ -119,15 +119,14 @@ export class Tooltip {
                 const tooltipCoordinate = TooltipHelper.getTooltipCoordinate(coordinatePointer);
                 TooltipComponentsManager.setTooltipBlockCoordinate(tooltipBlock, tooltipCoordinate);
 
-                select(this).style('filter', `url(#${filterId})`);
-
-                ElementHighlighter.changeDonutHighlightAppearance(select<SVGGElement, PieArcDatum<DataRow>>(this), margin, blockSize, donutThickness, block.transitionManager.durations.donutHover, true);
+                // select(this).style('filter', `url(#${filterId})`);
+                // ElementHighlighter.changeDonutHighlightAppearance(select<SVGGElement, PieArcDatum<DataRow>>(this), margin, blockSize, donutThickness, block.transitionManager.durations.donutHover, true);
             });
 
         elemets.on('mouseleave', function () {
             TooltipComponentsManager.hideTooltipBlock(tooltipBlock);
-            ElementHighlighter.removeElementsFilter(select(this));
-            ElementHighlighter.changeDonutHighlightAppearance(select<SVGGElement, PieArcDatum<DataRow>>(this), margin, blockSize, donutThickness, block.transitionManager.durations.donutHover, false);
+            // ElementHighlighter.removeElementsFilter(select(this));
+            // ElementHighlighter.changeDonutHighlightAppearance(select<SVGGElement, PieArcDatum<DataRow>>(this), margin, blockSize, donutThickness, block.transitionManager.durations.donutHover, false);
         });
     }
 

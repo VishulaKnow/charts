@@ -12,12 +12,6 @@ export interface TooltipLineAttributes {
     y1: number;
     y2: number;
 }
-export interface TipBoxAttributes {
-    x: number;
-    y: number;
-    width: number;
-    height: number;
-}
 export interface TooltipCoordinate {
     left: string;
     top: string;
@@ -141,16 +135,6 @@ export class TooltipHelper {
             return this.getKeyIndexOfPoint(pointer, scaleStep, marginByOrient, pointerAxisType);
         } else {
             return this.getKeyIndexOfBand(pointer, scaleStep, marginByOrient, pointerAxisType, blockSize, margin, chartOrient, scaleKey);
-        }
-    }
-
-    public static getTipBoxAttributes(margin: BlockMargin, blockSize: Size): TipBoxAttributes {
-        const pad = 5;
-        return {
-            x: margin.left - pad,
-            y: margin.top - pad,
-            width: blockSize.width - margin.left - margin.right + pad * 2,
-            height: blockSize.height - margin.top - margin.bottom + pad * 2,
         }
     }
 
