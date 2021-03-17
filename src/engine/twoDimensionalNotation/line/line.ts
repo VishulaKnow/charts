@@ -18,43 +18,11 @@ export class Line {
             this.renderGrouped(block, scales, data, keyField, margin, keyAxisOrient, chart, chart.markersOptions.show);
     }
 
-    public static updateData(block: Block, scales: Scales, newData: DataRow[], keyField: Field, margin: BlockMargin, keyAxisOrient: Orient, chart: TwoDimensionalChartModel): void {
+    public static update(block: Block, scales: Scales, newData: DataRow[], keyField: Field, margin: BlockMargin, keyAxisOrient: Orient, chart: TwoDimensionalChartModel): void {
         if (chart.isSegmented) {
-            const keys = chart.data.valueFields.map(field => field.name);
-            const stackedData = stack().keys(keys)(newData);
-
-            const lineGenerator = LineHelper.getSegmentedLineGenerator(keyAxisOrient, scales, keyField.name, margin);
-
-            const lines = block.getChartGroup(chart.index)
-                .selectAll<SVGPathElement, DataRow[]>(`path.${this.lineChartClass}${Helper.getCssClassesLine(chart.cssClasses)}`);
-
-            lines
-                .data(stackedData)
-                .interrupt()
-                .transition()
-                .duration(block.transitionManager.durations.chartUpdate)
-                .attr('d', d => lineGenerator(d));
-
-            if (chart.markersOptions.show) {
-                lines.each((dataset, index) => {
-                    MarkDot.updateDotsCoordinateByValueAxis(block, dataset, keyAxisOrient, scales, margin, keyField.name, index, '1', chart);
-                });
-            }
+            this.updateSegmeneted(block, scales, newData, keyField, margin, keyAxisOrient, chart);
         } else {
-            chart.data.valueFields.forEach((valueField, valueFieldIndex) => {
-                const line = LineHelper.getLineGenerator(keyAxisOrient, scales, keyField.name, valueField.name, margin);
-
-                block.getChartGroup(chart.index)
-                    .select(`.${this.lineChartClass}${Helper.getCssClassesLine(chart.cssClasses)}.chart-element-${valueFieldIndex}`)
-                    .interrupt()
-                    .transition()
-                    .duration(block.transitionManager.durations.chartUpdate)
-                    .attr('d', line(newData));
-
-                if (chart.markersOptions.show) {
-                    MarkDot.updateDotsCoordinateByValueAxis(block, newData, keyAxisOrient, scales, margin, keyField.name, valueFieldIndex, valueField.name, chart);
-                }
-            });
+            this.updateGrouped(block, scales, newData, keyField, margin, keyAxisOrient, chart);
         }
     }
 
@@ -101,10 +69,50 @@ export class Line {
 
         this.setSegmentColor(lines, chart.style.elementColors);
 
-        stackedData.forEach((dataset, index) => {
+        stackedData.forEach((dataset, stackIndex) => {
             if (markFlag)
-                MarkDot.render(block, dataset, keyAxisOrient, scales, margin, keyField.name, index, '1', chart);
+                MarkDot.render(block, dataset, keyAxisOrient, scales, margin, keyField.name, stackIndex, '1', chart);
         });
+    }
+
+    private static updateGrouped(block: Block, scales: Scales, newData: DataRow[], keyField: Field, margin: BlockMargin, keyAxisOrient: Orient, chart: TwoDimensionalChartModel): void {
+        chart.data.valueFields.forEach((valueField, valueFieldIndex) => {
+            const lineGenerator = LineHelper.getLineGenerator(keyAxisOrient, scales, keyField.name, valueField.name, margin);
+
+            block.getChartGroup(chart.index)
+                .select(`.${this.lineChartClass}${Helper.getCssClassesLine(chart.cssClasses)}.chart-element-${valueFieldIndex}`)
+                .interrupt()
+                .transition()
+                .duration(block.transitionManager.durations.chartUpdate)
+                .attr('d', lineGenerator(newData));
+
+            if (chart.markersOptions.show) {
+                MarkDot.updateDotsCoordinateByValueAxis(block, newData, keyAxisOrient, scales, margin, keyField.name, valueFieldIndex, valueField.name, chart);
+            }
+        });
+    }
+
+    private static updateSegmeneted(block: Block, scales: Scales, newData: DataRow[], keyField: Field, margin: BlockMargin, keyAxisOrient: Orient, chart: TwoDimensionalChartModel): void {
+        const keys = chart.data.valueFields.map(field => field.name);
+        const stackedData = stack().keys(keys)(newData);
+
+        const lineGenerator = LineHelper.getSegmentedLineGenerator(keyAxisOrient, scales, keyField.name, margin);
+
+        const lines = block.getChartGroup(chart.index)
+            .selectAll<SVGPathElement, DataRow[]>(`path.${this.lineChartClass}${Helper.getCssClassesLine(chart.cssClasses)}`);
+
+        lines
+            .data(stackedData)
+            .interrupt()
+            .transition()
+            .duration(block.transitionManager.durations.chartUpdate)
+            .attr('d', d => lineGenerator(d));
+
+        if (chart.markersOptions.show) {
+            lines.each((dataset, index) => {
+                MarkDot.updateDotsCoordinateByValueAxis(block, dataset, keyAxisOrient, scales, margin, keyField.name, index, '1', chart);
+            });
+        }
     }
 
     private static setSegmentColor(segments: Selection<SVGGElement, unknown, SVGGElement, unknown>, colorPalette: Color[]): void {

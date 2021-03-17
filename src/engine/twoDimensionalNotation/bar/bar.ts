@@ -24,7 +24,7 @@ export class Bar {
 
     public static update(block: Block, newData: DataRow[], scales: Scales, margin: BlockMargin, keyAxisOrient: Orient, chart: TwoDimensionalChartModel, blockSize: Size, barsAmounts: number[], keyField: Field, firstBarIndex: number, barSettings: BarChartSettings, isSegmented: boolean): void {
         if (isSegmented) {
-            this.updateDataForSegmented(block,
+            this.updateSegmented(block,
                 newData,
                 scales,
                 margin,
@@ -36,7 +36,7 @@ export class Bar {
                 firstBarIndex,
                 barSettings);
         } else {
-            this.updateDataForGrouped(block,
+            this.updateGrouped(block,
                 newData,
                 scales,
                 margin,
@@ -128,7 +128,7 @@ export class Bar {
         });
     }
 
-    private static updateDataForGrouped(block: Block, newData: DataRow[], scales: Scales, margin: BlockMargin, keyAxisOrient: Orient, chart: TwoDimensionalChartModel, blockSize: Size, barsAmounts: number[], keyField: Field, firstBarIndex: number, barSettings: BarChartSettings): void {
+    private static updateGrouped(block: Block, newData: DataRow[], scales: Scales, margin: BlockMargin, keyAxisOrient: Orient, chart: TwoDimensionalChartModel, blockSize: Size, barsAmounts: number[], keyField: Field, firstBarIndex: number, barSettings: BarChartSettings): void {
         chart.data.valueFields.forEach((valueField, index) => {
             const indexesOfRemoved: number[] = [];
 
@@ -184,7 +184,7 @@ export class Bar {
         });
     }
 
-    private static updateDataForSegmented(block: Block, newData: DataRow[], scales: Scales, margin: BlockMargin, keyAxisOrient: Orient, chart: TwoDimensionalChartModel, blockSize: Size, barsAmounts: number[], keyField: Field, firstBarIndex: number, barSettings: BarChartSettings): void {
+    private static updateSegmented(block: Block, newData: DataRow[], scales: Scales, margin: BlockMargin, keyAxisOrient: Orient, chart: TwoDimensionalChartModel, blockSize: Size, barsAmounts: number[], keyField: Field, firstBarIndex: number, barSettings: BarChartSettings): void {
         const keys = chart.data.valueFields.map(field => field.name);
         const stackedData = stack().keys(keys)(newData);
 

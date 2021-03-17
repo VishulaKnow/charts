@@ -149,7 +149,7 @@ export class TwoDimensionalManager {
                     barSettings,
                     chart.isSegmented);
             } else if (chart.type === 'line') {
-                Line.updateData(block,
+                Line.update(block,
                     scales,
                     data[dataOptions.dataSource],
                     dataOptions.keyField,
@@ -158,7 +158,7 @@ export class TwoDimensionalManager {
                     chart);
             }
             else if (chart.type === 'area') {
-                Area.updateData(block,
+                Area.update(block,
                     scales,
                     data[dataOptions.dataSource],
                     dataOptions.keyField,

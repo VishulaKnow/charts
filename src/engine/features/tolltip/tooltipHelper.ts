@@ -1,10 +1,7 @@
 import { AxisScale } from 'd3-axis';
-import { easeLinear } from 'd3-ease';
-import { Selection, BaseType, select } from 'd3-selection'
-import { interrupt } from 'd3-transition';
+import { Selection, BaseType } from 'd3-selection'
 import { ChartOrientation, ValueField } from "../../../config/config";
-import { BlockMargin, DataRow, DataSource, Field, OptionsModelData, Orient, PolarChartModel, ScaleKeyType, Size, TwoDimensionalChartModel } from "../../../model/model";
-import { Block } from '../../block/block';
+import { BlockMargin, DataSource, OptionsModelData, Orient, PolarChartModel, ScaleKeyType, Size, TwoDimensionalChartModel } from "../../../model/model";
 import { Helper } from '../../helper';
 import { ValueFormatter, } from "../../valueFormatter";
 import { Scale } from '../scale/scale';
@@ -27,12 +24,6 @@ export interface TooltipCoordinate {
     right: string;
     bottom: string;
 }
-export interface BarHighlighterAttrs {
-    x: number;
-    y: number;
-    width: number;
-    height: number;
-}
 
 export const ARROW_SIZE = 20;
 export const ARROW_DEFAULT_POSITION = 9;
@@ -41,10 +32,13 @@ const TOOLTIP_ARROW_PADDING_X = ARROW_DEFAULT_POSITION - (ARROW_SIZE * Math.sqrt
 const TOOLTIP_ARROW_PADDING_Y = 13;
 
 export class TooltipHelper {
+    private static tooltipGroupClass = 'tooltip-group';
+    private static tooltipHeadClass = 'tooltip-head';
+
     public static fillForMulty2DCharts(tooltipContentBlock: Selection<BaseType, unknown, BaseType, unknown>, charts: TwoDimensionalChartModel[], data: DataSource, dataOptions: OptionsModelData, keyValue: string): void {
         tooltipContentBlock.html('');
         tooltipContentBlock.append('div')
-            .attr('class', 'tooltip-group tooltip-head')
+            .attr('class', `${this.tooltipGroupClass} ${this.tooltipHeadClass}`)
             .text(keyValue);
 
         charts.forEach(chart => {
@@ -58,7 +52,7 @@ export class TooltipHelper {
     public static fillTooltipForPolarChart(tooltipContentBlock: Selection<BaseType, unknown, BaseType, unknown>, chart: PolarChartModel, data: DataSource, dataOptions: OptionsModelData, keyValue: string, markColor: string): void {
         tooltipContentBlock.html('');
         tooltipContentBlock.append('div')
-            .attr('class', 'tooltip-group tooltip-head')
+            .attr('class', `${this.tooltipGroupClass} ${this.tooltipHeadClass}`)
             .text(keyValue);
 
         const text = this.getTooltipItemText(data, dataOptions, keyValue, chart.data.valueField, false);
@@ -208,7 +202,7 @@ export class TooltipHelper {
 
     private static fillTooltipContent(tooltipContentBlock: Selection<BaseType, unknown, BaseType, unknown>, markColor: string, tooltipText: string): void {
         const group = tooltipContentBlock.append('div')
-            .attr('class', 'tooltip-group');
+            .attr('class', this.tooltipGroupClass);
 
         group.append('div')
             .attr('class', 'tooltip-color')

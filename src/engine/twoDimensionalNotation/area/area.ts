@@ -18,43 +18,11 @@ export class Area {
             this.renderGrouped(block, scales, data, keyField, margin, keyAxisOrient, chart, blockSize);
     }
 
-    public static updateData(block: Block, scales: Scales, data: DataRow[], keyField: Field, margin: BlockMargin, chart: TwoDimensionalChartModel, keyAxisOrient: Orient, blockSize: Size): void {
+    public static update(block: Block, scales: Scales, newData: DataRow[], keyField: Field, margin: BlockMargin, chart: TwoDimensionalChartModel, keyAxisOrient: Orient, blockSize: Size): void {
         if (chart.isSegmented) {
-            const keys = chart.data.valueFields.map(field => field.name);
-            const stackedData = stack().keys(keys)(data);
-
-            const areaGenerator = AreaHelper.getSegmentedAreaGenerator(keyAxisOrient, scales, margin, keyField.name);
-            const areas = block.getChartGroup(chart.index)
-                .selectAll<SVGRectElement, DataRow[]>(`path.${this.areaChartClass}${Helper.getCssClassesLine(chart.cssClasses)}`);
-
-            areas
-                .data(stackedData)
-                .interrupt()
-                .transition()
-                .duration(block.transitionManager.durations.chartUpdate)
-                .attr('d', d => areaGenerator(d));
-
-            if (chart.markersOptions.show) {
-                areas.each((dataset, index) => {
-                    // '1' - атрибут, показывающий координаты согласно полю значения
-                    MarkDot.updateDotsCoordinateByValueAxis(block, dataset, keyAxisOrient, scales, margin, keyField.name, index, '1', chart);
-                });
-            }
+            this.updateSegmented(block, scales, newData, keyField, margin, chart, keyAxisOrient);
         } else {
-            chart.data.valueFields.forEach((field, valueFieldIndex) => {
-                const area = AreaHelper.getGroupedAreaGenerator(keyAxisOrient, scales, margin, keyField.name, field.name, blockSize);
-
-                block.getChartGroup(chart.index)
-                    .select(`.${this.areaChartClass}${Helper.getCssClassesLine(chart.cssClasses)}.chart-element-${valueFieldIndex}`)
-                    .interrupt()
-                    .transition()
-                    .duration(block.transitionManager.durations.chartUpdate)
-                    .attr('d', area(data));
-
-                if (chart.markersOptions.show) {
-                    MarkDot.updateDotsCoordinateByValueAxis(block, data, keyAxisOrient, scales, margin, keyField.name, valueFieldIndex, field.name, chart);
-                }
-            });
+            this.updateGrouped(block, scales, newData, keyField, margin, chart, keyAxisOrient, blockSize);
         }
     }
 
@@ -101,6 +69,46 @@ export class Area {
         if (chart.markersOptions.show) {
             stackedData.forEach((dataset, index) => {
                 MarkDot.render(block, dataset, keyAxisOrient, scales, margin, keyField.name, index, '1', chart);
+            });
+        }
+    }
+
+    private static updateGrouped(block: Block, scales: Scales, newData: DataRow[], keyField: Field, margin: BlockMargin, chart: TwoDimensionalChartModel, keyAxisOrient: Orient, blockSize: Size): void {
+        chart.data.valueFields.forEach((field, valueFieldIndex) => {
+            const area = AreaHelper.getGroupedAreaGenerator(keyAxisOrient, scales, margin, keyField.name, field.name, blockSize);
+
+            block.getChartGroup(chart.index)
+                .select(`.${this.areaChartClass}${Helper.getCssClassesLine(chart.cssClasses)}.chart-element-${valueFieldIndex}`)
+                .interrupt()
+                .transition()
+                .duration(block.transitionManager.durations.chartUpdate)
+                .attr('d', area(newData));
+
+            if (chart.markersOptions.show) {
+                MarkDot.updateDotsCoordinateByValueAxis(block, newData, keyAxisOrient, scales, margin, keyField.name, valueFieldIndex, field.name, chart);
+            }
+        });
+    }
+
+    private static updateSegmented(block: Block, scales: Scales, newData: DataRow[], keyField: Field, margin: BlockMargin, chart: TwoDimensionalChartModel, keyAxisOrient: Orient): void {
+        const keys = chart.data.valueFields.map(field => field.name);
+        const stackedData = stack().keys(keys)(newData);
+
+        const areaGenerator = AreaHelper.getSegmentedAreaGenerator(keyAxisOrient, scales, margin, keyField.name);
+        const areas = block.getChartGroup(chart.index)
+            .selectAll<SVGRectElement, DataRow[]>(`path.${this.areaChartClass}${Helper.getCssClassesLine(chart.cssClasses)}`);
+
+        areas
+            .data(stackedData)
+            .interrupt()
+            .transition()
+            .duration(block.transitionManager.durations.chartUpdate)
+            .attr('d', d => areaGenerator(d));
+
+        if (chart.markersOptions.show) {
+            areas.each((dataset, index) => {
+                // '1' - атрибут, показывающий координаты согласно полю значения
+                MarkDot.updateDotsCoordinateByValueAxis(block, dataset, keyAxisOrient, scales, margin, keyField.name, index, '1', chart);
             });
         }
     }
