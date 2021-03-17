@@ -4,7 +4,7 @@ import Engine from "../engine";
 import { Legend } from "../features/legend/legend";
 import { RecordOverflowAlert } from "../features/recordOverflowAlert/recordOverflowAlert";
 import { Title } from "../features/title/title";
-import { ElementHighlighter } from "../elementHighlighter";
+import { ElementHighlighter } from "../elementHighlighter/elementHighlighter";
 import { Tooltip } from "../features/tolltip/tooltip";
 import { Aggregator } from "./aggregator";
 import { Donut } from "./donut/donut";

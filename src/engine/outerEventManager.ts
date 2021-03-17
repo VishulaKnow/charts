@@ -3,7 +3,7 @@ import { pointer } from "d3-selection";
 import { ChartOrientation } from "../config/config";
 import { BlockMargin, TwoDimensionalChartModel, OptionsModelData, ScaleKeyModel, Size, TwoDimensionalOptionsModel, PolarOptionsModel } from "../model/model";
 import { Block } from "./block/block";
-import { ElementHighlighter } from "./elementHighlighter";
+import { ElementHighlighter } from "./elementHighlighter/elementHighlighter";
 import { TipBox } from "./features/tipBox/tipBox";
 import { TipBoxHelper } from "./features/tipBox/tipBoxHelper";
 import { NamesManager } from "./namesManager";
@@ -37,22 +37,38 @@ export class OuterEventManager {
 
         const thisClass = this;
 
-        tipBox.on('click', function (event) {
+        tipBox.on('click', function (event: MouseEvent) {
             const index = TipBoxHelper.getKeyIndex(pointer(event, this), chartOrientation, margin, blockSize, scaleKey, scaleKeyModel.type);
-            const keyValue = scaleKey.domain()[index];
+            let keyValue = scaleKey.domain()[index];
+            if (index >= scaleKey.domain().length)
+                keyValue = scaleKey.domain()[scaleKey.domain().length - 1];
 
-            if (thisClass.selectedKeys.findIndex(key => key === keyValue) === -1) {
-                thisClass.addKey(keyValue);
-                ElementHighlighter.highlightElementsOf2D(thisClass.block, dataOptions.keyField.name, keyValue, charts, filterId, 0);
+            if (event.ctrlKey) {
+                if (thisClass.selectedKeys.findIndex(key => key === keyValue) === -1) {
+                    thisClass.addKey(keyValue);
+                    ElementHighlighter.highlightElementsOf2D(thisClass.block, dataOptions.keyField.name, keyValue, charts, filterId, 0);
+                } else {
+                    thisClass.removeKey(keyValue);
+                    ElementHighlighter.remove2DHighlightingByKey(thisClass.block, dataOptions.keyField.name, keyValue, charts, 0);
+                }
             } else {
-                thisClass.removeKey(keyValue);
-                ElementHighlighter.remove2DHighlightingByKey(thisClass.block, dataOptions.keyField.name, keyValue, charts, 0);
+                if (thisClass.selectedKeys[0] === keyValue && thisClass.selectedKeys.length === 1) {
+                    thisClass.removeKey(keyValue);
+                    ElementHighlighter.remove2DHighlightingByKey(thisClass.block, dataOptions.keyField.name, keyValue, charts, 0);
+                } else {
+                    thisClass.setKey(keyValue);
+                    // ElementHighlighter.removeUnselected2DHighlight()
+                }
             }
         });
     }
 
     private registerEventForPolar(): void {
 
+    }
+
+    private setKey(keyValue: string): void {
+        this.selectedKeys = [keyValue];
     }
 
     private addKey(keyValue: string): void {
