@@ -23,6 +23,8 @@ export class PolarManager {
             model.blockCanvas.size,
             model.chartSettings.donut);
 
+        engine.block.filterEventManager.registerEvents(options, null, model.chartBlock.margin, model.blockCanvas.size);
+
         Title.render(engine.block,
             options.title,
             model.otherComponents.titleBlock,

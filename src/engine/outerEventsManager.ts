@@ -1,12 +1,14 @@
 import { AxisScale } from "d3-axis";
-import { pointer } from "d3-selection";
+import { pointer, select } from "d3-selection";
 import { ChartOrientation } from "../config/config";
-import { BlockMargin, TwoDimensionalChartModel, OptionsModelData, ScaleKeyModel, Size, TwoDimensionalOptionsModel, PolarOptionsModel } from "../model/model";
+import { BlockMargin, TwoDimensionalChartModel, OptionsModelData, ScaleKeyModel, Size, TwoDimensionalOptionsModel, PolarOptionsModel, Model } from "../model/model";
 import { Block } from "./block/block";
 import { ElementHighlighter } from "./elementHighlighter/elementHighlighter";
 import { TipBox } from "./features/tipBox/tipBox";
 import { TipBoxHelper } from "./features/tipBox/tipBoxHelper";
 import { NamesManager } from "./namesManager";
+import { Donut } from "./polarNotation/donut/donut";
+import { DonutHelper } from "./polarNotation/donut/DonutHelper";
 
 export class OuterEventManager {
     private block: Block;
@@ -25,6 +27,24 @@ export class OuterEventManager {
         if (options.type === '2d') {
             this.registerEventFor2D(scaleKey, margin, blockSize, options.charts, options.orient, options.data, options.scale.scaleKey)
         }
+    }
+    public registerEventToDonut(model: Model, margin: BlockMargin, blockSize: Size): void {
+        const thisClass = this
+        const arcItems = Donut.getAllArcGroups(this.block);
+        const donutThickness = DonutHelper.getThickness(model.chartSettings.donut, model.blockCanvas.size, model.chartBlock.margin)
+
+        arcItems.on('click', function (event, dataRow) {
+            const keyValue = dataRow.data[Object.keys(dataRow.data)[0]];
+
+            if (thisClass.selectedKeys.findIndex(key => key === keyValue) === -1) {
+                thisClass.addKey(keyValue);
+                ElementHighlighter.changeDonutHighlightAppearance(select(this), margin, blockSize, donutThickness, thisClass.block.transitionManager.durations.donutHover, true);
+
+            } else {
+                thisClass.removeKey(keyValue);
+                // ElementHighlighter.remove2DElementHighlighting(thisClass.block, dataOptions.keyField.name, keyValue, charts, filterId, 0);
+            }
+        })
     }
 
     private registerEventFor2D(scaleKey: AxisScale<any>, margin: BlockMargin, blockSize: Size, charts: TwoDimensionalChartModel[], chartOrientation: ChartOrientation, dataOptions: OptionsModelData, scaleKeyModel: ScaleKeyModel): void {
