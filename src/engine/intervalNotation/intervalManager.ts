@@ -46,7 +46,7 @@ export class IntervalManager {
     }
 
     private static renderCharts(block: Block, charts: IntervalChartModel[], scales: Scales, data: DataSource, dataOptions: OptionsModelData, margin: BlockMargin, keyAxisOrient: Orient, chartSettings: ChartElementsSettings): void {
-        block.renderChartBlock();
+        block.renderChartsBlock();
         charts.forEach(chart => {
             if (chart.type === 'gantt')
                 Gantt.render(block,

@@ -30,8 +30,8 @@ export class Title {
             .attr('height', attributes.height)
             .attr('dominant-baseline', attributes.dominantBaseline)
             .text(text);
-            
-        Helper.cropLabels(titleBlock, attributes.width);
+
+        Helper.cropSvgLabels(titleBlock, attributes.width);
     }
 
     private static getTitleAttributes(blockSize: Size, titleBlockModel: TitleBlockModel): TitleAttributes {

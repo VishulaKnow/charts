@@ -97,7 +97,7 @@ export class TwoDimensionalManager {
 
     private static renderCharts(block: Block, charts: TwoDimensionalChartModel[], scales: Scales, data: DataSource, dataOptions: OptionsModelData, margin: BlockMargin, keyAxisOrient: Orient, barSettings: BarChartSettings, blockSize: Size) {
         block.renderClipPath(margin, blockSize);
-        block.renderChartBlock();
+        block.renderChartsBlock();
         charts.forEach((chart: TwoDimensionalChartModel) => {
             if (chart.type === 'bar')
                 Bar.render(block,

@@ -50,18 +50,18 @@ export class Block {
             .style('position', 'relative');
     }
 
-    public renderChartBlock(): void {
-        this.getSvg()
-            .append('g')
-            .attr('class', this.chartBlockClass);
-    }
-
     public getSvg(): Selection<SVGElement, unknown, HTMLElement, any> {
         return this.getWrapper().select(`svg.${NamesManager.getClassName('svg-chart')}`);
     }
 
     public getWrapper(): Selection<BaseType, unknown, HTMLElement, any> {
         return this.wrapper;
+    }
+
+    public renderChartsBlock(): void {
+        this.getSvg()
+            .append('g')
+            .attr('class', this.chartBlockClass);
     }
 
     public getChartBlock(): Selection<SVGGElement, unknown, HTMLElement, any> {
@@ -80,6 +80,10 @@ export class Block {
             .attr('height', attributes.height);
     }
 
+    public getClipPathId(): string {
+        return NamesManager.getId('clip-path', this.id);
+    }
+
     public renderDefs(): Selection<SVGDefsElement, unknown, HTMLElement, unknown> {
         let defs = this.getSvg()
             .select<SVGDefsElement>('defs');
@@ -90,8 +94,15 @@ export class Block {
         return defs;
     }
 
-    public getClipPathId(): string {
-        return NamesManager.getId('clip-path', this.id);
+    public getChartGroup(chartIndex: number): Selection<SVGGElement, any, BaseType, any> {
+        let group: Selection<SVGGElement, any, BaseType, any> = this.getChartBlock().select(`.${this.chartGroupClass}-${chartIndex}`);
+        if (group.empty()) {
+            group = this.getChartBlock()
+                .append('g')
+                .attr('class', `${this.chartGroupClass}-${chartIndex}`);
+        }
+
+        return group;
     }
 
     public removeEventListeners(): void {
@@ -104,17 +115,6 @@ export class Block {
         arcItems.on('mouseover', null);
         arcItems.on('mouseleave', null);
         arcItems.on('mousemove', null);
-    }
-
-    public getChartGroup(chartIndex: number): Selection<SVGGElement, any, BaseType, any> {
-        let group: Selection<SVGGElement, any, BaseType, any> = this.getChartBlock().select(`.${this.chartGroupClass}-${chartIndex}`);
-        if (group.empty()) {
-            group = this.getChartBlock()
-                .append('g')
-                .attr('class', `${this.chartGroupClass}-${chartIndex}`);
-        }
-
-        return group;
     }
 
     public clearWrapper(): void {

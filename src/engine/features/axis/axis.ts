@@ -45,7 +45,7 @@ export class Axis {
     private static updateKeyAxis(block: Block, scaleKey: AxisScale<any>, scaleOptions: ScaleKeyModel, axisOptions: AxisModelOptions, blockSize: Size, domainNotUpdated: boolean): void {
         const axisGenerator = this.getBaseAxisGenerator(axisOptions, scaleKey, scaleOptions);
 
-        if (axisOptions.labels.positition === 'rotated') {
+        if (axisOptions.labels.positition === 'rotated') { // Задание координат для перевернутых лейблов (если до этого они не были перевернуты)
             if (axisOptions.orient === 'bottom')
                 axisGenerator.tickPadding(-4);
             else if (axisOptions.orient === 'top')
@@ -87,7 +87,6 @@ export class Axis {
         if (axisOptions.orient === 'left' || axisOptions.orient === 'right') {
             this.alignLabelsInKeyAxis(axisOptions, axisElement);
         }
-
         if (axisOptions.orient === 'bottom' || axisOptions.orient === 'top') {
             axisElement.selectAll('.tick > text').attr('text-anchor', 'center');
             if (axisOptions.labels.positition === 'rotated')
@@ -127,7 +126,7 @@ export class Axis {
 
     private static updateAxisElement(axisGenerator: IAxis<any>, axisElement: Selection<BaseType, any, BaseType, any>, translate: TranslateModel, transitionDuration: number = 0): Promise<string> {
         return new Promise(resolve => {
-            let axisHandler: Selection<BaseType, any, BaseType, any> | Transition<BaseType, any, BaseType, any> = axisElement;
+            let axisHandler: Transition<BaseType, any, BaseType, any> | Selection<BaseType, any, BaseType, any> = axisElement;
             if (transitionDuration > 0) {
                 axisHandler = axisHandler
                     .interrupt()
@@ -234,7 +233,7 @@ export class Axis {
             else
                 labelSize = (scale as ScaleBand<string>).step();
 
-            Helper.cropLabels(axisTextBlocks, labelSize);
+            Helper.cropSvgLabels(axisTextBlocks, labelSize);
 
             if (scaleOptions.type === 'point' && axisOptions.labels.positition === 'straight' && (axisOptions.orient === 'top' || axisOptions.orient === 'bottom')) {
                 this.cropAndAlignExtremeLabels(block, labelSize, axisOptions, blockSize);
@@ -249,7 +248,7 @@ export class Axis {
 
         if (translateX + lastLabel.node().getBBox().width + axisOptions.translate.translateX > blockSize.width) {
             lastLabel.attr('text-anchor', 'end');
-            Helper.cropLabels(lastLabel, labelSize / 2);
+            Helper.cropSvgLabels(lastLabel, labelSize / 2);
         }
 
         const firtsLabel = block.getSvg()
@@ -259,7 +258,7 @@ export class Axis {
 
         if (axisOptions.translate.translateX - firtsLabel.node().getBBox().width < 0) {
             firtsLabel.attr('text-anchor', 'start');
-            Helper.cropLabels(firtsLabel, labelSize / 2);
+            Helper.cropSvgLabels(firtsLabel, labelSize / 2);
         }
     }
 

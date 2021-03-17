@@ -14,12 +14,16 @@ export class Helper {
         });
     }
 
-    /**
-     * Возвращает все CSS-классы через точку. Используется для создания селектора для поиска
-     * @param cssClasses 
-     */
     public static getCssClassesLine(cssClasses: string[]): string {
         return '.' + cssClasses.join('.');
+    }
+
+    public static getCssClassesArray(cssClass: string): string[] {
+        return cssClass.split(' ');
+    }
+
+    public static getCssClassesWithElementIndex(cssClasses: string[], index: number): string[] {
+        return cssClasses.concat([`chart-element-${index}`]);
     }
 
     public static setChartStyle(elements: Selection<BaseType, unknown, BaseType, unknown>, chartStyle: ChartStyle, fieldIndex: number, styleType: StyleColorType): void {
@@ -31,7 +35,7 @@ export class Helper {
         elements.style(styleType, colorPalette[fieldIndex % colorPalette.length].toString());
     }
 
-    public static cropLabels(labelBlocks: Selection<SVGGraphicsElement, unknown, BaseType, unknown>, maxWidth: number): void {
+    public static cropSvgLabels(labelBlocks: Selection<SVGGraphicsElement, unknown, BaseType, unknown>, maxWidth: number): void {
         labelBlocks.nodes().forEach(node => {
             if (node.getBBox().width > maxWidth) {
                 const text = node.textContent;
@@ -43,10 +47,6 @@ export class Helper {
                     node.textContent = '';
             }
         });
-    }
-
-    public static getCssClassesArray(cssClass: string): string[] {
-        return cssClass.split(' ');
     }
 
     public static getTranslateNumbers(transformValue: string): [number, number] {
@@ -74,10 +74,6 @@ export class Helper {
 
     public static getSelectionNumericAttr(selection: Selection<BaseType, unknown, BaseType, unknown>, attrName: string): number {
         return parseFloat(selection.attr(attrName));
-    }
-
-    public static getCssClassesWithElementIndex(cssClasses: string[], index: number): string[] {
-        return cssClasses.concat([`chart-element-${index}`]);
     }
 
     public static getChartElements(block: Block, chart: TwoDimensionalChartModel): Selection<BaseType, DataRow, BaseType, unknown> {

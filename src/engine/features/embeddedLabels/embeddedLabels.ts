@@ -150,7 +150,7 @@ export class EmbeddedLabels {
         else
             labelTextSpace = EmbeddedLabelsHelper.getSpaceSizeForType(position, barAttrs.width, margin, blockSize);
 
-        Helper.cropLabels(labelBlock, labelTextSpace);
+        Helper.cropSvgLabels(labelBlock, labelTextSpace);
     }
 
     private static renderGroup(block: Block, cssClasses: string[]): Selection<SVGGElement, unknown, HTMLElement, unknown> {

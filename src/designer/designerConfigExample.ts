@@ -19,10 +19,10 @@ const designerConfig: DesignerConfig = {
         },
         chartOptions: {
             bar: {
-                groupMinDistance: 10,
                 minBarWidth: 3,
                 maxBarWidth: 30,
-                barDistance: 5,
+                groupMinDistance: 16,
+                barDistance: 8,
                 groupMaxDistance: 35
             },
             donut: {
