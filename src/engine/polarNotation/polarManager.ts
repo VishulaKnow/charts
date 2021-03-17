@@ -8,12 +8,18 @@ import { ElementHighlighter } from "../elementHighlighter";
 import { Tooltip } from "../features/tolltip/tooltip";
 import { Aggregator } from "./aggregator";
 import { Donut } from "./donut/donut";
+import { Scale } from "../features/scale/scale";
 
 export class PolarManager {
     public static render(engine: Engine, model: Model) {
         const options = <PolarOptionsModel>model.options;
 
         engine.block.renderSvg(model.blockCanvas.size);
+
+        // const scales = Scale.getScales(options.scale.scaleKey,
+        //     options.scale.scaleValue,
+        //     model.chartSettings.bar);
+        // engine.block.scales = scales;
 
         this.renderCharts(engine.block,
             options.charts,
@@ -22,6 +28,8 @@ export class PolarManager {
             model.chartBlock.margin,
             model.blockCanvas.size,
             model.chartSettings.donut);
+
+        engine.block.filterEventManager.registerEvents(model, options, null, model.chartBlock.margin, model.blockCanvas.size);
 
         Title.render(engine.block,
             options.title,
