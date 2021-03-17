@@ -24,13 +24,9 @@ export class Legend {
             const chartElementsColor = LegendHelper.getMarksColor(options);
             const legendItemsDirection = LegendHelper.getLegendItemsDirection(options.type, options.legend.position);
 
-            this.renderLegendObject(block,
-                legendItemsContent,
-                options.legend.position,
-                legendBlockModel,
-                chartElementsColor,
-                blockSize,
-                legendItemsDirection);
+            const legendObject = this.renderLegendObject(block, options.legend.position, legendBlockModel, blockSize);
+
+            this.renderLegendContent(legendObject, legendItemsContent, chartElementsColor, legendItemsDirection, options.legend.position);
         }
     }
 
@@ -49,15 +45,15 @@ export class Legend {
         }
     }
 
-    private static renderLegendObject(block: Block, items: string[], legendPosition: Orient, legendBlockModel: LegendBlockModel, colorPalette: Color[], blockSize: Size, itemsDirection: LegendItemsDirection): void {
-        const legendBlock = block.getSvg()
+    private static renderLegendObject(block: Block, legendPosition: Orient, legendBlockModel: LegendBlockModel, blockSize: Size): Selection<SVGForeignObjectElement, unknown, HTMLElement, any> {
+        const legendObject = block.getSvg()
             .append('foreignObject')
             .attr('class', this.legendObjectClass);
 
         const legendCoordinate = this.getLegendCoordinateByPosition(legendPosition, legendBlockModel, blockSize);
-        this.fillLegendCoordinate(legendBlock, legendCoordinate);
+        this.fillLegendCoordinate(legendObject, legendCoordinate);
 
-        this.renderLegendContent(legendBlock, items, colorPalette, itemsDirection, legendPosition);
+        return legendObject;
     }
 
     private static getLegendCoordinateByPosition(legendPosition: Orient, legendBlockModel: LegendBlockModel, blockSize: Size): LegendCoordinate {
