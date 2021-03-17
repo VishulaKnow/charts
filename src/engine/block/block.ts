@@ -80,6 +80,17 @@ export class Block {
             .attr('height', attributes.height);
     }
 
+    public updateClipPath(margin: BlockMargin, blockSize: Size): void {
+        const attributes = BlockHelper.getClipPathAttributes(blockSize, margin);
+        this.renderDefs()
+            .select('clipPath')
+            .select('rect')
+            .attr('x', attributes.x)
+            .attr('y', attributes.y)
+            .attr('width', attributes.width)
+            .attr('height', attributes.height);
+    }
+
     public getClipPathId(): string {
         return NamesManager.getId('clip-path', this.id);
     }

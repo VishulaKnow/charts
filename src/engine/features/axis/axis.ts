@@ -2,17 +2,14 @@ import { Selection, BaseType } from 'd3-selection';
 import { min, max } from 'd3-array';
 import { format } from 'd3-format';
 import { AxisScale, Axis as IAxis } from 'd3-axis';
-import { ScaleBand } from 'd3-scale'
-import { AxisModelOptions, BlockMargin, IAxisModel, IScaleModel, Orient, ScaleKeyModel, ScaleValueModel, Size, TranslateModel } from "../../../model/model";
-import { Helper } from "../../helper";
+import { AxisModelOptions, BlockMargin, IAxisModel, IScaleModel, ScaleKeyModel, ScaleValueModel, Size, TranslateModel } from "../../../model/model";
 import { Block } from "../../block/block";
 import { Scale, Scales } from "../scale/scale";
-import { AXIS_HORIZONTAL_LABEL_PADDING, AXIS_VERTICAL_LABEL_PADDING } from "../../../model/marginModel";
+import { AXIS_VERTICAL_LABEL_PADDING } from "../../../model/marginModel";
 import { NamesManager } from '../../namesManager';
 import { AxisHelper } from './axisHelper';
 import { Transition } from 'd3-transition';
-
-type TextAnchor = 'start' | 'end' | 'middle';
+import { AxisLabelHelper } from './axisLabelHelper';
 
 const MINIMAL_STEP_SIZE = 40;
 const MINIMAL_STEP_SIZE_FOR_WRAPPING = 38;
@@ -38,7 +35,7 @@ export class Axis {
         const axisGenerator = this.getBaseAxisGenerator(axisOptions, scaleValue, scaleOptions);
 
         const axisElement = block.getSvg()
-            .select(`g.${axisOptions.cssClass}`);
+            .select<SVGGElement>(`g.${axisOptions.cssClass}`);
         this.updateAxisElement(axisGenerator, axisElement, axisOptions.translate, block.transitionManager.durations.chartUpdate);
     }
 
@@ -72,26 +69,26 @@ export class Axis {
                             .attr('text-anchor', 'middle')
                             .attr('x', null);
                     }
-                    this.cropLabels(block, scaleKey, scaleOptions, axisOptions, blockSize);
+                    AxisLabelHelper.cropLabels(block, scaleKey, scaleOptions, axisOptions, blockSize);
                 }
                 if (axisOptions.orient === 'left' || axisOptions.orient === 'right') {
                     if (Scale.getScaleStep(scaleKey) >= MINIMAL_STEP_SIZE_FOR_WRAPPING)
                         axisElement.selectAll<SVGGElement, unknown>('.tick text').call(AxisHelper.wrapHandler, axisOptions.labels.maxSize);
                     else
-                        this.cropLabels(block, scaleKey, scaleOptions, axisOptions, blockSize);
+                        AxisLabelHelper.cropLabels(block, scaleKey, scaleOptions, axisOptions, blockSize);
 
-                    this.alignLabelsInKeyAxis(axisOptions, axisElement);
+                    AxisLabelHelper.alignLabelsInKeyAxis(axisOptions, axisElement);
                 }
             });
 
         if (axisOptions.orient === 'left' || axisOptions.orient === 'right') {
-            this.alignLabelsInKeyAxis(axisOptions, axisElement);
+            AxisLabelHelper.alignLabelsInKeyAxis(axisOptions, axisElement);
         }
         if (axisOptions.orient === 'bottom' || axisOptions.orient === 'top') {
             axisElement.selectAll('.tick > text').attr('text-anchor', 'center');
             if (axisOptions.labels.positition === 'rotated')
-                this.rotateLabels(axisElement, axisOptions.orient);
-            this.cropLabels(block, scaleKey, scaleOptions, axisOptions, blockSize);
+                AxisLabelHelper.rotateLabels(axisElement, axisOptions.orient);
+            AxisLabelHelper.cropLabels(block, scaleKey, scaleOptions, axisOptions, blockSize);
         }
     }
 
@@ -109,24 +106,24 @@ export class Axis {
 
         if (axisOptions.labels.visible) {
             if (axisOptions.type === 'key' && axisOptions.labels.positition === 'rotated' && (axisOptions.orient === 'top' || axisOptions.orient === 'bottom'))
-                this.rotateLabels(axisElement, axisOptions.orient);
+                AxisLabelHelper.rotateLabels(axisElement, axisOptions.orient);
 
             if ((axisOptions.orient === 'left' || axisOptions.orient === 'right') && axisOptions.type === 'key' && Scale.getScaleStep(scale) >= MINIMAL_STEP_SIZE_FOR_WRAPPING)
                 axisElement.selectAll<SVGGElement, unknown>('.tick text').call(AxisHelper.wrapHandler, axisOptions.labels.maxSize);
             else
-                this.cropLabels(block, scale, scaleOptions, axisOptions, blockSize);
+                AxisLabelHelper.cropLabels(block, scale, scaleOptions, axisOptions, blockSize);
 
             if (axisOptions.type === 'key') {
-                this.alignLabelsInKeyAxis(axisOptions, axisElement);
+                AxisLabelHelper.alignLabelsInKeyAxis(axisOptions, axisElement);
             }
         } else {
-            this.hideLabels(axisElement);
+            AxisLabelHelper.hideLabels(axisElement);
         }
     }
 
-    private static updateAxisElement(axisGenerator: IAxis<any>, axisElement: Selection<BaseType, any, BaseType, any>, translate: TranslateModel, transitionDuration: number = 0): Promise<string> {
+    private static updateAxisElement(axisGenerator: IAxis<any>, axisElement: Selection<SVGGElement, any, BaseType, any>, translate: TranslateModel, transitionDuration: number = 0): Promise<string> {
         return new Promise(resolve => {
-            let axisHandler: Transition<BaseType, any, BaseType, any> | Selection<BaseType, any, BaseType, any> = axisElement;
+            let axisHandler: Selection<SVGGElement, any, BaseType, any> | Transition<SVGGElement, any, BaseType, any> = axisElement;
             if (transitionDuration > 0) {
                 axisHandler = axisHandler
                     .interrupt()
@@ -146,8 +143,8 @@ export class Axis {
         const axis = AxisHelper.getAxisByOrient(axisOptions.orient, scale);
         if (!axisOptions.ticks.flag)
             this.removeTicks(axis);
-        this.setAxisLabelPaddingByOrient(axis, axisOptions);
-        this.setAxisFormat(scale, scaleOptions, axis);
+        AxisLabelHelper.setAxisLabelPaddingByOrient(axis, axisOptions);
+        this.setTickFormat(scale, scaleOptions, axis);
 
         return axis;
     }
@@ -166,104 +163,15 @@ export class Axis {
         }
     }
 
-    private static alignLabelsInKeyAxis(axisOptions: AxisModelOptions, axisElement: Selection<SVGGElement, unknown, HTMLElement, any>): void {
-        if (axisOptions.orient === 'left')
-            this.alignLabelsInVerticalAxis(axisElement, 'start', axisOptions.labels.maxSize, true);
-        else if (axisOptions.orient === 'right')
-            this.alignLabelsInVerticalAxis(axisElement, 'start', axisOptions.labels.maxSize, false);
-    }
-
-    private static alignLabelsInVerticalAxis(axisElement: Selection<SVGGElement, unknown, HTMLElement, any>, anchor: TextAnchor, maxLabelSize: number, changeCoordinate: boolean): void {
-        const axisTextBlocks = axisElement.selectAll('text');
-        const spans = axisElement.selectAll('tspan');
-        axisTextBlocks.attr('text-anchor', anchor);
-        spans.attr('text-anchor', anchor);
-
-        if (changeCoordinate) {
-            axisTextBlocks.attr('x', -(maxLabelSize + AXIS_VERTICAL_LABEL_PADDING));
-            spans.attr('x', -(maxLabelSize + AXIS_VERTICAL_LABEL_PADDING));
-        } else {
-            spans.attr('x', AXIS_VERTICAL_LABEL_PADDING);
-        }
-    }
-
-    private static setAxisLabelPaddingByOrient(axis: IAxis<any>, axisOptions: AxisModelOptions): void {
-        let axisLabelPadding = AXIS_HORIZONTAL_LABEL_PADDING;
-        if (axisOptions.orient === 'left' || axisOptions.orient === 'right')
-            axisLabelPadding = AXIS_VERTICAL_LABEL_PADDING;
-        axis.tickPadding(axisLabelPadding);
-    }
-
-    private static rotateLabels(axisElement: Selection<SVGGElement, unknown, HTMLElement, any>, keyAxisOrient: Orient): void {
-        const labelBlocks = axisElement.selectAll('text');
-        labelBlocks.attr('transform', 'rotate(-90)');
-
-        if (keyAxisOrient === 'bottom') {
-            labelBlocks
-                .attr('text-anchor', 'end')
-                .attr('x', -AXIS_HORIZONTAL_LABEL_PADDING)
-                .attr('y', -4);
-        }
-        else if (keyAxisOrient === 'top') {
-            labelBlocks
-                .attr('text-anchor', 'start')
-                .attr('x', AXIS_HORIZONTAL_LABEL_PADDING)
-                .attr('y', 6);
-        }
-    }
-
     private static removeTicks(axis: IAxis<any>): void {
         axis.tickSize(0);
     }
 
-    private static setAxisFormat(scale: AxisScale<any>, scaleOptions: ScaleValueModel | ScaleKeyModel, axis: IAxis<any>): void {
+    private static setTickFormat(scale: AxisScale<any>, scaleOptions: ScaleValueModel | ScaleKeyModel, axis: IAxis<any>): void {
         if (scaleOptions.type === 'linear') {
             if (max(scale.domain()) > 1000) {
                 axis.tickFormat(format('.2s')); // examples: 1.2K, 350, 0 
             }
         }
-    }
-
-    private static cropLabels(block: Block, scale: AxisScale<any>, scaleOptions: ScaleKeyModel | ScaleValueModel, axisOptions: AxisModelOptions, blockSize: Size): void {
-        if (scaleOptions.type === 'point' || scaleOptions.type === 'band') {
-            const axisTextBlocks = block.getSvg().select(`.${axisOptions.cssClass}`).selectAll<SVGGraphicsElement, unknown>('text');
-            let labelSize: number;
-            if ((axisOptions.orient === 'left' || axisOptions.orient === 'right') || (axisOptions.type === 'key' && axisOptions.labels.positition === 'rotated'))
-                labelSize = axisOptions.labels.maxSize;
-            else
-                labelSize = (scale as ScaleBand<string>).step();
-
-            Helper.cropSvgLabels(axisTextBlocks, labelSize);
-
-            if (scaleOptions.type === 'point' && axisOptions.labels.positition === 'straight' && (axisOptions.orient === 'top' || axisOptions.orient === 'bottom')) {
-                this.cropAndAlignExtremeLabels(block, labelSize, axisOptions, blockSize);
-            }
-        }
-    }
-
-    private static cropAndAlignExtremeLabels(block: Block, labelSize: number, axisOptions: AxisModelOptions, blockSize: Size): void {
-        const lastTick = block.getSvg().select(`.${axisOptions.cssClass}`).select<SVGGraphicsElement>('.tick:last-of-type');
-        const lastLabel = lastTick.select<SVGGraphicsElement>('text');
-        const translateX = Helper.getTranslateNumbers(lastTick.attr('transform'))[0];
-
-        if (translateX + lastLabel.node().getBBox().width + axisOptions.translate.translateX > blockSize.width) {
-            lastLabel.attr('text-anchor', 'end');
-            Helper.cropSvgLabels(lastLabel, labelSize / 2);
-        }
-
-        const firtsLabel = block.getSvg()
-            .select(`.${axisOptions.cssClass}`)
-            .select('.tick:first-of-type')
-            .select<SVGGraphicsElement>('text');
-
-        if (axisOptions.translate.translateX - firtsLabel.node().getBBox().width < 0) {
-            firtsLabel.attr('text-anchor', 'start');
-            Helper.cropSvgLabels(firtsLabel, labelSize / 2);
-        }
-    }
-
-    private static hideLabels(axisElement: Selection<SVGGElement, unknown, BaseType, unknown>): void {
-        axisElement.selectAll('.tick text')
-            .style('display', 'none');
     }
 }

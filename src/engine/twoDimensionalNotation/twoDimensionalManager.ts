@@ -80,7 +80,7 @@ export class TwoDimensionalManager {
             model.chartBlock.margin,
             options.scale.scaleKey);
 
-        this.updateChartsData(block,
+        this.updateCharts(block,
             options.charts,
             scales,
             data,
@@ -133,7 +133,8 @@ export class TwoDimensionalManager {
         EmbeddedLabels.raiseGroups(block);
     }
 
-    private static updateChartsData(block: Block, charts: TwoDimensionalChartModel[], scales: Scales, data: DataSource, dataOptions: OptionsModelData, margin: BlockMargin, keyAxisOrient: Orient, blockSize: Size, barSettings: BarChartSettings): void {
+    private static updateCharts(block: Block, charts: TwoDimensionalChartModel[], scales: Scales, data: DataSource, dataOptions: OptionsModelData, margin: BlockMargin, keyAxisOrient: Orient, blockSize: Size, barSettings: BarChartSettings): void {
+        block.updateClipPath(margin, blockSize);
         charts.forEach((chart: TwoDimensionalChartModel) => {
             if (chart.type === 'bar') {
                 Bar.update(block,
