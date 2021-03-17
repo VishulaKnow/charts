@@ -29,6 +29,19 @@ export class OuterEventManager {
         return this.selectedKeys.findIndex(key => key === keyValue) !== -1;
     }
 
+    public setKey(keyValue: string): void {
+        this.selectedKeys = [keyValue];
+    }
+
+    public addKey(keyValue: string): void {
+        this.selectedKeys.push(keyValue);
+    }
+
+    public removeKey(keyValue: string): void {
+        const selectedKeys = this.selectedKeys;
+        selectedKeys.splice(selectedKeys.findIndex(key => key === keyValue), 1);
+    }
+
     public registerEventFor2D(scaleKey: AxisScale<any>, margin: BlockMargin, blockSize: Size, options: TwoDimensionalOptionsModel): void {
         const tipBox = TipBox.render(this.block, margin, blockSize);
 
@@ -56,18 +69,5 @@ export class OuterEventManager {
 
             SelectHighlighter.clickPolarHandler(event, thisClass, this, keyValue, margin, blockSize, thisClass.block, options, arcItems, donutSettings);
         });
-    }
-
-    public setKey(keyValue: string): void {
-        this.selectedKeys = [keyValue];
-    }
-
-    public addKey(keyValue: string): void {
-        this.selectedKeys.push(keyValue);
-    }
-
-    public removeKey(keyValue: string): void {
-        const selectedKeys = this.selectedKeys;
-        selectedKeys.splice(selectedKeys.findIndex(key => key === keyValue), 1);
     }
 }
