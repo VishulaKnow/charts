@@ -1,7 +1,7 @@
 import { Selection, BaseType } from 'd3-selection';
 import { PieArcDatum } from 'd3-shape'
 import { BlockMargin, DataRow, Size, TwoDimensionalChartModel } from "../model/model";
-import { Helper } from "./helper";
+import { Helper, SelectionCondition } from "./helper";
 import { Block } from "./block/block";
 import { easeLinear } from 'd3-ease';
 import { interrupt, Transition } from 'd3-transition';
@@ -55,18 +55,21 @@ export class ElementHighlighter {
     }
 
     public static highlight2DElementsHover(block: Block, keyFieldName: string, keyValue: string, charts: TwoDimensionalChartModel[], filterId: string, transitionDuration: number): void {
-        this.remove2DChartsHighlighting(block, charts, transitionDuration);
+        this.removeUnselected2DHighlight(block, keyFieldName, charts, transitionDuration);
 
         this.highlightElementsOf2D(block, keyFieldName, keyValue, charts, filterId, transitionDuration);
     }
 
-    public static remove2DChartsHighlighting(block: Block, charts: TwoDimensionalChartModel[], transitionDuration: number): void {
+    public static removeUnselected2DHighlight(block: Block, keyFieldName: string, charts: TwoDimensionalChartModel[], transitionDuration: number): void {
         charts.forEach(chart => {
             const elems = Helper.getChartElements(block, chart);
+
+            const selectedElems = Helper.get2DElementsByKeys(elems, chart.isSegmented, keyFieldName, block.filterEventManager.getSelectedKeys(), SelectionCondition.Exclude);
+
             if (chart.type === 'area' || chart.type === 'line') {
-                elems.call(this.scaleElement, false, transitionDuration);
+                selectedElems.call(this.scaleElement, false, transitionDuration);
             } else {
-                this.removeElementsFilter(elems);
+                selectedElems.style('filter', null);
             }
         });
     }
@@ -75,11 +78,7 @@ export class ElementHighlighter {
         charts.forEach(chart => {
             const elems = Helper.getChartElements(block, chart);
 
-            let selectedElems: Selection<BaseType, DataRow, BaseType, unknown>;
-            if (!chart.isSegmented)
-                selectedElems = elems.filter(d => d[keyFieldName] === keyValue);
-            else
-                selectedElems = elems.filter(d => d.data[keyFieldName] === keyValue);
+            const selectedElems = Helper.get2DElementsByKey(elems, chart.isSegmented, keyFieldName, keyValue);
 
             if (chart.type === 'area' || chart.type === 'line') {
                 selectedElems.call(this.scaleElement, true, transitionDuration);
@@ -90,15 +89,11 @@ export class ElementHighlighter {
     }
 
     //TODO: убрать дублирование
-    public static remove2DElementHighlighting(block: Block, keyFieldName: string, keyValue: string, charts: TwoDimensionalChartModel[], filterId: string, transitionDuration: number): void {
+    public static remove2DHighlightingByKey(block: Block, keyFieldName: string, keyValue: string, charts: TwoDimensionalChartModel[], transitionDuration: number): void {
         charts.forEach(chart => {
             const elems = Helper.getChartElements(block, chart);
 
-            let selectedElems: Selection<BaseType, DataRow, BaseType, unknown>;
-            if (!chart.isSegmented)
-                selectedElems = elems.filter(d => d[keyFieldName] === keyValue);
-            else
-                selectedElems = elems.filter(d => d.data[keyFieldName] === keyValue);
+            const selectedElems = Helper.get2DElementsByKey(elems, chart.isSegmented, keyFieldName, keyValue);
 
             if (chart.type === 'area' || chart.type === 'line') {
                 selectedElems.call(this.scaleElement, false, transitionDuration);
@@ -126,5 +121,16 @@ export class ElementHighlighter {
         elementsHandler
             .attr('r', isScaled ? 6 : 4)
             .style('stroke-width', (isScaled ? 4.3 : 3) + 'px');
+    }
+
+    private static remove2DChartsFullHighlighting(block: Block, charts: TwoDimensionalChartModel[], transitionDuration: number): void {
+        charts.forEach(chart => {
+            const elems = Helper.getChartElements(block, chart);
+            if (chart.type === 'area' || chart.type === 'line') {
+                elems.call(this.scaleElement, false, transitionDuration);
+            } else {
+                this.removeElementsFilter(elems);
+            }
+        });
     }
 }

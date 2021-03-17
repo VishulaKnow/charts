@@ -17,13 +17,17 @@ export class OuterEventManager {
         this.selectedKeys = [];
     }
 
+    public getSelectedKeys(): string[] {
+        return this.selectedKeys;
+    }
+
     public registerEvents(options: TwoDimensionalOptionsModel | PolarOptionsModel, scaleKey: AxisScale<any>, margin: BlockMargin, blockSize: Size): void {
         if (options.type === '2d') {
             this.registerEventFor2D(scaleKey, margin, blockSize, options.charts, options.orient, options.data, options.scale.scaleKey)
         }
     }
 
-    public registerEventFor2D(scaleKey: AxisScale<any>, margin: BlockMargin, blockSize: Size, charts: TwoDimensionalChartModel[], chartOrientation: ChartOrientation, dataOptions: OptionsModelData, scaleKeyModel: ScaleKeyModel): void {
+    private registerEventFor2D(scaleKey: AxisScale<any>, margin: BlockMargin, blockSize: Size, charts: TwoDimensionalChartModel[], chartOrientation: ChartOrientation, dataOptions: OptionsModelData, scaleKeyModel: ScaleKeyModel): void {
         const tipBoxAttributes = TipBox.getTipBoxAttributes(margin, blockSize);
         const tipBox = TipBox.renderTipBox(this.block, tipBoxAttributes);
 
@@ -42,9 +46,13 @@ export class OuterEventManager {
                 ElementHighlighter.highlightElementsOf2D(thisClass.block, dataOptions.keyField.name, keyValue, charts, filterId, 0);
             } else {
                 thisClass.removeKey(keyValue);
-                ElementHighlighter.remove2DElementHighlighting(thisClass.block, dataOptions.keyField.name, keyValue, charts, filterId, 0);
+                ElementHighlighter.remove2DHighlightingByKey(thisClass.block, dataOptions.keyField.name, keyValue, charts, 0);
             }
         });
+    }
+
+    private registerEventForPolar(): void {
+
     }
 
     private addKey(keyValue: string): void {

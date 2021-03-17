@@ -7,6 +7,11 @@ import { Bar } from "./twoDimensionalNotation/bar/bar";
 
 type StyleColorType = 'fill' | 'stroke';
 
+export enum SelectionCondition {
+    Include, Exclude
+}
+
+//TODO: Подумать над разделением
 export class Helper {
     public static setCssClasses(elem: Selection<BaseType, unknown, any, unknown>, cssClasses: string[]): void {
         cssClasses.forEach(cssClass => {
@@ -103,6 +108,32 @@ export class Helper {
                 isEqual = false;
         });
         return isEqual;
+    }
+
+    public static get2DElementsByKey(initialSelection: Selection<BaseType, DataRow, BaseType, unknown>, isSegmented: boolean, keyFieldName: string, keyValue: string): Selection<BaseType, DataRow, BaseType, unknown> {
+        if (!isSegmented)
+            return initialSelection.filter(d => d[keyFieldName] === keyValue);
+        else
+            return initialSelection.filter(d => d.data[keyFieldName] === keyValue);
+    }
+
+    public static get2DElementsByKeys(initialSelection: Selection<BaseType, DataRow, BaseType, unknown>, isSegmented: boolean, keyFieldName: string, keyValues: string[], condition: SelectionCondition): Selection<BaseType, DataRow, BaseType, unknown> {
+        if (!isSegmented) {
+            return initialSelection.filter(d => {
+                if (condition === SelectionCondition.Exclude) {
+                    return keyValues.findIndex(kv => kv === d[keyFieldName]) === -1;
+                }
+                return keyValues.findIndex(kv => kv === d[keyFieldName]) !== -1;
+            });
+        }
+        else {
+            return initialSelection.filter(d => {
+                if (condition === SelectionCondition.Exclude) {
+                    return keyValues.findIndex(kv => kv === d.data[keyFieldName]) === -1;
+                }
+                return keyValues.findIndex(kv => kv === d.data[keyFieldName]) !== -1;
+            });
+        }
     }
 
     private static setChartOpacity(elements: Selection<BaseType, unknown, BaseType, unknown>, opacity: number): void {

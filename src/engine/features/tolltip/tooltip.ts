@@ -92,14 +92,14 @@ export class Tooltip {
                     TooltipComponentsManager.setTooltipLineAttributes(tooltipLine, tooltipLineAttributes, block.transitionManager.durations.tooltipSlide);
                     TooltipComponentsManager.showTooltipLine(tooltipLine);
 
-                    // ElementHighlighter.highlight2DElementsHover(block, dataOptions.keyField.name, keyValue, charts, filterId, block.transitionManager.durations.markerHover);
+                    ElementHighlighter.highlight2DElementsHover(block, dataOptions.keyField.name, keyValue, charts, filterId, block.transitionManager.durations.markerHover);
                 }
             })
             .on('mouseleave', function () {
                 TooltipComponentsManager.hideTooltipBlock(tooltipBlock);
                 TooltipComponentsManager.hideTooltipLine(tooltipLine);
                 currentKey = null;
-                // ElementHighlighter.remove2DElementsHighlighting(block, charts, block.transitionManager.durations.markerHover);
+                ElementHighlighter.removeUnselected2DHighlight(block, dataOptions.keyField.name, charts, block.transitionManager.durations.markerHover);
             });
     }
 
