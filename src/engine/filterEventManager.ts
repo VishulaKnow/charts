@@ -8,7 +8,7 @@ import { TipBox } from "./features/tipBox/tipBox";
 import { TipBoxHelper } from "./features/tipBox/tipBoxHelper";
 import { Donut } from "./polarNotation/donut/donut";
 
-export class OuterEventManager {
+export class FilterEventManager {
     private block: Block;
     private selectedKeys: string[];
 

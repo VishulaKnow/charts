@@ -2,12 +2,12 @@ import { select, Selection } from "d3-selection";
 import { PieArcDatum } from "d3-shape";
 import { BlockMargin, DataRow, DonutChartSettings, PolarOptionsModel, Size, TwoDimensionalOptionsModel } from "../../model/model";
 import { Block } from "../block/block";
-import { OuterEventManager } from "../outerEventManager";
+import { FilterEventManager } from "../filterEventManager";
 import { DonutHelper } from "../polarNotation/donut/DonutHelper";
 import { ElementHighlighter } from "./elementHighlighter";
 
 export class SelectHighlighter {
-    public static click2DHandler(event: MouseEvent, eventManger: OuterEventManager, keyValue: string, block: Block, options: TwoDimensionalOptionsModel): void {
+    public static click2DHandler(event: MouseEvent, eventManger: FilterEventManager, keyValue: string, block: Block, options: TwoDimensionalOptionsModel): void {
         if (event.ctrlKey) {
             if (eventManger.getSelectedKeys().findIndex(key => key === keyValue) === -1) {
                 eventManger.addKey(keyValue);
@@ -28,7 +28,7 @@ export class SelectHighlighter {
         }
     }
 
-    public static clickPolarHandler(event: MouseEvent, eventManager: OuterEventManager, segment: SVGGElement, keyValue: string, margin: BlockMargin, blockSize: Size, block: Block, options: PolarOptionsModel, arcItems: Selection<SVGGElement, PieArcDatum<DataRow>, SVGGElement, unknown>, donutSettings: DonutChartSettings): void {
+    public static clickPolarHandler(event: MouseEvent, eventManager: FilterEventManager, segment: SVGGElement, keyValue: string, margin: BlockMargin, blockSize: Size, block: Block, options: PolarOptionsModel, arcItems: Selection<SVGGElement, PieArcDatum<DataRow>, SVGGElement, unknown>, donutSettings: DonutChartSettings): void {
         const donutThickness = DonutHelper.getThickness(donutSettings, blockSize, margin);
 
         if (event.ctrlKey) {
