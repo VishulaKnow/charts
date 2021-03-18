@@ -61,3 +61,23 @@ describe('calcDigitesAfterDot', () => {
         expect(result).toBe(0);
     });
 });
+
+describe('getKeyFieldValue', () => {
+    test('should return value for non-segmemted', () => {
+        const row = {
+            brand: 'bmw'
+        }
+        const result = Helper.getKeyFieldValue(row, 'brand', false);
+        expect(result).toBe('bmw');
+    });
+
+    test('should return value for segmemted', () => {
+        const row = {
+            data: {
+                brand: 'bmw'
+            }
+        }
+        const result = Helper.getKeyFieldValue(row, 'brand', true);
+        expect(result).toBe('bmw');
+    });
+});

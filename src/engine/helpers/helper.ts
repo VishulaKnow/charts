@@ -1,3 +1,5 @@
+import { DataRow } from "../../main";
+
 export class Helper {
     public static getCssClassesLine(cssClasses: string[]): string {
         return '.' + cssClasses.join('.');
@@ -50,5 +52,9 @@ export class Helper {
 
     public static getValueOrZero(value: number): number {
         return value > 0 ? value : 0;
+    }
+
+    public static getKeyFieldValue(row: DataRow, keyFieldName: string, isSegmented: boolean): string {
+        return isSegmented ? row.data[keyFieldName] : row[keyFieldName];
     }
 }
