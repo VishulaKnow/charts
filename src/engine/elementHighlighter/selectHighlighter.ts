@@ -2,7 +2,6 @@ import { select, Selection } from "d3-selection";
 import { PieArcDatum } from "d3-shape";
 import { BlockMargin, DataRow, DonutChartSettings, PolarOptionsModel, Size, TwoDimensionalOptionsModel } from "../../model/model";
 import { Block } from "../block/block";
-import { FilterEventManager } from "../filterEventManager";
 import { DonutHelper } from "../polarNotation/donut/DonutHelper";
 import { ElementHighlighter } from "./elementHighlighter";
 
@@ -26,7 +25,6 @@ export class SelectHighlighter {
 
     public static clickPolarHandler(multySelection: boolean, appendKey: boolean, segment: SVGGElement, selectedKeys: string[], margin: BlockMargin, blockSize: Size, block: Block, options: PolarOptionsModel, arcItems: Selection<SVGGElement, PieArcDatum<DataRow>, SVGGElement, unknown>, donutSettings: DonutChartSettings): void {
         const donutThickness = DonutHelper.getThickness(donutSettings, blockSize, margin);
-
         if (multySelection) {
             if (appendKey) {
                 ElementHighlighter.changeDonutHighlightAppearance(select(segment), margin, blockSize, donutThickness, block.transitionManager.durations.donutHover, true);
