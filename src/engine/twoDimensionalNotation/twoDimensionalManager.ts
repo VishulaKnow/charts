@@ -51,8 +51,7 @@ export class TwoDimensionalManager {
         Legend.render(engine.block,
             engine.data,
             options,
-            model.otherComponents.legendBlock,
-            model.blockCanvas.size);
+            model);
 
         Tooltip.render(engine.block, model, engine.data, scales);
 

@@ -1,12 +1,16 @@
-import { Selection, BaseType } from 'd3-selection'
-import { ChartNotation } from "../../../config/config";
+import { ChartNotation, Size } from "../../../config/config";
 import { LegendItemsDirection } from "../../../model/featuresModel/legendModel/legendCanvasModel";
 import { Color } from "d3-color";
-import { DataRow, DataSource, IntervalOptionsModel, LegendPosition, PolarOptionsModel, TwoDimensionalOptionsModel } from "../../../model/model";
-import { DomHelper } from '../../helpers/domHelper';
+import { DataRow, DataSource, IntervalOptionsModel, LegendBlockModel, LegendPosition, Orient, PolarOptionsModel, TwoDimensionalOptionsModel } from "../../../model/model";
 import { Helper } from '../../helpers/helper';
+import { legendClasses } from './legendDomHelper';
 
-
+export interface LegendCoordinate {
+    x: number;
+    y: number;
+    height: number;
+    width: number;
+}
 export class LegendHelper {
     public static getLegendItemsContent(options: TwoDimensionalOptionsModel | PolarOptionsModel | IntervalOptionsModel, data: DataSource): string[] {
         if (options.type === '2d') {
@@ -36,13 +40,13 @@ export class LegendHelper {
         }
     }
 
-    public static getMaxItemWidth(legendBlock: Selection<SVGForeignObjectElement, unknown, HTMLElement, any>, items: Selection<HTMLDivElement, string, BaseType, unknown>, itemsDirection: LegendItemsDirection): number {
+    public static getMaxItemWidth(legendBlockWidth: string, marginsLeft: number[], itemsDirection: LegendItemsDirection): number {
         if (itemsDirection === 'row') {
-            const margins = items.nodes().map(node => DomHelper.getPXValueFromString(DomHelper.getCssPropertyValue(node, 'margin-left')));
-            const sumOfMargins = Helper.getSumOfNumeric(margins);
-            return (parseFloat(legendBlock.attr('width')) - sumOfMargins) / items.size();
+            const sumOfMargins = Helper.getSumOfNumeric(marginsLeft);
+            return (parseFloat(legendBlockWidth) - sumOfMargins) / marginsLeft.length;
         }
-        return parseFloat(legendBlock.attr('width'));
+        return parseFloat(legendBlockWidth);
+        
     }
 
     public static getItemClasses(itemsDirection: LegendItemsDirection, position: LegendPosition, index: number): string {
@@ -53,7 +57,8 @@ export class LegendHelper {
     }
 
     public static getLegendItemClassByDirection(itemsDirection: LegendItemsDirection): string {
-        return itemsDirection === 'column' ? 'legend-item-row' : 'legend-item-inline';
+        return legendClasses.combineLegendClassWithAddition(legendClasses.legendItemClass,
+            itemsDirection === 'column' ?  legendClasses.RowClassAddition : legendClasses.inlineClassAddition);
     }
 
     public static getLegendItemsMarginClass(legendPosition: LegendPosition): string {
@@ -62,8 +67,9 @@ export class LegendHelper {
 
     public static getLegendLabelClassByPosition(position: LegendPosition): string {
         if (position === 'top' || position === 'bottom')
-            return 'legend-label legend-label-nowrap';
-        return 'legend-label';
+            return legendClasses.legendLabelClass + ' ' + 
+            legendClasses.combineLegendClassWithAddition(legendClasses.legendLabelClass, legendClasses.nowrapClassAddition);
+        return legendClasses.legendLabelClass;
     }
 
     public static getLegendItemsDirection(chartNotation: ChartNotation, legendPosition: LegendPosition): LegendItemsDirection {
@@ -73,9 +79,41 @@ export class LegendHelper {
             return chartNotation === 'polar' ? 'column' : 'row';
     }
 
-    public static getSumOfItemsWidths(items: Selection<HTMLDivElement, string, BaseType, unknown>): number {
-        let sumOfItemsWidth = Helper.getSumOfNumeric(items.nodes().map(node => node.getBoundingClientRect().width));
-        sumOfItemsWidth += Helper.getSumOfNumeric(items.nodes().map(node => DomHelper.getPXValueFromString(DomHelper.getCssPropertyValue(node, 'margin-left'))));
+    public static getSumOfItemsWidths(itemsWidth: number[], marginsLeft: number[]): number {
+        let sumOfItemsWidth = Helper.getSumOfNumeric(itemsWidth);
+        sumOfItemsWidth += Helper.getSumOfNumeric(marginsLeft);
         return sumOfItemsWidth;
+    }
+    
+    public static getLegendCoordinateByPosition(legendPosition: Orient, legendBlockModel: LegendBlockModel, blockSize: Size): LegendCoordinate {
+        const legendModel = legendBlockModel[legendPosition];
+        
+        const coordinate: LegendCoordinate = {
+            x: 0,
+            y: 0,
+            width: 0,
+            height: 0
+        }
+
+        if (legendPosition === 'left' || legendPosition === 'right') {
+            coordinate.y = legendModel.margin.top + legendModel.pad;
+            coordinate.width = legendModel.size;
+            coordinate.height = blockSize.height - legendModel.margin.top - legendModel.margin.bottom;
+        } else if (legendPosition === 'bottom' || legendPosition === 'top') {
+            coordinate.x = legendModel.margin.left;
+            coordinate.width = blockSize.width - legendModel.margin.left - legendModel.margin.right;
+            coordinate.height = legendModel.size;
+        }
+
+        if (legendPosition === 'left')
+            coordinate.x = legendModel.margin.left;
+        else if (legendPosition === 'right')
+            coordinate.x = blockSize.width - legendModel.size - legendModel.margin.right;
+        else if (legendPosition === 'top')
+            coordinate.y = legendModel.margin.top + legendModel.pad;
+        else if (legendPosition === 'bottom')
+            coordinate.y = blockSize.height - legendModel.size - legendModel.margin.bottom;
+
+        return coordinate;
     }
 }

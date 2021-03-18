@@ -1,4 +1,6 @@
+
 export class Helper {
+
     public static getCssClassesLine(cssClasses: string[]): string {
         return '.' + cssClasses.join('.');
     }
