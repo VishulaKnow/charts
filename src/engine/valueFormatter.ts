@@ -10,8 +10,4 @@ export class ValueFormatter {
     public static setFormatFunction(formatFunction: Formatter): void {
         this.format = formatFunction;
     }
-
-    public static getValueOrZero(value: number): number {
-        return value > 0 ? value : 0;
-    }
 }

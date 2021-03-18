@@ -47,4 +47,8 @@ export class Helper {
         });
         return isEqual;
     }
+
+    public static getValueOrZero(value: number): number {
+        return value > 0 ? value : 0;
+    }
 }

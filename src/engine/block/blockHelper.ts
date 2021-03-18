@@ -1,5 +1,5 @@
 import { BlockMargin, Size } from "../../model/model";
-import { ValueFormatter } from "../valueFormatter";
+import { Helper } from "../helpers/helper";
 
 export interface ClipPathAttributes {
     x: number;
@@ -14,8 +14,8 @@ export class BlockHelper {
         return {
             x: margin.left - outSize,
             y: margin.top - outSize,
-            width: ValueFormatter.getValueOrZero(blockSize.width - margin.left - margin.right) + outSize * 2,
-            height: ValueFormatter.getValueOrZero(blockSize.height - margin.top - margin.bottom) + outSize * 2
+            width: Helper.getValueOrZero(blockSize.width - margin.left - margin.right) + outSize * 2,
+            height: Helper.getValueOrZero(blockSize.height - margin.top - margin.bottom) + outSize * 2
         }
     }
 
