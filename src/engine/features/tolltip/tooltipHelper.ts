@@ -23,4 +23,6 @@ export class TooltipHelper {
             ? tooltipBlockWidth - ARROW_DEFAULT_POSITION - 20 * Math.sqrt(2)
             : horizontalPad; // If tooltip arrow has coordinate outside svg, it take X position in end of tooltip block
     }
+
+    
 }

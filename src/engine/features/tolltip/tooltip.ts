@@ -82,7 +82,7 @@ export class Tooltip {
 
                     TooltipDomHelper.fillForMulty2DCharts(tooltipContent, charts, data, dataOptions, keyValue);
 
-                    const tooltipCoordinate = TooltipDomHelper.getTooltipFixedCoordinate(scaleKey, margin, blockSize, keyValue, tooltipContent.node(), keyAxisOrient);
+                    const tooltipCoordinate = TooltipDomHelper.getTooltipFixedCoordinate(block, scaleKey, margin, blockSize, keyValue, tooltipContent.node(), keyAxisOrient);
                     TooltipComponentsManager.setLineTooltipCoordinate(tooltipBlock, tooltipCoordinate, chartOrientation, block.transitionManager.durations.tooltipSlide);
 
                     const tooltipLineAttributes = TooltipDomHelper.getTooltipLineAttributes(scaleKey, margin, keyValue, chartOrientation, blockSize);
