@@ -1,6 +1,6 @@
 import { Selection, BaseType } from 'd3-selection';
 import { Block } from "../../block/block";
-import { ARROW_DEFAULT_POSITION, ARROW_SIZE, TooltipCoordinate, TooltipLineAttributes } from "./tooltipHelper";
+import { ARROW_DEFAULT_POSITION, ARROW_SIZE, TooltipCoordinate, TooltipLineAttributes } from "./tooltipDomHelper";
 import { ChartOrientation } from "../../../config/config";
 import { easeLinear } from 'd3-ease';
 import { interrupt } from 'd3-transition';
