@@ -2,7 +2,7 @@ import { Color } from "d3-color";
 import { Selection, BaseType } from 'd3-selection'
 import { ChartStyle, DataRow, TwoDimensionalChartModel } from "../../model/model";
 import { Block } from "../block/block";
-import { MarkDotHelper } from "../features/markDots/markDotsHelper";
+import { MarkDot } from "../features/markDots/markDot";
 import { Bar } from "../twoDimensionalNotation/bar/bar";
 
 type StyleColorType = 'fill' | 'stroke';
@@ -18,9 +18,9 @@ export class DomHelper {
         });
     }
 
-    public static getChartElements(block: Block, chart: TwoDimensionalChartModel): Selection<BaseType, DataRow, BaseType, unknown> {
+    public static get2DChartElements(block: Block, chart: TwoDimensionalChartModel): Selection<BaseType, DataRow, BaseType, unknown> {
         if (chart.type === 'line' || chart.type === 'area')
-            return MarkDotHelper.getMarkDotForChart(block, chart.cssClasses);
+            return MarkDot.getMarkDotForChart(block, chart.cssClasses);
         else
             return Bar.getAllBarItems(block, chart.cssClasses);
     }
