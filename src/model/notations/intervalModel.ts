@@ -17,7 +17,7 @@ export class IntervalModel {
             title: configOptions.title,
             orient: configOptions.orientation,
             scale: {
-                scaleKey: {
+                key: {
                     domain: ScaleModel.getScaleKeyDomain(dataScope.allowableKeys),
                     range: {
                         start: 0,
@@ -26,7 +26,7 @@ export class IntervalModel {
                     type: ScaleModel.getScaleKeyType(configOptions.charts),
                     elementsAmount: configOptions.charts.length
                 },
-                scaleValue: {
+                value: {
                     domain: ScaleModel.getScaleDateValueDomain(data, configOptions.charts, configOptions.axis.keyAxis.position, configOptions.data.dataSource),
                     range: {
                         start: 0,

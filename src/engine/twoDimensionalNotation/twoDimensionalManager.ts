@@ -20,8 +20,8 @@ export class TwoDimensionalManager {
     public static render(engine: Engine, model: Model): void {
         const options = <TwoDimensionalOptionsModel>model.options;
 
-        const scales = Scale.getScales(options.scale.scaleKey,
-            options.scale.scaleValue,
+        const scales = Scale.getScales(options.scale.key,
+            options.scale.value,
             model.chartSettings.bar);
         engine.block.scales = scales;
 
@@ -29,7 +29,7 @@ export class TwoDimensionalManager {
 
         Axis.render(engine.block, scales, options.scale, options.axis, model.chartBlock.margin, model.blockCanvas.size);
 
-        GridLine.render(engine.block, options.additionalElements.gridLine.flag, options.axis.keyAxis, options.axis.valueAxis, model.blockCanvas.size, model.chartBlock.margin, options.scale.scaleKey);
+        GridLine.render(engine.block, options.additionalElements.gridLine.flag, options.axis.keyAxis, options.axis.valueAxis, model.blockCanvas.size, model.chartBlock.margin, options.scale.key);
 
         this.renderCharts(engine.block,
             options.charts,
@@ -68,8 +68,8 @@ export class TwoDimensionalManager {
 
         ElementHighlighter.remove2DChartsFullHighlighting(block, options.charts);
 
-        const scales = Scale.getScales(options.scale.scaleKey,
-            options.scale.scaleValue,
+        const scales = Scale.getScales(options.scale.key,
+            options.scale.value,
             model.chartSettings.bar);
 
         const keyDomainEquality = Helper.checkDomainsEquality(block.scales.scaleKey.domain(), scales.scaleKey.domain());
@@ -83,7 +83,7 @@ export class TwoDimensionalManager {
             options.axis.valueAxis,
             model.blockCanvas.size,
             model.chartBlock.margin,
-            options.scale.scaleKey);
+            options.scale.key);
 
         this.updateCharts(block,
             options.charts,
