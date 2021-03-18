@@ -51,23 +51,18 @@ export class FilterEventManager {
 
         tipBox.on('click', function (event: MouseEvent) {
             const keyValue = TipBoxHelper.getKeyValueByPointer(pointer(event, this), options.orient, margin, blockSize, scaleKey, options.scale.scaleKey.type);
-
             const appended = thisClass.processKey(event.ctrlKey, keyValue);
-
             SelectHighlighter.click2DHandler(event.ctrlKey, appended, keyValue, thisClass.block, options);
         });
     }
 
     public registerEventToDonut(margin: BlockMargin, blockSize: Size, options: PolarOptionsModel, donutSettings: DonutChartSettings): void {
         const arcItems = Donut.getAllArcGroups(this.block);
-
         const thisClass = this;
 
         arcItems.on('click', function (event: MouseEvent, dataRow) {
             const keyValue = dataRow.data[options.data.keyField.name];
-
             const appended = thisClass.processKey(event.ctrlKey, keyValue);
-
             SelectHighlighter.clickPolarHandler(event.ctrlKey, appended, this, thisClass.getSelectedKeys(), margin, blockSize, thisClass.block, options, arcItems, donutSettings);
         });
     }
