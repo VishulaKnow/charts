@@ -5,7 +5,6 @@ import { IntervalManager } from "./intervalNotation/intervalManager";
 import { Engine } from "../main";
 import { Block } from "./block/block";
 
-//
 export class ContentManager {
     public static render(model: Model, data: DataSource, engine: Engine): void {
         if (model.options.type === '2d')
