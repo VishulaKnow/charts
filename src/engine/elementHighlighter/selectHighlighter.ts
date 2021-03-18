@@ -23,6 +23,7 @@ export class SelectHighlighter {
             } else {
                 eventManger.setKey(keyValue);
                 ElementHighlighter.removeUnselected2DHighlight(block, options.data.keyField.name, options.charts, 0);
+                ElementHighlighter.highlightElementsOf2D(block, options.data.keyField.name, keyValue, options.charts, 0);
             }
         }
     }
@@ -45,6 +46,7 @@ export class SelectHighlighter {
             } else {
                 eventManager.setKey(keyValue);
                 ElementHighlighter.removeDonutHighlightingByKeys(arcItems, options.data.keyField.name, eventManager.getSelectedKeys(), margin, blockSize, donutThickness);
+                ElementHighlighter.changeDonutHighlightAppearance(select(segment), margin, blockSize, donutThickness, block.transitionManager.durations.donutHover, true);
             }
         }
     }
