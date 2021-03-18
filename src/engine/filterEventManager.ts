@@ -50,12 +50,11 @@ export class FilterEventManager {
         const thisClass = this;
 
         tipBox.on('click', function (event: MouseEvent) {
-            const index = TipBoxHelper.getKeyIndex(pointer(event, this), options.orient, margin, blockSize, scaleKey, options.scale.scaleKey.type);
-            let keyValue = scaleKey.domain()[index];
-            if (index >= scaleKey.domain().length)
-                keyValue = scaleKey.domain()[scaleKey.domain().length - 1];
+            const keyValue = TipBoxHelper.getKeyValueByPointer(pointer(event, this), options.orient, margin, blockSize, scaleKey, options.scale.scaleKey.type);
 
-            SelectHighlighter.click2DHandler(event, thisClass, keyValue, thisClass.block, options);
+            const appended = thisClass.processKey(event.ctrlKey, keyValue);
+
+            SelectHighlighter.click2DHandler(event.ctrlKey, appended, keyValue, thisClass.block, options);
         });
     }
 
@@ -67,7 +66,29 @@ export class FilterEventManager {
         arcItems.on('click', function (event: MouseEvent, dataRow) {
             const keyValue = dataRow.data[options.data.keyField.name];
 
-            SelectHighlighter.clickPolarHandler(event, thisClass, this, keyValue, margin, blockSize, thisClass.block, options, arcItems, donutSettings);
+            const appended = thisClass.processKey(event.ctrlKey, keyValue);
+
+            SelectHighlighter.clickPolarHandler(event.ctrlKey, appended, this, thisClass.getSelectedKeys(), margin, blockSize, thisClass.block, options, arcItems, donutSettings);
         });
+    }
+
+    private processKey(multySelect: boolean, keyValue: string): boolean {
+        if (multySelect) {
+            if (this.getSelectedKeys().findIndex(key => key === keyValue) === -1) {
+                this.addKey(keyValue);
+                return true;
+            } else {
+                this.removeKey(keyValue);
+                return false;
+            }
+        } else {
+            if (this.getSelectedKeys()[0] === keyValue && this.getSelectedKeys().length === 1) {
+                this.removeKey(keyValue);
+                return false;
+            } else {
+                this.setKey(keyValue);
+                return true;
+            }
+        }
     }
 }

@@ -70,10 +70,7 @@ export class Tooltip {
 
         tipBox
             .on('mousemove', function (event) {
-                const index = TipBoxHelper.getKeyIndex(pointer(event, this), chartOrientation, margin, blockSize, scaleKey, scaleKeyModel.type);
-                let keyValue = scaleKey.domain()[index];
-                if (index >= scaleKey.domain().length)
-                    keyValue = scaleKey.domain()[scaleKey.domain().length - 1];
+                const keyValue = TipBoxHelper.getKeyValueByPointer(pointer(event, this), chartOrientation, margin, blockSize, scaleKey, scaleKeyModel.type);
 
                 if (!currentKey || currentKey !== keyValue) {
                     currentKey = keyValue;
