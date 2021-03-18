@@ -9,7 +9,7 @@ import { TwoDimensionalModel } from "./notations/twoDimensionalModel";
 
 export const AXIS_HORIZONTAL_LABEL_PADDING = 15;
 export const AXIS_VERTICAL_LABEL_PADDING = 10;
-//as
+
 export class MarginModel {
     public static getMargin(designerConfig: DesignerConfig, config: Config, otherComponents: OtherComponents, data: DataSource): BlockMargin {
         const margin: BlockMargin = { ...designerConfig.canvas.chartBlockMargin }
