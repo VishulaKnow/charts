@@ -15,13 +15,13 @@ export class IntervalManager {
 
         block.renderSvg(model.blockCanvas.size);
 
-        const scales = Scale.getScales(options.scale.scaleKey,
-            options.scale.scaleValue,
+        const scales = Scale.getScales(options.scale.key,
+            options.scale.value,
             model.chartSettings.bar);
 
         Axis.render(block, scales, options.scale, options.axis, model.chartBlock.margin, model.blockCanvas.size);
 
-        GridLine.render(block, options.additionalElements.gridLine.flag, options.axis.keyAxis, options.axis.valueAxis, model.blockCanvas.size, model.chartBlock.margin, options.scale.scaleKey);
+        GridLine.render(block, options.additionalElements.gridLine.flag, options.axis.keyAxis, options.axis.valueAxis, model.blockCanvas.size, model.chartBlock.margin, options.scale.key);
 
         this.renderCharts(block,
             options.charts,

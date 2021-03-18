@@ -50,7 +50,7 @@ export class FilterEventManager {
         const thisClass = this;
 
         tipBox.on('click', function (event: MouseEvent) {
-            const keyValue = TipBoxHelper.getKeyValueByPointer(pointer(event, this), options.orient, margin, blockSize, scaleKey, options.scale.scaleKey.type);
+            const keyValue = TipBoxHelper.getKeyValueByPointer(pointer(event, this), options.orient, margin, blockSize, scaleKey, options.scale.key.type);
             const appended = thisClass.processKey(event.ctrlKey, keyValue);
             SelectHighlighter.click2DHandler(event.ctrlKey, appended, keyValue, thisClass.block, options);
         });

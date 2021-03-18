@@ -1,4 +1,5 @@
 import { BlockMargin, DataRow, Orient } from "../../../model/model";
+import { Helper } from "../../helpers/helper";
 import { Scale, Scales } from "../scale/scale";
 import { DotAttrs } from "./markDot";
 
@@ -8,16 +9,12 @@ export class MarkDotHelper {
 
         if (keyAxisOrient === 'left' || keyAxisOrient === 'right') {
             attrs.cx = d => scales.scaleValue(d[valueField]) + margin.left;
-            attrs.cy = d => Scale.getScaledValue(scales.scaleKey, this.getKeyFieldValue(d, keyField, isSegmented)) + margin.top;
+            attrs.cy = d => Scale.getScaledValue(scales.scaleKey, Helper.getKeyFieldValue(d, keyField, isSegmented)) + margin.top;
         } else if (keyAxisOrient === 'bottom' || keyAxisOrient === 'top') {
-            attrs.cx = d => Scale.getScaledValue(scales.scaleKey, this.getKeyFieldValue(d, keyField, isSegmented)) + margin.left;
+            attrs.cx = d => Scale.getScaledValue(scales.scaleKey, Helper.getKeyFieldValue(d, keyField, isSegmented)) + margin.left;
             attrs.cy = d => scales.scaleValue(d[valueField]) + margin.top;
         }
 
         return attrs;
-    }
-
-    public static getKeyFieldValue(row: DataRow, keyFieldName: string, isSegmented: boolean): string {
-        return isSegmented ? row.data[keyFieldName] : row[keyFieldName]
     }
 }

@@ -113,15 +113,12 @@ export class BarHelper {
         const barSize = barStep > barSettings.maxBarWidth ? barSettings.maxBarWidth : barStep;
         const barDiff = (barStep - barSize) * barsAmount / 2; // if bar bigger than maxWidth, diff for x coordinate
 
-        // функция получения пути к значению key-филда. Если сегментированный, то данные хранятся в dataRow.data
-        const getKeyValuePath = (d: DataRow, keyName: string, isSegmented: boolean) => isSegmented ? d.data[keyName] : d[keyName];
-
         if (keyAxisOrient === 'top' || keyAxisOrient === 'bottom') {
-            attrs.x = d => scales.scaleKey(getKeyValuePath(d, keyField, isSegmented)) + margin.left + barSize * barIndex + barDistance * barIndex + barDiff;
+            attrs.x = d => scales.scaleKey(Helper.getKeyFieldValue(d, keyField, isSegmented)) + margin.left + barSize * barIndex + barDistance * barIndex + barDiff;
             attrs.width = d => barSize;
         }
         if (keyAxisOrient === 'left' || keyAxisOrient === 'right') {
-            attrs.y = d => scales.scaleKey(getKeyValuePath(d, keyField, isSegmented)) + margin.top + barSize * barIndex + barDistance * barIndex + barDiff;
+            attrs.y = d => scales.scaleKey(Helper.getKeyFieldValue(d, keyField, isSegmented)) + margin.top + barSize * barIndex + barDistance * barIndex + barDiff;
             attrs.height = d => barSize;
         }
     }

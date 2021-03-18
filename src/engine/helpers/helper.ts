@@ -1,4 +1,4 @@
-
+import { DataRow } from "../../main";
 export class Helper {
 
     public static getCssClassesLine(cssClasses: string[]): string {
@@ -52,5 +52,16 @@ export class Helper {
 
     public static getValueOrZero(value: number): number {
         return value > 0 ? value : 0;
+    }
+
+    /**
+     * Возвращает значение ключа в зависимости от того, сегментированный ли график
+     * @param row 
+     * @param keyFieldName 
+     * @param isSegmented 
+     * @returns 
+     */
+    public static getKeyFieldValue(row: DataRow, keyFieldName: string, isSegmented: boolean): string {
+        return isSegmented ? row.data[keyFieldName] : row[keyFieldName];
     }
 }

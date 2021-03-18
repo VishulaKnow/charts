@@ -18,7 +18,7 @@ export class TwoDimensionalModel {
             title: configOptions.title,
             orient: configOptions.orientation,
             scale: {
-                scaleKey: {
+                key: {
                     domain: ScaleModel.getScaleKeyDomain(dataScope.allowableKeys),
                     range: {
                         start: 0,
@@ -27,7 +27,7 @@ export class TwoDimensionalModel {
                     type: ScaleModel.getScaleKeyType(configOptions.charts),
                     elementsAmount: ScaleModel.getScaleElementsAmount(this.getChartsByType(configOptions.charts, 'bar'))
                 },
-                scaleValue: {
+                value: {
                     domain: ScaleModel.getScaleLinearValueDomain(configOptions.axis.valueAxis.domain, data, configOptions),
                     range: {
                         start: 0,
