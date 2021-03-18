@@ -48,17 +48,17 @@ describe('get2DChartStyle.elementColors', () => {
             expect(getColorHex(result)).toEqual(['#f44336', '#e91e63', '#9c27b0', '#673ab7']);
         });
 
-        test('should return [0, 1, 2, 3] colors', () => {
-            chartStyleConfig.step = 20;
+        test('should return [0, 1, 2, 3] colors with step 15', () => {
+            chartStyleConfig.step = 15;
             const result = ChartStyleModel.getChartStyle(4, chartStyleConfig).elementColors;
-            expect(getColorHex(result)).toEqual(['#f44336', '#e91e63', '#9c27b0', '#673ab7']);
+            expect(getColorHex(result)).toEqual(['#f44336', '#ff5722', '#ff9800', '#ffc107']);
         });
 
-        test('should return [1, 5, 9, 13, 17, 2, 6] colors', () => {
+        test('should return [1, 5, 9, 13, 1, 5, 9] colors', () => {
             chartStyleConfig.step = 4;
             chartStyleConfig.baseColor = 'pink';
             const result = ChartStyleModel.getChartStyle(7, chartStyleConfig).elementColors;
-            expect(getColorHex(result)).toEqual(['#e91e63', '#2196f3', '#4caf50', '#ffc107', '#9e9e9e', '#9c27b0', '#03a9f4']);
+            expect(getColorHex(result)).toEqual(['#e91e63', '#2196f3', '#4caf50', '#ffc107', '#e91e63', '#2196f3', '#4caf50']);
         });
     });
 });
