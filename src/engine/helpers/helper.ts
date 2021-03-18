@@ -26,8 +26,8 @@ export class Helper {
         return numbers.reduce((acc, value) => acc + value, 0);
     }
 
-    public static parseFormattedToNumber(value: string): number {
-        return parseFloat(value.replace(',', '.').split(/\s/).join(''));
+    public static parseFormattedToNumber(value: string, rankSpliter: string): number {
+        return parseFloat(value.replace(rankSpliter, '.').split(/\s/).join(''));
     }
 
     public static calcDigitsAfterDot(value: number): number {
@@ -36,7 +36,7 @@ export class Helper {
         return valueInString.substring(dotIndex).length;
     }
 
-    public static checkDomainsEqual(oldDomain: string[], newDomain: string[]): boolean {
+    public static checkDomainsEquality(oldDomain: string[], newDomain: string[]): boolean {
         if (oldDomain.length !== newDomain.length)
             return false;
 

@@ -72,7 +72,7 @@ export class TwoDimensionalManager {
             options.scale.scaleValue,
             model.chartSettings.bar);
 
-        const keyDomainEquality = Helper.checkDomainsEqual(block.scales.scaleKey.domain(), scales.scaleKey.domain());
+        const keyDomainEquality = Helper.checkDomainsEquality(block.scales.scaleKey.domain(), scales.scaleKey.domain());
         block.scales = scales;
 
         Axis.update(block, scales, options.scale, options.axis, model.blockCanvas.size, keyDomainEquality);
