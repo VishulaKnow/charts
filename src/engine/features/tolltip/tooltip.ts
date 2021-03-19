@@ -13,6 +13,7 @@ import { DonutHelper } from '../../polarNotation/donut/DonutHelper';
 import { TipBox } from '../tipBox/tipBox';
 import { TipBoxHelper } from '../tipBox/tipBoxHelper';
 import { Helper } from '../../helpers/helper';
+import { TooltipHelper } from './tooltipHelper';
 
 export class Tooltip {
     public static tooltipBlockClass = 'tooltip-block';
@@ -26,7 +27,7 @@ export class Tooltip {
         const chartsWithTooltipIndex = model.options.charts.findIndex((chart: TwoDimensionalChartModel | PolarChartModel | IntervalChartModel) => chart.tooltip.show);
         if (chartsWithTooltipIndex !== -1) {
             if (model.options.type === '2d') {
-                this.renderTooltipFor2DCharts(block, model.options.charts, data, model.options.data, model.blockCanvas.size, model.chartBlock.margin, model.options.orient, scales.scaleKey, model.options.scale.key, model.options.axis.keyAxis.orient);
+                this.renderTooltipFor2DCharts(block, model.options.charts, data, model.options.data, model.blockCanvas.size, model.chartBlock.margin, model.options.orient, scales.key, model.options.scale.key, model.options.axis.keyAxis.orient);
             } else if (model.options.type === 'polar') {
                 this.renderTooltipForPolar(block, model.options.charts, data, model.options.data, model.blockCanvas.size, model.chartBlock.margin, DonutHelper.getThickness(model.chartSettings.donut, model.blockCanvas.size, model.chartBlock.margin));
             }
@@ -79,7 +80,7 @@ export class Tooltip {
 
                     TooltipDomHelper.fillForMulty2DCharts(tooltipContent, charts, data, dataOptions, keyValue);
 
-                    const tooltipCoordinate = TooltipDomHelper.getTooltipFixedCoordinate(scaleKey, margin, blockSize, keyValue, tooltipContent.node(), keyAxisOrient);
+                    const tooltipCoordinate = TooltipHelper.getTooltipFixedCoordinate(scaleKey, margin, blockSize, keyValue, tooltipContent.node().getBoundingClientRect(), keyAxisOrient);
                     TooltipComponentsManager.setLineTooltipCoordinate(tooltipBlock, tooltipCoordinate, chartOrientation, block.transitionManager.durations.tooltipSlide);
 
                     const tooltipLineAttributes = TooltipDomHelper.getTooltipLineAttributes(scaleKey, margin, keyValue, chartOrientation, blockSize);
@@ -110,7 +111,7 @@ export class Tooltip {
                 TooltipDomHelper.fillTooltipForPolarChart(tooltipContent, chart, data, dataOptions, dataRow.data[dataOptions.keyField.name], select(this).select('path').style('fill'))
 
                 const coordinatePointer = TooltipDomHelper.getRecalcedCoordinateByArrow(DonutHelper.getArcCentroid(blockSize, margin, dataRow, donutThickness), tooltipBlock, blockSize, tooltipArrow, translateX, translateY);
-                const tooltipCoordinate = TooltipDomHelper.getCoordinateByPointer(coordinatePointer);
+                const tooltipCoordinate = TooltipHelper.getCoordinateByPointer(coordinatePointer);
                 TooltipComponentsManager.setTooltipBlockCoordinate(tooltipBlock, tooltipCoordinate);
 
                 ElementHighlighter.setFilter(select(this), block);

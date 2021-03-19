@@ -25,6 +25,6 @@ export class BlockHelper {
             wrapperClasses.push(cssClass + '-wrapper');
         });
 
-        return wrapperClasses
+        return wrapperClasses;
     }
 }

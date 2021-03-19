@@ -42,6 +42,7 @@ export class LegendHelper {
 
     public static getMaxItemWidth(legendBlockWidth: string, marginsLeft: number[], itemsDirection: LegendItemsDirection): number {
         if (itemsDirection === 'row') {
+
             const sumOfMargins = Helper.getSumOfNumeric(marginsLeft);
             return (parseFloat(legendBlockWidth) - sumOfMargins) / marginsLeft.length;
         }
@@ -79,9 +80,11 @@ export class LegendHelper {
             return chartNotation === 'polar' ? 'column' : 'row';
     }
 
+
     public static getSumOfItemsWidths(itemsWidth: number[], marginsLeft: number[]): number {
         let sumOfItemsWidth = Helper.getSumOfNumeric(itemsWidth);
         sumOfItemsWidth += Helper.getSumOfNumeric(marginsLeft);
+
         return sumOfItemsWidth;
     }
     

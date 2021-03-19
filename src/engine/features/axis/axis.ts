@@ -9,7 +9,7 @@ import { AXIS_VERTICAL_LABEL_PADDING } from "../../../model/marginModel";
 import { NamesManager } from '../../namesManager';
 import { AxisHelper } from './axisHelper';
 import { Transition } from 'd3-transition';
-import { AxisLabelHelper } from './axisLabelHelper';
+import { AxisLabelHelper } from './axisLabelDomHelper';
 
 const MINIMAL_STEP_SIZE = 40;
 const MINIMAL_STEP_SIZE_FOR_WRAPPING = 38;
@@ -19,16 +19,16 @@ export class Axis {
 
     public static render(block: Block, scales: Scales, scaleModel: IScaleModel, axisModel: IAxisModel, margin: BlockMargin, blockSize: Size): void {
         if (axisModel.valueAxis.visibility)
-            this.renderAxis(block, scales.scaleValue, scaleModel.value, axisModel.valueAxis, margin, blockSize);
+            this.renderAxis(block, scales.value, scaleModel.value, axisModel.valueAxis, margin, blockSize);
         if (axisModel.keyAxis.visibility)
-            this.renderAxis(block, scales.scaleKey, scaleModel.key, axisModel.keyAxis, margin, blockSize);
+            this.renderAxis(block, scales.key, scaleModel.key, axisModel.keyAxis, margin, blockSize);
     }
 
     public static update(block: Block, scales: Scales, scalesOptions: IScaleModel, axisModel: IAxisModel, blockSize: Size, keyDomainsEquality: boolean): void {
         if (axisModel.valueAxis.visibility)
-            this.updateValueAxis(block, scales.scaleValue, scalesOptions.value, axisModel.valueAxis);
+            this.updateValueAxis(block, scales.value, scalesOptions.value, axisModel.valueAxis);
         if (axisModel.keyAxis.visibility)
-            this.updateKeyAxis(block, scales.scaleKey, scalesOptions.key, axisModel.keyAxis, blockSize, keyDomainsEquality);
+            this.updateKeyAxis(block, scales.key, scalesOptions.key, axisModel.keyAxis, blockSize, keyDomainsEquality);
     }
 
     private static updateValueAxis(block: Block, scaleValue: AxisScale<any>, scaleOptions: ScaleValueModel, axisOptions: AxisModelOptions): void {

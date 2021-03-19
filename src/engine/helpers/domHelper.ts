@@ -29,10 +29,6 @@ export class DomHelper {
         return window.getComputedStyle(node).getPropertyValue(propertyName);
     }
 
-    public static getPXValueFromString(propertyValue: string): number {
-        return parseFloat(propertyValue);
-    }
-
     public static getSelectionNumericAttr(selection: Selection<BaseType, unknown, BaseType, unknown>, attrName: string): number {
         return parseFloat(selection.attr(attrName));
     }
