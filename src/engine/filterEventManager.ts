@@ -1,6 +1,6 @@
 import { AxisScale } from "d3-axis";
 import { pointer } from "d3-selection";
-import { BlockMargin, Size, TwoDimensionalOptionsModel, PolarOptionsModel, DonutChartSettings, DataRow, DataSource } from "../model/model";
+import { BlockMargin, Size, TwoDimensionalOptionsModel, PolarOptionsModel, DonutChartSettings, DataRow } from "../model/model";
 import { Block } from "./block/block";
 import { SelectHighlighter } from "./elementHighlighter/selectHighlighter";
 import { TipBox } from "./features/tipBox/tipBox";
@@ -14,7 +14,7 @@ export class FilterEventManager {
     private block: Block;
     private selectedIds: number[];
 
-    constructor(private callback: FilterCallback, private fullDataset: DataSource, private dataSetName: string) {
+    constructor(private callback: FilterCallback, private fullDataset: DataRow[]) {
         this.selectedIds = [];
     }
 
@@ -23,15 +23,16 @@ export class FilterEventManager {
     }
 
     public getSelectedKeys(keyFieldName: string): string[] {
-        return Helper.getKeysByIds(this.selectedIds, keyFieldName, this.fullDataset[this.dataSetName]);
+        return Helper.getKeysByIds(this.selectedIds, keyFieldName, this.fullDataset);
     }
 
-    public clearIds(): void {
+    public update(newDataset: DataRow[]): void {
         this.selectedIds = [];
+        this.fullDataset = newDataset;
     }
 
     public isSelected(keyValue: string, keyFieldName: string): boolean {
-        return Helper.getKeysByIds(this.selectedIds, keyFieldName, this.fullDataset[this.dataSetName]).findIndex(key => key === keyValue) !== -1;
+        return Helper.getKeysByIds(this.selectedIds, keyFieldName, this.fullDataset).findIndex(key => key === keyValue) !== -1;
     }
 
     public registerEventFor2D(scaleKey: AxisScale<any>, margin: BlockMargin, blockSize: Size, options: TwoDimensionalOptionsModel): void {
@@ -44,7 +45,7 @@ export class FilterEventManager {
             SelectHighlighter.click2DHandler(event.ctrlKey, appended, keyValue, thisClass.block, options);
 
             if (thisClass.callback)
-                thisClass.callback(Helper.getRowsByIds(thisClass.selectedIds, thisClass.fullDataset[thisClass.dataSetName]));
+                thisClass.callback(Helper.getRowsByIds(thisClass.selectedIds, thisClass.fullDataset));
         });
     }
 
@@ -58,7 +59,7 @@ export class FilterEventManager {
             SelectHighlighter.clickPolarHandler(event.ctrlKey, appended, this, thisClass.getSelectedKeys(options.data.keyField.name), margin, blockSize, thisClass.block, options, arcItems, donutSettings);
 
             if (thisClass.callback)
-                thisClass.callback(Helper.getRowsByIds(thisClass.selectedIds, thisClass.fullDataset[thisClass.dataSetName]));
+                thisClass.callback(Helper.getRowsByIds(thisClass.selectedIds, thisClass.fullDataset));
         });
     }
 
@@ -75,7 +76,7 @@ export class FilterEventManager {
     }
 
     private processKey(multySelect: boolean, keyValue: string, keyFieldName: string): boolean {
-        const selectedId = Helper.getIdFromRowByKey(keyFieldName, keyValue, this.fullDataset[this.dataSetName]);
+        const selectedId = Helper.getIdFromRowByKey(keyFieldName, keyValue, this.fullDataset);
         if (multySelect) {
             if (this.getSelectedKeys(keyFieldName).findIndex(key => key === keyValue) === -1) {
                 this.addId(selectedId);

@@ -61,7 +61,7 @@ export class TwoDimensionalManager {
 
     public static updateData(block: Block, model: Model, data: DataSource) {
         block.transitionManager.interruptTransitions();
-        block.filterEventManager.clearIds();
+        block.filterEventManager.update(data[model.options.data.dataSource]);
 
         const options = <TwoDimensionalOptionsModel>model.options;
 

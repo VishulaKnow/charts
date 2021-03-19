@@ -53,7 +53,7 @@ export class PolarManager {
     public static updateData(block: Block, model: Model, data: DataSource): void {
         block.transitionManager.interruptTransitions();
         block.removeEventListeners();
-        block.filterEventManager.clearIds();
+        block.filterEventManager.update(data[model.options.data.dataSource]);
 
         ElementHighlighter.removeFilter(Donut.getAllArcGroups(block));
         Tooltip.hide(block);
