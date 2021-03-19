@@ -1,4 +1,5 @@
-import { DataRow } from "../../main";
+import { DataRow } from "../../model/model";
+
 export class Helper {
 
     public static getCssClassesLine(cssClasses: string[]): string {
