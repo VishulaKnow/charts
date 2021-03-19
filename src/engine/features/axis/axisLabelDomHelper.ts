@@ -60,8 +60,7 @@ export class AxisLabelHelper {
     }
 
     public static hideLabels(axisElement: Selection<SVGGElement, unknown, BaseType, unknown>): void {
-        axisElement.selectAll('.tick text')
-            .style('display', 'none');
+        axisElement.selectAll('.tick text').style('display', 'none');
     }
 
     private static alignLabelsInVerticalAxis(axisElement: Selection<SVGGElement, unknown, HTMLElement, any>, anchor: TextAnchor, maxLabelSize: number, changeCoordinate: boolean): void {

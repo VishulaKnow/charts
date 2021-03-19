@@ -9,7 +9,7 @@ import { AXIS_VERTICAL_LABEL_PADDING } from "../../../model/marginModel";
 import { NamesManager } from '../../namesManager';
 import { AxisHelper } from './axisHelper';
 import { Transition } from 'd3-transition';
-import { AxisLabelHelper } from './axisLabelHelper';
+import { AxisLabelHelper } from './axisLabelDomHelper';
 
 const MINIMAL_STEP_SIZE = 40;
 const MINIMAL_STEP_SIZE_FOR_WRAPPING = 38;
