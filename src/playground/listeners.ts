@@ -711,6 +711,7 @@ class DataUpdater {
         if (random > 0.66) {
             for (let i = 0; i < ListenersHelper.randInt(1, 4); i++) {
                 newData[this.dataSetName].push({
+                    $id: ListenersHelper.randInt(100, 5000000),
                     brand: this.makeHASH(ListenersHelper.randInt(4, 10)).toUpperCase(),
                     price: ListenersHelper.randInt(0, 150),
                     count: ListenersHelper.randInt(0, 50)
@@ -719,7 +720,7 @@ class DataUpdater {
         } else if (random < 0.33) {
             newData[this.dataSetName].splice(ListenersHelper.randInt(0, 4), ListenersHelper.randInt(1, 3));
         }
-
+        
         newData[this.dataSetName][ListenersHelper.randInt(0, newData[this.dataSetName].length - 1)]['price'] = ListenersHelper.randInt(0, 100);
         newData[this.dataSetName][ListenersHelper.randInt(0, newData[this.dataSetName].length - 1)]['count'] = ListenersHelper.randInt(0, 100);
     }

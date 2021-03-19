@@ -53,6 +53,7 @@ export class PolarManager {
     public static updateData(block: Block, model: Model, data: DataSource): void {
         block.transitionManager.interruptTransitions();
         block.removeEventListeners();
+        block.filterEventManager.clearIds();
 
         ElementHighlighter.removeFilter(Donut.getAllArcGroups(block));
         Tooltip.hide(block);
@@ -60,7 +61,10 @@ export class PolarManager {
         const options = <PolarOptionsModel>model.options;
 
         Donut.updateValues(block, data[options.data.dataSource], model.chartBlock.margin, options.charts[0], model.blockCanvas.size, model.chartSettings.donut, options.data.keyField.name)
-            .then(() => Tooltip.render(block, model, data));
+            .then(() => {
+                Tooltip.render(block, model, data);
+                block.filterEventManager.registerEventToDonut(model.chartBlock.margin, model.blockCanvas.size, options, model.chartSettings.donut);
+            });
 
         Aggregator.update(block, data[options.data.dataSource], options.charts[0].data.valueField);
 

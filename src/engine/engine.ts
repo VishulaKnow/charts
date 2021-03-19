@@ -15,11 +15,13 @@ export default class Engine {
     }
 
     public render(model: Model, data: DataSource, parentElement: HTMLElement): void {
-        this.filterEventManager = new FilterEventManager(this.filterCallback, data[model.options.data.dataSource]);
+        this.data = data;
+
+        this.filterEventManager = new FilterEventManager(this.filterCallback, this.data, model.options.data.dataSource);
         this.block = new Block(model.blockCanvas.cssClass, parentElement, this.chartId, this.filterEventManager, model.transitions);
         this.filterEventManager.setBlock(this.block);
         this.block.renderWrapper(model.blockCanvas.size);
-        this.data = data;
+        
 
         if (model.options) {
             ValueFormatter.setFormatFunction(model.dataSettings.format.formatters);

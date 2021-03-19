@@ -123,11 +123,13 @@ export class Block {
         tipBoxes.on('mousemove', null);
         tipBoxes.on('mouseover', null);
         tipBoxes.on('mouseleave', null);
+        tipBoxes.on('click', null);
 
         const arcItems = Donut.getAllArcGroups(this);
         arcItems.on('mouseover', null);
         arcItems.on('mouseleave', null);
         arcItems.on('mousemove', null);
+        arcItems.on('click', null);
     }
 
     public clearWrapper(): void {
