@@ -1,12 +1,9 @@
-import { Color } from "d3-color";
-import { BaseType, select, Selection } from "d3-selection";
+import { BaseType, Selection } from "d3-selection";
 import { LegendItemsDirection } from "../../../model/featuresModel/legendModel/legendCanvasModel";
-import { LegendBlockModel, LegendPosition, Orient, Size } from "../../../model/model";
-import { Block } from "../../block/block";
 import { DomHelper } from "../../helpers/domHelper";
 import { Helper } from "../../helpers/helper";
 import { Legend } from "./legend";
-import { LegendCoordinate, LegendHelper } from "./legendHelper";
+import { LegendHelper } from "./legendHelper";
 
 export class LegendDomHelper {
     public static cropRowLabels(legendBlock: Selection<SVGForeignObjectElement, unknown, HTMLElement, any>, items: Selection<HTMLDivElement, string, BaseType, unknown>): void {
