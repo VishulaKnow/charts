@@ -1,10 +1,7 @@
-import { AxisScale } from 'd3-axis';
 import { Selection, BaseType } from 'd3-selection'
-import { ChartOrientation, ValueField } from "../../../config/config";
-import { BlockMargin, DataSource, OptionsModelData, Orient, PolarChartModel, ScaleKeyType, Size, TwoDimensionalChartModel } from "../../../model/model";
-import { DomHelper } from '../../helpers/domHelper';
+import { ValueField } from "../../../config/config";
+import { DataSource, OptionsModelData, PolarChartModel, Size, TwoDimensionalChartModel } from "../../../model/model";
 import { ValueFormatter, } from "../../valueFormatter";
-import { Scale } from '../scale/scale';
 import { TooltipHelper } from './tooltipHelper';
 
 export interface TooltipLineAttributes {
