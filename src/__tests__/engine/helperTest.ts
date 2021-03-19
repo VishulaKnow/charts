@@ -2,7 +2,7 @@ import configCars from "../../config/configExample";
 import designerConfig from "../../designer/designerConfigExample";
 import { Helper } from "../../engine/helpers/helper";
 import { TwoDimensionalOptions } from "../../main";
-import { Model, TwoDimensionalOptionsModel } from "../../model/model";
+import { DataRow, Model, TwoDimensionalOptionsModel } from "../../model/model";
 import { assembleModel } from "../../model/modelBuilder";
 
 describe('getTranslateNumbers', () => {
@@ -88,5 +88,54 @@ describe('test getCssClasses getters', ()=> {
             elements.forEach(index => {
                 // expect(Helper.getCssClassesWithElementIndex(options.charts[0].cssClasses)).toEqual('.chart-' + index)
             })
+    });
+});
+
+describe('test id and keyValue manipulations', () => {
+    let dataset: DataRow[];
+    beforeEach(() => {
+        dataset = [
+            {
+                $id: 12,
+                name: 'bmw',
+                price: 130
+            },
+            {
+                $id: 145,
+                name: 'audi',
+                price: 141
+            },
+            {
+                $id: 1453,
+                name: 'lada',
+                price: 11
+            }
+        ]
+    });
+
+    test('getRowsByIds', () => {
+        const result = Helper.getRowsByIds([12, 145], dataset);
+        expect(result).toEqual([
+            {
+                $id: 12,
+                name: 'bmw',
+                price: 130
+            },
+            {
+                $id: 145,
+                name: 'audi',
+                price: 141
+            }
+        ])
+    });
+
+    test('extractKeysFromRows', () => {
+        const result = Helper.extractKeysFromRows('name', dataset);
+        expect(result).toEqual(['bmw', 'audi', 'lada']);
+    });
+
+    test('getIdFromRowByKey', () => {
+        const result = Helper.getIdFromRowByKey('name', 'audi', dataset);
+        expect(result).toBe(145);
     });
 });
