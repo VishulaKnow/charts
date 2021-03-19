@@ -83,7 +83,7 @@ export class Tooltip {
                     const tooltipCoordinate = TooltipHelper.getTooltipFixedCoordinate(scaleKey, margin, blockSize, keyValue, tooltipContent.node().getBoundingClientRect(), keyAxisOrient);
                     TooltipComponentsManager.setLineTooltipCoordinate(tooltipBlock, tooltipCoordinate, chartOrientation, block.transitionManager.durations.tooltipSlide);
 
-                    const tooltipLineAttributes = TooltipDomHelper.getTooltipLineAttributes(scaleKey, margin, keyValue, chartOrientation, blockSize);
+                    const tooltipLineAttributes = TooltipHelper.getTooltipLineAttributes(scaleKey, margin, keyValue, chartOrientation, blockSize);
                     TooltipComponentsManager.setTooltipLineAttributes(tooltipLine, tooltipLineAttributes, block.transitionManager.durations.tooltipSlide);
                     TooltipComponentsManager.showTooltipLine(tooltipLine);
 

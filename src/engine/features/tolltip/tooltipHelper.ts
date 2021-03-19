@@ -1,9 +1,9 @@
 import { AxisScale } from "d3-axis";
+import { ChartOrientation } from "../../../config/config";
 import { BlockMargin, Orient, Size } from "../../../model/model";
-import { DomHelper } from "../../helpers/domHelper";
 import { Helper } from "../../helpers/helper";
 import { Scale } from "../scale/scale";
-import { ARROW_DEFAULT_POSITION, TooltipCoordinate, TOOLTIP_ARROW_PADDING_X, TOOLTIP_ARROW_PADDING_Y } from "./tooltipDomHelper";
+import { ARROW_DEFAULT_POSITION, TooltipCoordinate, TooltipLineAttributes, TOOLTIP_ARROW_PADDING_X, TOOLTIP_ARROW_PADDING_Y } from "./tooltipDomHelper";
 
 export class TooltipHelper {
     public static getHorizontalPad(coordinateX: number, tooltipBlockWidth: number, blockSize: Size, translateX: number): number {
@@ -88,5 +88,26 @@ export class TooltipHelper {
 
             return coordinate;
         }
+    }
+
+    public static getTooltipLineAttributes(scaleKey: AxisScale<any>, margin: BlockMargin, key: string, chartOrientation: ChartOrientation, blockSize: Size): TooltipLineAttributes {
+        const convexSize = 5;
+        const attributes: TooltipLineAttributes = {
+            x1: 0, x2: 0, y1: 0, y2: 0
+        }
+
+        if (chartOrientation === 'vertical') {
+            attributes.x1 = Math.ceil(Scale.getScaledValue(scaleKey, key) + margin.left) - 0.5;
+            attributes.x2 = Math.ceil(Scale.getScaledValue(scaleKey, key) + margin.left) - 0.5;
+            attributes.y1 = margin.top - convexSize;
+            attributes.y2 = blockSize.height - margin.bottom + convexSize * 2;
+        } else {
+            attributes.x1 = margin.left - convexSize;
+            attributes.x2 = blockSize.width - margin.right + convexSize * 2;
+            attributes.y1 = Scale.getScaledValue(scaleKey, key) + margin.top;
+            attributes.y2 = Scale.getScaledValue(scaleKey, key) + margin.top;
+        }
+
+        return attributes;
     }
 }
