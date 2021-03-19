@@ -101,13 +101,13 @@ export class TooltipHelper {
                 coordinate.left = windowWidth - blockPadLeft - tooltipWidth + 'px';
         }
         if(keyAxisOrient === 'right'){ // если ось ключей справа, то тултип слева
-            if(tooltipWidth - this.CONVEXSIZE * 3> blockPadLeft) // Если ширина тултипа - свдиг влево для сопряжения > Расстояния от левого края блока до левого края видимой области 
+            if(tooltipWidth - this.CONVEXSIZE * 2> blockPadLeft) // Если ширина тултипа - свдиг влево для сопряжения > Расстояния от левого края блока до левого края видимой области 
             coordinate.left = -blockPadLeft  + 'px'; // позиция от края видимой области слева
             else
             coordinate.left = -tooltipWidth + this.CONVEXSIZE * 3 + 'px'; // позиция сопряженная с линией тултипа
         }
         if(keyAxisOrient === 'left'){ // если ось ключей слева, то тултип справа
-            if(tooltipWidth - this.CONVEXSIZE * 3> blockPadRight) // Если ширина тултипа - свдиг влево для сопряжения > Расстояния от правого края блока до правого края видимой области 
+            if(tooltipWidth - this.CONVEXSIZE * 2> blockPadRight) // Если ширина тултипа - свдиг влево для сопряжения > Расстояния от правого края блока до правого края видимой области 
             coordinate.right = -blockPadLeft  + 'px'; // позиция от края видимой области справа
             else
             coordinate.right = -tooltipWidth + this.CONVEXSIZE * 3 + 'px'; // позиция сопряженная с линией тултипа 
