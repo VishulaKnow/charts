@@ -54,6 +54,10 @@ export class Helper {
         return value > 0 ? value : 0;
     }
 
+    public static getPXValueFromString(propertyValue: string): number {
+        return parseFloat(propertyValue);
+    }
+
     /**
      * Возвращает значение ключа в зависимости от того, сегментированный ли график
      * @param row 

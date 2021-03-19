@@ -54,68 +54,6 @@ export class TooltipDomHelper {
         this.fillTooltipContent(tooltipContentBlock, markColor, text);
     }
 
-    public static getCoordinateByPointer(pointer: [number, number]): TooltipCoordinate {
-        const coordinate: TooltipCoordinate = {
-            left: null,
-            top: null,
-            right: null,
-            bottom: null
-        }
-
-        coordinate.left = pointer[0] + 'px';
-        coordinate.top = pointer[1] + 'px';
-
-        return coordinate;
-    }
-
-    public static getTooltipFixedCoordinate(scaleKey: AxisScale<any>, margin: BlockMargin, blockSize: Size, keyValue: string, tooltipBlockElement: HTMLElement, keyAxisOrient: Orient): TooltipCoordinate {
-        if (keyAxisOrient === 'bottom' || keyAxisOrient === 'top') {
-            const coordinate: TooltipCoordinate = {
-                top: margin.top - 5 - tooltipBlockElement.getBoundingClientRect().height + 'px',
-                bottom: null,
-                left: Scale.getScaledValue(scaleKey, keyValue) + margin.left - tooltipBlockElement.getBoundingClientRect().width / 2 + 'px',
-                right: null
-            }
-
-            if (DomHelper.getPXValueFromString(coordinate.left) < 0)
-                coordinate.left = 0 + 'px';
-
-            if (DomHelper.getPXValueFromString(coordinate.left) + tooltipBlockElement.getBoundingClientRect().width > blockSize.width) {
-                coordinate.left = null;
-                coordinate.right = 0 + 'px';
-            }
-
-            if (keyAxisOrient === 'top') {
-                coordinate.top = null;
-                coordinate.bottom = 0 + 'px';
-            }
-
-            return coordinate;
-        } else {
-            const coordinate: TooltipCoordinate = {
-                top: Scale.getScaledValue(scaleKey, keyValue) + margin.top - tooltipBlockElement.getBoundingClientRect().height / 2 + 'px',
-                left: 0 + 'px',
-                bottom: null,
-                right: null
-            }
-
-            if (DomHelper.getPXValueFromString(coordinate.top) < 0)
-                coordinate.top = 0 + 'px';
-
-            if (DomHelper.getPXValueFromString(coordinate.top) + tooltipBlockElement.getBoundingClientRect().height > blockSize.height) {
-                coordinate.top = null;
-                coordinate.bottom = 0 + 'px';
-            }
-
-            if (keyAxisOrient === 'left') {
-                coordinate.left = null;
-                coordinate.right = 0 + 'px';
-            }
-
-            return coordinate;
-        }
-    }
-
     public static getRecalcedCoordinateByArrow(coordinate: [number, number], tooltipBlock: Selection<HTMLElement, unknown, HTMLElement, any>, blockSize: Size, tooltipArrow: Selection<BaseType, unknown, HTMLElement, any>, translateX: number = 0, translateY: number = 0): [number, number] {
         const tooltipBlockNode = tooltipBlock.node();
         const horizontalPad = TooltipHelper.getHorizontalPad(coordinate[0], tooltipBlockNode.getBoundingClientRect().width, blockSize, translateX);
