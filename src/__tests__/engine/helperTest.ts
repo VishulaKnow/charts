@@ -138,4 +138,9 @@ describe('test id and keyValue manipulations', () => {
         const result = Helper.getIdFromRowByKey('name', 'audi', dataset);
         expect(result).toBe(145);
     });
+
+    test('getKeysByIds', () => {
+        const result = Helper.getKeysByIds([12, 1453], 'name', dataset);
+        expect(result).toEqual(['bmw', 'lada']);
+    });
 });

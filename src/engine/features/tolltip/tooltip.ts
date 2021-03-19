@@ -120,7 +120,7 @@ export class Tooltip {
 
         elemets.on('mouseleave', function (_event, dataRow) {
             TooltipComponentsManager.hideTooltipBlock(tooltipBlock);
-            if (!block.filterEventManager.isSelected(dataRow.data[dataOptions.keyField.name])) {
+            if (!block.filterEventManager.isSelected(dataRow.data[dataOptions.keyField.name], dataOptions.keyField.name)) {
                 ElementHighlighter.removeFilter(select(this));
                 ElementHighlighter.changeDonutHighlightAppearance(select<SVGGElement, PieArcDatum<DataRow>>(this), margin, blockSize, donutThickness, block.transitionManager.durations.donutHover, false);
             }

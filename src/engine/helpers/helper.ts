@@ -12,6 +12,10 @@ export class Helper {
         return dataSet.find(row => row[keyFieldName] === keyValue).$id;
     }
 
+    public static getKeysByIds(ids: number[], keyFieldName: string, dataSet: DataRow[]): string[] {
+        return this.extractKeysFromRows(keyFieldName, this.getRowsByIds(ids, dataSet));
+    }
+
     public static getCssClassesLine(cssClasses: string[]): string {
         return '.' + cssClasses.join('.');
     }
