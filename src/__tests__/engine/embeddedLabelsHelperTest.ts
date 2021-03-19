@@ -100,7 +100,7 @@ describe('test label coordinates', () => {
         test('inside bar with end anchor', () => {
             const result = EmbeddedLabelsHelper.getLabelAttrs(barAttrs, 'value', 'inside', 'left', 20);
             expected.textAnchor = 'end';
-            expected.x = 94;
+            expected.x = 104;
             expect(result).toEqual(expected);
         });
 

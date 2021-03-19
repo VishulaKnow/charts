@@ -37,7 +37,7 @@ export class IntervalManager {
             model.otherComponents.titleBlock,
             model.blockCanvas.size);
 
-        Legend.render(block, data, options, model.otherComponents.legendBlock, model.blockCanvas.size);
+        Legend.render(block, data, options, model);
 
         Tooltip.render(block, model, data);
 
