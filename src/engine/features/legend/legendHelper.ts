@@ -3,7 +3,7 @@ import { LegendItemsDirection } from "../../../model/featuresModel/legendModel/l
 import { Color } from "d3-color";
 import { DataRow, DataSource, IntervalOptionsModel, LegendBlockModel, LegendPosition, Orient, PolarOptionsModel, TwoDimensionalOptionsModel } from "../../../model/model";
 import { Helper } from '../../helpers/helper';
-import { legendClasses } from './legendDomHelper';
+import { Legend } from "./legend";
 
 export interface LegendCoordinate {
     x: number;
@@ -42,12 +42,11 @@ export class LegendHelper {
 
     public static getMaxItemWidth(legendBlockWidth: string, marginsLeft: number[], itemsDirection: LegendItemsDirection): number {
         if (itemsDirection === 'row') {
-
             const sumOfMargins = Helper.getSumOfNumeric(marginsLeft);
             return (parseFloat(legendBlockWidth) - sumOfMargins) / marginsLeft.length;
         }
+
         return parseFloat(legendBlockWidth);
-        
     }
 
     public static getItemClasses(itemsDirection: LegendItemsDirection, position: LegendPosition, index: number): string {
@@ -58,8 +57,7 @@ export class LegendHelper {
     }
 
     public static getLegendItemClassByDirection(itemsDirection: LegendItemsDirection): string {
-        return legendClasses.combineLegendClassWithAddition(legendClasses.legendItemClass,
-            itemsDirection === 'column' ?  legendClasses.RowClassAddition : legendClasses.inlineClassAddition);
+        return itemsDirection === 'column' ? 'legend-item-row' : 'legend-item-inline';
     }
 
     public static getLegendItemsMarginClass(legendPosition: LegendPosition): string {
@@ -68,9 +66,8 @@ export class LegendHelper {
 
     public static getLegendLabelClassByPosition(position: LegendPosition): string {
         if (position === 'top' || position === 'bottom')
-            return legendClasses.legendLabelClass + ' ' + 
-            legendClasses.combineLegendClassWithAddition(legendClasses.legendLabelClass, legendClasses.nowrapClassAddition);
-        return legendClasses.legendLabelClass;
+            return `${Legend.labelClass} ${Legend.labelClass + '-nowrap'}`;
+        return Legend.labelClass;
     }
 
     public static getLegendItemsDirection(chartNotation: ChartNotation, legendPosition: LegendPosition): LegendItemsDirection {
@@ -87,10 +84,10 @@ export class LegendHelper {
 
         return sumOfItemsWidth;
     }
-    
+
     public static getLegendCoordinateByPosition(legendPosition: Orient, legendBlockModel: LegendBlockModel, blockSize: Size): LegendCoordinate {
         const legendModel = legendBlockModel[legendPosition];
-        
+
         const coordinate: LegendCoordinate = {
             x: 0,
             y: 0,

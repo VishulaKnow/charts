@@ -3,7 +3,6 @@ import { ChartOrientation } from "../../../config/config";
 import { Block } from "../../block/block";
 import { DomHelper } from '../../helpers/domHelper';
 import { Legend } from '../legend/legend';
-import { legendClasses, legendDomHelper } from '../legend/legendDomHelper';
 
 interface AlertBlockPositionAttrs {
     top: string;
@@ -114,7 +113,7 @@ export class RecordOverflowAlert {
     }
 
     private static getLeftAttrForRightBlock(block: Block): number {
-        const legendBlock = block.getSvg().select(`.${legendClasses.legendObjectClass}`);
+        const legendBlock = block.getSvg().select(`.${Legend.objectClass}`);
         if (legendBlock.empty())
             return null;
 
