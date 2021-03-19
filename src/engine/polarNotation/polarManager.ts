@@ -30,7 +30,7 @@ export class PolarManager {
             model.otherComponents.titleBlock,
             model.blockCanvas.size);
 
-        Legend.render(engine.block, engine.data, options, model.otherComponents.legendBlock, model.blockCanvas.size);
+        Legend.render(engine.block, engine.data, options, model);
 
         Tooltip.render(engine.block, model, engine.data);
 
