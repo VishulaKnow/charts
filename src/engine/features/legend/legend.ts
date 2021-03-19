@@ -1,7 +1,8 @@
 import { Color } from "d3-color";
 import { select, Selection } from "d3-selection";
+import { Size } from "../../../config/config";
 import { LegendItemsDirection } from "../../../model/featuresModel/legendModel/legendCanvasModel";
-import { DataSource, IntervalOptionsModel, LegendBlockModel, LegendPosition, Model, Orient, PolarOptionsModel, Size, TwoDimensionalOptionsModel } from "../../../model/model";
+import { DataSource, IntervalOptionsModel, LegendBlockModel, LegendPosition, Model, Orient, PolarOptionsModel, TwoDimensionalOptionsModel } from "../../../model/model";
 import { Block } from "../../block/block";
 import { LegendDomHelper } from "./legendDomHelper";
 import { LegendCoordinate, LegendHelper } from "./legendHelper";

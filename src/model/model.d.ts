@@ -1,5 +1,5 @@
 import { Color } from "d3-color";
-import { ChartOrientation, IntervalChartType, PolarChartType, TwoDimensionalChartType } from "../config/config";
+import { ChartOrientation, IntervalChartType, PolarChartType, Size, TwoDimensionalChartType } from "../config/config";
 import { DataType, Formatter, Transitions } from "../designer/designerConfig";
 
 type AxisType = 'key' | 'value';
@@ -36,10 +36,6 @@ export interface Model {
 export interface BlockCanvas {
     size: Size;
     cssClass: string;
-}
-export interface Size {
-    width: number;
-    height: number;
 }
 
 export interface ChartBlock {

@@ -1,7 +1,8 @@
 import { select, Selection, BaseType } from 'd3-selection';
 import { axisTop, axisBottom, axisLeft, axisRight, AxisScale, Axis as IAxis } from 'd3-axis';
-import { BlockMargin, Orient, Size } from "../../../model/model";
+import { BlockMargin, Orient } from "../../../model/model";
 import { max, min } from 'd3-array';
+import { Size } from "../../../config/config";
 
 const MINIMAL_STEP_SIZE = 40;
 export class AxisHelper {
@@ -16,45 +17,7 @@ export class AxisHelper {
             return axisRight(scale);
     }
 
-    public static wrapHandler(textBlocks: Selection<SVGGElement, unknown, BaseType, any>, maxWidth: number) {
-        textBlocks.each(function () {
-            let textBlock = select(this);
-            if (textBlock.node().getBBox().width > maxWidth) {
-                let letters = textBlock.text().split('').reverse(), // split text to letters.
-                    letter,
-                    line: string[] = [], // one line. letters from this var into tpsans.
-                    lineNumber = 0,
-                    y = textBlock.attr("y"),
-                    dy = 1.4,
-                    tspan = textBlock.text(null).append("tspan").attr("dy", dy + "em");
-
-                while (letter = letters.pop()) {
-                    line.push(letter);
-                    tspan.text(line.join(''));
-                    if (tspan.node().getComputedTextLength() > maxWidth && line.length > 1 && letters.length > 0) {
-                        line.pop();
-                        tspan.text(line.join(''));
-                        if (lineNumber === 0 && line[line.length - 1] !== ' ')
-                            tspan.text(tspan.text() + '-');
-                        line = [letter];
-                        if (lineNumber >= 1) { // If text block has 2 lines, text cropped.
-                            if (letters.length > 0)
-                                tspan.text(tspan.text().substr(0, tspan.text().length - 1) + '...')
-                            break;
-                        }
-                        tspan = textBlock.append("tspan").attr("dy", dy * lineNumber + 1 + "em").text(letter);
-                        lineNumber++;
-                    }
-                }
-
-                if (textBlock.selectAll('tspan').size() === 1)
-                    textBlock.text(tspan.text()).attr('y', null);
-
-                if (!textBlock.selectAll('tspan').empty())
-                    textBlock.attr('y', -(textBlock.node().getBBox().height / 2 + 4.8));
-            }
-        });
-    }
+    
     public static setStepSize(blockSize: Size, margin: BlockMargin, axis: IAxis<any>, axisOrient: Orient, scaleDomain: any[]): void {
         let axisLength = blockSize.width - margin.left - margin.right;
         if (axisOrient === 'left' || axisOrient === 'right') {

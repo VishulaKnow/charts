@@ -1,9 +1,9 @@
-import { Config, PolarChart, TwoDimensionalChart, IntervalOptions, IntervalChart, TwoDimensionalOptions, PolarOptions } from "../config/config";
+import { Config, PolarChart, TwoDimensionalChart, IntervalOptions, IntervalChart, TwoDimensionalOptions, PolarOptions, Size } from "../config/config";
 import { BarOptionsCanvas, DataType, DesignerConfig } from "../designer/designerConfig";
 import { AxisModel } from "./featuresModel/axisModel";
 import { LegendCanvasModel } from "./featuresModel/legendModel/legendCanvasModel";
 import { MIN_DONUT_BLOCK_SIZE } from "./featuresModel/legendModel/legendModel";
-import { BlockMargin, DataRow, DataScope, DataSource, Field, LegendBlockModel, LegendPosition, Size } from "./model";
+import { BlockMargin, DataRow, DataScope, DataSource, Field, LegendBlockModel, LegendPosition } from "./model";
 import { ModelHelper } from "./modelHelper";
 
 export class DataManagerModel {

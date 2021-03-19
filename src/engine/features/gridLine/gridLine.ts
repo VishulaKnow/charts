@@ -1,8 +1,8 @@
-import { select } from "d3-selection";
-import { AxisModelOptions, BlockMargin, GridLineFlag, ScaleKeyModel, Size } from "../../../model/model";
+import { Size } from "../../../config/config";
+import { AxisModelOptions, BlockMargin, GridLineFlag, ScaleKeyModel } from "../../../model/model";
 import { Block } from "../../block/block";
 
-type GridLineType = 'key' | 'value';
+export type GridLineType = 'key' | 'value';
 interface GridLineAttributes {
     x1: number;
     y1: number;

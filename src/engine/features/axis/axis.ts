@@ -1,7 +1,7 @@
 import { min, max } from 'd3-array';
 import { format } from 'd3-format';
 import { AxisScale, Axis as IAxis } from 'd3-axis';
-import { AxisModelOptions, BlockMargin, IAxisModel, IScaleModel, Orient, ScaleKeyModel, ScaleValueModel, Size, TranslateModel } from "../../../model/model";
+import { AxisModelOptions, BlockMargin, IAxisModel, IScaleModel, Orient, ScaleKeyModel, ScaleValueModel, TranslateModel } from "../../../model/model";
 import { Block } from "../../block/block";
 import { Scale, Scales } from "../scale/scale";
 import { AXIS_VERTICAL_LABEL_PADDING } from "../../../model/marginModel";
@@ -10,6 +10,7 @@ import { AxisHelper } from './axisHelper';
 
 import { AxisLabelHelper } from './axisLabelDomHelper';
 import { AxisDomHelper } from './axisDomHelper';
+import { Size } from '../../../config/config';
 
 
 const MINIMAL_STEP_SIZE_FOR_WRAPPING = 38;
@@ -69,7 +70,7 @@ export class Axis {
                 }
                 if (axisOptions.orient === 'left' || axisOptions.orient === 'right') {
                     if (Scale.getScaleStep(scaleKey) >= MINIMAL_STEP_SIZE_FOR_WRAPPING)
-                        axisElement.selectAll<SVGGElement, unknown>('.tick text').call(AxisHelper.wrapHandler, axisOptions.labels.maxSize);
+                        axisElement.selectAll<SVGGElement, unknown>('.tick text').call(AxisDomHelper.wrapHandler, axisOptions.labels.maxSize);
                     else
                         AxisLabelHelper.cropLabels(block, scaleKey, scaleOptions, axisOptions, blockSize);
 
@@ -105,7 +106,7 @@ export class Axis {
                 AxisLabelHelper.rotateLabels(axisElement, axisOptions.orient);
 
             if ((axisOptions.orient === 'left' || axisOptions.orient === 'right') && axisOptions.type === 'key' && Scale.getScaleStep(scale) >= MINIMAL_STEP_SIZE_FOR_WRAPPING)
-                axisElement.selectAll<SVGGElement, unknown>('.tick text').call(AxisHelper.wrapHandler, axisOptions.labels.maxSize);
+                axisElement.selectAll<SVGGElement, unknown>('.tick text').call(AxisDomHelper.wrapHandler, axisOptions.labels.maxSize);
             else
                 AxisLabelHelper.cropLabels(block, scale, scaleOptions, axisOptions, blockSize);
 

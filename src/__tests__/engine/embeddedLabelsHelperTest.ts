@@ -1,5 +1,6 @@
 import { BarAttrs, EmbeddedLabelsHelper, LabelAttrs, LABEL_BAR_PADDING } from "../../engine/features/embeddedLabels/embeddedLabelsHelper";
-import { BlockMargin, Size } from "../../model/model";
+import { BlockMargin } from "../../model/model";
+import { Size } from "../../config/config";
 
 describe('test postion and space', () => {
     const margin: BlockMargin = {

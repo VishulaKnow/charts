@@ -1,13 +1,14 @@
 import { stack } from 'd3-shape';
 import { select, Selection } from 'd3-selection'
 import { Color } from "d3-color";
-import { BlockMargin, DataRow, Field, Orient, Size, TwoDimensionalChartModel } from "../../../model/model";
+import { BlockMargin, DataRow, Field, Orient, TwoDimensionalChartModel } from "../../../model/model";
 import { Scales } from "../../features/scale/scale";
 import { Block } from "../../block/block";
 import { MarkDot } from "../../features/markDots/markDot";
 import { AreaHelper } from './areaHelper';
 import { DomHelper } from '../../helpers/domHelper';
 import { Helper } from '../../helpers/helper';
+import { Size } from '../../../config/config';
 
 export class Area {
     public static areaChartClass = 'area';

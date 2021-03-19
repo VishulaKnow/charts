@@ -1,5 +1,5 @@
-import { ChartNotation } from "../../../config/config";
-import { BlockMargin, ILegendModel, LegendBlockModel, LegendPosition, Orient, Size } from "../../model";
+import { ChartNotation, Size } from "../../../config/config";
+import { BlockMargin, ILegendModel, LegendBlockModel, LegendPosition, Orient } from "../../model";
 import { ModelHelper } from "../../modelHelper";
 import { TitleModel } from "../titleModel";
 import { LegendCanvasModel, LegendItemsDirection } from "./legendCanvasModel";

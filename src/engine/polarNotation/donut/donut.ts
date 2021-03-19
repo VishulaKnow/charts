@@ -2,11 +2,12 @@ import { Arc, Pie, PieArcDatum } from 'd3-shape'
 import { Color } from "d3-color";
 import { Selection, BaseType } from 'd3-selection'
 import { interpolate } from 'd3-interpolate'
-import { BlockMargin, DataRow, DonutChartSettings, PolarChartModel, Size } from "../../../model/model";
+import { BlockMargin, DataRow, DonutChartSettings, PolarChartModel } from "../../../model/model";
 import { Block } from "../../block/block";
 import { Aggregator } from "../aggregator";
 import { DonutHelper } from './DonutHelper';
 import { DomHelper } from '../../helpers/domHelper';
+import { Size } from '../../../config/config';
 
 export interface Translate {
     x: number;
