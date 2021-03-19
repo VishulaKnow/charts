@@ -8,6 +8,10 @@ export class Helper {
         return dataSet.map(row => row[keyFieldName]);
     }
 
+    public static getIdFromRowByKey(keyFieldName: string, keyValue: string, dataSet: DataRow[]): number {
+        return dataSet.find(row => row[keyFieldName] === keyValue).$id;
+    }
+
     public static getCssClassesLine(cssClasses: string[]): string {
         return '.' + cssClasses.join('.');
     }

@@ -8,13 +8,18 @@ import { TipBox } from "./features/tipBox/tipBox";
 import { TipBoxHelper } from "./features/tipBox/tipBoxHelper";
 import { Donut } from "./polarNotation/donut/donut";
 
+export type FilterCallback = (rows: DataRow[]) => void;
+
 export class FilterEventManager {
     private block: Block;
     private selectedKeys: string[];
 
-    constructor(block: Block, private callback: (rows: DataRow[]) => void, private dataSet: DataRow[]) {
-        this.block = block;
+    constructor(private callback: FilterCallback, private dataSet: DataRow[]) {
         this.selectedKeys = [];
+    }
+
+    public setBlock(block: Block): void {
+        this.block = block;
     }
 
     public getSelectedKeys(): string[] {

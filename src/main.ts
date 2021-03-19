@@ -1,6 +1,7 @@
 import { Config, ValueField, AdditionalElements, Size, TwoDimensionalChartData, PolarChartData, Legend, DataOptions, AxisOptions, TwoDimensionalOptions, TwoDimensionalChartType, TwoDimensionalChart, TwoDimensionalAxis, PolarOptions, PolarChartType, PolarChart, NumberDomain, IntervalOptions, IntervalChartType, IntervalChart, IntervalAxis, EmbeddedLabelType, ChartType, ChartOrientation, ChartNotation, ChartBlockCanvas, AxisPosition } from "./config/config";
 import { DesignerConfig, Formatter, DonutOptionsCanvas, DataTypeOptions, DataType, ChartStyleConfig, BarOptionsCanvas, AxisLabelCanvas } from "./designer/designerConfig";
 import Engine from "./engine/engine";
+import { FilterCallback } from "./engine/filterEventManager";
 import { DataRow, DataSource, Model } from "./model/model";
 import { assembleModel, getPreparedData } from "./model/modelBuilder";
 
@@ -24,7 +25,7 @@ class Chart {
      * @param data Данные
      * @param isResizable Флаг подстройки размера блока графика под родительский элемент
      */
-    constructor(config: Config, designerConfig: DesignerConfig, data: DataSource, isResizable: boolean = false) {
+    constructor(config: Config, designerConfig: DesignerConfig, data: DataSource, filterCallback: FilterCallback, isResizable: boolean = false) {
         Chart.chartCounter++;
         this.config = config;
         this.designerConfig = designerConfig;
@@ -32,7 +33,7 @@ class Chart {
         this.isResizable = isResizable;
 
         this.model = assembleModel(this.config, this.data, this.designerConfig);
-        this.engine = new Engine(Chart.chartCounter);
+        this.engine = new Engine(Chart.chartCounter, filterCallback);
     }
 
     /**
@@ -105,6 +106,7 @@ export {
     DataRow,
     Size,
     Legend,
+    FilterCallback,
     DataOptions,
     AdditionalElements,
     TwoDimensionalChartData,

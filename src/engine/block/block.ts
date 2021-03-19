@@ -24,7 +24,7 @@ export class Block {
     private chartBlockClass = 'chart-block';
     private chartGroupClass = 'chart-group';
 
-    constructor(cssClass: string, parentElement: HTMLElement, blockId: number, transitions: Transitions = null) {
+    constructor(cssClass: string, parentElement: HTMLElement, blockId: number, filterEventManager: FilterEventManager, transitions: Transitions = null) {
         this.wrapperCssClasses = Helper.getCssClassesArray(cssClass);
         this.svgCssClasses = Helper.getCssClassesArray(cssClass);
         this.wrapperCssClasses = BlockHelper.getFormattedCssClassesForWrapper(this.wrapperCssClasses);
@@ -33,7 +33,7 @@ export class Block {
         this.id = blockId;
 
         this.transitionManager = new TransitionManager(this, transitions);
-        this.filterEventManager = new FilterEventManager(this);
+        this.filterEventManager = filterEventManager;
     }
 
     public renderSvg(blockSize: Size): void {
