@@ -44,8 +44,6 @@ export class ElementHighlighter {
     }
 
     public static changeDonutHighlightAppearance(segment: Selection<SVGGElement, PieArcDatum<DataRow>, BaseType, unknown>, margin: BlockMargin, blockSize: Size, donutThickness: number, transitionDuration: number, on: boolean): void {
-        interrupt(segment.node());
-
         let scaleSize = 0;
         if (on)
             scaleSize = 5; // Если нужно выделить сегмент, то scaleSize не равен нулю и отображается увеличенным
