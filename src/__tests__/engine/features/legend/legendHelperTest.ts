@@ -9,14 +9,12 @@ describe('getLegendItemsContent', ()=>{
     let model: Model = assembleModel(configTest2D, data, designerConfig)
     describe('TwoDimensionalOptionsModel', ()=>{
         let result = LegendHelper.getLegendItemsContent(model.options, data)
-        console.log(result)
         expect(result).toEqual(["Количество", "Aвтомобилей на", "Количество автомобилей"])
     });
     const configTestPolar = require('../../../../config/configTestPolar.json')
     model = assembleModel(configTestPolar, data, designerConfig)
     describe('PolarOptionsModel', ()=>{
         let result = LegendHelper.getLegendItemsContent(model.options, data)
-        console.log(result)
         expect(result)
         .toEqual(["BMW", "LADA", "MERCEDES", "AUDI", "VOLKSWAGEN", "DODGE", "SAAB", "HONDA", "TOYOTA"]);
     });
