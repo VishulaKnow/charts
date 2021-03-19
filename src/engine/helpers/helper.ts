@@ -1,5 +1,12 @@
 import { DataRow } from "../../main";
 export class Helper {
+    public static getRowsByIds(ids: number[], dataSet: DataRow[]): DataRow[] {
+        return dataSet.filter(row => ids.findIndex(id => id === row.$id) !== -1);
+    }
+
+    public static extractKeysFromRows(keyFieldName: string, dataSet: DataRow[]): string[] {
+        return dataSet.map(row => row[keyFieldName]);
+    }
 
     public static getCssClassesLine(cssClasses: string[]): string {
         return '.' + cssClasses.join('.');

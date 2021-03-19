@@ -1,6 +1,6 @@
 import { AxisScale } from "d3-axis";
 import { pointer } from "d3-selection";
-import { BlockMargin, Size, TwoDimensionalOptionsModel, PolarOptionsModel, DonutChartSettings } from "../model/model";
+import { BlockMargin, Size, TwoDimensionalOptionsModel, PolarOptionsModel, DonutChartSettings, DataRow } from "../model/model";
 import { Block } from "./block/block";
 import { ElementHighlighter } from "./elementHighlighter/elementHighlighter";
 import { SelectHighlighter } from "./elementHighlighter/selectHighlighter";
@@ -12,7 +12,7 @@ export class FilterEventManager {
     private block: Block;
     private selectedKeys: string[];
 
-    constructor(block: Block) {
+    constructor(block: Block, private callback: (rows: DataRow[]) => void, private dataSet: DataRow[]) {
         this.block = block;
         this.selectedKeys = [];
     }
