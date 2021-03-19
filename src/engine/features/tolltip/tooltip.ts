@@ -63,7 +63,7 @@ export class Tooltip {
 
         const tooltipLine = TooltipComponentsManager.renderTooltipLine(block);
 
-        const tipBox = TipBox.render(block, margin, blockSize);
+        const tipBox = TipBox.renderOrGet(block, margin, blockSize);
 
         ElementHighlighter.renderShadowFilter(block);
 

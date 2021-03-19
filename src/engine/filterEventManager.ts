@@ -2,7 +2,6 @@ import { AxisScale } from "d3-axis";
 import { pointer } from "d3-selection";
 import { BlockMargin, Size, TwoDimensionalOptionsModel, PolarOptionsModel, DonutChartSettings, DataRow } from "../model/model";
 import { Block } from "./block/block";
-import { ElementHighlighter } from "./elementHighlighter/elementHighlighter";
 import { SelectHighlighter } from "./elementHighlighter/selectHighlighter";
 import { TipBox } from "./features/tipBox/tipBox";
 import { TipBoxHelper } from "./features/tipBox/tipBoxHelper";
@@ -36,16 +35,16 @@ export class FilterEventManager {
     }
 
     public registerEventFor2D(scaleKey: AxisScale<any>, margin: BlockMargin, blockSize: Size, options: TwoDimensionalOptionsModel): void {
-        const tipBox = TipBox.render(this.block, margin, blockSize);
-
-        ElementHighlighter.renderShadowFilter(this.block);
-
+        const tipBox = TipBox.renderOrGet(this.block, margin, blockSize);
         const thisClass = this;
 
         tipBox.on('click', function (event: MouseEvent) {
             const keyValue = TipBoxHelper.getKeyValueByPointer(pointer(event, this), options.orient, margin, blockSize, scaleKey, options.scale.key.type);
             const appended = thisClass.processKey(event.ctrlKey, keyValue, options.data.keyField.name);
             SelectHighlighter.click2DHandler(event.ctrlKey, appended, keyValue, thisClass.block, options);
+
+            if (thisClass.callback)
+                thisClass.callback(Helper.getRowsByIds(thisClass.selectedIds, thisClass.fullDataset));
         });
     }
 
@@ -57,6 +56,9 @@ export class FilterEventManager {
             const keyValue = dataRow.data[options.data.keyField.name];
             const appended = thisClass.processKey(event.ctrlKey, keyValue, options.data.keyField.name);
             SelectHighlighter.clickPolarHandler(event.ctrlKey, appended, this, thisClass.getSelectedKeys(options.data.keyField.name), margin, blockSize, thisClass.block, options, arcItems, donutSettings);
+
+            if (thisClass.callback)
+                thisClass.callback(Helper.getRowsByIds(thisClass.selectedIds, thisClass.fullDataset));
         });
     }
 

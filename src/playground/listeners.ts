@@ -2,7 +2,7 @@ import Engine from '../engine/engine';
 import { assembleModel, getPreparedData, getUpdatedModel } from '../model/modelBuilder';
 import { Config, IntervalOptions, PolarChart, PolarOptions, TwoDimensionalChart, TwoDimensionalOptions } from '../config/config'
 import { DesignerConfig, Transitions } from '../designer/designerConfig';
-import { DataSource } from '../model/model';
+import { DataRow, DataSource } from '../model/model';
 
 class ListenersHelper {
     static randInt(min: number, max: number): number {
@@ -647,7 +647,7 @@ const data = require('./assets/dataSet.json');
 // const chart = new Chart(config, designerConfig, data, false);
 // chart.render(document.querySelector('.main-wrapper'));
 
-const engine = new Engine(2, null);
+const engine = new Engine(2, (rows: DataRow[]) => console.log(rows.map(row => row.$id)));
 const model = assembleModel(config, data, designerConfig);
 engine.render(model, getPreparedData(model, data, config), document.querySelector('.main-wrapper'));
 new Listeners(engine, config, designerConfig, data);
