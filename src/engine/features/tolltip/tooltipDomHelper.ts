@@ -27,8 +27,10 @@ export const ARROW_DEFAULT_POSITION = 9;
 export const TOOLTIP_ARROW_PADDING_X = ARROW_DEFAULT_POSITION - (ARROW_SIZE * Math.sqrt(2) - ARROW_SIZE) / 2 + 14;
 export const TOOLTIP_ARROW_PADDING_Y = 13;
 
+export const CONVEXSIZE = 5;
+
 export class TooltipDomHelper {
-    private static convexSize = 5;
+    
     private static tooltipGroupClass = 'tooltip-group';
     private static tooltipHeadClass = 'tooltip-head';
 
@@ -85,9 +87,9 @@ export class TooltipDomHelper {
             coordinate.top = Scale.getScaledValue(scaleKey, keyValue) + margin.top - tooltipBlockElement.getBoundingClientRect().height / 2 + 'px';
         }
         // Пересчет относительно viewPort'а
-        return this.recalcToolTipCoordinateByViewPort(block, tooltipBlockElement, keyAxisOrient, coordinate);
+        return TooltipHelper.recalcToolTipCoordinateByViewPort(block, tooltipBlockElement, keyAxisOrient, coordinate);
         // Пересчет относительно block'а
-        // return this.recalcToolTipCoordinateByBlock(block, scaleKey, margin, blockSize, keyValue, tooltipBlockElement, keyAxisOrient, coordinate);
+        // return TooltipHelper.recalcToolTipCoordinateByBlock(block, scaleKey, margin, blockSize, keyValue, tooltipBlockElement, keyAxisOrient, coordinate);
     }
     
     public static getRecalcedCoordinateByArrow(coordinate: [number, number], tooltipBlock: Selection<HTMLElement, unknown, HTMLElement, any>, blockSize: Size, tooltipArrow: Selection<BaseType, unknown, HTMLElement, any>, translateX: number = 0, translateY: number = 0): [number, number] {
@@ -109,11 +111,11 @@ export class TooltipDomHelper {
         if (chartOrientation === 'vertical') {
             attributes.x1 = Math.ceil(Scale.getScaledValue(scaleKey, key) + margin.left) - 0.5;
             attributes.x2 = Math.ceil(Scale.getScaledValue(scaleKey, key) + margin.left) - 0.5;
-            attributes.y1 = margin.top - this.convexSize;
-            attributes.y2 = blockSize.height - margin.bottom + this.convexSize * 2;
+            attributes.y1 = margin.top - CONVEXSIZE;
+            attributes.y2 = blockSize.height - margin.bottom + CONVEXSIZE * 2;
         } else {
-            attributes.x1 = margin.left - this.convexSize;
-            attributes.x2 = blockSize.width - margin.right + this.convexSize * 2;
+            attributes.x1 = margin.left - CONVEXSIZE;
+            attributes.x2 = blockSize.width - margin.right + CONVEXSIZE * 2;
             attributes.y1 = Scale.getScaledValue(scaleKey, key) + margin.top;
             attributes.y2 = Scale.getScaledValue(scaleKey, key) + margin.top;
         }
@@ -158,65 +160,5 @@ export class TooltipDomHelper {
             tooltipArrow.style('left', `${ARROW_DEFAULT_POSITION}px`);
     }
 
-    private static recalcToolTipCoordinateByViewPort(block: Block,  tooltipBlockElement: HTMLElement, keyAxisOrient: Orient, coordinate: TooltipCoordinate): TooltipCoordinate {
-        const windowWidth: number = window.innerWidth; // Ширина окна
-        const tooltipWidth=  tooltipBlockElement.getBoundingClientRect().width // Ширина блока с графиком
-        const blockPadLeft = block.getSvg().node().getBoundingClientRect().left // Расстояние от левого края Блока до левой стороны экрана
-        const blockPadRight = block.getSvg().node().getBoundingClientRect().right - block.getSvg().node().getBoundingClientRect().width // Расстояние от правого края Блока до правой стороны экрана
-        const tooltipPositionAtBlock = DomHelper.getPXValueFromString(coordinate.left) 
-        const tooltipPositionAtWindow = blockPadLeft + tooltipPositionAtBlock 
-        const tooltipRight = tooltipPositionAtWindow + tooltipWidth 
-
-        if(keyAxisOrient === 'bottom' || keyAxisOrient === 'top'){
-            // проверка слева
-            if (tooltipPositionAtBlock < 0 && -1 * tooltipPositionAtBlock > blockPadLeft)
-            coordinate.left = -blockPadLeft  + 'px';
-            // проверка справа
-            if (tooltipRight > windowWidth)
-                coordinate.left = windowWidth - blockPadLeft - tooltipWidth + 'px';
-        }
-        if(keyAxisOrient === 'right'){
-            if(tooltipWidth - this.convexSize * 3> blockPadLeft)
-            coordinate.left = -blockPadLeft  + 'px';
-            else
-            coordinate.left = -tooltipWidth + this.convexSize * 3 + 'px';
-        }
-        if(keyAxisOrient === 'left'){
-            if(tooltipWidth - this.convexSize * 3> blockPadRight)
-            coordinate.right = -blockPadLeft  + 'px';
-            else
-            coordinate.right = -tooltipWidth + this.convexSize * 3 + 'px';
-        }             
-        return coordinate;
-    }
-    
-    private static recalcToolTipCoordinateByBlock(block: Block, scaleKey: AxisScale<any>, margin: BlockMargin, blockSize: Size, keyValue: string, tooltipBlockElement: HTMLElement, keyAxisOrient: Orient, coordinate: TooltipCoordinate): TooltipCoordinate {
-        if (keyAxisOrient === 'bottom' || keyAxisOrient === 'top') {
-            if (DomHelper.getPXValueFromString(coordinate.left) < 0)
-                coordinate.left = 0 + 'px';
-            if (DomHelper.getPXValueFromString(coordinate.left) + tooltipBlockElement.getBoundingClientRect().width > blockSize.width) {
-                coordinate.left = null;
-                coordinate.right = 0 + 'px';
-            }
-            if (keyAxisOrient === 'top') {
-                coordinate.top = null;
-                coordinate.bottom = 0 + 'px';
-            }
-        } else {
-            if (DomHelper.getPXValueFromString(coordinate.top) < 0)
-                coordinate.top = 0 + 'px';
-
-            if (DomHelper.getPXValueFromString(coordinate.top) + tooltipBlockElement.getBoundingClientRect().height > blockSize.height) {
-                coordinate.top = null;
-                coordinate.bottom = 0 + 'px';
-            }
-
-            if (keyAxisOrient === 'left') {
-                coordinate.left = null;
-                coordinate.right = 0 + 'px';
-            }
-        }
-
-    return coordinate;
-    }
+ 
 }
