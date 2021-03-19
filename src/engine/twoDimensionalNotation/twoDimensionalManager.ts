@@ -41,7 +41,7 @@ export class TwoDimensionalManager {
             model.chartSettings.bar,
             model.blockCanvas.size);
 
-        engine.block.filterEventManager.registerEventFor2D(scales.scaleKey, model.chartBlock.margin, model.blockCanvas.size, options);
+        engine.block.filterEventManager.registerEventFor2D(scales.key, model.chartBlock.margin, model.blockCanvas.size, options);
 
         Title.render(engine.block,
             options.title,
@@ -72,7 +72,7 @@ export class TwoDimensionalManager {
             options.scale.value,
             model.chartSettings.bar);
 
-        const keyDomainEquality = Helper.checkDomainsEquality(block.scales.scaleKey.domain(), scales.scaleKey.domain());
+        const keyDomainEquality = Helper.checkDomainsEquality(block.scales.key.domain(), scales.key.domain());
         block.scales = scales;
 
         Axis.update(block, scales, options.scale, options.axis, model.blockCanvas.size, keyDomainEquality);
@@ -95,7 +95,7 @@ export class TwoDimensionalManager {
             model.blockCanvas.size,
             model.chartSettings.bar);
 
-        block.filterEventManager.registerEventFor2D(scales.scaleKey, model.chartBlock.margin, model.blockCanvas.size, options);
+        block.filterEventManager.registerEventFor2D(scales.key, model.chartBlock.margin, model.blockCanvas.size, options);
 
         Tooltip.render(block, model, data, scales);
 

@@ -19,8 +19,8 @@ export class BarHelper {
             height: null
         }
 
-        this.setBarAttrsByKey(attrs, keyAxisOrient, scales.scaleKey, margin, keyField, barIndex, barsAmount, barSettings, false);
-        this.setGroupedBarAttrsByValue(attrs, keyAxisOrient, margin, scales.scaleValue, valueFieldName, blockSize);
+        this.setBarAttrsByKey(attrs, keyAxisOrient, scales.key, margin, keyField, barIndex, barsAmount, barSettings, false);
+        this.setGroupedBarAttrsByValue(attrs, keyAxisOrient, margin, scales.value, valueFieldName, blockSize);
 
         return attrs;
     }
@@ -33,8 +33,8 @@ export class BarHelper {
             height: null
         }
 
-        this.setBarAttrsByKey(attrs, keyAxisOrient, scales.scaleKey, margin, keyField, barIndex, barsAmount, barSettings, true);
-        this.setSegmentedBarAttrsByValue(attrs, keyAxisOrient, scales.scaleValue, margin, blockSize);
+        this.setBarAttrsByKey(attrs, keyAxisOrient, scales.key, margin, keyField, barIndex, barsAmount, barSettings, true);
+        this.setSegmentedBarAttrsByValue(attrs, keyAxisOrient, scales.value, margin, blockSize);
 
         return attrs;
     }
