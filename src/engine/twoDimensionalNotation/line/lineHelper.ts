@@ -6,28 +6,28 @@ export class LineHelper {
     public static getLineGenerator(keyAxisOrient: Orient, scales: Scales, keyFieldName: string, valueFieldName: string, margin: BlockMargin): ILine<DataRow> {
         if (keyAxisOrient === 'bottom' || keyAxisOrient === 'top') {
             return line<DataRow>()
-                .x(d => Scale.getScaledValue(scales.scaleKey, d[keyFieldName]) + margin.left)
-                .y(d => scales.scaleValue(d[valueFieldName]) + margin.top);
+                .x(d => Scale.getScaledValue(scales.key, d[keyFieldName]) + margin.left)
+                .y(d => scales.value(d[valueFieldName]) + margin.top);
         }
 
         if (keyAxisOrient === 'left' || keyAxisOrient === 'right') {
             return line<DataRow>()
-                .x(d => scales.scaleValue(d[valueFieldName]) + margin.left)
-                .y(d => Scale.getScaledValue(scales.scaleKey, d[keyFieldName]) + margin.top);
+                .x(d => scales.value(d[valueFieldName]) + margin.left)
+                .y(d => Scale.getScaledValue(scales.key, d[keyFieldName]) + margin.top);
         }
     }
 
     public static getSegmentedLineGenerator(keyAxisOrient: Orient, scales: Scales, keyFieldName: string, margin: BlockMargin): ILine<DataRow> {
         if (keyAxisOrient === 'bottom' || keyAxisOrient === 'top') {
             return line<DataRow>()
-                .x(d => Scale.getScaledValue(scales.scaleKey, d.data[keyFieldName]) + margin.left)
-                .y(d => scales.scaleValue(d[1]) + margin.top);
+                .x(d => Scale.getScaledValue(scales.key, d.data[keyFieldName]) + margin.left)
+                .y(d => scales.value(d[1]) + margin.top);
         }
 
         if (keyAxisOrient === 'left' || keyAxisOrient === 'right') {
             return line<DataRow>()
-                .x(d => scales.scaleValue(d[1]) + margin.left)
-                .y(d => Scale.getScaledValue(scales.scaleKey, d.data[keyFieldName]) + margin.top);
+                .x(d => scales.value(d[1]) + margin.left)
+                .y(d => Scale.getScaledValue(scales.key, d.data[keyFieldName]) + margin.top);
         }
     }
 }

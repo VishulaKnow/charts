@@ -52,35 +52,35 @@ export class Gantt {
             width: null,
             height: null
         }
-        const itemSize = Scale.getScaleBandWidth(scales.scaleKey) > barSettings.maxBarWidth
+        const itemSize = Scale.getScaleBandWidth(scales.key) > barSettings.maxBarWidth
             ? barSettings.maxBarWidth
-            : Scale.getScaleBandWidth(scales.scaleKey);
-        const sizeDiff = (Scale.getScaleBandWidth(scales.scaleKey) - itemSize) / 2;
+            : Scale.getScaleBandWidth(scales.key);
+        const sizeDiff = (Scale.getScaleBandWidth(scales.key) - itemSize) / 2;
 
         if (axisOrient === 'top' || axisOrient === 'bottom') {
-            attrs.x = d => scales.scaleKey(d[keyField]) + margin.left + sizeDiff;
+            attrs.x = d => scales.key(d[keyField]) + margin.left + sizeDiff;
             attrs.width = d => itemSize;
         }
         if (axisOrient === 'left' || axisOrient === 'right') {
-            attrs.y = d => scales.scaleKey(d[keyField]) + margin.top + sizeDiff;
+            attrs.y = d => scales.key(d[keyField]) + margin.top + sizeDiff;
             attrs.height = d => itemSize;
         }
 
         if (axisOrient === 'top') {
-            attrs.y = d => scales.scaleValue(d[valueField1]) + margin.top;
-            attrs.height = d => scales.scaleValue(d[valueField2]) - scales.scaleValue(d[valueField1]);
+            attrs.y = d => scales.value(d[valueField1]) + margin.top;
+            attrs.height = d => scales.value(d[valueField2]) - scales.value(d[valueField1]);
         }
         else if (axisOrient === 'bottom') {
-            attrs.y = d => scales.scaleValue(d[valueField2]) + margin.top;
-            attrs.height = d => scales.scaleValue(d[valueField1]) - scales.scaleValue(d[valueField2]);
+            attrs.y = d => scales.value(d[valueField2]) + margin.top;
+            attrs.height = d => scales.value(d[valueField1]) - scales.value(d[valueField2]);
         }
         else if (axisOrient === 'left') {
-            attrs.x = d => scales.scaleValue(d[valueField1]) + margin.left;
-            attrs.width = d => scales.scaleValue(d[valueField2]) - scales.scaleValue(d[valueField1]);
+            attrs.x = d => scales.value(d[valueField1]) + margin.left;
+            attrs.width = d => scales.value(d[valueField2]) - scales.value(d[valueField1]);
         }
         else if (axisOrient === 'right') {
-            attrs.x = d => scales.scaleValue(d[valueField2]) + margin.left;
-            attrs.width = d => scales.scaleValue(d[valueField1]) - scales.scaleValue(d[valueField2]);
+            attrs.x = d => scales.value(d[valueField2]) + margin.left;
+            attrs.width = d => scales.value(d[valueField1]) - scales.value(d[valueField2]);
         }
         return attrs;
     }

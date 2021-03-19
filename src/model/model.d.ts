@@ -97,8 +97,8 @@ export interface Field {
 
 //====================================================== TwoDimensionalOptionsModel & IntervalOptionsModel
 export interface IScaleModel {
-    scaleKey: ScaleKeyModel;
-    scaleValue: ScaleValueModel;
+    key: ScaleKeyModel;
+    value: ScaleValueModel;
 }
 export interface ScaleKeyModel {
     domain: any[];

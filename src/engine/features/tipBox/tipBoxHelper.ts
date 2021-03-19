@@ -4,6 +4,15 @@ import { BlockMargin, ScaleKeyType } from "../../../model/model";
 import { Scale } from "../scale/scale";
 
 export class TipBoxHelper {
+    public static getKeyValueByPointer(pointer: [number, number], chartOrient: ChartOrientation, margin: BlockMargin, blockSize: Size, scaleKey: AxisScale<any>, scaleKeyType: ScaleKeyType): string {
+        const index = TipBoxHelper.getKeyIndex(pointer, chartOrient, margin, blockSize, scaleKey, scaleKeyType);
+        let keyValue = scaleKey.domain()[index];
+        if (index >= scaleKey.domain().length)
+            keyValue = scaleKey.domain()[scaleKey.domain().length - 1];
+
+        return keyValue;
+    }
+
     public static getKeyIndex(pointer: [number, number], chartOrient: ChartOrientation, margin: BlockMargin, blockSize: Size, scaleKey: AxisScale<any>, scaleKeyType: ScaleKeyType): number {
         const pointerAxisType = chartOrient === 'vertical' ? 0 : 1; // 0 - координата поинтера по оси x, 1 - по оси y
         const marginByOrient = chartOrient === 'vertical' ? margin.left : margin.top;

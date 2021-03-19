@@ -69,7 +69,7 @@ export class ElementHighlighter {
 
     public static remove2DChartsFullHighlighting(block: Block, charts: TwoDimensionalChartModel[], transitionDuration: number = 0): void {
         charts.forEach(chart => {
-            const elems = DomHelper.getChartElements(block, chart);
+            const elems = DomHelper.get2DChartElements(block, chart);
             if (chart.type === 'area' || chart.type === 'line') {
                 elems.call(this.scaleElement, false, transitionDuration);
             } else {
@@ -86,7 +86,7 @@ export class ElementHighlighter {
 
     public static removeUnselected2DHighlight(block: Block, keyFieldName: string, charts: TwoDimensionalChartModel[], transitionDuration: number): void {
         charts.forEach(chart => {
-            const elems = DomHelper.getChartElements(block, chart);
+            const elems = DomHelper.get2DChartElements(block, chart);
 
             const selectedElems = DomHelper.getChartElementsByKeys(elems, chart.isSegmented, keyFieldName, block.filterEventManager.getSelectedKeys(), SelectionCondition.Exclude);
 
@@ -109,7 +109,7 @@ export class ElementHighlighter {
 
     private static change2DHighlightState(block: Block, keyFieldName: string, keyValue: string, charts: TwoDimensionalChartModel[], isHighlight: boolean, filterId: string, transitionDuration: number): void {
         charts.forEach(chart => {
-            const elems = DomHelper.getChartElements(block, chart);
+            const elems = DomHelper.get2DChartElements(block, chart);
 
             const selectedElems = DomHelper.get2DElementsByKey(elems, chart.isSegmented, keyFieldName, keyValue);
 

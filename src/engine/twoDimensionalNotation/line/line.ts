@@ -48,8 +48,7 @@ export class Line {
     }
 
     private static renderSegmented(block: Block, scales: Scales, data: DataRow[], keyField: Field, margin: BlockMargin, keyAxisOrient: Orient, chart: TwoDimensionalChartModel, markFlag: boolean): void {
-        const keys = chart.data.valueFields.map(field => field.name);
-        const stackedData = stack().keys(keys)(data);
+        const stackedData = stack().keys(chart.data.valueFields.map(field => field.name))(data);
 
         const lineGenerator = LineHelper.getSegmentedLineGenerator(keyAxisOrient, scales, keyField.name, margin);
 
@@ -94,8 +93,7 @@ export class Line {
     }
 
     private static updateSegmeneted(block: Block, scales: Scales, newData: DataRow[], keyField: Field, margin: BlockMargin, keyAxisOrient: Orient, chart: TwoDimensionalChartModel): void {
-        const keys = chart.data.valueFields.map(field => field.name);
-        const stackedData = stack().keys(keys)(newData);
+        const stackedData = stack().keys(chart.data.valueFields.map(field => field.name))(newData);
 
         const lineGenerator = LineHelper.getSegmentedLineGenerator(keyAxisOrient, scales, keyField.name, margin);
 

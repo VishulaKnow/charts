@@ -1,3 +1,5 @@
+import { DataRow } from "../../main";
+
 export class Helper {
     public static getCssClassesLine(cssClasses: string[]): string {
         return '.' + cssClasses.join('.');
@@ -26,8 +28,8 @@ export class Helper {
         return numbers.reduce((acc, value) => acc + value, 0);
     }
 
-    public static parseFormattedToNumber(value: string): number {
-        return parseFloat(value.replace(',', '.').split(/\s/).join(''));
+    public static parseFormattedToNumber(value: string, rankSpliter: string): number {
+        return parseFloat(value.replace(rankSpliter, '.').split(/\s/).join(''));
     }
 
     public static calcDigitsAfterDot(value: number): number {
@@ -36,7 +38,7 @@ export class Helper {
         return valueInString.substring(dotIndex).length;
     }
 
-    public static checkDomainsEqual(oldDomain: string[], newDomain: string[]): boolean {
+    public static checkDomainsEquality(oldDomain: string[], newDomain: string[]): boolean {
         if (oldDomain.length !== newDomain.length)
             return false;
 
@@ -46,5 +48,24 @@ export class Helper {
                 isEqual = false;
         });
         return isEqual;
+    }
+
+    public static getValueOrZero(value: number): number {
+        return value > 0 ? value : 0;
+    }
+
+    public static getPXValueFromString(propertyValue: string): number {
+        return parseFloat(propertyValue);
+    }
+
+    /**
+     * Возвращает значение ключа в зависимости от того, сегментированный ли график
+     * @param row 
+     * @param keyFieldName 
+     * @param isSegmented 
+     * @returns 
+     */
+    public static getKeyFieldValue(row: DataRow, keyFieldName: string, isSegmented: boolean): string {
+        return isSegmented ? row.data[keyFieldName] : row[keyFieldName];
     }
 }

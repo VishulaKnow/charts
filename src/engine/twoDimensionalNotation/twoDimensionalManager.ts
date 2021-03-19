@@ -20,8 +20,8 @@ export class TwoDimensionalManager {
     public static render(engine: Engine, model: Model): void {
         const options = <TwoDimensionalOptionsModel>model.options;
 
-        const scales = Scale.getScales(options.scale.scaleKey,
-            options.scale.scaleValue,
+        const scales = Scale.getScales(options.scale.key,
+            options.scale.value,
             model.chartSettings.bar);
         engine.block.scales = scales;
 
@@ -29,7 +29,7 @@ export class TwoDimensionalManager {
 
         Axis.render(engine.block, scales, options.scale, options.axis, model.chartBlock.margin, model.blockCanvas.size);
 
-        GridLine.render(engine.block, options.additionalElements.gridLine.flag, options.axis.keyAxis, options.axis.valueAxis, model.blockCanvas.size, model.chartBlock.margin, options.scale.scaleKey);
+        GridLine.render(engine.block, options.additionalElements.gridLine.flag, options.axis.keyAxis, options.axis.valueAxis, model.blockCanvas.size, model.chartBlock.margin, options.scale.key);
 
         this.renderCharts(engine.block,
             options.charts,
@@ -41,7 +41,7 @@ export class TwoDimensionalManager {
             model.chartSettings.bar,
             model.blockCanvas.size);
 
-        engine.block.filterEventManager.registerEventFor2D(scales.scaleKey, model.chartBlock.margin, model.blockCanvas.size, options);
+        engine.block.filterEventManager.registerEventFor2D(scales.key, model.chartBlock.margin, model.blockCanvas.size, options);
 
         Title.render(engine.block,
             options.title,
@@ -68,11 +68,11 @@ export class TwoDimensionalManager {
 
         ElementHighlighter.remove2DChartsFullHighlighting(block, options.charts);
 
-        const scales = Scale.getScales(options.scale.scaleKey,
-            options.scale.scaleValue,
+        const scales = Scale.getScales(options.scale.key,
+            options.scale.value,
             model.chartSettings.bar);
 
-        const keyDomainEquality = Helper.checkDomainsEqual(block.scales.scaleKey.domain(), scales.scaleKey.domain());
+        const keyDomainEquality = Helper.checkDomainsEquality(block.scales.key.domain(), scales.key.domain());
         block.scales = scales;
 
         Axis.update(block, scales, options.scale, options.axis, model.blockCanvas.size, keyDomainEquality);
@@ -83,7 +83,7 @@ export class TwoDimensionalManager {
             options.axis.valueAxis,
             model.blockCanvas.size,
             model.chartBlock.margin,
-            options.scale.scaleKey);
+            options.scale.key);
 
         this.updateCharts(block,
             options.charts,
@@ -95,7 +95,7 @@ export class TwoDimensionalManager {
             model.blockCanvas.size,
             model.chartSettings.bar);
 
-        block.filterEventManager.registerEventFor2D(scales.scaleKey, model.chartBlock.margin, model.blockCanvas.size, options);
+        block.filterEventManager.registerEventFor2D(scales.key, model.chartBlock.margin, model.blockCanvas.size, options);
 
         Tooltip.render(block, model, data, scales);
 

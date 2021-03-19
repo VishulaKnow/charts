@@ -86,8 +86,7 @@ export class Bar {
     }
 
     private static renderSegmented(block: Block, scales: Scales, data: DataRow[], keyField: Field, margin: BlockMargin, keyAxisOrient: Orient, chart: TwoDimensionalChartModel, barsAmounts: number[], blockSize: Size, firstBarIndex: number, barSettings: BarChartSettings): void {
-        const keys = chart.data.valueFields.map(field => field.name);
-        const stackedData = stack().keys(keys)(data);
+        const stackedData = stack().keys(chart.data.valueFields.map(field => field.name))(data);
 
         let groups = block.getChartGroup(chart.index)
             .selectAll<SVGGElement, DataRow>(`g.${this.barSegmentGroupClass}${Helper.getCssClassesLine(chart.cssClasses)}`)
@@ -186,8 +185,7 @@ export class Bar {
     }
 
     private static updateSegmented(block: Block, newData: DataRow[], scales: Scales, margin: BlockMargin, keyAxisOrient: Orient, chart: TwoDimensionalChartModel, blockSize: Size, barsAmounts: number[], keyField: Field, firstBarIndex: number, barSettings: BarChartSettings): void {
-        const keys = chart.data.valueFields.map(field => field.name);
-        const stackedData = stack().keys(keys)(newData);
+        const stackedData = stack().keys(chart.data.valueFields.map(field => field.name))(newData);
 
         block.getChartGroup(chart.index)
             .selectAll<SVGRectElement, DataRow>(`.${this.barItemClass}${Helper.getCssClassesLine(chart.cssClasses)}`)

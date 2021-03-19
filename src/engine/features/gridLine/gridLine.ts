@@ -46,8 +46,7 @@ export class GridLine
             .attr('x1', lineAttributes.x1)
             .attr('y1', lineAttributes.y1)
             .attr('x2', lineAttributes.x2)
-            .attr('y2', lineAttributes.y2)
-            // .attr('shape-rendering', 'crispEdges');
+            .attr('y2', lineAttributes.y2);
 
     }
 

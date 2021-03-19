@@ -96,20 +96,20 @@ describe('test label coordinates', () => {
             const result = EmbeddedLabelsHelper.getLabelAttrs(barAttrs, 'key', 'inside', 'left', 10);
             expect(result).toEqual(expected);
         });
-    
+
         test('inside bar with end anchor', () => {
-            const result = EmbeddedLabelsHelper.getLabelAttrs(barAttrs, 'value', 'inside', 'left', 10);
+            const result = EmbeddedLabelsHelper.getLabelAttrs(barAttrs, 'value', 'inside', 'left', 20);
             expected.textAnchor = 'end';
             expected.x = 104;
             expect(result).toEqual(expected);
         });
-    
+
         test('outside bar with end anchor', () => {
             const result = EmbeddedLabelsHelper.getLabelAttrs(barAttrs, 'key', 'outside', 'left', 10);
             expected.x = 126;
             expect(result).toEqual(expected);
         });
-    
+
         test('outside bar with end anchor', () => {
             const result = EmbeddedLabelsHelper.getLabelAttrs(barAttrs, 'value', 'outside', 'left', 10);
             expected.x = 126;

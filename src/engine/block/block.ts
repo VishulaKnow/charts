@@ -5,7 +5,7 @@ import { Scales } from "../features/scale/scale";
 import { TipBox } from "../features/tipBox/tipBox";
 import { Helper } from "../helpers/helper";
 import { NamesManager } from "../namesManager";
-import { OuterEventManager } from "../outerEventManager";
+import { FilterEventManager } from "../filterEventManager";
 import { Donut } from "../polarNotation/donut/donut";
 import { TransitionManager } from "../transitionManager";
 import { BlockHelper } from "./blockHelper";
@@ -15,7 +15,7 @@ export class Block {
     public id: number;
     public transitionManager: TransitionManager;
     public scales: Scales;
-    public filterEventManager: OuterEventManager;
+    public filterEventManager: FilterEventManager;
 
     private svgCssClasses: string[];
     private wrapperCssClasses: string[];
@@ -33,7 +33,7 @@ export class Block {
         this.id = blockId;
 
         this.transitionManager = new TransitionManager(this, transitions);
-        this.filterEventManager = new OuterEventManager(this);
+        this.filterEventManager = new FilterEventManager(this);
     }
 
     public renderSvg(blockSize: Size): void {
@@ -102,8 +102,7 @@ export class Block {
         let defs = this.getSvg()
             .select<SVGDefsElement>('defs');
         if (defs.empty())
-            defs = this.getSvg()
-                .append<SVGDefsElement>('defs');
+            defs = this.getSvg().append<SVGDefsElement>('defs');
 
         return defs;
     }

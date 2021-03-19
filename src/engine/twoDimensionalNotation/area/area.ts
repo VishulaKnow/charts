@@ -47,8 +47,7 @@ export class Area {
     }
 
     private static renderSegmented(block: Block, scales: Scales, data: DataRow[], keyField: Field, margin: BlockMargin, keyAxisOrient: Orient, chart: TwoDimensionalChartModel): void {
-        const keys = chart.data.valueFields.map(field => field.name);
-        const stackedData = stack().keys(keys)(data);
+        const stackedData = stack().keys(chart.data.valueFields.map(field => field.name))(data);
         const areaGenerator = AreaHelper.getSegmentedAreaGenerator(keyAxisOrient, scales, margin, keyField.name);
 
         const areas = block.getChartGroup(chart.index)
@@ -92,8 +91,7 @@ export class Area {
     }
 
     private static updateSegmented(block: Block, scales: Scales, newData: DataRow[], keyField: Field, margin: BlockMargin, chart: TwoDimensionalChartModel, keyAxisOrient: Orient): void {
-        const keys = chart.data.valueFields.map(field => field.name);
-        const stackedData = stack().keys(keys)(newData);
+        const stackedData = stack().keys(chart.data.valueFields.map(field => field.name))(newData);
 
         const areaGenerator = AreaHelper.getSegmentedAreaGenerator(keyAxisOrient, scales, margin, keyField.name);
         const areas = block.getChartGroup(chart.index)

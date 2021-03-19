@@ -2,7 +2,7 @@ import { select, Selection, pointer } from 'd3-selection';
 import { PieArcDatum } from 'd3-shape'
 import { BlockMargin, DataRow, DataSource, IntervalChartModel, Model, OptionsModelData, Orient, PolarChartModel, ScaleKeyModel, Size, TwoDimensionalChartModel } from "../../../model/model";
 import { Block } from "../../block/block";
-import { TooltipHelper } from "./tooltipHelper";
+import { TooltipDomHelper } from "./tooltipDomHelper";
 import { Donut } from "../../polarNotation/donut/donut";
 import { ChartOrientation } from "../../../config/config";
 import { Scales } from '../scale/scale';
@@ -13,6 +13,7 @@ import { DonutHelper } from '../../polarNotation/donut/DonutHelper';
 import { TipBox } from '../tipBox/tipBox';
 import { TipBoxHelper } from '../tipBox/tipBoxHelper';
 import { Helper } from '../../helpers/helper';
+import { TooltipHelper } from './tooltipHelper';
 
 export class Tooltip {
     public static tooltipBlockClass = 'tooltip-block';
@@ -26,7 +27,7 @@ export class Tooltip {
         const chartsWithTooltipIndex = model.options.charts.findIndex((chart: TwoDimensionalChartModel | PolarChartModel | IntervalChartModel) => chart.tooltip.show);
         if (chartsWithTooltipIndex !== -1) {
             if (model.options.type === '2d') {
-                this.renderTooltipFor2DCharts(block, model.options.charts, data, model.options.data, model.blockCanvas.size, model.chartBlock.margin, model.options.orient, scales.scaleKey, model.options.scale.scaleKey, model.options.axis.keyAxis.orient);
+                this.renderTooltipFor2DCharts(block, model.options.charts, data, model.options.data, model.blockCanvas.size, model.chartBlock.margin, model.options.orient, scales.key, model.options.scale.key, model.options.axis.keyAxis.orient);
             } else if (model.options.type === 'polar') {
                 this.renderTooltipForPolar(block, model.options.charts, data, model.options.data, model.blockCanvas.size, model.chartBlock.margin, DonutHelper.getThickness(model.chartSettings.donut, model.blockCanvas.size, model.chartBlock.margin));
             }
@@ -70,22 +71,19 @@ export class Tooltip {
 
         tipBox
             .on('mousemove', function (event) {
-                const index = TipBoxHelper.getKeyIndex(pointer(event, this), chartOrientation, margin, blockSize, scaleKey, scaleKeyModel.type);
-                let keyValue = scaleKey.domain()[index];
-                if (index >= scaleKey.domain().length)
-                    keyValue = scaleKey.domain()[scaleKey.domain().length - 1];
+                const keyValue = TipBoxHelper.getKeyValueByPointer(pointer(event, this), chartOrientation, margin, blockSize, scaleKey, scaleKeyModel.type);
 
                 if (!currentKey || currentKey !== keyValue) {
                     currentKey = keyValue;
 
                     TooltipComponentsManager.showTooltipBlock(tooltipBlock);
 
-                    TooltipHelper.fillForMulty2DCharts(tooltipContent, charts, data, dataOptions, keyValue);
+                    TooltipDomHelper.fillForMulty2DCharts(tooltipContent, charts, data, dataOptions, keyValue);
 
-                    const tooltipCoordinate = TooltipHelper.getTooltipFixedCoordinate(scaleKey, margin, blockSize, keyValue, tooltipContent.node(), keyAxisOrient);
+                    const tooltipCoordinate = TooltipHelper.getTooltipFixedCoordinate(scaleKey, margin, blockSize, keyValue, tooltipContent.node().getBoundingClientRect(), keyAxisOrient);
                     TooltipComponentsManager.setLineTooltipCoordinate(tooltipBlock, tooltipCoordinate, chartOrientation, block.transitionManager.durations.tooltipSlide);
 
-                    const tooltipLineAttributes = TooltipHelper.getTooltipLineAttributes(scaleKey, margin, keyValue, chartOrientation, blockSize);
+                    const tooltipLineAttributes = TooltipDomHelper.getTooltipLineAttributes(scaleKey, margin, keyValue, chartOrientation, blockSize);
                     TooltipComponentsManager.setTooltipLineAttributes(tooltipLine, tooltipLineAttributes, block.transitionManager.durations.tooltipSlide);
                     TooltipComponentsManager.showTooltipLine(tooltipLine);
 
@@ -110,10 +108,10 @@ export class Tooltip {
         elemets
             .on('mouseover', function (_event, dataRow) {
                 TooltipComponentsManager.showTooltipBlock(tooltipBlock);
-                TooltipHelper.fillTooltipForPolarChart(tooltipContent, chart, data, dataOptions, dataRow.data[dataOptions.keyField.name], select(this).select('path').style('fill'))
+                TooltipDomHelper.fillTooltipForPolarChart(tooltipContent, chart, data, dataOptions, dataRow.data[dataOptions.keyField.name], select(this).select('path').style('fill'))
 
-                const coordinatePointer: [number, number] = TooltipHelper.getRecalcedCoordinateByArrow(DonutHelper.getArcCentroid(blockSize, margin, dataRow, donutThickness), tooltipBlock, blockSize, tooltipArrow, translateX, translateY);
-                const tooltipCoordinate = TooltipHelper.getTooltipCoordinate(coordinatePointer);
+                const coordinatePointer = TooltipDomHelper.getRecalcedCoordinateByArrow(DonutHelper.getArcCentroid(blockSize, margin, dataRow, donutThickness), tooltipBlock, blockSize, tooltipArrow, translateX, translateY);
+                const tooltipCoordinate = TooltipHelper.getCoordinateByPointer(coordinatePointer);
                 TooltipComponentsManager.setTooltipBlockCoordinate(tooltipBlock, tooltipCoordinate);
 
                 ElementHighlighter.setFilter(select(this), block);
