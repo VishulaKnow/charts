@@ -29,14 +29,14 @@ export class ChartStyleModel {
         const valueFieldsAmount = chartsValueFieldAmount[chartIndex];
 
         return {
-            elementColors: this.getColors(this.palette, chartStyleConfig.step, valueFieldsAmount, startIndex, chartStyleConfig.baseColor),
+            elementColors: this.getColors(this.palette, valueFieldsAmount, startIndex, chartStyleConfig),
             opacity: this.getChartOpacity(chartsAmount, chartType, chartsValueFieldAmount[chartIndex], isSegmented)
         }
     }
 
     public static getChartStyle(elementsAmount: number, chartStyleConfig: ChartStyleConfig): ChartStyle {
         return {
-            elementColors: this.getColors(this.palette, chartStyleConfig.step, elementsAmount, 0, chartStyleConfig.baseColor),
+            elementColors: this.getColors(this.palette, elementsAmount, 0, chartStyleConfig),
             opacity: 1
         }
     }
@@ -47,27 +47,19 @@ export class ChartStyleModel {
         return 1;
     }
 
-    private static getColors(palette: ChartColors[], step: number, elementsAmount: number, startIndex: number, baseColorName: string): string[] {
+    private static getColors(palette: ChartColors[], elementsAmount: number, startIndex: number, styleConfig: ChartStyleConfig): string[] {
         if (elementsAmount <= 0)
             return [];
 
-        const colorsArray: string[] = [];
-        const baseColorIndex = this.getColorIndex(palette, baseColorName);
-        let indexOfDesired = 0;
-        startIndex *= step;
+        const selectedColors: string[] = [];
+        const baseColorIndex = this.getColorIndex(palette, styleConfig.baseColor);
+        startIndex *= styleConfig.step;
         do {
-            indexOfDesired = baseColorIndex + startIndex + colorsArray.length * step;
-            indexOfDesired = indexOfDesired % palette.length;
+            const indexOfDesired = (baseColorIndex + startIndex + selectedColors.length * styleConfig.step) % palette.length;
+            selectedColors.push(this.getBaseColor(palette[indexOfDesired].colorPalette));
+        } while (selectedColors.length !== elementsAmount);
 
-            colorsArray.push(this.getBaseColor(palette[indexOfDesired].colorPalette));
-        } while (colorsArray.length !== elementsAmount);
-
-        return colorsArray;
-    }
-
-    private static getColorIndex(palette: ChartColors[], baseColorName: string): number {
-        const index = palette.findIndex(colorObject => colorObject.colorName === baseColorName);
-        return index === -1 ? 0 : index;
+        return selectedColors;
     }
 
     private static getBaseColor(colorSet: ColorSet): string {
@@ -80,19 +72,8 @@ export class ChartStyleModel {
         return colorSet[firstKey];
     }
 
-    private static getColorRow(colorSet: ColorSet, colorsAmount: number): string[] {
-        const colors: string[] = [];
-        for (let colorCode in colorSet) {
-            if (colorCode === '100' || colorCode === '200' || colorCode === '300' || colorCode === '500')
-                colors.push(colorSet[colorCode]);
-        }
-        colors.reverse();
-
-        const chartColorSet: string[] = [];
-        for (let i = 0; i < colorsAmount; i++) {
-            chartColorSet.push(colors[i % colors.length]);
-        }
-
-        return chartColorSet;
+    private static getColorIndex(palette: ChartColors[], baseColorName: string): number {
+        const index = palette.findIndex(colorObject => colorObject.colorName === baseColorName);
+        return index === -1 ? 0 : index;
     }
 }
