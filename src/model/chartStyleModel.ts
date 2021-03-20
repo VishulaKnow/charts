@@ -16,7 +16,7 @@ export class ChartStyleModel {
             startIndex += chartsFieldsAmounts[i];
         }
         const fieldsAmount = chartsFieldsAmounts[chartIndex];
-        const palette = chroma.scale(styleConfig.baseColors).mode('lch').colors(ModelHelper.getSum(chartsFieldsAmounts));
+        const palette = chroma.scale(styleConfig.baseColors).mode('rgb').colors(ModelHelper.getSum(chartsFieldsAmounts));
 
         return {
             elementColors: this.getColors(palette, fieldsAmount, startIndex),
@@ -25,7 +25,9 @@ export class ChartStyleModel {
     }
 
     public static getChartStyle(elementsAmount: number, styleConfig: ChartStyleConfig): ChartStyle {
-        const palette = chroma.scale(styleConfig.baseColors).mode('lch').colors(elementsAmount);
+        const palette = chroma.scale(styleConfig.baseColors).mode('rgb').colors(elementsAmount);
+        console.log(palette);
+
         return {
             elementColors: palette,
             opacity: 1
