@@ -3,7 +3,7 @@
         {
             "$id": 1,
             "brand": "BMW",
-            "price": 1000000,
+            "price": 100,
             "count": 12
         },
         {
