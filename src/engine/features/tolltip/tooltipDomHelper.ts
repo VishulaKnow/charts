@@ -36,7 +36,7 @@ export class TooltipDomHelper {
         charts.forEach(chart => {
             chart.data.valueFields.forEach((field, index) => {
                 const text = this.getTooltipItemText(data, dataOptions, keyValue, field);
-                this.fillTooltipContent(tooltipContentBlock, chart.style.elementColors[index % chart.style.elementColors.length].toString(), text);
+                this.fillTooltipContent(tooltipContentBlock, chart.style.elementColors[index % chart.style.elementColors.length], text);
             });
         });
     }

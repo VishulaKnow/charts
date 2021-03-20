@@ -1,11 +1,11 @@
-import { Color } from "d3-color";
+
 import { ChartStyleConfig } from "../../designer/designerConfig";
 import { ChartStyleModel } from "../../model/chartStyleModel";
 
-function getColorHex(colors: Color[]): string[] {
+function getColorHex(colors: string[]): string[] {
     let hexes: string[] = [];
     colors.forEach(color => {
-        hexes.push(color.hex());
+        hexes.push(color);
     });
     return hexes;
 }

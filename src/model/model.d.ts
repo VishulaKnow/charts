@@ -1,4 +1,3 @@
-import { Color } from "d3-color";
 import { ChartOrientation, IntervalChartType, PolarChartType, TwoDimensionalChartType } from "../config/config";
 import { DataType, DonutOptionsCanvas, Formatter, Transitions } from "../designer/designerConfig";
 
@@ -164,7 +163,7 @@ interface TooltipModel {
     show: boolean;
 }
 export interface ChartStyle {
-    elementColors: Color[];
+    elementColors: string[];
     opacity: number;
 }
 

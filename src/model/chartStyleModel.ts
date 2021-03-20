@@ -1,4 +1,3 @@
-import { color, Color } from "d3-color";
 import { TwoDimensionalChartType } from "../config/config";
 import { ChartStyleConfig } from "../designer/designerConfig";
 import { ChartStyle } from "./model";
@@ -48,7 +47,7 @@ export class ChartStyleModel {
         return 1;
     }
 
-    private static getColors(palette: ChartColors[], step: number, elementsAmount: number, startIndex: number, baseColorName: string): Color[] {
+    private static getColors(palette: ChartColors[], step: number, elementsAmount: number, startIndex: number, baseColorName: string): string[] {
         if (elementsAmount <= 0)
             return [];
 
@@ -63,7 +62,7 @@ export class ChartStyleModel {
             colorsArray.push(this.getBaseColor(palette[indexOfDesired].colorPalette));
         } while (colorsArray.length !== elementsAmount);
 
-        return colorsArray.map(elementColor => color(elementColor));
+        return colorsArray;
     }
 
     private static getColorIndex(palette: ChartColors[], baseColorName: string): number {

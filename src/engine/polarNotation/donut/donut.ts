@@ -1,5 +1,5 @@
 import { Arc, Pie, PieArcDatum } from 'd3-shape'
-import { Color } from "d3-color";
+
 import { Selection, BaseType } from 'd3-selection'
 import { interpolate } from 'd3-interpolate'
 import { BlockMargin, DataRow, DonutChartSettings, PolarChartModel, Size } from "../../../model/model";
@@ -111,9 +111,9 @@ export class Donut {
         this.setElementsColor(items, chart.style.elementColors);
     }
 
-    private static setElementsColor(arcItems: Selection<SVGGElement, unknown, BaseType, unknown>, colorPalette: Color[]): void {
+    private static setElementsColor(arcItems: Selection<SVGGElement, unknown, BaseType, unknown>, colorPalette: string[]): void {
         arcItems
             .select('path')
-            .style('fill', (d, i) => colorPalette[i % colorPalette.length].toString());
+            .style('fill', (d, i) => colorPalette[i % colorPalette.length]);
     }
 }
