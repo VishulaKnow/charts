@@ -31,7 +31,7 @@ class ListenersHelper {
         return newArr;
     }
     static getInputValue(selector: string): string {
-        return (document.querySelector(selector) as HTMLInputElement).value;
+        return (document.querySelector(selector) as HTMLInputElement)?.value;
     }
     static setInputValue(selector: string, value: any): void {
         (document.querySelector(selector) as HTMLInputElement).value = value.toString();
@@ -406,16 +406,16 @@ export default class Listeners {
             thisClass.designerConfig.canvas.chartOptions.donut.aggregatorPad = parseFloat(this.value);
             thisClass.updateFull();
         });
-        document.querySelector('#base-color').addEventListener('keydown', function (e: any) {
+        document.querySelector('#base-colors').addEventListener('keydown', function (e: any) {
             if (e.code === 'Enter') {
-                thisClass.designerConfig.chartStyle.baseColor = this.value;
+                thisClass.designerConfig.chartStyle.baseColors = (this.value as string).split(', ');
                 thisClass.updateFull();
             }
-        });
-        document.querySelector('#color-step').addEventListener('input', function () {
-            thisClass.designerConfig.chartStyle.step = parseFloat(this.value);
-            thisClass.updateFull();
-        });
+        }); //TODO: подправить
+        // document.querySelector('#color-step').addEventListener('input', function () {
+        //     thisClass.designerConfig.chartStyle.step = parseFloat(this.value);
+        //     thisClass.updateFull();
+        // });
     }
 
     private setCommonListeners(): void {
@@ -609,8 +609,9 @@ export default class Listeners {
         ListenersHelper.setInputValue('#bar-distance', designerConfig.canvas.chartOptions.bar.barDistance);
         ListenersHelper.setInputValue('#min-bar-size', designerConfig.canvas.chartOptions.bar.minBarWidth);
         ListenersHelper.setInputValue('#max-bar-size', designerConfig.canvas.chartOptions.bar.maxBarWidth);
-        ListenersHelper.setInputValue('#base-color', designerConfig.chartStyle.baseColor);
-        ListenersHelper.setInputValue('#color-step', designerConfig.chartStyle.step);
+        ListenersHelper.setInputValue('#base-colors', designerConfig.chartStyle.baseColors.join(', '));
+        //TODO: подправить
+        // ListenersHelper.setInputValue('#color-step', designerConfig.chartStyle.step);
         ListenersHelper.setInputValue('#pad-angle', designerConfig.canvas.chartOptions.donut.padAngle);
         ListenersHelper.setInputValue('#pad-angle', designerConfig.canvas.chartOptions.donut.padAngle);
         ListenersHelper.setInputValue('#aggregator-pad', designerConfig.canvas.chartOptions.donut.aggregatorPad);

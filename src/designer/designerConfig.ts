@@ -69,6 +69,7 @@ interface DataFormat {
 
 // ========================================================================================= ChartStyle
 export interface ChartStyleConfig {
+    //TODO: убрать лишнее
     baseColor: string;
     step: number;
     baseColors: string[];
