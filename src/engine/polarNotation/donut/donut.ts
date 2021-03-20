@@ -19,13 +19,13 @@ export class Donut {
 
     private static arcItemClass = 'arc';
 
-    public static render(block: Block, data: DataRow[], margin: BlockMargin, chart: PolarChartModel, blockSize: Size, donutSettings: DonutChartSettings): void {
+    public static render(block: Block, data: DataRow[], margin: BlockMargin, chart: PolarChartModel, blockSize: Size, settings: DonutChartSettings): void {
         const outerRadius = DonutHelper.getOuterRadius(margin, blockSize);
-        const thickness = DonutHelper.getThickness(donutSettings, blockSize, margin);
+        const thickness = DonutHelper.getThickness(settings, blockSize, margin);
         const innerRadius = DonutHelper.getInnerRadius(outerRadius, thickness);
 
         const arcGenerator = DonutHelper.getArcGenerator(outerRadius, innerRadius);
-        const pieGenerator = DonutHelper.getPieGenerator(chart.data.valueField.name, donutSettings.padAngle);
+        const pieGenerator = DonutHelper.getPieGenerator(chart.data.valueField.name, settings.padAngle);
 
         const translateAttribute = DonutHelper.getTranslate(margin, blockSize);
 
@@ -38,7 +38,7 @@ export class Donut {
 
         this.renderNewArcItems(arcGenerator, pieGenerator, donutBlock, data, chart);
 
-        Aggregator.render(block, data, chart.data.valueField, innerRadius, translateAttribute, thickness);
+        Aggregator.render(block, data, chart.data.valueField, innerRadius, translateAttribute, thickness, settings.aggregatorPad);
     }
 
     public static updateValues(block: Block, data: DataRow[], margin: BlockMargin, chart: PolarChartModel, blockSize: Size, donutSettings: DonutChartSettings, keyField: string): Promise<any> {

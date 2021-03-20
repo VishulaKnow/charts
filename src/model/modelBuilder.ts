@@ -57,11 +57,7 @@ function getDataSettings(dataScope: DataScope, designerConfig: DesignerConfig): 
 function getChartSettings(barSettings: BarOptionsCanvas, donutSettings: DonutOptionsCanvas): ChartElementsSettings {
     return {
         bar: { ...barSettings },
-        donut: {
-            padAngle: donutSettings.padAngle,
-            maxThickness: donutSettings.maxThickness,
-            minThickness: donutSettings.minThickness,
-        }
+        donut: { ...donutSettings }
     }
 }
 

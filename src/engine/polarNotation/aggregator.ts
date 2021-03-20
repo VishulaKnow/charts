@@ -2,7 +2,7 @@ import { sum } from 'd3-array'
 import { interpolateNumber } from 'd3-interpolate';
 import { Selection } from 'd3-selection'
 import { DataType } from '../../designer/designerConfig';
-import { DataRow, Field } from "../../model/model";
+import { DataRow, DonutChartSettings, Field } from "../../model/model";
 import { Block } from "../block/block";
 import { Helper } from '../helpers/helper';
 import { ValueFormatter } from '../valueFormatter';
@@ -20,27 +20,27 @@ export class Aggregator {
     private static aggregatorNameClass = 'aggregator-name';
     private static aggregatorObjectClass = 'aggregator-object';
 
-    public static render(block: Block, data: DataRow[], valueField: Field, innerRadius: number, translate: Translate, fontSize: number): void {
+    public static render(block: Block, data: DataRow[], valueField: Field, innerRadius: number, translate: Translate, fontSize: number, pad: number): void {
         const aggregator: AggregatorInfo = {
             name: 'Сумма',
             value: sum(data.map(d => d[valueField.name])),
             format: valueField.format
         }
 
-        this.renderText(block, innerRadius, aggregator, translate, fontSize);
+        this.renderText(block, innerRadius, aggregator, translate, fontSize, pad);
     }
 
-    public static update(block: Block, data: DataRow[], valueField: Field): void {
+    public static update(block: Block, data: DataRow[], valueField: Field, pad: number): void {
         const aggregator: AggregatorInfo = {
             name: 'Сумма',
             value: sum(data.map(d => d[valueField.name])),
             format: valueField.format
         }
 
-        this.updateText(block, aggregator);
+        this.updateText(block, aggregator, pad);
     }
 
-    private static renderText(block: Block, innerRadius: number, aggregatorInfo: AggregatorInfo, translate: Translate, fontSize: number): void {
+    private static renderText(block: Block, innerRadius: number, aggregatorInfo: AggregatorInfo, translate: Translate, fontSize: number, pad: number): void {
         if (innerRadius > 50) {
             const aggregatorObject = this.renderAggregatorObject(block, innerRadius, translate);
             const wrapper = this.renderWrapper(aggregatorObject);
@@ -59,17 +59,18 @@ export class Aggregator {
                 .style('font-size', '18px')
                 .text(aggregatorInfo.name);
 
-            this.reCalculateAggregatorFontSize(aggregatorObject.node().getBoundingClientRect().width, block);
+            this.reCalculateAggregatorFontSize(aggregatorObject.node().getBoundingClientRect().width, block, pad);
         }
     }
 
-    private static updateText(block: Block, newAggregator: AggregatorInfo): void {
+    private static updateText(block: Block, newAggregator: AggregatorInfo, pad: number): void {
         const aggregatorObject = block.getSvg()
             .select<SVGForeignObjectElement>(`.${this.aggregatorObjectClass}`);
 
         const thisClass = this;
         block.getSvg()
             .select<HTMLDivElement>(`.${this.aggregatorValueClass}`)
+            .interrupt()
             .transition()
             .duration(block.transitionManager.durations.chartUpdate)
             .tween("text", function () {
@@ -79,24 +80,22 @@ export class Aggregator {
 
                 return t => {
                     this.textContent = ValueFormatter.formatField(newAggregator.format, (interpolateFunc(t)).toFixed(precision));
-                    thisClass.reCalculateAggregatorFontSize(aggregatorObject.node().getBoundingClientRect().width, block);
+                    thisClass.reCalculateAggregatorFontSize(aggregatorObject.node().getBoundingClientRect().width, block, pad);
                 }
             });
     }
 
-    private static reCalculateAggregatorFontSize(wrapperSize: number, block: Block): void {
+    private static reCalculateAggregatorFontSize(wrapperSize: number, block: Block, pad: number): void {
         const aggreggatorValue = block.getSvg()
             .select<HTMLDivElement>(`.${this.aggregatorValueClass}`);
 
         let fontSize = parseInt(aggreggatorValue.style('font-size'));
 
-        const pad = 40;
-
-        while (aggreggatorValue.node().getBoundingClientRect().width > wrapperSize - pad && fontSize > 15) {
+        while (aggreggatorValue.node().getBoundingClientRect().width > wrapperSize - pad * 2 && fontSize > 15) {
             aggreggatorValue.style('font-size', `${fontSize -= 2}px`);
         }
 
-        while (aggreggatorValue.node().getBoundingClientRect().width < wrapperSize - pad && fontSize < 60) {
+        while (aggreggatorValue.node().getBoundingClientRect().width < wrapperSize - pad * 2 && fontSize < 60) {
             aggreggatorValue.style('font-size', `${fontSize += 2}px`);
         }
     }

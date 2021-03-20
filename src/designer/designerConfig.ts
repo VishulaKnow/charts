@@ -57,6 +57,7 @@ export interface DonutOptionsCanvas {
     padAngle: number;
     minThickness: number;
     maxThickness: number;
+    aggregatorPad: number;
 }
 
 
