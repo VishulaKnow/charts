@@ -390,10 +390,6 @@ export default class Listeners {
             thisClass.designerConfig.canvas.chartOptions.bar.maxBarWidth = parseFloat(ListenersHelper.getInputValue('#max-bar-size')) || 0;
             thisClass.updateFull();
         });
-        document.querySelector('#min-donut-part-size').addEventListener('input', function () {
-            thisClass.designerConfig.canvas.chartOptions.donut.minPartSize = parseFloat(ListenersHelper.getInputValue('#min-donut-part-size')) || 0;
-            thisClass.updateFull();
-        });
         document.querySelector('#pad-angle').addEventListener('input', function () {
             thisClass.designerConfig.canvas.chartOptions.donut.padAngle = parseFloat(ListenersHelper.getInputValue('#pad-angle'));
             thisClass.updateFull();
@@ -611,7 +607,6 @@ export default class Listeners {
         ListenersHelper.setInputValue('#max-bar-size', designerConfig.canvas.chartOptions.bar.maxBarWidth);
         ListenersHelper.setInputValue('#base-color', designerConfig.chartStyle.baseColor);
         ListenersHelper.setInputValue('#color-step', designerConfig.chartStyle.step);
-        ListenersHelper.setInputValue('#min-donut-part-size', designerConfig.canvas.chartOptions.donut.minPartSize);
         ListenersHelper.setInputValue('#pad-angle', designerConfig.canvas.chartOptions.donut.padAngle);
         ListenersHelper.setInputValue('#donut-min-thickness', designerConfig.canvas.chartOptions.donut.minThickness);
         ListenersHelper.setInputValue('#donut-max-thickness', designerConfig.canvas.chartOptions.donut.maxThickness);
@@ -720,7 +715,7 @@ class DataUpdater {
         } else if (random < 0.33) {
             newData[this.dataSetName].splice(ListenersHelper.randInt(0, 4), ListenersHelper.randInt(1, 3));
         }
-        
+
         newData[this.dataSetName][ListenersHelper.randInt(0, newData[this.dataSetName].length - 1)]['price'] = ListenersHelper.randInt(0, 100);
         newData[this.dataSetName][ListenersHelper.randInt(0, newData[this.dataSetName].length - 1)]['count'] = ListenersHelper.randInt(0, 100);
     }

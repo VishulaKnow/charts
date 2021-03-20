@@ -54,7 +54,6 @@ export interface BarOptionsCanvas {
 }
 
 export interface DonutOptionsCanvas {
-    minPartSize: number;
     padAngle: number;
     minThickness: number;
     maxThickness: number;
