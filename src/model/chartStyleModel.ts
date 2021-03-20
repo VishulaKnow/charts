@@ -19,14 +19,13 @@ export class ChartStyleModel {
         const palette = chroma.scale(styleConfig.baseColors).mode('rgb').colors(ModelHelper.getSum(chartsFieldsAmounts));
 
         return {
-            elementColors: this.getColors(palette, fieldsAmount, startIndex),
+            elementColors: this.getColors(palette, fieldsAmount, startIndex, chartType),
             opacity: this.getChartOpacity(chartsAmount, chartType, chartsFieldsAmounts[chartIndex], isSegmented)
         }
     }
 
     public static getChartStyle(elementsAmount: number, styleConfig: ChartStyleConfig): ChartStyle {
         const palette = chroma.scale(styleConfig.baseColors).mode('rgb').colors(elementsAmount);
-        console.log(palette);
 
         return {
             elementColors: palette,
@@ -40,7 +39,14 @@ export class ChartStyleModel {
         return 1;
     }
 
-    private static getColors(palette: string[], elementsAmount: number, startIndex: number): string[] {
-        return palette.slice(startIndex, startIndex + elementsAmount);
+    private static getColors(palette: string[], elementsAmount: number, startIndex: number, chartType: TwoDimensionalChartType): string[] {
+        const selectedColors = palette.slice(startIndex, startIndex + elementsAmount);
+        if (chartType !== 'line')
+            return selectedColors;
+
+        for (let i = 0; i < selectedColors.length; i++) {
+            selectedColors[i] = chroma.mix(selectedColors[i], 'white', 0.2).saturate(3).hex();
+        }
+        return selectedColors;
     }
 }
