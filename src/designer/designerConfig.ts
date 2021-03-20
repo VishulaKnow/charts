@@ -71,6 +71,7 @@ interface DataFormat {
 export interface ChartStyleConfig {
     baseColor: string;
     step: number;
+    baseColors: string[];
 }
 
 
