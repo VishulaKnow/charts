@@ -6,6 +6,7 @@ import { Scale } from "../scale/scale";
 import { Block } from "../../block/block";
 import { ARROW_DEFAULT_POSITION, TooltipCoordinate, TooltipLineAttributes, TOOLTIP_ARROW_PADDING_X, TOOLTIP_ARROW_PADDING_Y } from "./tooltipDomHelper";
 import { Size } from "../../../config/config";
+
 export class TooltipHelper {
     private static CONVEXSIZE = 5
     public static getHorizontalPad(coordinateX: number, tooltipBlockWidth: number, blockSize: Size, translateX: number): number {
@@ -44,7 +45,7 @@ export class TooltipHelper {
         return coordinate;
     }
 
-    public static getTooltipFixedCoordinate(blockBoundingRect: DOMRect, scaleKey: AxisScale<any>, margin: BlockMargin, blockSize: Size, keyValue: string, tooltipBoundingRect: DOMRect, keyAxisOrient: Orient): TooltipCoordinate {
+    public static getTooltipFixedCoordinate(scaleKey: AxisScale<any>, margin: BlockMargin, keyValue: string, blockBoundingRect: DOMRect, tooltipBoundingRect: DOMRect, keyAxisOrient: Orient, winWidth: number): TooltipCoordinate {
         const coordinate: TooltipCoordinate = {
             top: null,
             bottom: null,
@@ -54,12 +55,12 @@ export class TooltipHelper {
         if (keyAxisOrient === 'bottom' || keyAxisOrient === 'top') {
             coordinate.top = margin.top - 5 - tooltipBoundingRect.height + 'px'
             coordinate.left = Scale.getScaledValue(scaleKey, keyValue) + margin.left - tooltipBoundingRect.width / 2 + 'px';
-        } 
+        }
         if (keyAxisOrient === 'left' || keyAxisOrient === 'right') {
             coordinate.top = Scale.getScaledValue(scaleKey, keyValue) + margin.top - tooltipBoundingRect.height / 2 + 'px';
         }
         // Пересчет относительно viewPort'а
-        return this.recalcToolTipCoordinateByViewPort(blockBoundingRect, tooltipBoundingRect, keyAxisOrient, coordinate);
+        return this.recalcToolTipCoordinateByViewPort(blockBoundingRect, tooltipBoundingRect, keyAxisOrient, coordinate, winWidth);
         // Пересчет относительно block'а
         // return TooltipHelper.recalcToolTipCoordinateByBlock( blockSize, tooltipBoundingRect, keyAxisOrient, coordinate);
     }
@@ -84,38 +85,38 @@ export class TooltipHelper {
         return attributes;
     }
 
-    public static recalcToolTipCoordinateByViewPort(blockBoundingRect: DOMRect,  tooltipBoundingRect: DOMRect, keyAxisOrient: Orient, coordinate: TooltipCoordinate): TooltipCoordinate {
-        const windowWidth: number = window.innerWidth; 
-        const tooltipWidth=  tooltipBoundingRect.width 
-        const blockPadLeft = blockBoundingRect.left 
-        const blockPadRight = blockBoundingRect.right - blockBoundingRect.width
-        const tooltipPositionAtBlock = Helper.getPXValueFromString(coordinate.left) 
-        const tooltipPositionAtWindow = blockPadLeft + tooltipPositionAtBlock 
-        const tooltipRight = tooltipPositionAtWindow + tooltipWidth 
-        if(keyAxisOrient === 'bottom' || keyAxisOrient === 'top'){
+    public static recalcToolTipCoordinateByViewPort(blockBoundingRect: DOMRect, tooltipBoundingRect: DOMRect, keyAxisOrient: Orient, coordinate: TooltipCoordinate, winWidth: number): TooltipCoordinate {
+        const tooltipWidth = tooltipBoundingRect.width;
+        const blockPadLeft = blockBoundingRect.left;
+        const blockPadRight = blockBoundingRect.right - blockBoundingRect.width;
+        const tooltipPositionAtBlock = Helper.getPXValueFromString(coordinate.left);
+        const tooltipRight = (blockPadLeft + tooltipPositionAtBlock) + tooltipWidth;
+
+        if (keyAxisOrient === 'bottom' || keyAxisOrient === 'top') {
             // проверка слева
             if (tooltipPositionAtBlock < 0 && -1 * tooltipPositionAtBlock > blockPadLeft)
-            coordinate.left = -blockPadLeft  + 'px';
+                coordinate.left = -blockPadLeft + 'px';
             // проверка справа
-            if (tooltipRight > windowWidth)
-                coordinate.left = windowWidth - blockPadLeft - tooltipWidth + 'px';
+            if (tooltipRight > winWidth)
+                coordinate.left = winWidth - blockPadLeft - tooltipWidth + 'px';
         }
-        if(keyAxisOrient === 'right'){ // если ось ключей справа, то тултип слева
-            if(tooltipWidth - this.CONVEXSIZE * 2> blockPadLeft) // Если ширина тултипа - свдиг влево для сопряжения > Расстояния от левого края блока до левого края видимой области 
-            coordinate.left = -blockPadLeft  + 'px'; // позиция от края видимой области слева
+        if (keyAxisOrient === 'right') { // если ось ключей справа, то тултип слева
+            if (tooltipWidth - this.CONVEXSIZE * 2 > blockPadLeft) // Если ширина тултипа - свдиг влево для сопряжения > Расстояния от левого края блока до левого края видимой области 
+                coordinate.left = -blockPadLeft + 'px'; // позиция от края видимой области слева
             else
-            coordinate.left = -tooltipWidth + this.CONVEXSIZE * 3 + 'px'; // позиция сопряженная с линией тултипа
+                coordinate.left = -tooltipWidth + this.CONVEXSIZE * 3 + 'px'; // позиция сопряженная с линией тултипа
         }
-        if(keyAxisOrient === 'left'){ // если ось ключей слева, то тултип справа
-            if(tooltipWidth - this.CONVEXSIZE * 2> blockPadRight) // Если ширина тултипа - свдиг влево для сопряжения > Расстояния от правого края блока до правого края видимой области 
-            coordinate.right = -blockPadLeft  + 'px'; // позиция от края видимой области справа
+        if (keyAxisOrient === 'left') { // если ось ключей слева, то тултип справа
+            if (tooltipWidth - this.CONVEXSIZE * 2 > blockPadRight) // Если ширина тултипа - свдиг влево для сопряжения > Расстояния от правого края блока до правого края видимой области 
+                coordinate.right = -blockPadLeft + 'px'; // позиция от края видимой области справа
             else
-            coordinate.right = -tooltipWidth + this.CONVEXSIZE * 3 + 'px'; // позиция сопряженная с линией тултипа 
-        }             
+                coordinate.right = -tooltipWidth + this.CONVEXSIZE * 3 + 'px'; // позиция сопряженная с линией тултипа 
+        }
+
         return coordinate;
     }
-    
-    private static recalcToolTipCoordinateByBlock( blockSize: Size, tooltipBoundingRect: DOMRect, keyAxisOrient: Orient, coordinate: TooltipCoordinate): TooltipCoordinate {
+
+    private static recalcToolTipCoordinateByBlock(blockSize: Size, tooltipBoundingRect: DOMRect, keyAxisOrient: Orient, coordinate: TooltipCoordinate): TooltipCoordinate {
         if (keyAxisOrient === 'bottom' || keyAxisOrient === 'top') {
             if (Helper.getPXValueFromString(coordinate.left) < 0)
                 coordinate.left = 0 + 'px';
@@ -142,7 +143,7 @@ export class TooltipHelper {
             }
         }
 
-    return coordinate;
+        return coordinate;
     }
 
 }
