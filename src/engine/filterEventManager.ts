@@ -39,9 +39,9 @@ export class FilterEventManager {
     public eventPolarUpdate(margin: BlockMargin, blockSize: Size, options: PolarOptionsModel, donutSettings: DonutChartSettings): void {
         //TODO: разрешить
         this.registerEventToDonut(margin, blockSize, options, donutSettings);
-        const elem = Donut.getAllArcGroups(this.block).filter(d => this.selectedIds.includes(d.data.$id));
+        const selectedElems = Donut.getAllArcGroups(this.block).filter(d => this.selectedIds.findIndex(sid => sid === d.data.$id) !== -1);
         this.selectedIds = [];
-        elem.dispatch('click');
+        selectedElems.dispatch('click');
     }
 
     public event2DUpdate(options: TwoDimensionalOptionsModel): void {
