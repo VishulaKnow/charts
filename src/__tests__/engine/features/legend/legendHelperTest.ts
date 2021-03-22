@@ -1,4 +1,3 @@
-import { Color } from "d3-color";
 import designerConfig from "../../../../designer/designerConfigExample";
 import { LegendHelper } from "../../../../engine/features/legend/legendHelper";
 import { Model } from "../../../../model/model";

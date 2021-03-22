@@ -2,7 +2,7 @@ import { DataSource, Model } from "../model/model";
 import { TwoDimensionalManager } from "./twoDimensionalNotation/twoDimensionalManager";
 import { PolarManager } from "./polarNotation/polarManager";
 import { IntervalManager } from "./intervalNotation/intervalManager";
-import { Engine } from "../main";
+import Engine from "./engine";
 import { Block } from "./block/block";
 
 export class ContentManager {

@@ -1,6 +1,5 @@
-import { Color } from "d3-color";
 import { ChartOrientation, IntervalChartType, PolarChartType, Size, TwoDimensionalChartType } from "../config/config";
-import { DataType, Formatter, Transitions } from "../designer/designerConfig";
+import { DataType, DonutOptionsCanvas, Formatter, Transitions } from "../designer/designerConfig";
 
 type AxisType = 'key' | 'value';
 

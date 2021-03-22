@@ -1,6 +1,6 @@
 import { stack } from 'd3-shape';
 import { select, Selection } from 'd3-selection'
-import { BlockMargin, DataRow, Field, Orient, Size, TwoDimensionalChartModel } from "../../../model/model";
+import { BlockMargin, DataRow, Field, Orient, TwoDimensionalChartModel } from "../../../model/model";
 import { Scales } from "../../features/scale/scale";
 import { Block } from "../../block/block";
 import { MarkDot } from "../../features/markDots/markDot";

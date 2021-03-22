@@ -1,7 +1,7 @@
 import configCars from "../../config/configExample";
 import designerConfig from "../../designer/designerConfigExample";
 import { Helper } from "../../engine/helpers/helper";
-import { TwoDimensionalOptionsModel } from "../../model/model";
+import { DataRow, TwoDimensionalOptionsModel } from "../../model/model";
 import { assembleModel } from "../../model/modelBuilder";
 
 describe('getTranslateNumbers', () => {
