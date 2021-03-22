@@ -77,7 +77,7 @@ export class TwoDimensionalManager {
 
         Axis.update(block, scales, options.scale, options.axis, model.blockCanvas.size, keyDomainEquality);
 
-        GridLine.rerender(block,
+        GridLine.update(block,
             options.additionalElements.gridLine.flag,
             options.axis.keyAxis,
             options.axis.valueAxis,
