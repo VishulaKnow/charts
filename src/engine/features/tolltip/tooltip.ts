@@ -1,4 +1,4 @@
-import { select, Selection, pointer, BaseType } from 'd3-selection';
+import { select, Selection, pointer } from 'd3-selection';
 import { PieArcDatum } from 'd3-shape'
 import { BlockMargin, DataRow, DataSource, IntervalChartModel, Model, OptionsModelData, Orient, PolarChartModel, ScaleKeyModel, TwoDimensionalChartModel } from "../../../model/model";
 import { Block } from "../../block/block";
@@ -14,7 +14,6 @@ import { TipBox } from '../tipBox/tipBox';
 import { TipBoxHelper } from '../tipBox/tipBoxHelper';
 import { Helper } from '../../helpers/helper';
 import { TooltipHelper } from './tooltipHelper';
-import { easeLinear } from 'd3-ease';
 
 export class Tooltip {
     public static tooltipBlockClass = 'tooltip-block';
@@ -107,33 +106,31 @@ export class Tooltip {
         ElementHighlighter.renderShadowFilter(block);
 
         elements
-            .on('mouseover', function (_event, dataRow) {
+            .on('mouseover', function (_event, dataRow: PieArcDatum<DataRow>) {
+                
                 TooltipComponentsManager.showTooltipBlock(tooltipBlock);
                 TooltipDomHelper.fillTooltipForPolarChart(tooltipContent, chart, data, dataOptions, dataRow.data[dataOptions.keyField.name], select(this).select('path').style('fill'))
 
                 const coordinatePointer = TooltipDomHelper.getRecalcedCoordinateByArrow(DonutHelper.getArcCentroid(blockSize, margin, dataRow, donutThickness), tooltipBlock, blockSize, tooltipArrow, translateX, translateY);
                 const tooltipCoordinate = TooltipHelper.getCoordinateByPointer(coordinatePointer);
                 TooltipComponentsManager.setTooltipBlockCoordinate(tooltipBlock, tooltipCoordinate);
-                let clone =  block.getSvg()
-                .selectAll(`.${Donut.arcItemClass}-clone`).filter(d => d === dataRow) as Selection<SVGGElement, PieArcDatum<DataRow>, SVGGElement, unknown>;                            
+                let clone =  Donut.getAllArcClones(block)
+                .filter((d: PieArcDatum<DataRow>) => d.data[dataOptions.keyField.name] === dataRow.data[dataOptions.keyField.name]) as Selection<SVGGElement, PieArcDatum<DataRow>, SVGGElement, unknown>;
                 if(clone.nodes().length === 0){
-                    clone = select(this).clone(true).lower().style('pointer-events', `none`).classed(`${Donut.arcItemClass}`, false).classed(`${Donut.arcItemClass}-clone`,true) as Selection<SVGGElement, PieArcDatum<DataRow>, SVGGElement, unknown>;    
+                    clone = ElementHighlighter.makeArcClone(block, select<SVGGElement, PieArcDatum<DataRow>>(this))
+                    ElementHighlighter.setFilter(clone, block);      
+                    ElementHighlighter.changeDonutHighlightAppearance(select<SVGGElement, PieArcDatum<DataRow>>(this), margin, blockSize, donutThickness, block.transitionManager.durations.donutHover, true);
                 }
-                ElementHighlighter.setFilter(clone, block);   
-                // ElementHighlighter.setFilter(select(this), block);          
-                ElementHighlighter.changeDonutHighlightAppearance(select<SVGGElement, PieArcDatum<DataRow>>(this), margin, blockSize, donutThickness, block.transitionManager.durations.donutHover, true);
-           
-                
             });
         
-        elements.on('mouseleave', function (_event, dataRow) {
+        elements.on('mouseleave', function (_event, dataRow: PieArcDatum<DataRow>) {
             TooltipComponentsManager.hideTooltipBlock(tooltipBlock);
             if (!block.filterEventManager.isSelected(dataRow.data[dataOptions.keyField.name], dataOptions.keyField.name)) {
-                let clone =  block.getSvg()
-                    .selectAll(`.${Donut.arcItemClass}-clone`).filter(d => d === dataRow) as Selection<SVGGElement, PieArcDatum<DataRow>, SVGGElement, unknown>;
-                clone.remove()
-                // ElementHighlighter.removeFilter(select(this))
+                let clone =  Donut.getAllArcClones(block)
+                    .filter((d: PieArcDatum<DataRow>) => d.data[dataOptions.keyField.name] === dataRow.data[dataOptions.keyField.name]) as Selection<SVGGElement, PieArcDatum<DataRow>, SVGGElement, unknown>;
+                    clone.remove()
                 ElementHighlighter.changeDonutHighlightAppearance(select<SVGGElement, PieArcDatum<DataRow>>(this), margin, blockSize, donutThickness, block.transitionManager.durations.donutHover, false);
+
             }
         });
     }

@@ -38,7 +38,10 @@ export class SelectHighlighter {
                 ElementHighlighter.changeDonutHighlightAppearance(select(segment), margin, blockSize, donutThickness, block.transitionManager.durations.donutHover, false);
             } else {
                 ElementHighlighter.removeDonutHighlightingByKeys(arcItems, options.data.keyField.name, selectedKeys, margin, blockSize, donutThickness);
+                ElementHighlighter.removeDonutArcClones(block);
+                ElementHighlighter.setFilter(ElementHighlighter.makeArcClone(block, select(segment)), block); 
                 ElementHighlighter.changeDonutHighlightAppearance(select(segment), margin, blockSize, donutThickness, block.transitionManager.durations.donutHover, true);
+
             }
         }
     }
