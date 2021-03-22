@@ -12,11 +12,10 @@ export class ChartStyleModel {
 
     public static get2DChartStyle(chartsAmount: number, chartType: TwoDimensionalChartType, chartsFieldsAmounts: number[], chartIndex: number, isSegmented: boolean, styleConfig: ChartStyleConfig): ChartStyle {
         const startIndex = this.getStartIndex(chartIndex, chartsFieldsAmounts);
-        const fieldsAmount = chartsFieldsAmounts[chartIndex];
         const palette = chroma.scale(styleConfig.baseColors).mode('rgb').colors(ModelHelper.getSum(chartsFieldsAmounts) <= 1 ? 2 : ModelHelper.getSum(chartsFieldsAmounts));
 
         return {
-            elementColors: this.getColors(palette, fieldsAmount, startIndex, chartType),
+            elementColors: this.getColors(palette, chartsFieldsAmounts[chartIndex], startIndex, chartType),
             opacity: this.getChartOpacity(chartsAmount, chartType, chartsFieldsAmounts[chartIndex], isSegmented)
         }
     }
