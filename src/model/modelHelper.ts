@@ -1,8 +1,11 @@
 import { IntervalChart } from "../config/config";
 import { DataSource } from "./model";
 
-export class ModelHelper
-{
+export class ModelHelper {
+    public static getSum(items: number[]): number {
+        return items.reduce((acc, item) => acc + item, 0);
+    }
+
     public static getMinAndMaxOfIntervalData(data: DataSource, dataSource: string, charts: IntervalChart[]): [Date, Date] {
         let min = data[dataSource][0][charts[0].data.valueField1.name];
         let max = data[dataSource][0][charts[0].data.valueField1.name];
@@ -12,14 +15,14 @@ export class ModelHelper
             const valueField1 = chart.data.valueField1.name;
             const valueField2 = chart.data.valueField2.name;
             chartData.forEach(dataRow => {
-                if(dataRow[valueField1] > max)
+                if (dataRow[valueField1] > max)
                     max = dataRow[valueField1];
-                if(dataRow[valueField1] < min)
+                if (dataRow[valueField1] < min)
                     min = dataRow[valueField1];
 
-                if(dataRow[valueField2] > max)
+                if (dataRow[valueField2] > max)
                     max = dataRow[valueField2];
-                if(dataRow[valueField2] < min)
+                if (dataRow[valueField2] < min)
                     min = dataRow[valueField2];
             });
         });
@@ -29,7 +32,7 @@ export class ModelHelper
 
     public static getUniqueValues(values: string[]): string[] {
         const uniqueValues = values.filter((keyValue, index, self) => self.indexOf(keyValue) === index);
-       
+
         return uniqueValues;
     }
 
@@ -43,9 +46,9 @@ export class ModelHelper
 
         let score = 0;
         const upperLetterScore = 1;
-        const lowerLetterScore = 0.74; 
-        for(let i = 0; i < word.length; i++) {
-            if(word[i].toUpperCase() === word[i] && parseFloat(word[i]).toString() !== word[i])
+        const lowerLetterScore = 0.74;
+        for (let i = 0; i < word.length; i++) {
+            if (word[i].toUpperCase() === word[i] && parseFloat(word[i]).toString() !== word[i])
                 score += upperLetterScore;
             else
                 score += lowerLetterScore;

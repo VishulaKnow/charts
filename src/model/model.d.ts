@@ -1,6 +1,5 @@
-import { Color } from "d3-color";
 import { ChartOrientation, IntervalChartType, PolarChartType, TwoDimensionalChartType } from "../config/config";
-import { DataType, Formatter, Transitions } from "../designer/designerConfig";
+import { DataType, DonutOptionsCanvas, Formatter, Transitions } from "../designer/designerConfig";
 
 type AxisType = 'key' | 'value';
 
@@ -164,7 +163,7 @@ interface TooltipModel {
     show: boolean;
 }
 export interface ChartStyle {
-    elementColors: Color[];
+    elementColors: string[];
     opacity: number;
 }
 
@@ -238,11 +237,7 @@ export interface BarChartSettings {
     maxBarWidth: number;
     minBarWidth: number;
 }
-export interface DonutChartSettings {
-    maxThickness: number;
-    minThickness: number;
-    padAngle: number;
-}
+export interface DonutChartSettings extends DonutOptionsCanvas { }
 
 
 //====================================================== OtherComponents

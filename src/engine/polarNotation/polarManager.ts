@@ -66,7 +66,7 @@ export class PolarManager {
                 block.filterEventManager.registerEventToDonut(model.chartBlock.margin, model.blockCanvas.size, options, model.chartSettings.donut);
             });
 
-        Aggregator.update(block, data[options.data.dataSource], options.charts[0].data.valueField);
+        Aggregator.update(block, data[options.data.dataSource], options.charts[0].data.valueField, model.chartSettings.donut.aggregatorPad);
 
         Legend.update(block, data, model.options);
 

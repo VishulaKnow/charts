@@ -8,82 +8,41 @@ const configCars: Config = {
             height: 510
         }
     },
-    options: {
-        type: '2d',
-        title: 'График по 14 показателям в 4 разрезах, название длинное в одну строчку, если не влезает, то скрываем все в 3 точки',
-        axis: {
-            keyAxis: {
-                visibility: true,
-                position: 'end',
-                ticks: {
-                    flag: false
-                }
-            },
-            valueAxis: {
-                visibility: true,
-                domain: {
-                    start: -1,
-                    end: -1
-                },
-                position: 'start',
-                ticks: {
-                    flag: false
-                }
-            }
-        },
-        additionalElements: {
-            gridLine: {
-                flag: {
-                    value: true,
-                    key: true
-                }
-            }
-        },
-        legend: {
-            show: true
-        },
-        orientation: 'vertical',
-        data: {
-            dataSource: 'dataSet',
-            keyField: {
-                name: 'brand',
-                format: 'string'
-            }
-        },
-        charts: [
-            {
-                isSegmented: false,
-                type: 'bar',
-                data: {
-                    valueFields: [
-                        {
-                            name: 'price',
-                            format: 'money',
-                            title: 'Количество автомобилей'
-                        },
-                        {
-                            name: 'count',
-                            format: 'money',
-                            title: 'Количество автомобилей'
-                        }
-                    ]
-                },
-                tooltip: {
-                    show: true
-                },
-                embeddedLabels: 'value',
-                markers: {
-                    show: true
-                }
-            }
-        ]
-    }
     // options: {
-    //     type: 'polar',
-    //     title: 'some title',
+    //     type: '2d',
+    //     title: 'График по 14 показателям в 4 разрезах, название длинное в одну строчку, если не влезает, то скрываем все в 3 точки',
+    //     axis: {
+    //         keyAxis: {
+    //             visibility: true,
+    //             position: 'end',
+    //             ticks: {
+    //                 flag: false
+    //             }
+    //         },
+    //         valueAxis: {
+    //             visibility: true,
+    //             domain: {
+    //                 start: -1,
+    //                 end: -1
+    //             },
+    //             position: 'start',
+    //             ticks: {
+    //                 flag: false
+    //             }
+    //         }
+    //     },
+    //     additionalElements: {
+    //         gridLine: {
+    //             flag: {
+    //                 value: true,
+    //                 key: true
+    //             }
+    //         }
+    //     },
     //     legend: {
     //         show: true
     //     },
+    //     orientation: 'vertical',
     //     data: {
     //         dataSource: 'dataSet',
     //         keyField: {
@@ -93,20 +52,61 @@ const configCars: Config = {
     //     },
     //     charts: [
     //         {
-    //             type: 'donut',
+    //             isSegmented: false,
+    //             type: 'bar',
     //             data: {
-    //                 valueField: {
-    //                     name: 'price',
-    //                     format: 'money',
-    //                     title: 'some title'
-    //                 }
+    //                 valueFields: [
+    //                     {
+    //                         name: 'price',
+    //                         format: 'money',
+    //                         title: 'Количество автомобилей'
+    //                     },
+    //                     {
+    //                         name: 'count',
+    //                         format: 'money',
+    //                         title: 'Количество автомобилей'
+    //                     }
+    //                 ]
     //             },
     //             tooltip: {
+    //                 show: true
+    //             },
+    //             embeddedLabels: 'value',
+    //             markers: {
     //                 show: true
     //             }
     //         }
     //     ]
     // }
+    options: {
+        type: 'polar',
+        title: 'some title',
+        legend: {
+            show: true
+        },
+        data: {
+            dataSource: 'dataSet',
+            keyField: {
+                name: 'brand',
+                format: 'string'
+            }
+        },
+        charts: [
+            {
+                type: 'donut',
+                data: {
+                    valueField: {
+                        name: 'price',
+                        format: 'money',
+                        title: 'some title'
+                    }
+                },
+                tooltip: {
+                    show: true
+                }
+            }
+        ]
+    }
 }
 
 const configDemo: Config = {

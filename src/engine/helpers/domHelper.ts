@@ -1,4 +1,4 @@
-import { Color } from "d3-color";
+
 import { Selection, BaseType } from 'd3-selection'
 import { ChartStyle, DataRow, TwoDimensionalChartModel } from "../../model/model";
 import { Block } from "../block/block";
@@ -38,8 +38,8 @@ export class DomHelper {
         this.setChartOpacity(elements, chartStyle.opacity);
     }
 
-    public static setChartElementColor(elements: Selection<BaseType, unknown, BaseType, unknown>, colorPalette: Color[], fieldIndex: number, styleType: StyleColorType): void {
-        elements.style(styleType, colorPalette[fieldIndex % colorPalette.length].toString());
+    public static setChartElementColor(elements: Selection<BaseType, unknown, BaseType, unknown>, colorPalette: string[], fieldIndex: number, styleType: StyleColorType): void {
+        elements.style(styleType, colorPalette[fieldIndex % colorPalette.length]);
     }
 
     public static cropSvgLabels(labelBlocks: Selection<SVGGraphicsElement, unknown, BaseType, unknown>, maxWidth: number): void {

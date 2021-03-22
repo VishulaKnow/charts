@@ -31,7 +31,7 @@ class ListenersHelper {
         return newArr;
     }
     static getInputValue(selector: string): string {
-        return (document.querySelector(selector) as HTMLInputElement).value;
+        return (document.querySelector(selector) as HTMLInputElement)?.value;
     }
     static setInputValue(selector: string, value: any): void {
         (document.querySelector(selector) as HTMLInputElement).value = value.toString();
@@ -390,10 +390,6 @@ export default class Listeners {
             thisClass.designerConfig.canvas.chartOptions.bar.maxBarWidth = parseFloat(ListenersHelper.getInputValue('#max-bar-size')) || 0;
             thisClass.updateFull();
         });
-        document.querySelector('#min-donut-part-size').addEventListener('input', function () {
-            thisClass.designerConfig.canvas.chartOptions.donut.minPartSize = parseFloat(ListenersHelper.getInputValue('#min-donut-part-size')) || 0;
-            thisClass.updateFull();
-        });
         document.querySelector('#pad-angle').addEventListener('input', function () {
             thisClass.designerConfig.canvas.chartOptions.donut.padAngle = parseFloat(ListenersHelper.getInputValue('#pad-angle'));
             thisClass.updateFull();
@@ -406,16 +402,20 @@ export default class Listeners {
             thisClass.designerConfig.canvas.chartOptions.donut.maxThickness = parseFloat(ListenersHelper.getInputValue('#donut-max-thickness'));
             thisClass.updateFull();
         });
-        document.querySelector('#base-color').addEventListener('keydown', function (e: any) {
-            if (e.code === 'Enter') {
-                thisClass.designerConfig.chartStyle.baseColor = this.value;
-                thisClass.updateFull();
-            }
-        });
-        document.querySelector('#color-step').addEventListener('input', function () {
-            thisClass.designerConfig.chartStyle.step = parseFloat(this.value);
+        document.querySelector('#aggregator-pad').addEventListener('input', function () {
+            thisClass.designerConfig.canvas.chartOptions.donut.aggregatorPad = parseFloat(this.value);
             thisClass.updateFull();
         });
+        document.querySelector('#base-colors').addEventListener('keydown', function (e: any) {
+            if (e.code === 'Enter') {
+                thisClass.designerConfig.chartStyle.baseColors = (this.value as string).split(', ');
+                thisClass.updateFull();
+            }
+        }); //TODO: подправить
+        // document.querySelector('#color-step').addEventListener('input', function () {
+        //     thisClass.designerConfig.chartStyle.step = parseFloat(this.value);
+        //     thisClass.updateFull();
+        // });
     }
 
     private setCommonListeners(): void {
@@ -609,11 +609,12 @@ export default class Listeners {
         ListenersHelper.setInputValue('#bar-distance', designerConfig.canvas.chartOptions.bar.barDistance);
         ListenersHelper.setInputValue('#min-bar-size', designerConfig.canvas.chartOptions.bar.minBarWidth);
         ListenersHelper.setInputValue('#max-bar-size', designerConfig.canvas.chartOptions.bar.maxBarWidth);
-        ListenersHelper.setInputValue('#base-color', designerConfig.chartStyle.baseColor);
-        ListenersHelper.setInputValue('#color-step', designerConfig.chartStyle.step);
-        ListenersHelper.setInputValue('#min-donut-part-size', designerConfig.canvas.chartOptions.donut.minPartSize);
+        ListenersHelper.setInputValue('#base-colors', designerConfig.chartStyle.baseColors.join(', '));
+        //TODO: подправить
+        // ListenersHelper.setInputValue('#color-step', designerConfig.chartStyle.step);
         ListenersHelper.setInputValue('#pad-angle', designerConfig.canvas.chartOptions.donut.padAngle);
-        ListenersHelper.setInputValue('#donut-min-thickness', designerConfig.canvas.chartOptions.donut.minThickness);
+        ListenersHelper.setInputValue('#pad-angle', designerConfig.canvas.chartOptions.donut.padAngle);
+        ListenersHelper.setInputValue('#aggregator-pad', designerConfig.canvas.chartOptions.donut.aggregatorPad);
         ListenersHelper.setInputValue('#donut-max-thickness', designerConfig.canvas.chartOptions.donut.maxThickness);
 
         if (config.options.type === '2d') {
@@ -720,7 +721,7 @@ class DataUpdater {
         } else if (random < 0.33) {
             newData[this.dataSetName].splice(ListenersHelper.randInt(0, 4), ListenersHelper.randInt(1, 3));
         }
-        
+
         newData[this.dataSetName][ListenersHelper.randInt(0, newData[this.dataSetName].length - 1)]['price'] = ListenersHelper.randInt(0, 100);
         newData[this.dataSetName][ListenersHelper.randInt(0, newData[this.dataSetName].length - 1)]['count'] = ListenersHelper.randInt(0, 100);
     }

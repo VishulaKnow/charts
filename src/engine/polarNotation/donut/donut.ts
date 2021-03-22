@@ -1,5 +1,5 @@
 import { Arc, Pie, PieArcDatum } from 'd3-shape'
-import { Color } from "d3-color";
+
 import { Selection, BaseType } from 'd3-selection'
 import { interpolate } from 'd3-interpolate'
 import { BlockMargin, DataRow, DonutChartSettings, PolarChartModel, Size } from "../../../model/model";
@@ -19,13 +19,13 @@ export class Donut {
 
     private static arcItemClass = 'arc';
 
-    public static render(block: Block, data: DataRow[], margin: BlockMargin, chart: PolarChartModel, blockSize: Size, donutSettings: DonutChartSettings): void {
+    public static render(block: Block, data: DataRow[], margin: BlockMargin, chart: PolarChartModel, blockSize: Size, settings: DonutChartSettings): void {
         const outerRadius = DonutHelper.getOuterRadius(margin, blockSize);
-        const thickness = DonutHelper.getThickness(donutSettings, blockSize, margin);
+        const thickness = DonutHelper.getThickness(settings, blockSize, margin);
         const innerRadius = DonutHelper.getInnerRadius(outerRadius, thickness);
 
         const arcGenerator = DonutHelper.getArcGenerator(outerRadius, innerRadius);
-        const pieGenerator = DonutHelper.getPieGenerator(chart.data.valueField.name, donutSettings.padAngle);
+        const pieGenerator = DonutHelper.getPieGenerator(chart.data.valueField.name, settings.padAngle);
 
         const translateAttribute = DonutHelper.getTranslate(margin, blockSize);
 
@@ -38,7 +38,7 @@ export class Donut {
 
         this.renderNewArcItems(arcGenerator, pieGenerator, donutBlock, data, chart);
 
-        Aggregator.render(block, data, chart.data.valueField, innerRadius, translateAttribute, thickness);
+        Aggregator.render(block, data, chart.data.valueField, innerRadius, translateAttribute, thickness, settings.aggregatorPad);
     }
 
     public static updateValues(block: Block, data: DataRow[], margin: BlockMargin, chart: PolarChartModel, blockSize: Size, donutSettings: DonutChartSettings, keyField: string): Promise<any> {
@@ -111,9 +111,9 @@ export class Donut {
         this.setElementsColor(items, chart.style.elementColors);
     }
 
-    private static setElementsColor(arcItems: Selection<SVGGElement, unknown, BaseType, unknown>, colorPalette: Color[]): void {
+    private static setElementsColor(arcItems: Selection<SVGGElement, unknown, BaseType, unknown>, colorPalette: string[]): void {
         arcItems
             .select('path')
-            .style('fill', (d, i) => colorPalette[i % colorPalette.length].toString());
+            .style('fill', (d, i) => colorPalette[i % colorPalette.length]);
     }
 }
