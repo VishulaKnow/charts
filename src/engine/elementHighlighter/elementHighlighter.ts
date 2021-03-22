@@ -31,7 +31,7 @@ export class ElementHighlighter {
                 .attr('dx', 0)
                 .attr('dy', 0)
                 .attr('flood-color', 'rgba(0, 0, 0, 0.5)')
-                .attr('stdDeviation', 6);
+                .attr('stdDeviation', 20);
 
         return filter;
     }

@@ -18,7 +18,7 @@ export class Donut {
     public static donutBlockClass = 'donut-block';
     public static arcPathClass = 'arc-path';
 
-    private static arcItemClass = 'arc';
+    public static arcItemClass = 'arc';
 
     public static render(block: Block, data: DataRow[], margin: BlockMargin, chart: PolarChartModel, blockSize: Size, settings: DonutChartSettings): void {
         const outerRadius = DonutHelper.getOuterRadius(margin, blockSize);
