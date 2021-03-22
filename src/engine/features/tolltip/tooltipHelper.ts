@@ -3,12 +3,11 @@ import { ChartOrientation } from "../../../config/config";
 import { BlockMargin, Orient } from "../../../model/model";
 import { Helper } from "../../helpers/helper";
 import { Scale } from "../scale/scale";
-import { Block } from "../../block/block";
 import { ARROW_DEFAULT_POSITION, TooltipCoordinate, TooltipLineAttributes, TOOLTIP_ARROW_PADDING_X, TOOLTIP_ARROW_PADDING_Y } from "./tooltipDomHelper";
 import { Size } from "../../../config/config";
 
 export class TooltipHelper {
-    private static CONVEXSIZE = 5
+    private static CONVEXSIZE = 5;
     public static getHorizontalPad(coordinateX: number, tooltipBlockWidth: number, blockSize: Size, translateX: number): number {
         let pad = 0;
         if (tooltipBlockWidth + coordinateX - TOOLTIP_ARROW_PADDING_X + translateX > blockSize.width)
@@ -99,7 +98,7 @@ export class TooltipHelper {
             if (tooltipRight > winWidth)
                 coordinate.left = winWidth - blockPadLeft - tooltipWidth + 'px';
 
-            if(keyAxisOrient === 'top') {
+            if (keyAxisOrient === 'top') {
                 coordinate.bottom = '0px';
                 coordinate.top = null;
             }
@@ -111,9 +110,9 @@ export class TooltipHelper {
                 coordinate.left = -tooltipWidth + this.CONVEXSIZE * 3 + 'px'; // позиция сопряженная с линией тултипа
         }
         if (keyAxisOrient === 'left') { // если ось ключей слева, то тултип справа
-            const blockPadRight = blockBoundingRect.right - blockBoundingRect.width;
+            const blockPadRight = winWidth - blockBoundingRect.right;
             if (tooltipWidth - this.CONVEXSIZE * 2 > blockPadRight) // Если ширина тултипа - свдиг влево для сопряжения > Расстояния от правого края блока до правого края видимой области 
-                coordinate.right = -blockPadLeft + 'px'; // позиция от края видимой области справа
+                coordinate.right = -blockPadRight + 'px'; // позиция от края видимой области справа
             else
                 coordinate.right = -tooltipWidth + this.CONVEXSIZE * 3 + 'px'; // позиция сопряженная с линией тултипа 
         }

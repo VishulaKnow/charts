@@ -59,7 +59,7 @@ const configCars: Config = {
                         {
                             name: 'price',
                             format: 'money',
-                            title: 'Количество автомобилей'
+                            title: 'Количество'
                         }
                     ]
                 },
