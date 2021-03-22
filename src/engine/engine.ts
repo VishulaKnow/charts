@@ -2,20 +2,26 @@ import { Block } from './block/block';
 import { ValueFormatter } from './valueFormatter';
 import { ContentManager } from './contentManager';
 import { DataSource, Model } from '../model/model';
+import { FilterCallback, FilterEventManager } from './filterEventManager';
 
 export default class Engine {
     public block: Block;
+    public filterEventManager: FilterEventManager;
     public data: DataSource;
     private chartId: number;
 
-    constructor(id: number) {
+    constructor(id: number, private filterCallback: FilterCallback) {
         this.chartId = id;
     }
 
     public render(model: Model, data: DataSource, parentElement: HTMLElement): void {
-        this.block = new Block(model.blockCanvas.cssClass, parentElement, this.chartId, model.transitions);
-        this.block.renderWrapper(model.blockCanvas.size);
         this.data = data;
+
+        this.filterEventManager = new FilterEventManager(this.filterCallback, this.data[model.options.data.dataSource]);
+        this.block = new Block(model.blockCanvas.cssClass, parentElement, this.chartId, this.filterEventManager, model.transitions);
+        this.filterEventManager.setBlock(this.block);
+        this.block.renderWrapper(model.blockCanvas.size);
+        
 
         if (model.options) {
             ValueFormatter.setFormatFunction(model.dataSettings.format.formatters);

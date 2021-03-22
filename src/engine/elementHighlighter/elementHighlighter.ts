@@ -45,8 +45,6 @@ export class ElementHighlighter {
     }
 
     public static changeDonutHighlightAppearance(segment: Selection<SVGGElement, PieArcDatum<DataRow>, BaseType, unknown>, margin: BlockMargin, blockSize: Size, donutThickness: number, transitionDuration: number, on: boolean): void {
-        interrupt(segment.node());
-
         let scaleSize = 0;
         if (on)
             scaleSize = 5; // Если нужно выделить сегмент, то scaleSize не равен нулю и отображается увеличенным
@@ -89,7 +87,7 @@ export class ElementHighlighter {
         charts.forEach(chart => {
             const elems = DomHelper.get2DChartElements(block, chart);
 
-            const selectedElems = DomHelper.getChartElementsByKeys(elems, chart.isSegmented, keyFieldName, block.filterEventManager.getSelectedKeys(), SelectionCondition.Exclude);
+            const selectedElems = DomHelper.getChartElementsByKeys(elems, chart.isSegmented, keyFieldName, block.filterEventManager.getSelectedKeys(keyFieldName), SelectionCondition.Exclude);
 
             if (chart.type === 'area' || chart.type === 'line') {
                 selectedElems.call(this.scaleElement, false, transitionDuration);

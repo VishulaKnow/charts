@@ -1,4 +1,4 @@
-import { Color } from "d3-color";
+
 import { stack } from 'd3-shape';
 import { select, Selection, BaseType } from 'd3-selection';
 import { BarChartSettings, BlockMargin, DataRow, Field, Orient, TwoDimensionalChartModel } from "../../../model/model";
@@ -250,7 +250,7 @@ export class Bar {
         return barsHander;
     }
 
-    private static setSegmentColor(segments: Selection<SVGGElement, any, BaseType, unknown>, colorPalette: Color[], segmentedIndex: number): void {
-        segments.style('fill', colorPalette[segmentedIndex % colorPalette.length].toString());
+    private static setSegmentColor(segments: Selection<SVGGElement, any, BaseType, unknown>, colorPalette: string[], segmentedIndex: number): void {
+        segments.style('fill', colorPalette[segmentedIndex % colorPalette.length]);
     }
 }

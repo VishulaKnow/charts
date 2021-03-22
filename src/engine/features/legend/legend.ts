@@ -1,4 +1,4 @@
-import { Color } from "d3-color";
+
 import { select, Selection } from "d3-selection";
 import { Size } from "../../../config/config";
 import { LegendItemsDirection } from "../../../model/featuresModel/legendModel/legendCanvasModel";
@@ -49,7 +49,7 @@ export class Legend {
         return legendObject;
     }
 
-    public static renderLegendContent(legendObject: Selection<SVGForeignObjectElement, unknown, HTMLElement, any>, items: string[], colorPalette: Color[], itemsDirection: LegendItemsDirection, position: LegendPosition): void {
+    public static renderLegendContent(legendObject: Selection<SVGForeignObjectElement, unknown, HTMLElement, any>, items: string[], colorPalette: string[], itemsDirection: LegendItemsDirection, position: LegendPosition): void {
         const wrapper = legendObject.append('xhtml:div')
             .attr('class', Legend.legendBlockClass);
         wrapper
@@ -75,7 +75,7 @@ export class Legend {
         itemWrappers
             .append('span')
             .attr('class', 'legend-circle')
-            .style('background-color', (d, i) => colorPalette[i % colorPalette.length].toString());
+            .style('background-color', (d, i) => colorPalette[i % colorPalette.length]);
 
         itemWrappers
             .data(items)

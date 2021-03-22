@@ -2,7 +2,7 @@ import Engine from '../engine/engine';
 import { assembleModel, getPreparedData, getUpdatedModel } from '../model/modelBuilder';
 import { Config, IntervalOptions, PolarChart, PolarOptions, TwoDimensionalChart, TwoDimensionalOptions } from '../config/config'
 import { DesignerConfig, Transitions } from '../designer/designerConfig';
-import { DataSource } from '../model/model';
+import { DataRow, DataSource } from '../model/model';
 
 class ListenersHelper {
     static randInt(min: number, max: number): number {
@@ -31,7 +31,7 @@ class ListenersHelper {
         return newArr;
     }
     static getInputValue(selector: string): string {
-        return (document.querySelector(selector) as HTMLInputElement).value;
+        return (document.querySelector(selector) as HTMLInputElement)?.value;
     }
     static setInputValue(selector: string, value: any): void {
         (document.querySelector(selector) as HTMLInputElement).value = value.toString();
@@ -390,10 +390,6 @@ export default class Listeners {
             thisClass.designerConfig.canvas.chartOptions.bar.maxBarWidth = parseFloat(ListenersHelper.getInputValue('#max-bar-size')) || 0;
             thisClass.updateFull();
         });
-        document.querySelector('#min-donut-part-size').addEventListener('input', function () {
-            thisClass.designerConfig.canvas.chartOptions.donut.minPartSize = parseFloat(ListenersHelper.getInputValue('#min-donut-part-size')) || 0;
-            thisClass.updateFull();
-        });
         document.querySelector('#pad-angle').addEventListener('input', function () {
             thisClass.designerConfig.canvas.chartOptions.donut.padAngle = parseFloat(ListenersHelper.getInputValue('#pad-angle'));
             thisClass.updateFull();
@@ -406,16 +402,20 @@ export default class Listeners {
             thisClass.designerConfig.canvas.chartOptions.donut.maxThickness = parseFloat(ListenersHelper.getInputValue('#donut-max-thickness'));
             thisClass.updateFull();
         });
-        document.querySelector('#base-color').addEventListener('keydown', function (e: any) {
-            if (e.code === 'Enter') {
-                thisClass.designerConfig.chartStyle.baseColor = this.value;
-                thisClass.updateFull();
-            }
-        });
-        document.querySelector('#color-step').addEventListener('input', function () {
-            thisClass.designerConfig.chartStyle.step = parseFloat(this.value);
+        document.querySelector('#aggregator-pad').addEventListener('input', function () {
+            thisClass.designerConfig.canvas.chartOptions.donut.aggregatorPad = parseFloat(this.value);
             thisClass.updateFull();
         });
+        document.querySelector('#base-colors').addEventListener('keydown', function (e: any) {
+            if (e.code === 'Enter') {
+                thisClass.designerConfig.chartStyle.baseColors = (this.value as string).split(', ');
+                thisClass.updateFull();
+            }
+        }); //TODO: подправить
+        // document.querySelector('#color-step').addEventListener('input', function () {
+        //     thisClass.designerConfig.chartStyle.step = parseFloat(this.value);
+        //     thisClass.updateFull();
+        // });
     }
 
     private setCommonListeners(): void {
@@ -609,11 +609,12 @@ export default class Listeners {
         ListenersHelper.setInputValue('#bar-distance', designerConfig.canvas.chartOptions.bar.barDistance);
         ListenersHelper.setInputValue('#min-bar-size', designerConfig.canvas.chartOptions.bar.minBarWidth);
         ListenersHelper.setInputValue('#max-bar-size', designerConfig.canvas.chartOptions.bar.maxBarWidth);
-        ListenersHelper.setInputValue('#base-color', designerConfig.chartStyle.baseColor);
-        ListenersHelper.setInputValue('#color-step', designerConfig.chartStyle.step);
-        ListenersHelper.setInputValue('#min-donut-part-size', designerConfig.canvas.chartOptions.donut.minPartSize);
+        ListenersHelper.setInputValue('#base-colors', designerConfig.chartStyle.baseColors.join(', '));
+        //TODO: подправить
+        // ListenersHelper.setInputValue('#color-step', designerConfig.chartStyle.step);
         ListenersHelper.setInputValue('#pad-angle', designerConfig.canvas.chartOptions.donut.padAngle);
-        ListenersHelper.setInputValue('#donut-min-thickness', designerConfig.canvas.chartOptions.donut.minThickness);
+        ListenersHelper.setInputValue('#pad-angle', designerConfig.canvas.chartOptions.donut.padAngle);
+        ListenersHelper.setInputValue('#aggregator-pad', designerConfig.canvas.chartOptions.donut.aggregatorPad);
         ListenersHelper.setInputValue('#donut-max-thickness', designerConfig.canvas.chartOptions.donut.maxThickness);
 
         if (config.options.type === '2d') {
@@ -646,19 +647,19 @@ const data = require('./assets/dataSet.json');
 // const chart = new Chart(config, designerConfig, data, false);
 // chart.render(document.querySelector('.main-wrapper'));
 
-const engine = new Engine(2);
+const engine = new Engine(2, (rows: DataRow[]) => console.log(rows.map(row => row.$id)));
 const model = assembleModel(config, data, designerConfig);
 engine.render(model, getPreparedData(model, data, config), document.querySelector('.main-wrapper'));
 new Listeners(engine, config, designerConfig, data);
 
 const config3 = require('../config/configTest2D.json');
 const model3 = assembleModel(config3, data, designerConfig);
-const engine3 = new Engine(3);
+const engine3 = new Engine(3, null);
 engine3.render(model3, getPreparedData(model3, data, config3), document.querySelector('.main-wrapper2'));
 
 const config2 = require('../config/configTestPolar.json');
 const model2 = assembleModel(config2, data, designerConfig);
-const engine2 = new Engine(4);
+const engine2 = new Engine(4, null);
 engine2.render(model2, getPreparedData(model2, data, config2), document.querySelector('.main-wrapper2'));
 
 //====================================================================================================== Data updating
@@ -710,6 +711,7 @@ class DataUpdater {
         if (random > 0.66) {
             for (let i = 0; i < ListenersHelper.randInt(1, 4); i++) {
                 newData[this.dataSetName].push({
+                    $id: ListenersHelper.randInt(100, 5000000),
                     brand: this.makeHASH(ListenersHelper.randInt(4, 10)).toUpperCase(),
                     price: ListenersHelper.randInt(0, 150),
                     count: ListenersHelper.randInt(0, 50)

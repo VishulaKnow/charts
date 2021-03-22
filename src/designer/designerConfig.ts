@@ -54,10 +54,10 @@ export interface BarOptionsCanvas {
 }
 
 export interface DonutOptionsCanvas {
-    minPartSize: number;
     padAngle: number;
     minThickness: number;
     maxThickness: number;
+    aggregatorPad: number;
 }
 
 
@@ -69,8 +69,10 @@ interface DataFormat {
 
 // ========================================================================================= ChartStyle
 export interface ChartStyleConfig {
+    //TODO: убрать лишнее
     baseColor: string;
     step: number;
+    baseColors: string[];
 }
 
 

@@ -26,16 +26,17 @@ const designerConfig: DesignerConfig = {
                 groupMaxDistance: 35
             },
             donut: {
-                minPartSize: 10,
                 padAngle: 0,
                 minThickness: 40,
-                maxThickness: 60
+                maxThickness: 60,
+                aggregatorPad: 30
             }
         }
     },
     chartStyle: {
         baseColor: 'red',
-        step: 3
+        step: 3,
+        baseColors: ['#209de3', '#ff3131', '#ffba00', '#20b078']
     },
     dataFormat: {
         formatters: (value: any, options: { type?: string; title?: string; empty?: string; } = {}) => {

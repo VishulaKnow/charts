@@ -25,7 +25,7 @@ export class Block {
     private chartBlockClass = 'chart-block';
     private chartGroupClass = 'chart-group';
 
-    constructor(cssClass: string, parentElement: HTMLElement, blockId: number, transitions: Transitions = null) {
+    constructor(cssClass: string, parentElement: HTMLElement, blockId: number, filterEventManager: FilterEventManager, transitions: Transitions = null) {
         this.wrapperCssClasses = Helper.getCssClassesArray(cssClass);
         this.svgCssClasses = Helper.getCssClassesArray(cssClass);
         this.wrapperCssClasses = BlockHelper.getFormattedCssClassesForWrapper(this.wrapperCssClasses);
@@ -34,7 +34,7 @@ export class Block {
         this.id = blockId;
 
         this.transitionManager = new TransitionManager(this, transitions);
-        this.filterEventManager = new FilterEventManager(this);
+        this.filterEventManager = filterEventManager;
     }
 
     public renderSvg(blockSize: Size): void {
@@ -124,11 +124,13 @@ export class Block {
         tipBoxes.on('mousemove', null);
         tipBoxes.on('mouseover', null);
         tipBoxes.on('mouseleave', null);
+        tipBoxes.on('click', null);
 
         const arcItems = Donut.getAllArcGroups(this);
         arcItems.on('mouseover', null);
         arcItems.on('mouseleave', null);
         arcItems.on('mousemove', null);
+        arcItems.on('click', null);
     }
 
     public clearWrapper(): void {

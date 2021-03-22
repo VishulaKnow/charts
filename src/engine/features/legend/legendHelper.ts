@@ -1,6 +1,6 @@
 import { ChartNotation, Size } from "../../../config/config";
 import { LegendItemsDirection } from "../../../model/featuresModel/legendModel/legendCanvasModel";
-import { Color } from "d3-color";
+
 import { DataRow, DataSource, IntervalOptionsModel, LegendBlockModel, LegendPosition, Orient, PolarOptionsModel, TwoDimensionalOptionsModel } from "../../../model/model";
 import { Helper } from '../../helpers/helper';
 import { Legend } from "./legend";
@@ -26,9 +26,9 @@ export class LegendHelper {
         }
     }
 
-    public static getMarksColor(options: TwoDimensionalOptionsModel | PolarOptionsModel | IntervalOptionsModel): Color[] {
+    public static getMarksColor(options: TwoDimensionalOptionsModel | PolarOptionsModel | IntervalOptionsModel): string[] {
         if (options.type === '2d') {
-            let colors: Color[] = [];
+            let colors: string[] = [];
             options.charts.forEach(chart => {
                 colors = colors.concat(chart.style.elementColors);
             });

@@ -160,7 +160,7 @@ interface TooltipModel {
     show: boolean;
 }
 export interface ChartStyle {
-    elementColors: Color[];
+    elementColors: string[];
     opacity: number;
 }
 
@@ -234,11 +234,7 @@ export interface BarChartSettings {
     maxBarWidth: number;
     minBarWidth: number;
 }
-export interface DonutChartSettings {
-    maxThickness: number;
-    minThickness: number;
-    padAngle: number;
-}
+export interface DonutChartSettings extends DonutOptionsCanvas { }
 
 
 //====================================================== OtherComponents

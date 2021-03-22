@@ -1,7 +1,6 @@
 import { stack } from 'd3-shape';
 import { select, Selection } from 'd3-selection'
-import { Color } from "d3-color";
-import { BlockMargin, DataRow, Field, Orient, TwoDimensionalChartModel } from "../../../model/model";
+import { BlockMargin, DataRow, Field, Orient, Size, TwoDimensionalChartModel } from "../../../model/model";
 import { Scales } from "../../features/scale/scale";
 import { Block } from "../../block/block";
 import { MarkDot } from "../../features/markDots/markDot";
@@ -113,7 +112,7 @@ export class Area {
         }
     }
 
-    private static setSegmentColor(segments: Selection<SVGGElement, unknown, SVGGElement, unknown>, colorPalette: Color[]): void {
-        segments.style('fill', (d, i) => colorPalette[i % colorPalette.length].toString());
+    private static setSegmentColor(segments: Selection<SVGGElement, unknown, SVGGElement, unknown>, colorPalette: string[]): void {
+        segments.style('fill', (d, i) => colorPalette[i % colorPalette.length]);
     }
 }

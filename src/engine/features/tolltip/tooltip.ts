@@ -63,7 +63,7 @@ export class Tooltip {
 
         const tooltipLine = TooltipComponentsManager.renderTooltipLine(block);
 
-        const tipBox = TipBox.render(block, margin, blockSize);
+        const tipBox = TipBox.renderOrGet(block, margin, blockSize);
 
         ElementHighlighter.renderShadowFilter(block);
 
@@ -80,7 +80,7 @@ export class Tooltip {
 
                     TooltipDomHelper.fillForMulty2DCharts(tooltipContent, charts, data, dataOptions, keyValue);
 
-                    const tooltipCoordinate = TooltipHelper.getTooltipFixedCoordinate(scaleKey, margin, blockSize, keyValue, tooltipContent.node().getBoundingClientRect(), keyAxisOrient);
+                    const tooltipCoordinate = TooltipHelper.getTooltipFixedCoordinate(block.getSvg().node().getBoundingClientRect(), scaleKey, margin, blockSize, keyValue, tooltipContent.node().getBoundingClientRect(), keyAxisOrient);
                     TooltipComponentsManager.setLineTooltipCoordinate(tooltipBlock, tooltipCoordinate, chartOrientation, block.transitionManager.durations.tooltipSlide);
 
                     const tooltipLineAttributes = TooltipHelper.getTooltipLineAttributes(scaleKey, margin, keyValue, chartOrientation, blockSize);
@@ -120,7 +120,7 @@ export class Tooltip {
 
         elemets.on('mouseleave', function (_event, dataRow) {
             TooltipComponentsManager.hideTooltipBlock(tooltipBlock);
-            if (!block.filterEventManager.isSelected(dataRow.data[dataOptions.keyField.name])) {
+            if (!block.filterEventManager.isSelected(dataRow.data[dataOptions.keyField.name], dataOptions.keyField.name)) {
                 ElementHighlighter.removeFilter(select(this));
                 ElementHighlighter.changeDonutHighlightAppearance(select<SVGGElement, PieArcDatum<DataRow>>(this), margin, blockSize, donutThickness, block.transitionManager.durations.donutHover, false);
             }

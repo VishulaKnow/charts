@@ -13,7 +13,7 @@ export interface TipBoxAttributes {
 export class TipBox {
     public static tipBoxClass = 'tipbox';
 
-    public static render(block: Block, margin: BlockMargin, blockSize: Size): Selection<SVGRectElement, unknown, HTMLElement, any> {
+    public static renderOrGet(block: Block, margin: BlockMargin, blockSize: Size): Selection<SVGRectElement, unknown, HTMLElement, any> {
         const attributes = this.getAttributes(margin, blockSize);
         return this.renderBlock(block, attributes);
     }

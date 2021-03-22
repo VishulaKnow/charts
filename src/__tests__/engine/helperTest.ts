@@ -89,3 +89,57 @@ describe('test getCssClasses getters', ()=> {
             })
     });
 });
+
+describe('test id and keyValue manipulations', () => {
+    let dataset: DataRow[];
+    beforeEach(() => {
+        dataset = [
+            {
+                $id: 12,
+                name: 'bmw',
+                price: 130
+            },
+            {
+                $id: 145,
+                name: 'audi',
+                price: 141
+            },
+            {
+                $id: 1453,
+                name: 'lada',
+                price: 11
+            }
+        ]
+    });
+
+    test('getRowsByIds', () => {
+        const result = Helper.getRowsByIds([12, 145], dataset);
+        expect(result).toEqual([
+            {
+                $id: 12,
+                name: 'bmw',
+                price: 130
+            },
+            {
+                $id: 145,
+                name: 'audi',
+                price: 141
+            }
+        ])
+    });
+
+    test('extractKeysFromRows', () => {
+        const result = Helper.extractKeysFromRows('name', dataset);
+        expect(result).toEqual(['bmw', 'audi', 'lada']);
+    });
+
+    test('getIdFromRowByKey', () => {
+        const result = Helper.getIdFromRowByKey('name', 'audi', dataset);
+        expect(result).toBe(145);
+    });
+
+    test('getKeysByIds', () => {
+        const result = Helper.getKeysByIds([12, 1453], 'name', dataset);
+        expect(result).toEqual(['bmw', 'lada']);
+    });
+});
