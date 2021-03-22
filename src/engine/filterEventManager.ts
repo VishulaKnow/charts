@@ -11,6 +11,7 @@ import { Donut } from "./polarNotation/donut/donut";
 
 export type FilterCallback = (rows: DataRow[]) => void;
 
+//TODO: вынести в отдельную папку / продумать разделение ID-менеджера и менеджера событий
 export class FilterEventManager {
     private block: Block;
     private selectedIds: number[];
@@ -28,12 +29,18 @@ export class FilterEventManager {
     }
 
     public update(newDataset: DataRow[]): void {
-        this.selectedIds = [];
         this.fullDataset = newDataset;
     }
 
     public isSelected(keyValue: string, keyFieldName: string): boolean {
         return Helper.getKeysByIds(this.selectedIds, keyFieldName, this.fullDataset).findIndex(key => key === keyValue) !== -1;
+    }
+
+    public eventPolarUpdate(margin: BlockMargin, blockSize: Size, options: PolarOptionsModel, donutSettings: DonutChartSettings): void {
+        this.registerEventToDonut(margin, blockSize, options, donutSettings);
+        const elem = Donut.getAllArcGroups(this.block).filter(d => this.selectedIds.includes(d.data.$id));
+        this.selectedIds = [];
+        elem.dispatch('click');
     }
 
     public registerEventFor2D(scaleKey: AxisScale<any>, margin: BlockMargin, blockSize: Size, options: TwoDimensionalOptionsModel): void {
@@ -45,8 +52,9 @@ export class FilterEventManager {
             const appended = thisClass.processKey(event.ctrlKey, keyValue, options.data.keyField.name);
             SelectHighlighter.click2DHandler(event.ctrlKey, appended, keyValue, thisClass.block, options);
 
-            if (thisClass.callback)
+            if (thisClass.callback) {
                 thisClass.callback(Helper.getRowsByIds(thisClass.selectedIds, thisClass.fullDataset));
+            }
         });
     }
 
@@ -55,12 +63,15 @@ export class FilterEventManager {
         const thisClass = this;
 
         arcItems.on('click', function (event: MouseEvent, dataRow) {
-            const keyValue = dataRow.data[options.data.keyField.name];
-            const appended = thisClass.processKey(event.ctrlKey, keyValue, options.data.keyField.name);
-            SelectHighlighter.clickPolarHandler(event.ctrlKey, appended, this, thisClass.getSelectedKeys(options.data.keyField.name), margin, blockSize, thisClass.block, options, arcItems, donutSettings);
+            const multiSelect = event.ctrlKey === undefined ? true : event.ctrlKey;
 
-            if (thisClass.callback)
+            const keyValue = dataRow.data[options.data.keyField.name];
+            const appended = thisClass.processKey(multiSelect, keyValue, options.data.keyField.name);
+            SelectHighlighter.clickPolarHandler(multiSelect, appended, this, thisClass.getSelectedKeys(options.data.keyField.name), margin, blockSize, thisClass.block, options, arcItems, donutSettings);
+
+            if (thisClass.callback) {
                 thisClass.callback(Helper.getRowsByIds(thisClass.selectedIds, thisClass.fullDataset));
+            }
         });
     }
 

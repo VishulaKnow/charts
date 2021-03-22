@@ -30,6 +30,7 @@ export class SelectHighlighter {
         if (multySelection) {
             if (appendKey) {
                 ElementHighlighter.changeDonutHighlightAppearance(select(segment), margin, blockSize, donutThickness, block.transitionManager.durations.donutHover, true);
+                ElementHighlighter.setFilter(select(segment), block);
             } else {
                 ElementHighlighter.changeDonutHighlightAppearance(select(segment), margin, blockSize, donutThickness, block.transitionManager.durations.donutHover, false);
             }

@@ -18,9 +18,9 @@ export class Legend {
             const chartElementsColor = LegendHelper.getMarksColor(options);
             const legendItemsDirection = LegendHelper.getLegendItemsDirection(options.type, options.legend.position);
 
-            const legendObject = this.renderLegendObject(block, options.legend.position, model.otherComponents.legendBlock, model.blockCanvas.size);
+            const legendObject = this.renderObject(block, options.legend.position, model.otherComponents.legendBlock, model.blockCanvas.size);
 
-            this.renderLegendContent(legendObject, legendItemsContent, chartElementsColor, legendItemsDirection, options.legend.position);
+            this.renderContent(legendObject, legendItemsContent, chartElementsColor, legendItemsDirection, options.legend.position);
         }
     }
 
@@ -30,26 +30,26 @@ export class Legend {
             const chartElementsColor = LegendHelper.getMarksColor(options);
             const legendItemsDirection = LegendHelper.getLegendItemsDirection(options.type, options.legend.position);
 
-            const legendObject = this.getLegendObject(block)
+            const legendObject = this.getObject(block)
 
-            this.removeLegendBlock(legendObject)
+            this.removeContent(legendObject)
 
-            this.renderLegendContent(legendObject, legendItemsContent, chartElementsColor, legendItemsDirection, options.legend.position);
+            this.renderContent(legendObject, legendItemsContent, chartElementsColor, legendItemsDirection, options.legend.position);
         }
     }
 
-    public static renderLegendObject(block: Block, legendPosition: Orient, legendBlockModel: LegendBlockModel, blockSize: Size): Selection<SVGForeignObjectElement, unknown, HTMLElement, any> {
+    public static renderObject(block: Block, legendPosition: Orient, legendBlockModel: LegendBlockModel, blockSize: Size): Selection<SVGForeignObjectElement, unknown, HTMLElement, any> {
         const legendObject = block.getSvg()
             .append('foreignObject')
             .attr('class', Legend.objectClass);
 
         const legendCoordinate = LegendHelper.getLegendCoordinateByPosition(legendPosition, legendBlockModel, blockSize);
-        this.fillLegendCoordinate(legendObject, legendCoordinate);
+        this.fillCoordinate(legendObject, legendCoordinate);
 
         return legendObject;
     }
 
-    public static renderLegendContent(legendObject: Selection<SVGForeignObjectElement, unknown, HTMLElement, any>, items: string[], colorPalette: string[], itemsDirection: LegendItemsDirection, position: LegendPosition): void {
+    public static renderContent(legendObject: Selection<SVGForeignObjectElement, unknown, HTMLElement, any>, items: string[], colorPalette: string[], itemsDirection: LegendItemsDirection, position: LegendPosition): void {
         const wrapper = legendObject.append('xhtml:div')
             .attr('class', Legend.legendBlockClass);
         wrapper
@@ -89,16 +89,16 @@ export class Legend {
             LegendDomHelper.cropRowLabels(legendObject, itemWrappers);
     }
 
-    public static getLegendObject(block: Block): Selection<SVGForeignObjectElement, unknown, HTMLElement, any> {
+    public static getObject(block: Block): Selection<SVGForeignObjectElement, unknown, HTMLElement, any> {
         return block.getSvg()
             .select<SVGForeignObjectElement>(`foreignObject.${Legend.objectClass}`);
     }
 
-    public static removeLegendBlock(legendObject: Selection<SVGForeignObjectElement, unknown, HTMLElement, any>): void {
+    public static removeContent(legendObject: Selection<SVGForeignObjectElement, unknown, HTMLElement, any>): void {
         legendObject.select(`.${Legend.legendBlockClass}`).remove();
     }
 
-    private static fillLegendCoordinate(legendBlock: Selection<SVGForeignObjectElement, unknown, HTMLElement, any>, coordinate: LegendCoordinate): void {
+    private static fillCoordinate(legendBlock: Selection<SVGForeignObjectElement, unknown, HTMLElement, any>, coordinate: LegendCoordinate): void {
         legendBlock
             .attr('x', coordinate.x)
             .attr('y', coordinate.y)
