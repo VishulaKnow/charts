@@ -95,7 +95,7 @@ export class TwoDimensionalManager {
             model.blockCanvas.size,
             model.chartSettings.bar);
 
-        block.filterEventManager.registerEventFor2D(scales.key, model.chartBlock.margin, model.blockCanvas.size, options);
+        block.filterEventManager.event2DUpdate(options);
 
         Tooltip.render(block, model, data, scales);
 

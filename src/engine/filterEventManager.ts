@@ -37,10 +37,23 @@ export class FilterEventManager {
     }
 
     public eventPolarUpdate(margin: BlockMargin, blockSize: Size, options: PolarOptionsModel, donutSettings: DonutChartSettings): void {
+        //TODO: разрешить
         this.registerEventToDonut(margin, blockSize, options, donutSettings);
         const elem = Donut.getAllArcGroups(this.block).filter(d => this.selectedIds.includes(d.data.$id));
         this.selectedIds = [];
         elem.dispatch('click');
+    }
+
+    public event2DUpdate(options: TwoDimensionalOptionsModel): void {
+        const removedIds: number[] = [];
+        this.selectedIds.forEach(id => {
+            const key = Helper.getKeyById(id, options.data.keyField.name, this.fullDataset);
+            if (!key)
+                removedIds.push(id);
+            else
+                SelectHighlighter.click2DHandler(true, true, key, this.block, options);
+        });
+        removedIds.forEach(rid => this.selectedIds.splice(this.selectedIds.findIndex(sid => sid === rid), 1));
     }
 
     public registerEventFor2D(scaleKey: AxisScale<any>, margin: BlockMargin, blockSize: Size, options: TwoDimensionalOptionsModel): void {
