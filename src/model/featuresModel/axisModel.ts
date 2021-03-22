@@ -1,5 +1,5 @@
-import { AxisPosition, ChartOrientation } from "../../config/config";
-import { AxisLabelPosition, BlockMargin, Orient, Size } from "../model";
+import { AxisPosition, ChartOrientation, Size } from "../../config/config";
+import { AxisLabelPosition, BlockMargin, Orient } from "../model";
 import { ModelHelper } from "../modelHelper";
 import { AxisType, CLASSES } from "../modelBuilder";
 

@@ -1,6 +1,7 @@
 import { Selection } from 'd3-selection';
 import { Block } from "../../block/block";
-import { BlockMargin, Size } from '../../../model/model';
+import { BlockMargin } from '../../../model/model';
+import { Size } from "../../../config/config";
 
 export interface TipBoxAttributes {
     x: number;

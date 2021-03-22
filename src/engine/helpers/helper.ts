@@ -1,4 +1,5 @@
-import { DataRow } from "../../main";
+import { DataRow } from "../../model/model";
+
 export class Helper {
     public static getRowsByIds(ids: number[], dataSet: DataRow[]): DataRow[] {
         return dataSet.filter(row => ids.findIndex(id => id === row.$id) !== -1);

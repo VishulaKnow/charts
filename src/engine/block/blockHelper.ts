@@ -1,5 +1,6 @@
-import { BlockMargin, Size } from "../../model/model";
+import { BlockMargin } from "../../model/model";
 import { Helper } from "../helpers/helper";
+import { Size } from "../../config/config";
 
 export interface ClipPathAttributes {
     x: number;

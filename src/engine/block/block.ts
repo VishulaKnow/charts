@@ -1,6 +1,6 @@
 import { select, Selection, BaseType } from "d3-selection";
 import { Transitions } from "../../designer/designerConfig";
-import { BlockMargin, Size } from "../../model/model";
+import { BlockMargin } from "../../model/model";
 import { Scales } from "../features/scale/scale";
 import { TipBox } from "../features/tipBox/tipBox";
 import { Helper } from "../helpers/helper";
@@ -9,6 +9,7 @@ import { FilterEventManager } from "../filterEventManager";
 import { Donut } from "../polarNotation/donut/donut";
 import { TransitionManager } from "../transitionManager";
 import { BlockHelper } from "./blockHelper";
+import { Size } from "../../config/config";
 
 export class Block {
     public parentElement: HTMLElement;

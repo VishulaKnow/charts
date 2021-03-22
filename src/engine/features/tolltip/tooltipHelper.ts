@@ -1,11 +1,11 @@
 import { AxisScale } from "d3-axis";
 import { ChartOrientation } from "../../../config/config";
-import { BlockMargin, Orient, Size } from "../../../model/model";
+import { BlockMargin, Orient } from "../../../model/model";
 import { Helper } from "../../helpers/helper";
 import { Scale } from "../scale/scale";
 import { Block } from "../../block/block";
 import { ARROW_DEFAULT_POSITION, TooltipCoordinate, TooltipLineAttributes, TOOLTIP_ARROW_PADDING_X, TOOLTIP_ARROW_PADDING_Y } from "./tooltipDomHelper";
-
+import { Size } from "../../../config/config";
 export class TooltipHelper {
     private static CONVEXSIZE = 5
     public static getHorizontalPad(coordinateX: number, tooltipBlockWidth: number, blockSize: Size, translateX: number): number {

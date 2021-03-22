@@ -1,6 +1,7 @@
 import { select, Selection } from "d3-selection";
 import { PieArcDatum } from "d3-shape";
-import { BlockMargin, DataRow, DonutChartSettings, PolarOptionsModel, Size, TwoDimensionalOptionsModel } from "../../model/model";
+import { Size } from "../../config/config";
+import { BlockMargin, DataRow, DonutChartSettings, PolarOptionsModel, TwoDimensionalOptionsModel } from "../../model/model";
 import { Block } from "../block/block";
 import { DonutHelper } from "../polarNotation/donut/DonutHelper";
 import { ElementHighlighter } from "./elementHighlighter";

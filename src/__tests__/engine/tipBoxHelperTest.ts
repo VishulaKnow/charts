@@ -1,7 +1,8 @@
 import { AxisScale } from "d3-axis";
 import { scaleBand, scalePoint } from "d3-scale";
 import { TipBoxHelper } from "../../engine/features/tipBox/tipBoxHelper";
-import { BlockMargin, Size } from "../../model/model";
+import { Size } from "../../config/config";
+import { BlockMargin } from "../../model/model";
 
 describe('getKeyValueByPointer', () => {
     let scaleKey: AxisScale<string>;

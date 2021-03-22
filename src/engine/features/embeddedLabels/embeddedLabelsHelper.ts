@@ -1,4 +1,5 @@
-import { BlockMargin, EmbeddedLabelTypeModel, Field, Orient, Size } from "../../../model/model";
+import { BlockMargin, EmbeddedLabelTypeModel, Field, Orient} from "../../../model/model";
+import { Size } from "../../../config/config";
 
 export type EmbeddedLabelPosition = 'inside' | 'outside';
 export type TextAnchor = 'start' | 'end' | 'center';
