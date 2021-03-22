@@ -11,13 +11,15 @@ import { Size } from '../../config/config';
 import { Donut } from '../polarNotation/donut/donut';
 
 export class ElementHighlighter {
-    public static makeArcClone(block: Block, segment: Selection<SVGGElement, PieArcDatum<DataRow>, BaseType, unknown> ) {
+    public static makeArcClone(segment: Selection<SVGGElement, PieArcDatum<DataRow>, BaseType, unknown> ) {
         return segment.clone(true).lower().style('pointer-events', `none`).classed(`${Donut.arcItemClass}`, false).classed(`${Donut.arcItemClass}-clone`,true) as Selection<SVGGElement, PieArcDatum<DataRow>, SVGGElement, unknown>;    
     }
+
     public static removeDonutArcClones(block: Block) {
         let clones = Donut.getAllArcClones(block);
         clones.remove()
     }
+    
     public static renderShadowFilter(block: Block): Selection<SVGFilterElement, unknown, HTMLElement, unknown> {
         const filterId = NamesManager.getId('shadow', block.id);
 

@@ -117,7 +117,7 @@ export class Tooltip {
                 let clone =  Donut.getAllArcClones(block)
                 .filter((d: PieArcDatum<DataRow>) => d.data[dataOptions.keyField.name] === dataRow.data[dataOptions.keyField.name]) as Selection<SVGGElement, PieArcDatum<DataRow>, SVGGElement, unknown>;
                 if(clone.nodes().length === 0){
-                    clone = ElementHighlighter.makeArcClone(block, select<SVGGElement, PieArcDatum<DataRow>>(this))
+                    clone = ElementHighlighter.makeArcClone(select<SVGGElement, PieArcDatum<DataRow>>(this))
                     ElementHighlighter.setFilter(clone, block);      
                     ElementHighlighter.changeDonutHighlightAppearance(select<SVGGElement, PieArcDatum<DataRow>>(this), margin, blockSize, donutThickness, block.transitionManager.durations.donutHover, true);
                 }
@@ -130,7 +130,6 @@ export class Tooltip {
                     .filter((d: PieArcDatum<DataRow>) => d.data[dataOptions.keyField.name] === dataRow.data[dataOptions.keyField.name]) as Selection<SVGGElement, PieArcDatum<DataRow>, SVGGElement, unknown>;
                     clone.remove()
                 ElementHighlighter.changeDonutHighlightAppearance(select<SVGGElement, PieArcDatum<DataRow>>(this), margin, blockSize, donutThickness, block.transitionManager.durations.donutHover, false);
-
             }
         });
     }
