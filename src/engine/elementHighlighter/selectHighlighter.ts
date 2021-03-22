@@ -39,7 +39,8 @@ export class SelectHighlighter {
             } else {
                 ElementHighlighter.removeDonutHighlightingByKeys(arcItems, options.data.keyField.name, selectedKeys, margin, blockSize, donutThickness);
                 ElementHighlighter.removeDonutArcClones(block);
-                ElementHighlighter.setFilter(ElementHighlighter.makeArcClone(select(segment)), block); 
+                const clone = ElementHighlighter.makeArcClone(select(segment));
+                ElementHighlighter.setFilter(clone, block); 
                 ElementHighlighter.changeDonutHighlightAppearance(select(segment), margin, blockSize, donutThickness, block.transitionManager.durations.donutHover, true);
 
             }

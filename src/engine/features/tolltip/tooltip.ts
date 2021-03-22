@@ -120,7 +120,8 @@ export class Tooltip {
                     clone = ElementHighlighter.makeArcClone(select<SVGGElement, PieArcDatum<DataRow>>(this))
                     ElementHighlighter.setFilter(clone, block);      
                     ElementHighlighter.changeDonutHighlightAppearance(select<SVGGElement, PieArcDatum<DataRow>>(this), margin, blockSize, donutThickness, block.transitionManager.durations.donutHover, true);
-                }
+                    ElementHighlighter.changeDonutHighlightAppearance(clone, margin, blockSize, donutThickness, block.transitionManager.durations.donutHover, true);
+                 }
             });
         
         elements.on('mouseleave', function (_event, dataRow: PieArcDatum<DataRow>) {
