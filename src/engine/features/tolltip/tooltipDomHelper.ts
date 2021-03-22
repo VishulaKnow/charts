@@ -1,8 +1,9 @@
 import { Selection, BaseType } from 'd3-selection'
 import { ValueField } from "../../../config/config";
-import { DataSource, OptionsModelData, PolarChartModel, Size, TwoDimensionalChartModel } from "../../../model/model";
+import { DataSource, OptionsModelData, PolarChartModel, TwoDimensionalChartModel } from "../../../model/model";
 import { ValueFormatter, } from "../../valueFormatter";
 import { TooltipHelper } from './tooltipHelper';
+import { Size } from "../../../config/config";
 
 export interface TooltipLineAttributes {
     x1: number;

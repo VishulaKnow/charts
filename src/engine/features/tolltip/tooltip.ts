@@ -1,10 +1,10 @@
 import { select, Selection, pointer } from 'd3-selection';
 import { PieArcDatum } from 'd3-shape'
-import { BlockMargin, DataRow, DataSource, IntervalChartModel, Model, OptionsModelData, Orient, PolarChartModel, ScaleKeyModel, Size, TwoDimensionalChartModel } from "../../../model/model";
+import { BlockMargin, DataRow, DataSource, IntervalChartModel, Model, OptionsModelData, Orient, PolarChartModel, ScaleKeyModel, TwoDimensionalChartModel } from "../../../model/model";
 import { Block } from "../../block/block";
 import { TooltipDomHelper } from "./tooltipDomHelper";
 import { Donut } from "../../polarNotation/donut/donut";
-import { ChartOrientation } from "../../../config/config";
+import { ChartOrientation, Size } from "../../../config/config";
 import { Scales } from '../scale/scale';
 import { AxisScale } from 'd3-axis';
 import { TooltipComponentsManager } from './tooltipComponentsManager';
@@ -80,7 +80,7 @@ export class Tooltip {
 
                     TooltipDomHelper.fillForMulty2DCharts(tooltipContent, charts, data, dataOptions, keyValue);
 
-                    const tooltipCoordinate = TooltipHelper.getTooltipFixedCoordinate(scaleKey, margin, blockSize, keyValue, tooltipContent.node().getBoundingClientRect(), keyAxisOrient);
+                    const tooltipCoordinate = TooltipHelper.getTooltipFixedCoordinate(block.getSvg().node().getBoundingClientRect(), scaleKey, margin, blockSize, keyValue, tooltipContent.node().getBoundingClientRect(), keyAxisOrient);
                     TooltipComponentsManager.setLineTooltipCoordinate(tooltipBlock, tooltipCoordinate, chartOrientation, block.transitionManager.durations.tooltipSlide);
 
                     const tooltipLineAttributes = TooltipHelper.getTooltipLineAttributes(scaleKey, margin, keyValue, chartOrientation, blockSize);

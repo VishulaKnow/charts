@@ -1,5 +1,6 @@
 import { BarAttrs, EmbeddedLabelsHelper, LabelAttrs, LABEL_BAR_PADDING } from "../../engine/features/embeddedLabels/embeddedLabelsHelper";
-import { BlockMargin, Size } from "../../model/model";
+import { BlockMargin } from "../../model/model";
+import { Size } from "../../config/config";
 
 describe('test postion and space', () => {
     const margin: BlockMargin = {
@@ -100,7 +101,7 @@ describe('test label coordinates', () => {
         test('inside bar with end anchor', () => {
             const result = EmbeddedLabelsHelper.getLabelAttrs(barAttrs, 'value', 'inside', 'left', 20);
             expected.textAnchor = 'end';
-            expected.x = 104;
+            expected.x = 94;
             expect(result).toEqual(expected);
         });
 

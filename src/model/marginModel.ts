@@ -3,9 +3,10 @@ import { DesignerConfig } from "../designer/designerConfig";
 import { AxisModel, LabelSize } from "./featuresModel/axisModel";
 import { DataManagerModel } from "./dataManagerModel";
 import { LegendModel, MIN_DONUT_BLOCK_SIZE } from "./featuresModel/legendModel/legendModel";
-import { BlockMargin, DataScope, DataSource, LegendBlockModel, Orient, OtherComponents, PolarOptionsModel, Size, TitleBlockModel } from "./model";
+import { BlockMargin, DataScope, DataSource, LegendBlockModel, Orient, OtherComponents, PolarOptionsModel, TitleBlockModel } from "./model";
 import { AxisType } from "./modelBuilder";
 import { TwoDimensionalModel } from "./notations/twoDimensionalModel";
+import { Size } from "../config/config";
 
 export const AXIS_HORIZONTAL_LABEL_PADDING = 15;
 export const AXIS_VERTICAL_LABEL_PADDING = 10;

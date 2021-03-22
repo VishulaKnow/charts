@@ -1,11 +1,13 @@
 import { BaseType, select, Selection } from 'd3-selection';
 import { Transition } from 'd3-transition';
-import { BlockMargin, DataRow, EmbeddedLabelTypeModel, Field, Orient, Size } from "../../../model/model";
+import { Size } from '../../../config/config';
+import { BlockMargin, DataRow, EmbeddedLabelTypeModel, Field, Orient } from "../../../model/model";
 import { Block } from "../../block/block";
 import { DomHelper } from '../../helpers/domHelper';
 import { Helper } from '../../helpers/helper';
 import { BarAttrsHelper } from '../../twoDimensionalNotation/bar/barHelper';
 import { ValueFormatter } from "../../valueFormatter";
+import { EmbeddedLabelsDomHelper } from './embeddedLabelsDomHelper';
 import { BarAttrs, EmbeddedLabelPosition, EmbeddedLabelsHelper, LabelAttrs } from "./embeddedLabelsHelper";
 
 export class EmbeddedLabels {
@@ -93,12 +95,12 @@ export class EmbeddedLabels {
             this.renderBackground(labelsGroup, labelBlock, attrs);
         }
 
-        this.setLabelBlockAttrs(attrs, labelBlock);
+        EmbeddedLabelsDomHelper.setLabelBlockAttrs(attrs, labelBlock);
 
         if (position === 'inside')
             labelBlock.style('fill', this.innerLabelColor);
 
-        this.cropText(labelBlock, barAttrs, position, labelUnserveFlag, margin, blockSize);
+            EmbeddedLabelsDomHelper.cropText(labelBlock, barAttrs, position, labelUnserveFlag, margin, blockSize);
     }
 
     private static updateLabel(block: Block, dataRow: DataRow, keyAxisOrient: Orient, barAttrsHelper: BarAttrsHelper, margin: BlockMargin, type: EmbeddedLabelTypeModel, blockSize: Size, labelBlock: Selection<SVGTextElement, DataRow, HTMLElement, unknown>, labelsGroup: Selection<SVGGElement, unknown, SVGGElement, unknown>): void {
@@ -113,14 +115,14 @@ export class EmbeddedLabels {
         const position = EmbeddedLabelsHelper.getLabelPosition(barAttrs, labelBlock.node().getBBox().width, margin, blockSize, labelUnserveFlag);
         const attrs = EmbeddedLabelsHelper.getLabelAttrs(barAttrs, type, position, keyAxisOrient, labelBlock.node().getBBox().width);
 
-        this.cropText(labelBlock, barAttrs, position, labelUnserveFlag, margin, blockSize);
+        EmbeddedLabelsDomHelper.cropText(labelBlock, barAttrs, position, labelUnserveFlag, margin, blockSize);
 
         if (position === 'outside') {
             attrs.x = this.checkLabelToResetTextAnchor(attrs.x, labelBlock.node().getBBox().width, margin, blockSize, keyAxisOrient);
             labelBlock.style('fill', this.outerLabelColor);
         }
 
-        this.setLabelBlockAttrs(attrs, labelBlock, block.transitionManager.durations.chartUpdate)
+        EmbeddedLabelsDomHelper.setLabelBlockAttrs(attrs, labelBlock, block.transitionManager.durations.chartUpdate)
             .then(() => {
                 if (position === 'outside')
                     this.renderBackground(labelsGroup, labelBlock, attrs);
@@ -143,16 +145,7 @@ export class EmbeddedLabels {
         }
     }
 
-    private static cropText(labelBlock: Selection<SVGGraphicsElement, unknown, BaseType, unknown>, barAttrs: BarAttrs, position: EmbeddedLabelPosition, labelUnserveFlag: boolean, margin: BlockMargin, blockSize: Size): void {
-        let labelTextSpace: number;
 
-        if (labelUnserveFlag)
-            labelTextSpace = blockSize.width - margin.left - margin.right;
-        else
-            labelTextSpace = EmbeddedLabelsHelper.getSpaceSizeForType(position, barAttrs.width, margin, blockSize);
-
-        DomHelper.cropSvgLabels(labelBlock, labelTextSpace);
-    }
 
     private static renderGroup(block: Block, cssClasses: string[]): Selection<SVGGElement, unknown, HTMLElement, unknown> {
         let group: Selection<SVGGElement, unknown, HTMLElement, unknown> = block.getChartBlock()
@@ -179,26 +172,7 @@ export class EmbeddedLabels {
             .lower();
     }
 
-    private static setLabelBlockAttrs(attrs: LabelAttrs, labelBlock: Selection<SVGTextElement, DataRow, HTMLElement, unknown>, transitionDuration: number = 0): Promise<any> {
-        return new Promise((resolve) => {
-            let labelBlockHandler: Selection<SVGTextElement, DataRow, HTMLElement, unknown> | Transition<SVGTextElement, DataRow, HTMLElement, unknown> = labelBlock;
 
-            if (transitionDuration > 0) {
-                labelBlockHandler = labelBlockHandler
-                    .interrupt()
-                    .transition()
-                    .duration(transitionDuration)
-                    .on('end', () => resolve('updated'));
-            }
-            labelBlockHandler
-                .attr('x', attrs.x)
-                .attr('y', attrs.y)
-                .attr('dominant-baseline', 'middle');
-
-            if (transitionDuration <= 0)
-                resolve('updated');
-        });
-    }
 
     private static getLabelByIndex(labelsSelection: Selection<SVGTextElement, DataRow, SVGGElement, unknown>, barIndex: number, valueField: Field, dataRow: DataRow): Selection<SVGTextElement, DataRow, HTMLElement, unknown> {
         let labelBlock: Selection<SVGTextElement, DataRow, HTMLElement, unknown>;

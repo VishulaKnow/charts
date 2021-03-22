@@ -1,6 +1,7 @@
 import configCars from "../../../config/configExample";
+import { Size } from "../../../config/config";
 import designerConfig from "../../../designer/designerConfigExample";
-import { BlockMargin, Size, Model } from "../../../model/model";
+import { BlockMargin, Model } from "../../../model/model";
 import { assembleModel } from "../../../model/modelBuilder";
 import { BlockHelper } from "../../../engine/block/blockHelper";
 
