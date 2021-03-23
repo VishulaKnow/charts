@@ -11,6 +11,10 @@ import { Donut } from "./polarNotation/donut/donut";
 
 export type FilterCallback = (rows: DataRow[]) => void;
 
+export interface SelectDetails {
+    multySelect: boolean;
+}
+
 //TODO: вынести в отдельную папку / продумать разделение ID-менеджера и менеджера событий
 export class FilterEventManager {
     private block: Block;
@@ -41,7 +45,7 @@ export class FilterEventManager {
         this.registerEventToDonut(margin, blockSize, options, donutSettings);
         const selectedElems = Donut.getAllArcGroups(this.block).filter(d => this.selectedIds.findIndex(sid => sid === d.data.$id) !== -1);
         this.selectedIds = [];
-        selectedElems.dispatch('click');
+        selectedElems.dispatch('click', { bubbles: false, cancelable: true, detail: { multySelect: true } });
     }
 
     public event2DUpdate(options: TwoDimensionalOptionsModel): void {
@@ -75,12 +79,11 @@ export class FilterEventManager {
         const arcItems = Donut.getAllArcGroups(this.block);
         const thisClass = this;
 
-        arcItems.on('click', function (e: MouseEvent, dataRow) {
-            const multiSelect = e.ctrlKey === undefined ? true : e.ctrlKey;
-
+        arcItems.on('click', function (e: CustomEvent<SelectDetails>, dataRow) {
+            const multySelect = thisClass.getMultySelectParam(e);
             const keyValue = dataRow.data[options.data.keyField.name];
-            const appended = thisClass.processKey(multiSelect, keyValue, options.data.keyField.name);
-            SelectHighlighter.clickPolarHandler(multiSelect, appended, this, thisClass.getSelectedKeys(options.data.keyField.name), margin, blockSize, thisClass.block, options, arcItems, donutSettings);
+            const appended = thisClass.processKey(multySelect, keyValue, options.data.keyField.name);
+            SelectHighlighter.clickPolarHandler(multySelect, appended, this, thisClass.getSelectedKeys(options.data.keyField.name), margin, blockSize, thisClass.block, options, arcItems, donutSettings);
 
             if (thisClass.callback) {
                 thisClass.callback(Helper.getRowsByIds(thisClass.selectedIds, thisClass.fullDataset));
@@ -119,5 +122,11 @@ export class FilterEventManager {
                 return true;
             }
         }
+    }
+
+    private getMultySelectParam(e: CustomEvent<SelectDetails>): boolean {
+        return ((e as Event) as MouseEvent).ctrlKey === undefined
+            ? (e.detail.multySelect === undefined ? false : e.detail.multySelect)
+            : ((e as Event) as MouseEvent).ctrlKey;
     }
 }

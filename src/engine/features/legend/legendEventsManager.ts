@@ -11,7 +11,7 @@ export class LegendEventsManager {
      */
     public static setListeners(block: Block, keyFieldName: string, legendItems: Selection<HTMLDivElement, string, BaseType, unknown>): void {
         this.setHoverListeners(block, keyFieldName, legendItems);
-        // this.setClickListeners(block, keyFieldName, legendItems);
+        this.setClickListeners(block, keyFieldName, legendItems);
     }
 
     private static setHoverListeners(block: Block, keyFieldName: string, legendItems: Selection<HTMLDivElement, string, BaseType, unknown>): void {
@@ -31,9 +31,9 @@ export class LegendEventsManager {
     private static setClickListeners(block: Block, keyFieldName: string, legendItems: Selection<HTMLDivElement, string, BaseType, unknown>): void {
         const arcItems = Donut.getAllArcGroups(block);
 
-        legendItems.on('click', (e, keyValue) => {
+        legendItems.on('click', (e: MouseEvent, keyValue) => {
             arcItems.filter((row) => row.data[keyFieldName] === keyValue)
-                .dispatch('click');
+                .dispatch('click', { bubbles: false, cancelable: true, detail: { multySelect: e.ctrlKey } });
         });
     }
 }

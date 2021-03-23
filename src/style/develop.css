@@ -23,7 +23,7 @@
 
 /*========================================================================= Legend */
 .legend-item {
-    cursor: default;
+    cursor: pointer;
 }
 .legend-item-inline {
     white-space: nowrap;
