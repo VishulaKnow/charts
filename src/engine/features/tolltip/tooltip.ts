@@ -104,29 +104,30 @@ export class Tooltip {
         ElementHighlighter.renderShadowFilter(block);
 
         elements
-            .on('mouseover', function (_event, dataRow: PieArcDatum<DataRow>) {
+            .on('mouseover', function (e, dataRow: PieArcDatum<DataRow>) {
                 TooltipComponentsManager.showTooltipBlock(tooltipBlock);
                 TooltipDomHelper.fillTooltipForPolarChart(tooltipContent, chart, data, dataOptions, dataRow.data[dataOptions.keyField.name], select(this).select('path').style('fill'))
 
                 const coordinatePointer = TooltipDomHelper.getRecalcedCoordinateByArrow(DonutHelper.getArcCentroid(blockSize, margin, dataRow, donutThickness), tooltipBlock, blockSize, tooltipArrow, translateX, translateY);
                 const tooltipCoordinate = TooltipHelper.getCoordinateByPointer(coordinatePointer);
                 TooltipComponentsManager.setTooltipBlockCoordinate(tooltipBlock, tooltipCoordinate);
-                let clone =  Donut.getAllArcClones(block)
-                .filter((d: PieArcDatum<DataRow>) => d.data[dataOptions.keyField.name] === dataRow.data[dataOptions.keyField.name]) as Selection<SVGGElement, PieArcDatum<DataRow>, SVGGElement, unknown>;
-                if(clone.nodes().length === 0){
+
+                let clone = Donut.getAllArcClones(block)
+                    .filter((d: PieArcDatum<DataRow>) => d.data[dataOptions.keyField.name] === dataRow.data[dataOptions.keyField.name]);
+                if (clone.nodes().length === 0) {
                     clone = ElementHighlighter.makeArcClone(select<SVGGElement, PieArcDatum<DataRow>>(this))
-                    ElementHighlighter.setFilter(clone, block);      
+                    ElementHighlighter.setFilter(clone, block);
                     ElementHighlighter.changeDonutHighlightAppearance(select<SVGGElement, PieArcDatum<DataRow>>(this), margin, blockSize, donutThickness, block.transitionManager.durations.donutHover, true);
                     ElementHighlighter.changeDonutHighlightAppearance(clone, margin, blockSize, donutThickness, block.transitionManager.durations.donutHover, true);
-                 }
+                }
             });
-      
-        elements.on('mouseleave', function (_event, dataRow: PieArcDatum<DataRow>) {
+
+        elements.on('mouseleave', function (e, dataRow: PieArcDatum<DataRow>) {
             TooltipComponentsManager.hideTooltipBlock(tooltipBlock);
             if (!block.filterEventManager.isSelected(dataRow.data[dataOptions.keyField.name], dataOptions.keyField.name)) {
-                let clone =  Donut.getAllArcClones(block)
-                    .filter((d: PieArcDatum<DataRow>) => d.data[dataOptions.keyField.name] === dataRow.data[dataOptions.keyField.name]) as Selection<SVGGElement, PieArcDatum<DataRow>, SVGGElement, unknown>;
-                    clone.remove()
+                const clone = Donut.getAllArcClones(block)
+                    .filter((d: PieArcDatum<DataRow>) => d.data[dataOptions.keyField.name] === dataRow.data[dataOptions.keyField.name]);
+                clone.remove();
                 ElementHighlighter.changeDonutHighlightAppearance(select<SVGGElement, PieArcDatum<DataRow>>(this), margin, blockSize, donutThickness, block.transitionManager.durations.donutHover, false);
             }
         });

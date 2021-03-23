@@ -1,5 +1,4 @@
 import { Arc, Pie, PieArcDatum } from 'd3-shape'
-
 import { Selection, BaseType } from 'd3-selection'
 import { interpolate } from 'd3-interpolate'
 import { BlockMargin, DataRow, DonutChartSettings, PolarChartModel } from "../../../model/model";
@@ -95,6 +94,7 @@ export class Donut {
         return block.getSvg()
             .selectAll(`.${this.arcItemClass}`) as Selection<SVGGElement, PieArcDatum<DataRow>, SVGGElement, unknown>;
     }
+
     public static getAllArcClones(block: Block): Selection<SVGGElement, PieArcDatum<DataRow>, SVGGElement, unknown> {
         return block.getSvg()
             .selectAll(`.${Donut.arcItemClass}-clone`) as Selection<SVGGElement, PieArcDatum<DataRow>, SVGGElement, unknown>;
