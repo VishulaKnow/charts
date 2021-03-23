@@ -23,9 +23,10 @@ class Chart {
      * @param config Объект конфигуратора
      * @param designerConfig Объект конфигуратора дизайнера
      * @param data Данные
+     * @param selectedIds Id выделенных записей
      * @param isResizable Флаг подстройки размера блока графика под родительский элемент
      */
-    constructor(config: Config, designerConfig: DesignerConfig, data: DataSource, filterCallback: FilterCallback, isResizable: boolean = false) {
+    constructor(config: Config, designerConfig: DesignerConfig, data: DataSource, filterCallback: FilterCallback, selectedIds: number[] = [], isResizable: boolean = false) {
         Chart.chartCounter++;
         this.config = config;
         this.designerConfig = designerConfig;
@@ -33,7 +34,7 @@ class Chart {
         this.isResizable = isResizable;
 
         this.model = assembleModel(this.config, this.data, this.designerConfig);
-        this.engine = new Engine(Chart.chartCounter, filterCallback, []);
+        this.engine = new Engine(Chart.chartCounter, filterCallback, selectedIds);
     }
 
     /**
