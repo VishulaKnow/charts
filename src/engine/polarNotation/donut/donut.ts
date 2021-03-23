@@ -63,6 +63,8 @@ export class Donut {
 
         this.renderNewArcItems(arcGenerator, pieGenerator, donutBlock, dataNewZeroRows, chart);
 
+        this.setElementsColor(this.getAllArcGroups(block), chart.style.elementColors);
+
         const path = this.getAllArcGroups(block)
             .data(pieGenerator(dataExtraZeroRows))
             .select<SVGPathElement>('path');

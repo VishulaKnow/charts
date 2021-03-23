@@ -11,15 +11,11 @@ export class ChartStyleModel {
     }
 
     public static get2DChartStyle(chartsAmount: number, chartType: TwoDimensionalChartType, chartsFieldsAmounts: number[], chartIndex: number, isSegmented: boolean, styleConfig: ChartStyleConfig): ChartStyle {
-        let startIndex = 0;
-        for (let i = 0; i < chartIndex; i++) {
-            startIndex += chartsFieldsAmounts[i];
-        }
-        const fieldsAmount = chartsFieldsAmounts[chartIndex];
-        const palette = chroma.scale(styleConfig.baseColors).mode('rgb').colors(ModelHelper.getSum(chartsFieldsAmounts));
+        const startIndex = this.getStartIndex(chartIndex, chartsFieldsAmounts);
+        const palette = chroma.scale(styleConfig.baseColors).mode('rgb').colors(ModelHelper.getSum(chartsFieldsAmounts) <= 1 ? 2 : ModelHelper.getSum(chartsFieldsAmounts));
 
         return {
-            elementColors: this.getColors(palette, fieldsAmount, startIndex, chartType),
+            elementColors: this.getColors(palette, chartsFieldsAmounts[chartIndex], startIndex, chartType),
             opacity: this.getChartOpacity(chartsAmount, chartType, chartsFieldsAmounts[chartIndex], isSegmented)
         }
     }
@@ -48,5 +44,13 @@ export class ChartStyleModel {
             selectedColors[i] = chroma.mix(selectedColors[i], 'white', 0.2).saturate(3).hex();
         }
         return selectedColors;
+    }
+
+    private static getStartIndex(chartIndex: number, chartsFieldsAmounts: number[]): number {
+        let startIndex = 0;
+        for (let i = 0; i < chartIndex; i++) {
+            startIndex += chartsFieldsAmounts[i];
+        }
+        return startIndex;
     }
 }

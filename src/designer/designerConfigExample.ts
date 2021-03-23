@@ -34,8 +34,6 @@ const designerConfig: DesignerConfig = {
         }
     },
     chartStyle: {
-        baseColor: 'red',
-        step: 3,
         baseColors: ['#209de3', '#ff3131', '#ffba00', '#20b078']
     },
     dataFormat: {

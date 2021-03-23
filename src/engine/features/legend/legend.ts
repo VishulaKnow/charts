@@ -1,14 +1,16 @@
 
-import { select, Selection } from "d3-selection";
+import { BaseType, select, Selection } from "d3-selection";
 import { Size } from "../../../config/config";
 import { LegendItemsDirection } from "../../../model/featuresModel/legendModel/legendCanvasModel";
 import { DataSource, IntervalOptionsModel, LegendBlockModel, LegendPosition, Model, Orient, PolarOptionsModel, TwoDimensionalOptionsModel } from "../../../model/model";
 import { Block } from "../../block/block";
 import { LegendDomHelper } from "./legendDomHelper";
+import { LegendEventsManager } from "./legendEventsManager";
 import { LegendCoordinate, LegendHelper } from "./legendHelper";
 export class Legend {
     public static objectClass = 'legend-object';
     public static labelClass = 'legend-label';
+    public static itemClass = 'legend-item';
 
     private static legendBlockClass = 'legend-block';
 
@@ -18,9 +20,12 @@ export class Legend {
             const chartElementsColor = LegendHelper.getMarksColor(options);
             const legendItemsDirection = LegendHelper.getLegendItemsDirection(options.type, options.legend.position);
 
-            const legendObject = this.renderLegendObject(block, options.legend.position, model.otherComponents.legendBlock, model.blockCanvas.size);
+            const legendObject = this.renderObject(block, options.legend.position, model.otherComponents.legendBlock, model.blockCanvas.size);
 
-            this.renderLegendContent(legendObject, legendItemsContent, chartElementsColor, legendItemsDirection, options.legend.position);
+            const legendItems = this.renderContent(legendObject, legendItemsContent, chartElementsColor, legendItemsDirection, options.legend.position);
+            if (options.type === 'polar') {
+                LegendEventsManager.setListeners(block, options.data.keyField.name, legendItems);
+            }
         }
     }
 
@@ -30,26 +35,29 @@ export class Legend {
             const chartElementsColor = LegendHelper.getMarksColor(options);
             const legendItemsDirection = LegendHelper.getLegendItemsDirection(options.type, options.legend.position);
 
-            const legendObject = this.getLegendObject(block)
+            const legendObject = this.getObject(block)
 
-            this.removeLegendBlock(legendObject)
+            this.removeContent(legendObject);
 
-            this.renderLegendContent(legendObject, legendItemsContent, chartElementsColor, legendItemsDirection, options.legend.position);
+            const legendItems = this.renderContent(legendObject, legendItemsContent, chartElementsColor, legendItemsDirection, options.legend.position);
+            if (options.type === 'polar') {
+                LegendEventsManager.setListeners(block, options.data.keyField.name, legendItems);
+            }
         }
     }
 
-    public static renderLegendObject(block: Block, legendPosition: Orient, legendBlockModel: LegendBlockModel, blockSize: Size): Selection<SVGForeignObjectElement, unknown, HTMLElement, any> {
+    public static renderObject(block: Block, legendPosition: Orient, legendBlockModel: LegendBlockModel, blockSize: Size): Selection<SVGForeignObjectElement, unknown, HTMLElement, any> {
         const legendObject = block.getSvg()
             .append('foreignObject')
             .attr('class', Legend.objectClass);
 
         const legendCoordinate = LegendHelper.getLegendCoordinateByPosition(legendPosition, legendBlockModel, blockSize);
-        this.fillLegendCoordinate(legendObject, legendCoordinate);
+        this.fillCoordinate(legendObject, legendCoordinate);
 
         return legendObject;
     }
 
-    public static renderLegendContent(legendObject: Selection<SVGForeignObjectElement, unknown, HTMLElement, any>, items: string[], colorPalette: string[], itemsDirection: LegendItemsDirection, position: LegendPosition): void {
+    public static renderContent(legendObject: Selection<SVGForeignObjectElement, unknown, HTMLElement, any>, items: string[], colorPalette: string[], itemsDirection: LegendItemsDirection, position: LegendPosition): Selection<HTMLDivElement, string, BaseType, unknown> {
         const wrapper = legendObject.append('xhtml:div')
             .attr('class', Legend.legendBlockClass);
         wrapper
@@ -63,13 +71,15 @@ export class Legend {
         }
 
         const itemWrappers = wrapper
-            .selectAll(`.legend-item`)
+            .selectAll(`.${this.itemClass}`)
             .data(items)
             .enter()
             .append('div');
 
+        const thisClass = this;
+
         itemWrappers.each(function (d, i) {
-            select(this).attr('class', LegendHelper.getItemClasses(itemsDirection, position, i));
+            select(this).attr('class', `${thisClass.itemClass} ${LegendHelper.getItemClasses(itemsDirection, position, i)}`);
         });
 
         itemWrappers
@@ -87,18 +97,20 @@ export class Legend {
             LegendDomHelper.cropColumnLabels(legendObject, itemWrappers, itemsDirection);
         if (itemsDirection === 'row')
             LegendDomHelper.cropRowLabels(legendObject, itemWrappers);
+
+        return itemWrappers;
     }
 
-    public static getLegendObject(block: Block): Selection<SVGForeignObjectElement, unknown, HTMLElement, any> {
+    public static getObject(block: Block): Selection<SVGForeignObjectElement, unknown, HTMLElement, any> {
         return block.getSvg()
             .select<SVGForeignObjectElement>(`foreignObject.${Legend.objectClass}`);
     }
 
-    public static removeLegendBlock(legendObject: Selection<SVGForeignObjectElement, unknown, HTMLElement, any>): void {
+    public static removeContent(legendObject: Selection<SVGForeignObjectElement, unknown, HTMLElement, any>): void {
         legendObject.select(`.${Legend.legendBlockClass}`).remove();
     }
 
-    private static fillLegendCoordinate(legendBlock: Selection<SVGForeignObjectElement, unknown, HTMLElement, any>, coordinate: LegendCoordinate): void {
+    private static fillCoordinate(legendBlock: Selection<SVGForeignObjectElement, unknown, HTMLElement, any>, coordinate: LegendCoordinate): void {
         legendBlock
             .attr('x', coordinate.x)
             .attr('y', coordinate.y)

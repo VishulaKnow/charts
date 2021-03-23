@@ -1,4 +1,4 @@
-import { select, Selection, pointer } from 'd3-selection';
+import { select, Selection, pointer, } from 'd3-selection';
 import { PieArcDatum } from 'd3-shape'
 import { BlockMargin, DataRow, DataSource, IntervalChartModel, Model, OptionsModelData, Orient, PolarChartModel, ScaleKeyModel, TwoDimensionalChartModel } from "../../../model/model";
 import { Block } from "../../block/block";
@@ -60,9 +60,7 @@ export class Tooltip {
     private static renderLineTooltip(block: Block, scaleKey: AxisScale<any>, margin: BlockMargin, blockSize: Size, charts: TwoDimensionalChartModel[], chartOrientation: ChartOrientation, keyAxisOrient: Orient, data: DataSource, dataOptions: OptionsModelData, scaleKeyModel: ScaleKeyModel): void {
         const tooltipBlock = TooltipComponentsManager.renderTooltipBlock(block);
         const tooltipContent = TooltipComponentsManager.renderTooltipContentBlock(tooltipBlock);
-
         const tooltipLine = TooltipComponentsManager.renderTooltipLine(block);
-
         const tipBox = TipBox.renderOrGet(block, margin, blockSize);
 
         ElementHighlighter.renderShadowFilter(block);
@@ -70,8 +68,8 @@ export class Tooltip {
         let currentKey: string = null;
 
         tipBox
-            .on('mousemove', function (event) {
-                const keyValue = TipBoxHelper.getKeyValueByPointer(pointer(event, this), chartOrientation, margin, blockSize, scaleKey, scaleKeyModel.type);
+            .on('mousemove', function (e) {
+                const keyValue = TipBoxHelper.getKeyValueByPointer(pointer(e, this), chartOrientation, margin, blockSize, scaleKey, scaleKeyModel.type);
 
                 if (!currentKey || currentKey !== keyValue) {
                     currentKey = keyValue;
@@ -80,7 +78,7 @@ export class Tooltip {
 
                     TooltipDomHelper.fillForMulty2DCharts(tooltipContent, charts, data, dataOptions, keyValue);
 
-                    const tooltipCoordinate = TooltipHelper.getTooltipFixedCoordinate(block.getSvg().node().getBoundingClientRect(), scaleKey, margin, blockSize, keyValue, tooltipContent.node().getBoundingClientRect(), keyAxisOrient);
+                    const tooltipCoordinate = TooltipHelper.getTooltipFixedCoordinate(scaleKey, margin, keyValue, block.getSvg().node().getBoundingClientRect(), tooltipContent.node().getBoundingClientRect(), keyAxisOrient, window.innerWidth, window.innerHeight);
                     TooltipComponentsManager.setLineTooltipCoordinate(tooltipBlock, tooltipCoordinate, chartOrientation, block.transitionManager.durations.tooltipSlide);
 
                     const tooltipLineAttributes = TooltipHelper.getTooltipLineAttributes(scaleKey, margin, keyValue, chartOrientation, blockSize);
@@ -107,7 +105,6 @@ export class Tooltip {
 
         elements
             .on('mouseover', function (_event, dataRow: PieArcDatum<DataRow>) {
-                
                 TooltipComponentsManager.showTooltipBlock(tooltipBlock);
                 TooltipDomHelper.fillTooltipForPolarChart(tooltipContent, chart, data, dataOptions, dataRow.data[dataOptions.keyField.name], select(this).select('path').style('fill'))
 
@@ -123,7 +120,7 @@ export class Tooltip {
                     ElementHighlighter.changeDonutHighlightAppearance(clone, margin, blockSize, donutThickness, block.transitionManager.durations.donutHover, true);
                  }
             });
-        
+      
         elements.on('mouseleave', function (_event, dataRow: PieArcDatum<DataRow>) {
             TooltipComponentsManager.hideTooltipBlock(tooltipBlock);
             if (!block.filterEventManager.isSelected(dataRow.data[dataOptions.keyField.name], dataOptions.keyField.name)) {
@@ -137,7 +134,7 @@ export class Tooltip {
 
     private static renderTooltipWrapper(block: Block): void {
         let tooltipWrapper = block.getWrapper()
-            .select(`.${this.tooltipWrapperClass}`)
+            .select(`.${this.tooltipWrapperClass}`);
 
         if (tooltipWrapper.empty())
             block.getWrapper()

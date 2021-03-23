@@ -77,7 +77,7 @@ export class TwoDimensionalManager {
 
         Axis.update(block, scales, options.scale, options.axis, model.blockCanvas.size, keyDomainEquality);
 
-        GridLine.rerender(block,
+        GridLine.update(block,
             options.additionalElements.gridLine.flag,
             options.axis.keyAxis,
             options.axis.valueAxis,
@@ -95,7 +95,7 @@ export class TwoDimensionalManager {
             model.blockCanvas.size,
             model.chartSettings.bar);
 
-        block.filterEventManager.registerEventFor2D(scales.key, model.chartBlock.margin, model.blockCanvas.size, options);
+        block.filterEventManager.event2DUpdate(options);
 
         Tooltip.render(block, model, data, scales);
 
