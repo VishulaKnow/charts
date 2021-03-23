@@ -2,7 +2,7 @@ import { Block } from './block/block';
 import { ValueFormatter } from './valueFormatter';
 import { ContentManager } from './contentManager';
 import { DataSource, Model } from '../model/model';
-import { FilterCallback, FilterEventManager } from './filterEventManager';
+import { FilterCallback, FilterEventManager } from './filterManager/filterEventManager';
 
 export default class Engine {
     public block: Block;

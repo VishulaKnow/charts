@@ -5,7 +5,7 @@ import { Scales } from "../features/scale/scale";
 import { TipBox } from "../features/tipBox/tipBox";
 import { Helper } from "../helpers/helper";
 import { NamesManager } from "../namesManager";
-import { FilterEventManager } from "../filterEventManager";
+import { FilterEventManager } from "../filterManager/filterEventManager";
 import { Donut } from "../polarNotation/donut/donut";
 import { TransitionManager } from "../transitionManager";
 import { BlockHelper } from "./blockHelper";

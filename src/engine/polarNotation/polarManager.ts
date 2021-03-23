@@ -42,7 +42,7 @@ export class PolarManager {
     public static updateData(block: Block, model: Model, data: DataSource): void {
         block.transitionManager.interruptTransitions();
         block.removeEventListeners();
-        block.filterEventManager.update(data[model.options.data.dataSource]);
+        block.filterEventManager.updateData(data[model.options.data.dataSource]);
         ElementHighlighter.removeDonutArcClones(block);
 
         ElementHighlighter.removeFilter(Donut.getAllArcGroups(block));

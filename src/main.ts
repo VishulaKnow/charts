@@ -1,7 +1,7 @@
 import { Config, ValueField, AdditionalElements, Size, TwoDimensionalChartData, PolarChartData, Legend, DataOptions, AxisOptions, TwoDimensionalOptions, TwoDimensionalChartType, TwoDimensionalChart, TwoDimensionalAxis, PolarOptions, PolarChartType, PolarChart, NumberDomain, IntervalOptions, IntervalChartType, IntervalChart, IntervalAxis, EmbeddedLabelType, ChartType, ChartOrientation, ChartNotation, ChartBlockCanvas, AxisPosition } from "./config/config";
 import { DesignerConfig, Formatter, DonutOptionsCanvas, DataTypeOptions, DataType, ChartStyleConfig, BarOptionsCanvas, AxisLabelCanvas } from "./designer/designerConfig";
 import Engine from "./engine/engine";
-import { FilterCallback } from "./engine/filterEventManager";
+import { FilterCallback } from "./engine/filterManager/filterEventManager";
 import { DataRow, DataSource, Model } from "./model/model";
 import { assembleModel, getPreparedData } from "./model/modelBuilder";
 

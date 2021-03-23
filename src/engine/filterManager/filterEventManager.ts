@@ -1,13 +1,13 @@
 import { AxisScale } from "d3-axis";
 import { pointer, select } from "d3-selection";
-import { Size } from "../config/config";
-import { BlockMargin, TwoDimensionalOptionsModel, PolarOptionsModel, DonutChartSettings, DataRow } from "../model/model";
-import { Block } from "./block/block";
-import { SelectHighlighter } from "./elementHighlighter/selectHighlighter";
-import { TipBox } from "./features/tipBox/tipBox";
-import { TipBoxHelper } from "./features/tipBox/tipBoxHelper";
-import { Helper } from "./helpers/helper";
-import { Donut } from "./polarNotation/donut/donut";
+import { Size } from "../../config/config";
+import { BlockMargin, TwoDimensionalOptionsModel, PolarOptionsModel, DonutChartSettings, DataRow } from "../../model/model";
+import { Block } from "../block/block";
+import { SelectHighlighter } from "../elementHighlighter/selectHighlighter";
+import { TipBox } from "../features/tipBox/tipBox";
+import { TipBoxHelper } from "../features/tipBox/tipBoxHelper";
+import { Helper } from "../helpers/helper";
+import { Donut } from "../polarNotation/donut/donut";
 
 export type FilterCallback = (rows: DataRow[]) => void;
 
@@ -35,12 +35,45 @@ export class FilterEventManager {
         return Helper.getKeysByIds(this.selectedIds, keyFieldName, this.fullDataset);
     }
 
-    public update(newDataset: DataRow[]): void {
+    public updateData(newDataset: DataRow[]): void {
         this.fullDataset = newDataset;
     }
 
     public isSelected(keyValue: string, keyFieldName: string): boolean {
         return Helper.getKeysByIds(this.selectedIds, keyFieldName, this.fullDataset).findIndex(key => key === keyValue) !== -1;
+    }
+
+    private setId(id: number): void {
+        this.selectedIds = [id];
+    }
+
+    private addId(id: number): void {
+        this.selectedIds.push(id);
+    }
+
+    private removeId(id: number): void {
+        this.selectedIds.splice(this.selectedIds.findIndex($id => $id === id), 1);
+    }
+
+    private processKey(multySelect: boolean, keyValue: string, keyFieldName: string): boolean {
+        const selectedId = Helper.getIdFromRowByKey(keyFieldName, keyValue, this.fullDataset);
+        if (multySelect) {
+            if (this.getSelectedKeys(keyFieldName).findIndex(key => key === keyValue) === -1) {
+                this.addId(selectedId);
+                return true;
+            } else {
+                this.removeId(selectedId);
+                return false;
+            }
+        } else {
+            if (this.getSelectedKeys(keyFieldName)[0] === keyValue && this.getSelectedKeys(keyFieldName).length === 1) {
+                this.removeId(selectedId);
+                return false;
+            } else {
+                this.setId(selectedId);
+                return true;
+            }
+        }
     }
 
     public setListenerPolar(margin: BlockMargin, blockSize: Size, options: PolarOptionsModel, donutSettings: DonutChartSettings): void {
@@ -98,39 +131,6 @@ export class FilterEventManager {
                 thisClass.callback(Helper.getRowsByIds(thisClass.selectedIds, thisClass.fullDataset));
             }
         });
-    }
-
-    private setId(id: number): void {
-        this.selectedIds = [id];
-    }
-
-    private addId(id: number): void {
-        this.selectedIds.push(id);
-    }
-
-    private removeId(id: number): void {
-        this.selectedIds.splice(this.selectedIds.findIndex($id => $id === id), 1);
-    }
-
-    private processKey(multySelect: boolean, keyValue: string, keyFieldName: string): boolean {
-        const selectedId = Helper.getIdFromRowByKey(keyFieldName, keyValue, this.fullDataset);
-        if (multySelect) {
-            if (this.getSelectedKeys(keyFieldName).findIndex(key => key === keyValue) === -1) {
-                this.addId(selectedId);
-                return true;
-            } else {
-                this.removeId(selectedId);
-                return false;
-            }
-        } else {
-            if (this.getSelectedKeys(keyFieldName)[0] === keyValue && this.getSelectedKeys(keyFieldName).length === 1) {
-                this.removeId(selectedId);
-                return false;
-            } else {
-                this.setId(selectedId);
-                return true;
-            }
-        }
     }
 
     private getMultySelectParam(e: CustomEvent<SelectDetails>): boolean {
