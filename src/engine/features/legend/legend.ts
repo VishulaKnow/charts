@@ -10,6 +10,7 @@ import { LegendCoordinate, LegendHelper } from "./legendHelper";
 export class Legend {
     public static objectClass = 'legend-object';
     public static labelClass = 'legend-label';
+    public static itemClass = 'legend-item';
 
     private static legendBlockClass = 'legend-block';
 
@@ -70,13 +71,15 @@ export class Legend {
         }
 
         const itemWrappers = wrapper
-            .selectAll(`.legend-item`)
+            .selectAll(`.${this.itemClass}`)
             .data(items)
             .enter()
             .append('div');
 
+        const thisClass = this;
+
         itemWrappers.each(function (d, i) {
-            select(this).attr('class', LegendHelper.getItemClasses(itemsDirection, position, i));
+            select(this).attr('class', `${thisClass.itemClass} ${LegendHelper.getItemClasses(itemsDirection, position, i)}`);
         });
 
         itemWrappers

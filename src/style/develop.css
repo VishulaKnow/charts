@@ -22,6 +22,9 @@
 
 
 /*========================================================================= Legend */
+.legend-item {
+    cursor: default;
+}
 .legend-item-inline {
     white-space: nowrap;
 }
