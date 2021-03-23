@@ -18,7 +18,7 @@ export class IntervalModel {
             orient: configOptions.orientation,
             scale: {
                 key: {
-                    domain: ScaleModel.getScaleKeyDomain(dataScope.allowableKeys),
+                    domain: dataScope.allowableKeys,
                     range: {
                         start: 0,
                         end: ScaleModel.getScaleRangePeek(ScaleType.Key, configOptions.orientation, margin, config.canvas.size)

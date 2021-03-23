@@ -19,10 +19,6 @@ export class ScaleModel {
             : blockSize.width - margin.left - margin.right;
     }
 
-    public static getScaleKeyDomain(allowableKeys: string[]): string[] {
-        return allowableKeys;
-    }
-
     public static getScaleDateValueDomain(data: DataSource, charts: IntervalChart[], keyAxisPosition: AxisPosition, dataSource: string): [Date, Date] {
         const minMax = ModelHelper.getMinAndMaxOfIntervalData(data, dataSource, charts);
         let domainPeekMin = minMax[0];

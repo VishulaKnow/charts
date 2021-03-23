@@ -97,7 +97,7 @@ export function assembleModel(config: Config, data: DataSource, designerConfig: 
     const preparedData = DataManagerModel.getPreparedData(data, dataScope.allowableKeys, config);
 
     if (config.options.type === '2d' && config.options.axis.keyAxis.visibility)
-        MarginModel.recalcMarginByVerticalAxisLabel(margin, data, config, designerConfig, dataScope);
+        MarginModel.recalcMarginByVerticalAxisLabel(margin, config, designerConfig, dataScope);
 
     const blockCanvas = getBlockCanvas(config);
     const chartBlock = getChartBlock(margin);

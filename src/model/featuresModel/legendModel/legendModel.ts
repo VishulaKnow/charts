@@ -26,7 +26,6 @@ export class LegendModel {
         const titleModelTemplate = TitleModel.getTitleModel()
 
         return {
-
             left: {
                 size: 0,
                 margin: { top: mt, bottom: mb, left: ml, right: 0 },
@@ -37,16 +36,6 @@ export class LegendModel {
                 margin: { top: 0, bottom: 20, left: 20, right: 20 },
                 pad: 0
             },
-            // right: { 
-            //     size: 0,
-            //     margin: { top: mt, bottom: mb, left: 0, right: mr },
-            //     pad: 0
-            // },
-            // top: { 
-            //     size: 0,
-            //     margin: { top: 20, bottom: 0, left: 20, right: 20 },
-            //     pad: 0
-            // }
             right: {
                 size: 0,
                 margin: { top: titleModelTemplate.pad + titleModelTemplate.margin.top + titleModelTemplate.size, bottom: mb, left: 0, right: mr },

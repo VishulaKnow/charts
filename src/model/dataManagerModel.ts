@@ -22,8 +22,8 @@ export class DataManagerModel {
         }
     }
 
-    public static getDataValuesByKeyField(data: DataSource, dataSource: string, keyFieldName: string): string[] {
-        return data[dataSource].map(dataRow => dataRow[keyFieldName]);
+    public static getDataValuesByKeyField(data: DataSource, dataSourceName: string, keyFieldName: string): string[] {
+        return data[dataSourceName].map(dataRow => dataRow[keyFieldName]);
     }
 
 

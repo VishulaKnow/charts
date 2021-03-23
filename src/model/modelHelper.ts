@@ -36,10 +36,6 @@ export class ModelHelper {
         return uniqueValues;
     }
 
-    public static getUniqueValuesLength(values: string[]): number {
-        return this.getUniqueValues(values).length;
-    }
-
     public static getStringScore(word: string): number {
         // lower case letter width ~ 0.74 from upper case width.
         // Number width == lower case letter width

@@ -1,4 +1,4 @@
-import { TwoDimensionalAxis, Config, PolarChart, TwoDimensionalChart, IntervalChart, IntervalAxis, TwoDimensionalOptions, PolarOptions, IntervalOptions } from "../config/config";
+import { TwoDimensionalAxis, Config, IntervalAxis, TwoDimensionalOptions, PolarOptions, IntervalOptions, ChartOrientation } from "../config/config";
 import { DesignerConfig } from "../designer/designerConfig";
 import { AxisModel, LabelSize } from "./featuresModel/axisModel";
 import { DataManagerModel } from "./dataManagerModel";
@@ -20,7 +20,7 @@ export class MarginModel {
 
         if (config.options.type === '2d' || config.options.type === 'interval') {
             const labelSize = this.getHorizontalMarginByAxisLabels(designerConfig.canvas.axisLabel.maxSize.main, config.options.axis, data, config.options);
-            this.recalcVerticalMarginByAxisLabelHeight(labelSize, margin, config.options, config.options.axis);
+            this.recalcVerticalMarginByAxisLabelHeight(labelSize, margin, config.options.orientation, config.options.axis);
 
             // Если встроенный лейбл показывает ключи, то лейблы оси ключей не показываются
             // При этом все графики должны иметь: embeddedLabels = 'key'
@@ -29,7 +29,7 @@ export class MarginModel {
                 ? !TwoDimensionalModel.getChartsEmbeddedLabelsFlag(config.options.charts, config.options.orientation)
                 : true;
 
-            this.recalcHorizontalMarginByAxisLabelWidth(labelSize, margin, config.options, config.options.axis, showingFlag);
+            this.recalcHorizontalMarginByAxisLabelWidth(labelSize, margin, config.options.orientation, config.options.axis, showingFlag);
         }
 
         return margin;
@@ -55,7 +55,7 @@ export class MarginModel {
         }
     }
 
-    public static recalcMarginByVerticalAxisLabel(margin: BlockMargin, data: DataSource, config: Config, designerConfig: DesignerConfig, dataScope: DataScope): void {
+    public static recalcMarginByVerticalAxisLabel(margin: BlockMargin, config: Config, designerConfig: DesignerConfig, dataScope: DataScope): void {
         if ((config.options.type === '2d' || config.options.type === 'interval') && config.options.orientation === 'vertical') {
             const axisLabelSize = AxisModel.getLabelSize(designerConfig.canvas.axisLabel.maxSize.main, dataScope.allowableKeys);
             const axisConfig = AxisModel.getKeyAxisLabelPosition(margin, config.canvas.size, dataScope.allowableKeys.length);
@@ -80,9 +80,9 @@ export class MarginModel {
         return AxisModel.getLabelSize(labelsMaxWidth, labelsTexts);
     }
 
-    private static recalcVerticalMarginByAxisLabelHeight(labelSize: LabelSize, margin: BlockMargin, options: TwoDimensionalOptions | IntervalOptions, axis: TwoDimensionalAxis | IntervalAxis): void {
-        const keyAxisOrient = AxisModel.getAxisOrient(AxisType.Key, options.orientation, axis.keyAxis.position);
-        const valueAxisOrient = AxisModel.getAxisOrient(AxisType.Value, options.orientation, axis.valueAxis.position);
+    private static recalcVerticalMarginByAxisLabelHeight(labelSize: LabelSize, margin: BlockMargin, orientation: ChartOrientation, axis: TwoDimensionalAxis | IntervalAxis): void {
+        const keyAxisOrient = AxisModel.getAxisOrient(AxisType.Key, orientation, axis.keyAxis.position);
+        const valueAxisOrient = AxisModel.getAxisOrient(AxisType.Value, orientation, axis.valueAxis.position);
 
         if ((keyAxisOrient === 'bottom' || keyAxisOrient === 'top')) {
             if (axis.keyAxis.visibility)
@@ -92,9 +92,9 @@ export class MarginModel {
         }
     }
 
-    private static recalcHorizontalMarginByAxisLabelWidth(labelSize: LabelSize, margin: BlockMargin, options: TwoDimensionalOptions | IntervalOptions, axis: TwoDimensionalAxis | IntervalAxis, isShow: boolean): void {
-        const keyAxisOrient = AxisModel.getAxisOrient(AxisType.Key, options.orientation, axis.keyAxis.position);
-        const valueAxisOrient = AxisModel.getAxisOrient(AxisType.Value, options.orientation, axis.valueAxis.position);
+    private static recalcHorizontalMarginByAxisLabelWidth(labelSize: LabelSize, margin: BlockMargin, orientation: ChartOrientation, axis: TwoDimensionalAxis | IntervalAxis, isShow: boolean): void {
+        const keyAxisOrient = AxisModel.getAxisOrient(AxisType.Key, orientation, axis.keyAxis.position);
+        const valueAxisOrient = AxisModel.getAxisOrient(AxisType.Value, orientation, axis.valueAxis.position);
 
         if ((keyAxisOrient === 'left' || keyAxisOrient === 'right') && isShow && axis.keyAxis.visibility) {
             margin[keyAxisOrient] += labelSize.width + AXIS_VERTICAL_LABEL_PADDING;
@@ -106,7 +106,7 @@ export class MarginModel {
     private static recalcMarginWithLegend(margin: BlockMargin, config: Config, legendMaxWidth: number, legendBlockModel: LegendBlockModel, data: DataSource): void {
         const legendPosition = LegendModel.getLegendModel(config.options.type, config.options.legend.show, config.canvas.size, margin).position;
         if (legendPosition !== 'off') {
-            const legendItemsContent = this.getLegendItemsContent(config.options.charts, config.options, data);
+            const legendItemsContent = this.getLegendItemsContent(config.options, data);
             const legendSize = LegendModel.getLegendSize(config.options.type, legendPosition, legendItemsContent, legendMaxWidth, config.canvas.size, legendBlockModel);
 
             margin[legendPosition] += legendSize;
@@ -118,7 +118,7 @@ export class MarginModel {
         }
     }
 
-    private static getLegendItemsContent(charts: Array<TwoDimensionalChart | IntervalChart | PolarChart>, options: TwoDimensionalOptions | PolarOptions | IntervalOptions, data: DataSource): string[] {
+    private static getLegendItemsContent(options: TwoDimensionalOptions | PolarOptions | IntervalOptions, data: DataSource): string[] {
         if (options.type === '2d') {
             let texts: string[] = [];
             options.charts.forEach(chart => {
