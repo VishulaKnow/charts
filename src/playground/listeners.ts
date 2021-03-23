@@ -411,11 +411,7 @@ export default class Listeners {
                 thisClass.designerConfig.chartStyle.baseColors = (this.value as string).split(', ');
                 thisClass.updateFull();
             }
-        }); //TODO: подправить
-        // document.querySelector('#color-step').addEventListener('input', function () {
-        //     thisClass.designerConfig.chartStyle.step = parseFloat(this.value);
-        //     thisClass.updateFull();
-        // });
+        });
     }
 
     private setCommonListeners(): void {
@@ -610,8 +606,6 @@ export default class Listeners {
         ListenersHelper.setInputValue('#min-bar-size', designerConfig.canvas.chartOptions.bar.minBarWidth);
         ListenersHelper.setInputValue('#max-bar-size', designerConfig.canvas.chartOptions.bar.maxBarWidth);
         ListenersHelper.setInputValue('#base-colors', designerConfig.chartStyle.baseColors.join(', '));
-        //TODO: подправить
-        // ListenersHelper.setInputValue('#color-step', designerConfig.chartStyle.step);
         ListenersHelper.setInputValue('#pad-angle', designerConfig.canvas.chartOptions.donut.padAngle);
         ListenersHelper.setInputValue('#pad-angle', designerConfig.canvas.chartOptions.donut.padAngle);
         ListenersHelper.setInputValue('#aggregator-pad', designerConfig.canvas.chartOptions.donut.aggregatorPad);

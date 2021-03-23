@@ -1,5 +1,5 @@
 import { DataRow } from "../../model/model";
-//TODO: подумать над разделением хелпера ключей, классов и т. д.
+
 export class Helper {
     public static getRowsByIds(ids: number[], dataSet: DataRow[]): DataRow[] {
         return dataSet.filter(row => ids.findIndex(id => id === row.$id) !== -1);
@@ -18,7 +18,7 @@ export class Helper {
     }
 
     public static getKeyById(id: number, keyFieldName: string, dataSet: DataRow[]): string {
-        return this.extractKeysFromRows(keyFieldName, this.getRowsByIds([id], dataSet))[0];
+        return this.getKeysByIds([id], keyFieldName, dataSet)[0];
     }
 
     public static getCssClassesLine(cssClasses: string[]): string {
