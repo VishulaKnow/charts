@@ -46,6 +46,7 @@ export class ChartStyleModel {
         return 1;
     }
 
+    // hsv: h += 14 в первых двух
     private static getColorSet(baseColors: string[], elementsAmount: number): string[] {
         return chroma.scale(baseColors).mode('rgb').colors(elementsAmount <= 1 ? 2 : elementsAmount);
 
