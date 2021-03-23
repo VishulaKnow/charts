@@ -10,7 +10,7 @@ export default class Engine {
     public data: DataSource;
     private chartId: number;
 
-    constructor(id: number, private filterCallback: FilterCallback) {
+    constructor(id: number, private filterCallback: FilterCallback, private initializeSelected: number[]) {
         this.chartId = id;
     }
 
@@ -60,9 +60,12 @@ export default class Engine {
     }
 
     private setFilterEventManager(dataSource: string): void {
+        const highlightIds: number[] = [];
+        if (this.initializeSelected instanceof Array && this.initializeSelected.length > 0)
+            highlightIds.push(...this.initializeSelected);
         if (dataSource)
-            this.filterEventManager = new FilterEventManager(this.filterCallback, this.data[dataSource]);
+            this.filterEventManager = new FilterEventManager(this.filterCallback, this.data[dataSource], highlightIds);
         else
-            this.filterEventManager = new FilterEventManager(this.filterCallback, []);
+            this.filterEventManager = new FilterEventManager(this.filterCallback, [], highlightIds);
     }
 }

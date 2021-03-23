@@ -30,7 +30,13 @@ export class SelectHighlighter {
         const donutThickness = DonutHelper.getThickness(donutSettings, blockSize, margin);
         if (multySelection) {
             if (appendKey) {
+                const oldClone = Donut.getAllArcClones(block)
+                    .filter((d: PieArcDatum<DataRow>) => d.data[options.data.keyField.name] === select<SVGGElement, PieArcDatum<DataRow>>(segment).datum().data[options.data.keyField.name]);
+                oldClone.remove();
                 ElementHighlighter.changeDonutHighlightAppearance(select(segment), margin, blockSize, donutThickness, block.transitionManager.durations.donutHover, true);
+                const clone = ElementHighlighter.makeArcClone(select(segment));
+                ElementHighlighter.changeDonutHighlightAppearance(clone, margin, blockSize, donutThickness, block.transitionManager.durations.donutHover, true);
+                ElementHighlighter.setFilter(clone, block);
             } else {
                 ElementHighlighter.changeDonutHighlightAppearance(select(segment), margin, blockSize, donutThickness, block.transitionManager.durations.donutHover, false);
                 const clone = Donut.getAllArcClones(block)
@@ -38,16 +44,16 @@ export class SelectHighlighter {
                 clone.remove();
             }
         } else {
-            if (!appendKey) {
-                ElementHighlighter.changeDonutHighlightAppearance(select(segment), margin, blockSize, donutThickness, block.transitionManager.durations.donutHover, false);
-                const clone = Donut.getAllArcClones(block)
-                    .filter((d: PieArcDatum<DataRow>) => d.data[options.data.keyField.name] === select<SVGGElement, PieArcDatum<DataRow>>(segment).datum().data[options.data.keyField.name]);
-                clone.remove();
-            } else {
+            if (appendKey) {
                 ElementHighlighter.removeDonutHighlightingByKeys(arcItems, options.data.keyField.name, selectedKeys, margin, blockSize, donutThickness);
                 ElementHighlighter.removeDonutArcClones(block);
                 ElementHighlighter.setFilter(ElementHighlighter.makeArcClone(select(segment)), block);
                 ElementHighlighter.changeDonutHighlightAppearance(select(segment), margin, blockSize, donutThickness, block.transitionManager.durations.donutHover, true);
+            } else {
+                ElementHighlighter.changeDonutHighlightAppearance(select(segment), margin, blockSize, donutThickness, block.transitionManager.durations.donutHover, false);
+                const clone = Donut.getAllArcClones(block)
+                    .filter((d: PieArcDatum<DataRow>) => d.data[options.data.keyField.name] === select<SVGGElement, PieArcDatum<DataRow>>(segment).datum().data[options.data.keyField.name]);
+                clone.remove();
             }
         }
     }

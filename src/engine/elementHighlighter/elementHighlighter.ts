@@ -33,8 +33,7 @@ export class ElementHighlighter {
                 .attr('width', '300%')
                 .attr('height', '300%')
                 .attr('x', '-100%')
-                .attr('y', '-100%')
-                .style('outline', '1px solid red');
+                .attr('y', '-100%');
 
         if (filter.select('feDropShadow').empty())
             filter.append('feDropShadow')

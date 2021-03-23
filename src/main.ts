@@ -33,7 +33,7 @@ class Chart {
         this.isResizable = isResizable;
 
         this.model = assembleModel(this.config, this.data, this.designerConfig);
-        this.engine = new Engine(Chart.chartCounter, filterCallback);
+        this.engine = new Engine(Chart.chartCounter, filterCallback, []);
     }
 
     /**

@@ -20,8 +20,8 @@ export class FilterEventManager {
     private block: Block;
     private selectedIds: number[];
 
-    constructor(private callback: FilterCallback, private fullDataset: DataRow[]) {
-        this.selectedIds = [];
+    constructor(private callback: FilterCallback, private fullDataset: DataRow[], selected: number[] = []) {
+        this.selectedIds = selected;
     }
 
     public setBlock(block: Block): void {

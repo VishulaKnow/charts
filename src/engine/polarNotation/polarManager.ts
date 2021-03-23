@@ -24,8 +24,6 @@ export class PolarManager {
             model.blockCanvas.size,
             model.chartSettings.donut);
 
-        engine.block.filterEventManager.registerEventToDonut(model.chartBlock.margin, model.blockCanvas.size, options, model.chartSettings.donut);
-
         Title.render(engine.block,
             options.title,
             model.otherComponents.titleBlock,
@@ -34,6 +32,8 @@ export class PolarManager {
         Legend.render(engine.block, engine.data, options, model);
 
         Tooltip.render(engine.block, model, engine.data);
+
+        engine.block.filterEventManager.eventPolarUpdate(model.chartBlock.margin, model.blockCanvas.size, options, model.chartSettings.donut);
 
         if (model.dataSettings.scope.hidedRecordsAmount !== 0 && model.options.legend.position !== 'off')
             RecordOverflowAlert.render(engine.block, model.dataSettings.scope.hidedRecordsAmount, model.options.legend.position);

@@ -43,16 +43,14 @@ export class TwoDimensionalManager {
             model.blockCanvas.size);
 
         engine.block.filterEventManager.registerEventFor2D(scales.key, model.chartBlock.margin, model.blockCanvas.size, options);
+        engine.block.filterEventManager.event2DUpdate(options);
 
         Title.render(engine.block,
             options.title,
             model.otherComponents.titleBlock,
             model.blockCanvas.size);
 
-        Legend.render(engine.block,
-            engine.data,
-            options,
-            model);
+        Legend.render(engine.block, engine.data, options, model);
 
         Tooltip.render(engine.block, model, engine.data, scales);
 
