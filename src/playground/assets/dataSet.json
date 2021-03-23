@@ -401,19 +401,22 @@
             "brand": "BMW",
             "price": 120,
             "count": 12,
-            "simple": 300
+            "simple": 300,
+            "$id": 0
         },
         {
             "brand": "LADA",
             "price": 50,
             "count": 10,
-            "simple": 30
+            "simple": 30,
+            "$id": 0
         },
         {
             "brand": "MERCEDES",
             "price": 15,
             "count": 12,
-            "simple": 500
+            "simple": 500,
+            "$id": 0
         }
     ],
     "dataSet_poor2": [

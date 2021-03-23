@@ -80,7 +80,7 @@ const configCars: Config = {
             show: true
         },
         data: {
-            dataSource: 'dataSet',
+            dataSource: 'dataSet_poor',
             keyField: {
                 name: 'brand',
                 format: 'string'

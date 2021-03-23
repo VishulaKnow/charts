@@ -33,7 +33,7 @@ export class PolarManager {
 
         Tooltip.render(engine.block, model, engine.data);
 
-        engine.block.filterEventManager.eventPolarUpdate(model.chartBlock.margin, model.blockCanvas.size, options, model.chartSettings.donut);
+        engine.block.filterEventManager.setListenerPolar(model.chartBlock.margin, model.blockCanvas.size, options, model.chartSettings.donut);
 
         if (model.dataSettings.scope.hidedRecordsAmount !== 0 && model.options.legend.position !== 'off')
             RecordOverflowAlert.render(engine.block, model.dataSettings.scope.hidedRecordsAmount, model.options.legend.position);
@@ -53,7 +53,7 @@ export class PolarManager {
         Donut.updateValues(block, data[options.data.dataSource], model.chartBlock.margin, options.charts[0], model.blockCanvas.size, model.chartSettings.donut, options.data.keyField.name)
             .then(() => {
                 Tooltip.render(block, model, data);
-                block.filterEventManager.eventPolarUpdate(model.chartBlock.margin, model.blockCanvas.size, options, model.chartSettings.donut);
+                block.filterEventManager.setListenerPolar(model.chartBlock.margin, model.blockCanvas.size, options, model.chartSettings.donut);
             });
 
         Aggregator.update(block, data[options.data.dataSource], options.charts[0].data.valueField, model.chartSettings.donut.aggregatorPad);
