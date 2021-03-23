@@ -16,16 +16,10 @@ export default class Engine {
 
     public render(model: Model, data: DataSource, parentElement: HTMLElement): void {
         this.data = data;
-
-        if(model.options?.data?.dataSource)
-            this.filterEventManager = new FilterEventManager(this.filterCallback, this.data[model.options.data.dataSource]);
-        else 
-            this.filterEventManager = new FilterEventManager(this.filterCallback, []);
-            
+        this.setFilterEventManager(model?.options?.data?.dataSource);
         this.block = new Block(model.blockCanvas.cssClass, parentElement, this.chartId, this.filterEventManager, model.transitions);
         this.filterEventManager.setBlock(this.block);
         this.block.renderWrapper(model.blockCanvas.size);
-        
 
         if (model.options) {
             ValueFormatter.setFormatFunction(model.dataSettings.format.formatters);
@@ -63,5 +57,12 @@ export default class Engine {
 
     private renderCharts(model: Model, data: DataSource): void {
         ContentManager.render(model, data, this);
+    }
+
+    private setFilterEventManager(dataSource: string): void {
+        if (dataSource)
+            this.filterEventManager = new FilterEventManager(this.filterCallback, this.data[dataSource]);
+        else
+            this.filterEventManager = new FilterEventManager(this.filterCallback, []);
     }
 }
