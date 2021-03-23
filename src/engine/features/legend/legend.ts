@@ -1,10 +1,11 @@
 
-import { select, Selection } from "d3-selection";
+import { BaseType, select, Selection } from "d3-selection";
 import { Size } from "../../../config/config";
 import { LegendItemsDirection } from "../../../model/featuresModel/legendModel/legendCanvasModel";
 import { DataSource, IntervalOptionsModel, LegendBlockModel, LegendPosition, Model, Orient, PolarOptionsModel, TwoDimensionalOptionsModel } from "../../../model/model";
 import { Block } from "../../block/block";
 import { LegendDomHelper } from "./legendDomHelper";
+import { LegendEventsManager } from "./legendEventsManager";
 import { LegendCoordinate, LegendHelper } from "./legendHelper";
 export class Legend {
     public static objectClass = 'legend-object';
@@ -20,7 +21,10 @@ export class Legend {
 
             const legendObject = this.renderObject(block, options.legend.position, model.otherComponents.legendBlock, model.blockCanvas.size);
 
-            this.renderContent(legendObject, legendItemsContent, chartElementsColor, legendItemsDirection, options.legend.position);
+            const legendItems = this.renderContent(legendObject, legendItemsContent, chartElementsColor, legendItemsDirection, options.legend.position);
+            if (options.type === 'polar') {
+                LegendEventsManager.setHoverListeners(block, options.data.keyField.name, legendItems);
+            }
         }
     }
 
@@ -32,9 +36,12 @@ export class Legend {
 
             const legendObject = this.getObject(block)
 
-            this.removeContent(legendObject)
+            this.removeContent(legendObject);
 
-            this.renderContent(legendObject, legendItemsContent, chartElementsColor, legendItemsDirection, options.legend.position);
+            const legendItems = this.renderContent(legendObject, legendItemsContent, chartElementsColor, legendItemsDirection, options.legend.position);
+            if (options.type === 'polar') {
+                LegendEventsManager.setHoverListeners(block, options.data.keyField.name, legendItems);
+            }
         }
     }
 
@@ -49,7 +56,7 @@ export class Legend {
         return legendObject;
     }
 
-    public static renderContent(legendObject: Selection<SVGForeignObjectElement, unknown, HTMLElement, any>, items: string[], colorPalette: string[], itemsDirection: LegendItemsDirection, position: LegendPosition): void {
+    public static renderContent(legendObject: Selection<SVGForeignObjectElement, unknown, HTMLElement, any>, items: string[], colorPalette: string[], itemsDirection: LegendItemsDirection, position: LegendPosition): Selection<HTMLDivElement, string, BaseType, unknown> {
         const wrapper = legendObject.append('xhtml:div')
             .attr('class', Legend.legendBlockClass);
         wrapper
@@ -87,6 +94,8 @@ export class Legend {
             LegendDomHelper.cropColumnLabels(legendObject, itemWrappers, itemsDirection);
         if (itemsDirection === 'row')
             LegendDomHelper.cropRowLabels(legendObject, itemWrappers);
+
+        return itemWrappers;
     }
 
     public static getObject(block: Block): Selection<SVGForeignObjectElement, unknown, HTMLElement, any> {
