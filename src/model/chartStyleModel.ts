@@ -21,7 +21,7 @@ export class ChartStyleModel {
     }
 
     public static getChartStyle(elementsAmount: number, styleConfig: ChartStyleConfig): ChartStyle {
-        const palette = chroma.scale(styleConfig.baseColors).mode('rgb').colors(elementsAmount);
+        const palette = chroma.scale(styleConfig.baseColors).mode('rgb').colors(elementsAmount <= 1 ? 2 : elementsAmount);
 
         return {
             elementColors: palette,
