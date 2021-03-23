@@ -15,6 +15,7 @@ export class AxisModel {
             height: 0
         }
         const textBlock = document.createElement('span');
+        textBlock.style.opacity = '0';
         textBlock.style.position = 'absolute';
         textBlock.style.whiteSpace = 'nowrap';
         textBlock.classList.add(CLASSES.dataLabel);

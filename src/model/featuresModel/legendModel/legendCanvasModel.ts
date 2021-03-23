@@ -7,6 +7,7 @@ export type LegendItemsDirection = 'row' | 'column'
 export class LegendCanvasModel {
     public static getLegendHeight(texts: string[], blockWidth: number, marginLeft: number, marginRight: number, itemsPosition: LegendItemsDirection, legendPosition: LegendPosition): number {
         const legendWrapper = document.createElement('div');
+        legendWrapper.style.opacity = '0';
         legendWrapper.style.display = 'flex';
         if (itemsPosition === 'column')
             legendWrapper.style.flexDirection = 'column';
@@ -35,6 +36,7 @@ export class LegendCanvasModel {
 
     public static getLegendItemWidth(text: string): number {
         const itemWrapper = document.createElement('div');
+        itemWrapper.style.opacity = '0';
         const colorBlock = document.createElement('span');
         const textBlock = document.createElement('span');
 
@@ -58,6 +60,7 @@ export class LegendCanvasModel {
 
     public static findElementsAmountByLegendSize(texts: string[], position: LegendPosition, legendBlockWidth: number, legendBlockHeight: number): number {
         const legendWrapper = document.createElement('div');
+        legendWrapper.style.opacity = '0';
         legendWrapper.style.display = 'flex';
         legendWrapper.style.flexDirection = 'column';
         legendWrapper.style.position = 'absolute';
