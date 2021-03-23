@@ -39,18 +39,6 @@ export class PolarManager {
             RecordOverflowAlert.render(engine.block, model.dataSettings.scope.hidedRecordsAmount, model.options.legend.position);
     }
 
-    private static renderCharts(block: Block, charts: PolarChartModel[], data: DataSource, dataSource: string, margin: BlockMargin, blockSize: Size, donutSettings: DonutChartSettings) {
-        charts.forEach((chart: PolarChartModel) => {
-            if (chart.type === 'donut')
-                Donut.render(block,
-                    data[dataSource],
-                    margin,
-                    chart,
-                    blockSize,
-                    donutSettings);
-        });
-    }
-
     public static updateData(block: Block, model: Model, data: DataSource): void {
         block.transitionManager.interruptTransitions();
         block.removeEventListeners();
@@ -74,5 +62,17 @@ export class PolarManager {
 
         if (model.options.legend.position !== 'off')
             RecordOverflowAlert.update(block, model.dataSettings.scope.hidedRecordsAmount, model.options.legend.position);
+    }
+
+    private static renderCharts(block: Block, charts: PolarChartModel[], data: DataSource, dataSource: string, margin: BlockMargin, blockSize: Size, donutSettings: DonutChartSettings) {
+        charts.forEach((chart: PolarChartModel) => {
+            if (chart.type === 'donut')
+                Donut.render(block,
+                    data[dataSource],
+                    margin,
+                    chart,
+                    blockSize,
+                    donutSettings);
+        });
     }
 }

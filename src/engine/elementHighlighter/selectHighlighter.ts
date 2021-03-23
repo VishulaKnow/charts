@@ -16,11 +16,11 @@ export class SelectHighlighter {
                 ElementHighlighter.remove2DHighlightingByKey(block, options.data.keyField.name, keyValue, options.charts, 0);
             }
         } else {
-            if (!appendKey) {
-                ElementHighlighter.remove2DHighlightingByKey(block, options.data.keyField.name, keyValue, options.charts, 0);
-            } else {
+            if (appendKey) {
                 ElementHighlighter.removeUnselected2DHighlight(block, options.data.keyField.name, options.charts, 0);
                 ElementHighlighter.highlightElementsOf2D(block, options.data.keyField.name, keyValue, options.charts, 0);
+            } else {
+                ElementHighlighter.remove2DHighlightingByKey(block, options.data.keyField.name, keyValue, options.charts, 0);
             }
         }
     }
