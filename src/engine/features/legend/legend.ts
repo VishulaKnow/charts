@@ -24,7 +24,7 @@ export class Legend {
 
             const legendItems = this.renderContent(legendObject, legendItemsContent, chartElementsColor, legendItemsDirection, options.legend.position);
             if (options.type === 'polar') {
-                LegendEventsManager.setHoverListeners(block, options.data.keyField.name, legendItems);
+                LegendEventsManager.setListeners(block, options.data.keyField.name, legendItems);
             }
         }
     }
@@ -41,7 +41,7 @@ export class Legend {
 
             const legendItems = this.renderContent(legendObject, legendItemsContent, chartElementsColor, legendItemsDirection, options.legend.position);
             if (options.type === 'polar') {
-                LegendEventsManager.setHoverListeners(block, options.data.keyField.name, legendItems);
+                LegendEventsManager.setListeners(block, options.data.keyField.name, legendItems);
             }
         }
     }

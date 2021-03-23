@@ -1,4 +1,4 @@
-import { select, Selection, pointer } from 'd3-selection';
+import { select, Selection, pointer, } from 'd3-selection';
 import { PieArcDatum } from 'd3-shape'
 import { BlockMargin, DataRow, DataSource, IntervalChartModel, Model, OptionsModelData, Orient, PolarChartModel, ScaleKeyModel, TwoDimensionalChartModel } from "../../../model/model";
 import { Block } from "../../block/block";
@@ -60,9 +60,7 @@ export class Tooltip {
     private static renderLineTooltip(block: Block, scaleKey: AxisScale<any>, margin: BlockMargin, blockSize: Size, charts: TwoDimensionalChartModel[], chartOrientation: ChartOrientation, keyAxisOrient: Orient, data: DataSource, dataOptions: OptionsModelData, scaleKeyModel: ScaleKeyModel): void {
         const tooltipBlock = TooltipComponentsManager.renderTooltipBlock(block);
         const tooltipContent = TooltipComponentsManager.renderTooltipContentBlock(tooltipBlock);
-
         const tooltipLine = TooltipComponentsManager.renderTooltipLine(block);
-
         const tipBox = TipBox.renderOrGet(block, margin, blockSize);
 
         ElementHighlighter.renderShadowFilter(block);
@@ -129,7 +127,7 @@ export class Tooltip {
 
     private static renderTooltipWrapper(block: Block): void {
         let tooltipWrapper = block.getWrapper()
-            .select(`.${this.tooltipWrapperClass}`)
+            .select(`.${this.tooltipWrapperClass}`);
 
         if (tooltipWrapper.empty())
             block.getWrapper()
