@@ -5,6 +5,8 @@ import { ChartStyle } from "./model";
 import { ModelHelper } from "./modelHelper";
 
 export class ChartStyleModel {
+    private static safeColorsAmount = 8;
+
     public static getCssClasses(chartIndex: number): string[] {
         const cssClasses = [`chart-${chartIndex}`];
         return cssClasses;
@@ -46,6 +48,26 @@ export class ChartStyleModel {
 
     private static getColorSet(baseColors: string[], elementsAmount: number): string[] {
         return chroma.scale(baseColors).mode('rgb').colors(elementsAmount <= 1 ? 2 : elementsAmount);
+
+        // if (elementsAmount < this.safeColorsAmount)
+        //     return chroma.scale(baseColors).mode('rgb').colors(elementsAmount <= 1 ? 2 : elementsAmount);
+
+        // const basePalette = chroma.scale(baseColors).mode('rgb').colors(this.safeColorsAmount);
+        // const finalPalette = [...basePalette];
+        // for (let i = this.safeColorsAmount; i < elementsAmount; i++) {
+        //     finalPalette.push(this.resetColor(i, basePalette[i % this.safeColorsAmount]));
+        // }
+        // return finalPalette;
+    }
+
+    private static resetColor(index: number, baseColor: string): string {
+        let color = chroma(baseColor)
+            .luminance(0.5)
+            .saturate(1.5 - Math.floor(index / this.safeColorsAmount) * 0.1)
+            .hex();
+
+        color = chroma(color).set('hsl.h', chroma(color).get('hsl.h') + Math.floor(index / this.safeColorsAmount) * 2).hex();
+        return color;
     }
 
     private static getStartIndex(chartIndex: number, chartsFieldsAmounts: number[]): number {
