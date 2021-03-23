@@ -18,7 +18,7 @@ export class Donut {
     public static donutBlockClass = 'donut-block';
     public static arcPathClass = 'arc-path';
 
-    private static arcItemClass = 'arc';
+    public static arcItemClass = 'arc';
 
     public static render(block: Block, data: DataRow[], margin: BlockMargin, chart: PolarChartModel, blockSize: Size, settings: DonutChartSettings): void {
         const outerRadius = DonutHelper.getOuterRadius(margin, blockSize);
@@ -94,6 +94,10 @@ export class Donut {
     public static getAllArcGroups(block: Block): Selection<SVGGElement, PieArcDatum<DataRow>, SVGGElement, unknown> {
         return block.getSvg()
             .selectAll(`.${this.arcItemClass}`) as Selection<SVGGElement, PieArcDatum<DataRow>, SVGGElement, unknown>;
+    }
+    public static getAllArcClones(block: Block): Selection<SVGGElement, PieArcDatum<DataRow>, SVGGElement, unknown> {
+        return block.getSvg()
+            .selectAll(`.${Donut.arcItemClass}-clone`) as Selection<SVGGElement, PieArcDatum<DataRow>, SVGGElement, unknown>;
     }
 
     private static renderNewArcItems(arcGenerator: Arc<any, PieArcDatum<DataRow>>, pieGenerator: Pie<any, DataRow>, donutBlock: Selection<SVGGElement, unknown, HTMLElement, any>, data: DataRow[], chart: PolarChartModel): void {

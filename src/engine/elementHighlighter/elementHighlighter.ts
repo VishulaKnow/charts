@@ -1,4 +1,4 @@
-import { Selection, BaseType } from 'd3-selection';
+import { Selection, BaseType, select, selectAll } from 'd3-selection';
 import { PieArcDatum } from 'd3-shape'
 import { BlockMargin, DataRow, TwoDimensionalChartModel } from "../../model/model";
 import { Block } from "../block/block";
@@ -8,8 +8,18 @@ import { DonutHelper } from '../polarNotation/donut/DonutHelper';
 import { DomHelper, SelectionCondition } from '../helpers/domHelper';
 import { NamesManager } from '../namesManager';
 import { Size } from '../../config/config';
+import { Donut } from '../polarNotation/donut/donut';
 
 export class ElementHighlighter {
+    public static makeArcClone(segment: Selection<SVGGElement, PieArcDatum<DataRow>, BaseType, unknown> ) {
+        return segment.clone(true).lower().style('pointer-events', `none`).classed(`${Donut.arcItemClass}`, false).classed(`${Donut.arcItemClass}-clone`,true) as Selection<SVGGElement, PieArcDatum<DataRow>, SVGGElement, unknown>;    
+    }
+
+    public static removeDonutArcClones(block: Block) {
+        let clones = Donut.getAllArcClones(block);
+        clones.remove()
+    }
+    
     public static renderShadowFilter(block: Block): Selection<SVGFilterElement, unknown, HTMLElement, unknown> {
         const filterId = NamesManager.getId('shadow', block.id);
 
@@ -60,10 +70,9 @@ export class ElementHighlighter {
                 .innerRadius(DonutHelper.getOuterRadius(margin, blockSize) - donutThickness - scaleSize)(d, i));
     }
 
-    public static removeDonutHighlightingByKeys(arcSegments: Selection<SVGGElement, PieArcDatum<DataRow>, BaseType, unknown>, keyFieldName: string, keyValues: string[], margin: BlockMargin, blockSize: Size, donutThickness: number): void {
+    public static removeDonutHighlightingByKeys(arcSegments: Selection<SVGGElement, PieArcDatum<DataRow>, BaseType, unknown>,  keyFieldName: string, keyValues: string[], margin: BlockMargin, blockSize: Size, donutThickness: number): void {
         const segments = DomHelper.getChartElementsByKeys(arcSegments, true, keyFieldName, keyValues, SelectionCondition.Exclude);
-        this.changeDonutHighlightAppearance(segments, margin, blockSize, donutThickness, 0, false);
-        this.removeFilter(segments);
+        this.changeDonutHighlightAppearance(segments, margin, blockSize, donutThickness, 0, false);       
     }
 
     public static remove2DChartsFullHighlighting(block: Block, charts: TwoDimensionalChartModel[], transitionDuration: number = 0): void {
