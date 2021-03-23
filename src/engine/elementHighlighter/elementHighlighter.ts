@@ -1,4 +1,4 @@
-import { Selection, BaseType, select, selectAll } from 'd3-selection';
+import { Selection, BaseType } from 'd3-selection';
 import { PieArcDatum } from 'd3-shape'
 import { BlockMargin, DataRow, TwoDimensionalChartModel } from "../../model/model";
 import { Block } from "../block/block";

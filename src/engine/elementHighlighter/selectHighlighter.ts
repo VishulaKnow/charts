@@ -1,4 +1,4 @@
-import { BaseType, select, Selection } from "d3-selection";
+import { BaseType, Selection } from "d3-selection";
 import { PieArcDatum } from "d3-shape";
 import { Size } from "../../config/config";
 import { BlockMargin, DataRow, DonutChartSettings, PolarOptionsModel, TwoDimensionalOptionsModel } from "../../model/model";

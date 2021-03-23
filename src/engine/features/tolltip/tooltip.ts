@@ -23,7 +23,7 @@ export class Tooltip {
     public static tooltipArrowClass = 'tooltip-arrow';
 
     public static render(block: Block, model: Model, data: DataSource, scales?: Scales): void {
-        this.renderTooltipWrapper(block);
+        TooltipComponentsManager.renderTooltipWrapper(block);
         const chartsWithTooltipIndex = model.options.charts.findIndex((chart: TwoDimensionalChartModel | PolarChartModel | IntervalChartModel) => chart.tooltip.show);
         if (chartsWithTooltipIndex !== -1) {
             if (model.options.type === '2d') {
@@ -129,15 +129,5 @@ export class Tooltip {
                 ElementHighlighter.changeDonutHighlightAppearance(select<SVGGElement, PieArcDatum<DataRow>>(this), margin, blockSize, donutThickness, block.transitionManager.durations.donutHover, false);
             }
         });
-    }
-
-    private static renderTooltipWrapper(block: Block): void {
-        let tooltipWrapper = block.getWrapper()
-            .select(`.${this.tooltipWrapperClass}`);
-
-        if (tooltipWrapper.empty())
-            block.getWrapper()
-                .append('div')
-                .attr('class', this.tooltipWrapperClass);
     }
 }

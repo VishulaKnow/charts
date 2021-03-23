@@ -15,6 +15,16 @@ export class TooltipComponentsManager {
         tooltipBlock.style('display', 'none');
     }
 
+    public static renderTooltipWrapper(block: Block): void {
+        let tooltipWrapper = block.getWrapper()
+            .select(`.${Tooltip.tooltipWrapperClass}`);
+
+        if (tooltipWrapper.empty())
+            block.getWrapper()
+                .append('div')
+                .attr('class', Tooltip.tooltipWrapperClass);
+    }
+
     public static renderTooltipBlock(block: Block, translateX: number = 0, translateY: number = 0): Selection<HTMLElement, unknown, HTMLElement, any> {
         const wrapper = block.getWrapper().select<HTMLElement>(`.${Tooltip.tooltipWrapperClass}`);
 
