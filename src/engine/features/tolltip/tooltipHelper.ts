@@ -93,7 +93,7 @@ export class TooltipHelper {
             const tooltipPositionAtBlock = Helper.getPXValueFromString(coordinate.left);
             const tooltipRight = (blockPadLeft + tooltipPositionAtBlock) + tooltipWidth;
             // проверка слева
-            if (tooltipPositionAtBlock < 0 && -1 * tooltipPositionAtBlock > blockPadLeft)
+            if (tooltipPositionAtBlock < 0 && -tooltipPositionAtBlock > blockPadLeft)
                 coordinate.left = -blockPadLeft + 'px';
             // проверка справа
             if (tooltipRight > winWidth)
