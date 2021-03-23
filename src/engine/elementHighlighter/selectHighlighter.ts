@@ -3,6 +3,7 @@ import { PieArcDatum } from "d3-shape";
 import { Size } from "../../config/config";
 import { BlockMargin, DataRow, DonutChartSettings, PolarOptionsModel, TwoDimensionalOptionsModel } from "../../model/model";
 import { Block } from "../block/block";
+import { Donut } from "../polarNotation/donut/donut";
 import { DonutHelper } from "../polarNotation/donut/DonutHelper";
 import { ElementHighlighter } from "./elementHighlighter";
 
@@ -37,6 +38,9 @@ export class SelectHighlighter {
         } else {
             if (!appendKey) {
                 ElementHighlighter.changeDonutHighlightAppearance(select(segment), margin, blockSize, donutThickness, block.transitionManager.durations.donutHover, false);
+                let clone =  Donut.getAllArcClones(block)
+                .filter((d: PieArcDatum<DataRow>) => d.data[options.data.keyField.name] === select<SVGGElement, PieArcDatum<DataRow>>(segment).datum().data[options.data.keyField.name]) as Selection<SVGGElement, PieArcDatum<DataRow>, SVGGElement, unknown>;
+                clone.remove()
             } else {
                 ElementHighlighter.removeDonutHighlightingByKeys(arcItems, options.data.keyField.name, selectedKeys, margin, blockSize, donutThickness);
                 ElementHighlighter.removeDonutArcClones(block);
