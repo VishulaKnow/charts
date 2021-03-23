@@ -6,14 +6,14 @@ export class LegendEventsManager {
     public static setHoverListeners(block: Block, keyFieldName: string, legendItems: Selection<HTMLDivElement, string, BaseType, unknown>): void {
         const arcItems = Donut.getAllArcGroups(block);
 
-        legendItems.on('mouseover', (event, keyValue) => {
+        legendItems.on('mouseover', (e, keyValue) => {
             arcItems.filter((row) => row.data[keyFieldName] === keyValue)
                 .dispatch('mouseover');
         });
 
-        legendItems.on('mouseleave', (event, keyValue) => {
+        legendItems.on('mouseleave', (e, keyValue) => {
             arcItems.filter((row) => row.data[keyFieldName] === keyValue)
-                .dispatch('mouseleave');
+                .dispatch('mouseleave', { detail: { name: 12 }, bubbles: false, cancelable: true });
         });
     }
 }

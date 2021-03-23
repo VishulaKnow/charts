@@ -70,8 +70,8 @@ export class Tooltip {
         let currentKey: string = null;
 
         tipBox
-            .on('mousemove', function (event) {
-                const keyValue = TipBoxHelper.getKeyValueByPointer(pointer(event, this), chartOrientation, margin, blockSize, scaleKey, scaleKeyModel.type);
+            .on('mousemove', function (e) {
+                const keyValue = TipBoxHelper.getKeyValueByPointer(pointer(e, this), chartOrientation, margin, blockSize, scaleKey, scaleKeyModel.type);
 
                 if (!currentKey || currentKey !== keyValue) {
                     currentKey = keyValue;
@@ -106,7 +106,7 @@ export class Tooltip {
         ElementHighlighter.renderShadowFilter(block);
 
         elemets
-            .on('mouseover', function (_event, dataRow) {
+            .on('mouseover', function (e, dataRow) {
                 TooltipComponentsManager.showTooltipBlock(tooltipBlock);
                 TooltipDomHelper.fillTooltipForPolarChart(tooltipContent, chart, data, dataOptions, dataRow.data[dataOptions.keyField.name], select(this).select('path').style('fill'))
 
@@ -118,7 +118,7 @@ export class Tooltip {
                 ElementHighlighter.changeDonutHighlightAppearance(select<SVGGElement, PieArcDatum<DataRow>>(this), margin, blockSize, donutThickness, block.transitionManager.durations.donutHover, true);
             });
 
-        elemets.on('mouseleave', function (_event, dataRow) {
+        elemets.on('mouseleave', function (e, dataRow) {
             TooltipComponentsManager.hideTooltipBlock(tooltipBlock);
             if (!block.filterEventManager.isSelected(dataRow.data[dataOptions.keyField.name], dataOptions.keyField.name)) {
                 ElementHighlighter.removeFilter(select(this));

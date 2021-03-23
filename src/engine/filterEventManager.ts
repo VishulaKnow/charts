@@ -60,10 +60,10 @@ export class FilterEventManager {
         const tipBox = TipBox.renderOrGet(this.block, margin, blockSize);
         const thisClass = this;
 
-        tipBox.on('click', function (event: MouseEvent) {
-            const keyValue = TipBoxHelper.getKeyValueByPointer(pointer(event, this), options.orient, margin, blockSize, scaleKey, options.scale.key.type);
-            const appended = thisClass.processKey(event.ctrlKey, keyValue, options.data.keyField.name);
-            SelectHighlighter.click2DHandler(event.ctrlKey, appended, keyValue, thisClass.block, options);
+        tipBox.on('click', function (e: MouseEvent) {
+            const keyValue = TipBoxHelper.getKeyValueByPointer(pointer(e, this), options.orient, margin, blockSize, scaleKey, options.scale.key.type);
+            const appended = thisClass.processKey(e.ctrlKey, keyValue, options.data.keyField.name);
+            SelectHighlighter.click2DHandler(e.ctrlKey, appended, keyValue, thisClass.block, options);
 
             if (thisClass.callback) {
                 thisClass.callback(Helper.getRowsByIds(thisClass.selectedIds, thisClass.fullDataset));
@@ -75,8 +75,8 @@ export class FilterEventManager {
         const arcItems = Donut.getAllArcGroups(this.block);
         const thisClass = this;
 
-        arcItems.on('click', function (event: MouseEvent, dataRow) {
-            const multiSelect = event.ctrlKey === undefined ? true : event.ctrlKey;
+        arcItems.on('click', function (e: MouseEvent, dataRow) {
+            const multiSelect = e.ctrlKey === undefined ? true : e.ctrlKey;
 
             const keyValue = dataRow.data[options.data.keyField.name];
             const appended = thisClass.processKey(multiSelect, keyValue, options.data.keyField.name);
