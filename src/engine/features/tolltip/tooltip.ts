@@ -125,9 +125,7 @@ export class Tooltip {
         elements.on('mouseleave', function (e, dataRow: PieArcDatum<DataRow>) {
             TooltipComponentsManager.hideTooltipBlock(tooltipBlock);
             if (!block.filterEventManager.isSelected(dataRow.data[dataOptions.keyField.name], dataOptions.keyField.name)) {
-                const clone = Donut.getAllArcClones(block)
-                    .filter((d: PieArcDatum<DataRow>) => d.data[dataOptions.keyField.name] === dataRow.data[dataOptions.keyField.name]);
-                clone.remove();
+                ElementHighlighter.removeCloneForElem(block, dataOptions.keyField.name, select(this));
                 ElementHighlighter.changeDonutHighlightAppearance(select<SVGGElement, PieArcDatum<DataRow>>(this), margin, blockSize, donutThickness, block.transitionManager.durations.donutHover, false);
             }
         });

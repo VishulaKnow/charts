@@ -55,6 +55,7 @@ export class PolarManager {
         block.transitionManager.interruptTransitions();
         block.removeEventListeners();
         block.filterEventManager.update(data[model.options.data.dataSource]);
+        ElementHighlighter.removeDonutArcClones(block);
 
         ElementHighlighter.removeFilter(Donut.getAllArcGroups(block));
         Tooltip.hide(block);

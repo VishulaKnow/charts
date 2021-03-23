@@ -150,4 +150,10 @@ export class ElementHighlighter {
             .attr('r', isScaled ? 6 : 4)
             .style('stroke-width', (isScaled ? 4.3 : 3) + 'px');
     }
+
+    public static removeCloneForElem(block: Block, keyFieldName: string, selectedSegment: Selection<SVGGElement, PieArcDatum<DataRow>, BaseType, unknown>): void {
+        const clone = Donut.getAllArcClones(block)
+            .filter((d: PieArcDatum<DataRow>) => d.data[keyFieldName] === selectedSegment.datum().data[keyFieldName]);
+        clone.remove();
+    }
 }

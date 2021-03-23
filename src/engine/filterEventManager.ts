@@ -1,5 +1,5 @@
 import { AxisScale } from "d3-axis";
-import { pointer } from "d3-selection";
+import { pointer, select } from "d3-selection";
 import { Size } from "../config/config";
 import { BlockMargin, TwoDimensionalOptionsModel, PolarOptionsModel, DonutChartSettings, DataRow } from "../model/model";
 import { Block } from "./block/block";
@@ -83,7 +83,7 @@ export class FilterEventManager {
             const multySelect = thisClass.getMultySelectParam(e);
             const keyValue = dataRow.data[options.data.keyField.name];
             const appended = thisClass.processKey(multySelect, keyValue, options.data.keyField.name);
-            SelectHighlighter.clickPolarHandler(multySelect, appended, this, thisClass.getSelectedKeys(options.data.keyField.name), margin, blockSize, thisClass.block, options, arcItems, donutSettings);
+            SelectHighlighter.clickPolarHandler(multySelect, appended, select(this), thisClass.getSelectedKeys(options.data.keyField.name), margin, blockSize, thisClass.block, options, arcItems, donutSettings);
 
             if (thisClass.callback) {
                 thisClass.callback(Helper.getRowsByIds(thisClass.selectedIds, thisClass.fullDataset));
