@@ -143,8 +143,24 @@ describe('test id and keyValue manipulations', () => {
         expect(result).toEqual(['bmw', 'lada']);
     });
 
+    test('getKeysByIds empty', () => {
+        const result = Helper.getKeysByIds([], 'name', dataset);
+        expect(result).toEqual([]);
+    });
+
     test('getKeyById', () => {
         const result = Helper.getKeyById(12, 'name', dataset);
         expect(result).toBe('bmw');
-    })
+    });
+
+    test('getRowsFromKeys', () => {
+        const result = Helper.getRowsByKeys(['bmw'], 'name', dataset);
+        expect(result).toEqual([
+            {
+                $id: 12,
+                name: 'bmw',
+                price: 130
+            }
+        ]);
+    });
 });

@@ -5,6 +5,10 @@ export class Helper {
         return dataSet.filter(row => ids.findIndex(id => id === row.$id) !== -1);
     }
 
+    public static getRowsByKeys(keys: string[], keyFieldName: string, dataSet: DataRow[]): DataRow[] {
+        return dataSet.filter(row => keys.findIndex(key => key === row[keyFieldName]) !== -1);
+    }
+
     public static extractKeysFromRows(keyFieldName: string, dataSet: DataRow[]): string[] {
         return dataSet.map(row => row[keyFieldName]);
     }

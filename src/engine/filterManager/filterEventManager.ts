@@ -20,10 +20,10 @@ export class FilterEventManager {
     public filtrable: boolean;
 
     private block: Block;
-    private selectedIds: number[];
+    private selectedKeys: string[];
 
-    constructor(private callback: FilterCallback, private fullDataset: DataRow[], filtrable: boolean, selected: number[] = []) {
-        this.selectedIds = selected;
+    constructor(private callback: FilterCallback, private fullDataset: DataRow[], filtrable: boolean, keyFieldName: string, selectedIds: number[] = []) {
+        this.selectedKeys = Helper.getKeysByIds(selectedIds, keyFieldName, fullDataset);
         this.filtrable = filtrable ? new Set(fullDataset.map(row => row.$id)).size === fullDataset.length : filtrable;
     }
 
@@ -32,7 +32,7 @@ export class FilterEventManager {
     }
 
     public getSelectedKeys(keyFieldName: string): string[] {
-        return Helper.getKeysByIds(this.selectedIds, keyFieldName, this.fullDataset);
+        return this.selectedKeys;
     }
 
     public updateData(newDataset: DataRow[]): void {
@@ -40,37 +40,36 @@ export class FilterEventManager {
     }
 
     public isSelected(keyValue: string, keyFieldName: string): boolean {
-        return Helper.getKeysByIds(this.selectedIds, keyFieldName, this.fullDataset).findIndex(key => key === keyValue) !== -1;
+        return this.selectedKeys.findIndex(key => key === keyValue) !== -1;
     }
 
-    private setId(id: number): void {
-        this.selectedIds = [id];
+    private setKey(key: string): void {
+        this.selectedKeys = [key];
     }
 
-    private addId(id: number): void {
-        this.selectedIds.push(id);
+    private addId(key: string): void {
+        this.selectedKeys.push(key);
     }
 
-    private removeId(id: number): void {
-        this.selectedIds.splice(this.selectedIds.findIndex($id => $id === id), 1);
+    private removeId(key: string): void {
+        this.selectedKeys.splice(this.selectedKeys.findIndex(k => k === key), 1);
     }
 
     private processKey(multySelect: boolean, keyValue: string, keyFieldName: string): boolean {
-        const selectedId = Helper.getIdFromRowByKey(keyFieldName, keyValue, this.fullDataset);
         if (multySelect) {
             if (this.getSelectedKeys(keyFieldName).findIndex(key => key === keyValue) === -1) {
-                this.addId(selectedId);
+                this.addId(keyValue);
                 return true;
             } else {
-                this.removeId(selectedId);
+                this.removeId(keyValue);
                 return false;
             }
         } else {
             if (this.getSelectedKeys(keyFieldName)[0] === keyValue && this.getSelectedKeys(keyFieldName).length === 1) {
-                this.removeId(selectedId);
+                this.removeId(keyValue);
                 return false;
             } else {
-                this.setId(selectedId);
+                this.setKey(keyValue);
                 return true;
             }
         }
@@ -80,23 +79,22 @@ export class FilterEventManager {
         //TODO: разрешить
         if (this.filtrable) {
             this.registerEventToDonut(margin, blockSize, options, donutSettings);
-            const selectedElems = Donut.getAllArcGroups(this.block).filter(d => this.selectedIds.findIndex(sid => sid === d.data.$id) !== -1);
-            this.selectedIds = [];
+            const selectedElems = Donut.getAllArcGroups(this.block).filter(d => this.selectedKeys.findIndex(sid => sid === d.data.$id) !== -1);
+            this.selectedKeys = [];
             selectedElems.dispatch('click', { bubbles: false, cancelable: true, detail: { multySelect: true } });
         }
     }
 
     public event2DUpdate(options: TwoDimensionalOptionsModel): void {
         if (this.filtrable) {
-            const removedIds: number[] = [];
-            this.selectedIds.forEach(id => {
-                const key = Helper.getKeyById(id, options.data.keyField.name, this.fullDataset);
-                if (!key)
-                    removedIds.push(id);
+            const removedKeys: string[] = [];
+            this.selectedKeys.forEach(key => {
+                if (this.fullDataset.findIndex(row => row[options.data.keyField.name] === key) === -1)
+                    removedKeys.push(key);
                 else
                     SelectHighlighter.click2DHandler(true, true, key, this.block, options);
             });
-            removedIds.forEach(rid => this.selectedIds.splice(this.selectedIds.findIndex(sid => sid === rid), 1));
+            removedKeys.forEach(rKey => this.selectedKeys.splice(this.selectedKeys.findIndex(sKey => sKey === rKey), 1));
         }
     }
 
@@ -111,7 +109,7 @@ export class FilterEventManager {
                 SelectHighlighter.click2DHandler(e.ctrlKey, appended, keyValue, thisClass.block, options);
 
                 if (thisClass.callback) {
-                    thisClass.callback(Helper.getRowsByIds(thisClass.selectedIds, thisClass.fullDataset));
+                    thisClass.callback(Helper.getRowsByKeys(thisClass.selectedKeys, options.data.keyField.name, thisClass.fullDataset));
                 }
             });
         }
@@ -128,7 +126,7 @@ export class FilterEventManager {
             SelectHighlighter.clickPolarHandler(multySelect, appended, select(this), thisClass.getSelectedKeys(options.data.keyField.name), margin, blockSize, thisClass.block, options, arcItems, donutSettings);
 
             if (thisClass.callback) {
-                thisClass.callback(Helper.getRowsByIds(thisClass.selectedIds, thisClass.fullDataset));
+                thisClass.callback(Helper.getRowsByKeys(thisClass.selectedKeys, options.data.keyField.name, thisClass.fullDataset));
             }
         });
     }

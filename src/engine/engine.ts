@@ -1,7 +1,7 @@
 import { Block } from './block/block';
 import { ValueFormatter } from './valueFormatter';
 import { ContentManager } from './contentManager';
-import { DataSource, Model } from '../model/model';
+import { DataSource, IntervalOptionsModel, Model, PolarOptionsModel, TwoDimensionalOptionsModel } from '../model/model';
 import { FilterCallback, FilterEventManager } from './filterManager/filterEventManager';
 
 export default class Engine {
@@ -16,7 +16,7 @@ export default class Engine {
 
     public render(model: Model, data: DataSource, parentElement: HTMLElement): void {
         this.data = data;
-        this.setFilterEventManager(model?.options?.data?.dataSource, model.options.selectable);
+        this.setFilterEventManager(model?.options);
         this.block = new Block(model.blockCanvas.cssClass, parentElement, this.chartId, this.filterEventManager, model.transitions);
         this.filterEventManager.setBlock(this.block);
         this.block.renderWrapper(model.blockCanvas.size);
@@ -59,13 +59,13 @@ export default class Engine {
         ContentManager.render(model, data, this);
     }
 
-    private setFilterEventManager(dataSource: string, selectable: boolean): void {
+    private setFilterEventManager(options: PolarOptionsModel | TwoDimensionalOptionsModel | IntervalOptionsModel): void {
         let highlightIds: number[] = [];
         if (this.initializeSelected instanceof Array && this.initializeSelected.length > 0)
             highlightIds = [...this.initializeSelected];
-        if (dataSource)
-            this.filterEventManager = new FilterEventManager(this.filterCallback, this.data[dataSource], selectable, highlightIds);
+        if (options?.data?.dataSource)
+            this.filterEventManager = new FilterEventManager(this.filterCallback, this.data[options.data.dataSource], options.selectable, options.data.keyField.name, highlightIds);
         else
-            this.filterEventManager = new FilterEventManager(this.filterCallback, [], selectable, highlightIds);
+            this.filterEventManager = new FilterEventManager(this.filterCallback, [], options?.selectable, options?.data?.keyField?.name, highlightIds);
     }
 }
