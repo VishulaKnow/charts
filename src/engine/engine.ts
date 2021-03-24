@@ -16,7 +16,7 @@ export default class Engine {
 
     public render(model: Model, data: DataSource, parentElement: HTMLElement): void {
         this.data = data;
-        this.setFilterEventManager(model?.options?.data?.dataSource);
+        this.setFilterEventManager(model?.options?.data?.dataSource, model.options.selectable);
         this.block = new Block(model.blockCanvas.cssClass, parentElement, this.chartId, this.filterEventManager, model.transitions);
         this.filterEventManager.setBlock(this.block);
         this.block.renderWrapper(model.blockCanvas.size);
@@ -59,13 +59,13 @@ export default class Engine {
         ContentManager.render(model, data, this);
     }
 
-    private setFilterEventManager(dataSource: string): void {
-        const highlightIds: number[] = [];
+    private setFilterEventManager(dataSource: string, selectable: boolean): void {
+        let highlightIds: number[] = [];
         if (this.initializeSelected instanceof Array && this.initializeSelected.length > 0)
-            highlightIds.push(...this.initializeSelected);
+            highlightIds = [...this.initializeSelected];
         if (dataSource)
-            this.filterEventManager = new FilterEventManager(this.filterCallback, this.data[dataSource], highlightIds);
+            this.filterEventManager = new FilterEventManager(this.filterCallback, this.data[dataSource], selectable, highlightIds);
         else
-            this.filterEventManager = new FilterEventManager(this.filterCallback, [], highlightIds);
+            this.filterEventManager = new FilterEventManager(this.filterCallback, [], selectable, highlightIds);
     }
 }

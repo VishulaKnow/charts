@@ -26,7 +26,7 @@ class Chart {
      * @param selectedIds Id выделенных записей
      * @param isResizable Флаг подстройки размера блока графика под родительский элемент
      */
-    constructor(config: Config, designerConfig: DesignerConfig, data: DataSource, filterCallback: FilterCallback, selectedIds: number[] = [], isResizable: boolean = false) {
+    constructor(config: Config, designerConfig: DesignerConfig, data: DataSource, isResizable: boolean = false, filterCallback: FilterCallback, selectedIds: number[] = []) {
         Chart.chartCounter++;
         this.config = config;
         this.designerConfig = designerConfig;

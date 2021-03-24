@@ -22,9 +22,9 @@ export class FilterEventManager {
     private block: Block;
     private selectedIds: number[];
 
-    constructor(private callback: FilterCallback, private fullDataset: DataRow[], selected: number[] = []) {
+    constructor(private callback: FilterCallback, private fullDataset: DataRow[], filtrable: boolean, selected: number[] = []) {
         this.selectedIds = selected;
-        this.filtrable = new Set(fullDataset.map(row => row.$id)).size === fullDataset.length;
+        this.filtrable = filtrable ? new Set(fullDataset.map(row => row.$id)).size === fullDataset.length : filtrable;
     }
 
     public setBlock(block: Block): void {

@@ -12,10 +12,11 @@ import { AxisType } from "../modelBuilder";
 export class TwoDimensionalModel {
     public static getOptions(config: Config, designerConfig: DesignerConfig, margin: BlockMargin, dataScope: DataScope, data: DataSource): TwoDimensionalOptionsModel {
         const configOptions = <TwoDimensionalOptions>config.options;
-
+        //TODO: вынести получение scale и получение axis в отдельные компоненты
         return {
             legend: LegendModel.getLegendModel(config.options.type, config.options.legend.show, config.canvas.size, margin),
             title: configOptions.title,
+            selectable: configOptions.selectedable,
             orient: configOptions.orientation,
             scale: {
                 key: {

@@ -158,6 +158,7 @@ export default class Listeners {
             const options: TwoDimensionalOptions = {
                 title: this.config.options.title,
                 legend: this.config.options.legend,
+                selectedable: this.config.options.selectedable,
                 orientation: ListenersHelper.getInputValue('#chart-orient') as 'horizontal' | 'vertical',
                 type: notationType,
                 data: {
@@ -213,6 +214,7 @@ export default class Listeners {
             const options: PolarOptions = {
                 title: this.config.options.title,
                 legend: this.config.options.legend,
+                selectedable: this.config.options.selectedable,
                 data: {
                     dataSource: 'dataSet',
                     keyField: {
@@ -234,6 +236,7 @@ export default class Listeners {
             const options: IntervalOptions = {
                 title: this.config.options.title,
                 legend: this.config.options.legend,
+                selectedable: this.config.options.selectedable,
                 data: {
                     dataSource: 'dataSet_gantt',
                     keyField: {
@@ -634,6 +637,7 @@ export default class Listeners {
 import '../style/develop.css'
 import config from '../config/configExample';
 import designerConfig from '../designer/designerConfigExample';
+import { thresholdFreedmanDiaconis } from 'd3-array';
 
 const data = require('./assets/dataSet.json');
 
@@ -648,7 +652,7 @@ new Listeners(engine, config, designerConfig, data);
 
 const config3 = require('../config/configTest2D.json');
 const model3 = assembleModel(config3, data, designerConfig);
-const engine3 = new Engine(3, null, undefined);
+const engine3 = new Engine(3, void 0, undefined);
 engine3.render(model3, getPreparedData(model3, data, config3), document.querySelector('.main-wrapper2'));
 
 const config2 = require('../config/configTestPolar.json');

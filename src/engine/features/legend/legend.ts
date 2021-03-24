@@ -1,4 +1,3 @@
-
 import { BaseType, select, Selection } from "d3-selection";
 import { Size } from "../../../config/config";
 import { LegendItemsDirection } from "../../../model/featuresModel/legendModel/legendCanvasModel";
@@ -91,7 +90,8 @@ export class Legend {
             .data(items)
             .append('span')
             .attr('class', LegendHelper.getLegendLabelClassByPosition(position))
-            .text(d => d.toString());
+            .attr('title', d => d)
+            .text(d => d);
 
         if (itemsDirection === 'column' && position === 'bottom')
             LegendDomHelper.cropColumnLabels(legendObject, itemWrappers, itemsDirection);

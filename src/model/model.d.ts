@@ -53,6 +53,7 @@ interface OptionsModel {
     legend: ILegendModel;
     data: OptionsModelData;
     title: string;
+    selectable: boolean;
 }
 export interface TwoDimensionalOptionsModel extends OptionsModel {
     type: '2d';
