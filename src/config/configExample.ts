@@ -11,7 +11,7 @@ const configCars: Config = {
     options: {
         type: '2d',
         title: 'График по 14 показателям в 4 разрезах, название длинное в одну строчку, если не влезает, то скрываем все в 3 точки',
-        selectedable: true,
+        selectable: true,
         axis: {
             keyAxis: {
                 visibility: true,
@@ -117,7 +117,7 @@ const configDemo: Config = {
     options: {
         title: 'asd',
         type: '2d',
-        selectedable: true,
+        selectable: true,
         axis: {
             keyAxis: {
                 visibility: true,

@@ -158,7 +158,7 @@ export default class Listeners {
             const options: TwoDimensionalOptions = {
                 title: this.config.options.title,
                 legend: this.config.options.legend,
-                selectedable: this.config.options.selectedable,
+                selectable: this.config.options.selectable,
                 orientation: ListenersHelper.getInputValue('#chart-orient') as 'horizontal' | 'vertical',
                 type: notationType,
                 data: {
@@ -214,7 +214,7 @@ export default class Listeners {
             const options: PolarOptions = {
                 title: this.config.options.title,
                 legend: this.config.options.legend,
-                selectedable: this.config.options.selectedable,
+                selectable: this.config.options.selectable,
                 data: {
                     dataSource: 'dataSet',
                     keyField: {
@@ -236,7 +236,7 @@ export default class Listeners {
             const options: IntervalOptions = {
                 title: this.config.options.title,
                 legend: this.config.options.legend,
-                selectedable: this.config.options.selectedable,
+                selectable: this.config.options.selectable,
                 data: {
                     dataSource: 'dataSet_gantt',
                     keyField: {

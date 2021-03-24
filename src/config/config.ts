@@ -31,7 +31,7 @@ interface Options {
     legend: Legend;
     data: DataOptions;
     title: string;
-    selectedable: boolean;
+    selectable: boolean;
 }
 
 export interface Legend {
