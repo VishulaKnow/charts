@@ -11,7 +11,7 @@ const configCars: Config = {
     options: {
         type: '2d',
         title: 'График по 14 показателям в 4 разрезах, название длинное в одну строчку, если не влезает, то скрываем все в 3 точки',
-        selectedable: false,
+        selectedable: true,
         axis: {
             keyAxis: {
                 visibility: true,
@@ -45,7 +45,7 @@ const configCars: Config = {
         },
         orientation: 'horizontal',
         data: {
-            dataSource: 'dataSet',
+            dataSource: 'dataSet_poor',
             keyField: {
                 name: 'brand',
                 format: 'string'

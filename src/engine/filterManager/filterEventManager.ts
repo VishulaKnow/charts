@@ -24,7 +24,7 @@ export class FilterEventManager {
 
     constructor(private callback: FilterCallback, private fullDataset: DataRow[], filtrable: boolean, keyFieldName: string, selectedIds: number[] = []) {
         this.selectedKeys = Helper.getKeysByIds(selectedIds, keyFieldName, fullDataset);
-        this.filtrable = filtrable ? new Set(fullDataset.map(row => row.$id)).size === fullDataset.length : filtrable;
+        this.filtrable = filtrable;
     }
 
     public setBlock(block: Block): void {
