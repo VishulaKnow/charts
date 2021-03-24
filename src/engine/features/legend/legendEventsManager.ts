@@ -9,9 +9,10 @@ export class LegendEventsManager {
      * @param keyFieldName 
      * @param legendItems айтемы легенды полара, которые привязаны к ключам
      */
-    public static setListeners(block: Block, keyFieldName: string, legendItems: Selection<HTMLDivElement, string, BaseType, unknown>): void {
+    public static setListeners(block: Block, keyFieldName: string, legendItems: Selection<HTMLDivElement, string, BaseType, unknown>, selectable: boolean): void {
         this.setHoverListeners(block, keyFieldName, legendItems);
-        this.setClickListeners(block, keyFieldName, legendItems);
+        if (selectable)
+            this.setClickListeners(block, keyFieldName, legendItems);
     }
 
     private static setHoverListeners(block: Block, keyFieldName: string, legendItems: Selection<HTMLDivElement, string, BaseType, unknown>): void {

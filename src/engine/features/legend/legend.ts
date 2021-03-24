@@ -15,15 +15,15 @@ export class Legend {
 
     public static render(block: Block, data: DataSource, options: TwoDimensionalOptionsModel | PolarOptionsModel | IntervalOptionsModel, model: Model): void {
         if (options.legend.position !== 'off') {
-            const legendItemsContent = LegendHelper.getLegendItemsContent(options, data);
-            const chartElementsColor = LegendHelper.getMarksColor(options);
-            const legendItemsDirection = LegendHelper.getLegendItemsDirection(options.type, options.legend.position);
+            const items = LegendHelper.getLegendItemsContent(options, data);
+            const colors = LegendHelper.getMarksColor(options);
+            const itemsDirection = LegendHelper.getLegendItemsDirection(options.type, options.legend.position);
 
             const legendObject = this.renderObject(block, options.legend.position, model.otherComponents.legendBlock, model.blockCanvas.size);
 
-            const legendItems = this.renderContent(legendObject, legendItemsContent, chartElementsColor, legendItemsDirection, options.legend.position);
+            const itemBlocks = this.renderContent(legendObject, items, colors, itemsDirection, options.legend.position);
             if (options.type === 'polar') {
-                LegendEventsManager.setListeners(block, options.data.keyField.name, legendItems);
+                LegendEventsManager.setListeners(block, options.data.keyField.name, itemBlocks, options.selectable);
             }
         }
     }
@@ -40,7 +40,7 @@ export class Legend {
 
             const legendItems = this.renderContent(legendObject, legendItemsContent, chartElementsColor, legendItemsDirection, options.legend.position);
             if (options.type === 'polar') {
-                LegendEventsManager.setListeners(block, options.data.keyField.name, legendItems);
+                LegendEventsManager.setListeners(block, options.data.keyField.name, legendItems, options.selectable);
             }
         }
     }
