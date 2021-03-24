@@ -46,20 +46,17 @@ export class ChartStyleModel {
         return 1;
     }
 
-    // hsv: h += 14 в первых двух
-    /*
-        Вычитать 2400000-3100000 умноженный на два, потом прибавлять это число. Пример: 8 6 7 4 5 2 3 (разница = 1)
-    */
     private static getColorSet(baseColors: string[], elementsAmount: number): string[] {
-        if (elementsAmount < this.safeColorsAmount)
-            return chroma.scale(baseColors).mode('rgb').colors(elementsAmount <= 1 ? 2 : elementsAmount);
+        return chroma.scale(baseColors).mode('rgb').colors(elementsAmount <= 1 ? 2 : elementsAmount);
+        // if (elementsAmount < this.safeColorsAmount)
+        //     return chroma.scale(baseColors).mode('rgb').colors(elementsAmount <= 1 ? 2 : elementsAmount);
 
-        const basePalette = chroma.scale(baseColors).mode('rgb').colors(this.safeColorsAmount);
-        const finalPalette = [...basePalette];
-        for (let i = this.safeColorsAmount; i < elementsAmount; i++) {
-            finalPalette.push(this.resetColor(i, basePalette[i % this.safeColorsAmount]));
-        }
-        return finalPalette;
+        // const basePalette = chroma.scale(baseColors).mode('rgb').colors(this.safeColorsAmount);
+        // const finalPalette = [...basePalette];
+        // for (let i = this.safeColorsAmount; i < elementsAmount; i++) {
+        //     finalPalette.push(this.resetColor(i, basePalette[i % this.safeColorsAmount]));
+        // }
+        // return finalPalette;
     }
 
     private static resetColor(index: number, baseColor: string): string {
