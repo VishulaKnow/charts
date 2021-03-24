@@ -637,7 +637,6 @@ export default class Listeners {
 import '../style/develop.css'
 import config from '../config/configExample';
 import designerConfig from '../designer/designerConfigExample';
-import { thresholdFreedmanDiaconis } from 'd3-array';
 
 const data = require('./assets/dataSet.json');
 
