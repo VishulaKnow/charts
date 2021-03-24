@@ -47,28 +47,30 @@ export class ChartStyleModel {
     }
 
     // hsv: h += 14 в первых двух
+    /*
+        Вычитать 2400000-3100000 умноженный на два, потом прибавлять это число. Пример: 8 6 7 4 5 2 3 (разница = 1)
+    */
     private static getColorSet(baseColors: string[], elementsAmount: number): string[] {
-        return chroma.scale(baseColors).mode('rgb').colors(elementsAmount <= 1 ? 2 : elementsAmount);
+        if (elementsAmount < this.safeColorsAmount)
+            return chroma.scale(baseColors).mode('rgb').colors(elementsAmount <= 1 ? 2 : elementsAmount);
 
-        // if (elementsAmount < this.safeColorsAmount)
-        //     return chroma.scale(baseColors).mode('rgb').colors(elementsAmount <= 1 ? 2 : elementsAmount);
-
-        // const basePalette = chroma.scale(baseColors).mode('rgb').colors(this.safeColorsAmount);
-        // const finalPalette = [...basePalette];
-        // for (let i = this.safeColorsAmount; i < elementsAmount; i++) {
-        //     finalPalette.push(this.resetColor(i, basePalette[i % this.safeColorsAmount]));
-        // }
-        // return finalPalette;
+        const basePalette = chroma.scale(baseColors).mode('rgb').colors(this.safeColorsAmount);
+        const finalPalette = [...basePalette];
+        for (let i = this.safeColorsAmount; i < elementsAmount; i++) {
+            finalPalette.push(this.resetColor(i, basePalette[i % this.safeColorsAmount]));
+        }
+        return finalPalette;
     }
 
     private static resetColor(index: number, baseColor: string): string {
         let color = chroma(baseColor)
             .luminance(0.5)
-            .saturate(1.5 - Math.floor(index / this.safeColorsAmount) * 0.1)
-            .hex();
+            .saturate(1.5 + Math.floor(index / this.safeColorsAmount) * 0.5);
 
-        color = chroma(color).set('hsl.h', chroma(color).get('hsl.h') + Math.floor(index / this.safeColorsAmount) * 2).hex();
-        return color;
+        color = chroma(color)
+            .set('hsv.h', chroma(color).get('hsv.h') + Math.floor(index / this.safeColorsAmount) * 4);
+        
+        return color.hex();
     }
 
     private static getStartIndex(chartIndex: number, chartsFieldsAmounts: number[]): number {
