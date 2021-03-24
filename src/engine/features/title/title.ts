@@ -21,6 +21,7 @@ export class Title {
         const titleCoordinate = this.getTitleAttributes(blockSize, titleBlockModel);
 
         this.fillTitleBlockAttributes(titleBlock, titleCoordinate, text);
+        this.setTitleTooltip(titleBlock, text);
     }
 
     private static fillTitleBlockAttributes(titleBlock: Selection<SVGTextElement, unknown, HTMLElement, any>, attributes: TitleAttributes, text: string) {
@@ -50,5 +51,10 @@ export class Title {
         coordinate.height = titleBlockModel.size;
 
         return coordinate;
+    }
+
+    private static setTitleTooltip(titleBlock: Selection<SVGTextElement, unknown, HTMLElement, any>, text: string): void {
+        titleBlock.append('title')
+            .text(text);
     }
 }
