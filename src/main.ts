@@ -1,11 +1,11 @@
-import { Config, ValueField, AdditionalElements, Size, TwoDimensionalChartData, PolarChartData, Legend, DataOptions, AxisOptions, TwoDimensionalOptions, TwoDimensionalChartType, TwoDimensionalChart, TwoDimensionalAxis, PolarOptions, PolarChartType, PolarChart, NumberDomain, IntervalOptions, IntervalChartType, IntervalChart, IntervalAxis, EmbeddedLabelType, ChartType, ChartOrientation, ChartNotation, ChartBlockCanvas, AxisPosition } from "./config/config";
-import { DesignerConfig, Formatter, DonutOptionsCanvas, DataTypeOptions, DataType, ChartStyleConfig, BarOptionsCanvas, AxisLabelCanvas } from "./designer/designerConfig";
+import { Config, Size } from "./config/config";
+import { DesignerConfig } from "./designer/designerConfig";
 import Engine from "./engine/engine";
 import { FilterCallback } from "./engine/filterManager/filterEventManager";
-import { DataRow, DataSource, Model } from "./model/model";
+import { DataSource, Model } from "./model/model";
 import { assembleModel, getPreparedData } from "./model/modelBuilder";
 
-class Chart {
+export class Chart {
     public static chartCounter = 0;
 
     private config: Config;
@@ -99,45 +99,6 @@ class Chart {
     }
 }
 
-export {
-    Chart,
-    Engine,
-    Config,
-    DataSource,
-    DataRow,
-    Size,
-    Legend,
-    FilterCallback,
-    DataOptions,
-    AdditionalElements,
-    TwoDimensionalChartData,
-    TwoDimensionalOptions,
-    TwoDimensionalChartType,
-    TwoDimensionalChart,
-    TwoDimensionalAxis,
-    ValueField,
-    PolarOptions,
-    PolarChartData,
-    PolarChartType,
-    PolarChart,
-    NumberDomain,
-    IntervalOptions,
-    IntervalChartType,
-    IntervalChart,
-    IntervalAxis,
-    EmbeddedLabelType,
-    ChartType,
-    ChartOrientation,
-    ChartNotation,
-    ChartBlockCanvas,
-    AxisPosition,
-    DesignerConfig,
-    Formatter,
-    DonutOptionsCanvas,
-    DataTypeOptions,
-    DataType,
-    ChartStyleConfig,
-    BarOptionsCanvas,
-    AxisOptions,
-    AxisLabelCanvas
-}
+export * from "./config/config";
+export * from "./designer/designerConfig";
+export { DataSource } from "./model/model";
