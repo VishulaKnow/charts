@@ -87,7 +87,7 @@ export class TooltipHelper {
     public static recalcToolTipCoordinateByViewPort(blockBounding: DOMRect, tooltipBounding: DOMRect, keyAxisOrient: Orient, coordinate: TooltipCoordinate, winWidth: number, winHeight: number): TooltipCoordinate {
         const tooltipWidth = tooltipBounding.width;
         const blockPadLeft = blockBounding.left;
-        const scrollPad = 20;
+        const scrollPad = 16;
 
         if (keyAxisOrient === 'bottom' || keyAxisOrient === 'top') {
             const tooltipPositionAtBlock = Helper.getPXValueFromString(coordinate.left);
@@ -96,7 +96,7 @@ export class TooltipHelper {
             if (tooltipPositionAtBlock < 0 && -tooltipPositionAtBlock > blockPadLeft)
                 coordinate.left = -blockPadLeft + 'px';
             // проверка справа
-            if (tooltipRight > winWidth)
+            if (tooltipRight > winWidth - scrollPad)
                 coordinate.left = winWidth - blockPadLeft - tooltipWidth - scrollPad + 'px';
 
             if (keyAxisOrient === 'top') {
