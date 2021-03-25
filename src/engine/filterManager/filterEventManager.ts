@@ -79,7 +79,7 @@ export class FilterEventManager {
         //TODO: разрешить
         if (this.filtrable) {
             this.registerEventToDonut(margin, blockSize, options, donutSettings);
-            const selectedElems = Donut.getAllArcGroups(this.block).filter(d => this.selectedKeys.findIndex(sid => sid === d.data.$id) !== -1);
+            const selectedElems = Donut.getAllArcGroups(this.block).filter(d => this.selectedKeys.findIndex(sid => sid === d.data[options.data.keyField.name]) !== -1);
             this.selectedKeys = [];
             selectedElems.dispatch('click', { bubbles: false, cancelable: true, detail: { multySelect: true } });
         }
