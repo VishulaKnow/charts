@@ -15,11 +15,11 @@ export interface Translate {
 }
 
 export class Donut {
-    public static donutBlockClass = 'donut-block';
-    public static arcPathClass = 'arc-path';
-    public static arcItemClass = 'arc';
-    public static arcHighlightedClass = 'arc-highlighted';
-    public static clonesGroupClass = 'arc-clones';
+    public static readonly donutBlockClass = 'donut-block';
+    public static readonly arcPathClass = 'arc-path';
+    public static readonly arcItemClass = 'arc';
+    public static readonly arcHighlightedClass = 'arc-highlighted';
+    public static readonly clonesGroupClass = 'arc-clones';
 
     public static render(block: Block, data: DataRow[], margin: BlockMargin, chart: PolarChartModel, blockSize: Size, settings: DonutChartSettings): void {
         const outerRadius = DonutHelper.getOuterRadius(margin, blockSize);

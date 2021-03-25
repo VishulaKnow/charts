@@ -25,8 +25,8 @@ export const TOOLTIP_ARROW_PADDING_X = ARROW_DEFAULT_POSITION - (ARROW_SIZE * Ma
 export const TOOLTIP_ARROW_PADDING_Y = 13;
 
 export class TooltipDomHelper {
-    private static tooltipGroupClass = 'tooltip-group';
-    private static tooltipHeadClass = 'tooltip-head';
+    private static readonly tooltipGroupClass = 'tooltip-group';
+    private static readonly tooltipHeadClass = 'tooltip-head';
 
     public static fillForMulty2DCharts(contentBlock: Selection<BaseType, unknown, BaseType, unknown>, charts: TwoDimensionalChartModel[], data: DataSource, dataOptions: OptionsModelData, keyValue: string): void {
         contentBlock.html('');

@@ -13,7 +13,7 @@ interface AlertBlockPositionAttrs {
 type AlertBlockPosition = 'top' | 'bottom' | 'right' | 'left';
 
 export class RecordOverflowAlert {
-    private static blockClass = 'record-overflow-alert';
+    private static readonly blockClass = 'record-overflow-alert';
 
     public static render(block: Block, hidedRecordsAmount: number, position: AlertBlockPosition, chartOrientation: ChartOrientation = null): void {
         const alertBlock = block.getWrapper()

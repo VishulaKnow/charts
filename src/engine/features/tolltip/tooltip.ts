@@ -16,11 +16,11 @@ import { Helper } from '../../helpers/helper';
 import { TooltipHelper } from './tooltipHelper';
 
 export class Tooltip {
-    public static tooltipBlockClass = 'tooltip-block';
-    public static tooltipLineClass = 'tooltip-line';
-    public static tooltipWrapperClass = 'tooltip-wrapper';
-    public static tooltipContentClass = 'tooltip-content';
-    public static tooltipArrowClass = 'tooltip-arrow';
+    public static readonly tooltipBlockClass = 'tooltip-block';
+    public static readonly tooltipLineClass = 'tooltip-line';
+    public static readonly tooltipWrapperClass = 'tooltip-wrapper';
+    public static readonly tooltipContentClass = 'tooltip-content';
+    public static readonly tooltipArrowClass = 'tooltip-arrow';
 
     public static render(block: Block, model: Model, data: DataSource, scales?: Scales): void {
         TooltipComponentsManager.renderTooltipWrapper(block);

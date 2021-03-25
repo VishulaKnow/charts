@@ -6,12 +6,13 @@ import { Block } from "../../block/block";
 import { LegendDomHelper } from "./legendDomHelper";
 import { LegendEventsManager } from "./legendEventsManager";
 import { LegendCoordinate, LegendHelper } from "./legendHelper";
-export class Legend {
-    public static objectClass = 'legend-object';
-    public static labelClass = 'legend-label';
-    public static itemClass = 'legend-item';
 
-    private static legendBlockClass = 'legend-block';
+export class Legend {
+    public static readonly objectClass = 'legend-object';
+    public static readonly labelClass = 'legend-label';
+    public static readonly itemClass = 'legend-item';
+
+    private static readonly legendBlockClass = 'legend-block';
 
     public static render(block: Block, data: DataSource, options: TwoDimensionalOptionsModel | PolarOptionsModel | IntervalOptionsModel, model: Model): void {
         if (options.legend.position !== 'off') {

@@ -12,7 +12,7 @@ interface GanttItemsAttrs {
 }
 
 export class Gantt {
-    private static ganttItemClass = 'gantt-item';
+    private static readonly ganttItemClass = 'gantt-item';
 
     public static render(block: Block, data: DataRow[], dataOptions: OptionsModelData, scales: Scales, margin: BlockMargin, keyAxisOrient: Orient, chart: IntervalChartModel, barSettings: BarChartSettings): void {
         const ganttItems = block.getChartBlock()

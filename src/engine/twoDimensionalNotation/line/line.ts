@@ -10,7 +10,7 @@ import { DomHelper } from '../../helpers/domHelper';
 import { Helper } from '../../helpers/helper';
 
 export class Line {
-    public static lineChartClass = 'line';
+    public static readonly lineChartClass = 'line';
 
     public static render(block: Block, scales: Scales, data: DataRow[], keyField: Field, margin: BlockMargin, keyAxisOrient: Orient, chart: TwoDimensionalChartModel): void {
         if (chart.isSegmented)

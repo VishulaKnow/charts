@@ -16,7 +16,7 @@ export interface DotAttrs {
 select.prototype.transition = transition;
 
 export class MarkDot {
-    public static markerDotClass = 'dot';
+    public static readonly markerDotClass = 'dot';
     private static dotRadius = 4;
 
     public static render(block: Block, data: DataRow[], keyAxisOrient: Orient, scales: Scales, margin: BlockMargin, keyField: string, valueFieldIndex: number, valueFieldName: string, chart: TwoDimensionalChartModel): void {

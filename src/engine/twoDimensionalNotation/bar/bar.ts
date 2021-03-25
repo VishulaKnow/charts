@@ -14,8 +14,9 @@ import { Helper } from "../../helpers/helper";
 import { Size } from "../../../config/config";
 
 export class Bar {
-    public static barItemClass = 'bar-item';
-    private static barSegmentGroupClass = 'bar-segment-group';
+    public static readonly barItemClass = 'bar-item';
+
+    private static readonly barSegmentGroupClass = 'bar-segment-group';
 
     public static render(block: Block, scales: Scales, data: DataRow[], keyField: Field, margin: BlockMargin, keyAxisOrient: Orient, chart: TwoDimensionalChartModel, blockSize: Size, barSettings: BarChartSettings, barsAmounts: number[], isSegmented: boolean, firstBarIndex: number): void {
         if (isSegmented)

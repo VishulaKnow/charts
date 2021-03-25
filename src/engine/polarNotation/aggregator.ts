@@ -15,10 +15,10 @@ export interface AggregatorInfo {
 }
 
 export class Aggregator {
-    public static aggregatorValueClass = 'aggregator-value';
+    public static readonly aggregatorValueClass = 'aggregator-value';
 
-    private static aggregatorNameClass = 'aggregator-name';
-    private static aggregatorObjectClass = 'aggregator-object';
+    private static readonly aggregatorNameClass = 'aggregator-name';
+    private static readonly aggregatorObjectClass = 'aggregator-object';
 
     public static render(block: Block, data: DataRow[], valueField: Field, innerRadius: number, translate: Translate, fontSize: number, pad: number): void {
         const aggregator: AggregatorInfo = {

@@ -22,8 +22,8 @@ export class Block {
     private wrapperCssClasses: string[];
     private parentElementSelection: Selection<BaseType, any, HTMLElement, any>;
     private wrapper: Selection<BaseType, any, HTMLElement, any>;
-    private chartBlockClass = 'chart-block';
-    private chartGroupClass = 'chart-group';
+    private readonly chartBlockClass = 'chart-block';
+    private readonly chartGroupClass = 'chart-group';
 
     constructor(cssClass: string, parentElement: HTMLElement, blockId: number, filterEventManager: FilterEventManager, transitions: Transitions = null) {
         this.wrapperCssClasses = Helper.getCssClassesArray(cssClass);

@@ -10,7 +10,7 @@ import { Helper } from '../../helpers/helper';
 import { Size } from '../../../config/config';
 
 export class Area {
-    public static areaChartClass = 'area';
+    public static readonly areaChartClass = 'area';
 
     public static render(block: Block, scales: Scales, data: DataRow[], keyField: Field, margin: BlockMargin, keyAxisOrient: Orient, chart: TwoDimensionalChartModel, blockSize: Size): void {
         if (chart.isSegmented)

@@ -11,7 +11,7 @@ export interface TipBoxAttributes {
 }
 
 export class TipBox {
-    public static tipBoxClass = 'tipbox';
+    public static readonly tipBoxClass = 'tipbox';
 
     public static renderOrGet(block: Block, margin: BlockMargin, blockSize: Size): Selection<SVGRectElement, unknown, HTMLElement, any> {
         const attributes = this.getAttributes(margin, blockSize);

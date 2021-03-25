@@ -4,7 +4,7 @@ import { Block } from "../../block/block";
 import { GridLineAttributes, GridLineHelper } from "./gidLineHelper";
 
 export class GridLine {
-    private static gridLineClass = 'grid-line';
+    private static readonly gridLineClass = 'grid-line';
 
     public static render(block: Block, gridLineFlag: GridLineFlag, keyAxis: AxisModelOptions, valueAxis: AxisModelOptions, blockSize: Size, margin: BlockMargin, scaleKey: ScaleKeyModel): void {
         if (gridLineFlag.value) {
