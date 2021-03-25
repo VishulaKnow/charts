@@ -9,6 +9,7 @@
     "watch": "npx webpack --mode development --watch",
     "test": "jest"
   },
+  "homepage": "https://github.com/VishulaKnow/charts",
   "author": "",
   "license": "ISC",
   "devDependencies": {
