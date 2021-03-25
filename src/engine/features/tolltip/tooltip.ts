@@ -73,7 +73,6 @@ export class Tooltip {
 
                 if (!currentKey || currentKey !== keyValue) {
                     currentKey = keyValue;
-
                     TooltipComponentsManager.showTooltipBlock(tooltipBlock);
                     TooltipDomHelper.fillForMulty2DCharts(tooltipContent, charts, data, dataOptions, keyValue);
 
@@ -122,7 +121,7 @@ export class Tooltip {
             TooltipComponentsManager.hideTooltipBlock(tooltipBlock);
             if (!block.filterEventManager.isSelected(dataRow.data[dataOptions.keyField.name], dataOptions.keyField.name)) {
                 ElementHighlighter.removeCloneForElem(block, dataOptions.keyField.name, select(this));
-                ElementHighlighter.changeDonutHighlightAppearance(select<SVGGElement, PieArcDatum<DataRow>>(this), margin, blockSize, donutThickness, block.transitionManager.durations.donutHover, false);
+                ElementHighlighter.changeDonutHighlightState(select<SVGGElement, PieArcDatum<DataRow>>(this), margin, blockSize, donutThickness, block.transitionManager.durations.donutHover, false);
             }
         });
     }

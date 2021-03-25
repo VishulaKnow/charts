@@ -32,8 +32,8 @@ export class ElementHighlighter {
 
     public static renderArcCloneAndHighlight(block: Block, margin: BlockMargin, arcSelection: Selection<SVGGElement, PieArcDatum<DataRow>, BaseType, unknown>, blockSize: Size, donutThickness: number): void {
         const clones = this.makeArcClone(arcSelection, block)
-        this.changeDonutHighlightAppearance(arcSelection, margin, blockSize, donutThickness, block.transitionManager.durations.donutHover, true);
-        this.changeDonutHighlightAppearance(clones, margin, blockSize, donutThickness, block.transitionManager.durations.donutHover, true)
+        this.changeDonutHighlightState(arcSelection, margin, blockSize, donutThickness, block.transitionManager.durations.donutHover, true);
+        this.changeDonutHighlightState(clones, margin, blockSize, donutThickness, block.transitionManager.durations.donutHover, true)
     }
 
     public static renderShadowFilter(block: Block): Selection<SVGFilterElement, unknown, HTMLElement, unknown> {
@@ -69,7 +69,7 @@ export class ElementHighlighter {
         elemSelection.style('filter', `url(#${NamesManager.getId('shadow', block.id)})`);
     }
 
-    public static changeDonutHighlightAppearance(segment: Selection<SVGGElement, PieArcDatum<DataRow>, BaseType, unknown>, margin: BlockMargin, blockSize: Size, donutThickness: number, transitionDuration: number, on: boolean): void {
+    public static changeDonutHighlightState(segment: Selection<SVGGElement, PieArcDatum<DataRow>, BaseType, unknown>, margin: BlockMargin, blockSize: Size, donutThickness: number, transitionDuration: number, on: boolean): void {
         let scaleSize = 0;
         if (on)
             scaleSize = 5; // Если нужно выделить сегмент, то scaleSize не равен нулю и отображается увеличенным
@@ -87,7 +87,7 @@ export class ElementHighlighter {
 
     public static removeDonutHighlightingByKeys(arcSegments: Selection<SVGGElement, PieArcDatum<DataRow>, BaseType, unknown>, keyFieldName: string, keyValues: string[], margin: BlockMargin, blockSize: Size, donutThickness: number): void {
         const segments = DomHelper.getChartElementsByKeys(arcSegments, true, keyFieldName, keyValues, SelectionCondition.Exclude);
-        this.changeDonutHighlightAppearance(segments, margin, blockSize, donutThickness, 0, false);
+        this.changeDonutHighlightState(segments, margin, blockSize, donutThickness, 0, false);
     }
 
     public static remove2DChartsFullHighlighting(block: Block, charts: TwoDimensionalChartModel[], transitionDuration: number = 0): void {

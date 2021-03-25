@@ -29,7 +29,7 @@ export class SelectHighlighter {
         const donutThickness = DonutHelper.getThickness(donutSettings, blockSize, margin);
         ElementHighlighter.renderShadowFilter(block);
         if (!appendKey) {
-            ElementHighlighter.changeDonutHighlightAppearance(selectedSegment, margin, blockSize, donutThickness, block.transitionManager.durations.donutHover, false);
+            ElementHighlighter.changeDonutHighlightState(selectedSegment, margin, blockSize, donutThickness, block.transitionManager.durations.donutHover, false);
             ElementHighlighter.removeCloneForElem(block, options.data.keyField.name, selectedSegment);
             return;
         }
