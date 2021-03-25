@@ -75,7 +75,6 @@ export class Tooltip {
                     currentKey = keyValue;
 
                     TooltipComponentsManager.showTooltipBlock(tooltipBlock);
-
                     TooltipDomHelper.fillForMulty2DCharts(tooltipContent, charts, data, dataOptions, keyValue);
 
                     const tooltipCoordinate = TooltipHelper.getTooltipFixedCoordinate(scaleKey, margin, keyValue, block.getSvg().node().getBoundingClientRect(), tooltipContent.node().getBoundingClientRect(), keyAxisOrient, window.innerWidth, window.innerHeight);
@@ -106,18 +105,16 @@ export class Tooltip {
         elements
             .on('mouseover', function (e, dataRow: PieArcDatum<DataRow>) {
                 TooltipComponentsManager.showTooltipBlock(tooltipBlock);
-                TooltipDomHelper.fillTooltipForPolarChart(tooltipContent, chart, data, dataOptions, dataRow.data[dataOptions.keyField.name], select(this).select('path').style('fill'))
+                TooltipDomHelper.fillTextForPolarChart(tooltipContent, chart, data, dataOptions, dataRow.data[dataOptions.keyField.name], select(this).select('path').style('fill'))
 
                 const coordinatePointer = TooltipDomHelper.getRecalcedCoordinateByArrow(DonutHelper.getArcCentroid(blockSize, margin, dataRow, donutThickness), tooltipBlock, blockSize, tooltipArrow, translateX, translateY);
                 const tooltipCoordinate = TooltipHelper.getCoordinateByPointer(coordinatePointer);
-                TooltipComponentsManager.setTooltipBlockCoordinate(tooltipBlock, tooltipCoordinate);
+                TooltipComponentsManager.setBlockCoordinate(tooltipBlock, tooltipCoordinate);
 
-                let clone = Donut.getAllArcClones(block)
+                let clones = Donut.getAllArcClones(block)
                     .filter((d: PieArcDatum<DataRow>) => d.data[dataOptions.keyField.name] === dataRow.data[dataOptions.keyField.name]);
-                if (clone.nodes().length === 0) {
-                    clone = ElementHighlighter.makeArcClone(select<SVGGElement, PieArcDatum<DataRow>>(this), block)
-                    ElementHighlighter.changeDonutHighlightAppearance(select<SVGGElement, PieArcDatum<DataRow>>(this), margin, blockSize, donutThickness, block.transitionManager.durations.donutHover, true);
-                    ElementHighlighter.changeDonutHighlightAppearance(clone, margin, blockSize, donutThickness, block.transitionManager.durations.donutHover, true);
+                if (clones.nodes().length === 0) {
+                    ElementHighlighter.renderArcCloneAndHighlight(block, margin, select(this), blockSize, donutThickness);
                 }
             });
 

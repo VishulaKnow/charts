@@ -1,9 +1,13 @@
-import { Selection, BaseType } from 'd3-selection'
+import { Selection, BaseType, select } from 'd3-selection'
 import { ValueField } from "../../../config/config";
-import { DataSource, OptionsModelData, PolarChartModel, TwoDimensionalChartModel } from "../../../model/model";
+import { BlockMargin, DataRow, DataSource, OptionsModelData, PolarChartModel, TwoDimensionalChartModel } from "../../../model/model";
 import { ValueFormatter, } from "../../valueFormatter";
 import { TooltipHelper } from './tooltipHelper';
 import { Size } from "../../../config/config";
+import { Donut } from '../../polarNotation/donut/donut';
+import { Block } from '../../block/block';
+import { ElementHighlighter } from '../../elementHighlighter/elementHighlighter';
+import { PieArcDatum } from 'd3-shape';
 
 export interface TooltipLineAttributes {
     x1: number;
@@ -43,7 +47,7 @@ export class TooltipDomHelper {
         });
     }
 
-    public static fillTooltipForPolarChart(contentBlock: Selection<BaseType, unknown, BaseType, unknown>, chart: PolarChartModel, data: DataSource, dataOptions: OptionsModelData, keyValue: string, markColor: string): void {
+    public static fillTextForPolarChart(contentBlock: Selection<BaseType, unknown, BaseType, unknown>, chart: PolarChartModel, data: DataSource, dataOptions: OptionsModelData, keyValue: string, markColor: string): void {
         contentBlock.html('');
         contentBlock.append('div')
             .attr('class', `${this.tooltipGroupClass} ${this.tooltipHeadClass}`)

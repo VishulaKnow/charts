@@ -113,7 +113,7 @@ export class TooltipComponentsManager {
         return tooltipArrow;
     }
 
-    public static setTooltipBlockCoordinate(tooltipBlock: Selection<BaseType, unknown, HTMLElement, any>, tooltipCoordinate: TooltipCoordinate): void {
+    public static setBlockCoordinate(tooltipBlock: Selection<BaseType, unknown, HTMLElement, any>, tooltipCoordinate: TooltipCoordinate): void {
         tooltipBlock
             .style('right', tooltipCoordinate.right)
             .style('bottom', tooltipCoordinate.bottom)
@@ -125,7 +125,7 @@ export class TooltipComponentsManager {
         interrupt(tooltipBlock.node());
 
         if (!transition || transition <= 0)
-            this.setTooltipBlockCoordinate(tooltipBlock, tooltipCoordinate);
+            this.setBlockCoordinate(tooltipBlock, tooltipCoordinate);
 
         if (chartOrientation === 'vertical' && tooltipBlock.style('left') !== '0px' && tooltipBlock.style('right') !== '0px' && tooltipCoordinate.right !== '0px' && tooltipCoordinate.left !== null) {
             tooltipBlock
@@ -148,7 +148,7 @@ export class TooltipComponentsManager {
                 .ease(easeLinear)
                 .style('top', tooltipCoordinate.top);
         } else {
-            this.setTooltipBlockCoordinate(tooltipBlock, tooltipCoordinate);
+            this.setBlockCoordinate(tooltipBlock, tooltipCoordinate);
         }
     }
 }

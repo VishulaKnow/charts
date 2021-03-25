@@ -30,6 +30,12 @@ export class ElementHighlighter {
         clones.remove()
     }
 
+    public static renderArcCloneAndHighlight(block: Block, margin: BlockMargin, arcSelection: Selection<SVGGElement, PieArcDatum<DataRow>, BaseType, unknown>, blockSize: Size, donutThickness: number): void {
+        const clones = this.makeArcClone(arcSelection, block)
+        this.changeDonutHighlightAppearance(arcSelection, margin, blockSize, donutThickness, block.transitionManager.durations.donutHover, true);
+        this.changeDonutHighlightAppearance(clones, margin, blockSize, donutThickness, block.transitionManager.durations.donutHover, true)
+    }
+
     public static renderShadowFilter(block: Block): Selection<SVGFilterElement, unknown, HTMLElement, unknown> {
         const filterId = NamesManager.getId('shadow', block.id);
 

@@ -27,26 +27,19 @@ export class SelectHighlighter {
 
     public static clickPolarHandler(multySelection: boolean, appendKey: boolean, selectedSegment: Selection<SVGGElement, PieArcDatum<DataRow>, BaseType, unknown>, selectedKeys: string[], margin: BlockMargin, blockSize: Size, block: Block, options: PolarOptionsModel, arcItems: Selection<SVGGElement, PieArcDatum<DataRow>, SVGGElement, unknown>, donutSettings: DonutChartSettings): void {
         const donutThickness = DonutHelper.getThickness(donutSettings, blockSize, margin);
+        if (!appendKey) {
+            ElementHighlighter.changeDonutHighlightAppearance(selectedSegment, margin, blockSize, donutThickness, block.transitionManager.durations.donutHover, false);
+            ElementHighlighter.removeCloneForElem(block, options.data.keyField.name, selectedSegment);
+            return;
+        }
+
         if (multySelection) {
-            if (appendKey) {
-                ElementHighlighter.removeCloneForElem(block, options.data.keyField.name, selectedSegment);
-                ElementHighlighter.changeDonutHighlightAppearance(selectedSegment, margin, blockSize, donutThickness, block.transitionManager.durations.donutHover, true);
-                const clone = ElementHighlighter.makeArcClone(selectedSegment, block);
-                ElementHighlighter.changeDonutHighlightAppearance(clone, margin, blockSize, donutThickness, block.transitionManager.durations.donutHover, true);
-            } else {
-                ElementHighlighter.changeDonutHighlightAppearance(selectedSegment, margin, blockSize, donutThickness, block.transitionManager.durations.donutHover, false);
-                ElementHighlighter.removeCloneForElem(block, options.data.keyField.name, selectedSegment);
-            }
+            ElementHighlighter.removeCloneForElem(block, options.data.keyField.name, selectedSegment);
+            ElementHighlighter.renderArcCloneAndHighlight(block, margin, selectedSegment, blockSize, donutThickness);
         } else {
-            if (appendKey) {
-                ElementHighlighter.removeDonutHighlightingByKeys(arcItems, options.data.keyField.name, selectedKeys, margin, blockSize, donutThickness);
-                ElementHighlighter.removeDonutArcClones(block);
-                ElementHighlighter.makeArcClone(selectedSegment, block);
-                ElementHighlighter.changeDonutHighlightAppearance(selectedSegment, margin, blockSize, donutThickness, block.transitionManager.durations.donutHover, true);
-            } else {
-                ElementHighlighter.changeDonutHighlightAppearance(selectedSegment, margin, blockSize, donutThickness, block.transitionManager.durations.donutHover, false);
-                ElementHighlighter.removeCloneForElem(block, options.data.keyField.name, selectedSegment);
-            }
+            ElementHighlighter.removeDonutHighlightingByKeys(arcItems, options.data.keyField.name, selectedKeys, margin, blockSize, donutThickness);
+            ElementHighlighter.removeDonutArcClones(block);
+            ElementHighlighter.renderArcCloneAndHighlight(block, margin, selectedSegment, blockSize, donutThickness);
         }
     }
 }

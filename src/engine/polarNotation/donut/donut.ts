@@ -29,21 +29,19 @@ export class Donut {
         const arcGenerator = DonutHelper.getArcGenerator(outerRadius, innerRadius);
         const pieGenerator = DonutHelper.getPieGenerator(chart.data.valueField.name, settings.padAngle);
 
-        const translateAttribute = DonutHelper.getTranslate(margin, blockSize);
+        const translateAttr = DonutHelper.getTranslate(margin, blockSize);
 
         const donutBlock = block.getSvg()
             .append('g')
             .attr('class', this.donutBlockClass)
-            .attr('x', translateAttribute.x)
-            .attr('y', translateAttribute.y)
-            .attr('transform', `translate(${translateAttribute.x}, ${translateAttribute.y})`);
-
+            .attr('x', translateAttr.x)
+            .attr('y', translateAttr.y)
+            .attr('transform', `translate(${translateAttr.x}, ${translateAttr.y})`);
 
         this.renderNewArcItems(arcGenerator, pieGenerator, donutBlock, data, chart);
+        this.renderClonesG(block, donutBlock);
 
-        Aggregator.render(block, data, chart.data.valueField, innerRadius, translateAttribute, thickness, settings.aggregatorPad);
-        const clonesG = donutBlock.append('g').attr('class', this.clonesGroupClass).raise();
-        ElementHighlighter.setFilter(clonesG, block);
+        Aggregator.render(block, data, chart.data.valueField, innerRadius, translateAttr, thickness, settings.aggregatorPad);
     }
 
     public static updateValues(block: Block, data: DataRow[], margin: BlockMargin, chart: PolarChartModel, blockSize: Size, donutSettings: DonutChartSettings, keyField: string): Promise<any> {
@@ -66,18 +64,16 @@ export class Donut {
         const donutBlock = block.getSvg().select<SVGGElement>(`.${this.donutBlockClass}`);
 
         this.renderNewArcItems(arcGenerator, pieGenerator, donutBlock, dataNewZeroRows, chart);
-
         this.setElementsColor(this.getAllArcGroups(block), chart.style.elementColors);
 
         const path = this.getAllArcGroups(block)
             .data(pieGenerator(dataExtraZeroRows))
             .select<SVGPathElement>('path');
-
         const items = this.getAllArcGroups(block)
             .data(pieGenerator(data));
 
         return new Promise(resolve => {
-            donutBlock.select(`.${this.clonesGroupClass}`).raise();
+            this.raiseClonesG(block);
             path
                 .interrupt()
                 .transition()
@@ -128,5 +124,20 @@ export class Donut {
         arcItems
             .select('path')
             .style('fill', (d, i) => colorPalette[i % colorPalette.length]);
+    }
+
+    /**
+     * Рендер группы для клонов сегментов доната внутри donut-block. Объекдиняет в себе стили для клонов 
+     */
+    private static renderClonesG(block: Block, donutBlock: Selection<SVGGElement, unknown, BaseType, unknown>): void {
+        const clonesG = donutBlock.append('g').attr('class', this.clonesGroupClass).raise();
+        ElementHighlighter.setFilter(clonesG, block);
+    }
+
+    private static raiseClonesG(block: Block): void {
+        block.getSvg()
+            .select(`.${this.donutBlockClass}`)
+            .select(`.${this.clonesGroupClass}`)
+            .raise();
     }
 }
