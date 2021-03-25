@@ -11,6 +11,19 @@ import { Size } from '../../../config/config';
 type TextAnchor = 'start' | 'end' | 'middle';
 
 export class AxisLabelHelper {
+    public static setTitles(axisElement: Selection<SVGGElement, unknown, HTMLElement, any>, tickValues: string[]): void {
+        axisElement.selectAll('.tick text')
+            .each(function (d, i) {
+                const tickTitle = select(this).select('title');
+                if (tickTitle.empty())
+                    select(this)
+                        .append('title')
+                        .text(tickValues[i]);
+                else
+                    tickTitle.text(tickValues[i]);
+            });
+    }
+
     public static alignLabelsInKeyAxis(axisOptions: AxisModelOptions, axisElement: Selection<SVGGElement, unknown, HTMLElement, any>): void {
         if (axisOptions.orient === 'left')
             this.alignLabelsInVerticalAxis(axisElement, 'start', axisOptions.labels.maxSize, true);

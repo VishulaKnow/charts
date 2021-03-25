@@ -11,6 +11,7 @@ import { AxisHelper } from './axisHelper';
 import { AxisLabelHelper } from './axisLabelDomHelper';
 import { AxisDomHelper } from './axisDomHelper';
 import { Size } from '../../../config/config';
+import { ScaleLinear } from 'd3-scale';
 
 
 const MINIMAL_STEP_SIZE_FOR_WRAPPING = 38;
@@ -75,6 +76,7 @@ export class Axis {
 
                     AxisLabelHelper.alignLabelsInKeyAxis(axisOptions, axisElement);
                 }
+                AxisLabelHelper.setTitles(axisElement, axisGenerator.scale().domain());
             });
 
         if (axisOptions.orient === 'left' || axisOptions.orient === 'right') {
@@ -100,7 +102,7 @@ export class Axis {
 
         const axisElement = block.getSvg()
             .append('g')
-            .attr('class', `${this.axesClass} ${axisOptions.cssClass} data-label`)
+            .attr('class', `${this.axesClass} ${axisOptions.cssClass} data-label`);
 
         AxisDomHelper.updateAxisElement(axisGenerator, axisElement, axisOptions.translate);
 
@@ -112,6 +114,10 @@ export class Axis {
                 axisElement.selectAll<SVGGElement, unknown>('.tick text').call(AxisLabelHelper.wrapHandler, axisOptions.labels.maxSize);
             else
                 AxisLabelHelper.cropLabels(block, scale, scaleOptions, axisOptions, blockSize);
+
+            if (axisOptions.type === 'key') {
+                AxisLabelHelper.setTitles(axisElement, axisGenerator.scale().domain());
+            }
 
             if (axisOptions.type === 'key') {
                 AxisLabelHelper.alignLabelsInKeyAxis(axisOptions, axisElement);
