@@ -11,7 +11,6 @@ import { AxisHelper } from './axisHelper';
 import { AxisLabelHelper } from './axisLabelDomHelper';
 import { AxisDomHelper } from './axisDomHelper';
 import { Size } from '../../../config/config';
-import { ScaleLinear } from 'd3-scale';
 
 
 const MINIMAL_STEP_SIZE_FOR_WRAPPING = 38;

@@ -115,8 +115,7 @@ export class Tooltip {
                 let clone = Donut.getAllArcClones(block)
                     .filter((d: PieArcDatum<DataRow>) => d.data[dataOptions.keyField.name] === dataRow.data[dataOptions.keyField.name]);
                 if (clone.nodes().length === 0) {
-                    clone = ElementHighlighter.makeArcClone(select<SVGGElement, PieArcDatum<DataRow>>(this))
-                    ElementHighlighter.setFilter(clone, block);
+                    clone = ElementHighlighter.makeArcClone(select<SVGGElement, PieArcDatum<DataRow>>(this), block)
                     ElementHighlighter.changeDonutHighlightAppearance(select<SVGGElement, PieArcDatum<DataRow>>(this), margin, blockSize, donutThickness, block.transitionManager.durations.donutHover, true);
                     ElementHighlighter.changeDonutHighlightAppearance(clone, margin, blockSize, donutThickness, block.transitionManager.durations.donutHover, true);
                 }

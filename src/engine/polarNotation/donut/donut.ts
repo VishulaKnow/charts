@@ -7,6 +7,7 @@ import { Aggregator } from "../aggregator";
 import { DonutHelper } from './DonutHelper';
 import { DomHelper } from '../../helpers/domHelper';
 import { Size } from '../../../config/config';
+import { ElementHighlighter } from '../../elementHighlighter/elementHighlighter';
 
 export interface Translate {
     x: number;
@@ -16,8 +17,9 @@ export interface Translate {
 export class Donut {
     public static donutBlockClass = 'donut-block';
     public static arcPathClass = 'arc-path';
-
     public static arcItemClass = 'arc';
+    public static arcHighlightedClass = 'arc-highlighted';
+    public static clonesGroupClass = 'arc-clones';
 
     public static render(block: Block, data: DataRow[], margin: BlockMargin, chart: PolarChartModel, blockSize: Size, settings: DonutChartSettings): void {
         const outerRadius = DonutHelper.getOuterRadius(margin, blockSize);
@@ -36,9 +38,12 @@ export class Donut {
             .attr('y', translateAttribute.y)
             .attr('transform', `translate(${translateAttribute.x}, ${translateAttribute.y})`);
 
+
         this.renderNewArcItems(arcGenerator, pieGenerator, donutBlock, data, chart);
 
         Aggregator.render(block, data, chart.data.valueField, innerRadius, translateAttribute, thickness, settings.aggregatorPad);
+        const clonesG = donutBlock.append('g').attr('class', this.clonesGroupClass).raise();
+        ElementHighlighter.setFilter(clonesG, block);
     }
 
     public static updateValues(block: Block, data: DataRow[], margin: BlockMargin, chart: PolarChartModel, blockSize: Size, donutSettings: DonutChartSettings, keyField: string): Promise<any> {
@@ -72,6 +77,7 @@ export class Donut {
             .data(pieGenerator(data));
 
         return new Promise(resolve => {
+            donutBlock.select(`.${this.clonesGroupClass}`).raise();
             path
                 .interrupt()
                 .transition()

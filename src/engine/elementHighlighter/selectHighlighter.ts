@@ -31,9 +31,8 @@ export class SelectHighlighter {
             if (appendKey) {
                 ElementHighlighter.removeCloneForElem(block, options.data.keyField.name, selectedSegment);
                 ElementHighlighter.changeDonutHighlightAppearance(selectedSegment, margin, blockSize, donutThickness, block.transitionManager.durations.donutHover, true);
-                const clone = ElementHighlighter.makeArcClone(selectedSegment);
+                const clone = ElementHighlighter.makeArcClone(selectedSegment, block);
                 ElementHighlighter.changeDonutHighlightAppearance(clone, margin, blockSize, donutThickness, block.transitionManager.durations.donutHover, true);
-                ElementHighlighter.setFilter(clone, block);
             } else {
                 ElementHighlighter.changeDonutHighlightAppearance(selectedSegment, margin, blockSize, donutThickness, block.transitionManager.durations.donutHover, false);
                 ElementHighlighter.removeCloneForElem(block, options.data.keyField.name, selectedSegment);
@@ -42,7 +41,7 @@ export class SelectHighlighter {
             if (appendKey) {
                 ElementHighlighter.removeDonutHighlightingByKeys(arcItems, options.data.keyField.name, selectedKeys, margin, blockSize, donutThickness);
                 ElementHighlighter.removeDonutArcClones(block);
-                ElementHighlighter.setFilter(ElementHighlighter.makeArcClone(selectedSegment), block);
+                ElementHighlighter.makeArcClone(selectedSegment, block);
                 ElementHighlighter.changeDonutHighlightAppearance(selectedSegment, margin, blockSize, donutThickness, block.transitionManager.durations.donutHover, true);
             } else {
                 ElementHighlighter.changeDonutHighlightAppearance(selectedSegment, margin, blockSize, donutThickness, block.transitionManager.durations.donutHover, false);
