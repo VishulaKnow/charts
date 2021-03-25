@@ -65,7 +65,7 @@ const configCars: Config = {
     //                 ]
     //             },
     //             tooltip: {
-    //                 show: true
+    //                 show: false
     //             },
     //             embeddedLabels: 'value',
     //             markers: {
