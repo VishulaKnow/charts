@@ -1,13 +1,35 @@
 import { ModelHelper } from "../modelHelper";
-import { BlockMargin, DataSource, ScaleKeyType, ScaleValueType } from "../model";
-import { AxisPosition, NumberDomain, IntervalChart, TwoDimensionalChart, TwoDimensionalOptions, Size } from "../../config/config";
-
+import { BlockMargin, DataSource, ScaleKeyModel, ScaleKeyType, ScaleValueModel, ScaleValueType } from "../model";
+import { AxisPosition, NumberDomain, IntervalChart, TwoDimensionalChart, TwoDimensionalOptions, Size, ChartOrientation } from "../../config/config";
 
 export enum ScaleType {
     Key, Value
 }
 
 export class ScaleModel {
+    public static getScaleKey(allowableKeys: string[], orient: ChartOrientation, margin: BlockMargin, blockSize: Size, charts: TwoDimensionalChart[] | IntervalChart[], barCharts: TwoDimensionalChart[]): ScaleKeyModel {
+        return {
+            domain: allowableKeys,
+            range: {
+                start: 0,
+                end: ScaleModel.getScaleRangePeek(ScaleType.Key, orient, margin, blockSize)
+            },
+            type: ScaleModel.getScaleKeyType(charts),
+            elementsAmount: this.getScaleElementsAmount(barCharts)
+        }
+    }
+
+    public static getScaleValue(configOptions: TwoDimensionalOptions, margin: BlockMargin, blockSize: Size, data: DataSource): ScaleValueModel {
+        return {
+            domain: ScaleModel.getScaleLinearValueDomain(configOptions.axis.valueAxis.domain, data, configOptions),
+            range: {
+                start: 0,
+                end: ScaleModel.getScaleRangePeek(ScaleType.Value, configOptions.orientation, margin, blockSize)
+            },
+            type: ScaleModel.getScaleValueType(configOptions.charts)
+        }
+    }
+
     public static getScaleRangePeek(scaleType: ScaleType, chartOrientation: string, margin: BlockMargin, blockSize: Size): number {
         if (chartOrientation === 'vertical')
             return scaleType === ScaleType.Key
