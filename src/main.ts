@@ -101,4 +101,4 @@ export class Chart {
 
 export * from "./config/config";
 export * from "./designer/designerConfig";
-export { DataSource } from "./model/model";
+export { DataSource, DataRow } from "./model/model";
