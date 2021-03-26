@@ -1,7 +1,7 @@
 import configCars from "../../config/configExample";
 import designerConfig from "../../designer/designerConfigExample";
 import { Helper } from "../../engine/helpers/helper";
-import { DataRow, TwoDimensionalOptionsModel } from "../../model/model";
+import { DataRow, DataSource, TwoDimensionalOptionsModel } from "../../model/model";
 import { assembleModel } from "../../model/modelBuilder";
 
 describe('getTranslateNumbers', () => {
@@ -162,5 +162,108 @@ describe('test id and keyValue manipulations', () => {
                 price: 130
             }
         ]);
+    });
+});
+
+describe('compareData', () => {
+    let oldSet: DataSource;
+    let newSet: DataSource;
+    let dataSetName = 'data';
+
+    beforeEach(() => {
+        oldSet = {
+            data: [
+                {
+                    name: 'bmw',
+                    price: 100
+                },
+                {
+                    name: 'audi',
+                    price: 1234
+                },
+                {
+                    name: 'lada',
+                    price: 300
+                }
+            ]
+        }
+        newSet = {
+            data: [
+                {
+                    name: 'bmw',
+                    price: 100
+                },
+                {
+                    name: 'audi',
+                    price: 1234
+                },
+                {
+                    name: 'lada',
+                    price: 300
+                }
+            ]
+        }
+    });
+
+    test('should return true for equal sets', () => {
+        const result = Helper.compareData(oldSet, newSet, dataSetName);
+        expect(result).toBe(true);
+    });
+
+    test('should return false for sets with diff lengths', () => {
+        newSet[dataSetName].pop();
+        const result = Helper.compareData(oldSet, newSet, dataSetName);
+        expect(result).toBe(false);
+    });
+
+    test('should return false for sets with diff keys', () => {
+        newSet[dataSetName][2].name = 'subaru';
+        const result = Helper.compareData(oldSet, newSet, dataSetName);
+        expect(result).toBe(false);
+    });
+
+    test('should return false for sets with diff values', () => {
+        newSet[dataSetName][1].price = 1213432;
+        const result = Helper.compareData(oldSet, newSet, dataSetName);
+        expect(result).toBe(false);
+    });
+
+    test('should return false for equal sets with DIFF order', () => {
+        newSet = {
+            data: [
+                {
+                    name: 'bmw',
+                    price: 100
+                },
+                {
+                    name: 'lada',
+                    price: 300
+                },
+                {
+                    name: 'audi',
+                    price: 1234
+                }
+            ]
+        }
+        const result = Helper.compareData(oldSet, newSet, dataSetName);
+        expect(result).toBe(false);
+    });
+
+    test('should return false for falsy sets', () => {
+        newSet = undefined;
+        const result = Helper.compareData(oldSet, newSet, dataSetName);
+        expect(result).toBe(false);
+    });
+
+    test('should return false for falsy arrays in sets', () => {
+        newSet[dataSetName] = undefined;
+        const result = Helper.compareData(oldSet, newSet, dataSetName);
+        expect(result).toBe(false);
+    });
+
+    test('should return false for falsy sourceName', () => {
+        dataSetName = undefined;
+        const result = Helper.compareData(oldSet, newSet, dataSetName);
+        expect(result).toBe(false);
     });
 });

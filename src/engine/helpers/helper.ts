@@ -1,4 +1,4 @@
-import { DataRow } from "../../model/model";
+import { DataRow, DataSource } from "../../model/model";
 
 export class Helper {
     public static getRowsByIds(ids: number[], dataSet: DataRow[]): DataRow[] {
@@ -91,5 +91,26 @@ export class Helper {
      */
     public static getKeyFieldValue(row: DataRow, keyFieldName: string, isSegmented: boolean): string {
         return isSegmented ? row.data[keyFieldName] : row[keyFieldName];
+    }
+
+    /**
+     * Сравнивает старые и новые данные
+     */
+    public static compareData(oldSource: DataSource, newSource: DataSource, sourceName: string): boolean {
+        if (!oldSource || !newSource || !sourceName || !oldSource[sourceName] || !newSource[sourceName] || oldSource[sourceName].length !== newSource[sourceName].length)
+            return false;
+
+        const oldData = oldSource[sourceName];
+        const newData = newSource[sourceName];
+
+        let isEqual = true;
+        oldData.forEach((row, i) => {
+            for (let key in row) {
+                if (row[key] !== newData[i][key] && isEqual)
+                    isEqual = false;
+            }
+        });
+
+        return isEqual;
     }
 }

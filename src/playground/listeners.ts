@@ -692,7 +692,6 @@ class DataUpdater {
 
                 const newModel = getUpdatedModel(config, newData, designerConfig);
                 engine.updateData(newModel, getPreparedData(newModel, newData, config));
-
                 run();
             }, ms)
         }

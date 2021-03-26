@@ -3,6 +3,7 @@ import { ValueFormatter } from './valueFormatter';
 import { ContentManager } from './contentManager';
 import { DataSource, IntervalOptionsModel, Model, PolarOptionsModel, TwoDimensionalOptionsModel } from '../model/model';
 import { FilterCallback, FilterEventManager } from './filterManager/filterEventManager';
+import { Helper } from './helpers/helper';
 
 export default class Engine {
     public block: Block;
@@ -46,7 +47,7 @@ export default class Engine {
             if (!this.data) {
                 this.data = newData;
                 this.updateFullBlock(model, this.data);
-            } else {
+            } else if (!Helper.compareData(this.data, newData, model.options.data.dataSource)) {
                 for (let source in newData) {
                     this.data[source] = newData[source];
                 }
