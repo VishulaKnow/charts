@@ -7,13 +7,13 @@ import { DataSource, BlockMargin, PolarOptionsModel, PolarChartModel } from "../
 
 export class PolarModel {
     public static getOptions(config: Config, data: DataSource, margin: BlockMargin, designerConfig: DesignerConfig): PolarOptionsModel {
-        const configOptions = <PolarOptions>config.options;
+        const options = <PolarOptions>config.options;
         return {
-            type: configOptions.type,
-            selectable: configOptions.selectable,
-            title: configOptions.title,
-            data: { ...configOptions.data },
-            charts: this.getChartsModel(configOptions.charts, data[configOptions.data.dataSource].length, designerConfig.chartStyle),
+            type: options.type,
+            selectable: options.selectable,
+            title: options.title,
+            data: { ...options.data },
+            charts: this.getChartsModel(options.charts, data[options.data.dataSource].length, designerConfig.chartStyle),
             legend: LegendModel.getLegendModel(config.options.type, config.options.legend.show, config.canvas.size, margin)
         }
     }
