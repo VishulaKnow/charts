@@ -4,7 +4,7 @@ import { ChartStyleModel } from "../chartStyleModel";
 import { DataManagerModel } from "../dataManagerModel";
 import { AxisModel } from "../featuresModel/axisModel";
 import { LegendModel } from "../featuresModel/legendModel/legendModel";
-import { ScaleModel, ScaleType } from "../featuresModel/scaleModel";
+import { ScaleModel } from "../featuresModel/scaleModel";
 import { BlockMargin, DataScope, DataSource, TwoDimensionalOptionsModel, TwoDimensionalChartModel, EmbeddedLabelTypeModel, AdditionalElementsOptions } from "../model";
 import { AxisType } from "../modelBuilder";
 
@@ -20,14 +20,7 @@ export class TwoDimensionalModel {
             orient: options.orientation,
             scale: {
                 key: ScaleModel.getScaleKey(dataScope.allowableKeys, options.orientation, margin, config.canvas.size, options.charts, this.getChartsByType(options.charts, 'bar')),
-                value: {
-                    domain: ScaleModel.getScaleLinearValueDomain(options.axis.valueAxis.domain, data, options),
-                    range: {
-                        start: 0,
-                        end: ScaleModel.getScaleRangePeek(ScaleType.Value, options.orientation, margin, config.canvas.size)
-                    },
-                    type: ScaleModel.getScaleValueType(options.charts)
-                }
+                value: ScaleModel.getScaleLinear(options, data, margin, config.canvas.size)
             },
             axis: {
                 keyAxis: {

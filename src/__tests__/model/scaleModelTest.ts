@@ -1,4 +1,4 @@
-import { TwoDimensionalChart } from "../../config/config";
+import { TwoDimensionalChart, TwoDimensionalOptions } from "../../config/config";
 import { DataSource } from "../../model/model";
 import { ScaleModel } from "../../model/featuresModel/scaleModel";
 
@@ -427,6 +427,7 @@ describe('get scales tests', () => {
     let charts: TwoDimensionalChart[];
     let data: DataSource;
     let dataSource: string;
+    let options: TwoDimensionalOptions;
 
     beforeEach(() => {
         charts = [
@@ -483,6 +484,39 @@ describe('get scales tests', () => {
         ]
         data = getData();
         dataSource = "dataSet_poor";
+        options = {
+            legend: {
+                show: false
+            },
+            additionalElements: null,
+            axis: {
+                keyAxis: {
+                    position: 'start',
+                    ticks: null,
+                    visibility: true
+                },
+                valueAxis: {
+                    domain: {
+                        start: -1, end: -1
+                    },
+                    position: "end",
+                    ticks: null,
+                    visibility: true
+                }
+            },
+            charts,
+            data: {
+                dataSource,
+                keyField: {
+                    format: null,
+                    name: 'price'
+                },
+            },
+            orientation: "vertical",
+            selectable: true,
+            title: null,
+            type: '2d'
+        }
     });
 
     test('get scale key band', () => {
@@ -509,6 +543,17 @@ describe('get scales tests', () => {
             },
             type: 'point',
             elementsAmount: 1
+        })
+    });
+
+    test('get scale linear', () => {
+        const result = ScaleModel.getScaleLinear(options, data, { bottom: 20, left: 20, right: 20, top: 20 }, { height: 500, width: 1000 });
+        expect(result).toEqual({
+            domain: [0, 120],
+            range: {
+                start: 0, end: 460
+            },
+            type: 'linear'
         })
     });
 });

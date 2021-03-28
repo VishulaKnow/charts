@@ -22,16 +22,16 @@ export class IntervalModel {
                     domain: dataScope.allowableKeys,
                     range: {
                         start: 0,
-                        end: ScaleModel.getScaleRangePeek(ScaleType.Key, options.orientation, margin, config.canvas.size)
+                        end: ScaleModel.getRangePeek(ScaleType.Key, options.orientation, margin, config.canvas.size)
                     },
                     type: ScaleModel.getScaleKeyType(options.charts),
                     elementsAmount: options.charts.length
                 },
                 value: {
-                    domain: ScaleModel.getScaleDateValueDomain(data, options.charts, options.axis.keyAxis.position, options.data.dataSource),
+                    domain: ScaleModel.getDateValueDomain(data, options.charts, options.axis.keyAxis.position, options.data.dataSource),
                     range: {
                         start: 0,
-                        end: ScaleModel.getScaleRangePeek(ScaleType.Value, options.orientation, margin, config.canvas.size)
+                        end: ScaleModel.getRangePeek(ScaleType.Value, options.orientation, margin, config.canvas.size)
                     },
                     type: ScaleModel.getScaleValueType(options.charts)
                 }
