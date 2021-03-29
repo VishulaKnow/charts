@@ -1,4 +1,4 @@
-import { AxisPosition, ChartOrientation, DataOptions, DiscreteAxisOptions, Size, TwoDimensionalChart } from "../../config/config";
+import { AxisPosition, ChartOrientation, DataOptions, DiscreteAxisOptions, NumberAxisOptions, Size, TwoDimensionalChart } from "../../config/config";
 import { AxisLabelPosition, AxisModelOptions, BlockMargin, DataSource, Orient } from "../model";
 import { ModelHelper } from "../modelHelper";
 import { AxisType, CLASSES } from "../modelBuilder";
@@ -26,6 +26,25 @@ export class AxisModel {
                 maxSize: AxisModel.getLabelSize(labelConfig.maxSize.main, data[dataOptions.dataSource].map(d => d[dataOptions.keyField.name])).width,
                 positition: AxisModel.getKeyAxisLabelPosition(margin, blockSize, DataManagerModel.getDataValuesByKeyField(data, dataOptions.dataSource, dataOptions.keyField.name).length),
                 visible: !TwoDimensionalModel.getChartsEmbeddedLabelsFlag(charts, orient)
+            },
+            visibility: axisConfig.visibility
+        }
+    }
+
+    public static getValueAxis(orient: ChartOrientation, axisConfig: NumberAxisOptions, labelConfig: AxisLabelCanvas, margin: BlockMargin, blockSize: Size): AxisModelOptions {
+        return {
+            type: 'value',
+            orient: AxisModel.getAxisOrient(AxisType.Value, orient, axisConfig.position),
+            translate: {
+                translateX: AxisModel.getAxisTranslateX(AxisType.Value, orient, axisConfig.position, margin, blockSize.width),
+                translateY: AxisModel.getAxisTranslateY(AxisType.Value, orient, axisConfig.position, margin, blockSize.height)
+            },
+            cssClass: 'value-axis',
+            ticks: axisConfig.ticks,
+            labels: {
+                maxSize: labelConfig.maxSize.main,
+                positition: 'straight',
+                visible: true
             },
             visibility: axisConfig.visibility
         }

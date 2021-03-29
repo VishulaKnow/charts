@@ -1,4 +1,4 @@
-import { DataOptions, DiscreteAxisOptions, Size, TwoDimensionalChart, TwoDimensionalOptions } from "../../config/config";
+import { DataOptions, DiscreteAxisOptions, NumberAxisOptions, Size, TwoDimensionalChart, TwoDimensionalOptions } from "../../config/config";
 import { AxisModel } from "../../model/featuresModel/axisModel";
 import { AxisModelOptions, BlockMargin, DataSource } from "../../model/model";
 
@@ -27,10 +27,11 @@ function getData(): DataSource {
     return data;
 }
 
-describe('get key axis', () => {
+describe('get axes', () => {
     let charts: TwoDimensionalChart[];
     let data: DataSource;
-    let axisOptions: DiscreteAxisOptions;
+    let descreteAxisOptions: DiscreteAxisOptions;
+    let numberAxisOptions: NumberAxisOptions;
     let dataOptions: DataOptions;
     let margin: BlockMargin;
     let blockSize: Size;
@@ -88,22 +89,22 @@ describe('get key axis', () => {
                 embeddedLabels: 'key'
             }
         ];
-        axisOptions = { ticks: { flag: false }, position: 'end', visibility: true }
+        descreteAxisOptions = { ticks: { flag: false }, position: 'end', visibility: true }
+        numberAxisOptions = { ...descreteAxisOptions, domain: { start: 0, end: 120 } }
         data = getData();
         dataOptions = { dataSource: "dataSet_poor", keyField: { name: 'brand', format: null } };
         margin = { top: 20, bottom: 20, left: 20, right: 20 };
         blockSize = { height: 500, width: 1000 }
     });
 
-    test('should return bottom key axis with straight labels', () => {
-        const result = AxisModel.getKeyAxis(charts, data, dataOptions, 'vertical', axisOptions, { maxSize: { main: 60, orthogonal: null } }, margin, blockSize);
-        result.labels.maxSize = null;
+    test('getKeyAxis should return bottom key axis with straight labels', () => {
+        const result = AxisModel.getKeyAxis(charts, data, dataOptions, 'vertical', descreteAxisOptions, { maxSize: { main: 60, orthogonal: null } }, margin, blockSize);
         const toExpect: AxisModelOptions = {
             visibility: true,
             type: "key",
             cssClass: "key-axis",
             labels: {
-                maxSize: null,
+                maxSize: 0,
                 positition: 'straight',
                 visible: true
             },
@@ -119,16 +120,15 @@ describe('get key axis', () => {
         expect(result).toEqual(toExpect);
     });
 
-    test('should return left key axis with straight labels', () => {
-        axisOptions.position = 'start';
-        const result = AxisModel.getKeyAxis(charts, data, dataOptions, 'horizontal', axisOptions, { maxSize: { main: 60, orthogonal: null } }, margin, blockSize);
-        result.labels.maxSize = null;
+    test('getKeyAxis should return left key axis with straight labels', () => {
+        descreteAxisOptions.position = 'start';
+        const result = AxisModel.getKeyAxis(charts, data, dataOptions, 'horizontal', descreteAxisOptions, { maxSize: { main: 60, orthogonal: null } }, margin, blockSize);
         const toExpect: AxisModelOptions = {
             visibility: true,
             type: "key",
             cssClass: "key-axis",
             labels: {
-                maxSize: null,
+                maxSize: 0,
                 positition: 'straight',
                 visible: true
             },
@@ -138,6 +138,53 @@ describe('get key axis', () => {
             },
             translate: {
                 translateX: 20,
+                translateY: 20
+            }
+        }
+        expect(result).toEqual(toExpect);
+    });
+
+    test('getValueAxis should return left axis', () => {
+        numberAxisOptions.position = 'start';
+        const result = AxisModel.getValueAxis('vertical', numberAxisOptions, { maxSize: { main: 60, orthogonal: null } }, margin, blockSize);
+        const toExpect: AxisModelOptions = {
+            visibility: true,
+            type: "value",
+            cssClass: "value-axis",
+            labels: {
+                maxSize: 60,
+                positition: 'straight',
+                visible: true
+            },
+            orient: "left",
+            ticks: {
+                flag: false
+            },
+            translate: {
+                translateX: 20,
+                translateY: 20
+            }
+        }
+        expect(result).toEqual(toExpect);
+    });
+
+    test('getValueAxis should return right axis', () => {
+        const result = AxisModel.getValueAxis('vertical', numberAxisOptions, { maxSize: { main: 60, orthogonal: null } }, margin, blockSize);
+        const toExpect: AxisModelOptions = {
+            visibility: true,
+            type: "value",
+            cssClass: "value-axis",
+            labels: {
+                maxSize: 60,
+                positition: 'straight',
+                visible: true
+            },
+            orient: "right",
+            ticks: {
+                flag: false
+            },
+            translate: {
+                translateX: 980,
                 translateY: 20
             }
         }

@@ -103,7 +103,7 @@ interface AxisTicks {
     flag: boolean;
 }
 
-interface NumberAxisOptions extends AxisOptions {
+export interface NumberAxisOptions extends AxisOptions {
     domain: NumberDomain;
 }
 

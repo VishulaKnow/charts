@@ -23,22 +23,7 @@ export class TwoDimensionalModel {
             },
             axis: {
                 keyAxis: AxisModel.getKeyAxis(options.charts, data, options.data, options.orientation, options.axis.keyAxis, designerConfig.canvas.axisLabel, margin, config.canvas.size),
-                valueAxis: {
-                    type: 'value',
-                    orient: AxisModel.getAxisOrient(AxisType.Value, options.orientation, options.axis.valueAxis.position),
-                    translate: {
-                        translateX: AxisModel.getAxisTranslateX(AxisType.Value, options.orientation, options.axis.valueAxis.position, margin, config.canvas.size.width),
-                        translateY: AxisModel.getAxisTranslateY(AxisType.Value, options.orientation, options.axis.valueAxis.position, margin, config.canvas.size.height)
-                    },
-                    cssClass: 'value-axis',
-                    ticks: options.axis.valueAxis.ticks,
-                    labels: {
-                        maxSize: designerConfig.canvas.axisLabel.maxSize.main,
-                        positition: 'straight',
-                        visible: true
-                    },
-                    visibility: options.axis.valueAxis.visibility
-                }
+                valueAxis: AxisModel.getValueAxis(options.orientation, options.axis.valueAxis, designerConfig.canvas.axisLabel, margin, config.canvas.size)
             },
             type: options.type,
             data: { ...options.data },
