@@ -665,6 +665,8 @@ class DataUpdater {
     private static refresh: number = 4000;
 
     private static dataSetName = 'dataSet';
+    private static keyFieldName = 'brand';
+    private static valueFieldNames = ['price', 'count'];
 
     static counter = 1;
 
@@ -706,12 +708,12 @@ class DataUpdater {
         const random = Math.random();
         if (random > 0.66) {
             for (let i = 0; i < ListenersHelper.randInt(1, 4); i++) {
-                newData[this.dataSetName].push({
-                    $id: ListenersHelper.randInt(100, 5000000),
-                    brand: this.makeHASH(ListenersHelper.randInt(4, 10)).toUpperCase(),
-                    price: ListenersHelper.randInt(0, 150),
-                    count: ListenersHelper.randInt(0, 50)
-                });
+                const row: any = {
+                    $id: ListenersHelper.randInt(100, 5000000)
+                }
+                row[this.keyFieldName] = this.makeHASH(ListenersHelper.randInt(4, 10)).toUpperCase();
+                this.valueFieldNames.forEach(vField => row[vField] = ListenersHelper.randInt(0, 150));
+                newData[this.dataSetName].push(row);
             }
         } else if (random < 0.33) {
             newData[this.dataSetName].splice(ListenersHelper.randInt(0, 4), ListenersHelper.randInt(1, 3));
