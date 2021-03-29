@@ -113,8 +113,8 @@ export interface RangeModel {
 }
 
 export interface IAxisModel {
-    keyAxis: AxisModelOptions;
-    valueAxis: AxisModelOptions;
+    key: AxisModelOptions;
+    value: AxisModelOptions;
 }
 export interface AxisModelOptions {
     visibility: boolean;
@@ -165,9 +165,9 @@ export interface ChartStyle {
 }
 
 export interface TwoDimensionalChartModel extends ChartModel {
-    index: number;
     type: TwoDimensionalChartType;
     data: TwoDimensionalChartDataModel;
+    index: number;
     embeddedLabels: EmbeddedLabelTypeModel;
     isSegmented: boolean;
     markersOptions: MarkersOptions;
@@ -256,6 +256,3 @@ export interface LegendBlockModel {
 
 export interface TitleBlockModel extends ComponentBlockModel { }
 interface LegendBlockCanvas extends ComponentBlockModel { }
-
-
-//====================================================== Transitions

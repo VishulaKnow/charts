@@ -490,12 +490,12 @@ describe('get scales tests', () => {
             },
             additionalElements: null,
             axis: {
-                keyAxis: {
+                key: {
                     position: 'start',
                     ticks: null,
                     visibility: true
                 },
-                valueAxis: {
+                value: {
                     domain: {
                         start: -1, end: -1
                     },

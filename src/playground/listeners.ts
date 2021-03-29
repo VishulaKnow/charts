@@ -70,8 +70,8 @@ export default class Listeners {
     }
     private dropAxisDomain(config: Config) {
         if (config.options.type === '2d') {
-            config.options.axis.valueAxis.domain.end = -1;
-            config.options.axis.valueAxis.domain.start = -1;
+            config.options.axis.value.domain.end = -1;
+            config.options.axis.value.domain.start = -1;
         }
     }
 
@@ -181,14 +181,14 @@ export default class Listeners {
                     }
                 ],
                 axis: {
-                    keyAxis: {
+                    key: {
                         visibility: true,
                         position: ListenersHelper.getInputValue('#key-axis-orient') as 'start' | 'end',
                         ticks: {
                             flag: false
                         }
                     },
-                    valueAxis: {
+                    value: {
                         visibility: true,
                         domain: {
                             start: -1,
@@ -254,14 +254,14 @@ export default class Listeners {
                     }
                 ],
                 axis: {
-                    keyAxis: {
+                    key: {
                         visibility: true,
                         position: ListenersHelper.getInputValue('#key-axis-orient') as "start" | "end",
                         ticks: {
                             flag: false
                         }
                     },
-                    valueAxis: {
+                    value: {
                         visibility: true,
                         position: ListenersHelper.getInputValue('#value-axis-orient') as "start" | "end",
                         ticks: {
@@ -445,8 +445,8 @@ export default class Listeners {
                 const dataCopy = ListenersHelper.getCopy(thisClass.data);
                 const newData = thisClass.getDataWithRandomValues(dataCopy, max);
 
-                if (config.options.type === '2d' && config.options.axis.valueAxis.domain.end < max)
-                    config.options.axis.valueAxis.domain.end = -1;
+                if (config.options.type === '2d' && config.options.axis.value.domain.end < max)
+                    config.options.axis.value.domain.end = -1;
 
                 const model = getUpdatedModel(thisClass.config, newData, thisClass.designerConfig);
                 const preparedData = getPreparedData(model, newData, config);
@@ -483,8 +483,8 @@ export default class Listeners {
             if (config.options.type === '2d') {
                 const start = ListenersHelper.getInputValue('#domain-start');
                 const end = ListenersHelper.getInputValue('#domain-end');
-                config.options.axis.valueAxis.domain.start = parseInt(start) || -1;
-                config.options.axis.valueAxis.domain.end = parseInt(end) || -1;
+                config.options.axis.value.domain.start = parseInt(start) || -1;
+                config.options.axis.value.domain.end = parseInt(end) || -1;
                 thisClass.engine.updateData(getUpdatedModel(thisClass.config, thisClass.data, thisClass.designerConfig), thisClass.data);
             }
         });
@@ -493,8 +493,8 @@ export default class Listeners {
                 if (config.options.type === '2d') {
                     const start = ListenersHelper.getInputValue('#domain-start');
                     const end = ListenersHelper.getInputValue('#domain-end');
-                    config.options.axis.valueAxis.domain.start = parseInt(start) || -1;
-                    config.options.axis.valueAxis.domain.end = parseInt(end) || -1;
+                    config.options.axis.value.domain.start = parseInt(start) || -1;
+                    config.options.axis.value.domain.end = parseInt(end) || -1;
                     thisClass.engine.updateData(getUpdatedModel(thisClass.config, thisClass.data, thisClass.designerConfig), thisClass.data);
                 }
             }
@@ -504,8 +504,8 @@ export default class Listeners {
                 if (config.options.type === '2d') {
                     const start = ListenersHelper.getInputValue('#domain-start');
                     const end = ListenersHelper.getInputValue('#domain-end');
-                    config.options.axis.valueAxis.domain.start = parseInt(start) || -1;
-                    config.options.axis.valueAxis.domain.end = parseInt(end) || -1;
+                    config.options.axis.value.domain.start = parseInt(start) || -1;
+                    config.options.axis.value.domain.end = parseInt(end) || -1;
                     thisClass.engine.updateData(getUpdatedModel(thisClass.config, thisClass.data, thisClass.designerConfig), thisClass.data);
                 }
             }
@@ -539,25 +539,25 @@ export default class Listeners {
         });
         document.querySelector('#key-axis-orient').addEventListener('change', function () {
             if (config.options.type === '2d' || config.options.type === 'interval') {
-                config.options.axis.keyAxis.position = this.value;
+                config.options.axis.key.position = this.value;
                 thisClass.updateFull();
             }
         });
         document.querySelector('#key-axis-visibility').addEventListener('change', function () {
             if (config.options.type === '2d' || config.options.type === 'interval') {
-                config.options.axis.keyAxis.visibility = this.checked;
+                config.options.axis.key.visibility = this.checked;
                 thisClass.updateFull();
             }
         });
         document.querySelector('#value-axis-orient').addEventListener('change', function () {
             if (config.options.type === '2d' || config.options.type === 'interval') {
-                config.options.axis.valueAxis.position = this.value;
+                config.options.axis.value.position = this.value;
                 thisClass.updateFull();
             }
         });
         document.querySelector('#value-axis-visibility').addEventListener('change', function () {
             if (config.options.type === '2d' || config.options.type === 'interval') {
-                config.options.axis.valueAxis.visibility = this.checked;
+                config.options.axis.value.visibility = this.checked;
                 thisClass.updateFull();
             }
         });
@@ -575,13 +575,13 @@ export default class Listeners {
         });
         document.querySelector('#config-tick-key').addEventListener('change', function () {
             if (config.options.type === '2d' || config.options.type === 'interval') {
-                config.options.axis.keyAxis.ticks.flag = this.checked;
+                config.options.axis.key.ticks.flag = this.checked;
                 thisClass.updateFull();
             }
         });
         document.querySelector('#config-tick-value').addEventListener('change', function () {
             if (config.options.type === '2d' || config.options.type === 'interval') {
-                config.options.axis.valueAxis.ticks.flag = this.checked;
+                config.options.axis.value.ticks.flag = this.checked;
                 thisClass.updateFull();
             }
         });
@@ -617,17 +617,17 @@ export default class Listeners {
         if (config.options.type === '2d') {
             ListenersHelper.setInputValue('#chart-2d-type', config.options.charts[0].type);
             ListenersHelper.setInputValue('#chart-orient', config.options.orientation);
-            ListenersHelper.setInputValue('#key-axis-orient', config.options.axis.keyAxis.position);
-            ListenersHelper.setInputValue('#value-axis-orient', config.options.axis.valueAxis.position);
+            ListenersHelper.setInputValue('#key-axis-orient', config.options.axis.key.position);
+            ListenersHelper.setInputValue('#value-axis-orient', config.options.axis.value.position);
             ListenersHelper.setCheckboxValue('#config-value-grid', config.options.additionalElements.gridLine.flag.value);
             ListenersHelper.setCheckboxValue('#config-key-grid', config.options.additionalElements.gridLine.flag.key);
-            ListenersHelper.setCheckboxValue('#config-tick-key', config.options.axis.keyAxis.ticks.flag);
-            ListenersHelper.setCheckboxValue('#config-tick-value', config.options.axis.valueAxis.ticks.flag);
+            ListenersHelper.setCheckboxValue('#config-tick-key', config.options.axis.key.ticks.flag);
+            ListenersHelper.setCheckboxValue('#config-tick-value', config.options.axis.value.ticks.flag);
             ListenersHelper.setCheckboxValue('#is-segmented', config.options.charts.findIndex(ch => ch.isSegmented) !== -1);
             ListenersHelper.setCheckboxValue('#markers', config.options.charts.findIndex(ch => ch.markers.show) !== -1);
             ListenersHelper.setInputValue('#embedded-labels', config.options.charts[0].embeddedLabels);
-            ListenersHelper.setCheckboxValue('#key-axis-visibility', config.options.axis.keyAxis.visibility);
-            ListenersHelper.setCheckboxValue('#value-axis-visibility', config.options.axis.valueAxis.visibility);
+            ListenersHelper.setCheckboxValue('#key-axis-visibility', config.options.axis.key.visibility);
+            ListenersHelper.setCheckboxValue('#value-axis-visibility', config.options.axis.value.visibility);
         } else if (config.options.type === 'polar') {
             ListenersHelper.setInputValue('#chart-polar-type', config.options.charts[0].type);
         }

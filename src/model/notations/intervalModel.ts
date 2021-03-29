@@ -28,7 +28,7 @@ export class IntervalModel {
                     elementsAmount: options.charts.length
                 },
                 value: {
-                    domain: ScaleModel.getDateValueDomain(data, options.charts, options.axis.keyAxis.position, options.data.dataSource),
+                    domain: ScaleModel.getDateValueDomain(data, options.charts, options.axis.key.position, options.data.dataSource),
                     range: {
                         start: 0,
                         end: ScaleModel.getRangePeek(ScaleType.Value, options.orientation, margin, config.canvas.size)
@@ -37,37 +37,37 @@ export class IntervalModel {
                 }
             },
             axis: {
-                keyAxis: {
+                key: {
                     type: 'key',
-                    orient: AxisModel.getAxisOrient(AxisType.Key, options.orientation, options.axis.keyAxis.position),
+                    orient: AxisModel.getAxisOrient(AxisType.Key, options.orientation, options.axis.key.position),
                     translate: {
-                        translateX: AxisModel.getAxisTranslateX(AxisType.Key, options.orientation, options.axis.keyAxis.position, margin, config.canvas.size.width),
-                        translateY: AxisModel.getAxisTranslateY(AxisType.Key, options.orientation, options.axis.keyAxis.position, margin, config.canvas.size.height)
+                        translateX: AxisModel.getAxisTranslateX(AxisType.Key, options.orientation, options.axis.key.position, margin, config.canvas.size.width),
+                        translateY: AxisModel.getAxisTranslateY(AxisType.Key, options.orientation, options.axis.key.position, margin, config.canvas.size.height)
                     },
                     cssClass: 'key-axis',
-                    ticks: options.axis.keyAxis.ticks,
+                    ticks: options.axis.key.ticks,
                     labels: {
                         maxSize: AxisModel.getLabelSize(designerConfig.canvas.axisLabel.maxSize.main, data[options.data.dataSource].map(d => d[options.data.keyField.name])).width,
                         positition: AxisModel.getKeyAxisLabelPosition(margin, config.canvas.size, DataManagerModel.getDataValuesByKeyField(data, options.data.dataSource, options.data.keyField.name).length),
                         visible: true
                     },
-                    visibility: options.axis.keyAxis.visibility
+                    visibility: options.axis.key.visibility
                 },
-                valueAxis: {
+                value: {
                     type: 'value',
-                    orient: AxisModel.getAxisOrient(AxisType.Value, options.orientation, options.axis.valueAxis.position),
+                    orient: AxisModel.getAxisOrient(AxisType.Value, options.orientation, options.axis.value.position),
                     translate: {
-                        translateX: AxisModel.getAxisTranslateX(AxisType.Value, options.orientation, options.axis.valueAxis.position, margin, config.canvas.size.width),
-                        translateY: AxisModel.getAxisTranslateY(AxisType.Value, options.orientation, options.axis.valueAxis.position, margin, config.canvas.size.height)
+                        translateX: AxisModel.getAxisTranslateX(AxisType.Value, options.orientation, options.axis.value.position, margin, config.canvas.size.width),
+                        translateY: AxisModel.getAxisTranslateY(AxisType.Value, options.orientation, options.axis.value.position, margin, config.canvas.size.height)
                     },
                     cssClass: 'value-axis',
-                    ticks: options.axis.valueAxis.ticks,
+                    ticks: options.axis.value.ticks,
                     labels: {
                         maxSize: designerConfig.canvas.axisLabel.maxSize.main,
                         positition: 'straight',
                         visible: true
                     },
-                    visibility: options.axis.valueAxis.visibility
+                    visibility: options.axis.value.visibility
                 }
             },
             data: { ...options.data },

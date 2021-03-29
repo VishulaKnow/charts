@@ -21,7 +21,7 @@ export class ScaleModel {
 
     public static getScaleLinear(options: TwoDimensionalOptions, data: DataSource, margin: BlockMargin, blockSize: Size): ScaleValueModel {
         return {
-            domain: ScaleModel.getLinearDomain(options.axis.valueAxis.domain, data, options),
+            domain: ScaleModel.getLinearDomain(options.axis.value.domain, data, options),
             range: {
                 start: 0,
                 end: ScaleModel.getRangePeek(ScaleType.Value, options.orientation, margin, blockSize)
@@ -63,7 +63,7 @@ export class ScaleModel {
         else
             domainPeekMax = configDomain.end;
 
-        if (configOptions.axis.keyAxis.position === 'start')
+        if (configOptions.axis.key.position === 'start')
             return [domainPeekMin, domainPeekMax];
         return [domainPeekMax, domainPeekMin];
     }

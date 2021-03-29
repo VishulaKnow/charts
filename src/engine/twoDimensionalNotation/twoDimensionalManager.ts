@@ -30,7 +30,7 @@ export class TwoDimensionalManager {
 
         Axis.render(engine.block, scales, options.scale, options.axis, model.chartBlock.margin, model.blockCanvas.size);
 
-        GridLine.render(engine.block, options.additionalElements.gridLine.flag, options.axis.keyAxis, options.axis.valueAxis, model.blockCanvas.size, model.chartBlock.margin, options.scale.key);
+        GridLine.render(engine.block, options.additionalElements.gridLine.flag, options.axis.key, options.axis.value, model.blockCanvas.size, model.chartBlock.margin, options.scale.key);
 
         this.renderCharts(engine.block,
             options.charts,
@@ -38,7 +38,7 @@ export class TwoDimensionalManager {
             engine.data,
             options.data,
             model.chartBlock.margin,
-            options.axis.keyAxis.orient,
+            options.axis.key.orient,
             model.chartSettings.bar,
             model.blockCanvas.size);
 
@@ -77,8 +77,8 @@ export class TwoDimensionalManager {
 
         GridLine.update(block,
             options.additionalElements.gridLine.flag,
-            options.axis.keyAxis,
-            options.axis.valueAxis,
+            options.axis.key,
+            options.axis.value,
             model.blockCanvas.size,
             model.chartBlock.margin,
             options.scale.key);
@@ -89,7 +89,7 @@ export class TwoDimensionalManager {
             data,
             model.options.data,
             model.chartBlock.margin,
-            options.axis.keyAxis.orient,
+            options.axis.key.orient,
             model.blockCanvas.size,
             model.chartSettings.bar);
 

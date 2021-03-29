@@ -89,8 +89,8 @@ interface GridLineFlag {
 
 //====================================================== TwoDimensionalOptions
 export interface TwoDimensionalAxis {
-    keyAxis: DiscreteAxisOptions;
-    valueAxis: NumberAxisOptions;
+    key: DiscreteAxisOptions;
+    value: NumberAxisOptions;
 }
 
 export interface AxisOptions {
@@ -117,8 +117,8 @@ export interface DiscreteAxisOptions extends AxisOptions { }
 
 //====================================================== IntervalOptions
 export interface IntervalAxis {
-    keyAxis: DiscreteAxisOptions;
-    valueAxis: DateAxisOptions;
+    key: DiscreteAxisOptions;
+    value: DateAxisOptions;
 }
 
 interface DateAxisOptions extends AxisOptions { }

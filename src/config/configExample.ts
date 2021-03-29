@@ -13,14 +13,14 @@ const configCars: Config = {
         title: 'График по 14 показателям в 4 разрезах, название длинное в одну строчку, если не влезает, то скрываем все в 3 точки',
         selectable: true,
         axis: {
-            keyAxis: {
+            key: {
                 visibility: true,
                 position: 'start',
                 ticks: {
                     flag: false
                 }
             },
-            valueAxis: {
+            value: {
                 visibility: true,
                 domain: {
                     start: -1,
@@ -119,14 +119,14 @@ const configDemo: Config = {
         type: '2d',
         selectable: true,
         axis: {
-            keyAxis: {
+            key: {
                 visibility: true,
                 position: 'end',
                 ticks: {
                     flag: false
                 }
             },
-            valueAxis: {
+            value: {
                 visibility: true,
                 domain: {
                     start: -1,

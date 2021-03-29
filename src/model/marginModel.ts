@@ -60,7 +60,7 @@ export class MarginModel {
             const axisLabelSize = AxisModel.getLabelSize(designerConfig.canvas.axisLabel.maxSize.main, dataScope.allowableKeys);
             const axisConfig = AxisModel.getKeyAxisLabelPosition(margin, config.canvas.size, dataScope.allowableKeys.length);
 
-            const marginOrient = config.options.axis.keyAxis.position === 'end' ? 'bottom' : 'top';
+            const marginOrient = config.options.axis.key.position === 'end' ? 'bottom' : 'top';
 
             if (axisConfig === 'rotated')
                 margin[marginOrient] += (axisLabelSize.width - axisLabelSize.height);
@@ -68,7 +68,7 @@ export class MarginModel {
     }
 
     private static getHorizontalMarginByAxisLabels(labelsMaxWidth: number, axis: TwoDimensionalAxis | IntervalAxis, data: DataSource, options: TwoDimensionalOptions | IntervalOptions): LabelSize {
-        const keyAxisOrient = AxisModel.getAxisOrient(AxisType.Key, options.orientation, axis.keyAxis.position);
+        const keyAxisOrient = AxisModel.getAxisOrient(AxisType.Key, options.orientation, axis.key.position);
         let labelsTexts: string[];
 
         if (keyAxisOrient === 'left' || keyAxisOrient === 'right') {
@@ -81,24 +81,24 @@ export class MarginModel {
     }
 
     private static recalcVerticalMarginByAxisLabelHeight(labelSize: LabelSize, margin: BlockMargin, orientation: ChartOrientation, axis: TwoDimensionalAxis | IntervalAxis): void {
-        const keyAxisOrient = AxisModel.getAxisOrient(AxisType.Key, orientation, axis.keyAxis.position);
-        const valueAxisOrient = AxisModel.getAxisOrient(AxisType.Value, orientation, axis.valueAxis.position);
+        const keyAxisOrient = AxisModel.getAxisOrient(AxisType.Key, orientation, axis.key.position);
+        const valueAxisOrient = AxisModel.getAxisOrient(AxisType.Value, orientation, axis.value.position);
 
         if ((keyAxisOrient === 'bottom' || keyAxisOrient === 'top')) {
-            if (axis.keyAxis.visibility)
+            if (axis.key.visibility)
                 margin[keyAxisOrient] += labelSize.height + AXIS_HORIZONTAL_LABEL_PADDING;
-        } else if (axis.valueAxis.visibility) {
+        } else if (axis.value.visibility) {
             margin[valueAxisOrient] += labelSize.height + AXIS_HORIZONTAL_LABEL_PADDING;
         }
     }
 
     private static recalcHorizontalMarginByAxisLabelWidth(labelSize: LabelSize, margin: BlockMargin, orientation: ChartOrientation, axis: TwoDimensionalAxis | IntervalAxis, isShow: boolean): void {
-        const keyAxisOrient = AxisModel.getAxisOrient(AxisType.Key, orientation, axis.keyAxis.position);
-        const valueAxisOrient = AxisModel.getAxisOrient(AxisType.Value, orientation, axis.valueAxis.position);
+        const keyAxisOrient = AxisModel.getAxisOrient(AxisType.Key, orientation, axis.key.position);
+        const valueAxisOrient = AxisModel.getAxisOrient(AxisType.Value, orientation, axis.value.position);
 
-        if ((keyAxisOrient === 'left' || keyAxisOrient === 'right') && isShow && axis.keyAxis.visibility) {
+        if ((keyAxisOrient === 'left' || keyAxisOrient === 'right') && isShow && axis.key.visibility) {
             margin[keyAxisOrient] += labelSize.width + AXIS_VERTICAL_LABEL_PADDING;
-        } else if ((valueAxisOrient === 'left' || valueAxisOrient === 'right') && axis.valueAxis.visibility) {
+        } else if ((valueAxisOrient === 'left' || valueAxisOrient === 'right') && axis.value.visibility) {
             margin[valueAxisOrient] += labelSize.width + AXIS_VERTICAL_LABEL_PADDING;
         }
     }

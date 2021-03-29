@@ -19,17 +19,17 @@ export class Axis {
     public static axesClass = NamesManager.getClassName('axis');
 
     public static render(block: Block, scales: Scales, scaleModel: IScaleModel, axisModel: IAxisModel, margin: BlockMargin, blockSize: Size): void {
-        if (axisModel.valueAxis.visibility)
-            this.renderAxis(block, scales.value, scaleModel.value, axisModel.valueAxis, margin, blockSize);
-        if (axisModel.keyAxis.visibility)
-            this.renderAxis(block, scales.key, scaleModel.key, axisModel.keyAxis, margin, blockSize);
+        if (axisModel.value.visibility)
+            this.renderAxis(block, scales.value, scaleModel.value, axisModel.value, margin, blockSize);
+        if (axisModel.key.visibility)
+            this.renderAxis(block, scales.key, scaleModel.key, axisModel.key, margin, blockSize);
     }
 
     public static update(block: Block, scales: Scales, scalesOptions: IScaleModel, axisModel: IAxisModel, blockSize: Size, keyDomainsEquality: boolean): void {
-        if (axisModel.valueAxis.visibility)
-            this.updateValueAxis(block, scales.value, scalesOptions.value, axisModel.valueAxis);
-        if (axisModel.keyAxis.visibility)
-            this.updateKeyAxis(block, scales.key, scalesOptions.key, axisModel.keyAxis, blockSize, keyDomainsEquality);
+        if (axisModel.value.visibility)
+            this.updateValueAxis(block, scales.value, scalesOptions.value, axisModel.value);
+        if (axisModel.key.visibility)
+            this.updateKeyAxis(block, scales.key, scalesOptions.key, axisModel.key, blockSize, keyDomainsEquality);
     }
 
     private static updateValueAxis(block: Block, scaleValue: AxisScale<any>, scaleOptions: ScaleValueModel, axisOptions: AxisModelOptions): void {

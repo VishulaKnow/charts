@@ -20,8 +20,8 @@ export class TwoDimensionalModel {
                 value: ScaleModel.getScaleLinear(options, data, margin, config.canvas.size)
             },
             axis: {
-                keyAxis: AxisModel.getKeyAxis(options.charts, data, options.data, options.orientation, options.axis.keyAxis, designerConfig.canvas.axisLabel, margin, config.canvas.size),
-                valueAxis: AxisModel.getValueAxis(options.orientation, options.axis.valueAxis, designerConfig.canvas.axisLabel, margin, config.canvas.size)
+                key: AxisModel.getKeyAxis(options.charts, data, options.data, options.orientation, options.axis.key, designerConfig.canvas.axisLabel, margin, config.canvas.size),
+                value: AxisModel.getValueAxis(options.orientation, options.axis.value, designerConfig.canvas.axisLabel, margin, config.canvas.size)
             },
             type: options.type,
             data: { ...options.data },
