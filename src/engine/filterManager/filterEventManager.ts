@@ -76,7 +76,6 @@ export class FilterEventManager {
     }
 
     public setListenerPolar(margin: BlockMargin, blockSize: Size, options: PolarOptionsModel, donutSettings: DonutChartSettings): void {
-        //TODO: разрешить
         if (this.filtrable) {
             this.registerEventToDonut(margin, blockSize, options, donutSettings);
             const selectedElems = Donut.getAllArcGroups(this.block).filter(d => this.selectedKeys.findIndex(sid => sid === d.data[options.data.keyField.name]) !== -1);

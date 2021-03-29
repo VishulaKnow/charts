@@ -112,7 +112,7 @@ export interface NumberDomain {
     end: number;
 }
 
-interface DiscreteAxisOptions extends AxisOptions { }
+export interface DiscreteAxisOptions extends AxisOptions { }
 
 
 //====================================================== IntervalOptions

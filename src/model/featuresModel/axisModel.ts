@@ -1,7 +1,10 @@
-import { AxisPosition, ChartOrientation, Size } from "../../config/config";
-import { AxisLabelPosition, BlockMargin, Orient } from "../model";
+import { AxisPosition, ChartOrientation, DataOptions, DiscreteAxisOptions, Size, TwoDimensionalChart } from "../../config/config";
+import { AxisLabelPosition, AxisModelOptions, BlockMargin, DataSource, Orient } from "../model";
 import { ModelHelper } from "../modelHelper";
 import { AxisType, CLASSES } from "../modelBuilder";
+import { DataManagerModel } from "../dataManagerModel";
+import { TwoDimensionalModel } from "../notations/twoDimensionalModel";
+import { AxisLabelCanvas } from "../../designer/designerConfig";
 
 export interface LabelSize {
     width: number;
@@ -9,32 +12,23 @@ export interface LabelSize {
 }
 
 export class AxisModel {
-    public static getLabelSize(labelMaxWidth: number, labelTexts: any[]): LabelSize {
-        const labelSize = {
-            width: 0,
-            height: 0
+    public static getKeyAxis(charts: TwoDimensionalChart[], data: DataSource, dataOptions: DataOptions, orient: ChartOrientation, axisConfig: DiscreteAxisOptions, labelConfig: AxisLabelCanvas, margin: BlockMargin, blockSize: Size): AxisModelOptions {
+        return {
+            type: 'key',
+            orient: AxisModel.getAxisOrient(AxisType.Key, orient, axisConfig.position),
+            translate: {
+                translateX: AxisModel.getAxisTranslateX(AxisType.Key, orient, axisConfig.position, margin, blockSize.width),
+                translateY: AxisModel.getAxisTranslateY(AxisType.Key, orient, axisConfig.position, margin, blockSize.height)
+            },
+            cssClass: 'key-axis',
+            ticks: axisConfig.ticks,
+            labels: {
+                maxSize: AxisModel.getLabelSize(labelConfig.maxSize.main, data[dataOptions.dataSource].map(d => d[dataOptions.keyField.name])).width,
+                positition: AxisModel.getKeyAxisLabelPosition(margin, blockSize, DataManagerModel.getDataValuesByKeyField(data, dataOptions.dataSource, dataOptions.keyField.name).length),
+                visible: !TwoDimensionalModel.getChartsEmbeddedLabelsFlag(charts, orient)
+            },
+            visibility: axisConfig.visibility
         }
-        const textBlock = document.createElement('span');
-        textBlock.style.opacity = '0';
-        textBlock.style.position = 'absolute';
-        textBlock.style.whiteSpace = 'nowrap';
-        textBlock.classList.add(CLASSES.dataLabel);
-        let maxLabel = '';
-        let biggestScore = 0;
-        let maxWidth = 0;
-        labelTexts.forEach((text: string) => {
-            if (ModelHelper.getStringScore(text) > biggestScore) {
-                maxLabel = text;
-                biggestScore = ModelHelper.getStringScore(text);
-            }
-        });
-        textBlock.textContent = maxLabel === '0000' ? maxLabel : maxLabel + 'D';
-        document.body.append(textBlock);
-        maxWidth = Math.ceil(textBlock.getBoundingClientRect().width);
-        labelSize.height = textBlock.getBoundingClientRect().height;
-        labelSize.width = maxWidth > labelMaxWidth ? labelMaxWidth : maxWidth;
-        textBlock.remove();
-        return labelSize;
     }
 
     public static getAxisLength(chartOrientation: ChartOrientation, margin: BlockMargin, blockSize: Size): number {
@@ -80,5 +74,33 @@ export class AxisModel {
             return 'rotated';
 
         return 'straight';
+    }
+
+    public static getLabelSize(labelMaxWidth: number, labelTexts: any[]): LabelSize {
+        const labelSize = {
+            width: 0,
+            height: 0
+        }
+        const textBlock = document.createElement('span');
+        textBlock.style.opacity = '0';
+        textBlock.style.position = 'absolute';
+        textBlock.style.whiteSpace = 'nowrap';
+        textBlock.classList.add(CLASSES.dataLabel);
+        let maxLabel = '';
+        let biggestScore = 0;
+        let maxWidth = 0;
+        labelTexts.forEach((text: string) => {
+            if (ModelHelper.getStringScore(text) > biggestScore) {
+                maxLabel = text;
+                biggestScore = ModelHelper.getStringScore(text);
+            }
+        });
+        textBlock.textContent = maxLabel === '0000' ? maxLabel : maxLabel + 'D';
+        document.body.append(textBlock);
+        maxWidth = Math.ceil(textBlock.getBoundingClientRect().width);
+        labelSize.height = textBlock.getBoundingClientRect().height;
+        labelSize.width = maxWidth > labelMaxWidth ? labelMaxWidth : maxWidth;
+        textBlock.remove();
+        return labelSize;
     }
 }

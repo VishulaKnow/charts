@@ -1,7 +1,6 @@
 import { ChartOrientation, Config, TwoDimensionalChart, TwoDimensionalChartType, TwoDimensionalOptions } from "../../config/config";
 import { ChartStyleConfig, DesignerConfig } from "../../designer/designerConfig";
 import { ChartStyleModel } from "../chartStyleModel";
-import { DataManagerModel } from "../dataManagerModel";
 import { AxisModel } from "../featuresModel/axisModel";
 import { LegendModel } from "../featuresModel/legendModel/legendModel";
 import { ScaleModel } from "../featuresModel/scaleModel";
@@ -23,22 +22,7 @@ export class TwoDimensionalModel {
                 value: ScaleModel.getScaleLinear(options, data, margin, config.canvas.size)
             },
             axis: {
-                keyAxis: {
-                    type: 'key',
-                    orient: AxisModel.getAxisOrient(AxisType.Key, options.orientation, options.axis.keyAxis.position),
-                    translate: {
-                        translateX: AxisModel.getAxisTranslateX(AxisType.Key, options.orientation, options.axis.keyAxis.position, margin, config.canvas.size.width),
-                        translateY: AxisModel.getAxisTranslateY(AxisType.Key, options.orientation, options.axis.keyAxis.position, margin, config.canvas.size.height)
-                    },
-                    cssClass: 'key-axis',
-                    ticks: options.axis.keyAxis.ticks,
-                    labels: {
-                        maxSize: AxisModel.getLabelSize(designerConfig.canvas.axisLabel.maxSize.main, data[options.data.dataSource].map(d => d[options.data.keyField.name])).width,
-                        positition: AxisModel.getKeyAxisLabelPosition(margin, config.canvas.size, DataManagerModel.getDataValuesByKeyField(data, options.data.dataSource, options.data.keyField.name).length),
-                        visible: !TwoDimensionalModel.getChartsEmbeddedLabelsFlag(options.charts, options.orientation)
-                    },
-                    visibility: options.axis.keyAxis.visibility
-                },
+                keyAxis: AxisModel.getKeyAxis(options.charts, data, options.data, options.orientation, options.axis.keyAxis, designerConfig.canvas.axisLabel, margin, config.canvas.size),
                 valueAxis: {
                     type: 'value',
                     orient: AxisModel.getAxisOrient(AxisType.Value, options.orientation, options.axis.valueAxis.position),
