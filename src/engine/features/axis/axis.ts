@@ -67,16 +67,17 @@ export class Axis {
                     AxisDomHelper.rotateElementsBack(axisElement, axisOptions.labels.positition);
                     AxisLabelHelper.cropLabels(block, scaleKey, scaleOptions, axisOptions, blockSize);
                 }
-                if (axisOptions.orient === 'left' || axisOptions.orient === 'right') {
-                    if (Scale.getScaleStep(scaleKey) >= MINIMAL_STEP_SIZE_FOR_WRAPPING)
-                        axisElement.selectAll<SVGGElement, unknown>('.tick text').call(AxisLabelHelper.wrapHandler, axisOptions.labels.maxSize);
-                    else
-                        AxisLabelHelper.cropLabels(block, scaleKey, scaleOptions, axisOptions, blockSize);
-                    AxisLabelHelper.alignLabelsInKeyAxis(axisOptions, axisElement);
-                }
+                // if (axisOptions.orient === 'left' || axisOptions.orient === 'right') {
+                //     if (Scale.getScaleStep(scaleKey) >= MINIMAL_STEP_SIZE_FOR_WRAPPING)
+                //         axisElement.selectAll<SVGGElement, unknown>('.tick text').call(AxisLabelHelper.wrapHandler, axisOptions.labels.maxSize);
+                //     else
+                //         AxisLabelHelper.cropLabels(block, scaleKey, scaleOptions, axisOptions, blockSize);
+                //     AxisLabelHelper.alignLabelsInKeyAxis(axisOptions, axisElement);
+                // }
                 AxisLabelHelper.setTitles(axisElement, axisGenerator.scale().domain());
             });
 
+        // Ведется отсчет нескольких кадров, чтобы получить уже 100%-отрендеренные лейблы оси.
         let frame = 0;
         const labelHandle = () => {
             frame++;
