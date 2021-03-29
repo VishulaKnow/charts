@@ -5,13 +5,11 @@ import { AxisModel } from "../featuresModel/axisModel";
 import { LegendModel } from "../featuresModel/legendModel/legendModel";
 import { ScaleModel } from "../featuresModel/scaleModel";
 import { BlockMargin, DataScope, DataSource, TwoDimensionalOptionsModel, TwoDimensionalChartModel, EmbeddedLabelTypeModel, AdditionalElementsOptions } from "../model";
-import { AxisType } from "../modelBuilder";
 
 
 export class TwoDimensionalModel {
     public static getOptions(config: Config, designerConfig: DesignerConfig, margin: BlockMargin, dataScope: DataScope, data: DataSource): TwoDimensionalOptionsModel {
         const options = <TwoDimensionalOptions>config.options;
-        //TODO: вынести получение scale и получение axis в отдельные компоненты
         return {
             legend: LegendModel.getLegendModel(config.options.type, config.options.legend.show, config.canvas.size, margin),
             title: options.title,
