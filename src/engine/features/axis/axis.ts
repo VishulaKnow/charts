@@ -72,25 +72,31 @@ export class Axis {
                         axisElement.selectAll<SVGGElement, unknown>('.tick text').call(AxisLabelHelper.wrapHandler, axisOptions.labels.maxSize);
                     else
                         AxisLabelHelper.cropLabels(block, scaleKey, scaleOptions, axisOptions, blockSize);
-
                     AxisLabelHelper.alignLabelsInKeyAxis(axisOptions, axisElement);
                 }
                 AxisLabelHelper.setTitles(axisElement, axisGenerator.scale().domain());
             });
 
-        if (axisOptions.orient === 'left' || axisOptions.orient === 'right') {
-            if (Scale.getScaleStep(scaleKey) >= MINIMAL_STEP_SIZE_FOR_WRAPPING)
-                axisElement.selectAll<SVGGElement, unknown>('.tick text').call(AxisLabelHelper.wrapHandler, axisOptions.labels.maxSize);
-            else
+        let frame = 0;
+        const labelHandle = () => {
+            frame++;
+            if (frame < 10)
+                requestAnimationFrame(labelHandle);
+            if (axisOptions.orient === 'left' || axisOptions.orient === 'right') {
+                if (Scale.getScaleStep(scaleKey) >= MINIMAL_STEP_SIZE_FOR_WRAPPING)
+                    axisElement.selectAll<SVGGElement, unknown>('.tick text').call(AxisLabelHelper.wrapHandler, axisOptions.labels.maxSize);
+                else
+                    AxisLabelHelper.cropLabels(block, scaleKey, scaleOptions, axisOptions, blockSize);
+                AxisLabelHelper.alignLabelsInKeyAxis(axisOptions, axisElement);
+            }
+            if (axisOptions.orient === 'bottom' || axisOptions.orient === 'top') {
+                axisElement.selectAll('.tick > text').attr('text-anchor', 'center');
+                if (axisOptions.labels.positition === 'rotated')
+                    AxisLabelHelper.rotateLabels(axisElement, axisOptions.orient);
                 AxisLabelHelper.cropLabels(block, scaleKey, scaleOptions, axisOptions, blockSize);
-            AxisLabelHelper.alignLabelsInKeyAxis(axisOptions, axisElement);
+            }
         }
-        if (axisOptions.orient === 'bottom' || axisOptions.orient === 'top') {
-            axisElement.selectAll('.tick > text').attr('text-anchor', 'center');
-            if (axisOptions.labels.positition === 'rotated')
-                AxisLabelHelper.rotateLabels(axisElement, axisOptions.orient);
-            AxisLabelHelper.cropLabels(block, scaleKey, scaleOptions, axisOptions, blockSize);
-        }
+        requestAnimationFrame(labelHandle);
     }
 
     private static renderAxis(block: Block, scale: AxisScale<any>, scaleOptions: ScaleKeyModel | ScaleValueModel, axisOptions: AxisModelOptions, margin: BlockMargin, blockSize: Size): void {

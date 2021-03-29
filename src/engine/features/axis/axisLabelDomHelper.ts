@@ -114,6 +114,10 @@ export class AxisLabelHelper {
     public static wrapHandler(textBlocks: Selection<SVGGElement, unknown, BaseType, any>, maxWidth: number) {
         textBlocks.each(function () {
             let textBlock = select(this);
+            if (!textBlock.selectAll('tspan').empty())
+                return;
+            textBlock.select('title').remove();
+            let textContent = textBlock.text();
             if (textBlock.node().getBBox().width > maxWidth) {
                 let letters = textBlock.text().split('').reverse(), // split text to letters.
                     letter,
@@ -142,8 +146,10 @@ export class AxisLabelHelper {
                     }
                 }
 
-                if (textBlock.selectAll('tspan').size() === 1)
-                    textBlock.text(tspan.text()).attr('y', null);
+                if (textBlock.selectAll('tspan').size() === 1) {
+                    textBlock.text(textContent).attr('y', null);
+                }
+
 
                 if (!textBlock.selectAll('tspan').empty())
                     textBlock.attr('y', -(textBlock.node().getBBox().height / 2 + 4.8));

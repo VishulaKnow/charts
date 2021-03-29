@@ -72,7 +72,18 @@ export class Block {
         return this.getSvg().select(`.${this.chartBlockClass}`);
     }
 
-    public renderClipPath(margin: BlockMargin, blockSize: Size): void {
+    public getChartGroup(chartIndex: number): Selection<SVGGElement, any, BaseType, any> {
+        let group: Selection<SVGGElement, any, BaseType, any> = this.getChartBlock().select(`.${this.chartGroupClass}-${chartIndex}`);
+        if (group.empty()) {
+            group = this.getChartBlock()
+                .append('g')
+                .attr('class', `${this.chartGroupClass}-${chartIndex}`);
+        }
+
+        return group;
+    }
+
+    public renderChartClipPath(margin: BlockMargin, blockSize: Size): void {
         const attributes = BlockHelper.getClipPathAttributes(blockSize, margin);
         this.renderDefs()
             .append('clipPath')
@@ -84,7 +95,7 @@ export class Block {
             .attr('height', attributes.height);
     }
 
-    public updateClipPath(margin: BlockMargin, blockSize: Size): void {
+    public updateChartClipPath(margin: BlockMargin, blockSize: Size): void {
         const attributes = BlockHelper.getClipPathAttributes(blockSize, margin);
         this.renderDefs()
             .select('clipPath')
@@ -106,17 +117,6 @@ export class Block {
             defs = this.getSvg().append<SVGDefsElement>('defs');
 
         return defs;
-    }
-
-    public getChartGroup(chartIndex: number): Selection<SVGGElement, any, BaseType, any> {
-        let group: Selection<SVGGElement, any, BaseType, any> = this.getChartBlock().select(`.${this.chartGroupClass}-${chartIndex}`);
-        if (group.empty()) {
-            group = this.getChartBlock()
-                .append('g')
-                .attr('class', `${this.chartGroupClass}-${chartIndex}`);
-        }
-
-        return group;
     }
 
     public removeEventListeners(): void {

@@ -101,7 +101,7 @@ export class TwoDimensionalManager {
     }
 
     private static renderCharts(block: Block, charts: TwoDimensionalChartModel[], scales: Scales, data: DataSource, dataOptions: OptionsModelData, margin: BlockMargin, keyAxisOrient: Orient, barSettings: BarChartSettings, blockSize: Size) {
-        block.renderClipPath(margin, blockSize);
+        block.renderChartClipPath(margin, blockSize);
         block.renderChartsBlock();
         charts.forEach((chart: TwoDimensionalChartModel) => {
             if (chart.type === 'bar')
@@ -139,7 +139,7 @@ export class TwoDimensionalManager {
     }
 
     private static updateCharts(block: Block, charts: TwoDimensionalChartModel[], scales: Scales, data: DataSource, dataOptions: OptionsModelData, margin: BlockMargin, keyAxisOrient: Orient, blockSize: Size, barSettings: BarChartSettings): void {
-        block.updateClipPath(margin, blockSize);
+        block.updateChartClipPath(margin, blockSize);
         charts.forEach((chart: TwoDimensionalChartModel) => {
             if (chart.type === 'bar') {
                 Bar.update(block,

@@ -102,3 +102,4 @@ export class Chart {
 export * from "./config/config";
 export * from "./designer/designerConfig";
 export { DataSource, DataRow } from "./model/model";
+export { FilterCallback } from "./engine/filterManager/filterEventManager";
