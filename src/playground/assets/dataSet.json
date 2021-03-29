@@ -2,7 +2,7 @@
     "dataSet": [
         {
             "$id": 1,
-            "brand": "BMW long text",
+            "brand": "BMW",
             "price": 100,
             "count": 12
         },
@@ -38,7 +38,7 @@
         },
         {
             "$id": 7,
-            "brand": "SAAB long long",
+            "brand": "SAAB",
             "price": 50,
             "count": 11
         },
