@@ -12,25 +12,25 @@ export class ScaleModel {
             domain: allowableKeys,
             range: {
                 start: 0,
-                end: ScaleModel.getScaleRangePeek(ScaleType.Key, orient, margin, blockSize)
+                end: ScaleModel.getRangePeek(ScaleType.Key, orient, margin, blockSize)
             },
             type: ScaleModel.getScaleKeyType(charts),
-            elementsAmount: this.getScaleElementsAmount(barCharts)
+            elementsAmount: this.getElementsAmount(barCharts)
         }
     }
 
-    public static getScaleValue(configOptions: TwoDimensionalOptions, margin: BlockMargin, blockSize: Size, data: DataSource): ScaleValueModel {
+    public static getScaleLinear(options: TwoDimensionalOptions, data: DataSource, margin: BlockMargin, blockSize: Size): ScaleValueModel {
         return {
-            domain: ScaleModel.getScaleLinearValueDomain(configOptions.axis.valueAxis.domain, data, configOptions),
+            domain: ScaleModel.getLinearDomain(options.axis.valueAxis.domain, data, options),
             range: {
                 start: 0,
-                end: ScaleModel.getScaleRangePeek(ScaleType.Value, configOptions.orientation, margin, blockSize)
+                end: ScaleModel.getRangePeek(ScaleType.Value, options.orientation, margin, blockSize)
             },
-            type: ScaleModel.getScaleValueType(configOptions.charts)
+            type: ScaleModel.getScaleValueType(options.charts)
         }
     }
 
-    public static getScaleRangePeek(scaleType: ScaleType, chartOrientation: string, margin: BlockMargin, blockSize: Size): number {
+    public static getRangePeek(scaleType: ScaleType, chartOrientation: string, margin: BlockMargin, blockSize: Size): number {
         if (chartOrientation === 'vertical')
             return scaleType === ScaleType.Key
                 ? blockSize.width - margin.left - margin.right
@@ -41,7 +41,7 @@ export class ScaleModel {
             : blockSize.width - margin.left - margin.right;
     }
 
-    public static getScaleDateValueDomain(data: DataSource, charts: IntervalChart[], keyAxisPosition: AxisPosition, dataSource: string): [Date, Date] {
+    public static getDateValueDomain(data: DataSource, charts: IntervalChart[], keyAxisPosition: AxisPosition, dataSource: string): [Date, Date] {
         const minMax = ModelHelper.getMinAndMaxOfIntervalData(data, dataSource, charts);
         let domainPeekMin = minMax[0];
         let domainPeekMax = minMax[1];
@@ -51,7 +51,7 @@ export class ScaleModel {
         return [domainPeekMax, domainPeekMin];
     }
 
-    public static getScaleLinearValueDomain(configDomain: NumberDomain, data: DataSource, configOptions: TwoDimensionalOptions): [number, number] {
+    public static getLinearDomain(configDomain: NumberDomain, data: DataSource, configOptions: TwoDimensionalOptions): [number, number] {
         let domainPeekMin: number;
         let domainPeekMax: number;
         if (configDomain.start === -1)
@@ -82,7 +82,7 @@ export class ScaleModel {
         return 'linear';
     }
 
-    public static getScaleElementsAmount(barCharts: TwoDimensionalChart[]): number {
+    public static getElementsAmount(barCharts: TwoDimensionalChart[]): number {
         if (barCharts.length === 0)
             return 1;
 

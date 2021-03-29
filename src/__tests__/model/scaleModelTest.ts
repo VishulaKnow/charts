@@ -1,6 +1,31 @@
-import { TwoDimensionalChart } from "../../config/config";
+import { TwoDimensionalChart, TwoDimensionalOptions } from "../../config/config";
 import { DataSource } from "../../model/model";
 import { ScaleModel } from "../../model/featuresModel/scaleModel";
+
+function getData(): DataSource {
+    let data = JSON.parse(`{
+        "dataSet": [
+            { "brand": "BMW", "price": 10, "count": 12 },
+            { "brand": "LADA", "price": 50, "count": 10 },
+            { "brand": "MERCEDES", "price": 15, "count": 12 },
+            { "brand": "AUDI", "price": 20, "count": 5 },
+            { "brand": "VOLKSWAGEN", "price": 115, "count": 6 },
+            { "brand": "DODGE", "price": 115, "count": 4 },
+            { "brand": "SAAB", "price": 50, "count": 11 },
+            { "brand": "HONDA", "price": 20, "count": 2 },
+            { "brand": "TOYOTA", "price": 120, "count": 20 }
+        ]
+    }`);
+    data = Object.assign(data, JSON.parse(`{
+        "dataSet_poor": [
+            { "brand": "BMW", "price": 120, "count": 12, "simple": 300 },
+            { "brand": "LADA", "price": 50, "count": 10, "simple": 30 },
+            { "brand": "MERCEDES", "price": 15, "count": 12, "simple": 500 }
+        ]
+    }`));
+
+    return data;
+}
 
 describe('getScaleMaxValue test', () => {
     let charts: TwoDimensionalChart[];
@@ -68,7 +93,7 @@ describe('getScaleMaxValue test', () => {
             });
         });
 
-        describe('segmnted', () => {
+        describe('segmented', () => {
             beforeEach(() => {
                 charts[0].isSegmented = true;
             });
@@ -92,7 +117,6 @@ describe('getScaleMaxValue test', () => {
     });
 
     describe('two charts', () => {
-
         describe('segmented/non-segmented', () => {
             test('should return 500', () => {
                 charts = [
@@ -399,27 +423,137 @@ describe('getScaleMaxValue test', () => {
     })
 });
 
-function getData(): DataSource {
-    let data = JSON.parse(`{
-        "dataSet": [
-            { "brand": "BMW", "price": 10, "count": 12 },
-            { "brand": "LADA", "price": 50, "count": 10 },
-            { "brand": "MERCEDES", "price": 15, "count": 12 },
-            { "brand": "AUDI", "price": 20, "count": 5 },
-            { "brand": "VOLKSWAGEN", "price": 115, "count": 6 },
-            { "brand": "DODGE", "price": 115, "count": 4 },
-            { "brand": "SAAB", "price": 50, "count": 11 },
-            { "brand": "HONDA", "price": 20, "count": 2 },
-            { "brand": "TOYOTA", "price": 120, "count": 20 }
-        ]
-    }`);
-    data = Object.assign(data, JSON.parse(`{
-        "dataSet_poor": [
-            { "brand": "BMW", "price": 120, "count": 12, "simple": 300 },
-            { "brand": "LADA", "price": 50, "count": 10, "simple": 30 },
-            { "brand": "MERCEDES", "price": 15, "count": 12, "simple": 500 }
-        ]
-    }`));
+describe('get scales tests', () => {
+    let charts: TwoDimensionalChart[];
+    let data: DataSource;
+    let dataSource: string;
+    let options: TwoDimensionalOptions;
 
-    return data;
-}
+    beforeEach(() => {
+        charts = [
+            {
+                isSegmented: false,
+                type: 'line',
+                data: {
+                    valueFields: [
+                        {
+                            name: 'price',
+                            format: 'money',
+                            title: 'Количество автомобилей на душу населения'
+                        },
+                        {
+                            name: 'count',
+                            format: 'integer',
+                            title: 'Количество автомобилей на душу населения'
+                        }
+                    ]
+                },
+                tooltip: {
+                    show: true
+                },
+                markers: {
+                    show: true
+                },
+                embeddedLabels: 'key'
+            },
+            {
+                isSegmented: false,
+                type: 'bar',
+                data: {
+                    valueFields: [
+                        {
+                            name: 'price',
+                            format: 'money',
+                            title: 'Количество автомобилей на душу населения'
+                        },
+                        {
+                            name: 'count',
+                            format: 'integer',
+                            title: 'Количество автомобилей на душу населения'
+                        }
+                    ]
+                },
+                tooltip: {
+                    show: true
+                },
+                markers: {
+                    show: true
+                },
+                embeddedLabels: 'key'
+            }
+        ]
+        data = getData();
+        dataSource = "dataSet_poor";
+        options = {
+            legend: {
+                show: false
+            },
+            additionalElements: null,
+            axis: {
+                keyAxis: {
+                    position: 'start',
+                    ticks: null,
+                    visibility: true
+                },
+                valueAxis: {
+                    domain: {
+                        start: -1, end: -1
+                    },
+                    position: "end",
+                    ticks: null,
+                    visibility: true
+                }
+            },
+            charts,
+            data: {
+                dataSource,
+                keyField: {
+                    format: null,
+                    name: 'price'
+                },
+            },
+            orientation: "vertical",
+            selectable: true,
+            title: null,
+            type: '2d'
+        }
+    });
+
+    test('get scale key band', () => {
+        const result = ScaleModel.getScaleKey(['BMW', 'LADA', 'MECEDES'], 'vertical', { bottom: 20, left: 20, right: 20, top: 20 }, { height: 500, width: 1000 }, charts, charts.filter(chart => chart.type === 'bar'));
+        expect(result).toEqual({
+            domain: ['BMW', 'LADA', 'MECEDES'],
+            range: {
+                start: 0,
+                end: 960
+            },
+            type: 'band',
+            elementsAmount: 2
+        })
+    });
+
+    test('get scale key', () => {
+        charts[1].type = 'line'
+        const result = ScaleModel.getScaleKey(['BMW', 'LADA', 'MECEDES'], 'vertical', { bottom: 20, left: 20, right: 20, top: 20 }, { height: 500, width: 1000 }, charts, charts.filter(chart => chart.type === 'bar'));
+        expect(result).toEqual({
+            domain: ['BMW', 'LADA', 'MECEDES'],
+            range: {
+                start: 0,
+                end: 960
+            },
+            type: 'point',
+            elementsAmount: 1
+        })
+    });
+
+    test('get scale linear', () => {
+        const result = ScaleModel.getScaleLinear(options, data, { bottom: 20, left: 20, right: 20, top: 20 }, { height: 500, width: 1000 });
+        expect(result).toEqual({
+            domain: [0, 120],
+            range: {
+                start: 0, end: 460
+            },
+            type: 'linear'
+        })
+    });
+});
