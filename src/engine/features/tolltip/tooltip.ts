@@ -48,12 +48,9 @@ export class Tooltip {
     private static renderTooltipForPolar(block: Block, charts: PolarChartModel[], data: DataSource, dataOptions: OptionsModelData, blockSize: Size, margin: BlockMargin, chartThickness: number): void {
         charts.forEach(chart => {
             const attrTransform = block.getSvg().select(`.${Donut.donutBlockClass}`).attr('transform');
-            const translateNumbers = Helper.getTranslateNumbers(attrTransform);
-            const translateX = translateNumbers[0];
-            const translateY = translateNumbers[1];
-
+            const translateNums = Helper.getTranslateNumbers(attrTransform);
             const arcItems = Donut.getAllArcGroups(block);
-            this.renderTooltipForDonut(block, arcItems, data, dataOptions, chart, blockSize, margin, chartThickness, translateX, translateY);
+            this.renderTooltipForDonut(block, arcItems, data, dataOptions, chart, blockSize, margin, chartThickness, translateNums[0], translateNums[1]);
         });
     }
 
@@ -110,7 +107,7 @@ export class Tooltip {
                 const tooltipCoordinate = TooltipHelper.getCoordinateByPointer(coordinatePointer);
                 TooltipComponentsManager.setBlockCoordinate(tooltipBlock, tooltipCoordinate);
 
-                let clones = Donut.getAllArcClones(block)
+                const clones = Donut.getAllArcClones(block)
                     .filter((d: PieArcDatum<DataRow>) => d.data[dataOptions.keyField.name] === dataRow.data[dataOptions.keyField.name]);
                 if (clones.nodes().length === 0) {
                     ElementHighlighter.renderArcCloneAndHighlight(block, margin, select(this), blockSize, donutThickness);
@@ -121,7 +118,7 @@ export class Tooltip {
             TooltipComponentsManager.hideTooltipBlock(tooltipBlock);
             if (!block.filterEventManager.isSelected(dataRow.data[dataOptions.keyField.name], dataOptions.keyField.name)) {
                 ElementHighlighter.removeCloneForElem(block, dataOptions.keyField.name, select(this));
-                ElementHighlighter.changeDonutHighlightState(select<SVGGElement, PieArcDatum<DataRow>>(this), margin, blockSize, donutThickness, block.transitionManager.durations.donutHover, false);
+                ElementHighlighter.changeDonutHighlightState(select(this), margin, blockSize, donutThickness, block.transitionManager.durations.donutHover, false);
             }
         });
     }
