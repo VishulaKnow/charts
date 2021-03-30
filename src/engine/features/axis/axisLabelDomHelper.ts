@@ -63,7 +63,7 @@ export class AxisLabelHelper {
             if ((axisOptions.orient === 'left' || axisOptions.orient === 'right') || (axisOptions.type === 'key' && axisOptions.labels.positition === 'rotated'))
                 labelSize = axisOptions.labels.maxSize;
             else
-                labelSize = (scale as ScaleBand<string>).step();
+                labelSize = (scale as ScaleBand<string>).step() - 4;
 
             DomHelper.cropSvgLabels(axisTextBlocks, labelSize);
             if (scaleOptions.type === 'point' && axisOptions.labels.positition === 'straight' && (axisOptions.orient === 'top' || axisOptions.orient === 'bottom')) {

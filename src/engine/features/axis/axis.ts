@@ -109,7 +109,6 @@ export class Axis {
         const axisElement = block.getSvg()
             .append('g')
             .attr('class', `${this.axesClass} ${axisOptions.cssClass} data-label`);
-
         AxisDomHelper.updateAxisElement(axisGenerator, axisElement, axisOptions.translate);
 
         if (axisOptions.labels.visible) {
@@ -123,9 +122,6 @@ export class Axis {
 
             if (axisOptions.type === 'key') {
                 AxisLabelHelper.setTitles(axisElement, axisGenerator.scale().domain());
-            }
-
-            if (axisOptions.type === 'key') {
                 AxisLabelHelper.alignLabelsInKeyAxis(axisOptions, axisElement);
             }
         } else {

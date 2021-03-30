@@ -11,9 +11,7 @@ import { Area } from "./twoDimensionalNotation/area/area";
 import { Bar } from "./twoDimensionalNotation/bar/bar";
 import { Line } from "./twoDimensionalNotation/line/line";
 
-interface Durations extends Transitions {
-    clickHighlight: number;
-}
+interface Durations extends Transitions { }
 
 export class TransitionManager {
     /**
@@ -24,8 +22,7 @@ export class TransitionManager {
         tooltipSlide: 75,
         donutHover: 200,
         markerHover: 50,
-        elementFadeOut: 400,
-        clickHighlight: 700
+        elementFadeOut: 400
     }
 
     private block: Block;
