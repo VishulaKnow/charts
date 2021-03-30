@@ -66,7 +66,7 @@ export class Tooltip {
 
         tipBox
             .on('mousemove', function (e) {
-                const keyValue = TipBoxHelper.getKeyValueByPointer(pointer(e, this), chartOrientation, margin, blockSize, scaleKey, scaleKeyModel.type);
+                const keyValue = TipBoxHelper.getKeyValueByPointer(pointer(e, this), chartOrientation, margin, blockSize, scaleKey, scaleKeyModel.type, 'hover');
 
                 if (!currentKey || currentKey !== keyValue) {
                     currentKey = keyValue;

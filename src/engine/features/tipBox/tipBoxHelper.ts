@@ -4,7 +4,7 @@ import { BlockMargin, ScaleKeyType } from "../../../model/model";
 import { Scale } from "../scale/scale";
 
 export class TipBoxHelper {
-    public static getKeyValueByPointer(pointer: [number, number], chartOrient: ChartOrientation, margin: BlockMargin, blockSize: Size, scaleKey: AxisScale<any>, scaleKeyType: ScaleKeyType): string {
+    public static getKeyValueByPointer(pointer: [number, number], chartOrient: ChartOrientation, margin: BlockMargin, blockSize: Size, scaleKey: AxisScale<any>, scaleKeyType: ScaleKeyType, t: 'click' | 'hover' = 'hover'): string {
         const index = TipBoxHelper.getKeyIndex(pointer, chartOrient, margin, blockSize, scaleKey, scaleKeyType);
         let keyValue = scaleKey.domain()[index];
         if (index >= scaleKey.domain().length)

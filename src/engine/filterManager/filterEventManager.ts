@@ -17,14 +17,13 @@ export interface SelectDetails {
 
 //TODO: вынести в отдельную папку / продумать разделение ID-менеджера и менеджера событий
 export class FilterEventManager {
-    public filtrable: boolean;
-
+    private filterable: boolean;
     private block: Block;
     private selectedKeys: string[];
 
     constructor(private callback: FilterCallback, private fullDataset: DataRow[], filtrable: boolean, keyFieldName: string, selectedIds: number[] = []) {
         this.selectedKeys = Helper.getKeysByIds(selectedIds, keyFieldName, fullDataset);
-        this.filtrable = filtrable;
+        this.filterable = filtrable;
     }
 
     public setBlock(block: Block): void {
@@ -76,7 +75,7 @@ export class FilterEventManager {
     }
 
     public setListenerPolar(margin: BlockMargin, blockSize: Size, options: PolarOptionsModel, donutSettings: DonutChartSettings): void {
-        if (this.filtrable) {
+        if (this.filterable) {
             this.registerEventToDonut(margin, blockSize, options, donutSettings);
             const selectedElems = Donut.getAllArcGroups(this.block).filter(d => this.selectedKeys.findIndex(sid => sid === d.data[options.data.keyField.name]) !== -1);
             this.selectedKeys = [];
@@ -85,7 +84,7 @@ export class FilterEventManager {
     }
 
     public event2DUpdate(options: TwoDimensionalOptionsModel): void {
-        if (this.filtrable) {
+        if (this.filterable) {
             const removedKeys: string[] = [];
             this.selectedKeys.forEach(key => {
                 if (this.fullDataset.findIndex(row => row[options.data.keyField.name] === key) === -1)
@@ -98,12 +97,12 @@ export class FilterEventManager {
     }
 
     public registerEventFor2D(scaleKey: AxisScale<any>, margin: BlockMargin, blockSize: Size, options: TwoDimensionalOptionsModel): void {
-        if (this.filtrable) {
+        if (this.filterable) {
             const tipBox = TipBox.renderOrGet(this.block, margin, blockSize);
             const thisClass = this;
 
             tipBox.on('click', function (e: MouseEvent) {
-                const keyValue = TipBoxHelper.getKeyValueByPointer(pointer(e, this), options.orient, margin, blockSize, scaleKey, options.scale.key.type);
+                const keyValue = TipBoxHelper.getKeyValueByPointer(pointer(e, this), options.orient, margin, blockSize, scaleKey, options.scale.key.type, 'click');
                 const appended = thisClass.processKey(e.ctrlKey, keyValue);
                 SelectHighlighter.click2DHandler(e.ctrlKey, appended, keyValue, thisClass.block, options);
 
