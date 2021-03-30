@@ -102,9 +102,10 @@ export class FilterEventManager {
             const thisClass = this;
 
             tipBox.on('click', function (e: MouseEvent) {
+                const multySelect = e.ctrlKey || e.metaKey;
                 const keyValue = TipBoxHelper.getKeyValueByPointer(pointer(e, this), options.orient, margin, blockSize, scaleKey, options.scale.key.type, 'click');
-                const appended = thisClass.processKey(e.ctrlKey, keyValue);
-                SelectHighlighter.click2DHandler(e.ctrlKey, appended, keyValue, thisClass.block, options);
+                const appended = thisClass.processKey(multySelect, keyValue);
+                SelectHighlighter.click2DHandler(multySelect, appended, keyValue, thisClass.block, options);
 
                 if (thisClass.callback) {
                     thisClass.callback(Helper.getRowsByKeys(thisClass.selectedKeys, options.data.keyField.name, thisClass.fullDataset));
@@ -130,8 +131,9 @@ export class FilterEventManager {
     }
 
     private getMultySelectParam(e: CustomEvent<SelectDetails>): boolean {
-        return ((e as Event) as MouseEvent).ctrlKey === undefined
+        const isMultyButtonToggle = ((e as Event) as MouseEvent).ctrlKey || ((e as Event) as MouseEvent).metaKey;
+        return isMultyButtonToggle === undefined
             ? (e.detail.multySelect === undefined ? false : e.detail.multySelect)
-            : ((e as Event) as MouseEvent).ctrlKey;
+            : isMultyButtonToggle;
     }
 }
