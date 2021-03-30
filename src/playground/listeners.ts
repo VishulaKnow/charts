@@ -644,7 +644,7 @@ const data = require('./assets/dataSet.json');
 // const chart = new Chart(config, designerConfig, data, false);
 // chart.render(document.querySelector('.main-wrapper'));
 
-const engine = new Engine(2, (rows: DataRow[]) => console.log(rows.map(row => row.$id)), undefined);
+const engine = new Engine(2, (rows: DataRow[]) => console.log('Selected IDs:', rows.map(row => row.$id)), undefined);
 const model = assembleModel(config, data, designerConfig);
 engine.render(model, getPreparedData(model, data, config), document.querySelector('.main-wrapper'));
 new Listeners(engine, config, designerConfig, data);
