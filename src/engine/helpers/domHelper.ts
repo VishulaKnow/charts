@@ -1,4 +1,3 @@
-
 import { Selection, BaseType } from 'd3-selection'
 import { ChartStyle, DataRow, TwoDimensionalChartModel } from "../../model/model";
 import { Block } from "../block/block";
@@ -66,17 +65,13 @@ export class DomHelper {
     public static getChartElementsByKeys<T extends BaseType>(initialSelection: Selection<T, DataRow, BaseType, unknown>, dataWrapped: boolean, keyFieldName: string, keyValues: string[], condition: SelectionCondition): Selection<T, any, BaseType, unknown> {
         if (!dataWrapped) {
             return initialSelection.filter(d => {
-                if (condition === SelectionCondition.Exclude) {
-                    return keyValues.findIndex(kv => kv === d[keyFieldName]) === -1;
-                }
-                return keyValues.findIndex(kv => kv === d[keyFieldName]) !== -1;
+                const index = keyValues.findIndex(kv => kv === d[keyFieldName]);
+                return SelectionCondition.Exclude ? index === -1 : index !== -1;
             });
         } else {
             return initialSelection.filter(d => {
-                if (condition === SelectionCondition.Exclude) {
-                    return keyValues.findIndex(kv => kv === d.data[keyFieldName]) === -1;
-                }
-                return keyValues.findIndex(kv => kv === d.data[keyFieldName]) !== -1;
+                const index = keyValues.findIndex(kv => kv === d.data[keyFieldName]);
+                return SelectionCondition.Exclude ? index === -1 : index !== -1;
             });
         }
     }

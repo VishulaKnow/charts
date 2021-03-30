@@ -31,7 +31,7 @@ export class FilterEventManager {
         this.block = block;
     }
 
-    public getSelectedKeys(keyFieldName: string): string[] {
+    public getSelectedKeys(): string[] {
         return this.selectedKeys;
     }
 
@@ -39,7 +39,7 @@ export class FilterEventManager {
         this.fullDataset = newDataset;
     }
 
-    public isSelected(keyValue: string, keyFieldName: string): boolean {
+    public isSelected(keyValue: string): boolean {
         return this.selectedKeys.findIndex(key => key === keyValue) !== -1;
     }
 
@@ -55,9 +55,9 @@ export class FilterEventManager {
         this.selectedKeys.splice(this.selectedKeys.findIndex(k => k === key), 1);
     }
 
-    private processKey(multySelect: boolean, keyValue: string, keyFieldName: string): boolean {
+    private processKey(multySelect: boolean, keyValue: string): boolean {
         if (multySelect) {
-            if (this.getSelectedKeys(keyFieldName).findIndex(key => key === keyValue) === -1) {
+            if (this.getSelectedKeys().findIndex(key => key === keyValue) === -1) {
                 this.addId(keyValue);
                 return true;
             } else {
@@ -65,7 +65,7 @@ export class FilterEventManager {
                 return false;
             }
         } else {
-            if (this.getSelectedKeys(keyFieldName)[0] === keyValue && this.getSelectedKeys(keyFieldName).length === 1) {
+            if (this.getSelectedKeys()[0] === keyValue && this.getSelectedKeys().length === 1) {
                 this.removeId(keyValue);
                 return false;
             } else {
@@ -104,7 +104,7 @@ export class FilterEventManager {
 
             tipBox.on('click', function (e: MouseEvent) {
                 const keyValue = TipBoxHelper.getKeyValueByPointer(pointer(e, this), options.orient, margin, blockSize, scaleKey, options.scale.key.type);
-                const appended = thisClass.processKey(e.ctrlKey, keyValue, options.data.keyField.name);
+                const appended = thisClass.processKey(e.ctrlKey, keyValue);
                 SelectHighlighter.click2DHandler(e.ctrlKey, appended, keyValue, thisClass.block, options);
 
                 if (thisClass.callback) {
@@ -121,8 +121,8 @@ export class FilterEventManager {
         arcItems.on('click', function (e: CustomEvent<SelectDetails>, dataRow) {
             const multySelect = thisClass.getMultySelectParam(e);
             const keyValue = dataRow.data[options.data.keyField.name];
-            const appended = thisClass.processKey(multySelect, keyValue, options.data.keyField.name);
-            SelectHighlighter.clickPolarHandler(multySelect, appended, select(this), thisClass.getSelectedKeys(options.data.keyField.name), margin, blockSize, thisClass.block, options, arcItems, donutSettings);
+            const appended = thisClass.processKey(multySelect, keyValue);
+            SelectHighlighter.clickPolarHandler(multySelect, appended, select(this), thisClass.getSelectedKeys(), margin, blockSize, thisClass.block, options, arcItems, donutSettings);
 
             if (thisClass.callback) {
                 thisClass.callback(Helper.getRowsByKeys(thisClass.selectedKeys, options.data.keyField.name, thisClass.fullDataset));

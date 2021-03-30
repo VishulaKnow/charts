@@ -110,7 +110,7 @@ export class ElementHighlighter {
         charts.forEach(chart => {
             const elems = DomHelper.get2DChartElements(block, chart);
 
-            const selectedElems = DomHelper.getChartElementsByKeys(elems, chart.isSegmented, keyFieldName, block.filterEventManager.getSelectedKeys(keyFieldName), SelectionCondition.Exclude);
+            const selectedElems = DomHelper.getChartElementsByKeys(elems, chart.isSegmented, keyFieldName, block.filterEventManager.getSelectedKeys(), SelectionCondition.Exclude);
 
             if (chart.type === 'area' || chart.type === 'line') {
                 selectedElems.call(this.scaleElement, false, transitionDuration);
@@ -132,7 +132,6 @@ export class ElementHighlighter {
     private static change2DHighlightState(block: Block, keyFieldName: string, keyValue: string, charts: TwoDimensionalChartModel[], isHighlight: boolean, filterId: string, transitionDuration: number): void {
         charts.forEach(chart => {
             const elems = DomHelper.get2DChartElements(block, chart);
-
             const selectedElems = DomHelper.get2DElementsByKey(elems, chart.isSegmented, keyFieldName, keyValue);
 
             if (chart.type === 'area' || chart.type === 'line') {
