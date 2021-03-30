@@ -35,7 +35,7 @@ export default class Engine {
 
     public destroy(): void {
         this.block.transitionManager.interruptTransitions();
-        this.block.removeEventListeners();
+        this.block.removeMouseEvents();
         this.block.getWrapper().remove();
     }
 

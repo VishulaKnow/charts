@@ -41,7 +41,7 @@ export class PolarManager {
 
     public static updateData(block: Block, model: Model, data: DataSource): void {
         block.transitionManager.interruptTransitions();
-        block.removeEventListeners();
+        block.removeMouseEvents();
         block.filterEventManager.updateData(data[model.options.data.dataSource]);
         ElementHighlighter.removeDonutArcClones(block);
 

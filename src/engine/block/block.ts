@@ -119,7 +119,7 @@ export class Block {
         return defs;
     }
 
-    public removeEventListeners(): void {
+    public removeMouseEvents(): void {
         const tipBoxes = this.getSvg().selectAll(`.${TipBox.tipBoxClass}`)
         tipBoxes.on('mousemove', null);
         tipBoxes.on('mouseover', null);
