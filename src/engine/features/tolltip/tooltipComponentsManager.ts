@@ -77,7 +77,7 @@ export class TooltipComponentsManager {
     public static setTooltipLineAttributes(tooltipLine: Selection<SVGLineElement, unknown, HTMLElement, any>, attributes: TooltipLineAttributes, transition: number): void {
         interrupt(tooltipLine.node());
 
-        if (transition && tooltipLine.style('display') === 'block') {
+        if (transition > 0 && tooltipLine.style('display') === 'block') {
             tooltipLine
                 .interrupt()
                 .transition()

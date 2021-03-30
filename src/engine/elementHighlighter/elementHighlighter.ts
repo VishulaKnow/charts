@@ -26,8 +26,7 @@ export class ElementHighlighter {
     }
 
     public static removeDonutArcClones(block: Block) {
-        let clones = Donut.getAllArcClones(block);
-        clones.remove()
+        Donut.getAllArcClones(block).remove();
     }
 
     public static renderArcCloneAndHighlight(block: Block, margin: BlockMargin, arcSelection: Selection<SVGGElement, PieArcDatum<DataRow>, BaseType, unknown>, blockSize: Size, donutThickness: number): void {
