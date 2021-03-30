@@ -118,7 +118,7 @@ export class Tooltip {
             TooltipComponentsManager.hideTooltipBlock(tooltipBlock);
             if (!block.filterEventManager.isSelected(dataRow.data[dataOptions.keyField.name])) {
                 ElementHighlighter.removeCloneForElem(block, dataOptions.keyField.name, select(this));
-                ElementHighlighter.changeDonutHighlightState(select(this), margin, blockSize, donutThickness, block.transitionManager.durations.donutHover, false);
+                ElementHighlighter.toggleDonutHighlightState(select(this), margin, blockSize, donutThickness, block.transitionManager.durations.donutHover, false);
             }
         });
     }

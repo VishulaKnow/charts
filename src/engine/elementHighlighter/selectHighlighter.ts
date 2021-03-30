@@ -3,6 +3,7 @@ import { PieArcDatum } from "d3-shape";
 import { Size } from "../../config/config";
 import { BlockMargin, DataRow, DonutChartSettings, PolarOptionsModel, TwoDimensionalOptionsModel } from "../../model/model";
 import { Block } from "../block/block";
+import { Donut } from "../polarNotation/donut/donut";
 import { DonutHelper } from "../polarNotation/donut/DonutHelper";
 import { ElementHighlighter } from "./elementHighlighter";
 
@@ -29,8 +30,12 @@ export class SelectHighlighter {
         const donutThickness = DonutHelper.getThickness(donutSettings, blockSize, margin);
         ElementHighlighter.renderShadowFilter(block);
         if (!appendKey) {
-            ElementHighlighter.changeDonutHighlightState(selectedSegment, margin, blockSize, donutThickness, block.transitionManager.durations.donutHover, false);
+            ElementHighlighter.toggleDonutHighlightState(selectedSegment, margin, blockSize, donutThickness, block.transitionManager.durations.donutHover, false);
             ElementHighlighter.removeCloneForElem(block, options.data.keyField.name, selectedSegment);
+            if (block.getSvg().selectAll(`.${Donut.arcItemClass}:not(.${ElementHighlighter.inactiveElemClass})`).size() > 1) {
+                selectedSegment.classed(ElementHighlighter.inactiveElemClass, true);
+                Donut.getAllArcGroups(block).classed(ElementHighlighter.inactiveElemClass, false);
+            }
             return;
         }
 
@@ -41,6 +46,8 @@ export class SelectHighlighter {
             ElementHighlighter.removeDonutHighlightingByKeys(arcItems, options.data.keyField.name, selectedKeys, margin, blockSize, donutThickness);
             ElementHighlighter.removeDonutArcClones(block);
             ElementHighlighter.renderArcCloneAndHighlight(block, margin, selectedSegment, blockSize, donutThickness);
+            Donut.getAllArcGroups(block).classed(ElementHighlighter.inactiveElemClass, true);
+            selectedSegment.classed(ElementHighlighter.inactiveElemClass, false);
         }
     }
 }
