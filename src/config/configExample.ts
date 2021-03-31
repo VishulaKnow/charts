@@ -4,7 +4,7 @@ const configCars: Config = {
     canvas: {
         class: 'outline',
         size: {
-            width: 860,
+            width: 800,
             height: 510
         }
     },
@@ -45,20 +45,20 @@ const configCars: Config = {
         },
         orientation: 'vertical',
         data: {
-            dataSource: 'dataSet',
+            dataSource: 'data',
             keyField: {
-                name: 'brand',
+                name: 'x',
                 format: 'string'
             }
         },
         charts: [
             {
                 isSegmented: false,
-                type: 'bar',
+                type: 'line',
                 data: {
                     valueFields: [
                         {
-                            name: 'price',
+                            name: 'y',
                             format: 'money',
                             title: 'Количество'
                         }

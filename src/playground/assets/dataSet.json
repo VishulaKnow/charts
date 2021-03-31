@@ -55,53 +55,6 @@
             "count": 15
         }
     ],
-    "dataSet2": [
-        {
-            "brand": "BMW",
-            "price": 10,
-            "count": 12
-        },
-        {
-            "brand": "LADA",
-            "price": 50,
-            "count": 10
-        },
-        {
-            "brand": "MERCEDES",
-            "price": 15,
-            "count": 12
-        },
-        {
-            "brand": "AUDI",
-            "price": 20,
-            "count": 5
-        },
-        {
-            "brand": "VOLKSWAGEN",
-            "price": 115,
-            "count": 6
-        },
-        {
-            "brand": "DODGE",
-            "price": 115,
-            "count": 4
-        },
-        {
-            "brand": "SAAB",
-            "price": 50,
-            "count": 11
-        },
-        {
-            "brand": "HONDA",
-            "price": 20,
-            "count": 2
-        },
-        {
-            "brand": "TOYOTA",
-            "price": 117,
-            "count": 15
-        }
-    ],
     "dataSet_large": [
         {
             "brand": "BMW",
@@ -194,164 +147,6 @@
             "count": 8
         }
     ],
-    "dataSet_large2": [
-        {
-            "brand": "BMW",
-            "price": 100,
-            "count": 5
-        },
-        {
-            "brand": "LADA",
-            "price": 25,
-            "count": 2
-        },
-        {
-            "brand": "MERCEDES",
-            "price": 28,
-            "count": 0
-        },
-        {
-            "brand": "AUDI",
-            "price": 20,
-            "count": 4
-        },
-        {
-            "brand": "VOLKSWAGEN",
-            "price": 85,
-            "count": 3
-        },
-        {
-            "brand": "DODGE",
-            "price": 100,
-            "count": 4
-        },
-        {
-            "brand": "SAAB",
-            "price": 100,
-            "count": 11
-        },
-        {
-            "brand": "HONDA",
-            "price": 15,
-            "count": 11
-        },
-        {
-            "brand": "TOYOTA",
-            "price": 34,
-            "count": 0
-        },
-        {
-            "brand": "BMW2",
-            "price": 100,
-            "count": 5
-        },
-        {
-            "brand": "LADA2",
-            "price": 25,
-            "count": 2
-        },
-        {
-            "brand": "MERCEDES2",
-            "price": 28,
-            "count": 0
-        },
-        {
-            "brand": "AUDI2",
-            "price": 16,
-            "count": 4
-        },
-        {
-            "brand": "VOLKSWAGEN2",
-            "price": 85,
-            "count": 3
-        },
-        {
-            "brand": "DODGE2",
-            "price": 150,
-            "count": 4
-        },
-        {
-            "brand": "SAAB2",
-            "price": 150,
-            "count": 11
-        },
-        {
-            "brand": "HONDA2",
-            "price": 15,
-            "count": 11
-        },
-        {
-            "brand": "TOYOTA2",
-            "price": 180,
-            "count": 0
-        }
-    ],
-    "dataSet_data": [
-        {
-            "SortOrder": 202007,
-            "EventCost": 19000.00,
-            "AlcoholCost": 8000.00,
-            "MonthYear": "Jul 20"
-        },
-        {
-            "SortOrder": 202008,
-            "EventCost": 166000.00,
-            "AlcoholCost": 31000.00,
-            "MonthYear": "Aug 20"
-        },
-        {
-            "SortOrder": 202010,
-            "EventCost": 17000.00,
-            "AlcoholCost": 0.00,
-            "MonthYear": "Oct 20"
-        },
-        {
-            "SortOrder": 202011,
-            "EventCost": 15000.00,
-            "AlcoholCost": 0.00,
-            "MonthYear": "Nov 20"
-        },
-        {
-            "SortOrder": 202012,
-            "EventCost": 317007.00,
-            "AlcoholCost": 36000.00,
-            "MonthYear": "Dec 20"
-        },
-        {
-            "SortOrder": 202101,
-            "EventCost": 4500.00,
-            "AlcoholCost": 0.00,
-            "MonthYear": "Jan 21"
-        },
-        {
-            "SortOrder": 202102,
-            "EventCost": 200000.00,
-            "AlcoholCost": 0.00,
-            "MonthYear": "Feb 21"
-        }
-    ],
-    "dataSet_gantt2": [
-        {
-            "task": "task1",
-            "start": "2020-12-12 06:30",
-            "end": "2020-12-12 18:00"
-        },
-        {
-            "task": "task1",
-            "start": "2020-12-11 12:00",
-            "end": "2020-12-11 18:30"
-        },
-        {
-            "task": "task4",
-            "start": "2020-12-13 11:00",
-            "end": "2020-12-13 23:40"
-        },
-        {
-            "task": "task4",
-            "start": "2020-12-14 12:20",
-            "end": "2020-12-14 19:40"
-        }
-    ],
     "dataSet_gantt": [
         {
             "id": 2,
@@ -417,23 +212,6 @@
             "count": 12,
             "simple": 500,
             "$id": 0
-        }
-    ],
-    "dataSet_poor2": [
-        {
-            "brand": "BMW",
-            "price": 120,
-            "count": 12
-        },
-        {
-            "brand": "LADA",
-            "price": 50,
-            "count": 10
-        },
-        {
-            "brand": "MERCEDES",
-            "price": 15,
-            "count": 12
         }
     ],
     "dataSet_72": [
@@ -796,6 +574,50 @@
             "brand": "TOYOTA8",
             "price": 115,
             "count": 1
+        }
+    ],
+    "dataSet_data": [
+        {
+            "SortOrder": 202007,
+            "ec": 19000.00,
+            "ac": 8000.00,
+            "x": "Jul 20"
+        },
+        {
+            "SortOrder": 202008,
+            "ec": 166000.00,
+            "ac": 31000.00,
+            "x": "Aug 20"
+        },
+        {
+            "SortOrder": 202010,
+            "ec": 17000.00,
+            "ac": 0.00,
+            "x": "Oct 20"
+        },
+        {
+            "SortOrder": 202011,
+            "ec": 15000.00,
+            "ac": 0.00,
+            "x": "Nov 20"
+        },
+        {
+            "SortOrder": 202012,
+            "ec": 317007.00,
+            "ac": 36000.00,
+            "x": "Dec 20"
+        },
+        {
+            "SortOrder": 202101,
+            "ec": 4500.00,
+            "ac": 0.00,
+            "x": "Jan 21"
+        },
+        {
+            "SortOrder": 202102,
+            "ec": 200000.00,
+            "ac": 0.00,
+            "x": "Feb 21"
         }
     ],
     "data": [
