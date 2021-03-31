@@ -36,6 +36,11 @@ const designerConfig: DesignerConfig = {
     chartStyle: {
         baseColors: ['#209de3', '#ff3131', '#ffba00', '#20b078']
     },
+    elementsOptions: {
+        tooltip: {
+            position: 'fixed'
+        }
+    },
     dataFormat: {
         formatters: (value: any, options: { type?: string; title?: string; empty?: string; } = {}) => {
             var type = typeof value;

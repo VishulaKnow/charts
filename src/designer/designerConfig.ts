@@ -9,6 +9,7 @@ export interface DesignerConfig {
     canvas: Canvas;
     dataFormat: DataFormat;
     chartStyle: ChartStyleConfig;
+    elementsOptions: ElementsOptions;
     transitions?: Transitions;
 }
 
@@ -70,6 +71,16 @@ interface DataFormat {
 // ========================================================================================= ChartStyle
 export interface ChartStyleConfig {
     baseColors: string[];
+}
+
+
+// ========================================================================================= ElementsOptions
+export interface ElementsOptions {
+    tooltip: TooltipOptions;
+}
+
+export interface TooltipOptions {
+    position: 'cursor' | 'fixed';
 }
 
 

@@ -9,6 +9,9 @@
     fill: none;
     stroke-width: 4;
 }
+.arc {
+    transition: opacity 0.1s;
+}
 .data-label {
     font-family: "Roboto";
     font-style: normal;
@@ -20,9 +23,19 @@
 }
 
 
-/*========================================================================= Legend */
+/*========================================================================== Common classes */
+.charts-opacity-inactive {
+    opacity: 0.6;
+}
+.legend-item.charts-opacity-inactive {
+    opacity: 0.45;
+}
+
+
+/*========================================================================== Legend */
 .legend-item {
     cursor: default;
+    transition: opacity 0.1s;
 }
 .legend-item-inline {
     white-space: nowrap;

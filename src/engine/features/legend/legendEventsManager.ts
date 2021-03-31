@@ -34,7 +34,7 @@ export class LegendEventsManager {
 
         legendItems.on('click', (e: MouseEvent, keyValue) => {
             arcItems.filter((row) => row.data[keyFieldName] === keyValue)
-                .dispatch('click', { bubbles: false, cancelable: true, detail: { multySelect: e.ctrlKey } });
+                .dispatch('click', { bubbles: false, cancelable: true, detail: { multySelect: e.ctrlKey || e.metaKey } });
         });
     }
 }

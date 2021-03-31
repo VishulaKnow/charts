@@ -32,7 +32,7 @@ export class SelectHighlighter {
             ElementHighlighter.toggleDonutHighlightState(selectedSegment, margin, blockSize, donutThickness, block.transitionManager.durations.donutHover, false);
             ElementHighlighter.removeCloneForElem(block, options.data.keyField.name, selectedSegment);
 
-            if (Donut.getAllArcGroups(block).filter(`:not(.${ElementHighlighter.inactiveElemClass})`).size() > 1) {
+            if (selectedKeys.length > 0) {
                 ElementHighlighter.toggleActivityStyle(selectedSegment, false);
                 ElementHighlighter.toggleActivityStyle(Legend.getItemsByKeys(block, selectedKeys, SelectionCondition.Exclude), false);
             } else {
