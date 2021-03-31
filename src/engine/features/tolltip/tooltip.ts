@@ -112,7 +112,7 @@ export class Tooltip {
     }
 
     private static renderTooltipForDonut(block: Block, elements: Selection<SVGGElement, PieArcDatum<DataRow>, SVGGElement, unknown>, data: DataSource, dataOptions: OptionsModelData, chart: PolarChartModel, blockSize: Size, margin: BlockMargin, donutThickness: number, tooltipOptions: TooltipOptions, translateX: number = 0, translateY: number = 0): void {
-        const tooltipBlock = TooltipComponentsManager.renderTooltipBlock(block, translateX, translateY);
+        const tooltipBlock = TooltipComponentsManager.renderTooltipBlock(block);
         const tooltipContent = TooltipComponentsManager.renderTooltipContentBlock(tooltipBlock);
         let tooltipArrow: Selection<BaseType, unknown, HTMLElement, any>;
 
@@ -123,11 +123,7 @@ export class Tooltip {
 
         if (tooltipOptions.position === 'followCursor') {
             elements.on('mousemove', function (e: CustomEvent<OverDetails>) {
-                const pointerCoordinate = !pointer(e, this)[0] ? e.detail.pointer : pointer(e, this);
-                if (e.detail.ignoreTranslate) {
-                    pointerCoordinate[0] = pointerCoordinate[0] - translateX;
-                    pointerCoordinate[1] = pointerCoordinate[1] - translateY;
-                }
+                const pointerCoordinate = !pointer(e, block.getSvg().node())[0] ? e.detail.pointer : pointer(e, block.getSvg().node());
                 const tooltipCoordinate = TooltipHelper.getTooltipCursorCoordinate(pointerCoordinate, block.getSvg().node().getBoundingClientRect(), tooltipContent.node().getBoundingClientRect(), window.innerWidth, window.innerHeight);
                 TooltipComponentsManager.setBlockCoordinate(tooltipBlock, tooltipCoordinate);
             });
@@ -139,6 +135,8 @@ export class Tooltip {
 
             if (tooltipOptions.position === 'fixed') {
                 const coordinatePointer = TooltipDomHelper.getRecalcedCoordinateByArrow(DonutHelper.getArcCentroid(blockSize, margin, dataRow, donutThickness), tooltipBlock, blockSize, tooltipArrow, translateX, translateY);
+                coordinatePointer[0] = coordinatePointer[0] + translateX;
+                coordinatePointer[1] = coordinatePointer[1] + translateY;
                 const tooltipCoordinate = TooltipHelper.getCoordinateByPointer(coordinatePointer);
                 TooltipComponentsManager.setBlockCoordinate(tooltipBlock, tooltipCoordinate);
             }
