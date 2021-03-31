@@ -8,7 +8,6 @@ import { Donut } from "../polarNotation/donut/donut";
 import { DonutHelper } from "../polarNotation/donut/DonutHelper";
 import { ElementHighlighter } from "./elementHighlighter";
 
-//TODO: отрефакторить после окночательного решения 
 export class SelectHighlighter {
     public static click2DHandler(multySelection: boolean, appendKey: boolean, keyValue: string, block: Block, options: TwoDimensionalOptionsModel): void {
         ElementHighlighter.renderShadowFilter(block);
@@ -33,9 +32,9 @@ export class SelectHighlighter {
             ElementHighlighter.removeCloneForElem(block, options.data.keyField.name, selectedSegment);
 
             if (Donut.getAllArcGroups(block).filter(`:not(.${ElementHighlighter.inactiveElemClass})`).size() > 1) {
-                selectedSegment.classed(ElementHighlighter.inactiveElemClass, true);
+                ElementHighlighter.toggleActivityStyle(selectedSegment, false);
             } else {
-                Donut.getAllArcGroups(block).classed(ElementHighlighter.inactiveElemClass, false);
+                ElementHighlighter.toggleActivityStyle(Donut.getAllArcGroups(block), true);
             }
             return;
         }
@@ -44,18 +43,15 @@ export class SelectHighlighter {
             ElementHighlighter.removeCloneForElem(block, options.data.keyField.name, selectedSegment);
             ElementHighlighter.renderArcCloneAndHighlight(block, margin, selectedSegment, blockSize, donutThickness);
 
-            selectedSegment.classed(ElementHighlighter.inactiveElemClass, false);
-            DomHelper.getChartElementsByKeys(Donut.getAllArcGroups(block), true, options.data.keyField.name, selectedKeys, SelectionCondition.Exclude)
-                .classed(ElementHighlighter.inactiveElemClass, true);
+            ElementHighlighter.toggleActivityStyle(selectedSegment, true);
+            ElementHighlighter.toggleActivityStyle(DomHelper.getChartElementsByKeys(Donut.getAllArcGroups(block), true, options.data.keyField.name, selectedKeys, SelectionCondition.Exclude), false);
         } else {
-            selectedSegment.classed(ElementHighlighter.inactiveElemClass, false);
-
             ElementHighlighter.removeDonutHighlightingByKeys(arcItems, options.data.keyField.name, selectedKeys, margin, blockSize, donutThickness);
             ElementHighlighter.removeDonutArcClones(block);
-            ElementHighlighter.renderArcCloneAndHighlight(block, margin, selectedSegment, blockSize, donutThickness);
+            ElementHighlighter.toggleActivityStyle(Donut.getAllArcGroups(block), false);
 
-            Donut.getAllArcGroups(block).classed(ElementHighlighter.inactiveElemClass, true);
-            selectedSegment.classed(ElementHighlighter.inactiveElemClass, false);
+            ElementHighlighter.toggleActivityStyle(selectedSegment, true);
+            ElementHighlighter.renderArcCloneAndHighlight(block, margin, selectedSegment, blockSize, donutThickness);
         }
     }
 }

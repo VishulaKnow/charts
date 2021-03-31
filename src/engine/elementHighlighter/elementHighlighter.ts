@@ -13,30 +13,6 @@ import { Donut } from '../polarNotation/donut/donut';
 export class ElementHighlighter {
     public static inactiveElemClass = 'charts-op-08';
 
-    public static makeArcClone(segment: Selection<SVGGElement, PieArcDatum<DataRow>, BaseType, unknown>, block: Block): Selection<SVGGElement, PieArcDatum<DataRow>, SVGGElement, unknown> {
-        const clone = segment
-            .clone(true)
-            .style('pointer-events', 'none')
-            .raise()
-            .classed(`${Donut.arcItemClass}`, false)
-            .classed(`${Donut.arcItemClass}-clone`, true)
-            .remove();
-
-        block.getSvg().select(`.${Donut.clonesGroupClass}`).append(function () { return clone.node() });
-
-        return clone as Selection<SVGGElement, PieArcDatum<DataRow>, SVGGElement, unknown>;
-    }
-
-    public static removeDonutArcClones(block: Block) {
-        Donut.getAllArcClones(block).remove();
-    }
-
-    public static renderArcCloneAndHighlight(block: Block, margin: BlockMargin, arcSelection: Selection<SVGGElement, PieArcDatum<DataRow>, BaseType, unknown>, blockSize: Size, donutThickness: number): void {
-        const clones = this.makeArcClone(arcSelection, block)
-        this.toggleDonutHighlightState(arcSelection, margin, blockSize, donutThickness, block.transitionManager.durations.donutHover, true);
-        this.toggleDonutHighlightState(clones, margin, blockSize, donutThickness, block.transitionManager.durations.donutHover, true)
-    }
-
     public static renderShadowFilter(block: Block): Selection<SVGFilterElement, unknown, HTMLElement, unknown> {
         const filterId = NamesManager.getId('shadow', block.id);
 
@@ -70,6 +46,30 @@ export class ElementHighlighter {
         elemSelection.style('filter', `url(#${NamesManager.getId('shadow', block.id)})`);
     }
 
+    public static makeArcClone(segment: Selection<SVGGElement, PieArcDatum<DataRow>, BaseType, unknown>, block: Block): Selection<SVGGElement, PieArcDatum<DataRow>, SVGGElement, unknown> {
+        const clone = segment
+            .clone(true)
+            .style('pointer-events', 'none')
+            .raise()
+            .classed(`${Donut.arcItemClass}`, false)
+            .classed(`${Donut.arcItemClass}-clone`, true)
+            .remove();
+
+        block.getSvg().select(`.${Donut.clonesGroupClass}`).append(function () { return clone.node() });
+
+        return clone as Selection<SVGGElement, PieArcDatum<DataRow>, SVGGElement, unknown>;
+    }
+
+    public static removeDonutArcClones(block: Block) {
+        Donut.getAllArcClones(block).remove();
+    }
+
+    public static renderArcCloneAndHighlight(block: Block, margin: BlockMargin, arcSelection: Selection<SVGGElement, PieArcDatum<DataRow>, BaseType, unknown>, blockSize: Size, donutThickness: number): void {
+        const clones = this.makeArcClone(arcSelection, block)
+        this.toggleDonutHighlightState(arcSelection, margin, blockSize, donutThickness, block.transitionManager.durations.donutHover, true);
+        this.toggleDonutHighlightState(clones, margin, blockSize, donutThickness, block.transitionManager.durations.donutHover, true)
+    }
+
     public static toggleDonutHighlightState(segment: Selection<SVGGElement, PieArcDatum<DataRow>, BaseType, unknown>, margin: BlockMargin, blockSize: Size, donutThickness: number, transitionDuration: number, on: boolean): void {
         let scaleSize = 0;
         if (on)
@@ -86,6 +86,10 @@ export class ElementHighlighter {
                 .innerRadius(DonutHelper.getOuterRadius(margin, blockSize) - donutThickness - scaleSize)(d, i));
     }
 
+    public static toggleActivityStyle(elementSelection: Selection<BaseType, unknown, BaseType, unknown>, isActive: boolean): void {
+        elementSelection.classed(this.inactiveElemClass, !isActive);
+    }
+
     public static removeDonutHighlightingByKeys(arcSegments: Selection<SVGGElement, PieArcDatum<DataRow>, BaseType, unknown>, keyFieldName: string, keyValues: string[], margin: BlockMargin, blockSize: Size, donutThickness: number): void {
         const segments = DomHelper.getChartElementsByKeys(arcSegments, true, keyFieldName, keyValues, SelectionCondition.Exclude);
         this.toggleDonutHighlightState(segments, margin, blockSize, donutThickness, 0, false);
@@ -95,7 +99,7 @@ export class ElementHighlighter {
         charts.forEach(chart => {
             const elems = DomHelper.get2DChartElements(block, chart);
             if (chart.type === 'area' || chart.type === 'line') {
-                elems.call(this.scaleElement, false, transitionDuration);
+                elems.call(this.scaleHandler, false, transitionDuration);
             } else {
                 this.removeFilter(elems);
             }
@@ -104,7 +108,6 @@ export class ElementHighlighter {
 
     public static highlight2DElementsHover(block: Block, keyFieldName: string, keyValue: string, charts: TwoDimensionalChartModel[], transitionDuration: number): void {
         this.removeUnselected2DHighlight(block, keyFieldName, charts, transitionDuration);
-
         this.highlightElementsOf2D(block, keyFieldName, keyValue, charts, transitionDuration);
     }
 
@@ -115,7 +118,7 @@ export class ElementHighlighter {
             const selectedElems = DomHelper.getChartElementsByKeys(elems, chart.isSegmented, keyFieldName, block.filterEventManager.getSelectedKeys(), SelectionCondition.Exclude);
 
             if (chart.type === 'area' || chart.type === 'line') {
-                selectedElems.call(this.scaleElement, false, transitionDuration);
+                selectedElems.call(this.scaleHandler, false, transitionDuration);
             } else {
                 this.removeFilter(selectedElems);
             }
@@ -137,7 +140,7 @@ export class ElementHighlighter {
             const selectedElems = DomHelper.get2DElementsByKey(elems, chart.isSegmented, keyFieldName, keyValue);
 
             if (chart.type === 'area' || chart.type === 'line') {
-                selectedElems.call(this.scaleElement, isHighlight, transitionDuration);
+                selectedElems.call(this.scaleHandler, isHighlight, transitionDuration);
             } else {
                 if (isHighlight)
                     selectedElems.style('filter', `url(#${filterId})`);
@@ -147,7 +150,7 @@ export class ElementHighlighter {
         });
     }
 
-    private static scaleElement(elementSelection: Selection<BaseType, DataRow, BaseType, unknown>, isScaled: boolean, transitionDuration: number = 0): void {
+    private static scaleHandler(elementSelection: Selection<BaseType, DataRow, BaseType, unknown>, isScaled: boolean, transitionDuration: number = 0): void {
         const animationName = 'size-scale';
 
         elementSelection.nodes().forEach(node => {

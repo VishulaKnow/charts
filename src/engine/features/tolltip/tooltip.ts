@@ -107,9 +107,10 @@ export class Tooltip {
                 const tooltipCoordinate = TooltipHelper.getCoordinateByPointer(coordinatePointer);
                 TooltipComponentsManager.setBlockCoordinate(tooltipBlock, tooltipCoordinate);
 
+                ElementHighlighter.toggleActivityStyle(select(this), true);
                 const clones = Donut.getAllArcClones(block)
                     .filter((d: PieArcDatum<DataRow>) => d.data[dataOptions.keyField.name] === dataRow.data[dataOptions.keyField.name]);
-                if (clones.nodes().length === 0) {
+                if (clones.nodes().length === 0 && (block.filterEventManager.getSelectedKeys().length === 0 || block.filterEventManager.isSelected(dataRow.data[dataOptions.keyField.name]))) {
                     ElementHighlighter.renderArcCloneAndHighlight(block, margin, select(this), blockSize, donutThickness);
                 }
             });
@@ -119,6 +120,9 @@ export class Tooltip {
             if (!block.filterEventManager.isSelected(dataRow.data[dataOptions.keyField.name])) {
                 ElementHighlighter.removeCloneForElem(block, dataOptions.keyField.name, select(this));
                 ElementHighlighter.toggleDonutHighlightState(select(this), margin, blockSize, donutThickness, block.transitionManager.durations.donutHover, false);
+                if (block.filterEventManager.getSelectedKeys().length > 0) {
+                    ElementHighlighter.toggleActivityStyle(select(this), false);
+                }
             }
         });
     }
