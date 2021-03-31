@@ -4,7 +4,6 @@ import { Donut } from "../../polarNotation/donut/donut";
 
 export class LegendEventsManager {
     /**
-     * 
      * @param block 
      * @param keyFieldName 
      * @param legendItems айтемы легенды полара, которые привязаны к ключам
