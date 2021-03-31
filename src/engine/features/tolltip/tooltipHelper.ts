@@ -102,27 +102,19 @@ export class TooltipHelper {
     }
 
     public static recalcToolTipCoordinateByViewPort(blockBounding: DOMRect, tooltipBounding: DOMRect, coordinate: TooltipCoordinate, winWidth: number, winHeight: number): TooltipCoordinate {
-        const tooltipWidth = tooltipBounding.width;
-        const blockPadLeft = blockBounding.left;
         const scrollPad = 18;
 
         const tooltipLeftAtBlock = Helper.getPXValueFromString(coordinate.left);
-        const tooltipClientRight = (blockPadLeft + tooltipLeftAtBlock) + tooltipWidth;
-
-        if (tooltipLeftAtBlock < 0 && -tooltipLeftAtBlock > blockPadLeft)
-            coordinate.left = -blockPadLeft + 'px';
-
-        if (tooltipClientRight > winWidth - scrollPad)
-            coordinate.left = winWidth - blockPadLeft - tooltipWidth - scrollPad + 'px';
+        if (tooltipLeftAtBlock < 0 && -tooltipLeftAtBlock > blockBounding.left)
+            coordinate.left = -blockBounding.left + 'px';
+        if (blockBounding.left + tooltipLeftAtBlock + tooltipBounding.width > winWidth - scrollPad)
+            coordinate.left = winWidth - blockBounding.left - tooltipBounding.width - scrollPad + 'px';
 
         const tooltipTopAtBlock = Helper.getPXValueFromString(coordinate.top);
-        if (blockBounding.top + tooltipTopAtBlock + tooltipBounding.height > winHeight) {
-            coordinate.top = blockBounding.height - tooltipBounding.height - (blockBounding.bottom - winHeight) + 'px';
-        }
-
-        if (tooltipTopAtBlock + blockBounding.top < 0 && -tooltipTopAtBlock > blockBounding.top) {
+        if (tooltipTopAtBlock + blockBounding.top < 0 && -tooltipTopAtBlock > blockBounding.top)
             coordinate.top = -blockBounding.top + 'px';
-        }
+        if (blockBounding.top + tooltipTopAtBlock + tooltipBounding.height > winHeight)
+            coordinate.top = blockBounding.height - tooltipBounding.height - (blockBounding.bottom - winHeight) + 'px';
 
         return coordinate;
     }

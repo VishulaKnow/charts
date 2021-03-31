@@ -72,38 +72,38 @@ export class Tooltip {
 
         let currentKey: string = null;
 
-        tipBox
-            .on('mousemove', function (e) {
-                const keyValue = TipBoxHelper.getKeyValueByPointer(pointer(e, this), chartOrientation, margin, blockSize, scaleKey, scaleKeyModel.type, 'hover');
+        tipBox.on('mousemove', function (e) {
+            const keyValue = TipBoxHelper.getKeyValueByPointer(pointer(e, this), chartOrientation, margin, blockSize, scaleKey, scaleKeyModel.type, 'hover');
 
-                if (tooltipOptions.position === 'followCursor') {
-                    const tooltipCoordinate = TooltipHelper.getTooltipCursorCoordinate(pointer(e, this), block.getSvg().node().getBoundingClientRect(), tooltipContent.node().getBoundingClientRect(), window.innerWidth, window.innerHeight);
-                    TooltipComponentsManager.setLineTooltipCoordinate(tooltipBlock, tooltipCoordinate, chartOrientation, 0);
+            if (tooltipOptions.position === 'followCursor') {
+                const tooltipCoordinate = TooltipHelper.getTooltipCursorCoordinate(pointer(e, this), block.getSvg().node().getBoundingClientRect(), tooltipContent.node().getBoundingClientRect(), window.innerWidth, window.innerHeight);
+                TooltipComponentsManager.setLineTooltipCoordinate(tooltipBlock, tooltipCoordinate, chartOrientation, 0);
+            }
+
+            if (!currentKey || currentKey !== keyValue) {
+                currentKey = keyValue;
+                TooltipComponentsManager.showTooltipBlock(tooltipBlock);
+                TooltipDomHelper.fillForMulty2DCharts(tooltipContent, charts.filter(ch => ch.tooltip.show), data, dataOptions, keyValue);
+
+                if (tooltipOptions.position === 'fixed') {
+                    const tooltipCoordinate = TooltipHelper.getTooltipFixedCoordinate(scaleKey, margin, keyValue, block.getSvg().node().getBoundingClientRect(), tooltipContent.node().getBoundingClientRect(), keyAxisOrient, window.innerWidth, window.innerHeight);
+                    TooltipComponentsManager.setLineTooltipCoordinate(tooltipBlock, tooltipCoordinate, chartOrientation, block.transitionManager.durations.tooltipSlide);
                 }
 
-                if (!currentKey || currentKey !== keyValue) {
-                    currentKey = keyValue;
-                    TooltipComponentsManager.showTooltipBlock(tooltipBlock);
-                    TooltipDomHelper.fillForMulty2DCharts(tooltipContent, charts.filter(ch => ch.tooltip.show), data, dataOptions, keyValue);
+                const tooltipLineAttributes = TooltipHelper.getTooltipLineAttributes(scaleKey, margin, keyValue, chartOrientation, blockSize);
+                TooltipComponentsManager.setTooltipLineAttributes(tooltipLine, tooltipLineAttributes, block.transitionManager.durations.tooltipSlide);
+                TooltipComponentsManager.showTooltipLine(tooltipLine);
 
-                    if (tooltipOptions.position === 'fixed') {
-                        const tooltipCoordinate = TooltipHelper.getTooltipFixedCoordinate(scaleKey, margin, keyValue, block.getSvg().node().getBoundingClientRect(), tooltipContent.node().getBoundingClientRect(), keyAxisOrient, window.innerWidth, window.innerHeight);
-                        TooltipComponentsManager.setLineTooltipCoordinate(tooltipBlock, tooltipCoordinate, chartOrientation, block.transitionManager.durations.tooltipSlide);
-                    }
+                ElementHighlighter.highlight2DElementsHover(block, dataOptions.keyField.name, keyValue, charts, block.transitionManager.durations.markerHover);
+            }
+        })
 
-                    const tooltipLineAttributes = TooltipHelper.getTooltipLineAttributes(scaleKey, margin, keyValue, chartOrientation, blockSize);
-                    TooltipComponentsManager.setTooltipLineAttributes(tooltipLine, tooltipLineAttributes, block.transitionManager.durations.tooltipSlide);
-                    TooltipComponentsManager.showTooltipLine(tooltipLine);
-
-                    ElementHighlighter.highlight2DElementsHover(block, dataOptions.keyField.name, keyValue, charts, block.transitionManager.durations.markerHover);
-                }
-            })
-            .on('mouseleave', function () {
-                TooltipComponentsManager.hideTooltipBlock(tooltipBlock);
-                TooltipComponentsManager.hideTooltipLine(tooltipLine);
-                currentKey = null;
-                ElementHighlighter.removeUnselected2DHighlight(block, dataOptions.keyField.name, charts, block.transitionManager.durations.markerHover);
-            });
+        tipBox.on('mouseleave', function () {
+            TooltipComponentsManager.hideTooltipBlock(tooltipBlock);
+            TooltipComponentsManager.hideTooltipLine(tooltipLine);
+            currentKey = null;
+            ElementHighlighter.removeUnselected2DHighlight(block, dataOptions.keyField.name, charts, block.transitionManager.durations.markerHover);
+        });
     }
 
     private static renderTooltipForDonut(block: Block, elements: Selection<SVGGElement, PieArcDatum<DataRow>, SVGGElement, unknown>, data: DataSource, dataOptions: OptionsModelData, chart: PolarChartModel, blockSize: Size, margin: BlockMargin, donutThickness: number, tooltipOptions: TooltipOptions, translateX: number = 0, translateY: number = 0): void {
@@ -123,24 +123,23 @@ export class Tooltip {
             });
         }
 
-        elements
-            .on('mouseover', function (e, dataRow: PieArcDatum<DataRow>) {
-                TooltipComponentsManager.showTooltipBlock(tooltipBlock);
-                TooltipDomHelper.fillTextForPolarChart(tooltipContent, chart, data, dataOptions, dataRow.data[dataOptions.keyField.name], select(this).select('path').style('fill'))
+        elements.on('mouseover', function (e, dataRow: PieArcDatum<DataRow>) {
+            TooltipComponentsManager.showTooltipBlock(tooltipBlock);
+            TooltipDomHelper.fillTextForPolarChart(tooltipContent, chart, data, dataOptions, dataRow.data[dataOptions.keyField.name], select(this).select('path').style('fill'))
 
-                if (tooltipOptions.position === 'fixed') {
-                    const coordinatePointer = TooltipDomHelper.getRecalcedCoordinateByArrow(DonutHelper.getArcCentroid(blockSize, margin, dataRow, donutThickness), tooltipBlock, blockSize, tooltipArrow, translateX, translateY);
-                    const tooltipCoordinate = TooltipHelper.getCoordinateByPointer(coordinatePointer);
-                    TooltipComponentsManager.setBlockCoordinate(tooltipBlock, tooltipCoordinate);
-                }
+            if (tooltipOptions.position === 'fixed') {
+                const coordinatePointer = TooltipDomHelper.getRecalcedCoordinateByArrow(DonutHelper.getArcCentroid(blockSize, margin, dataRow, donutThickness), tooltipBlock, blockSize, tooltipArrow, translateX, translateY);
+                const tooltipCoordinate = TooltipHelper.getCoordinateByPointer(coordinatePointer);
+                TooltipComponentsManager.setBlockCoordinate(tooltipBlock, tooltipCoordinate);
+            }
 
-                ElementHighlighter.toggleActivityStyle(select(this), true);
-                const clones = Donut.getAllArcClones(block)
-                    .filter((d: PieArcDatum<DataRow>) => d.data[dataOptions.keyField.name] === dataRow.data[dataOptions.keyField.name]);
-                if (clones.nodes().length === 0 && (block.filterEventManager.getSelectedKeys().length === 0 || block.filterEventManager.isSelected(dataRow.data[dataOptions.keyField.name]))) {
-                    ElementHighlighter.renderArcCloneAndHighlight(block, margin, select(this), blockSize, donutThickness);
-                }
-            });
+            ElementHighlighter.toggleActivityStyle(select(this), true);
+            const clones = Donut.getAllArcClones(block)
+                .filter((d: PieArcDatum<DataRow>) => d.data[dataOptions.keyField.name] === dataRow.data[dataOptions.keyField.name]);
+            if (clones.nodes().length === 0 && (block.filterEventManager.getSelectedKeys().length === 0 || block.filterEventManager.isSelected(dataRow.data[dataOptions.keyField.name]))) {
+                ElementHighlighter.renderArcCloneAndHighlight(block, margin, select(this), blockSize, donutThickness);
+            }
+        });
 
         elements.on('mouseleave', function (e, dataRow: PieArcDatum<DataRow>) {
             TooltipComponentsManager.hideTooltipBlock(tooltipBlock);

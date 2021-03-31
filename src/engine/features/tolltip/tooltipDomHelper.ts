@@ -1,13 +1,9 @@
-import { Selection, BaseType, select } from 'd3-selection'
+import { Selection, BaseType } from 'd3-selection'
 import { ValueField } from "../../../config/config";
-import { BlockMargin, DataRow, DataSource, OptionsModelData, PolarChartModel, TwoDimensionalChartModel } from "../../../model/model";
+import { DataSource, OptionsModelData, PolarChartModel, TwoDimensionalChartModel } from "../../../model/model";
 import { ValueFormatter, } from "../../valueFormatter";
 import { TooltipHelper } from './tooltipHelper';
 import { Size } from "../../../config/config";
-import { Donut } from '../../polarNotation/donut/donut';
-import { Block } from '../../block/block';
-import { ElementHighlighter } from '../../elementHighlighter/elementHighlighter';
-import { PieArcDatum } from 'd3-shape';
 
 export interface TooltipLineAttributes {
     x1: number;
