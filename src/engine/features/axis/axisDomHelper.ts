@@ -22,11 +22,9 @@ export class AxisDomHelper {
     }
 
     public static rotateElementsBack(axisElement: Selection<SVGGElement, unknown, HTMLElement, any>, labelPostion: AxisLabelPosition): void {
-        if (labelPostion === 'straight') {
-            axisElement.selectAll('.tick text')
-                .attr('transform', null)
-                .attr('text-anchor', 'middle')
-                .attr('x', null);
-        }
+        axisElement.selectAll('.tick text')
+            .attr('transform', null)
+            .attr('text-anchor', 'middle')
+            .attr('x', null);
     }
 }

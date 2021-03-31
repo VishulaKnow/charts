@@ -98,7 +98,7 @@ export class AxisLabelHelper {
         const marginRight = blockSize.width - axisOptions.translate.translateX - tickTranslateX;
         if (tickTranslateX + lastLabel.node().getBBox().width + axisOptions.translate.translateX > blockSize.width) {
             lastLabel.attr('text-anchor', 'start');
-            lastLabel.attr('transform', `translate(${-Math.min(maxLabelSize / 2, lastLabel.node().getBBox().width - marginRight)}, 0)`);
+            lastLabel.attr('transform', `translate(${this.getTranslateNumber(maxLabelSize, lastLabel, marginRight)}, 0)`);
             DomHelper.cropSvgLabels(lastLabel, maxLabelSize / 2 + marginRight);
         }
 
@@ -107,12 +107,18 @@ export class AxisLabelHelper {
             .select('.tick:first-of-type')
             .select<SVGGraphicsElement>('text');
         const axisElementTranslate = Helper.getTranslateNumbers(block.getSvg().select(`.${axisOptions.cssClass}`).attr('transform'))[0];
-
         if (axisOptions.translate.translateX - firstLabel.node().getBBox().width < 0) {
             firstLabel.attr('text-anchor', 'start');
             firstLabel.attr('transform', `translate(${-axisOptions.translate.translateX}, 0)`);
             DomHelper.cropSvgLabels(firstLabel, maxLabelSize / 2 + axisElementTranslate);
         }
+    }
+
+    private static getTranslateNumber(maxLabelSize: number, lastLabel: Selection<SVGGraphicsElement, unknown, HTMLElement, any>, marginRight: number) {
+        if (maxLabelSize / 2 > lastLabel.node().getBBox().width)
+            return -(lastLabel.node().getBBox().width - marginRight);
+        return -maxLabelSize / 2
+        // return -Math.min(maxLabelSize / 2, lastLabel.node().getBBox().width - marginRight)
     }
 
     public static wrapHandler(textBlocks: Selection<SVGGElement, unknown, BaseType, any>, maxWidth: number) {

@@ -63,8 +63,6 @@ export class Axis {
         AxisDomHelper.updateAxisElement(axisGenerator, axisElement, axisOptions.translate, domainNotUpdated ? 0 : block.transitionManager.durations.chartUpdate)
             .then(() => {
                 if (axisOptions.orient === 'bottom' || axisOptions.orient === 'top') {
-                    // Обратное выравнивание лейблов, если они были перевернуты, но теперь могут отображаться прямо
-                    AxisDomHelper.rotateElementsBack(axisElement, axisOptions.labels.positition);
                     AxisLabelHelper.cropLabels(block, scaleKey, scaleOptions, axisOptions, blockSize);
                 }
                 AxisLabelHelper.setTitles(axisElement, axisGenerator.scale().domain());
@@ -74,8 +72,8 @@ export class Axis {
         let frame = 0;
         const labelHandle = () => {
             frame++;
-            if (frame < 10)
-                requestAnimationFrame(labelHandle);
+            if (frame < 10) requestAnimationFrame(labelHandle);
+
             if (axisOptions.orient === 'left' || axisOptions.orient === 'right') {
                 if (Scale.getScaleStep(scaleKey) >= MINIMAL_STEP_SIZE_FOR_WRAPPING)
                     axisElement.selectAll<SVGGElement, unknown>('.tick text').call(AxisLabelHelper.wrapHandler, axisOptions.labels.maxSize);
@@ -87,6 +85,9 @@ export class Axis {
                 axisElement.selectAll('.tick > text').attr('text-anchor', 'center');
                 if (axisOptions.labels.positition === 'rotated')
                     AxisLabelHelper.rotateLabels(axisElement, axisOptions.orient);
+                // Обратное выравнивание лейблов, если они были перевернуты, но теперь могут отображаться прямо
+                if (axisOptions.labels.positition === 'straight')
+                    AxisDomHelper.rotateElementsBack(axisElement, axisOptions.labels.positition);
                 AxisLabelHelper.cropLabels(block, scaleKey, scaleOptions, axisOptions, blockSize);
             }
         }
@@ -97,7 +98,7 @@ export class Axis {
         const axisGenerator = this.getBaseAxisGenerator(axisOptions, scale, scaleOptions);
 
         if (axisOptions.type === 'value')
-            AxisHelper.setStepSize(blockSize, margin, axisGenerator, axisOptions.orient, scaleOptions.domain);
+            AxisHelper.setStepSize(axisGenerator, scaleOptions.domain, scale.range());
 
         const axisElement = block.getSvg()
             .append('g')

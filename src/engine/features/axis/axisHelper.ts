@@ -1,8 +1,6 @@
-import { select, Selection, BaseType } from 'd3-selection';
 import { axisTop, axisBottom, axisLeft, axisRight, AxisScale, Axis as IAxis } from 'd3-axis';
-import { BlockMargin, Orient } from "../../../model/model";
+import { Orient } from "../../../model/model";
 import { max, min } from 'd3-array';
-import { Size } from "../../../config/config";
 
 const MINIMAL_STEP_SIZE = 40;
 export class AxisHelper {
@@ -17,12 +15,9 @@ export class AxisHelper {
             return axisRight(scale);
     }
 
-    
-    public static setStepSize(blockSize: Size, margin: BlockMargin, axis: IAxis<any>, axisOrient: Orient, scaleDomain: any[]): void {
-        let axisLength = blockSize.width - margin.left - margin.right;
-        if (axisOrient === 'left' || axisOrient === 'right') {
-            axisLength = blockSize.height - margin.top - margin.bottom;
-        }
+
+    public static setStepSize(axis: IAxis<any>, scaleDomain: any[], range: number[]): void {
+        const axisLength = range[1] - range[0];
         if (axisLength / 10 < MINIMAL_STEP_SIZE) {
             if (Math.floor(axisLength / MINIMAL_STEP_SIZE) > 2)
                 axis.ticks(Math.floor(axisLength / MINIMAL_STEP_SIZE));
