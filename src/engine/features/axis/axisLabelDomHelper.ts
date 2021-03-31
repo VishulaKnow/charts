@@ -107,7 +107,7 @@ export class AxisLabelHelper {
             .select('.tick:first-of-type')
             .select<SVGGraphicsElement>('text');
         const axisElementTranslate = Helper.getTranslateNumbers(block.getSvg().select(`.${axisOptions.cssClass}`).attr('transform'))[0];
-        if (axisOptions.translate.translateX - firstLabel.node().getBBox().width < 0) {
+        if (axisOptions.translate.translateX - firstLabel.node().getBBox().width / 2 < 0) {
             firstLabel.attr('text-anchor', 'start');
             firstLabel.attr('transform', `translate(${-axisOptions.translate.translateX}, 0)`);
             DomHelper.cropSvgLabels(firstLabel, maxLabelSize / 2 + axisElementTranslate);

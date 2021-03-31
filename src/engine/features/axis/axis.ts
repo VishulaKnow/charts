@@ -1,4 +1,3 @@
-import { max } from 'd3-array';
 import { format } from 'd3-format';
 import { AxisScale, Axis as IAxis } from 'd3-axis';
 import { AxisModelOptions, BlockMargin, IAxisModel, IScaleModel, ScaleKeyModel, ScaleValueModel } from "../../../model/model";
@@ -82,7 +81,6 @@ export class Axis {
                 AxisLabelHelper.alignLabelsInKeyAxis(axisOptions, axisElement);
             }
             if (axisOptions.orient === 'bottom' || axisOptions.orient === 'top') {
-                axisElement.selectAll('.tick > text').attr('text-anchor', 'center');
                 if (axisOptions.labels.positition === 'rotated')
                     AxisLabelHelper.rotateLabels(axisElement, axisOptions.orient);
                 // Обратное выравнивание лейблов, если они были перевернуты, но теперь могут отображаться прямо
