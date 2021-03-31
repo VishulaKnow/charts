@@ -146,7 +146,7 @@ export class Axis {
     private static setTickFormat(scale: AxisScale<any>, scaleOptions: ScaleValueModel | ScaleKeyModel, axis: IAxis<any>): void {
         if (scaleOptions.type === 'linear') {
             if (max(scale.domain()) > 1000) {
-                axis.tickFormat(format('.2s')); // examples: 1.2K, 350, 0 
+                axis.tickFormat(format('~s')); // examples: 1.2K, 350, 0 
             }
         }
     }
