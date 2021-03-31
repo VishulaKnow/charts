@@ -11,7 +11,7 @@ import { Size } from '../../config/config';
 import { Donut } from '../polarNotation/donut/donut';
 
 export class ElementHighlighter {
-    public static inactiveElemClass = 'charts-op-08';
+    public static inactiveElemClass = 'charts-opacity-inactive';
 
     public static renderShadowFilter(block: Block): Selection<SVGFilterElement, unknown, HTMLElement, unknown> {
         const filterId = NamesManager.getId('shadow', block.id);

@@ -1,5 +1,4 @@
 import { BaseType, Selection } from "d3-selection";
-import { LegendItemsDirection } from "../../../model/featuresModel/legendModel/legendCanvasModel";
 import { DomHelper } from "../../helpers/domHelper";
 import { Helper } from "../../helpers/helper";
 import { Legend } from "./legend";

@@ -3,6 +3,7 @@ import { PieArcDatum } from "d3-shape";
 import { Size } from "../../config/config";
 import { BlockMargin, DataRow, DonutChartSettings, PolarOptionsModel, TwoDimensionalOptionsModel } from "../../model/model";
 import { Block } from "../block/block";
+import { Legend } from "../features/legend/legend";
 import { DomHelper, SelectionCondition } from "../helpers/domHelper";
 import { Donut } from "../polarNotation/donut/donut";
 import { DonutHelper } from "../polarNotation/donut/DonutHelper";
@@ -33,8 +34,10 @@ export class SelectHighlighter {
 
             if (Donut.getAllArcGroups(block).filter(`:not(.${ElementHighlighter.inactiveElemClass})`).size() > 1) {
                 ElementHighlighter.toggleActivityStyle(selectedSegment, false);
+                ElementHighlighter.toggleActivityStyle(Legend.getItemsByKeys(block, selectedKeys, SelectionCondition.Exclude), false);
             } else {
                 ElementHighlighter.toggleActivityStyle(Donut.getAllArcGroups(block), true);
+                ElementHighlighter.toggleActivityStyle(Legend.getItemsByKeys(block, [], SelectionCondition.Exclude), true);
             }
             return;
         }
@@ -53,5 +56,8 @@ export class SelectHighlighter {
             ElementHighlighter.toggleActivityStyle(selectedSegment, true);
             ElementHighlighter.renderArcCloneAndHighlight(block, margin, selectedSegment, blockSize, donutThickness);
         }
+
+        ElementHighlighter.toggleActivityStyle(Legend.getItemsByKeys(block, selectedKeys, SelectionCondition.Exclude), false);
+        ElementHighlighter.toggleActivityStyle(Legend.getItemsByKeys(block, selectedKeys), true);
     }
 }
