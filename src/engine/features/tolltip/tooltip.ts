@@ -1,4 +1,4 @@
-import { select, Selection, pointer, } from 'd3-selection';
+import { select, Selection, pointer, BaseType, } from 'd3-selection';
 import { PieArcDatum } from 'd3-shape'
 import { BlockMargin, DataRow, DataSource, IntervalChartModel, Model, OptionsModelData, Orient, PolarChartModel, ScaleKeyModel, TwoDimensionalChartModel, TwoDimensionalOptionsModel } from "../../../model/model";
 import { Block } from "../../block/block";
@@ -77,7 +77,7 @@ export class Tooltip {
                 const keyValue = TipBoxHelper.getKeyValueByPointer(pointer(e, this), chartOrientation, margin, blockSize, scaleKey, scaleKeyModel.type, 'hover');
 
                 if (tooltipOptions.position === 'followCursor') {
-                    const tooltipCoordinate = TooltipHelper.getTooltipCursorCoordinate(pointer(e, this), block.getSvg().node().getBoundingClientRect(), tooltipContent.node().getBoundingClientRect(), keyAxisOrient, window.innerWidth, window.innerHeight);
+                    const tooltipCoordinate = TooltipHelper.getTooltipCursorCoordinate(pointer(e, this), block.getSvg().node().getBoundingClientRect(), tooltipContent.node().getBoundingClientRect(), window.innerWidth, window.innerHeight);
                     TooltipComponentsManager.setLineTooltipCoordinate(tooltipBlock, tooltipCoordinate, chartOrientation, 0);
                 }
 
@@ -109,18 +109,30 @@ export class Tooltip {
     private static renderTooltipForDonut(block: Block, elements: Selection<SVGGElement, PieArcDatum<DataRow>, SVGGElement, unknown>, data: DataSource, dataOptions: OptionsModelData, chart: PolarChartModel, blockSize: Size, margin: BlockMargin, donutThickness: number, tooltipOptions: TooltipOptions, translateX: number = 0, translateY: number = 0): void {
         const tooltipBlock = TooltipComponentsManager.renderTooltipBlock(block, translateX, translateY);
         const tooltipContent = TooltipComponentsManager.renderTooltipContentBlock(tooltipBlock);
-        const tooltipArrow = TooltipComponentsManager.renderTooltipArrow(tooltipBlock);
+        let tooltipArrow: Selection<BaseType, unknown, HTMLElement, any>;
+
+        if (tooltipOptions.position === 'fixed')
+            tooltipArrow = TooltipComponentsManager.renderTooltipArrow(tooltipBlock);
 
         ElementHighlighter.renderShadowFilter(block);
+
+        if (tooltipOptions.position === 'followCursor') {
+            elements.on('mousemove', function (e, dataRow: PieArcDatum<DataRow>) {
+                const tooltipCoordinate = TooltipHelper.getTooltipCursorCoordinate(pointer(e, this), block.getSvg().node().getBoundingClientRect(), tooltipContent.node().getBoundingClientRect(), window.innerWidth, window.innerHeight);
+                TooltipComponentsManager.setBlockCoordinate(tooltipBlock, tooltipCoordinate);
+            });
+        }
 
         elements
             .on('mouseover', function (e, dataRow: PieArcDatum<DataRow>) {
                 TooltipComponentsManager.showTooltipBlock(tooltipBlock);
                 TooltipDomHelper.fillTextForPolarChart(tooltipContent, chart, data, dataOptions, dataRow.data[dataOptions.keyField.name], select(this).select('path').style('fill'))
 
-                const coordinatePointer = TooltipDomHelper.getRecalcedCoordinateByArrow(DonutHelper.getArcCentroid(blockSize, margin, dataRow, donutThickness), tooltipBlock, blockSize, tooltipArrow, translateX, translateY);
-                const tooltipCoordinate = TooltipHelper.getCoordinateByPointer(coordinatePointer);
-                TooltipComponentsManager.setBlockCoordinate(tooltipBlock, tooltipCoordinate);
+                if (tooltipOptions.position === 'fixed') {
+                    const coordinatePointer = TooltipDomHelper.getRecalcedCoordinateByArrow(DonutHelper.getArcCentroid(blockSize, margin, dataRow, donutThickness), tooltipBlock, blockSize, tooltipArrow, translateX, translateY);
+                    const tooltipCoordinate = TooltipHelper.getCoordinateByPointer(coordinatePointer);
+                    TooltipComponentsManager.setBlockCoordinate(tooltipBlock, tooltipCoordinate);
+                }
 
                 ElementHighlighter.toggleActivityStyle(select(this), true);
                 const clones = Donut.getAllArcClones(block)

@@ -38,7 +38,7 @@ const designerConfig: DesignerConfig = {
     },
     elementsOptions: {
         tooltip: {
-            position: 'fixed'
+            position: 'followCursor'
         }
     },
     dataFormat: {
