@@ -62,18 +62,25 @@ export class DomHelper {
             return initialSelection.filter(d => d.data[keyFieldName] === keyValue);
     }
 
+    /**
+     * Возвращает выборку элементов, ключи которых содержатся или НЕ содержатся в переданном массиве
+     * @param initialSelection Изначальная выборка
+     * @param dataWrapped Содержаться ли данные в обертке .data
+     * @param keyFieldName название поля ключей
+     * @param keyValues значения ключей
+     * @param condition включать или исключать элменты по ключам
+     * @returns 
+     */
     public static getChartElementsByKeys<T extends BaseType>(initialSelection: Selection<T, DataRow, BaseType, unknown>, dataWrapped: boolean, keyFieldName: string, keyValues: string[], condition: SelectionCondition): Selection<T, any, BaseType, unknown> {
-        if (!dataWrapped) {
-            return initialSelection.filter(d => {
-                const index = keyValues.findIndex(kv => kv === d[keyFieldName]);
-                return condition === SelectionCondition.Exclude ? index === -1 : index !== -1;
-            });
-        } else {
-            return initialSelection.filter(d => {
-                const index = keyValues.findIndex(kv => kv === d.data[keyFieldName]);
-                return condition === SelectionCondition.Exclude ? index === -1 : index !== -1;
-            });
-        }
+        return initialSelection.filter(d => {
+            let i: number;
+            if (dataWrapped)
+                i = keyValues.findIndex(kv => kv === d.data[keyFieldName]);
+            else
+                i = keyValues.findIndex(kv => kv === d[keyFieldName]);
+
+            return condition === SelectionCondition.Exclude ? i === -1 : i !== -1;
+        });
     }
 
     private static setChartOpacity(elements: Selection<BaseType, unknown, BaseType, unknown>, opacity: number): void {
