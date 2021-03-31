@@ -3,6 +3,7 @@ import { Size } from "../../../config/config";
 import { LegendItemsDirection } from "../../../model/featuresModel/legendModel/legendCanvasModel";
 import { DataSource, IntervalOptionsModel, LegendBlockModel, LegendPosition, Model, Orient, PolarOptionsModel, TwoDimensionalOptionsModel } from "../../../model/model";
 import { Block } from "../../block/block";
+import { SelectionCondition } from "../../helpers/domHelper";
 import { LegendDomHelper } from "./legendDomHelper";
 import { LegendEventsManager } from "./legendEventsManager";
 import { LegendCoordinate, LegendHelper } from "./legendHelper";
@@ -46,7 +47,17 @@ export class Legend {
         }
     }
 
-    public static renderObject(block: Block, legendPosition: Orient, legendBlockModel: LegendBlockModel, blockSize: Size): Selection<SVGForeignObjectElement, unknown, HTMLElement, any> {
+    public static getItemsByKeys(block: Block, keys: string[], condition: SelectionCondition = SelectionCondition.Include): Selection<HTMLDivElement, string, BaseType, unknown> {
+        return block
+            .getSvg()
+            .selectAll<HTMLDivElement, string>(`.${this.itemClass}`)
+            .filter(d => {
+                const index = keys.findIndex(k => k === d);
+                return condition === SelectionCondition.Include ? index !== -1 : index === -1;
+            });
+    }
+
+    private static renderObject(block: Block, legendPosition: Orient, legendBlockModel: LegendBlockModel, blockSize: Size): Selection<SVGForeignObjectElement, unknown, HTMLElement, any> {
         const legendObject = block.getSvg()
             .append('foreignObject')
             .attr('class', Legend.objectClass);
@@ -57,7 +68,7 @@ export class Legend {
         return legendObject;
     }
 
-    public static renderContent(legendObject: Selection<SVGForeignObjectElement, unknown, HTMLElement, any>, items: string[], colorPalette: string[], itemsDirection: LegendItemsDirection, position: LegendPosition): Selection<HTMLDivElement, string, BaseType, unknown> {
+    private static renderContent(legendObject: Selection<SVGForeignObjectElement, unknown, HTMLElement, any>, items: string[], colorPalette: string[], itemsDirection: LegendItemsDirection, position: LegendPosition): Selection<HTMLDivElement, string, BaseType, unknown> {
         const wrapper = legendObject.append('xhtml:div')
             .attr('class', Legend.legendBlockClass);
         wrapper
@@ -77,7 +88,6 @@ export class Legend {
             .append('div');
 
         const thisClass = this;
-
         itemWrappers.each(function (d, i) {
             select(this).attr('class', `${thisClass.itemClass} ${LegendHelper.getItemClasses(itemsDirection, position, i)}`);
         });
@@ -88,7 +98,6 @@ export class Legend {
             .style('background-color', (d, i) => colorPalette[i % colorPalette.length]);
 
         itemWrappers
-            .data(items)
             .append('span')
             .attr('class', LegendHelper.getLegendLabelClassByPosition(position))
             .attr('title', d => d)
@@ -100,12 +109,12 @@ export class Legend {
         return itemWrappers;
     }
 
-    public static getObject(block: Block): Selection<SVGForeignObjectElement, unknown, HTMLElement, any> {
+    private static getObject(block: Block): Selection<SVGForeignObjectElement, unknown, HTMLElement, any> {
         return block.getSvg()
             .select<SVGForeignObjectElement>(`foreignObject.${Legend.objectClass}`);
     }
 
-    public static removeContent(legendObject: Selection<SVGForeignObjectElement, unknown, HTMLElement, any>): void {
+    private static removeContent(legendObject: Selection<SVGForeignObjectElement, unknown, HTMLElement, any>): void {
         legendObject.select(`.${Legend.legendBlockClass}`).remove();
     }
 

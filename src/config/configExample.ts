@@ -76,7 +76,7 @@ const configCars: Config = {
     // }
     options: {
         type: 'polar',
-        title: 'some title',
+        title: 'Title',
         selectable: true,
         legend: {
             show: true
