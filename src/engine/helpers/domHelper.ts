@@ -66,12 +66,12 @@ export class DomHelper {
         if (!dataWrapped) {
             return initialSelection.filter(d => {
                 const index = keyValues.findIndex(kv => kv === d[keyFieldName]);
-                return SelectionCondition.Exclude ? index === -1 : index !== -1;
+                return condition === SelectionCondition.Exclude ? index === -1 : index !== -1;
             });
         } else {
             return initialSelection.filter(d => {
                 const index = keyValues.findIndex(kv => kv === d.data[keyFieldName]);
-                return SelectionCondition.Exclude ? index === -1 : index !== -1;
+                return condition === SelectionCondition.Exclude ? index === -1 : index !== -1;
             });
         }
     }
