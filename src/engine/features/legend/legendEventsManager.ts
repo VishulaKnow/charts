@@ -1,4 +1,4 @@
-import { BaseType, Selection } from "d3-selection";
+import { BaseType, pointer, Selection } from "d3-selection";
 import { Block } from "../../block/block";
 import { Donut } from "../../polarNotation/donut/donut";
 
@@ -17,6 +17,18 @@ export class LegendEventsManager {
 
     private static setHoverListeners(block: Block, keyFieldName: string, legendItems: Selection<HTMLDivElement, string, BaseType, unknown>): void {
         const arcItems = Donut.getAllArcGroups(block);
+
+        legendItems.on('mousemove', function (e, keyValue) {
+            arcItems.filter((row) => row.data[keyFieldName] === keyValue)
+                .dispatch('mousemove', {
+                    bubbles: false,
+                    cancelable: true,
+                    detail: {
+                        pointer: pointer(e, block.getWrapper().node()),
+                        ignoreTranslate: true
+                    }
+                });
+        });
 
         legendItems.on('mouseover', (e, keyValue) => {
             arcItems.filter((row) => row.data[keyFieldName] === keyValue)

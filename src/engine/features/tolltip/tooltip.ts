@@ -16,6 +16,11 @@ import { Helper } from '../../helpers/helper';
 import { TooltipHelper } from './tooltipHelper';
 import { TooltipOptions } from '../../../designer/designerConfig';
 
+interface OverDetails {
+    pointer: [number, number];
+    ignoreTranslate?: boolean;
+}
+
 export class Tooltip {
     public static readonly tooltipBlockClass = 'tooltip-block';
     public static readonly tooltipLineClass = 'tooltip-line';
@@ -117,8 +122,13 @@ export class Tooltip {
         ElementHighlighter.renderShadowFilter(block);
 
         if (tooltipOptions.position === 'followCursor') {
-            elements.on('mousemove', function (e, dataRow: PieArcDatum<DataRow>) {
-                const tooltipCoordinate = TooltipHelper.getTooltipCursorCoordinate(pointer(e, this), block.getSvg().node().getBoundingClientRect(), tooltipContent.node().getBoundingClientRect(), window.innerWidth, window.innerHeight);
+            elements.on('mousemove', function (e: CustomEvent<OverDetails>) {
+                const pointerCoordinate = !pointer(e, this)[0] ? e.detail.pointer : pointer(e, this);
+                if (e.detail.ignoreTranslate) {
+                    pointerCoordinate[0] = pointerCoordinate[0] - translateX;
+                    pointerCoordinate[1] = pointerCoordinate[1] - translateY;
+                }
+                const tooltipCoordinate = TooltipHelper.getTooltipCursorCoordinate(pointerCoordinate, block.getSvg().node().getBoundingClientRect(), tooltipContent.node().getBoundingClientRect(), window.innerWidth, window.innerHeight);
                 TooltipComponentsManager.setBlockCoordinate(tooltipBlock, tooltipCoordinate);
             });
         }

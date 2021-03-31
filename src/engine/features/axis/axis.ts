@@ -67,13 +67,6 @@ export class Axis {
                     AxisDomHelper.rotateElementsBack(axisElement, axisOptions.labels.positition);
                     AxisLabelHelper.cropLabels(block, scaleKey, scaleOptions, axisOptions, blockSize);
                 }
-                // if (axisOptions.orient === 'left' || axisOptions.orient === 'right') {
-                //     if (Scale.getScaleStep(scaleKey) >= MINIMAL_STEP_SIZE_FOR_WRAPPING)
-                //         axisElement.selectAll<SVGGElement, unknown>('.tick text').call(AxisLabelHelper.wrapHandler, axisOptions.labels.maxSize);
-                //     else
-                //         AxisLabelHelper.cropLabels(block, scaleKey, scaleOptions, axisOptions, blockSize);
-                //     AxisLabelHelper.alignLabelsInKeyAxis(axisOptions, axisElement);
-                // }
                 AxisLabelHelper.setTitles(axisElement, axisGenerator.scale().domain());
             });
 
@@ -146,7 +139,7 @@ export class Axis {
     private static setTickFormat(scale: AxisScale<any>, scaleOptions: ScaleValueModel | ScaleKeyModel, axis: IAxis<any>): void {
         if (scaleOptions.type === 'linear') {
             if (max(scale.domain()) > 1000) {
-                axis.tickFormat(format('~s')); // examples: 1.2K, 350, 0 
+                axis.tickFormat(format('~s'));
             }
         }
     }

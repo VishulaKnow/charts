@@ -8,6 +8,7 @@ import { DonutHelper } from './DonutHelper';
 import { DomHelper } from '../../helpers/domHelper';
 import { Size } from '../../../config/config';
 import { ElementHighlighter } from '../../elementHighlighter/elementHighlighter';
+import { Helper } from '../../helpers/helper';
 
 export interface Translate {
     x: number;
