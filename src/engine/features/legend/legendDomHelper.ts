@@ -8,8 +8,8 @@ import { LegendHelper } from "./legendHelper";
 export class LegendDomHelper {
     public static cropRowLabels(legendBlock: Selection<SVGForeignObjectElement, unknown, HTMLElement, any>, items: Selection<HTMLDivElement, string, BaseType, unknown>): void {
         const maxWidth = legendBlock.node().getBoundingClientRect().width;
-        let itemsLeftMargins: number[] = this.getItemsLeftMargins(items);
-        let itemsWidth: number[] = this.getItemsWidth(items)
+        let itemsLeftMargins = this.getItemsLeftMargins(items);
+        let itemsWidth = this.getItemsWidth(items)
         let sumOfItemsWidth = LegendHelper.getSumOfItemsWidths(itemsWidth, itemsLeftMargins);
         const maxItemWidth = LegendHelper.getMaxItemWidth(legendBlock.attr('width'), itemsLeftMargins, 'row');
 
@@ -37,22 +37,6 @@ export class LegendDomHelper {
             });
             index++;
         }
-    }
-
-    public static cropColumnLabels(legendBlock: Selection<SVGForeignObjectElement, unknown, HTMLElement, any>, items: Selection<HTMLDivElement, string, BaseType, unknown>, itemsDirection: LegendItemsDirection): void {
-        const itemsLeftMargins: number[] = this.getItemsLeftMargins(items);
-        const maxItemWidth = LegendHelper.getMaxItemWidth(legendBlock.attr('width'), itemsLeftMargins, itemsDirection);
-
-        items.nodes().forEach(node => {
-            if (node.getBoundingClientRect().width > maxItemWidth) {
-                const text = node.querySelector(`.${Legend.labelClass}`);
-                let labelText = text.textContent;
-                while (node.getBoundingClientRect().width > maxItemWidth && labelText.length > 3) {
-                    labelText = labelText.substr(0, labelText.length - 1);
-                    text.textContent = labelText + '...';
-                }
-            }
-        });
     }
 
     private static getItemsLeftMargins(items: Selection<HTMLDivElement, string, BaseType, unknown>): number[] {

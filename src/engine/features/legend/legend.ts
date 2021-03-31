@@ -94,8 +94,6 @@ export class Legend {
             .attr('title', d => d)
             .text(d => d);
 
-        if (itemsDirection === 'column' && position === 'bottom')
-            LegendDomHelper.cropColumnLabels(legendObject, itemWrappers, itemsDirection);
         if (itemsDirection === 'row')
             LegendDomHelper.cropRowLabels(legendObject, itemWrappers);
 
