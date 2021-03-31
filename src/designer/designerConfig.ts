@@ -4,6 +4,7 @@ export type DataTypeOptions = {
 }
 
 export type Formatter = (value: any, options?: any) => string;
+export type TooltipPosition = 'followCursor' | 'fixed';
 
 export interface DesignerConfig {
     canvas: Canvas;
@@ -78,9 +79,8 @@ export interface ChartStyleConfig {
 export interface ElementsOptions {
     tooltip: TooltipOptions;
 }
-
 export interface TooltipOptions {
-    position: 'cursor' | 'fixed';
+    position: TooltipPosition;
 }
 
 

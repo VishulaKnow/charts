@@ -39,7 +39,7 @@ export class IntervalManager {
 
         Legend.render(block, data, options, model);
 
-        Tooltip.render(block, model, data);
+        Tooltip.render(block, model, data, model.otherComponents.tooltipBlock);
 
         if (model.dataSettings.scope.hidedRecordsAmount !== 0)
             RecordOverflowAlert.render(block, model.dataSettings.scope.hidedRecordsAmount, 'top', options.orient);

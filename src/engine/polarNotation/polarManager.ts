@@ -31,7 +31,7 @@ export class PolarManager {
 
         Legend.render(engine.block, engine.data, options, model);
 
-        Tooltip.render(engine.block, model, engine.data);
+        Tooltip.render(engine.block, model, engine.data, model.otherComponents.tooltipBlock);
 
         engine.block.filterEventManager.setListenerPolar(model.chartBlock.margin, model.blockCanvas.size, options, model.chartSettings.donut);
 
@@ -52,7 +52,7 @@ export class PolarManager {
 
         Donut.updateValues(block, data[options.data.dataSource], model.chartBlock.margin, options.charts[0], model.blockCanvas.size, model.chartSettings.donut, options.data.keyField.name)
             .then(() => {
-                Tooltip.render(block, model, data);
+                Tooltip.render(block, model, data, model.otherComponents.tooltipBlock);
                 block.filterEventManager.setListenerPolar(model.chartBlock.margin, model.blockCanvas.size, options, model.chartSettings.donut);
             });
 

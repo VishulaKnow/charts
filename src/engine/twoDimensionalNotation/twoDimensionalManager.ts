@@ -52,7 +52,7 @@ export class TwoDimensionalManager {
 
         Legend.render(engine.block, engine.data, options, model);
 
-        Tooltip.render(engine.block, model, engine.data, scales);
+        Tooltip.render(engine.block, model, engine.data, model.otherComponents.tooltipBlock, scales);
 
         if (model.dataSettings.scope.hidedRecordsAmount !== 0)
             RecordOverflowAlert.render(engine.block, model.dataSettings.scope.hidedRecordsAmount, 'top', options.orient);
@@ -95,7 +95,7 @@ export class TwoDimensionalManager {
 
         block.filterEventManager.event2DUpdate(options);
 
-        Tooltip.render(block, model, data, scales);
+        Tooltip.render(block, model, data, model.otherComponents.tooltipBlock, scales);
 
         RecordOverflowAlert.update(block, model.dataSettings.scope.hidedRecordsAmount, 'top', options.orient);
     }

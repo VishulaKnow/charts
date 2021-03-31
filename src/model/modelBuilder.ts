@@ -91,7 +91,7 @@ export function assembleModel(config: Config, data: DataSource, designerConfig: 
 
     resetFalsyValues(data, config.options.data.keyField.name);
 
-    const otherComponents = OtherComponentsModel.getOtherComponentsModel();
+    const otherComponents = OtherComponentsModel.getOtherComponentsModel(designerConfig.elementsOptions);
     const margin = MarginModel.getMargin(designerConfig, config, otherComponents, data);
     const dataScope = DataManagerModel.getDataScope(config, margin, data, designerConfig, otherComponents.legendBlock);
     const preparedData = DataManagerModel.getPreparedData(data, dataScope.allowableKeys, config);
