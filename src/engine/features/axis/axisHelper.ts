@@ -1,6 +1,9 @@
 import { axisTop, axisBottom, axisLeft, axisRight, AxisScale, Axis as IAxis } from 'd3-axis';
 import { Orient } from "../../../model/model";
 import { max, min } from 'd3-array';
+import { ScaleLinear } from 'd3-scale';
+import { format } from 'd3-format';
+import { Axis } from './axis';
 
 const MINIMAL_STEP_SIZE = 40;
 export class AxisHelper {
@@ -16,14 +19,24 @@ export class AxisHelper {
     }
 
 
-    public static setStepSize(axis: IAxis<any>, scaleDomain: any[], range: number[]): void {
+    public static setStepSize(axisGenerator: IAxis<any>, scaleDomain: any[], range: number[]): void {
         const axisLength = range[1] - range[0];
+        let ticksAmount: number;
         if (axisLength / 10 < MINIMAL_STEP_SIZE) {
-            if (Math.floor(axisLength / MINIMAL_STEP_SIZE) > 2)
-                axis.ticks(Math.floor(axisLength / MINIMAL_STEP_SIZE));
-            else
-                axis.tickValues([min(scaleDomain), max(scaleDomain)]);
+            if (Math.floor(axisLength / MINIMAL_STEP_SIZE) > 2) {
+                ticksAmount = Math.floor(axisLength / MINIMAL_STEP_SIZE);
+                axisGenerator.ticks(Math.floor(axisLength / MINIMAL_STEP_SIZE));
+            }
+            else {
+                ticksAmount = 2;
+                axisGenerator.tickValues([min(scaleDomain), max(scaleDomain)]);
+            }
         }
+        (axisGenerator.scale() as any).ticks(ticksAmount).forEach((value: number) => {
+            if (format('~s')(value).indexOf('.') !== -1) {
+                Axis.setNumTickFormat(axisGenerator, '.2s');
+            }
+        });
     }
 
     private static getRecalcedTickValuesWithLastValue(minValue: number, maxValue: number, countValues: number): number[] {
