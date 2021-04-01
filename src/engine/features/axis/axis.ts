@@ -15,11 +15,11 @@ const MINIMAL_STEP_SIZE_FOR_WRAPPING = 38;
 export class Axis {
     public static axesClass = NamesManager.getClassName('axis');
 
-    public static render(block: Block, scales: Scales, scaleModel: IScaleModel, axisModel: IAxisModel, margin: BlockMargin, blockSize: Size): void {
+    public static render(block: Block, scales: Scales, scaleModel: IScaleModel, axisModel: IAxisModel, blockSize: Size): void {
         if (axisModel.value.visibility)
-            this.renderAxis(block, scales.value, scaleModel.value, axisModel.value, margin, blockSize);
+            this.renderAxis(block, scales.value, scaleModel.value, axisModel.value, blockSize);
         if (axisModel.key.visibility)
-            this.renderAxis(block, scales.key, scaleModel.key, axisModel.key, margin, blockSize);
+            this.renderAxis(block, scales.key, scaleModel.key, axisModel.key, blockSize);
     }
 
     public static update(block: Block, scales: Scales, scalesOptions: IScaleModel, axisModel: IAxisModel, blockSize: Size, keyDomainsEquality: boolean): void {
@@ -30,7 +30,7 @@ export class Axis {
     }
 
     private static updateValueAxis(block: Block, scaleValue: AxisScale<any>, scaleOptions: ScaleValueModel, axisOptions: AxisModelOptions): void {
-        const axisGenerator = this.getBaseAxisGenerator(axisOptions, scaleValue, scaleOptions);
+        const axisGenerator = AxisHelper.getBaseAxisGenerator(axisOptions, scaleValue, scaleOptions);
         AxisHelper.setStepSize(axisGenerator, scaleOptions.domain, scaleValue.range());
 
         const axisElement = block.getSvg()
@@ -38,8 +38,8 @@ export class Axis {
         AxisDomHelper.updateAxisElement(axisGenerator, axisElement, axisOptions.translate, block.transitionManager.durations.chartUpdate);
     }
 
-    private static renderAxis(block: Block, scale: AxisScale<any>, scaleOptions: ScaleKeyModel | ScaleValueModel, axisOptions: AxisModelOptions, margin: BlockMargin, blockSize: Size): void {
-        const axisGenerator = this.getBaseAxisGenerator(axisOptions, scale, scaleOptions);
+    private static renderAxis(block: Block, scale: AxisScale<any>, scaleOptions: ScaleKeyModel | ScaleValueModel, axisOptions: AxisModelOptions, blockSize: Size): void {
+        const axisGenerator = AxisHelper.getBaseAxisGenerator(axisOptions, scale, scaleOptions);
 
         if (axisOptions.type === 'value')
             AxisHelper.setStepSize(axisGenerator, scaleOptions.domain, scale.range());
@@ -69,7 +69,7 @@ export class Axis {
     }
 
     private static updateKeyAxis(block: Block, scaleKey: AxisScale<any>, scaleOptions: ScaleKeyModel, axisOptions: AxisModelOptions, blockSize: Size, domainNotUpdated: boolean): void {
-        const axisGenerator = this.getBaseAxisGenerator(axisOptions, scaleKey, scaleOptions);
+        const axisGenerator = AxisHelper.getBaseAxisGenerator(axisOptions, scaleKey, scaleOptions);
 
         if (axisOptions.labels.positition === 'rotated') { // Задание координат для перевернутых лейблов (если до этого они не были перевернуты)
             if (axisOptions.orient === 'bottom')
@@ -98,13 +98,13 @@ export class Axis {
 
         // Ведется отсчет нескольких кадров, чтобы получить уже 100%-отрендеренные лейблы оси.
         let frame = 0;
-        const labelHandle = () => {
+        const labelHandler = () => {
             frame++;
-            if (frame < 10) requestAnimationFrame(labelHandle);
+            if (frame < 10) requestAnimationFrame(labelHandler);
 
             if (axisOptions.orient === 'left' || axisOptions.orient === 'right') {
                 if (Scale.getScaleStep(scaleKey) >= MINIMAL_STEP_SIZE_FOR_WRAPPING)
-                    axisElement.selectAll<SVGGElement, unknown>('.tick text').call(AxisLabelHelper.wrapHandler, axisOptions.labels.maxSize);
+                    axisElement.selectAll<SVGTextElement, unknown>('.tick text').call(AxisLabelHelper.wrapHandler, axisOptions.labels.maxSize);
                 else
                     AxisLabelHelper.cropLabels(block, scaleKey, scaleOptions, axisOptions, blockSize);
                 AxisLabelHelper.alignLabelsInKeyAxis(axisOptions, axisElement);
@@ -118,26 +118,6 @@ export class Axis {
                 AxisLabelHelper.cropLabels(block, scaleKey, scaleOptions, axisOptions, blockSize);
             }
         }
-        requestAnimationFrame(labelHandle);
-    }
-
-    //TODO: перенести в хелперы
-    private static getBaseAxisGenerator(axisOptions: AxisModelOptions, scale: AxisScale<any>, scaleOptions: ScaleKeyModel | ScaleValueModel): IAxis<any> {
-        const axisGenerator = AxisHelper.getAxisByOrient(axisOptions.orient, scale);
-        if (!axisOptions.ticks.flag)
-            this.removeTicks(axisGenerator);
-        AxisLabelHelper.setAxisLabelPaddingByOrient(axisGenerator, axisOptions);
-        if (scaleOptions.type === 'linear')
-            this.setNumTickFormat(axisGenerator);
-
-        return axisGenerator;
-    }
-
-    private static removeTicks(axis: IAxis<any>): void {
-        axis.tickSize(0);
-    }
-
-    public static setNumTickFormat(axis: IAxis<any>, formatName: '~s' | '.2s' = '~s'): void {
-        axis.tickFormat(format(formatName));
+        requestAnimationFrame(labelHandler);
     }
 }

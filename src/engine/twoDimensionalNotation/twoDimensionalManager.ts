@@ -28,7 +28,7 @@ export class TwoDimensionalManager {
 
         engine.block.renderSvg(model.blockCanvas.size);
 
-        Axis.render(engine.block, scales, options.scale, options.axis, model.chartBlock.margin, model.blockCanvas.size);
+        Axis.render(engine.block, scales, options.scale, options.axis, model.blockCanvas.size);
 
         GridLine.render(engine.block, options.additionalElements.gridLine.flag, options.axis.key, options.axis.value, model.blockCanvas.size, model.chartBlock.margin, options.scale.key);
 
