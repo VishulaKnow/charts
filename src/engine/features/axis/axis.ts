@@ -29,20 +29,11 @@ export class Axis {
             this.updateKeyAxis(block, scales.key, scalesOptions.key, axisModel.key, blockSize, keyDomainsEquality);
     }
 
-    private static updateValueAxis(block: Block, scaleValue: AxisScale<any>, scaleOptions: ScaleValueModel, axisOptions: AxisModelOptions): void {
-        const axisGenerator = AxisHelper.getBaseAxisGenerator(axisOptions, scaleValue, scaleOptions);
-        AxisHelper.setStepSize(axisGenerator, scaleOptions.domain, scaleValue.range());
-
-        const axisElement = block.getSvg()
-            .select<SVGGElement>(`g.${axisOptions.cssClass}`);
-        AxisDomHelper.updateAxisElement(axisGenerator, axisElement, axisOptions.translate, block.transitionManager.durations.chartUpdate);
-    }
-
     private static renderAxis(block: Block, scale: AxisScale<any>, scaleOptions: ScaleKeyModel | ScaleValueModel, axisOptions: AxisModelOptions, blockSize: Size): void {
         const axisGenerator = AxisHelper.getBaseAxisGenerator(axisOptions, scale, scaleOptions);
 
         if (axisOptions.type === 'value')
-            AxisHelper.setStepSize(axisGenerator, scaleOptions.domain, scale.range());
+            AxisHelper.setLabelsSettings(axisGenerator, scaleOptions.domain, scale.range());
 
         const axisElement = block.getSvg()
             .append('g')
@@ -66,6 +57,13 @@ export class Axis {
             AxisLabelHelper.setTitles(axisElement, axisGenerator.scale().domain());
             AxisLabelHelper.alignLabelsInKeyAxis(axisOptions, axisElement);
         }
+    }
+
+    private static updateValueAxis(block: Block, scaleValue: AxisScale<any>, scaleOptions: ScaleValueModel, axisOptions: AxisModelOptions): void {
+        const axisGenerator = AxisHelper.getBaseAxisGenerator(axisOptions, scaleValue, scaleOptions);
+        AxisHelper.setLabelsSettings(axisGenerator, scaleOptions.domain, scaleValue.range());
+        const axisElement = block.getSvg().select<SVGGElement>(`g.${axisOptions.cssClass}`);
+        AxisDomHelper.updateAxisElement(axisGenerator, axisElement, axisOptions.translate, block.transitionManager.durations.chartUpdate);
     }
 
     private static updateKeyAxis(block: Block, scaleKey: AxisScale<any>, scaleOptions: ScaleKeyModel, axisOptions: AxisModelOptions, blockSize: Size, domainNotUpdated: boolean): void {
@@ -123,7 +121,7 @@ export class Axis {
                 if (axisOptions.labels.position === 'rotated')
                     AxisLabelHelper.rotateLabels(axisElement, axisOptions.orient);
                 if (axisOptions.labels.position === 'straight') // Обратное выравнивание лейблов, если они были перевернуты, но теперь могут отображаться прямо
-                    AxisDomHelper.rotateElementsBack(axisElement, axisOptions.labels.position);
+                    AxisDomHelper.rotateElementsBack(axisElement);
 
                 AxisLabelHelper.cropLabels(block, scaleKey, scaleOptions, axisOptions, blockSize);
             }

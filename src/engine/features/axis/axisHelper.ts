@@ -18,7 +18,7 @@ export class AxisHelper {
     }
 
 
-    public static setStepSize(axisGenerator: IAxis<any>, scaleDomain: any[], range: number[]): void {
+    public static setLabelsSettings(axisGenerator: IAxis<any>, scaleDomain: any[], range: number[]): void {
         const axisLength = range[1] - range[0];
         let ticksAmount: number;
         if (axisLength / 10 < MINIMAL_STEP_SIZE) {

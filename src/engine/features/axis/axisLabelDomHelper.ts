@@ -24,13 +24,6 @@ export class AxisLabelHelper {
             });
     }
 
-    public static alignLabelsInKeyAxis(axisOptions: AxisModelOptions, axisElement: Selection<SVGGElement, unknown, HTMLElement, any>): void {
-        if (axisOptions.orient === 'left')
-            this.alignLabelsInVerticalAxis(axisElement, 'start', axisOptions.labels.maxSize, true);
-        else if (axisOptions.orient === 'right')
-            this.alignLabelsInVerticalAxis(axisElement, 'start', axisOptions.labels.maxSize, false);
-    }
-
     public static setAxisLabelPaddingByOrient(axis: IAxis<any>, axisOptions: AxisModelOptions): void {
         let axisLabelPadding = AXIS_HORIZONTAL_LABEL_PADDING;
         if (axisOptions.orient === 'left' || axisOptions.orient === 'right')
@@ -80,6 +73,13 @@ export class AxisLabelHelper {
         axisElement.selectAll('.tick text').style('display', 'none');
     }
 
+    public static alignLabelsInKeyAxis(axisOptions: AxisModelOptions, axisElement: Selection<SVGGElement, unknown, HTMLElement, any>): void {
+        if (axisOptions.orient === 'left')
+            this.alignLabelsInVerticalAxis(axisElement, 'start', axisOptions.labels.maxSize, true);
+        else if (axisOptions.orient === 'right')
+            this.alignLabelsInVerticalAxis(axisElement, 'start', axisOptions.labels.maxSize, false);
+    }
+
     private static alignLabelsInVerticalAxis(axisElement: Selection<SVGGElement, unknown, HTMLElement, any>, anchor: TextAnchor, maxLabelSize: number, changeCoordinate: boolean): void {
         const axisTextBlocks = axisElement.selectAll('text');
         const spans = axisElement.selectAll('tspan');
@@ -121,7 +121,7 @@ export class AxisLabelHelper {
     private static getTranslateNumber(maxLabelSize: number, lastLabel: Selection<SVGGraphicsElement, unknown, HTMLElement, any>, marginRight: number) {
         if (maxLabelSize / 2 > lastLabel.node().getBBox().width)
             return -(lastLabel.node().getBBox().width - marginRight);
-        return -maxLabelSize / 2
+        return -maxLabelSize / 2;
         // return -Math.min(maxLabelSize / 2, lastLabel.node().getBBox().width - marginRight)
     }
 
@@ -164,9 +164,9 @@ export class AxisLabelHelper {
                     textBlock.text(textContent).attr('y', null);
                 }
 
-
-                if (!textBlock.selectAll('tspan').empty())
+                if (!textBlock.selectAll('tspan').empty()) {
                     textBlock.attr('y', -(textBlock.node().getBBox().height / 2 + 4.8));
+                }
             }
         });
     }
