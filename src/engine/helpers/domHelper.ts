@@ -55,13 +55,6 @@ export class DomHelper {
         });
     }
 
-    public static get2DElementsByKey(initialSelection: Selection<BaseType, DataRow, BaseType, unknown>, isSegmented: boolean, keyFieldName: string, keyValue: string): Selection<BaseType, DataRow, BaseType, unknown> {
-        if (!isSegmented)
-            return initialSelection.filter(d => d[keyFieldName] === keyValue);
-        else
-            return initialSelection.filter(d => d.data[keyFieldName] === keyValue);
-    }
-
     /**
      * Возвращает выборку элементов, ключи которых содержатся или НЕ содержатся в переданном массиве
      * @param initialSelection Изначальная выборка
@@ -69,9 +62,9 @@ export class DomHelper {
      * @param keyFieldName название поля ключей
      * @param keyValues значения ключей
      * @param condition включать или исключать элменты по ключам
-     * @returns 
+     * @returns Выборка по ключам
      */
-    public static getChartElementsByKeys<T extends BaseType>(initialSelection: Selection<T, DataRow, BaseType, unknown>, dataWrapped: boolean, keyFieldName: string, keyValues: string[], condition: SelectionCondition): Selection<T, any, BaseType, unknown> {
+    public static getChartElementsByKeys<T extends BaseType>(initialSelection: Selection<T, DataRow, BaseType, unknown>, dataWrapped: boolean, keyFieldName: string, keyValues: string[], condition: SelectionCondition = SelectionCondition.Include): Selection<T, any, BaseType, unknown> {
         return initialSelection.filter(d => {
             let i: number;
             if (dataWrapped)

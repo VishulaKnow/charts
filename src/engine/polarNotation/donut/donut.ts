@@ -132,7 +132,7 @@ export class Donut {
      */
     private static renderClonesG(block: Block, donutBlock: Selection<SVGGElement, unknown, BaseType, unknown>): void {
         const clonesG = donutBlock.append('g').attr('class', this.clonesGroupClass).raise();
-        ElementHighlighter.setFilter(clonesG, block);
+        ElementHighlighter.setShadowFilter(clonesG, block);
     }
 
     private static raiseClonesG(block: Block): void {

@@ -7,7 +7,7 @@ import { interrupt, Transition } from 'd3-transition';
 import { DonutHelper } from '../polarNotation/donut/DonutHelper';
 import { DomHelper, SelectionCondition } from '../helpers/domHelper';
 import { NamesManager } from '../namesManager';
-import { Size } from '../../config/config';
+import { Size, TwoDimensionalChartType } from '../../config/config';
 import { Donut } from '../polarNotation/donut/donut';
 
 export class ElementHighlighter {
@@ -42,7 +42,7 @@ export class ElementHighlighter {
         elemSelection.style('filter', null);
     }
 
-    public static setFilter(elemSelection: Selection<BaseType, any, BaseType, any>, block: Block): void {
+    public static setShadowFilter(elemSelection: Selection<BaseType, any, BaseType, any>, block: Block): void {
         elemSelection.style('filter', `url(#${NamesManager.getId('shadow', block.id)})`);
     }
 
@@ -98,11 +98,7 @@ export class ElementHighlighter {
     public static remove2DChartsFullHighlighting(block: Block, charts: TwoDimensionalChartModel[], transitionDuration: number = 0): void {
         charts.forEach(chart => {
             const elems = DomHelper.get2DChartElements(block, chart);
-            if (chart.type === 'area' || chart.type === 'line') {
-                elems.call(this.scaleHandler, false, transitionDuration);
-            } else {
-                this.removeFilter(elems);
-            }
+            this.setElementsStyleByState(block, elems, false, chart.type, transitionDuration);
         });
     }
 
@@ -114,51 +110,50 @@ export class ElementHighlighter {
     public static removeUnselected2DHighlight(block: Block, keyFieldName: string, charts: TwoDimensionalChartModel[], transitionDuration: number): void {
         charts.forEach(chart => {
             const elems = DomHelper.get2DChartElements(block, chart);
-
             const selectedElems = DomHelper.getChartElementsByKeys(elems, chart.isSegmented, keyFieldName, block.filterEventManager.getSelectedKeys(), SelectionCondition.Exclude);
 
-            if (chart.type === 'area' || chart.type === 'line') {
-                selectedElems.call(this.scaleHandler, false, transitionDuration);
-            } else {
-                this.removeFilter(selectedElems);
-            }
+            this.setElementsStyleByState(block, selectedElems, false, chart.type, transitionDuration);
         });
     }
 
     public static highlightElementsOf2D(block: Block, keyFieldName: string, keyValue: string, charts: TwoDimensionalChartModel[], transitionDuration: number): void {
         const filterId = NamesManager.getId('shadow', block.id);
-        this.change2DHighlightState(block, keyFieldName, keyValue, charts, true, filterId, transitionDuration);
+        this.toggle2DHighlightState(block, keyFieldName, keyValue, charts, true, filterId, transitionDuration);
     }
 
     public static remove2DHighlightingByKey(block: Block, keyFieldName: string, keyValue: string, charts: TwoDimensionalChartModel[], transitionDuration: number): void {
-        this.change2DHighlightState(block, keyFieldName, keyValue, charts, false, null, transitionDuration);
+        this.toggle2DHighlightState(block, keyFieldName, keyValue, charts, false, null, transitionDuration);
     }
 
-    private static change2DHighlightState(block: Block, keyFieldName: string, keyValue: string, charts: TwoDimensionalChartModel[], isHighlight: boolean, filterId: string, transitionDuration: number): void {
+    private static toggle2DHighlightState(block: Block, keyFieldName: string, keyValue: string, charts: TwoDimensionalChartModel[], isHighlight: boolean, filterId: string, transitionDuration: number): void {
         charts.forEach(chart => {
             const elems = DomHelper.get2DChartElements(block, chart);
-            const selectedElems = DomHelper.get2DElementsByKey(elems, chart.isSegmented, keyFieldName, keyValue);
+            const selectedElems = DomHelper.getChartElementsByKeys(elems, chart.isSegmented, keyFieldName, [keyValue]);
 
-            if (chart.type === 'area' || chart.type === 'line') {
-                selectedElems.call(this.scaleHandler, isHighlight, transitionDuration);
-            } else {
-                if (isHighlight)
-                    selectedElems.style('filter', `url(#${filterId})`);
-                else
-                    this.removeFilter(selectedElems);
-            }
+            this.setElementsStyleByState(block, selectedElems, isHighlight, chart.type, transitionDuration);
         });
+    }
+
+    private static setElementsStyleByState(block: Block, elemSelection: Selection<BaseType, any, BaseType, any>, isHighlight: boolean, chartType: TwoDimensionalChartType, transitionDuration: number): void {
+        if (chartType === 'area' || chartType === 'line') {
+            elemSelection.call(this.scaleHandler, isHighlight, transitionDuration);
+        } else {
+            if (isHighlight) {
+                this.setShadowFilter(elemSelection, block)
+            }
+            else {
+                this.removeFilter(elemSelection);
+            }
+        }
     }
 
     private static scaleHandler(elementSelection: Selection<BaseType, DataRow, BaseType, unknown>, isScaled: boolean, transitionDuration: number = 0): void {
         const animationName = 'size-scale';
-
         elementSelection.nodes().forEach(node => {
             interrupt(node, animationName);
         });
 
         let elementsHandler: Selection<BaseType, DataRow, BaseType, unknown> | Transition<BaseType, DataRow, BaseType, unknown> = elementSelection;
-
         if (transitionDuration > 0) {
             elementsHandler = elementsHandler.interrupt().transition(animationName)
                 .duration(transitionDuration)
