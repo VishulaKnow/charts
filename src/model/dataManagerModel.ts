@@ -79,8 +79,8 @@ export class DataManagerModel {
         if (position === 'right') {
             maxItemsNumber = LegendCanvasModel.findElementsAmountByLegendSize(keys, position, 200, blockSize.height - margin.top - margin.bottom);
         } else {
-            let marginBottom = margin.bottom - (legendBlock.bottom.size === 0 ? legendBlock.bottom.size : legendBlock.bottom.size - legendBlock.bottom.margin.bottom);
-            maxItemsNumber = LegendCanvasModel.findElementsAmountByLegendSize(keys, position, blockSize.width - margin.left - margin.right, blockSize.height - margin.top - marginBottom - legendBlock.bottom.margin.bottom - MIN_DONUT_BLOCK_SIZE);
+            let marginBottom = margin.bottom - (legendBlock.coordinate.bottom.size === 0 ? legendBlock.coordinate.bottom.size : legendBlock.coordinate.bottom.size - legendBlock.coordinate.bottom.margin.bottom);
+            maxItemsNumber = LegendCanvasModel.findElementsAmountByLegendSize(keys, position, blockSize.width - margin.left - margin.right, blockSize.height - margin.top - marginBottom - legendBlock.coordinate.bottom.margin.bottom - MIN_DONUT_BLOCK_SIZE);
         }
 
         return {

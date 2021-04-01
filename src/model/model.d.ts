@@ -249,6 +249,10 @@ interface ComponentBlockModel {
     pad: number;
 }
 export interface LegendBlockModel {
+    coordinate: LegendCoordinate;
+    standartTooltip: boolean;
+}
+export interface LegendCoordinate {
     top: LegendBlockCanvas;
     bottom: LegendBlockCanvas;
     left: LegendBlockCanvas;

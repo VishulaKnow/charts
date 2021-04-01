@@ -14,38 +14,41 @@ export class LegendModel {
             return this.getLegendWidth(texts, legendMaxWidth);
 
         if (chartNotation === '2d' || chartNotation === 'interval') {
-            return LegendCanvasModel.getLegendHeight(texts, blockSize.width, legendBlockModel[position].margin.left, legendBlockModel[position].margin.right, 'row', position);
+            return LegendCanvasModel.getLegendHeight(texts, blockSize.width, legendBlockModel.coordinate[position].margin.left, legendBlockModel.coordinate[position].margin.right, 'row', position);
         } else if (chartNotation === 'polar') {
-            const size = LegendCanvasModel.getLegendHeight(texts, blockSize.width, legendBlockModel[position].margin.left, legendBlockModel[position].margin.right, 'column', position);
+            const size = LegendCanvasModel.getLegendHeight(texts, blockSize.width, legendBlockModel.coordinate[position].margin.left, legendBlockModel.coordinate[position].margin.right, 'column', position);
             return size;
         }
     }
 
-    public static getBaseLegendBlockModel(): LegendBlockModel {
+    public static getBaseLegendBlockModel(notation: ChartNotation): LegendBlockModel {
         const mt = 20, mb = 20, ml = 20, mr = 20;
         const titleModelTemplate = TitleModel.getTitleModel()
 
         return {
-            left: {
-                size: 0,
-                margin: { top: mt, bottom: mb, left: ml, right: 0 },
-                pad: 0
+            coordinate: {
+                left: {
+                    size: 0,
+                    margin: { top: mt, bottom: mb, left: ml, right: 0 },
+                    pad: 0
+                },
+                bottom: {
+                    size: 0,
+                    margin: { top: 0, bottom: 20, left: 20, right: 20 },
+                    pad: 0
+                },
+                right: {
+                    size: 0,
+                    margin: { top: titleModelTemplate.pad + titleModelTemplate.margin.top + titleModelTemplate.size, bottom: mb, left: 0, right: mr },
+                    pad: 0
+                },
+                top: {
+                    size: 0,
+                    margin: { top: 20, bottom: 0, left: 20, right: 20 },
+                    pad: titleModelTemplate.pad + titleModelTemplate.margin.top + titleModelTemplate.size
+                }
             },
-            bottom: {
-                size: 0,
-                margin: { top: 0, bottom: 20, left: 20, right: 20 },
-                pad: 0
-            },
-            right: {
-                size: 0,
-                margin: { top: titleModelTemplate.pad + titleModelTemplate.margin.top + titleModelTemplate.size, bottom: mb, left: 0, right: mr },
-                pad: 0
-            },
-            top: {
-                size: 0,
-                margin: { top: 20, bottom: 0, left: 20, right: 20 },
-                pad: titleModelTemplate.pad + titleModelTemplate.margin.top + titleModelTemplate.size
-            }
+            standartTooltip: notation === 'polar' ? false : true
         }
     }
 

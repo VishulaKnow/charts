@@ -86,7 +86,7 @@ export class LegendHelper {
     }
 
     public static getLegendCoordinateByPosition(legendPosition: Orient, legendBlockModel: LegendBlockModel, blockSize: Size): LegendCoordinate {
-        const legendModel = legendBlockModel[legendPosition];
+        const legendModel = legendBlockModel.coordinate[legendPosition];
 
         const coordinate: LegendCoordinate = {
             x: 0,

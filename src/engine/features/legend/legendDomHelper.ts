@@ -5,6 +5,10 @@ import { Legend } from "./legend";
 import { LegendHelper } from "./legendHelper";
 
 export class LegendDomHelper {
+    public static setItemsTitles(items: Selection<HTMLDivElement, string, BaseType, unknown>): void {
+        items.attr('title', d => d);
+    }
+
     public static cropRowLabels(legendBlock: Selection<SVGForeignObjectElement, unknown, HTMLElement, any>, items: Selection<HTMLDivElement, string, BaseType, unknown>): void {
         const maxWidth = legendBlock.node().getBoundingClientRect().width;
         let itemsLeftMargins = this.getItemsLeftMargins(items);

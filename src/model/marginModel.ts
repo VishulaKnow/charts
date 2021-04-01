@@ -49,8 +49,8 @@ export class MarginModel {
                 allowableKeys.push('1'); // Если есть спрятанные записи, то в массив добавляется объект, чтобы выделить место в легенде для индикатора переполнения
 
             const legendSize = LegendModel.getLegendSize(config.options.type, position, allowableKeys, designerConfig.canvas.legendBlock.maxWidth, config.canvas.size, legendBlockModel);
-            margin[position] += legendSize + legendBlockModel[position].margin[position];
-            legendBlockModel[position].size = legendSize;
+            margin[position] += legendSize + legendBlockModel.coordinate[position].margin[position];
+            legendBlockModel.coordinate[position].size = legendSize;
             options.legend.position = position;
         }
     }
@@ -114,7 +114,7 @@ export class MarginModel {
             if (legendSize !== 0)
                 this.appendToGlobalMarginValuesLegendMargin(margin, legendPosition, legendBlockModel);
 
-            legendBlockModel[legendPosition].size = legendSize;
+            legendBlockModel.coordinate[legendPosition].size = legendSize;
         }
     }
 
@@ -133,17 +133,19 @@ export class MarginModel {
     }
 
     private static appendToGlobalMarginValuesLegendMargin(margin: BlockMargin, position: Orient, legendBlockModel: LegendBlockModel): void {
+        const legendCoordinate = legendBlockModel.coordinate;
         if (position === 'left' || position === 'right')
-            margin[position] += legendBlockModel[position].margin.left + legendBlockModel[position].margin.right;
+            margin[position] += legendCoordinate[position].margin.left + legendCoordinate[position].margin.right;
         else
-            margin[position] += legendBlockModel[position].margin.top + legendBlockModel[position].margin.bottom;
+            margin[position] += legendCoordinate[position].margin.top + legendCoordinate[position].margin.bottom;
     }
 
     private static clearMarginByLegendBlockPosition(margin: BlockMargin, legendBlockModel: LegendBlockModel): void {
+        const legendCoordinate = legendBlockModel.coordinate;
         ['left', 'right', 'top', 'bottom'].forEach((position: Orient) => {
-            margin[position] -= legendBlockModel[position].size === 0
+            margin[position] -= legendCoordinate[position].size === 0
                 ? 0
-                : legendBlockModel[position].size + legendBlockModel[position].margin[position];
+                : legendCoordinate[position].size + legendCoordinate[position].margin[position];
         });
     }
 

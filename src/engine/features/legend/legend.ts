@@ -26,6 +26,8 @@ export class Legend {
             const itemBlocks = this.renderContent(legendObject, items, colors, itemsDirection, options.legend.position);
             if (options.type === 'polar') {
                 LegendEventsManager.setListeners(block, options.data.keyField.name, itemBlocks, options.selectable);
+            } else {
+                LegendDomHelper.setItemsTitles(itemBlocks);
             }
         }
     }
@@ -40,9 +42,11 @@ export class Legend {
 
             this.removeContent(legendObject);
 
-            const legendItems = this.renderContent(legendObject, legendItemsContent, chartElementsColor, legendItemsDirection, options.legend.position);
+            const itemBlocks = this.renderContent(legendObject, legendItemsContent, chartElementsColor, legendItemsDirection, options.legend.position);
             if (options.type === 'polar') {
-                LegendEventsManager.setListeners(block, options.data.keyField.name, legendItems, options.selectable);
+                LegendEventsManager.setListeners(block, options.data.keyField.name, itemBlocks, options.selectable);
+            } else {
+                LegendDomHelper.setItemsTitles(itemBlocks);
             }
         }
     }
@@ -100,7 +104,6 @@ export class Legend {
         itemWrappers
             .append('span')
             .attr('class', LegendHelper.getLegendLabelClassByPosition(position))
-            .attr('title', d => d)
             .text(d => d);
 
         if (itemsDirection === 'row')
