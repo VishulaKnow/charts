@@ -98,7 +98,7 @@ describe('get axes', () => {
     });
 
     test('getKeyAxis should return bottom key axis with straight labels', () => {
-        const result = AxisModel.getKeyAxis(charts, data, dataOptions, 'vertical', descreteAxisOptions, { maxSize: { main: 60, orthogonal: null } }, margin, blockSize);
+        const result = AxisModel.getKeyAxis(charts, data, dataOptions, 'vertical', descreteAxisOptions, { maxSize: { main: 60 } }, margin, blockSize);
         const expected: AxisModelOptions = {
             visibility: true,
             type: "key",
@@ -122,7 +122,7 @@ describe('get axes', () => {
 
     test('getKeyAxis should return left key axis with straight labels', () => {
         descreteAxisOptions.position = 'start';
-        const result = AxisModel.getKeyAxis(charts, data, dataOptions, 'horizontal', descreteAxisOptions, { maxSize: { main: 60, orthogonal: null } }, margin, blockSize);
+        const result = AxisModel.getKeyAxis(charts, data, dataOptions, 'horizontal', descreteAxisOptions, { maxSize: { main: 60 } }, margin, blockSize);
         const expected: AxisModelOptions = {
             visibility: true,
             type: "key",
@@ -146,7 +146,7 @@ describe('get axes', () => {
 
     test('getValueAxis should return left axis', () => {
         numberAxisOptions.position = 'start';
-        const result = AxisModel.getValueAxis('vertical', numberAxisOptions, { maxSize: { main: 60, orthogonal: null } }, margin, blockSize);
+        const result = AxisModel.getValueAxis('vertical', numberAxisOptions, { maxSize: { main: 60 } }, margin, blockSize);
         const expected: AxisModelOptions = {
             visibility: true,
             type: "value",
@@ -169,7 +169,7 @@ describe('get axes', () => {
     });
 
     test('getValueAxis should return right axis', () => {
-        const result = AxisModel.getValueAxis('vertical', numberAxisOptions, { maxSize: { main: 60, orthogonal: null } }, margin, blockSize);
+        const result = AxisModel.getValueAxis('vertical', numberAxisOptions, { maxSize: { main: 60 } }, margin, blockSize);
         const expected: AxisModelOptions = {
             visibility: true,
             type: "value",

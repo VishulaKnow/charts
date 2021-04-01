@@ -1,6 +1,5 @@
-import { format } from 'd3-format';
-import { AxisScale, Axis as IAxis } from 'd3-axis';
-import { AxisModelOptions, BlockMargin, IAxisModel, IScaleModel, ScaleKeyModel, ScaleValueModel } from "../../../model/model";
+import { AxisScale } from 'd3-axis';
+import { AxisModelOptions, IAxisModel, IScaleModel, ScaleKeyModel, ScaleValueModel } from "../../../model/model";
 import { Block } from "../../block/block";
 import { Scale, Scales } from "../scale/scale";
 import { AXIS_VERTICAL_LABEL_PADDING } from "../../../model/marginModel";
@@ -107,14 +106,15 @@ export class Axis {
                     axisElement.selectAll<SVGTextElement, unknown>('.tick text').call(AxisLabelHelper.wrapHandler, axisOptions.labels.maxSize);
                 else
                     AxisLabelHelper.cropLabels(block, scaleKey, scaleOptions, axisOptions, blockSize);
+
                 AxisLabelHelper.alignLabelsInKeyAxis(axisOptions, axisElement);
             }
             if (axisOptions.orient === 'bottom' || axisOptions.orient === 'top') {
                 if (axisOptions.labels.positition === 'rotated')
                     AxisLabelHelper.rotateLabels(axisElement, axisOptions.orient);
-                // Обратное выравнивание лейблов, если они были перевернуты, но теперь могут отображаться прямо
-                if (axisOptions.labels.positition === 'straight')
+                if (axisOptions.labels.positition === 'straight') // Обратное выравнивание лейблов, если они были перевернуты, но теперь могут отображаться прямо
                     AxisDomHelper.rotateElementsBack(axisElement, axisOptions.labels.positition);
+
                 AxisLabelHelper.cropLabels(block, scaleKey, scaleOptions, axisOptions, blockSize);
             }
         }

@@ -4,7 +4,6 @@ const designerConfig: DesignerConfig = {
     canvas: {
         axisLabel: {
             maxSize: {
-                orthogonal: 20,
                 main: 60
             }
         },

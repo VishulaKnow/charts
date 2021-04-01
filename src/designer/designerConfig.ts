@@ -28,7 +28,6 @@ export interface AxisLabelCanvas {
 }
 interface AxisLabelSize {
     main: number;
-    orthogonal: number;
 }
 
 interface BlockMargin {
