@@ -19,7 +19,7 @@ export class ContentManager {
         if (model.options.type === '2d') {
             TwoDimensionalManager.updateData(block, model, newData);
         } else if (model.options.type === 'polar') {
-            PolarManager.updateData(block, model, newData);
+            PolarManager.update(block, model, newData);
         }
     }
 }

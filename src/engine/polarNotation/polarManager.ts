@@ -39,13 +39,14 @@ export class PolarManager {
             RecordOverflowAlert.render(engine.block, model.dataSettings.scope.hidedRecordsAmount, model.options.legend.position);
     }
 
-    public static updateData(block: Block, model: Model, data: DataSource): void {
+    public static update(block: Block, model: Model, data: DataSource): void {
         block.transitionManager.interruptTransitions();
         block.removeMouseEvents();
         block.filterEventManager.updateData(data[model.options.data.dataSource]);
         ElementHighlighter.removeDonutArcClones(block);
 
         ElementHighlighter.removeFilter(Donut.getAllArcGroups(block));
+        ElementHighlighter.toggleActivityStyle(Donut.getAllArcGroups(block), true);
         Tooltip.hide(block);
 
         const options = <PolarOptionsModel>model.options;
