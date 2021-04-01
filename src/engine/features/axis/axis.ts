@@ -6,12 +6,9 @@ import { Scale, Scales } from "../scale/scale";
 import { AXIS_VERTICAL_LABEL_PADDING } from "../../../model/marginModel";
 import { NamesManager } from '../../namesManager';
 import { AxisHelper } from './axisHelper';
-
 import { AxisLabelHelper } from './axisLabelDomHelper';
 import { AxisDomHelper } from './axisDomHelper';
 import { Size } from '../../../config/config';
-import { select, Selection } from 'd3-selection';
-
 
 const MINIMAL_STEP_SIZE_FOR_WRAPPING = 38;
 
@@ -68,9 +65,6 @@ export class Axis {
 
             AxisLabelHelper.setTitles(axisElement, axisGenerator.scale().domain());
             AxisLabelHelper.alignLabelsInKeyAxis(axisOptions, axisElement);
-        }
-
-        if (axisOptions.type === 'value') {
         }
     }
 
