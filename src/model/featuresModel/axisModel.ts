@@ -24,7 +24,7 @@ export class AxisModel {
             ticks: axisConfig.ticks,
             labels: {
                 maxSize: AxisModel.getLabelSize(labelConfig.maxSize.main, data[dataOptions.dataSource].map(d => d[dataOptions.keyField.name])).width,
-                positition: AxisModel.getKeyAxisLabelPosition(margin, blockSize, DataManagerModel.getDataValuesByKeyField(data, dataOptions.dataSource, dataOptions.keyField.name).length),
+                position: AxisModel.getKeyAxisLabelPosition(margin, blockSize, DataManagerModel.getDataValuesByKeyField(data, dataOptions.dataSource, dataOptions.keyField.name).length),
                 visible: !TwoDimensionalModel.getChartsEmbeddedLabelsFlag(charts, orient)
             },
             visibility: axisConfig.visibility
@@ -43,7 +43,7 @@ export class AxisModel {
             ticks: axisConfig.ticks,
             labels: {
                 maxSize: labelConfig.maxSize.main,
-                positition: 'straight',
+                position: 'straight',
                 visible: true
             },
             visibility: axisConfig.visibility

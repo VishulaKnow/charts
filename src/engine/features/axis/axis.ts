@@ -55,7 +55,7 @@ export class Axis {
         }
 
         if (axisOptions.type === 'key') {
-            if (axisOptions.labels.positition === 'rotated' && (axisOptions.orient === 'top' || axisOptions.orient === 'bottom'))
+            if (axisOptions.labels.position === 'rotated' && (axisOptions.orient === 'top' || axisOptions.orient === 'bottom'))
                 AxisLabelHelper.rotateLabels(axisElement, axisOptions.orient);
 
             if ((axisOptions.orient === 'left' || axisOptions.orient === 'right') && Scale.getScaleStep(scale) >= MINIMAL_STEP_SIZE_FOR_WRAPPING)
@@ -71,7 +71,7 @@ export class Axis {
     private static updateKeyAxis(block: Block, scaleKey: AxisScale<any>, scaleOptions: ScaleKeyModel, axisOptions: AxisModelOptions, blockSize: Size, domainNotUpdated: boolean): void {
         const axisGenerator = AxisHelper.getBaseAxisGenerator(axisOptions, scaleKey, scaleOptions);
 
-        if (axisOptions.labels.positition === 'rotated') { // Задание координат для перевернутых лейблов (если до этого они не были перевернуты)
+        if (axisOptions.labels.position === 'rotated') { // Задание координат для перевернутых лейблов (если до этого они не были перевернуты)
             if (axisOptions.orient === 'bottom')
                 axisGenerator.tickPadding(-4);
             else if (axisOptions.orient === 'top')
@@ -120,10 +120,10 @@ export class Axis {
                 AxisLabelHelper.alignLabelsInKeyAxis(axisOptions, axisElement);
             }
             if (axisOptions.orient === 'bottom' || axisOptions.orient === 'top') {
-                if (axisOptions.labels.positition === 'rotated')
+                if (axisOptions.labels.position === 'rotated')
                     AxisLabelHelper.rotateLabels(axisElement, axisOptions.orient);
-                if (axisOptions.labels.positition === 'straight') // Обратное выравнивание лейблов, если они были перевернуты, но теперь могут отображаться прямо
-                    AxisDomHelper.rotateElementsBack(axisElement, axisOptions.labels.positition);
+                if (axisOptions.labels.position === 'straight') // Обратное выравнивание лейблов, если они были перевернуты, но теперь могут отображаться прямо
+                    AxisDomHelper.rotateElementsBack(axisElement, axisOptions.labels.position);
 
                 AxisLabelHelper.cropLabels(block, scaleKey, scaleOptions, axisOptions, blockSize);
             }

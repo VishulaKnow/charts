@@ -105,7 +105,7 @@ describe('get axes', () => {
             cssClass: "key-axis",
             labels: {
                 maxSize: 0,
-                positition: 'straight',
+                position: 'straight',
                 visible: true
             },
             orient: "bottom",
@@ -129,7 +129,7 @@ describe('get axes', () => {
             cssClass: "key-axis",
             labels: {
                 maxSize: 0,
-                positition: 'straight',
+                position: 'straight',
                 visible: true
             },
             orient: "left",
@@ -153,7 +153,7 @@ describe('get axes', () => {
             cssClass: "value-axis",
             labels: {
                 maxSize: 60,
-                positition: 'straight',
+                position: 'straight',
                 visible: true
             },
             orient: "left",
@@ -176,7 +176,7 @@ describe('get axes', () => {
             cssClass: "value-axis",
             labels: {
                 maxSize: 60,
-                positition: 'straight',
+                position: 'straight',
                 visible: true
             },
             orient: "right",

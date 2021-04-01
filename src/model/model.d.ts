@@ -134,7 +134,7 @@ interface AxisTicksModel {
 }
 export interface AxisLabelModel {
     maxSize: number;
-    positition: AxisLabelPosition;
+    position: AxisLabelPosition;
     visible: boolean;
 }
 
