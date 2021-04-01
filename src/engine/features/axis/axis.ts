@@ -105,6 +105,8 @@ export class Axis {
                 axisElement.selectAll<SVGTextElement, string>('.tick').each(function (d) {
                     if (scaleKey.domain().findIndex(key => key === d) === -1) {
                         select(this).style('opacity', 0);
+                    } else {
+                        select(this).style('opacity', 1);
                     }
                 })
             }
