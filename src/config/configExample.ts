@@ -61,31 +61,6 @@ const configCars: Config = {
                             name: 'price',
                             format: 'money',
                             title: 'Количество'
-                        },
-                        {
-                            name: 'count',
-                            format: 'money',
-                            title: 'Количество'
-                        }
-                    ]
-                },
-                tooltip: {
-                    show: true
-                },
-                embeddedLabels: 'value',
-                markers: {
-                    show: true
-                }
-            },
-            {
-                isSegmented: false,
-                type: 'line',
-                data: {
-                    valueFields: [
-                        {
-                            name: 'price',
-                            format: 'money',
-                            title: 'Количество'
                         }
                     ]
                 },

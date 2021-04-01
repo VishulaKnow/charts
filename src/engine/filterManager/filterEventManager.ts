@@ -15,7 +15,6 @@ export interface SelectDetails {
     multySelect: boolean;
 }
 
-//TODO: вынести в отдельную папку / продумать разделение ID-менеджера и менеджера событий
 export class FilterEventManager {
     private filterable: boolean;
     private block: Block;

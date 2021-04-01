@@ -139,7 +139,7 @@ export class ElementHighlighter {
             elemSelection.call(this.scaleHandler, isHighlight, transitionDuration);
         } else {
             if (isHighlight) {
-                this.setShadowFilter(elemSelection, block)
+                this.setShadowFilter(elemSelection, block);
             }
             else {
                 this.removeFilter(elemSelection);
