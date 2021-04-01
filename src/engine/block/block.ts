@@ -54,6 +54,12 @@ export class Block {
             .style('position', 'relative');
     }
 
+    public destroy(): void {
+        this.transitionManager.interruptTransitions();
+        this.removeMouseEvents();
+        this.getWrapper().remove();
+    }
+
     public getSvg(): Selection<SVGElement, unknown, HTMLElement, any> {
         return this.getWrapper().select(`svg.${NamesManager.getClassName('svg-chart')}`);
     }

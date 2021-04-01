@@ -4,7 +4,7 @@ const configCars: Config = {
     canvas: {
         class: 'outline',
         size: {
-            width: 629,
+            width: 800,
             height: 510
         }
     },

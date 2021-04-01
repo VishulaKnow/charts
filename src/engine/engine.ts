@@ -34,9 +34,7 @@ export default class Engine {
     }
 
     public destroy(): void {
-        this.block.transitionManager.interruptTransitions();
-        this.block.removeMouseEvents();
-        this.block.getWrapper().remove();
+        this.block.destroy();
     }
 
     public updateData(model: Model, newData: DataSource): void {
