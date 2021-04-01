@@ -650,7 +650,7 @@ const data = require('./assets/dataSet.json');
 // chart.render(document.querySelector('.main-wrapper'));
 
 const engine = new Engine(2, (rows: DataRow[]) => {
-    // console.log('Selected keys:', rows.map(row => row.brand))
+    console.log('Selected keys:', rows.map(row => row.brand))
 }, undefined);
 const model = assembleModel(config, data, designerConfig);
 engine.render(model, getPreparedData(model, data, config), document.querySelector('.main-wrapper'));

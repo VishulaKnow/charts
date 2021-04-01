@@ -8,6 +8,7 @@ import { AxisHelper } from './axisHelper';
 import { AxisLabelHelper } from './axisLabelDomHelper';
 import { AxisDomHelper } from './axisDomHelper';
 import { Size } from '../../../config/config';
+import { select } from 'd3-selection';
 
 const MINIMAL_STEP_SIZE_FOR_WRAPPING = 38;
 
@@ -100,6 +101,13 @@ export class Axis {
         const labelHandler = () => {
             frame++;
             if (frame < 10) requestAnimationFrame(labelHandler);
+            if (frame === 2) {
+                axisElement.selectAll<SVGTextElement, string>('.tick').each(function (d) {
+                    if (scaleKey.domain().findIndex(key => key === d) === -1) {
+                        select(this).style('opacity', 0);
+                    }
+                })
+            }
 
             if (axisOptions.orient === 'left' || axisOptions.orient === 'right') {
                 if (Scale.getScaleStep(scaleKey) >= MINIMAL_STEP_SIZE_FOR_WRAPPING)
