@@ -54,7 +54,6 @@ export class ElementHighlighter {
             .classed(`${Donut.arcItemClass}`, false)
             .classed(`${Donut.arcItemClass}-clone`, true)
             .remove();
-
         block.getSvg().select(`.${Donut.clonesGroupClass}`).append(function () { return clone.node() });
 
         return clone as Selection<SVGGElement, PieArcDatum<DataRow>, SVGGElement, unknown>;
@@ -117,15 +116,14 @@ export class ElementHighlighter {
     }
 
     public static highlightElementsOf2D(block: Block, keyFieldName: string, keyValue: string, charts: TwoDimensionalChartModel[], transitionDuration: number): void {
-        const filterId = NamesManager.getId('shadow', block.id);
-        this.toggle2DHighlightState(block, keyFieldName, keyValue, charts, true, filterId, transitionDuration);
+        this.toggle2DHighlightState(block, keyFieldName, keyValue, charts, true, transitionDuration);
     }
 
     public static remove2DHighlightingByKey(block: Block, keyFieldName: string, keyValue: string, charts: TwoDimensionalChartModel[], transitionDuration: number): void {
-        this.toggle2DHighlightState(block, keyFieldName, keyValue, charts, false, null, transitionDuration);
+        this.toggle2DHighlightState(block, keyFieldName, keyValue, charts, false, transitionDuration);
     }
 
-    private static toggle2DHighlightState(block: Block, keyFieldName: string, keyValue: string, charts: TwoDimensionalChartModel[], isHighlight: boolean, filterId: string, transitionDuration: number): void {
+    private static toggle2DHighlightState(block: Block, keyFieldName: string, keyValue: string, charts: TwoDimensionalChartModel[], isHighlight: boolean, transitionDuration: number): void {
         charts.forEach(chart => {
             const elems = DomHelper.get2DChartElements(block, chart);
             const selectedElems = DomHelper.getChartElementsByKeys(elems, chart.isSegmented, keyFieldName, [keyValue]);

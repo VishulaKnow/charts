@@ -31,7 +31,6 @@ export class AxisHelper {
                 axisGenerator.tickValues([min(scaleDomain), max(scaleDomain)]);
             }
         }
-        console.log((axisGenerator.scale() as any).ticks(2));
         (axisGenerator.scale() as any).ticks(ticksAmount).forEach((value: number) => {
             if (format('~s')(value).indexOf('.') !== -1) {
                 this.setNumTickFormat(axisGenerator, '.2s');
