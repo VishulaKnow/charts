@@ -21,6 +21,9 @@
     color: #444444;
     cursor: default;
 }
+.bar-item {
+    transition: filter 0.3s;
+}
 
 
 /*========================================================================== Common classes */
@@ -130,8 +133,8 @@
 }
 
 .tooltip-line {
-    stroke: #000000;
-    stroke-width: 2px;
+    stroke: #AAA;
+    stroke-width: 1px;
     stroke-linecap: round;
 }
 .tooltip-content .tooltip-head {

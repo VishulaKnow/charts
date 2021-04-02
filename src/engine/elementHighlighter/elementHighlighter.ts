@@ -40,7 +40,8 @@ export class ElementHighlighter {
     }
 
     public static setShadowFilter(elemSelection: Selection<BaseType, any, BaseType, any>, block: Block): void {
-        elemSelection.style('filter', `url(#${NamesManager.getId('shadow', block.id)})`);
+        // elemSelection.style('filter', `url(#${NamesManager.getId('shadow', block.id)})`);
+        elemSelection.style('filter', 'drop-shadow(0px 0px 6px rgba(0, 0, 0, 0.5))');
     }
 
     public static removeFilter(elemSelection: Selection<BaseType, any, BaseType, any>): void {
@@ -68,10 +69,6 @@ export class ElementHighlighter {
 
     public static removeDonutArcClones(block: Block): void {
         Donut.getAllArcClones(block).remove();
-    }
-
-    public static removeBarClones(block: Block): void {
-        Bar.getAllBarClones(block).remove();
     }
 
     public static renderArcCloneAndHighlight(block: Block, margin: BlockMargin, arcSelection: Selection<SVGGElement, PieArcDatum<DataRow>, BaseType, unknown>, blockSize: Size, donutThickness: number): void {
@@ -122,17 +119,7 @@ export class ElementHighlighter {
             const elems = DomHelper.get2DChartElements(block, chart);
             const selectedElems = DomHelper.getChartElementsByKeys(elems, chart.isSegmented, keyFieldName, block.filterEventManager.getSelectedKeys(), SelectionCondition.Exclude);
 
-            if (chart.type === 'bar') {
-                let clones: BaseType[] = [];
-                selectedElems.each(function (d) {
-                    const clone = block.getChartBlock().selectAll<BaseType, DataRow>(`.${Bar.barItemCloneClass}`)
-                        .filter(dr => dr[keyFieldName] === d[keyFieldName]);
-                    clones.push(clone.node());
-                });
-                this.setElementsStyleByState(block, selectAll(clones), false, chart.type, transitionDuration);
-            } else {
-                this.setElementsStyleByState(block, selectedElems, false, chart.type, transitionDuration);
-            }
+            this.setElementsStyleByState(block, selectedElems, false, chart.type, transitionDuration);
         });
     }
 
@@ -141,33 +128,7 @@ export class ElementHighlighter {
             const elems = DomHelper.get2DChartElements(block, chart);
             const selectedElems = DomHelper.getChartElementsByKeys(elems, chart.isSegmented, keyFieldName, [keyValue]);
 
-            if (chart.type === 'bar') {
-                let clones: BaseType[] = [];
-                if (isHighlight) {
-                    selectedElems.each(function (d) {
-                        let clone = block.getChartGroup(chart.index).selectAll<BaseType, DataRow>(`.${Bar.barItemCloneClass}`)
-                            .filter(dataRow => dataRow[keyFieldName] === d[keyFieldName]);
-                        if (clone.empty()) {
-                            clone = select(this)
-                                .clone()
-                                .classed(Bar.barItemClass, false)
-                                .classed(Bar.barItemCloneClass, true)
-                                .style('opacity', 0)
-                                .lower();
-                            clones.push(clone.node());
-                        }
-                    });
-                } else {
-                    selectedElems.each(function (d) {
-                        const clone = block.getChartBlock().selectAll<BaseType, DataRow>(`.${Bar.barItemCloneClass}`)
-                            .filter(dr => dr[keyFieldName] === d[keyFieldName]);
-                        clones.push(clone.node());
-                    });
-                }
-                this.setElementsStyleByState(block, selectAll(clones), isHighlight, chart.type, transitionDuration);
-            } else {
-                this.setElementsStyleByState(block, selectedElems, isHighlight, chart.type, transitionDuration);
-            }
+            this.setElementsStyleByState(block, selectedElems, isHighlight, chart.type, transitionDuration);
         });
     }
 
@@ -185,10 +146,9 @@ export class ElementHighlighter {
         } else {
             if (isHighlight) {
                 this.setShadowFilter(elemSelection, block);
-                elemSelection.interrupt().transition().duration(200).ease(easeLinear).style('opacity', 1)
             }
             else {
-                elemSelection.remove();
+                this.removeFilter(elemSelection);
             }
         }
     }

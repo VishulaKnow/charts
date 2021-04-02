@@ -23,6 +23,9 @@
     color: #444444;
     cursor: default;
 }
+.bar-item {
+    transition: filter 0.3s;
+}
 
 
 /*========================================================================== Common classes */
