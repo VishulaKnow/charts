@@ -104,9 +104,9 @@ export class Tooltip {
         })
 
         tipBox.on('mouseleave', function () {
+            currentKey = null;
             TooltipComponentsManager.hideTooltipBlock(tooltipBlock);
             TooltipComponentsManager.hideTooltipLine(tooltipLine);
-            currentKey = null;
             ElementHighlighter.removeUnselected2DHighlight(block, dataOptions.keyField.name, charts, block.transitionManager.durations.markerHover);
         });
     }
@@ -131,7 +131,7 @@ export class Tooltip {
 
         elements.on('mouseover', function (e, dataRow: PieArcDatum<DataRow>) {
             TooltipComponentsManager.showTooltipBlock(tooltipBlock);
-            TooltipDomHelper.fillTextForPolarChart(tooltipContent, chart, data, dataOptions, dataRow.data[dataOptions.keyField.name], select(this).select('path').style('fill'))
+            TooltipDomHelper.fillForPolarChart(tooltipContent, chart, data, dataOptions, dataRow.data[dataOptions.keyField.name], select(this).select('path').style('fill'))
 
             if (tooltipOptions.position === 'fixed') {
                 const coordinatePointer = TooltipDomHelper.getRecalcedCoordinateByArrow(DonutHelper.getArcCentroid(blockSize, margin, dataRow, donutThickness), tooltipBlock, blockSize, tooltipArrow, translateX, translateY);

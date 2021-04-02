@@ -106,7 +106,7 @@ export class Axis {
                     } else {
                         select(this).style('opacity', 1);
                     }
-                })
+                });
             }
 
             if (axisOptions.orient === 'left' || axisOptions.orient === 'right') {

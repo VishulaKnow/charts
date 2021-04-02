@@ -30,27 +30,22 @@ export class TooltipDomHelper {
 
     public static fillForMulty2DCharts(contentBlock: Selection<BaseType, unknown, BaseType, unknown>, charts: TwoDimensionalChartModel[], data: DataSource, dataOptions: OptionsModelData, keyValue: string): void {
         contentBlock.html('');
-        contentBlock.append('div')
-            .attr('class', `${this.tooltipGroupClass} ${this.tooltipHeadClass}`)
-            .style('white-space', 'nowrap')
-            .text(keyValue);
+        this.renderHead(contentBlock, keyValue);
 
         charts.forEach(chart => {
             chart.data.valueFields.forEach((field, index) => {
                 const html = this.getTooltipItemHtml(data, dataOptions, keyValue, field);
-                this.fillTooltipContent(contentBlock, chart.style.elementColors[index % chart.style.elementColors.length], html);
+                this.fillValuesContent(contentBlock, chart.style.elementColors[index % chart.style.elementColors.length], html);
             });
         });
     }
 
-    public static fillTextForPolarChart(contentBlock: Selection<BaseType, unknown, BaseType, unknown>, chart: PolarChartModel, data: DataSource, dataOptions: OptionsModelData, keyValue: string, markColor: string): void {
+    public static fillForPolarChart(contentBlock: Selection<BaseType, unknown, BaseType, unknown>, chart: PolarChartModel, data: DataSource, dataOptions: OptionsModelData, keyValue: string, markColor: string): void {
         contentBlock.html('');
-        contentBlock.append('div')
-            .attr('class', `${this.tooltipGroupClass} ${this.tooltipHeadClass}`)
-            .text(keyValue);
+        this.renderHead(contentBlock, keyValue);
 
         const text = this.getTooltipItemHtml(data, dataOptions, keyValue, chart.data.valueField);
-        this.fillTooltipContent(contentBlock, markColor, text);
+        this.fillValuesContent(contentBlock, markColor, text);
     }
 
     public static getRecalcedCoordinateByArrow(coordinate: [number, number], tooltipBlock: Selection<HTMLElement, unknown, HTMLElement, any>, blockSize: Size, tooltipArrow: Selection<BaseType, unknown, HTMLElement, any>, translateX: number = 0, translateY: number = 0): [number, number] {
@@ -64,7 +59,14 @@ export class TooltipDomHelper {
         coordinate[1] - TOOLTIP_ARROW_PADDING_Y - tooltipBlockNode.getBoundingClientRect().height - verticalPad];
     }
 
-    private static fillTooltipContent(contentBlock: Selection<BaseType, unknown, BaseType, unknown>, markColor: string, tooltipText: string): void {
+    private static renderHead(contentBlock: Selection<BaseType, unknown, BaseType, unknown>, keyValue: string): void {
+        contentBlock.append('div')
+            .attr('class', `${this.tooltipGroupClass} ${this.tooltipHeadClass}`)
+            .style('white-space', 'nowrap')
+            .text(keyValue);
+    }
+
+    private static fillValuesContent(contentBlock: Selection<BaseType, unknown, BaseType, unknown>, markColor: string, tooltipText: string): void {
         const group = contentBlock.append('div')
             .attr('class', this.tooltipGroupClass);
 
@@ -89,9 +91,7 @@ export class TooltipDomHelper {
 
     private static getTooltipItemHtml(data: DataSource, dataOptions: OptionsModelData, keyValue: string, valueField: ValueField): string {
         const row = data[dataOptions.dataSource].find(d => d[dataOptions.keyField.name] === keyValue);
-        let text: string;
-
-        text = `<span class="tooltip-field-title">${valueField.title}</span><span class="tooltip-field-value">${ValueFormatter.formatField(valueField.format, row[valueField.name])}</span>`;
+        const text = `<span class="tooltip-field-title">${valueField.title}</span><span class="tooltip-field-value">${ValueFormatter.formatField(valueField.format, row[valueField.name])}</span>`;
 
         return text;
     }
