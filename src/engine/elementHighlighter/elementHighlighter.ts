@@ -1,4 +1,4 @@
-import { Selection, BaseType, select, selectAll } from 'd3-selection';
+import { Selection, BaseType } from 'd3-selection';
 import { PieArcDatum } from 'd3-shape'
 import { BlockMargin, DataRow, TwoDimensionalChartModel } from "../../model/model";
 import { Block } from "../block/block";
@@ -9,7 +9,6 @@ import { DomHelper, SelectionCondition } from '../helpers/domHelper';
 import { NamesManager } from '../namesManager';
 import { Size, TwoDimensionalChartType } from '../../config/config';
 import { Donut } from '../polarNotation/donut/donut';
-import { Bar } from '../twoDimensionalNotation/bar/bar';
 
 export class ElementHighlighter {
     private static inactiveElemClass = 'charts-opacity-inactive';
