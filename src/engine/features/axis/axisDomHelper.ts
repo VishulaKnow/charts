@@ -1,7 +1,7 @@
-import { Selection, BaseType } from 'd3-selection';
+import { Selection, BaseType, select } from 'd3-selection';
 import { Transition } from 'd3-transition';
 import { Axis as IAxis } from 'd3-axis';
-import { TranslateModel } from '../../../model/model';
+import { AxisModelOptions, TranslateModel } from '../../../model/model';
 export class AxisDomHelper {
     public static updateAxisElement(axisGenerator: IAxis<any>, axisElement: Selection<SVGGElement, any, BaseType, any>, translate: TranslateModel, transitionDuration: number = 0): Promise<string> {
         return new Promise(resolve => {
@@ -26,5 +26,16 @@ export class AxisDomHelper {
             .attr('transform', null)
             .attr('text-anchor', 'middle')
             .attr('x', null);
+    }
+
+    public static axisRotation(axisElement: Selection<SVGGElement, unknown, HTMLElement, any>, axisOptions: AxisModelOptions): boolean {
+        let isRotated = false;
+        axisElement.selectAll('.tick text').each(function () {
+            if (select(this).attr('transform') === 'rotate(-90)')
+                isRotated = true;
+        });
+        console.log(isRotated);
+        return isRotated && axisOptions.labels.position === 'straight'
+            || !isRotated && axisOptions.labels.position === 'rotated';
     }
 }

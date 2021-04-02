@@ -31,13 +31,9 @@ export class AxisLabelHelper {
         axis.tickPadding(axisLabelPadding);
     }
 
-    public static rotateLabels(axisElement: Selection<SVGGElement, unknown, HTMLElement, any>, keyAxisOrient: Orient, transition: number = 0): void {
+    public static rotateLabels(axisElement: Selection<SVGGElement, unknown, HTMLElement, any>, keyAxisOrient: Orient): void {
         const labelBlocks = axisElement.selectAll('text');
-        if (transition > 0) {
-            labelBlocks.interrupt().transition().duration(transition).attr('transform', 'rotate(-90)');
-        } else {
-            labelBlocks.attr('transform', 'rotate(-90)');
-        }
+        labelBlocks.attr('transform', 'rotate(-90)');
 
         if (keyAxisOrient === 'bottom') {
             labelBlocks
