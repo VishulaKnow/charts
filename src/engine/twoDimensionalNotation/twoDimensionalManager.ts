@@ -65,6 +65,7 @@ export class TwoDimensionalManager {
         const options = <TwoDimensionalOptionsModel>model.options;
 
         ElementHighlighter.remove2DChartsFullHighlighting(block, options.charts);
+        ElementHighlighter.removeBarClones(block);
 
         const scales = Scale.getScales(options.scale.key,
             options.scale.value,

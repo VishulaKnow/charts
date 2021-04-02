@@ -15,6 +15,7 @@ import { Size } from "../../../config/config";
 
 export class Bar {
     public static readonly barItemClass = 'bar-item';
+    public static readonly barItemCloneClass = 'bar-item-clone';
 
     private static readonly barSegmentGroupClass = 'bar-segment-group';
 
@@ -53,8 +54,12 @@ export class Bar {
         }
     }
 
-    public static getAllBarItems(block: Block, chartCssClasses: string[]): Selection<BaseType, DataRow, BaseType, unknown> {
+    public static getAllBarsForChart(block: Block, chartCssClasses: string[]): Selection<BaseType, DataRow, BaseType, unknown> {
         return block.getSvg().selectAll(`rect.${this.barItemClass}${Helper.getCssClassesLine(chartCssClasses)}`);
+    }
+
+    public static getAllBarClones(block: Block): Selection<BaseType, DataRow, BaseType, unknown> {
+        return block.getChartBlock().selectAll(`.${this.barItemCloneClass}`);
     }
 
     private static renderGrouped(block: Block, scales: Scales, data: DataRow[], keyField: Field, margin: BlockMargin, keyAxisOrient: Orient, chart: TwoDimensionalChartModel, barsAmounts: number[], blockSize: Size, firstBarIndex: number, barSettings: BarChartSettings): void {
