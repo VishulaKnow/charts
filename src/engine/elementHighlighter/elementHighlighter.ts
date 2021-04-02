@@ -38,12 +38,12 @@ export class ElementHighlighter {
         return filter;
     }
 
-    public static removeFilter(elemSelection: Selection<BaseType, any, BaseType, any>): void {
-        elemSelection.style('filter', null);
-    }
-
     public static setShadowFilter(elemSelection: Selection<BaseType, any, BaseType, any>, block: Block): void {
         elemSelection.style('filter', `url(#${NamesManager.getId('shadow', block.id)})`);
+    }
+
+    public static removeFilter(elemSelection: Selection<BaseType, any, BaseType, any>): void {
+        elemSelection.style('filter', null);
     }
 
     public static makeArcClone(segment: Selection<SVGGElement, PieArcDatum<DataRow>, BaseType, unknown>, block: Block): Selection<SVGGElement, PieArcDatum<DataRow>, SVGGElement, unknown> {
@@ -57,6 +57,12 @@ export class ElementHighlighter {
         block.getSvg().select(`.${Donut.clonesGroupClass}`).append(function () { return clone.node() });
 
         return clone as Selection<SVGGElement, PieArcDatum<DataRow>, SVGGElement, unknown>;
+    }
+
+    public static removeCloneForElem(block: Block, keyFieldName: string, selectedSegment: Selection<SVGGElement, PieArcDatum<DataRow>, BaseType, unknown>): void {
+        const clone = Donut.getAllArcClones(block)
+            .filter((d: PieArcDatum<DataRow>) => d.data[keyFieldName] === selectedSegment.datum().data[keyFieldName]);
+        clone.remove();
     }
 
     public static removeDonutArcClones(block: Block) {
@@ -161,11 +167,5 @@ export class ElementHighlighter {
         elementsHandler
             .attr('r', isScaled ? 6 : 4)
             .style('stroke-width', (isScaled ? 4.3 : 3) + 'px');
-    }
-
-    public static removeCloneForElem(block: Block, keyFieldName: string, selectedSegment: Selection<SVGGElement, PieArcDatum<DataRow>, BaseType, unknown>): void {
-        const clone = Donut.getAllArcClones(block)
-            .filter((d: PieArcDatum<DataRow>) => d.data[keyFieldName] === selectedSegment.datum().data[keyFieldName]);
-        clone.remove();
     }
 }

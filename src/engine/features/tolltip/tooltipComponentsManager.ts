@@ -7,11 +7,11 @@ import { interrupt } from 'd3-transition';
 import { Tooltip } from './tooltip';
 
 export class TooltipComponentsManager {
-    public static showTooltipBlock(tooltipBlock: Selection<BaseType, unknown, HTMLElement, any>): void {
+    public static showComponent(tooltipBlock: Selection<BaseType, unknown, HTMLElement, any>): void {
         tooltipBlock.style('display', 'block');
     }
 
-    public static hideTooltipBlock(tooltipBlock: Selection<BaseType, unknown, HTMLElement, any>): void {
+    public static hideComponent(tooltipBlock: Selection<BaseType, unknown, HTMLElement, any>): void {
         tooltipBlock.style('display', 'none');
     }
 
@@ -66,14 +66,6 @@ export class TooltipComponentsManager {
         return tooltipLine;
     }
 
-    public static showTooltipLine(tooltipLine: Selection<SVGLineElement, unknown, HTMLElement, any>): void {
-        tooltipLine.style('display', 'block');
-    }
-
-    public static hideTooltipLine(tooltipLine: Selection<SVGLineElement, unknown, HTMLElement, any>): void {
-        tooltipLine.style('display', 'none');
-    }
-
     public static setTooltipLineAttributes(tooltipLine: Selection<SVGLineElement, unknown, HTMLElement, any>, attributes: TooltipLineAttributes, transition: number): void {
         interrupt(tooltipLine.node());
 
@@ -94,6 +86,10 @@ export class TooltipComponentsManager {
                 .attr('y1', attributes.y1)
                 .attr('y2', attributes.y2);
         }
+    }
+
+    public static getLineWidth(tooltipLine: Selection<BaseType, any, BaseType, any>): number {
+        return parseFloat(tooltipLine.style('stroke-width'));
     }
 
     public static renderTooltipArrow(tooltipBlock: Selection<BaseType, unknown, HTMLElement, any>): Selection<BaseType, unknown, HTMLElement, any> {

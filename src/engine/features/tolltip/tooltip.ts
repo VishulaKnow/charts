@@ -48,7 +48,7 @@ export class Tooltip {
     }
 
     public static hide(block: Block): void {
-        TooltipComponentsManager.hideTooltipBlock(block.getWrapper().select(`.${this.tooltipBlockClass}`));
+        TooltipComponentsManager.hideComponent(block.getWrapper().select(`.${this.tooltipBlockClass}`));
     }
 
     private static renderTooltipFor2DCharts(block: Block, data: DataSource, blockSize: Size, margin: BlockMargin, scaleKey: AxisScale<any>, options: TwoDimensionalOptionsModel, tooltipOptions: TooltipOptions): void {
@@ -87,7 +87,7 @@ export class Tooltip {
 
             if (!currentKey || currentKey !== keyValue) {
                 currentKey = keyValue;
-                TooltipComponentsManager.showTooltipBlock(tooltipBlock);
+                TooltipComponentsManager.showComponent(tooltipBlock);
                 TooltipDomHelper.fillForMulty2DCharts(tooltipContent, charts.filter(ch => ch.tooltip.show), data, dataOptions, keyValue);
 
                 if (tooltipOptions.position === 'fixed') {
@@ -95,9 +95,9 @@ export class Tooltip {
                     TooltipComponentsManager.setLineTooltipCoordinate(tooltipBlock, tooltipCoordinate, chartOrientation, block.transitionManager.durations.tooltipSlide);
                 }
 
-                const tooltipLineAttributes = TooltipHelper.getTooltipLineAttributes(scaleKey, margin, keyValue, chartOrientation, blockSize);
+                const tooltipLineAttributes = TooltipHelper.getTooltipLineAttributes(scaleKey, margin, keyValue, chartOrientation, blockSize,);
                 TooltipComponentsManager.setTooltipLineAttributes(tooltipLine, tooltipLineAttributes, block.transitionManager.durations.tooltipSlide);
-                TooltipComponentsManager.showTooltipLine(tooltipLine);
+                TooltipComponentsManager.showComponent(tooltipLine);
 
                 ElementHighlighter.highlight2DElementsHover(block, dataOptions.keyField.name, keyValue, charts, block.transitionManager.durations.markerHover);
             }
@@ -105,8 +105,8 @@ export class Tooltip {
 
         tipBox.on('mouseleave', function () {
             currentKey = null;
-            TooltipComponentsManager.hideTooltipBlock(tooltipBlock);
-            TooltipComponentsManager.hideTooltipLine(tooltipLine);
+            TooltipComponentsManager.hideComponent(tooltipBlock);
+            TooltipComponentsManager.hideComponent(tooltipLine);
             ElementHighlighter.removeUnselected2DHighlight(block, dataOptions.keyField.name, charts, block.transitionManager.durations.markerHover);
         });
     }
@@ -130,7 +130,7 @@ export class Tooltip {
         }
 
         elements.on('mouseover', function (e, dataRow: PieArcDatum<DataRow>) {
-            TooltipComponentsManager.showTooltipBlock(tooltipBlock);
+            TooltipComponentsManager.showComponent(tooltipBlock);
             TooltipDomHelper.fillForPolarChart(tooltipContent, chart, data, dataOptions, dataRow.data[dataOptions.keyField.name], select(this).select('path').style('fill'))
 
             if (tooltipOptions.position === 'fixed') {
@@ -150,7 +150,7 @@ export class Tooltip {
         });
 
         elements.on('mouseleave', function (e, dataRow: PieArcDatum<DataRow>) {
-            TooltipComponentsManager.hideTooltipBlock(tooltipBlock);
+            TooltipComponentsManager.hideComponent(tooltipBlock);
             if (!block.filterEventManager.isSelected(dataRow.data[dataOptions.keyField.name])) {
                 ElementHighlighter.removeCloneForElem(block, dataOptions.keyField.name, select(this));
                 ElementHighlighter.toggleDonutHighlightState(select(this), margin, blockSize, donutThickness, block.transitionManager.durations.donutHover, false);
