@@ -113,21 +113,19 @@ const configCars: Config = {
     //             format: 'string'
     //         }
     //     },
-    //     charts: [
-    //         {
-    //             type: 'donut',
-    //             data: {
-    //                 valueField: {
-    //                     name: 'y',
-    //                     format: 'money',
-    //                     title: 'some title'
-    //                 }
-    //             },
-    //             tooltip: {
-    //                 show: true
+    //     chart: {
+    //         type: 'donut',
+    //         data: {
+    //             valueField: {
+    //                 name: 'y',
+    //                 format: 'money',
+    //                 title: 'some title'
     //             }
+    //         },
+    //         tooltip: {
+    //             show: true
     //         }
-    //     ]
+    //     }
     // }
 }
 

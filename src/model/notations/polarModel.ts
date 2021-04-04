@@ -13,21 +13,19 @@ export class PolarModel {
             selectable: options.selectable,
             title: options.title,
             data: { ...options.data },
-            charts: this.getChartsModel(options.charts, data[options.data.dataSource].length, designerConfig.chartStyle),
+            charts: this.getChartsModel(options.chart, data[options.data.dataSource].length, designerConfig.chartStyle),
             legend: LegendModel.getLegendModel(config.options.type, config.options.legend.show, config.canvas.size, margin)
         }
     }
 
-    private static getChartsModel(charts: PolarChart[], dataLength: number, chartStyleConfig: ChartStyleConfig): PolarChartModel[] {
+    private static getChartsModel(chart: PolarChart, dataLength: number, chartStyleConfig: ChartStyleConfig): PolarChartModel[] {
         const chartsModel: PolarChartModel[] = [];
-        charts.forEach((chart, index) => {
-            chartsModel.push({
-                type: chart.type,
-                data: { ...chart.data },
-                tooltip: chart.tooltip,
-                cssClasses: ChartStyleModel.getCssClasses(index),
-                style: ChartStyleModel.getChartStyle(dataLength, chartStyleConfig)
-            });
+        chartsModel.push({
+            type: chart.type,
+            data: { ...chart.data },
+            tooltip: chart.tooltip,
+            cssClasses: ChartStyleModel.getCssClasses(0),
+            style: ChartStyleModel.getChartStyle(dataLength, chartStyleConfig)
         });
         return chartsModel;
     }
