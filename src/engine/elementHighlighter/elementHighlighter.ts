@@ -160,7 +160,9 @@ export class ElementHighlighter {
 
         let elementsHandler: Selection<BaseType, DataRow, BaseType, unknown> | Transition<BaseType, DataRow, BaseType, unknown> = elementSelection;
         if (transitionDuration > 0) {
-            elementsHandler = elementsHandler.interrupt().transition(animationName)
+            elementsHandler = elementsHandler
+                .interrupt()
+                .transition(animationName)
                 .duration(transitionDuration)
                 .ease(easeLinear);
         }
