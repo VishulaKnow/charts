@@ -641,9 +641,9 @@ export default class Listeners {
 import '../style/develop.css'
 import config from '../config/configExample';
 import designerConfig from '../designer/designerConfigExample';
+import { Chart } from '../main';
 
 const data = require('./assets/dataSet.json');
-
 
 // const chart = new Chart(config, designerConfig, data, false);
 // chart.render(document.querySelector('.main-wrapper'));
@@ -654,11 +654,6 @@ const engine = new Engine(2, (rows: DataRow[]) => {
 const model = assembleModel(config, data, designerConfig);
 engine.render(model, getPreparedData(model, data, config), document.querySelector('.main-wrapper'));
 new Listeners(engine, config, designerConfig, data);
-
-setTimeout(() => {
-    designerConfig.chartStyle.baseColors = ['red', 'blue', 'yellow', 'pink'];
-    engine.updateColors(assembleModel(config, data, designerConfig))
-}, 4000);
 
 const config3 = require('../config/configTest2D.json');
 const model3 = assembleModel(config3, data, designerConfig);

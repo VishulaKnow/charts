@@ -83,6 +83,16 @@ export class Chart {
         this.engine.updateFullBlock(this.model, getPreparedData(this.model, this.data, this.config));
     }
 
+    /**
+     * Обновление цветов графиков на основе новых базовых цветов
+     * @param newColors Новые базовые цвета
+     */
+    public updateColors(newColors: string[]): void {
+        this.designerConfig.chartStyle.baseColors = [...newColors];
+        this.model = assembleModel(this.config, this.data, this.designerConfig);
+        this.engine.updateColors(this.model);
+    }
+
     private registerResizeEvent(): void {
         window.addEventListener('resize', this.resizeHandler);
     }
