@@ -1,4 +1,4 @@
-import { Selection, BaseType } from 'd3-selection';
+import { Selection, BaseType, select } from 'd3-selection';
 import { PieArcDatum } from 'd3-shape'
 import { BlockMargin, DataRow, TwoDimensionalChartModel } from "../../model/model";
 import { Block } from "../block/block";
@@ -141,7 +141,7 @@ export class ElementHighlighter {
 
     private static setElementsStyleByState(block: Block, elemSelection: Selection<BaseType, any, BaseType, any>, isHighlight: boolean, chartType: TwoDimensionalChartType, transitionDuration: number): void {
         if (chartType === 'area' || chartType === 'line') {
-            elemSelection.call(this.scaleHandler, isHighlight, transitionDuration);
+            elemSelection.call(this.highlightDot, isHighlight, transitionDuration);
         } else {
             if (isHighlight) {
                 this.setShadowFilter(elemSelection, block);
@@ -152,7 +152,7 @@ export class ElementHighlighter {
         }
     }
 
-    private static scaleHandler(elementSelection: Selection<BaseType, DataRow, BaseType, unknown>, isScaled: boolean, transitionDuration: number = 0): void {
+    private static highlightDot(elementSelection: Selection<BaseType, DataRow, BaseType, unknown>, isScaled: boolean, transitionDuration: number = 0): void {
         const animationName = 'size-scale';
         elementSelection.nodes().forEach(node => {
             interrupt(node, animationName);
@@ -167,6 +167,9 @@ export class ElementHighlighter {
 
         elementsHandler
             .attr('r', isScaled ? 6 : 4)
-            .style('stroke-width', (isScaled ? 4.3 : 3) + 'px');
+            .style('stroke-width', (isScaled ? 4.3 : 3) + 'px')
+            .each(function () {
+                select(this).style('fill', isScaled ? select(this).style('stroke') : 'white');
+            });
     }
 }
