@@ -27,8 +27,16 @@ export class Line {
         }
     }
 
+    public static updateColors(block: Block, chart: TwoDimensionalChartModel): void {
+        chart.data.valueFields.forEach((_vf, valueIndex) => {
+            const path = block.getChartGroup(chart.index)
+                .select(`.${this.lineChartClass}${Helper.getCssClassesLine(chart.cssClasses)}.chart-element-${valueIndex}`);
+            DomHelper.setChartStyle(path, chart.style, valueIndex, 'stroke');
+        });
+    }
+
     private static renderGrouped(block: Block, scales: Scales, data: DataRow[], keyField: Field, margin: BlockMargin, keyAxisOrient: Orient, chart: TwoDimensionalChartModel, markFlag: boolean): void {
-        chart.data.valueFields.forEach((valueField, valueFieldIndex) => {
+        chart.data.valueFields.forEach((valueField, valueIndex) => {
             const lineGenerator = LineHelper.getLineGenerator(keyAxisOrient, scales, keyField.name, valueField.name, margin);
 
             const path = block.getChartGroup(chart.index)
@@ -39,17 +47,16 @@ export class Line {
                 .style('clip-path', `url(#${block.getClipPathId()})`)
                 .style('pointer-events', 'none');
 
-            DomHelper.setCssClasses(path, Helper.getCssClassesWithElementIndex(chart.cssClasses, valueFieldIndex));
-            DomHelper.setChartStyle(path, chart.style, valueFieldIndex, 'stroke');
+            DomHelper.setCssClasses(path, Helper.getCssClassesWithElementIndex(chart.cssClasses, valueIndex));
+            DomHelper.setChartStyle(path, chart.style, valueIndex, 'stroke');
 
             if (markFlag)
-                MarkDot.render(block, data, keyAxisOrient, scales, margin, keyField.name, valueFieldIndex, valueField.name, chart);
+                MarkDot.render(block, data, keyAxisOrient, scales, margin, keyField.name, valueIndex, valueField.name, chart);
         });
     }
 
     private static renderSegmented(block: Block, scales: Scales, data: DataRow[], keyField: Field, margin: BlockMargin, keyAxisOrient: Orient, chart: TwoDimensionalChartModel, markFlag: boolean): void {
         const stackedData = stack().keys(chart.data.valueFields.map(field => field.name))(data);
-
         const lineGenerator = LineHelper.getSegmentedLineGenerator(keyAxisOrient, scales, keyField.name, margin);
 
         const lines = block.getChartGroup(chart.index)

@@ -106,6 +106,10 @@ export class TwoDimensionalManager {
         (<TwoDimensionalOptionsModel>model.options).charts.forEach(chart => {
             if (chart.type === 'bar')
                 Bar.updateColors(block, chart);
+            else if (chart.type === 'line')
+                Line.updateColors(block, chart);
+            else if (chart.type === 'area')
+                Area.updateColors(block, chart);
         });
     }
 
