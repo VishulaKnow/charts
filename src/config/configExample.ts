@@ -43,7 +43,7 @@ const configCars: Config = {
         legend: {
             show: true
         },
-        orientation: 'horizontal',
+        orientation: 'vertical',
         data: {
             dataSource: 'dataSet',
             keyField: {
@@ -73,26 +73,6 @@ const configCars: Config = {
                     show: true
                 },
                 embeddedLabels: 'value',
-                markers: {
-                    show: true
-                }
-            },
-            {
-                isSegmented: false,
-                type: 'bar',
-                data: {
-                    valueFields: [
-                        {
-                            name: 'price',
-                            format: 'money',
-                            title: 'Стоимость за 2020 год'
-                        }
-                    ]
-                },
-                tooltip: {
-                    show: true
-                },
-                embeddedLabels: 'key',
                 markers: {
                     show: true
                 }

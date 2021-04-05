@@ -13,7 +13,7 @@ export class TwoDimensionalModel {
         return {
             legend: LegendModel.getLegendModel(config.options.type, config.options.legend.show, config.canvas.size, margin),
             title: options.title,
-            selectable: options.selectable,
+            selectable: !!options.selectable,
             orient: options.orientation,
             scale: {
                 key: ScaleModel.getScaleKey(dataScope.allowableKeys, options.orientation, margin, config.canvas.size, options.charts, this.getChartsByType(options.charts, 'bar')),

@@ -9,6 +9,7 @@
     "options": {
         "title": "Рост стоимости",
         "type": "polar",
+        "selectable": true,
         "legend": {
             "show": true
         },

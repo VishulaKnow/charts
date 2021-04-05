@@ -10,7 +10,7 @@ export class PolarModel {
         const options = <PolarOptions>config.options;
         return {
             type: options.type,
-            selectable: options.selectable,
+            selectable: !!options.selectable,
             title: options.title,
             data: { ...options.data },
             charts: this.getChartsModel(options.chart, data[options.data.dataSource].length, designerConfig.chartStyle),

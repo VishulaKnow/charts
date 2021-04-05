@@ -91,7 +91,7 @@
                     "show": true
                 },
                 "markers": {
-                    "show": false
+                    "show": true
                 },
                 "embeddedLabels": "key"
             }
