@@ -170,8 +170,8 @@ export class ElementHighlighter {
         elementsHandler
             .attr('r', isScaled ? 6 : 4)
             .style('stroke-width', (isScaled ? 4.3 : 3) + 'px')
-            .each(function () {
-                select(this).style('fill', isScaled ? select(this).style('stroke') : 'white');
-            });
+        // .each(function () {
+        //     select(this).style('fill', isScaled ? select(this).style('stroke') : 'white');
+        // });
     }
 }
