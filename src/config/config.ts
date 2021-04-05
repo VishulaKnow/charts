@@ -62,7 +62,7 @@ export interface TwoDimensionalOptions extends Options {
 
 export interface PolarOptions extends Options {
     type: 'polar';
-    charts: PolarChart[];
+    chart: PolarChart;
 }
 
 export interface IntervalOptions extends Options {

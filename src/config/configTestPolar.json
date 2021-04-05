@@ -19,21 +19,19 @@
                 "format": "string"
             }
         },
-        "charts": [
-            {
-                "title": "Рост стоимости",
-                "type": "donut",
-                "data": {
-                    "valueField": {
-                        "name": "price",
-                        "format": "money",
-                        "title": "Стоимость"
-                    }
-                },
-                "tooltip": {
-                    "show": true
+        "chart": {
+            "title": "Рост стоимости",
+            "type": "donut",
+            "data": {
+                "valueField": {
+                    "name": "price",
+                    "format": "money",
+                    "title": "Стоимость"
                 }
+            },
+            "tooltip": {
+                "show": true
             }
-        ]
+        }
     }
 }

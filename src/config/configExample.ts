@@ -10,7 +10,7 @@ const configCars: Config = {
     },
     options: {
         type: '2d',
-        title: 'График по 14 показателям в 4 разрезах, название длинное в одну строчку, если не влезает, то скрываем все в 3 точки',
+        title: 'Заголовок графика',
         selectable: true,
         axis: {
             key: {
@@ -43,7 +43,7 @@ const configCars: Config = {
         legend: {
             show: true
         },
-        orientation: 'vertical',
+        orientation: 'horizontal',
         data: {
             dataSource: 'dataSet',
             keyField: {
@@ -60,7 +60,12 @@ const configCars: Config = {
                         {
                             name: 'price',
                             format: 'money',
-                            title: 'Количество'
+                            title: 'Стоимость за 2020 год'
+                        },
+                        {
+                            name: 'count',
+                            format: 'money',
+                            title: 'Стоимость за 2021 год'
                         }
                     ]
                 },
@@ -68,6 +73,26 @@ const configCars: Config = {
                     show: true
                 },
                 embeddedLabels: 'value',
+                markers: {
+                    show: true
+                }
+            },
+            {
+                isSegmented: false,
+                type: 'bar',
+                data: {
+                    valueFields: [
+                        {
+                            name: 'price',
+                            format: 'money',
+                            title: 'Стоимость за 2020 год'
+                        }
+                    ]
+                },
+                tooltip: {
+                    show: true
+                },
+                embeddedLabels: 'key',
                 markers: {
                     show: true
                 }
@@ -88,21 +113,19 @@ const configCars: Config = {
     //             format: 'string'
     //         }
     //     },
-    //     charts: [
-    //         {
-    //             type: 'donut',
-    //             data: {
-    //                 valueField: {
-    //                     name: 'y',
-    //                     format: 'money',
-    //                     title: 'some title'
-    //                 }
-    //             },
-    //             tooltip: {
-    //                 show: true
+    //     chart: {
+    //         type: 'donut',
+    //         data: {
+    //             valueField: {
+    //                 name: 'y',
+    //                 format: 'money',
+    //                 title: 'some title'
     //             }
+    //         },
+    //         tooltip: {
+    //             show: true
     //         }
-    //     ]
+    //     }
     // }
 }
 

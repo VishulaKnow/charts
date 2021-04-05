@@ -100,10 +100,9 @@ export default class Listeners {
                 });
             });
         else if (this.config.options.type === 'polar') {
-            this.config.options.charts.forEach((chart: PolarChart) => {
-                data[config.options.data.dataSource].forEach((row: any) => {
-                    row[chart.data.valueField.name] = ListenersHelper.randInt(0, maxRand);
-                });
+            data[config.options.data.dataSource].forEach((row: any) => {
+                if (this.config.options.type === 'polar')
+                    row[this.config.options.chart.data.valueField.name] = ListenersHelper.randInt(0, maxRand);
             });
         }
         return data;
@@ -223,13 +222,11 @@ export default class Listeners {
                     }
                 },
                 type: notationType,
-                charts: [
-                    {
-                        data: this.getDataConfig(notationType),
-                        tooltip: this.getTooltipConfig(),
-                        type: 'donut'
-                    }
-                ]
+                chart: {
+                    data: this.getDataConfig(notationType),
+                    tooltip: this.getTooltipConfig(),
+                    type: 'donut'
+                }
             }
             this.config.options = options;
         } else if (notationType === 'interval') {
@@ -285,16 +282,18 @@ export default class Listeners {
 
     private change2DChartConfig(chartType: 'bar' | 'line' | 'area' | 'barLine'): void {
         const config = this.config;
-        if (chartType === 'barLine' && config.options.charts.length === 1) {
-            config.options.charts.push(ListenersHelper.getCopy(config.options.charts[0]));
-            config.options.charts[0].type = 'bar';
-            config.options.charts[1].type = 'line';
-        } else if (chartType === 'barLine' && config.options.charts.length === 2) {
-            config.options.charts[0].type = 'bar';
-            config.options.charts[1].type = 'line';
-        } else if (chartType !== 'barLine') {
-            config.options.charts.splice(1, 1);
-            config.options.charts[0].type = chartType;
+        if (config.options.type === '2d') {
+            if (chartType === 'barLine' && config.options.charts.length === 1) {
+                config.options.charts.push(ListenersHelper.getCopy(config.options.charts[0]));
+                config.options.charts[0].type = 'bar';
+                config.options.charts[1].type = 'line';
+            } else if (chartType === 'barLine' && config.options.charts.length === 2) {
+                config.options.charts[0].type = 'bar';
+                config.options.charts[1].type = 'line';
+            } else if (chartType !== 'barLine') {
+                config.options.charts.splice(1, 1);
+                config.options.charts[0].type = chartType;
+            }
         }
     }
 
@@ -634,7 +633,7 @@ export default class Listeners {
             ListenersHelper.setCheckboxValue('#key-axis-visibility', config.options.axis.key.visibility);
             ListenersHelper.setCheckboxValue('#value-axis-visibility', config.options.axis.value.visibility);
         } else if (config.options.type === 'polar') {
-            ListenersHelper.setInputValue('#chart-polar-type', config.options.charts[0].type);
+            ListenersHelper.setInputValue('#chart-polar-type', config.options.chart.type);
         }
     }
 }
@@ -740,9 +739,3 @@ class DataUpdater {
         return result;
     }
 }
-
-
-
-
-
-
