@@ -22,4 +22,12 @@ export class ContentManager {
             PolarManager.update(block, model, newData);
         }
     }
+
+    public static updateColors(engine: Engine, model: Model): void {
+        if (model.options.type === '2d') {
+            TwoDimensionalManager.updateColors(engine.block, model);
+        } else if (model.options.type === 'polar') {
+            PolarManager.updateColors(engine.block, model);
+        }
+    }
 }

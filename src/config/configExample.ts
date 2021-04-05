@@ -87,9 +87,9 @@ const configCars: Config = {
             show: true
         },
         data: {
-            dataSource: 'data',
+            dataSource: 'dataSet',
             keyField: {
-                name: 'x',
+                name: 'brand',
                 format: 'string'
             }
         },
@@ -97,7 +97,7 @@ const configCars: Config = {
             type: 'donut',
             data: {
                 valueField: {
-                    name: 'y',
+                    name: 'price',
                     format: 'money',
                     title: 'some title'
                 }

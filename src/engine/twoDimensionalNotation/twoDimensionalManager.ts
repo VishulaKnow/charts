@@ -101,6 +101,10 @@ export class TwoDimensionalManager {
         RecordOverflowAlert.update(block, model.dataSettings.scope.hidedRecordsAmount, 'top', options.orient);
     }
 
+    public static updateColors(block: Block, model: Model): void {
+        Legend.updateColors(block, model.options);
+    }
+
     private static renderCharts(block: Block, charts: TwoDimensionalChartModel[], scales: Scales, data: DataSource, dataOptions: OptionsModelData, margin: BlockMargin, keyAxisOrient: Orient, barSettings: BarChartSettings, blockSize: Size) {
         block.renderChartClipPath(margin, blockSize);
         block.renderChartsBlock();

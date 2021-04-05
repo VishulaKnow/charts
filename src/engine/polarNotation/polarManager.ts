@@ -65,6 +65,10 @@ export class PolarManager {
             RecordOverflowAlert.update(block, model.dataSettings.scope.hidedRecordsAmount, model.options.legend.position);
     }
 
+    public static updateColors(block: Block, model: Model): void {
+        Legend.updateColors(block, model.options);
+    }
+
     private static renderCharts(block: Block, charts: PolarChartModel[], data: DataSource, dataSource: string, margin: BlockMargin, blockSize: Size, donutSettings: DonutChartSettings) {
         charts.forEach((chart: PolarChartModel) => {
             if (chart.type === 'donut')

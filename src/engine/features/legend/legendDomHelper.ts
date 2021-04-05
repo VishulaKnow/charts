@@ -9,6 +9,11 @@ export class LegendDomHelper {
         items.attr('title', d => d);
     }
 
+    public static setItemsColors(items: Selection<HTMLDivElement, string, BaseType, unknown>, colorPalette: string[]): void {
+        items.select(`.${Legend.markerClass}`)
+            .style('background-color', (d, i) => colorPalette[i % colorPalette.length]);
+    }
+
     public static cropRowLabels(legendBlock: Selection<SVGForeignObjectElement, unknown, HTMLElement, any>, items: Selection<HTMLDivElement, string, BaseType, unknown>): void {
         const maxWidth = legendBlock.node().getBoundingClientRect().width;
         let itemsLeftMargins = this.getItemsLeftMargins(items);

@@ -39,7 +39,7 @@ export default class Engine {
 
     public updateData(model: Model, newData: DataSource): void {
         if (!newData) {
-            this.data = newData
+            this.data = newData;
             this.block.clearWrapper();
         } else {
             if (!this.data) {
@@ -52,6 +52,10 @@ export default class Engine {
                 ContentManager.updateData(this.block, model, newData);
             }
         }
+    }
+
+    public updateColors(model: Model): void {
+        ContentManager.updateColors(this, model);
     }
 
     private renderCharts(model: Model, data: DataSource): void {
