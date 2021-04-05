@@ -66,7 +66,6 @@ export class PolarManager {
     }
 
     private static renderCharts(block: Block, charts: PolarChartModel[], data: DataSource, dataSource: string, margin: BlockMargin, blockSize: Size, donutSettings: DonutChartSettings) {
-        //TODO: подумать над заменой charts у polar с массива на один объект
         charts.forEach((chart: PolarChartModel) => {
             if (chart.type === 'donut')
                 Donut.render(block,

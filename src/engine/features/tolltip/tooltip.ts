@@ -36,7 +36,7 @@ export class Tooltip {
                 this.renderTooltipFor2DCharts(block, data, model.blockCanvas.size, model.chartBlock.margin, scales.key, model.options, tooltipOptions);
             } else if (model.options.type === 'polar') {
                 this.renderTooltipForPolar(block,
-                    model.options.charts,
+                    model.options.charts[0],
                     data,
                     model.options.data,
                     model.blockCanvas.size,
@@ -58,13 +58,11 @@ export class Tooltip {
         this.renderLineTooltip(block, scaleKey, margin, blockSize, options.charts, options.orient, options.axis.key.orient, data, options.data, options.scale.key, tooltipOptions);
     }
 
-    private static renderTooltipForPolar(block: Block, charts: PolarChartModel[], data: DataSource, dataOptions: OptionsModelData, blockSize: Size, margin: BlockMargin, chartThickness: number, tooltipOptions: TooltipOptions): void {
-        charts.forEach(chart => {
-            const attrTransform = block.getSvg().select(`.${Donut.donutBlockClass}`).attr('transform');
-            const translateNums = Helper.getTranslateNumbers(attrTransform);
-            const arcItems = Donut.getAllArcGroups(block);
-            this.renderTooltipForDonut(block, arcItems, data, dataOptions, chart, blockSize, margin, chartThickness, tooltipOptions, translateNums[0], translateNums[1]);
-        });
+    private static renderTooltipForPolar(block: Block, chart: PolarChartModel, data: DataSource, dataOptions: OptionsModelData, blockSize: Size, margin: BlockMargin, chartThickness: number, tooltipOptions: TooltipOptions): void {
+        const attrTransform = block.getSvg().select(`.${Donut.donutBlockClass}`).attr('transform');
+        const translateNums = Helper.getTranslateNumbers(attrTransform);
+        const arcItems = Donut.getAllArcGroups(block);
+        this.renderTooltipForDonut(block, arcItems, data, dataOptions, chart, blockSize, margin, chartThickness, tooltipOptions, translateNums[0], translateNums[1]);
     }
 
     private static renderLineTooltip(block: Block, scaleKey: AxisScale<any>, margin: BlockMargin, blockSize: Size, charts: TwoDimensionalChartModel[], chartOrientation: ChartOrientation, keyAxisOrient: Orient, data: DataSource, dataOptions: OptionsModelData, scaleKeyModel: ScaleKeyModel, tooltipOptions: TooltipOptions): void {
