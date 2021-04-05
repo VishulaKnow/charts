@@ -32,6 +32,7 @@ export class Line {
             const path = block.getChartGroup(chart.index)
                 .select(`.${this.lineChartClass}${Helper.getCssClassesLine(chart.cssClasses)}.chart-element-${valueIndex}`);
             DomHelper.setChartStyle(path, chart.style, valueIndex, 'stroke');
+            MarkDot.updateColors(block, chart, valueIndex);
         });
     }
 
@@ -94,7 +95,7 @@ export class Line {
                 .attr('d', lineGenerator(newData));
 
             if (chart.markersOptions.show) {
-                MarkDot.updateDotsCoordinateByValueAxis(block, newData, keyAxisOrient, scales, margin, keyField.name, valueFieldIndex, valueField.name, chart);
+                MarkDot.update(block, newData, keyAxisOrient, scales, margin, keyField.name, valueFieldIndex, valueField.name, chart);
             }
         });
     }
@@ -116,7 +117,7 @@ export class Line {
 
         if (chart.markersOptions.show) {
             lines.each((dataset, index) => {
-                MarkDot.updateDotsCoordinateByValueAxis(block, dataset, keyAxisOrient, scales, margin, keyField.name, index, '1', chart);
+                MarkDot.update(block, dataset, keyAxisOrient, scales, margin, keyField.name, index, '1', chart);
             });
         }
     }

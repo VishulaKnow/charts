@@ -40,7 +40,7 @@ export class MarkDot {
         DomHelper.setChartElementColor(dots, chart.style.elementColors, valueFieldIndex, 'stroke');
     }
 
-    public static updateDotsCoordinateByValueAxis(block: Block, newData: DataRow[], keyAxisOrient: Orient, scales: Scales, margin: BlockMargin, keyField: string, valueFieldIndex: number, valueFieldName: string, chart: TwoDimensionalChartModel): void {
+    public static update(block: Block, newData: DataRow[], keyAxisOrient: Orient, scales: Scales, margin: BlockMargin, keyField: string, valueFieldIndex: number, valueFieldName: string, chart: TwoDimensionalChartModel): void {
         const dots = block.getChartGroup(chart.index)
             .selectAll(`.${this.markerDotClass}${Helper.getCssClassesLine(chart.cssClasses)}.chart-element-${valueFieldIndex}`)
             .data(newData);
@@ -71,6 +71,12 @@ export class MarkDot {
             .duration(block.transitionManager.durations.chartUpdate)
             .attr('cx', d => attrs.cx(d))
             .attr('cy', d => attrs.cy(d));
+    }
+
+    public static updateColors(block: Block, chart: TwoDimensionalChartModel, valueFieldIndex: number): void {
+        const dots = block.getChartGroup(chart.index)
+            .selectAll(`.${this.markerDotClass}${Helper.getCssClassesLine(chart.cssClasses)}.chart-element-${valueFieldIndex}`);
+        DomHelper.setChartElementColor(dots, chart.style.elementColors, valueFieldIndex, 'stroke');
     }
 
     public static getAllDots(block: Block): Selection<BaseType, DataRow, BaseType, unknown> {

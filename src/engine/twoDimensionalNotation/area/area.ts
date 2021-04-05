@@ -32,7 +32,8 @@ export class Area {
             const path = block.getChartGroup(chart.index)
                 .select(`.${this.areaChartClass}${Helper.getCssClassesLine(chart.cssClasses)}.chart-element-${valueIndex}`);
             DomHelper.setChartStyle(path, chart.style, valueIndex, 'fill');
-        })
+            MarkDot.updateColors(block, chart, valueIndex);
+        });
     }
 
     private static renderGrouped(block: Block, scales: Scales, data: DataRow[], keyField: Field, margin: BlockMargin, keyAxisOrient: Orient, chart: TwoDimensionalChartModel, blockSize: Size): void {
@@ -93,7 +94,7 @@ export class Area {
                 .attr('d', area(newData));
 
             if (chart.markersOptions.show) {
-                MarkDot.updateDotsCoordinateByValueAxis(block, newData, keyAxisOrient, scales, margin, keyField.name, valueIndex, field.name, chart);
+                MarkDot.update(block, newData, keyAxisOrient, scales, margin, keyField.name, valueIndex, field.name, chart);
             }
         });
     }
@@ -115,7 +116,7 @@ export class Area {
         if (chart.markersOptions.show) {
             areas.each((dataset, index) => {
                 // '1' - атрибут, показывающий координаты согласно полю значения
-                MarkDot.updateDotsCoordinateByValueAxis(block, dataset, keyAxisOrient, scales, margin, keyField.name, index, '1', chart);
+                MarkDot.update(block, dataset, keyAxisOrient, scales, margin, keyField.name, index, '1', chart);
             });
         }
     }
