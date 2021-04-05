@@ -93,6 +93,10 @@ export class Donut {
         });
     }
 
+    public static updateColors(block: Block, chart: PolarChartModel): void {
+        this.setElementsColor(this.getAllArcGroups(block), chart.style.elementColors);
+    }
+
     public static getAllArcGroups(block: Block): Selection<SVGGElement, PieArcDatum<DataRow>, SVGGElement, unknown> {
         return block.getSvg()
             .selectAll(`.${this.arcItemClass}`) as Selection<SVGGElement, PieArcDatum<DataRow>, SVGGElement, unknown>;

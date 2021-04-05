@@ -103,6 +103,10 @@ export class TwoDimensionalManager {
 
     public static updateColors(block: Block, model: Model): void {
         Legend.updateColors(block, model.options);
+        (<TwoDimensionalOptionsModel>model.options).charts.forEach(chart => {
+            if (chart.type === 'bar')
+                Bar.updateColors(block, chart);
+        });
     }
 
     private static renderCharts(block: Block, charts: TwoDimensionalChartModel[], scales: Scales, data: DataSource, dataOptions: OptionsModelData, margin: BlockMargin, keyAxisOrient: Orient, barSettings: BarChartSettings, blockSize: Size) {

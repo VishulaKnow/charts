@@ -7,7 +7,7 @@ import { Block } from "../../block/block";
 import { EmbeddedLabels } from "../../features/embeddedLabels/embeddedLabels";
 import { EmbeddedLabelsHelper } from "../../features/embeddedLabels/embeddedLabelsHelper";
 import { BarAttrsHelper, BarHelper } from "./barHelper";
-import { sum } from "d3-array";
+import { index, sum } from "d3-array";
 import { Transition } from "d3-transition";
 import { DomHelper } from "../../helpers/domHelper";
 import { Helper } from "../../helpers/helper";
@@ -52,6 +52,14 @@ export class Bar {
                 firstBarIndex,
                 barSettings);
         }
+    }
+
+    public static updateColors(block: Block, chart: TwoDimensionalChartModel): void {
+        chart.data.valueFields.forEach((_vf, index) => {
+            const bars = block.getChartGroup(chart.index)
+                .selectAll(`.${this.barItemClass}${Helper.getCssClassesLine(chart.cssClasses)}${Helper.getCssClassesLine(Helper.getCssClassesWithElementIndex(chart.cssClasses, index))}`);
+            DomHelper.setChartStyle(bars, chart.style, index, 'fill');
+        });
     }
 
     public static getAllBarsForChart(block: Block, chartCssClasses: string[]): Selection<BaseType, DataRow, BaseType, unknown> {

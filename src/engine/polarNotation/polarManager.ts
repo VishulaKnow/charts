@@ -29,8 +29,7 @@ export class PolarManager {
             model.otherComponents.titleBlock,
             model.blockCanvas.size);
 
-        Legend.render(engine.block, engine.data, options, model);
-
+        Legend.render(engine.block, engine.data, options, model); ``
         Tooltip.render(engine.block, model, engine.data, model.otherComponents.tooltipBlock);
 
         engine.block.filterEventManager.setListenerPolar(model.chartBlock.margin, model.blockCanvas.size, options, model.chartSettings.donut);
@@ -67,6 +66,7 @@ export class PolarManager {
 
     public static updateColors(block: Block, model: Model): void {
         Legend.updateColors(block, model.options);
+        Donut.updateColors(block, (<PolarOptionsModel>model.options).charts[0]);
     }
 
     private static renderCharts(block: Block, charts: PolarChartModel[], data: DataSource, dataSource: string, margin: BlockMargin, blockSize: Size, donutSettings: DonutChartSettings) {
