@@ -1,5 +1,5 @@
-import { Config, PolarChart, TwoDimensionalChart, IntervalOptions, IntervalChart, TwoDimensionalOptions, PolarOptions, Size } from "../config/config";
-import { BarOptionsCanvas, DataType, DesignerConfig } from "../designer/designerConfig";
+import { Config, TwoDimensionalChart, IntervalOptions, IntervalChart, TwoDimensionalOptions, PolarOptions, Size } from "../config/config";
+import { BarOptionsCanvas, DesignerConfig, LegendBlockCanvas } from "../designer/designerConfig";
 import { AxisModel } from "./featuresModel/axisModel";
 import { LegendCanvasModel } from "./featuresModel/legendModel/legendCanvasModel";
 import { MIN_DONUT_BLOCK_SIZE } from "./featuresModel/legendModel/legendModel";
@@ -18,7 +18,7 @@ export class DataManagerModel {
         if (config.options.type === '2d' || config.options.type === 'interval') {
             return this.getDataScopeFor2D(config.options, config.canvas.size, margin, data, designerConfig);
         } else if (config.options.type === 'polar') {
-            return this.getDataScopeForPolar(config.options, config.canvas.size, margin, data, legendBlock);
+            return this.getDataScopeForPolar(config.options, config.canvas.size, margin, data, legendBlock, designerConfig.canvas.legendBlock);
         }
     }
 
@@ -52,7 +52,7 @@ export class DataManagerModel {
         }
     }
 
-    private static getDataScopeForPolar(configOptions: PolarOptions, blockSize: Size, margin: BlockMargin, data: DataSource, legendBlock: LegendBlockModel): DataScope {
+    private static getDataScopeForPolar(configOptions: PolarOptions, blockSize: Size, margin: BlockMargin, data: DataSource, legendBlock: LegendBlockModel, legendCanvas: LegendBlockCanvas): DataScope {
         const dataset = data[configOptions.data.dataSource];
         const keyFieldName = configOptions.data.keyField.name;
         const keys = dataset.map(dataRow => dataRow[keyFieldName]);
@@ -70,14 +70,9 @@ export class DataManagerModel {
         else
             position = 'bottom';
 
-        if (position === 'right') {
-            if (blockSize.width - margin.left - margin.right < MIN_DONUT_BLOCK_SIZE)
-                position = 'bottom';
-        }
-
         let maxItemsNumber: number;
         if (position === 'right') {
-            maxItemsNumber = LegendCanvasModel.findElementsAmountByLegendSize(keys, position, 200, blockSize.height - margin.top - margin.bottom);
+            maxItemsNumber = LegendCanvasModel.findElementsAmountByLegendSize(keys, position, legendCanvas.maxWidth, blockSize.height - margin.top - margin.bottom);
         } else {
             let marginBottom = margin.bottom - (legendBlock.coordinate.bottom.size === 0 ? legendBlock.coordinate.bottom.size : legendBlock.coordinate.bottom.size - legendBlock.coordinate.bottom.margin.bottom);
             maxItemsNumber = LegendCanvasModel.findElementsAmountByLegendSize(keys, position, blockSize.width - margin.left - margin.right, blockSize.height - margin.top - marginBottom - legendBlock.coordinate.bottom.margin.bottom - MIN_DONUT_BLOCK_SIZE);

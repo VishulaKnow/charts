@@ -37,7 +37,7 @@ interface BlockMargin {
     right: number;
 }
 
-interface LegendBlockCanvas {
+export interface LegendBlockCanvas {
     maxWidth: number;
 }
 

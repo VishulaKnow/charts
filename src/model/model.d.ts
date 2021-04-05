@@ -253,11 +253,11 @@ export interface LegendBlockModel {
     standartTooltip: boolean;
 }
 export interface LegendCoordinate {
-    top: LegendBlockCanvas;
-    bottom: LegendBlockCanvas;
-    left: LegendBlockCanvas;
-    right: LegendBlockCanvas;
+    top: LegendCanvasCoordinate;
+    bottom: LegendCanvasCoordinate;
+    left: LegendCanvasCoordinate;
+    right: LegendCanvasCoordinate;
 }
 
 export interface TitleBlockModel extends ComponentBlockModel { }
-interface LegendBlockCanvas extends ComponentBlockModel { }
+interface LegendCanvasCoordinate extends ComponentBlockModel { }
