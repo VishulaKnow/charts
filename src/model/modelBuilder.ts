@@ -78,6 +78,7 @@ function roundMargin(margin: BlockMargin): void {
     margin.right = Math.ceil(margin.right);
 }
 
+//TODO: вынести получение толщины доната в модель
 export function assembleModel(config: Config, data: DataSource, designerConfig: DesignerConfig): Model {
     if (!data || Object.keys(data).length === 0)
         return {
