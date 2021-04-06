@@ -1,8 +1,7 @@
 import Engine from '../engine/engine';
 import { assembleModel, getPreparedData, getUpdatedModel } from '../model/modelBuilder';
-import { Config, IntervalOptions, PolarChart, PolarOptions, TwoDimensionalChart, TwoDimensionalOptions } from '../config/config'
+import { Config, DataRow, DataSource, IntervalOptions, PolarOptions, TwoDimensionalChart, TwoDimensionalOptions } from '../config/config'
 import { DesignerConfig, Transitions } from '../designer/designerConfig';
-import { DataRow, DataSource } from '../model/model';
 
 class ListenersHelper {
     static randInt(min: number, max: number): number {

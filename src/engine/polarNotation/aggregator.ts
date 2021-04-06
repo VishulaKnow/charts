@@ -1,8 +1,9 @@
 import { sum } from 'd3-array'
 import { interpolateNumber } from 'd3-interpolate';
 import { Selection } from 'd3-selection'
+import { DataRow } from '../../config/config';
 import { DataType } from '../../designer/designerConfig';
-import { DataRow, DonutChartSettings, Field } from "../../model/model";
+import { Field } from "../../model/model";
 import { Block } from "../block/block";
 import { Helper } from '../helpers/helper';
 import { ValueFormatter } from '../valueFormatter';

@@ -1,14 +1,13 @@
 import { BaseType, select, Selection } from 'd3-selection';
-import { Transition } from 'd3-transition';
-import { Size } from '../../../config/config';
-import { BlockMargin, DataRow, EmbeddedLabelTypeModel, Field, Orient } from "../../../model/model";
+import { DataRow, Size } from '../../../config/config';
+import { BlockMargin, EmbeddedLabelTypeModel, Field, Orient } from "../../../model/model";
 import { Block } from "../../block/block";
 import { DomHelper } from '../../helpers/domHelper';
 import { Helper } from '../../helpers/helper';
 import { BarAttrsHelper } from '../../twoDimensionalNotation/bar/barHelper';
 import { ValueFormatter } from "../../valueFormatter";
 import { EmbeddedLabelsDomHelper } from './embeddedLabelsDomHelper';
-import { BarAttrs, EmbeddedLabelPosition, EmbeddedLabelsHelper, LabelAttrs } from "./embeddedLabelsHelper";
+import { BarAttrs, EmbeddedLabelsHelper, LabelAttrs } from "./embeddedLabelsHelper";
 
 export class EmbeddedLabels {
     public static embeddedLabelsGroupClass: string = 'embedded-labels-group';
@@ -100,7 +99,7 @@ export class EmbeddedLabels {
         if (position === 'inside')
             labelBlock.style('fill', this.innerLabelColor);
 
-            EmbeddedLabelsDomHelper.cropText(labelBlock, barAttrs, position, labelUnserveFlag, margin, blockSize);
+        EmbeddedLabelsDomHelper.cropText(labelBlock, barAttrs, position, labelUnserveFlag, margin, blockSize);
     }
 
     private static updateLabel(block: Block, dataRow: DataRow, keyAxisOrient: Orient, barAttrsHelper: BarAttrsHelper, margin: BlockMargin, type: EmbeddedLabelTypeModel, blockSize: Size, labelBlock: Selection<SVGTextElement, DataRow, HTMLElement, unknown>, labelsGroup: Selection<SVGGElement, unknown, SVGGElement, unknown>): void {

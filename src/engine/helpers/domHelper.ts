@@ -1,5 +1,6 @@
 import { Selection, BaseType } from 'd3-selection'
-import { ChartStyle, DataRow, TwoDimensionalChartModel } from "../../model/model";
+import { DataRow } from '../../config/config';
+import { ChartStyle, TwoDimensionalChartModel } from "../../model/model";
 import { Block } from "../block/block";
 import { MarkDot } from "../features/markDots/markDot";
 import { Bar } from "../twoDimensionalNotation/bar/bar";

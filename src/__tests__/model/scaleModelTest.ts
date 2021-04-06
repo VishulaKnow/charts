@@ -1,5 +1,4 @@
-import { TwoDimensionalChart, TwoDimensionalOptions } from "../../config/config";
-import { DataSource } from "../../model/model";
+import { DataSource, TwoDimensionalChart, TwoDimensionalOptions } from "../../config/config";
 import { ScaleModel } from "../../model/featuresModel/scaleModel";
 
 function getData(): DataSource {

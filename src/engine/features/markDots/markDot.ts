@@ -1,6 +1,7 @@
 import { select, Selection, BaseType } from 'd3-selection';
 import { transition } from 'd3-transition';
-import { BlockMargin, DataRow, Orient, TwoDimensionalChartModel } from "../../../model/model";
+import { DataRow } from '../../../config/config';
+import { BlockMargin, Orient, TwoDimensionalChartModel } from "../../../model/model";
 import { Block } from "../../block/block";
 import { DomHelper } from '../../helpers/domHelper';
 import { Helper } from '../../helpers/helper';

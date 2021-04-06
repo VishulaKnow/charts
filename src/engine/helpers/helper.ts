@@ -1,4 +1,4 @@
-import { DataRow, DataSource } from "../../model/model";
+import { DataRow, DataSource } from "../../config/config";
 
 export class Helper {
     public static getRowsByIds(ids: number[], dataSet: DataRow[]): DataRow[] {

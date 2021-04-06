@@ -1,6 +1,6 @@
-import { DataOptions, DiscreteAxisOptions, NumberAxisOptions, Size, TwoDimensionalChart, TwoDimensionalOptions } from "../../config/config";
+import { DataOptions, DataSource, DiscreteAxisOptions, NumberAxisOptions, Size, TwoDimensionalChart, TwoDimensionalOptions } from "../../config/config";
 import { AxisModel } from "../../model/featuresModel/axisModel";
-import { AxisModelOptions, BlockMargin, DataSource } from "../../model/model";
+import { AxisModelOptions, BlockMargin } from "../../model/model";
 
 function getData(): DataSource {
     let data = JSON.parse(`{

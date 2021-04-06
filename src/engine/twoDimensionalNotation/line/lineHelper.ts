@@ -1,5 +1,6 @@
 import { line, Line as ILine } from 'd3-shape';
-import { Orient, BlockMargin, DataRow } from "../../../model/model";
+import { DataRow } from '../../../config/config';
+import { Orient, BlockMargin } from "../../../model/model";
 import { Scales, Scale } from "../../features/scale/scale";
 
 export class LineHelper {

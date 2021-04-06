@@ -1,6 +1,6 @@
 import { ModelHelper } from "../modelHelper";
-import { BlockMargin, DataSource, ScaleKeyModel, ScaleKeyType, ScaleValueModel, ScaleValueType } from "../model";
-import { AxisPosition, NumberDomain, IntervalChart, TwoDimensionalChart, TwoDimensionalOptions, Size, ChartOrientation } from "../../config/config";
+import { BlockMargin, ScaleKeyModel, ScaleKeyType, ScaleValueModel, ScaleValueType } from "../model";
+import { AxisPosition, NumberDomain, IntervalChart, TwoDimensionalChart, TwoDimensionalOptions, Size, ChartOrientation, DataSource } from "../../config/config";
 
 export enum ScaleType {
     Key, Value

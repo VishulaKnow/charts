@@ -1,5 +1,5 @@
-import { Config } from '../config/config';
-import { Model, BlockCanvas, ChartBlock, TwoDimensionalOptionsModel, PolarOptionsModel, BlockMargin, DataSettings, ChartElementsSettings, DataFormat, DataScope, DataSource, IntervalOptionsModel } from './model';
+import { Config, DataSource } from '../config/config';
+import { Model, BlockCanvas, ChartBlock, TwoDimensionalOptionsModel, PolarOptionsModel, BlockMargin, DataSettings, ChartElementsSettings, DataFormat, DataScope, IntervalOptionsModel } from './model';
 import { MarginModel } from './marginModel';
 import { TwoDimensionalModel } from './notations/twoDimensionalModel';
 import { PolarModel } from './notations/polarModel';

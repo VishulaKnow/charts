@@ -1,7 +1,7 @@
 import { merge } from "d3-array";
 import { PieArcDatum, Arc, arc, Pie, pie } from "d3-shape";
-import { Size } from "../../../config/config";
-import { BlockMargin, DataRow, DonutChartSettings } from "../../../model/model";
+import { DataRow, Size } from "../../../config/config";
+import { BlockMargin, DonutChartSettings } from "../../../model/model";
 import { Translate } from "./donut";
 
 export class DonutHelper {

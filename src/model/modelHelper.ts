@@ -1,5 +1,5 @@
-import { IntervalChart } from "../config/config";
-import { DataSource } from "./model";
+import { DataSource, IntervalChart } from "../config/config";
+
 
 export class ModelHelper {
     public static getSum(items: number[]): number {

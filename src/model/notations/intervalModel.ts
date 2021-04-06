@@ -1,10 +1,10 @@
-import { Config, IntervalChart, IntervalOptions } from "../../config/config";
+import { Config, DataSource, IntervalChart, IntervalOptions } from "../../config/config";
 import { ChartStyleConfig, DesignerConfig } from "../../designer/designerConfig";
 import { AxisModel } from "../featuresModel/axisModel";
 import { ChartStyleModel } from "../chartStyleModel";
 import { DataManagerModel } from "../dataManagerModel";
 import { LegendModel } from "../featuresModel/legendModel/legendModel";
-import { AdditionalElementsOptions, BlockMargin, DataScope, DataSource, IntervalChartModel, IntervalOptionsModel } from "../model";
+import { AdditionalElementsOptions, BlockMargin, DataScope, IntervalChartModel, IntervalOptionsModel } from "../model";
 import { AxisType } from "../modelBuilder";
 import { ScaleModel, ScaleType } from "../featuresModel/scaleModel";
 

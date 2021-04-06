@@ -1,12 +1,12 @@
 import { Arc, Pie, PieArcDatum } from 'd3-shape'
 import { Selection, BaseType } from 'd3-selection'
 import { interpolate } from 'd3-interpolate'
-import { BlockMargin, DataRow, DonutChartSettings, PolarChartModel } from "../../../model/model";
+import { BlockMargin, DonutChartSettings, PolarChartModel } from "../../../model/model";
 import { Block } from "../../block/block";
 import { Aggregator } from "../aggregator";
 import { DonutHelper } from './DonutHelper';
 import { DomHelper } from '../../helpers/domHelper';
-import { Size } from '../../../config/config';
+import { DataRow, Size } from '../../../config/config';
 import { ElementHighlighter } from '../../elementHighlighter/elementHighlighter';
 import { Helper } from '../../helpers/helper';
 

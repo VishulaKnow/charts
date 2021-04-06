@@ -1,5 +1,6 @@
 import { Selection, BaseType } from 'd3-selection'
-import { BarChartSettings, BlockMargin, DataRow, IntervalChartModel, OptionsModelData, Orient } from "../../model/model";
+import { DataRow } from '../../config/config';
+import { BarChartSettings, BlockMargin, IntervalChartModel, OptionsModelData, Orient } from "../../model/model";
 import { Block } from "../block/block";
 import { Scale, Scales } from "../features/scale/scale";
 import { DomHelper } from '../helpers/domHelper';

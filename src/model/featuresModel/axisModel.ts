@@ -1,5 +1,5 @@
-import { AxisPosition, ChartOrientation, DataOptions, DiscreteAxisOptions, NumberAxisOptions, Size, TwoDimensionalChart } from "../../config/config";
-import { AxisLabelPosition, AxisModelOptions, BlockMargin, DataSource, Orient } from "../model";
+import { AxisPosition, ChartOrientation, DataOptions, DataSource, DiscreteAxisOptions, NumberAxisOptions, Size, TwoDimensionalChart } from "../../config/config";
+import { AxisLabelPosition, AxisModelOptions, BlockMargin, Orient } from "../model";
 import { ModelHelper } from "../modelHelper";
 import { AxisType, CLASSES } from "../modelBuilder";
 import { DataManagerModel } from "../dataManagerModel";

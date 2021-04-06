@@ -1,7 +1,7 @@
 import { BaseType, select, Selection } from "d3-selection";
-import { Size } from "../../../config/config";
+import { DataSource, Size } from "../../../config/config";
 import { LegendItemsDirection } from "../../../model/featuresModel/legendModel/legendCanvasModel";
-import { DataSource, IntervalOptionsModel, LegendBlockModel, LegendPosition, Model, Orient, PolarOptionsModel, TwoDimensionalOptionsModel } from "../../../model/model";
+import { IntervalOptionsModel, LegendBlockModel, LegendPosition, Model, Orient, PolarOptionsModel, TwoDimensionalOptionsModel } from "../../../model/model";
 import { Block } from "../../block/block";
 import { SelectionCondition } from "../../helpers/domHelper";
 import { LegendDomHelper } from "./legendDomHelper";

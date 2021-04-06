@@ -1,10 +1,10 @@
-import { ChartOrientation, Config, TwoDimensionalChart, TwoDimensionalChartType, TwoDimensionalOptions } from "../../config/config";
+import { ChartOrientation, Config, DataSource, TwoDimensionalChart, TwoDimensionalChartType, TwoDimensionalOptions } from "../../config/config";
 import { ChartStyleConfig, DesignerConfig } from "../../designer/designerConfig";
 import { ChartStyleModel } from "../chartStyleModel";
 import { AxisModel } from "../featuresModel/axisModel";
 import { LegendModel } from "../featuresModel/legendModel/legendModel";
 import { ScaleModel } from "../featuresModel/scaleModel";
-import { BlockMargin, DataScope, DataSource, TwoDimensionalOptionsModel, TwoDimensionalChartModel, EmbeddedLabelTypeModel, AdditionalElementsOptions } from "../model";
+import { BlockMargin, DataScope, TwoDimensionalOptionsModel, TwoDimensionalChartModel, EmbeddedLabelTypeModel, AdditionalElementsOptions } from "../model";
 
 
 export class TwoDimensionalModel {

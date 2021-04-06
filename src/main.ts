@@ -1,8 +1,8 @@
-import { Config, Size } from "./config/config";
+import { Config, DataSource, Size } from "./config/config";
 import { DesignerConfig } from "./designer/designerConfig";
 import Engine from "./engine/engine";
 import { FilterCallback } from "./engine/filterManager/filterEventManager";
-import { DataSource, Model } from "./model/model";
+import { Model } from "./model/model";
 import { assembleModel, getPreparedData } from "./model/modelBuilder";
 
 export class Chart {
@@ -111,5 +111,4 @@ export class Chart {
 
 export * from "./config/config";
 export * from "./designer/designerConfig";
-export { DataSource, DataRow } from "./model/model";
 export { FilterCallback } from "./engine/filterManager/filterEventManager";

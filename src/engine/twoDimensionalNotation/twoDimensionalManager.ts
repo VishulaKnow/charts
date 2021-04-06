@@ -1,5 +1,5 @@
-import { Size } from "../../config/config";
-import { BarChartSettings, BlockMargin, DataSource, Model, OptionsModelData, Orient, TwoDimensionalChartModel, TwoDimensionalOptionsModel } from "../../model/model";
+import { DataSource, Size } from "../../config/config";
+import { BarChartSettings, BlockMargin, Model, OptionsModelData, Orient, TwoDimensionalChartModel, TwoDimensionalOptionsModel } from "../../model/model";
 import { Block } from "../block/block";
 import { ElementHighlighter } from "../elementHighlighter/elementHighlighter";
 import Engine from "../engine";

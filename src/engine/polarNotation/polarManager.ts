@@ -1,4 +1,4 @@
-import { BlockMargin, DataSource, DonutChartSettings, Model, PolarChartModel, PolarOptionsModel } from "../../model/model";
+import { BlockMargin, DonutChartSettings, Model, PolarChartModel, PolarOptionsModel } from "../../model/model";
 import { Block } from "../block/block";
 import Engine from "../engine";
 import { Legend } from "../features/legend/legend";
@@ -8,7 +8,7 @@ import { ElementHighlighter } from "../elementHighlighter/elementHighlighter";
 import { Tooltip } from "../features/tolltip/tooltip";
 import { Aggregator } from "./aggregator";
 import { Donut } from "./donut/donut";
-import { Size } from "../../config/config";
+import { DataSource, Size } from "../../config/config";
 
 export class PolarManager {
     public static render(engine: Engine, model: Model) {

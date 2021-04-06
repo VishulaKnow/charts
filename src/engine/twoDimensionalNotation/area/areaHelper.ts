@@ -1,6 +1,6 @@
 import { area, Area as IArea } from 'd3-shape';
-import { Size } from '../../../config/config';
-import { BlockMargin, DataRow, Orient } from "../../../model/model";
+import { DataRow, Size } from '../../../config/config';
+import { BlockMargin, Orient } from "../../../model/model";
 import { Scales, Scale } from "../../features/scale/scale";
 
 export class AreaHelper {

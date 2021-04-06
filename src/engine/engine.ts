@@ -1,9 +1,10 @@
 import { Block } from './block/block';
 import { ValueFormatter } from './valueFormatter';
 import { ContentManager } from './contentManager';
-import { DataSource, IntervalOptionsModel, Model, PolarOptionsModel, TwoDimensionalOptionsModel } from '../model/model';
+import { IntervalOptionsModel, Model, PolarOptionsModel, TwoDimensionalOptionsModel } from '../model/model';
 import { FilterCallback, FilterEventManager } from './filterManager/filterEventManager';
 import { Helper } from './helpers/helper';
+import { DataSource } from '../config/config';
 
 export default class Engine {
     public block: Block;

@@ -1,9 +1,9 @@
-import { TwoDimensionalAxis, Config, IntervalAxis, TwoDimensionalOptions, PolarOptions, IntervalOptions, ChartOrientation } from "../config/config";
+import { TwoDimensionalAxis, Config, IntervalAxis, TwoDimensionalOptions, PolarOptions, IntervalOptions, ChartOrientation, DataSource } from "../config/config";
 import { DesignerConfig } from "../designer/designerConfig";
 import { AxisModel, LabelSize } from "./featuresModel/axisModel";
 import { DataManagerModel } from "./dataManagerModel";
 import { LegendModel, MIN_DONUT_BLOCK_SIZE } from "./featuresModel/legendModel/legendModel";
-import { BlockMargin, DataScope, DataSource, LegendBlockModel, Orient, OtherComponents, PolarOptionsModel, TitleBlockModel } from "./model";
+import { BlockMargin, DataScope, LegendBlockModel, Orient, OtherComponents, PolarOptionsModel, TitleBlockModel } from "./model";
 import { AxisType } from "./modelBuilder";
 import { TwoDimensionalModel } from "./notations/twoDimensionalModel";
 import { Size } from "../config/config";

@@ -1,10 +1,10 @@
 import { select, Selection, pointer, BaseType, } from 'd3-selection';
 import { PieArcDatum } from 'd3-shape'
-import { BlockMargin, DataRow, DataSource, IntervalChartModel, Model, OptionsModelData, Orient, PolarChartModel, ScaleKeyModel, TwoDimensionalChartModel, TwoDimensionalOptionsModel } from "../../../model/model";
+import { BlockMargin, IntervalChartModel, Model, OptionsModelData, Orient, PolarChartModel, ScaleKeyModel, TwoDimensionalChartModel, TwoDimensionalOptionsModel } from "../../../model/model";
 import { Block } from "../../block/block";
 import { TooltipDomHelper } from "./tooltipDomHelper";
 import { Donut } from "../../polarNotation/donut/donut";
-import { ChartOrientation, Size } from "../../../config/config";
+import { ChartOrientation, DataRow, DataSource, Size } from "../../../config/config";
 import { Scales } from '../scale/scale';
 import { AxisScale } from 'd3-axis';
 import { TooltipComponentsManager } from './tooltipComponentsManager';

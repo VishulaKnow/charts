@@ -1,7 +1,7 @@
-import { ChartNotation, Size } from "../../../config/config";
+import { ChartNotation, DataRow, DataSource, Size } from "../../../config/config";
 import { LegendItemsDirection } from "../../../model/featuresModel/legendModel/legendCanvasModel";
 
-import { DataRow, DataSource, IntervalOptionsModel, LegendBlockModel, LegendPosition, Orient, PolarOptionsModel, TwoDimensionalOptionsModel } from "../../../model/model";
+import { IntervalOptionsModel, LegendBlockModel, LegendPosition, Orient, PolarOptionsModel, TwoDimensionalOptionsModel } from "../../../model/model";
 import { Helper } from '../../helpers/helper';
 import { Legend } from "./legend";
 

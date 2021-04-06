@@ -12,13 +12,6 @@ export type EmbeddedLabelTypeModel = 'none' | 'key' | 'value';
 export type DataOptions = {
     [option: string]: any
 }
-export type DataRow = {
-    [field: string]: any
-}
-
-export interface DataSource {
-    [source: string]: DataRow[];
-}
 
 export interface Model {
     blockCanvas: BlockCanvas;

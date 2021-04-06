@@ -1,7 +1,7 @@
 import { AxisScale } from "d3-axis";
 import { pointer, select } from "d3-selection";
-import { Size } from "../../config/config";
-import { BlockMargin, TwoDimensionalOptionsModel, PolarOptionsModel, DonutChartSettings, DataRow } from "../../model/model";
+import { DataRow, Size } from "../../config/config";
+import { BlockMargin, TwoDimensionalOptionsModel, PolarOptionsModel, DonutChartSettings } from "../../model/model";
 import { Block } from "../block/block";
 import { SelectHighlighter } from "../elementHighlighter/selectHighlighter";
 import { TipBox } from "../features/tipBox/tipBox";

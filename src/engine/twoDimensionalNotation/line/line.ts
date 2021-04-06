@@ -1,13 +1,14 @@
 import { stack } from 'd3-shape';
 import { select, Selection } from 'd3-selection';
 
-import { BlockMargin, DataRow, Field, Orient, TwoDimensionalChartModel } from "../../../model/model";
+import { BlockMargin, Field, Orient, TwoDimensionalChartModel } from "../../../model/model";
 import { Scales } from "../../features/scale/scale";
 import { Block } from "../../block/block";
 import { MarkDot } from "../../features/markDots/markDot";
 import { LineHelper } from './lineHelper';
 import { DomHelper } from '../../helpers/domHelper';
 import { Helper } from '../../helpers/helper';
+import { DataRow } from '../../../config/config';
 
 export class Line {
     public static readonly lineChartClass = 'line';

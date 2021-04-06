@@ -8,6 +8,12 @@ export type TwoDimensionalChartType = 'line' | 'bar' | 'area';
 export type PolarChartType = 'donut';
 export type IntervalChartType = 'gantt';
 export type EmbeddedLabelType = 'none' | 'key' | 'value';
+export type DataRow = {
+    [field: string]: any
+}
+export interface DataSource {
+    [source: string]: DataRow[];
+}
 
 export interface Config {
     canvas: ChartBlockCanvas;

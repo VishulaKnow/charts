@@ -1,4 +1,5 @@
-import { Model, IntervalOptionsModel, IntervalChartModel, OptionsModelData, BlockMargin, Orient, ChartElementsSettings, DataSource } from "../../model/model";
+import { DataSource } from "../../config/config";
+import { Model, IntervalOptionsModel, IntervalChartModel, OptionsModelData, BlockMargin, Orient, ChartElementsSettings } from "../../model/model";
 import { Block } from "../block/block";
 import { Axis } from "../features/axis/axis";
 import { GridLine } from "../features/gridLine/gridLine";
