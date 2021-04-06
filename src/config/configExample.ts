@@ -1,4 +1,4 @@
-import { Config } from './config';
+import { Config, DataRow } from './config';
 
 const configCars: Config = {
     canvas: {
@@ -107,111 +107,20 @@ const configCars: Config = {
             }
         },
         tooltip: {
-            html: null
-        }
-    }
-}
-
-const configDemo: Config = {
-    canvas: {
-        class: 'outline svg-chart',
-        size: {
-            width: 960,
-            height: 510
-        }
-    },
-    options: {
-        title: 'asd',
-        type: '2d',
-        selectable: true,
-        axis: {
-            key: {
-                visibility: true,
-                position: 'end',
-                ticks: {
-                    flag: false
-                }
-            },
-            value: {
-                visibility: true,
-                domain: {
-                    start: -1,
-                    end: -1
-                },
-                position: 'start',
-                ticks: {
-                    flag: false
-                }
+            html: (row: DataRow) => {
+                return `<div class="tooltip-group">
+                            <div class="tooltip-text-item">
+                                <span class="tooltip-field-title">Текст: </span>
+                                <span class="tooltip-field-value">${row.brand}</span>
+                            </div>
+                        </div>
+                        <div class="tooltip-group">
+                            <div class="tooltip-text-item">
+                                <span class="tooltip-field-title">Значение: </span>
+                                <span class="tooltip-field-value">${row.price}</span>
+                            </div>
+                        </div>`
             }
-        },
-        additionalElements: {
-            gridLine: {
-                flag: {
-                    value: true,
-                    key: true
-                }
-            }
-        },
-        legend: {
-            show: true
-        },
-        orientation: 'vertical',
-        data: {
-            dataSource: 'dataSet_data',
-            keyField: {
-                name: 'MonthYear',
-                format: 'string'
-            }
-        },
-        charts: [
-            {
-                isSegmented: false,
-                type: 'bar',
-                data: {
-                    valueFields: [
-                        {
-                            name: 'EventCost',
-                            format: 'integer',
-                            title: 'Количество автомобилей на душу населения'
-                        },
-                        {
-                            name: 'AlcoholCost',
-                            format: 'money',
-                            title: 'Количество автомобилей на душу населения'
-                        }
-                    ]
-                },
-                tooltip: {
-                    show: true
-                },
-                embeddedLabels: 'value',
-                markers: {
-                    show: true
-                }
-            },
-            {
-                isSegmented: false,
-                type: 'line',
-                data: {
-                    valueFields: [
-                        {
-                            name: 'EventCost',
-                            format: 'integer',
-                            title: 'Количество автомобилей на душу населения'
-                        }
-                    ]
-                },
-                tooltip: {
-                    show: true
-                },
-                embeddedLabels: 'value',
-                markers: {
-                    show: true
-                }
-            }
-        ],
-        tooltip: {
-            html: null
         }
     }
 }

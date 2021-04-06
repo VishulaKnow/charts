@@ -8,6 +8,7 @@ export type TwoDimensionalChartType = 'line' | 'bar' | 'area';
 export type PolarChartType = 'donut';
 export type IntervalChartType = 'gantt';
 export type EmbeddedLabelType = 'none' | 'key' | 'value';
+export type TooltipHtml = (dataRow: DataRow) => string;
 export type DataRow = {
     [field: string]: any
 }
@@ -83,7 +84,7 @@ export interface ValueField extends Field {
 }
 
 export interface TooltipOptions {
-    html: (dataRow: DataRow) => string;
+    html: TooltipHtml;
 }
 
 

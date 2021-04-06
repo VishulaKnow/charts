@@ -1,10 +1,10 @@
 import { select, Selection, pointer, BaseType, } from 'd3-selection';
 import { PieArcDatum } from 'd3-shape'
-import { BlockMargin, IntervalChartModel, Model, OptionsModelData, Orient, PolarChartModel, ScaleKeyModel, TwoDimensionalChartModel, TwoDimensionalOptionsModel } from "../../../model/model";
+import { BlockMargin, IntervalChartModel, Model, OptionsModelData, Orient, PolarChartModel, PolarOptionsModel, ScaleKeyModel, TwoDimensionalChartModel, TwoDimensionalOptionsModel } from "../../../model/model";
 import { Block } from "../../block/block";
 import { TooltipDomHelper } from "./tooltipDomHelper";
 import { Donut } from "../../polarNotation/donut/donut";
-import { ChartOrientation, DataRow, DataSource, Size } from "../../../config/config";
+import { ChartOrientation, DataRow, DataSource, Size, TooltipOptions } from "../../../config/config";
 import { Scales } from '../scale/scale';
 import { AxisScale } from 'd3-axis';
 import { TooltipComponentsManager } from './tooltipComponentsManager';
@@ -19,6 +19,11 @@ import { TooltipSettings } from '../../../designer/designerConfig';
 interface OverDetails {
     pointer: [number, number];
     ignoreTranslate?: boolean;
+}
+
+interface TooltipTranslate {
+    x: number;
+    y: number;
 }
 
 export class Tooltip {
@@ -36,9 +41,8 @@ export class Tooltip {
                 this.renderTooltipFor2DCharts(block, data, model.blockCanvas.size, model.chartBlock.margin, scales.key, model.options, tooltipOptions);
             } else if (model.options.type === 'polar') {
                 this.renderTooltipForPolar(block,
-                    model.options.charts[0],
+                    model.options,
                     data,
-                    model.options.data,
                     model.blockCanvas.size,
                     model.chartBlock.margin,
                     DonutHelper.getThickness(model.chartSettings.donut, model.blockCanvas.size, model.chartBlock.margin),
@@ -58,11 +62,11 @@ export class Tooltip {
         this.renderLineTooltip(block, scaleKey, margin, blockSize, options.charts, options.orient, options.axis.key.orient, data, options.data, options.scale.key, tooltipOptions);
     }
 
-    private static renderTooltipForPolar(block: Block, chart: PolarChartModel, data: DataSource, dataOptions: OptionsModelData, blockSize: Size, margin: BlockMargin, chartThickness: number, tooltipOptions: TooltipSettings): void {
+    private static renderTooltipForPolar(block: Block, options: PolarOptionsModel, data: DataSource, blockSize: Size, margin: BlockMargin, chartThickness: number, tooltipOptions: TooltipSettings): void {
         const attrTransform = block.getSvg().select(`.${Donut.donutBlockClass}`).attr('transform');
         const translateNums = Helper.getTranslateNumbers(attrTransform);
         const arcItems = Donut.getAllArcGroups(block);
-        this.renderTooltipForDonut(block, arcItems, data, dataOptions, chart, blockSize, margin, chartThickness, tooltipOptions, translateNums[0], translateNums[1]);
+        this.renderTooltipForDonut(block, arcItems, data, options.data, options.charts[0], blockSize, margin, chartThickness, tooltipOptions, options.tooltip, { x: translateNums[0], y: translateNums[1] });
     }
 
     private static renderLineTooltip(block: Block, scaleKey: AxisScale<any>, margin: BlockMargin, blockSize: Size, charts: TwoDimensionalChartModel[], chartOrientation: ChartOrientation, keyAxisOrient: Orient, data: DataSource, dataOptions: OptionsModelData, scaleKeyModel: ScaleKeyModel, tooltipOptions: TooltipSettings): void {
@@ -109,17 +113,14 @@ export class Tooltip {
         });
     }
 
-    private static renderTooltipForDonut(block: Block, elements: Selection<SVGGElement, PieArcDatum<DataRow>, SVGGElement, unknown>, data: DataSource, dataOptions: OptionsModelData, chart: PolarChartModel, blockSize: Size, margin: BlockMargin, donutThickness: number, tooltipOptions: TooltipSettings, translateX: number = 0, translateY: number = 0): void {
+    private static renderTooltipForDonut(block: Block, elements: Selection<SVGGElement, PieArcDatum<DataRow>, SVGGElement, unknown>, data: DataSource, dataOptions: OptionsModelData, chart: PolarChartModel, blockSize: Size, margin: BlockMargin, donutThickness: number, tooltipSettings: TooltipSettings, tooltipOptions: TooltipOptions, translate: TooltipTranslate): void {
         const tooltipBlock = TooltipComponentsManager.renderTooltipBlock(block);
         const tooltipContent = TooltipComponentsManager.renderTooltipContentBlock(tooltipBlock);
         let tooltipArrow: Selection<BaseType, unknown, HTMLElement, any>;
-
-        if (tooltipOptions.position === 'fixed')
+        if (tooltipSettings.position === 'fixed')
             tooltipArrow = TooltipComponentsManager.renderTooltipArrow(tooltipBlock);
 
-        ElementHighlighter.renderShadowFilter(block);
-
-        if (tooltipOptions.position === 'followCursor') {
+        if (tooltipSettings.position === 'followCursor') {
             elements.on('mousemove', function (e: CustomEvent<OverDetails>) {
                 const pointerCoordinate = !pointer(e, block.getSvg().node())[0] ? e.detail.pointer : pointer(e, block.getSvg().node());
                 const tooltipCoordinate = TooltipHelper.getTooltipCursorCoordinate(pointerCoordinate, block.getSvg().node().getBoundingClientRect(), tooltipContent.node().getBoundingClientRect(), window.innerWidth, window.innerHeight);
@@ -129,12 +130,12 @@ export class Tooltip {
 
         elements.on('mouseover', function (e, dataRow: PieArcDatum<DataRow>) {
             TooltipComponentsManager.showComponent(tooltipBlock);
-            TooltipDomHelper.fillForPolarChart(tooltipContent, chart, data, dataOptions, dataRow.data[dataOptions.keyField.name], select(this).select('path').style('fill'))
+            TooltipDomHelper.fillForPolarChart(tooltipContent, chart, data, dataOptions, dataRow.data[dataOptions.keyField.name], select(this).select('path').style('fill'), tooltipOptions?.html)
 
-            if (tooltipOptions.position === 'fixed') {
-                const coordinatePointer = TooltipDomHelper.getRecalcedCoordinateByArrow(DonutHelper.getArcCentroid(blockSize, margin, dataRow, donutThickness), tooltipBlock, blockSize, tooltipArrow, translateX, translateY);
-                coordinatePointer[0] = coordinatePointer[0] + translateX;
-                coordinatePointer[1] = coordinatePointer[1] + translateY;
+            if (tooltipSettings.position === 'fixed') {
+                const coordinatePointer = TooltipDomHelper.getRecalcedCoordinateByArrow(DonutHelper.getArcCentroid(blockSize, margin, dataRow, donutThickness), tooltipBlock, blockSize, tooltipArrow, translate.x, translate.y);
+                coordinatePointer[0] = coordinatePointer[0] + translate.x;
+                coordinatePointer[1] = coordinatePointer[1] + translate.y;
                 const tooltipCoordinate = TooltipHelper.getCoordinateByPointer(coordinatePointer);
                 TooltipComponentsManager.setBlockCoordinate(tooltipBlock, tooltipCoordinate);
             }
