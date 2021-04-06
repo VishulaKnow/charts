@@ -205,6 +205,9 @@ export default class Listeners {
                             key: false
                         }
                     }
+                },
+                tooltip: {
+                    html: null
                 }
             }
             this.config.options = options;
@@ -225,6 +228,9 @@ export default class Listeners {
                     data: this.getDataConfig(notationType),
                     tooltip: this.getTooltipConfig(),
                     type: 'donut'
+                },
+                tooltip: {
+                    html: null
                 }
             }
             this.config.options = options;
@@ -272,6 +278,9 @@ export default class Listeners {
                             key: false
                         }
                     }
+                },
+                tooltip: {
+                    html: null
                 }
             }
             this.config.options = options;

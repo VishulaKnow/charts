@@ -514,7 +514,10 @@ describe('get scales tests', () => {
             orientation: "vertical",
             selectable: true,
             title: null,
-            type: '2d'
+            type: '2d',
+            tooltip: {
+                html: null
+            }
         }
     });
 

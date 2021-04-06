@@ -105,6 +105,9 @@ const configCars: Config = {
             tooltip: {
                 show: true
             }
+        },
+        tooltip: {
+            html: null
         }
     }
 }
@@ -206,7 +209,10 @@ const configDemo: Config = {
                     show: true
                 }
             }
-        ]
+        ],
+        tooltip: {
+            html: null
+        }
     }
 }
 

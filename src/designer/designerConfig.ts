@@ -76,9 +76,9 @@ export interface ChartStyleConfig {
 
 // ========================================================================================= ElementsOptions
 export interface ElementsOptions {
-    tooltip: TooltipOptions;
+    tooltip: TooltipSettings;
 }
-export interface TooltipOptions {
+export interface TooltipSettings {
     position: TooltipPosition;
 }
 

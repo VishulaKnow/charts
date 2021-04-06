@@ -38,24 +38,7 @@ interface Options {
     data: DataOptions;
     title: string;
     selectable: boolean;
-}
-
-export interface Legend {
-    show: boolean;
-}
-
-export interface DataOptions {
-    dataSource: string;
-    keyField: Field;
-}
-
-interface Field {
-    name: string;
-    format: DataType;
-}
-
-export interface ValueField extends Field {
-    title: string;
+    tooltip: TooltipOptions;
 }
 
 export interface TwoDimensionalOptions extends Options {
@@ -79,6 +62,31 @@ export interface IntervalOptions extends Options {
     orientation: ChartOrientation;
 }
 
+
+//====================================================== Options
+export interface Legend {
+    show: boolean;
+}
+
+export interface DataOptions {
+    dataSource: string;
+    keyField: Field;
+}
+
+interface Field {
+    name: string;
+    format: DataType;
+}
+
+export interface ValueField extends Field {
+    title: string;
+}
+
+export interface TooltipOptions {
+    html: (dataRow: DataRow) => string;
+}
+
+
 //====================================================== TwoDimensionalOptions & IntervalOptions
 export interface AdditionalElements {
     gridLine: GridLineOptions;
@@ -92,6 +100,7 @@ interface GridLineFlag {
     key: boolean;
     value: boolean;
 }
+
 
 //====================================================== TwoDimensionalOptions
 export interface TwoDimensionalAxis {

@@ -1,5 +1,5 @@
 import { ChartOrientation, IntervalChartType, PolarChartType, Size, TwoDimensionalChartType } from "../config/config";
-import { DataType, DonutOptionsCanvas, Formatter, TooltipOptions, Transitions } from "../designer/designerConfig";
+import { DataType, DonutOptionsCanvas, Formatter, TooltipSettings, Transitions } from "../designer/designerConfig";
 
 type AxisType = 'key' | 'value';
 
@@ -234,7 +234,7 @@ export interface DonutChartSettings extends DonutOptionsCanvas { }
 export interface OtherComponents {
     legendBlock: LegendBlockModel;
     titleBlock: TitleBlockModel;
-    tooltipBlock: TooltipOptions;
+    tooltipBlock: TooltipSettings;
 }
 interface ComponentBlockModel {
     margin: BlockMargin;

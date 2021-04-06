@@ -14,7 +14,7 @@ import { TipBox } from '../tipBox/tipBox';
 import { TipBoxHelper } from '../tipBox/tipBoxHelper';
 import { Helper } from '../../helpers/helper';
 import { TooltipHelper } from './tooltipHelper';
-import { TooltipOptions } from '../../../designer/designerConfig';
+import { TooltipSettings } from '../../../designer/designerConfig';
 
 interface OverDetails {
     pointer: [number, number];
@@ -28,7 +28,7 @@ export class Tooltip {
     public static readonly tooltipContentClass = 'tooltip-content';
     public static readonly tooltipArrowClass = 'tooltip-arrow';
 
-    public static render(block: Block, model: Model, data: DataSource, tooltipOptions: TooltipOptions, scales?: Scales): void {
+    public static render(block: Block, model: Model, data: DataSource, tooltipOptions: TooltipSettings, scales?: Scales): void {
         TooltipComponentsManager.renderTooltipWrapper(block);
         const withTooltipIndex = model.options.charts.findIndex((chart: TwoDimensionalChartModel | PolarChartModel | IntervalChartModel) => chart.tooltip.show);
         if (withTooltipIndex !== -1) {
@@ -51,21 +51,21 @@ export class Tooltip {
         TooltipComponentsManager.hideComponent(block.getWrapper().select(`.${this.tooltipBlockClass}`));
     }
 
-    private static renderTooltipFor2DCharts(block: Block, data: DataSource, blockSize: Size, margin: BlockMargin, scaleKey: AxisScale<any>, options: TwoDimensionalOptionsModel, tooltipOptions: TooltipOptions): void {
+    private static renderTooltipFor2DCharts(block: Block, data: DataSource, blockSize: Size, margin: BlockMargin, scaleKey: AxisScale<any>, options: TwoDimensionalOptionsModel, tooltipOptions: TooltipSettings): void {
         if (scaleKey.domain().length === 0)
             return;
 
         this.renderLineTooltip(block, scaleKey, margin, blockSize, options.charts, options.orient, options.axis.key.orient, data, options.data, options.scale.key, tooltipOptions);
     }
 
-    private static renderTooltipForPolar(block: Block, chart: PolarChartModel, data: DataSource, dataOptions: OptionsModelData, blockSize: Size, margin: BlockMargin, chartThickness: number, tooltipOptions: TooltipOptions): void {
+    private static renderTooltipForPolar(block: Block, chart: PolarChartModel, data: DataSource, dataOptions: OptionsModelData, blockSize: Size, margin: BlockMargin, chartThickness: number, tooltipOptions: TooltipSettings): void {
         const attrTransform = block.getSvg().select(`.${Donut.donutBlockClass}`).attr('transform');
         const translateNums = Helper.getTranslateNumbers(attrTransform);
         const arcItems = Donut.getAllArcGroups(block);
         this.renderTooltipForDonut(block, arcItems, data, dataOptions, chart, blockSize, margin, chartThickness, tooltipOptions, translateNums[0], translateNums[1]);
     }
 
-    private static renderLineTooltip(block: Block, scaleKey: AxisScale<any>, margin: BlockMargin, blockSize: Size, charts: TwoDimensionalChartModel[], chartOrientation: ChartOrientation, keyAxisOrient: Orient, data: DataSource, dataOptions: OptionsModelData, scaleKeyModel: ScaleKeyModel, tooltipOptions: TooltipOptions): void {
+    private static renderLineTooltip(block: Block, scaleKey: AxisScale<any>, margin: BlockMargin, blockSize: Size, charts: TwoDimensionalChartModel[], chartOrientation: ChartOrientation, keyAxisOrient: Orient, data: DataSource, dataOptions: OptionsModelData, scaleKeyModel: ScaleKeyModel, tooltipOptions: TooltipSettings): void {
         const tooltipBlock = TooltipComponentsManager.renderTooltipBlock(block);
         const tooltipContent = TooltipComponentsManager.renderTooltipContentBlock(tooltipBlock);
         const tooltipLine = TooltipComponentsManager.renderTooltipLine(block);
@@ -109,7 +109,7 @@ export class Tooltip {
         });
     }
 
-    private static renderTooltipForDonut(block: Block, elements: Selection<SVGGElement, PieArcDatum<DataRow>, SVGGElement, unknown>, data: DataSource, dataOptions: OptionsModelData, chart: PolarChartModel, blockSize: Size, margin: BlockMargin, donutThickness: number, tooltipOptions: TooltipOptions, translateX: number = 0, translateY: number = 0): void {
+    private static renderTooltipForDonut(block: Block, elements: Selection<SVGGElement, PieArcDatum<DataRow>, SVGGElement, unknown>, data: DataSource, dataOptions: OptionsModelData, chart: PolarChartModel, blockSize: Size, margin: BlockMargin, donutThickness: number, tooltipOptions: TooltipSettings, translateX: number = 0, translateY: number = 0): void {
         const tooltipBlock = TooltipComponentsManager.renderTooltipBlock(block);
         const tooltipContent = TooltipComponentsManager.renderTooltipContentBlock(tooltipBlock);
         let tooltipArrow: Selection<BaseType, unknown, HTMLElement, any>;
