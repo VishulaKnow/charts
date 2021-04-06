@@ -206,9 +206,7 @@ export default class Listeners {
                         }
                     }
                 },
-                tooltip: {
-                    html: null
-                }
+                tooltip: this.config.options.tooltip
             }
             this.config.options = options;
         } else if (notationType === 'polar') {
@@ -229,9 +227,7 @@ export default class Listeners {
                     tooltip: this.getTooltipConfig(),
                     type: 'donut'
                 },
-                tooltip: {
-                    html: null
-                }
+                tooltip: this.config.options.tooltip
             }
             this.config.options = options;
         } else if (notationType === 'interval') {
@@ -279,9 +275,7 @@ export default class Listeners {
                         }
                     }
                 },
-                tooltip: {
-                    html: null
-                }
+                tooltip: this.config.options.tooltip
             }
             this.config.options = options;
         }

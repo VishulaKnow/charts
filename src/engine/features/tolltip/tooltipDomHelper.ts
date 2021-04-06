@@ -39,6 +39,9 @@ export class TooltipDomHelper {
                     this.fillValuesContent(contentBlock, chart.style.elementColors[index % chart.style.elementColors.length], html);
                 });
             });
+        } else {
+            const row = Helper.getRowsByKeys([keyValue], dataOptions.keyField.name, data[dataOptions.dataSource])[0];
+            contentBlock.html(htmlHandler(row));
         }
     }
 
