@@ -4,7 +4,6 @@ import { BlockMargin, DataRow, Orient, TwoDimensionalChartModel } from "../../..
 import { Block } from "../../block/block";
 import { DomHelper } from '../../helpers/domHelper';
 import { Helper } from '../../helpers/helper';
-
 import { Scales } from "../scale/scale";
 import { MarkDotHelper } from "./markDotsHelper";
 
@@ -19,13 +18,13 @@ export class MarkDot {
     public static readonly markerDotClass = 'dot';
     private static dotRadius = 4;
 
-    public static render(block: Block, data: DataRow[], keyAxisOrient: Orient, scales: Scales, margin: BlockMargin, keyField: string, valueFieldIndex: number, valueFieldName: string, chart: TwoDimensionalChartModel): void {
+    public static render(block: Block, data: DataRow[], keyAxisOrient: Orient, scales: Scales, margin: BlockMargin, keyFieldName: string, valueFieldIndex: number, valueFieldName: string, chart: TwoDimensionalChartModel): void {
         const dotsWrapper = block.getChartGroup(chart.index)
             .selectAll(`.${this.markerDotClass}${Helper.getCssClassesLine(chart.cssClasses)}.chart-index-${valueFieldIndex}`)
             .data(data)
             .enter();
 
-        const attrs = MarkDotHelper.getDotAttrs(keyAxisOrient, scales, margin, keyField, valueFieldName, chart.isSegmented);
+        const attrs = MarkDotHelper.getDotAttrs(keyAxisOrient, scales, margin, keyFieldName, valueFieldName, chart.isSegmented);
 
         const dots = dotsWrapper.append('circle')
             .attr('class', this.markerDotClass)
@@ -63,7 +62,7 @@ export class MarkDot {
         DomHelper.setCssClasses(newDots, Helper.getCssClassesWithElementIndex(chart.cssClasses, valueFieldIndex));
         DomHelper.setChartElementColor(newDots, chart.style.elementColors, valueFieldIndex, 'stroke');
 
-        const animationName = 'data-updating'
+        const animationName = 'data-updating';
 
         dots
             .interrupt(animationName)

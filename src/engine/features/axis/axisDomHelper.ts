@@ -34,7 +34,6 @@ export class AxisDomHelper {
             if (select(this).attr('transform') === 'rotate(-90)')
                 isRotated = true;
         });
-        console.log(isRotated);
         return isRotated && axisOptions.labels.position === 'straight'
             || !isRotated && axisOptions.labels.position === 'rotated';
     }

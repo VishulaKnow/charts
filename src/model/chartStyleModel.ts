@@ -4,6 +4,7 @@ import { ChartStyleConfig } from "../designer/designerConfig";
 import { ChartStyle } from "./model";
 import { ModelHelper } from "./modelHelper";
 
+
 export class ChartStyleModel {
     private static safeColorsAmount = 8;
 
@@ -47,16 +48,10 @@ export class ChartStyleModel {
     }
 
     private static getColorSet(baseColors: string[], elementsAmount: number): string[] {
-        return chroma.scale(baseColors).mode('rgb').colors(elementsAmount <= 1 ? 2 : elementsAmount);
-        // if (elementsAmount < this.safeColorsAmount)
-        //     return chroma.scale(baseColors).mode('rgb').colors(elementsAmount <= 1 ? 2 : elementsAmount);
-
-        // const basePalette = chroma.scale(baseColors).mode('rgb').colors(this.safeColorsAmount);
-        // const finalPalette = [...basePalette];
-        // for (let i = this.safeColorsAmount; i < elementsAmount; i++) {
-        //     finalPalette.push(this.resetColor(i, basePalette[i % this.safeColorsAmount]));
-        // }
-        // return finalPalette;
+        return chroma.scale(baseColors)
+            .mode('rgb')
+            .domain([0, 0.55, 0.75, 1])
+            .colors(elementsAmount <= 1 ? 2 : elementsAmount);
     }
 
     private static resetColor(index: number, baseColor: string): string {
@@ -66,7 +61,7 @@ export class ChartStyleModel {
 
         color = chroma(color)
             .set('hsv.h', chroma(color).get('hsv.h') + Math.floor(index / this.safeColorsAmount) * 4);
-        
+
         return color.hex();
     }
 
