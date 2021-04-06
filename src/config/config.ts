@@ -38,7 +38,7 @@ interface Options {
     data: DataOptions;
     title: string;
     selectable: boolean;
-    tooltip: TooltipOptions;
+    tooltip?: TooltipOptions;
 }
 
 export interface TwoDimensionalOptions extends Options {
