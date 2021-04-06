@@ -4,7 +4,7 @@ import { ChartStyleConfig } from "../designer/designerConfig";
 import { ChartStyle } from "./model";
 import { ModelHelper } from "./modelHelper";
 
-//TODO: append domain
+
 export class ChartStyleModel {
     private static safeColorsAmount = 8;
 
@@ -50,7 +50,7 @@ export class ChartStyleModel {
     private static getColorSet(baseColors: string[], elementsAmount: number): string[] {
         return chroma.scale(baseColors)
             .mode('rgb')
-            .domain([0, 0.5, 0.75, 1])
+            .domain([0, 0.55, 0.75, 1])
             .colors(elementsAmount <= 1 ? 2 : elementsAmount);
     }
 
