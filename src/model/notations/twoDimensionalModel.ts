@@ -26,7 +26,8 @@ export class TwoDimensionalModel {
             type: options.type,
             data: { ...options.data },
             charts: this.getChartsModel(options.charts, options.orientation, designerConfig.chartStyle),
-            additionalElements: this.getAdditionalElements(options)
+            additionalElements: this.getAdditionalElements(options),
+            tooltip: options.tooltip
         }
     }
 

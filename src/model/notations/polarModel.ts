@@ -14,7 +14,8 @@ export class PolarModel {
             title: options.title,
             data: { ...options.data },
             charts: this.getChartsModel(options.chart, data[options.data.dataSource].length, designerConfig.chartStyle),
-            legend: LegendModel.getLegendModel(config.options.type, config.options.legend.show, config.canvas.size, margin)
+            legend: LegendModel.getLegendModel(config.options.type, config.options.legend.show, config.canvas.size, margin),
+            tooltip: options.tooltip
         }
     }
 

@@ -73,7 +73,8 @@ export class IntervalModel {
             data: { ...options.data },
             type: options.type,
             charts: this.getChartsModel(options.charts, designerConfig.chartStyle),
-            additionalElements: this.getAdditionalElements(options)
+            additionalElements: this.getAdditionalElements(options),
+            tooltip: options.tooltip
         }
     }
 

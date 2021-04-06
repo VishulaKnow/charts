@@ -1,4 +1,4 @@
-import { ChartOrientation, IntervalChartType, PolarChartType, Size, TwoDimensionalChartType } from "../config/config";
+import { ChartOrientation, IntervalChartType, PolarChartType, Size, TooltipOptions, TwoDimensionalChartType } from "../config/config";
 import { DataType, DonutOptionsCanvas, Formatter, TooltipSettings, Transitions } from "../designer/designerConfig";
 
 type AxisType = 'key' | 'value';
@@ -47,6 +47,7 @@ interface OptionsModel {
     data: OptionsModelData;
     title: string;
     selectable: boolean;
+    tooltip: TooltipOptions;
 }
 export interface TwoDimensionalOptionsModel extends OptionsModel {
     type: '2d';
