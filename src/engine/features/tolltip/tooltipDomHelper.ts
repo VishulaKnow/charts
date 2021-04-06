@@ -122,9 +122,9 @@ export class TooltipDomHelper {
 
     private static setWhiteSpaceForTextBlocks(contentBlock: Selection<HTMLElement, unknown, BaseType, unknown>): void {
         contentBlock.style('min-width', null);
-        contentBlock.selectAll(`.${this.textItemClass}`).style('white-space', 'nowrap');
+        contentBlock.selectAll(`.${this.textItemClass}`).style('white-space', 'pre');
         if (contentBlock.node().getBoundingClientRect().width > this.maxContentWidth) {
-            contentBlock.selectAll(`.${this.textItemClass}`).style('white-space', 'normal');
+            contentBlock.selectAll(`.${this.textItemClass}`).style('white-space', 'pre-wrap');
             contentBlock.style('min-width', this.maxContentWidth + 'px');
         }
     }

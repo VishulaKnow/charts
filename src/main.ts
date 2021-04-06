@@ -15,9 +15,9 @@ export class Chart {
     private parentElement: HTMLElement;
     private isResizable: boolean;
 
-    private resizeHandler = this.resizeListener.bind(this);
-
     private engine: Engine;
+
+    private resizeHandler = this.resizeListener.bind(this);
 
     /**
      * @param config Объект конфигуратора
