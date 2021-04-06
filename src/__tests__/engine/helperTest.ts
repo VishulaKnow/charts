@@ -134,11 +134,6 @@ describe('test id and keyValue manipulations', () => {
         expect(result).toEqual(['bmw', 'audi', 'lada']);
     });
 
-    test('getIdFromRowByKey', () => {
-        const result = Helper.getIdFromRowByKey('name', 'audi', dataset);
-        expect(result).toBe(145);
-    });
-
     test('getKeysByIds', () => {
         const result = Helper.getKeysByIds([12, 1453], 'name', dataset);
         expect(result).toEqual(['bmw', 'lada']);
@@ -147,11 +142,6 @@ describe('test id and keyValue manipulations', () => {
     test('getKeysByIds empty', () => {
         const result = Helper.getKeysByIds([], 'name', dataset);
         expect(result).toEqual([]);
-    });
-
-    test('getKeyById', () => {
-        const result = Helper.getKeyById(12, 'name', dataset);
-        expect(result).toBe('bmw');
     });
 
     test('getRowsFromKeys', () => {
@@ -268,3 +258,33 @@ describe('compareData', () => {
         expect(result).toBe(false);
     });
 });
+
+describe('simple methods', () => {
+    test('getValueOrZero should return 12', () => {
+        expect(Helper.getValueOrZero(12)).toBe(12);
+    });
+
+    test('getValueOrZero should return 0', () => {
+        expect(Helper.getValueOrZero(-12)).toBe(0);
+    });
+
+    test('getPXValueFromString should return 42', () => {
+        expect(Helper.getPXValueFromString('42px')).toBe(42);
+    });
+
+    test('getKeyFieldValue for non-wrapped', () => {
+        const row = {
+            key: 'key'
+        }
+        expect(Helper.getKeyFieldValue(row, 'key', false)).toBe('key');
+    });
+
+    test('getKeyFieldValue for wrapped', () => {
+        const row = {
+            data: {
+                key: 'key'
+            }
+        }
+        expect(Helper.getKeyFieldValue(row, 'key', true)).toBe('key');
+    });
+})

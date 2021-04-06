@@ -13,16 +13,8 @@ export class Helper {
         return dataSet.map(row => row[keyFieldName]);
     }
 
-    public static getIdFromRowByKey(keyFieldName: string, keyValue: string, dataSet: DataRow[]): number {
-        return dataSet.find(row => row[keyFieldName] === keyValue).$id;
-    }
-
     public static getKeysByIds(ids: number[], keyFieldName: string, dataSet: DataRow[]): string[] {
         return this.extractKeysFromRows(keyFieldName, this.getRowsByIds(ids, dataSet));
-    }
-
-    public static getKeyById(id: number, keyFieldName: string, dataSet: DataRow[]): string {
-        return this.getKeysByIds([id], keyFieldName, dataSet)[0];
     }
 
     public static getCssClassesLine(cssClasses: string[]): string {
@@ -75,7 +67,7 @@ export class Helper {
     }
 
     public static getValueOrZero(value: number): number {
-        return value > 0 ? value : 0;
+        return Math.max(value, 0);
     }
 
     public static getPXValueFromString(propertyValue: string): number {
@@ -83,7 +75,7 @@ export class Helper {
     }
 
     /**
-     * Возвращает значение ключа в зависимости от того, сегментированный ли график
+     * Возвращает значение ключа в зависимости от того, обернуты ли данные
      * @param row 
      * @param keyFieldName 
      * @param isSegmented 
