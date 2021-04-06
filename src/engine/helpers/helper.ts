@@ -1,20 +1,20 @@
 import { DataRow, DataSource } from "../../config/config";
 
 export class Helper {
-    public static getRowsByIds(ids: number[], dataSet: DataRow[]): DataRow[] {
-        return dataSet.filter(row => ids.findIndex(id => id === row.$id) !== -1);
-    }
-
     public static getRowsByKeys(keys: string[], keyFieldName: string, dataSet: DataRow[]): DataRow[] {
         return dataSet.filter(row => keys.findIndex(key => key === row[keyFieldName]) !== -1);
+    }
+
+    public static getKeysByIds(ids: number[], keyFieldName: string, dataSet: DataRow[]): string[] {
+        return this.extractKeysFromRows(keyFieldName, this.getRowsByIds(ids, dataSet));
     }
 
     public static extractKeysFromRows(keyFieldName: string, dataSet: DataRow[]): string[] {
         return dataSet.map(row => row[keyFieldName]);
     }
 
-    public static getKeysByIds(ids: number[], keyFieldName: string, dataSet: DataRow[]): string[] {
-        return this.extractKeysFromRows(keyFieldName, this.getRowsByIds(ids, dataSet));
+    public static getRowsByIds(ids: number[], dataSet: DataRow[]): DataRow[] {
+        return dataSet.filter(row => ids.findIndex(id => id === row.$id) !== -1);
     }
 
     public static getCssClassesLine(cssClasses: string[]): string {
