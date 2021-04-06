@@ -25,10 +25,12 @@ export const TOOLTIP_ARROW_PADDING_X = ARROW_DEFAULT_POSITION - (ARROW_SIZE * Ma
 export const TOOLTIP_ARROW_PADDING_Y = 13;
 
 export class TooltipDomHelper {
-    private static readonly tooltipGroupClass = 'tooltip-group';
-    private static readonly tooltipHeadClass = 'tooltip-head';
+    private static readonly groupClass = 'tooltip-group';
+    private static readonly headClass = 'tooltip-head';
+    private static readonly textItemClass = 'tooltip-text-item';
+    private static readonly maxContentWidth = 450;
 
-    public static fillForMulty2DCharts(contentBlock: Selection<BaseType, unknown, BaseType, unknown>, charts: TwoDimensionalChartModel[], data: DataSource, dataOptions: OptionsModelData, keyValue: string, htmlHandler?: TooltipHtml): void {
+    public static fillForMulty2DCharts(contentBlock: Selection<HTMLElement, unknown, BaseType, unknown>, charts: TwoDimensionalChartModel[], data: DataSource, dataOptions: OptionsModelData, keyValue: string, htmlHandler?: TooltipHtml): void {
         contentBlock.html('');
 
         if (!htmlHandler) {
@@ -40,12 +42,11 @@ export class TooltipDomHelper {
                 });
             });
         } else {
-            const row = Helper.getRowsByKeys([keyValue], dataOptions.keyField.name, data[dataOptions.dataSource])[0];
-            contentBlock.html(htmlHandler(row));
+            this.fillContentByFunction(contentBlock, data, dataOptions, keyValue, htmlHandler);
         }
     }
 
-    public static fillForPolarChart(contentBlock: Selection<BaseType, unknown, BaseType, unknown>, chart: PolarChartModel, data: DataSource, dataOptions: OptionsModelData, keyValue: string, markColor: string, htmlHandler?: TooltipHtml): void {
+    public static fillForPolarChart(contentBlock: Selection<HTMLElement, unknown, BaseType, unknown>, chart: PolarChartModel, data: DataSource, dataOptions: OptionsModelData, keyValue: string, markColor: string, htmlHandler?: TooltipHtml): void {
         contentBlock.html('');
 
         if (!htmlHandler) {
@@ -53,8 +54,7 @@ export class TooltipDomHelper {
             const html = this.getTooltipItemHtml(data, dataOptions, keyValue, chart.data.valueField);
             this.fillValuesContent(contentBlock, markColor, html);
         } else {
-            const row = Helper.getRowsByKeys([keyValue], dataOptions.keyField.name, data[dataOptions.dataSource])[0];
-            contentBlock.html(htmlHandler(row));
+            this.fillContentByFunction(contentBlock, data, dataOptions, keyValue, htmlHandler);
         }
     }
 
@@ -71,14 +71,14 @@ export class TooltipDomHelper {
 
     private static renderHead(contentBlock: Selection<BaseType, unknown, BaseType, unknown>, keyValue: string): void {
         contentBlock.append('div')
-            .attr('class', `${this.tooltipGroupClass} ${this.tooltipHeadClass}`)
+            .attr('class', `${this.groupClass} ${this.headClass}`)
             .style('white-space', 'nowrap')
             .text(keyValue);
     }
 
     private static fillValuesContent(contentBlock: Selection<BaseType, unknown, BaseType, unknown>, markColor: string, tooltipHtml: string): void {
         const group = contentBlock.append('div')
-            .attr('class', this.tooltipGroupClass);
+            .attr('class', this.groupClass);
 
         group.append('div')
             .attr('class', 'tooltip-color')
@@ -89,13 +89,13 @@ export class TooltipDomHelper {
         const textBlock = group.append('div')
             .attr('class', 'tooltip-texts')
             .append('div')
-            .attr('class', 'tooltip-text-item')
+            .attr('class', this.textItemClass)
             .html(tooltipHtml)
             .style('white-space', 'nowrap');
 
-        if (textBlock.node().getBoundingClientRect().width >= 450) {
+        if (textBlock.node().getBoundingClientRect().width > this.maxContentWidth) {
             textBlock.style('white-space', 'normal');
-            contentBlock.select(`.${this.tooltipHeadClass}`).style('white-space', 'normal');
+            contentBlock.select(`.${this.headClass}`).style('white-space', 'normal');
         }
     }
 
@@ -112,5 +112,20 @@ export class TooltipDomHelper {
             tooltipArrow.style('left', `${ARROW_DEFAULT_POSITION + Math.floor(horizontalPad)}px`);
         else
             tooltipArrow.style('left', `${ARROW_DEFAULT_POSITION}px`);
+    }
+
+    private static fillContentByFunction(contentBlock: Selection<HTMLElement, unknown, BaseType, unknown>, data: DataSource, dataOptions: OptionsModelData, keyValue: string, htmlHandler: TooltipHtml): void {
+        const row = Helper.getRowsByKeys([keyValue], dataOptions.keyField.name, data[dataOptions.dataSource])[0];
+        contentBlock.html(htmlHandler(row));
+        this.setWhiteSpaceForTextBlocks(contentBlock);
+    }
+
+    private static setWhiteSpaceForTextBlocks(contentBlock: Selection<HTMLElement, unknown, BaseType, unknown>): void {
+        contentBlock.style('min-width', null);
+        contentBlock.selectAll(`.${this.textItemClass}`).style('white-space', 'nowrap');
+        if (contentBlock.node().getBoundingClientRect().width > this.maxContentWidth) {
+            contentBlock.selectAll(`.${this.textItemClass}`).style('white-space', 'normal');
+            contentBlock.style('min-width', this.maxContentWidth + 'px');
+        }
     }
 }

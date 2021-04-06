@@ -110,14 +110,12 @@ const configCars: Config = {
             html: (row: DataRow) => {
                 return `<div class="tooltip-group">
                             <div class="tooltip-text-item">
-                                <span class="tooltip-field-title">Текст: </span>
-                                <span class="tooltip-field-value">${row.brand}</span>
+                                Текст: ${row.brand}
                             </div>
                         </div>
                         <div class="tooltip-group">
                             <div class="tooltip-text-item">
-                                <span class="tooltip-field-title">Значение: </span>
-                                <span class="tooltip-field-value">${row.price}</span>
+                                Значение: ${row.price}
                             </div>
                         </div>`
             }
