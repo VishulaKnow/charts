@@ -3,7 +3,6 @@ import { Model, BlockCanvas, ChartBlock, TwoDimensionalOptionsModel, PolarOption
 import { MarginModel } from './marginModel';
 import { TwoDimensionalModel } from './notations/twoDimensionalModel';
 import { PolarModel } from './notations/polarModel';
-
 import { DataManagerModel } from './dataManagerModel';
 import { BarOptionsCanvas, DesignerConfig, DonutOptionsCanvas, Transitions } from '../designer/designerConfig';
 import { IntervalModel } from './notations/intervalModel';
