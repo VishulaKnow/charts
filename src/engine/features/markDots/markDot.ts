@@ -70,7 +70,7 @@ export class MarkDot {
             this.setAttrs(block, newDot, attrs);
 
             this.setClassesAndStyle(newDot, chart.cssClasses, vfIndex, chart.style.elementColors);
-        })
+        });
     }
 
     public static updateColors(block: Block, chart: TwoDimensionalChartModel, valueFieldIndex: number): void {
