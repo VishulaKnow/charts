@@ -19,9 +19,9 @@ export class MarkDot {
     public static readonly markerDotClass = 'dot';
     private static dotRadius = 4;
 
-    public static render(block: Block, data: DataRow[], keyAxisOrient: Orient, scales: Scales, margin: BlockMargin, keyFieldName: string, valueFieldIndex: number, valueFieldName: string, chart: TwoDimensionalChartModel): void {
+    public static render(block: Block, data: DataRow[], keyAxisOrient: Orient, scales: Scales, margin: BlockMargin, keyFieldName: string, vfIndex: number, valueFieldName: string, chart: TwoDimensionalChartModel): void {
         const dotsWrapper = block.getChartGroup(chart.index)
-            .selectAll(`.${this.markerDotClass}${Helper.getCssClassesLine(chart.cssClasses)}.chart-index-${valueFieldIndex}`)
+            .selectAll(`.${this.markerDotClass}${Helper.getCssClassesLine(chart.cssClasses)}.chart-index-${vfIndex}`)
             .data(data)
             .enter();
 
@@ -29,15 +29,13 @@ export class MarkDot {
         const dots = dotsWrapper.append('circle');
         this.setAttrs(block, dots, attrs);
 
-        DomHelper.setCssClasses(dots, Helper.getCssClassesWithElementIndex(chart.cssClasses, valueFieldIndex));
-        DomHelper.setChartElementColor(dots, chart.style.elementColors, valueFieldIndex, 'stroke');
+        this.setClassesAndStyle(dots, chart.cssClasses, vfIndex, chart.style.elementColors);
     }
 
-    public static update(block: Block, newData: DataRow[], keyAxisOrient: Orient, scales: Scales, margin: BlockMargin, keyField: string, valueFieldIndex: number, valueFieldName: string, chart: TwoDimensionalChartModel): void {
+    public static update(block: Block, newData: DataRow[], keyAxisOrient: Orient, scales: Scales, margin: BlockMargin, keyField: string, vfIndex: number, valueFieldName: string, chart: TwoDimensionalChartModel): void {
         const dots = block.getChartGroup(chart.index)
-            .selectAll(`.${this.markerDotClass}${Helper.getCssClassesLine(chart.cssClasses)}.chart-element-${valueFieldIndex}`)
+            .selectAll(`.${this.markerDotClass}${Helper.getCssClassesLine(chart.cssClasses)}.chart-element-${vfIndex}`)
             .data(newData);
-
         dots.exit().remove();
 
         const attrs = MarkDotHelper.getDotAttrs(keyAxisOrient, scales, margin, keyField, valueFieldName, chart.isSegmented);
@@ -46,11 +44,9 @@ export class MarkDot {
             .append('circle');
         this.setAttrs(block, newDots, attrs);
 
-        DomHelper.setCssClasses(newDots, Helper.getCssClassesWithElementIndex(chart.cssClasses, valueFieldIndex));
-        DomHelper.setChartElementColor(newDots, chart.style.elementColors, valueFieldIndex, 'stroke');
+        this.setClassesAndStyle(newDots, chart.cssClasses, vfIndex, chart.style.elementColors);
 
         const animationName = 'data-updating';
-
         dots
             .interrupt(animationName)
             .transition(animationName)
@@ -73,8 +69,7 @@ export class MarkDot {
                 .datum(data);
             this.setAttrs(block, newDot, attrs);
 
-            DomHelper.setCssClasses(newDot, Helper.getCssClassesWithElementIndex(chart.cssClasses, vfIndex));
-            DomHelper.setChartElementColor(newDot, chart.style.elementColors, vfIndex, 'stroke');
+            this.setClassesAndStyle(newDot, chart.cssClasses, vfIndex, chart.style.elementColors);
         })
     }
 
@@ -91,6 +86,11 @@ export class MarkDot {
     public static getMarkDotForChart(block: Block, chartCssClasses: string[]): Selection<BaseType, DataRow, BaseType, unknown> {
         return block.getSvg()
             .selectAll(`.${MarkDot.markerDotClass}${Helper.getCssClassesLine(chartCssClasses)}`);
+    }
+
+    private static setClassesAndStyle(dots: Selection<SVGCircleElement, DataRow, BaseType, any>, cssClasses: string[], vfIndex: number, elementColors: string[]): void {
+        DomHelper.setCssClasses(dots, Helper.getCssClassesWithElementIndex(cssClasses, vfIndex));
+        DomHelper.setChartElementColor(dots, elementColors, vfIndex, 'stroke');
     }
 
     private static setAttrs(block: Block, dots: Selection<SVGCircleElement, DataRow, BaseType, any>, attrs: DotAttrs): void {
