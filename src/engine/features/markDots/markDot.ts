@@ -26,15 +26,8 @@ export class MarkDot {
             .enter();
 
         const attrs = MarkDotHelper.getDotAttrs(keyAxisOrient, scales, margin, keyFieldName, valueFieldName, chart.isSegmented);
-
-        const dots = dotsWrapper.append('circle')
-            .attr('class', this.markerDotClass)
-            .attr('cx', d => attrs.cx(d))
-            .attr('cy', d => attrs.cy(d))
-            .attr('r', this.dotRadius)
-            .style('stroke-width', '3px')
-            .style('fill', 'white')
-            .style('clip-path', `url(#${block.getClipPathId()})`);
+        const dots = dotsWrapper.append('circle');
+        this.setAttrs(block, dots, attrs);
 
         DomHelper.setCssClasses(dots, Helper.getCssClassesWithElementIndex(chart.cssClasses, valueFieldIndex));
         DomHelper.setChartElementColor(dots, chart.style.elementColors, valueFieldIndex, 'stroke');
@@ -45,20 +38,13 @@ export class MarkDot {
             .selectAll(`.${this.markerDotClass}${Helper.getCssClassesLine(chart.cssClasses)}.chart-element-${valueFieldIndex}`)
             .data(newData);
 
-        const attrs = MarkDotHelper.getDotAttrs(keyAxisOrient, scales, margin, keyField, valueFieldName, chart.isSegmented);
-
         dots.exit().remove();
 
+        const attrs = MarkDotHelper.getDotAttrs(keyAxisOrient, scales, margin, keyField, valueFieldName, chart.isSegmented);
         const newDots = dots
             .enter()
-            .append('circle')
-            .attr('class', this.markerDotClass)
-            .attr('cx', d => attrs.cx(d))
-            .attr('cy', d => attrs.cy(d))
-            .attr('r', this.dotRadius)
-            .style('stroke-width', '3px')
-            .style('fill', 'white')
-            .style('clip-path', `url(#${block.getClipPathId()})`);
+            .append('circle');
+        this.setAttrs(block, newDots, attrs);
 
         DomHelper.setCssClasses(newDots, Helper.getCssClassesWithElementIndex(chart.cssClasses, valueFieldIndex));
         DomHelper.setChartElementColor(newDots, chart.style.elementColors, valueFieldIndex, 'stroke');
@@ -71,6 +57,25 @@ export class MarkDot {
             .duration(block.transitionManager.durations.chartUpdate)
             .attr('cx', d => attrs.cx(d))
             .attr('cy', d => attrs.cy(d));
+    }
+
+    public static renderDot(block: Block, data: DataRow, keyAxisOrient: Orient, scales: Scales, margin: BlockMargin, keyFieldName: string, chart: TwoDimensionalChartModel): void {
+        chart.data.valueFields.forEach((valueField, vfIndex) => {
+            let dotWrapper = block.getChartGroup(chart.index)
+                .selectAll<SVGCircleElement, DataRow>(`.${this.markerDotClass}${Helper.getCssClassesLine(chart.cssClasses)}.chart-index-${vfIndex}`)
+                .filter(d => d[keyFieldName] === data[keyFieldName]);
+            if (!dotWrapper.empty())
+                return;
+
+            const attrs = MarkDotHelper.getDotAttrs(keyAxisOrient, scales, margin, keyFieldName, valueField.name, chart.isSegmented);
+            const newDot = block.getChartGroup(chart.index)
+                .append('circle')
+                .datum(data);
+            this.setAttrs(block, newDot, attrs);
+
+            DomHelper.setCssClasses(newDot, Helper.getCssClassesWithElementIndex(chart.cssClasses, vfIndex));
+            DomHelper.setChartElementColor(newDot, chart.style.elementColors, vfIndex, 'stroke');
+        })
     }
 
     public static updateColors(block: Block, chart: TwoDimensionalChartModel, valueFieldIndex: number): void {
@@ -86,5 +91,16 @@ export class MarkDot {
     public static getMarkDotForChart(block: Block, chartCssClasses: string[]): Selection<BaseType, DataRow, BaseType, unknown> {
         return block.getSvg()
             .selectAll(`.${MarkDot.markerDotClass}${Helper.getCssClassesLine(chartCssClasses)}`);
+    }
+
+    private static setAttrs(block: Block, dots: Selection<SVGCircleElement, DataRow, BaseType, any>, attrs: DotAttrs): void {
+        dots
+            .attr('class', this.markerDotClass)
+            .attr('cx', d => attrs.cx(d))
+            .attr('cy', d => attrs.cy(d))
+            .attr('r', this.dotRadius)
+            .style('stroke-width', '3px')
+            .style('fill', 'white')
+            .style('clip-path', `url(#${block.getClipPathId()})`);
     }
 }

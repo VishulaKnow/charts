@@ -15,6 +15,7 @@ import { TipBoxHelper } from '../tipBox/tipBoxHelper';
 import { Helper } from '../../helpers/helper';
 import { TooltipHelper } from './tooltipHelper';
 import { TooltipSettings } from '../../../designer/designerConfig';
+import { MarkDot } from '../markDots/markDot';
 
 interface OverDetails {
     pointer: [number, number];
@@ -38,7 +39,7 @@ export class Tooltip {
         const withTooltipIndex = model.options.charts.findIndex((chart: TwoDimensionalChartModel | PolarChartModel | IntervalChartModel) => chart.tooltip.show);
         if (withTooltipIndex !== -1) {
             if (model.options.type === '2d') {
-                this.renderTooltipFor2DCharts(block, data, model.blockCanvas.size, model.chartBlock.margin, scales.key, model.options, tooltipOptions);
+                this.renderTooltipFor2DCharts(block, data, model.blockCanvas.size, model.chartBlock.margin, scales, model.options, tooltipOptions);
             } else if (model.options.type === 'polar') {
                 this.renderTooltipForPolar(block,
                     model.options,
@@ -55,11 +56,11 @@ export class Tooltip {
         TooltipComponentsManager.hideComponent(block.getWrapper().select(`.${this.tooltipBlockClass}`));
     }
 
-    private static renderTooltipFor2DCharts(block: Block, data: DataSource, blockSize: Size, margin: BlockMargin, scaleKey: AxisScale<any>, options: TwoDimensionalOptionsModel, tooltipOptions: TooltipSettings): void {
-        if (scaleKey.domain().length === 0)
+    private static renderTooltipFor2DCharts(block: Block, data: DataSource, blockSize: Size, margin: BlockMargin, scales: Scales, options: TwoDimensionalOptionsModel, tooltipOptions: TooltipSettings): void {
+        if (scales.key.domain().length === 0)
             return;
 
-        this.renderLineTooltip(block, scaleKey, margin, blockSize, options.charts, options.orient, options.axis.key.orient, data, options.data, options.scale.key, tooltipOptions, options.tooltip);
+        this.renderLineTooltip(block, scales, margin, blockSize, options.charts, options.orient, options.axis.key.orient, data, options.data, options.scale.key, tooltipOptions, options.tooltip);
     }
 
     private static renderTooltipForPolar(block: Block, options: PolarOptionsModel, data: DataSource, blockSize: Size, margin: BlockMargin, chartThickness: number, tooltipOptions: TooltipSettings): void {
@@ -69,7 +70,7 @@ export class Tooltip {
         this.renderTooltipForDonut(block, arcItems, data, options.data, options.charts[0], blockSize, margin, chartThickness, tooltipOptions, options.tooltip, { x: translateNums[0], y: translateNums[1] });
     }
 
-    private static renderLineTooltip(block: Block, scaleKey: AxisScale<any>, margin: BlockMargin, blockSize: Size, charts: TwoDimensionalChartModel[], chartOrientation: ChartOrientation, keyAxisOrient: Orient, data: DataSource, dataOptions: OptionsModelData, scaleKeyModel: ScaleKeyModel, tooltipSettings: TooltipSettings, tooltipOptions: TooltipOptions): void {
+    private static renderLineTooltip(block: Block, scales: Scales, margin: BlockMargin, blockSize: Size, charts: TwoDimensionalChartModel[], chartOrientation: ChartOrientation, keyAxisOrient: Orient, data: DataSource, dataOptions: OptionsModelData, scaleKeyModel: ScaleKeyModel, tooltipSettings: TooltipSettings, tooltipOptions: TooltipOptions): void {
         const tooltipBlock = TooltipComponentsManager.renderTooltipBlock(block);
         const tooltipContent = TooltipComponentsManager.renderTooltipContentBlock(tooltipBlock);
         const tooltipLine = TooltipComponentsManager.renderTooltipLine(block);
@@ -80,7 +81,7 @@ export class Tooltip {
         let currentKey: string = null;
 
         tipBox.on('mousemove', function (e) {
-            const keyValue = TipBoxHelper.getKeyValueByPointer(pointer(e, this), chartOrientation, margin, blockSize, scaleKey, scaleKeyModel.type, 'hover');
+            const keyValue = TipBoxHelper.getKeyValueByPointer(pointer(e, this), chartOrientation, margin, blockSize, scales.key, scaleKeyModel.type, 'hover');
 
             if (tooltipSettings.position === 'followCursor') {
                 const tooltipCoordinate = TooltipHelper.getTooltipCursorCoordinate(pointer(e, this), block.getSvg().node().getBoundingClientRect(), tooltipContent.node().getBoundingClientRect(), window.innerWidth, window.innerHeight);
@@ -93,14 +94,18 @@ export class Tooltip {
                 TooltipDomHelper.fillForMulty2DCharts(tooltipContent, charts.filter(ch => ch.tooltip.show), data, dataOptions, keyValue, tooltipOptions?.html);
 
                 if (tooltipSettings.position === 'fixed') {
-                    const tooltipCoordinate = TooltipHelper.getTooltipFixedCoordinate(scaleKey, margin, keyValue, block.getSvg().node().getBoundingClientRect(), tooltipContent.node().getBoundingClientRect(), keyAxisOrient, window.innerWidth, window.innerHeight);
+                    const tooltipCoordinate = TooltipHelper.getTooltipFixedCoordinate(scales.key, margin, keyValue, block.getSvg().node().getBoundingClientRect(), tooltipContent.node().getBoundingClientRect(), keyAxisOrient, window.innerWidth, window.innerHeight);
                     TooltipComponentsManager.setLineTooltipCoordinate(tooltipBlock, tooltipCoordinate, chartOrientation, block.transitionManager.durations.tooltipSlide);
                 }
 
-                const tooltipLineAttributes = TooltipHelper.getTooltipLineAttributes(scaleKey, margin, keyValue, chartOrientation, blockSize);
+                const tooltipLineAttributes = TooltipHelper.getTooltipLineAttributes(scales.key, margin, keyValue, chartOrientation, blockSize);
                 TooltipComponentsManager.setTooltipLineAttributes(tooltipLine, tooltipLineAttributes, block.transitionManager.durations.tooltipSlide);
                 TooltipComponentsManager.showComponent(tooltipLine);
 
+                // charts.forEach(chart => {
+                //     if (chart.type !== 'bar' && !chart.markersOptions.show)
+                //         MarkDot.renderDot(block, data[dataOptions.dataSource].find(row => row[dataOptions.keyField.name] === keyValue), keyAxisOrient, scales, margin, dataOptions.keyField.name, chart);
+                // });
                 ElementHighlighter.highlight2DElementsHover(block, dataOptions.keyField.name, keyValue, charts, block.transitionManager.durations.markerHover);
             }
         })
