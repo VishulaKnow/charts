@@ -118,6 +118,7 @@ export class TooltipDomHelper {
         const row = Helper.getRowsByKeys([keyValue], dataOptions.keyField.name, data[dataOptions.dataSource])[0];
         contentBlock.html(htmlHandler(row));
         this.setWhiteSpaceForTextBlocks(contentBlock);
+        contentBlock.selectAll('.tooltip-item-text').style('display', 'block');
     }
 
     private static setWhiteSpaceForTextBlocks(contentBlock: Selection<HTMLElement, unknown, BaseType, unknown>): void {
