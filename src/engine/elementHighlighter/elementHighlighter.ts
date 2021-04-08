@@ -9,6 +9,7 @@ import { DomHelper, SelectionCondition } from '../helpers/domHelper';
 import { NamesManager } from '../namesManager';
 import { DataRow, Size, TwoDimensionalChartType } from '../../config/config';
 import { Donut } from '../polarNotation/donut/donut';
+import { MarkDot } from '../features/markDots/markDot';
 
 export class ElementHighlighter {
     private static inactiveElemClass = 'charts-opacity-inactive';
@@ -110,6 +111,8 @@ export class ElementHighlighter {
         charts.forEach(chart => {
             const elems = DomHelper.get2DChartElements(block, chart);
 
+            if (chart.type !== 'bar' && !chart.markersOptions.show)
+                elems.classed(MarkDot.hiddenDotClass, true);
             this.setElementsStyleByState(block, elems, false, chart.type, transitionDuration);
         });
     }
@@ -119,6 +122,8 @@ export class ElementHighlighter {
             const elems = DomHelper.get2DChartElements(block, chart);
             const selectedElems = DomHelper.getChartElementsByKeys(elems, chart.isSegmented, keyFieldName, block.filterEventManager.getSelectedKeys(), SelectionCondition.Exclude);
 
+            if (chart.type !== 'bar' && !chart.markersOptions.show)
+                selectedElems.classed(MarkDot.hiddenDotClass, true);
             this.setElementsStyleByState(block, selectedElems, false, chart.type, transitionDuration);
         });
     }
@@ -128,6 +133,8 @@ export class ElementHighlighter {
             const elems = DomHelper.get2DChartElements(block, chart);
             const selectedElems = DomHelper.getChartElementsByKeys(elems, chart.isSegmented, keyFieldName, [keyValue]);
 
+            if (chart.type !== 'bar' && !chart.markersOptions.show)
+                selectedElems.classed(MarkDot.hiddenDotClass, !isHighlight);
             this.setElementsStyleByState(block, selectedElems, isHighlight, chart.type, transitionDuration);
         });
     }
