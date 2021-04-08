@@ -618,6 +618,7 @@ export default class Listeners {
         ListenersHelper.setInputValue('#pad-angle', designerConfig.canvas.chartOptions.donut.padAngle);
         ListenersHelper.setInputValue('#aggregator-pad', designerConfig.canvas.chartOptions.donut.aggregatorPad);
         ListenersHelper.setInputValue('#donut-max-thickness', designerConfig.canvas.chartOptions.donut.maxThickness);
+        ListenersHelper.setInputValue('#donut-min-thickness', designerConfig.canvas.chartOptions.donut.minThickness);
         ListenersHelper.setInputValue('#tooltip-position', designerConfig.elementsOptions.tooltip.position);
 
         if (config.options.type === '2d') {
