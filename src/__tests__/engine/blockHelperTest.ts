@@ -1,8 +1,5 @@
-import configCars from "../../playground/configs/configExample";
 import { Size } from "../../config/config";
-import designerConfig from "../../playground/configs/designerConfigExample";
-import { BlockMargin, Model } from "../../model/model";
-import { assembleModel } from "../../model/modelBuilder";
+import { BlockMargin } from "../../model/model";
 import { BlockHelper } from "../../engine/block/blockHelper";
 
 
@@ -19,6 +16,11 @@ describe('ClipPathAttributesTest', () => {
     };
 
     test('should return CLipPathAttributes defined object', () => {
-        expect(BlockHelper.getClipPathAttributes(size, margin)).toBeDefined()
+        expect(BlockHelper.getClipPathAttributes(size, margin)).toEqual({
+            x: 11,
+            y: 11,
+            width: 978,
+            height: 478
+        });
     });
 });
