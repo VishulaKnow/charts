@@ -1,4 +1,4 @@
-import { Config, DataRow } from './config';
+import { Config, DataRow } from '../../config/config';
 
 const configCars: Config = {
     canvas: {

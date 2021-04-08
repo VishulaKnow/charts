@@ -1,4 +1,4 @@
-import { DesignerConfig } from './designerConfig'
+import { DesignerConfig } from '../../designer/designerConfig'
 
 const designerConfig: DesignerConfig = {
     canvas: {
