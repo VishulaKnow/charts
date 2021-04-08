@@ -221,6 +221,7 @@
     line-height: 140.62%;
 }
 
+/* Title */
 .chart-title {
     font-family: "Roboto", sans-serif;
     font-style: normal;
@@ -228,4 +229,9 @@
     font-size: 18px;
     line-height: 140.62%;
     cursor: default;
+}
+
+/* Mark dots */
+.charts-dot-hidden {
+    display: none;
 }

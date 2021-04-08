@@ -1,6 +1,5 @@
 import { stack } from 'd3-shape';
 import { select, Selection } from 'd3-selection';
-
 import { BlockMargin, Field, Orient, TwoDimensionalChartModel } from "../../../model/model";
 import { Scales } from "../../features/scale/scale";
 import { Block } from "../../block/block";
@@ -15,9 +14,9 @@ export class Line {
 
     public static render(block: Block, scales: Scales, data: DataRow[], keyField: Field, margin: BlockMargin, keyAxisOrient: Orient, chart: TwoDimensionalChartModel): void {
         if (chart.isSegmented)
-            this.renderSegmented(block, scales, data, keyField, margin, keyAxisOrient, chart, chart.markersOptions.show);
+            this.renderSegmented(block, scales, data, keyField, margin, keyAxisOrient, chart);
         else
-            this.renderGrouped(block, scales, data, keyField, margin, keyAxisOrient, chart, chart.markersOptions.show);
+            this.renderGrouped(block, scales, data, keyField, margin, keyAxisOrient, chart);
     }
 
     public static update(block: Block, scales: Scales, newData: DataRow[], keyField: Field, margin: BlockMargin, keyAxisOrient: Orient, chart: TwoDimensionalChartModel): void {
@@ -37,7 +36,7 @@ export class Line {
         });
     }
 
-    private static renderGrouped(block: Block, scales: Scales, data: DataRow[], keyField: Field, margin: BlockMargin, keyAxisOrient: Orient, chart: TwoDimensionalChartModel, markFlag: boolean): void {
+    private static renderGrouped(block: Block, scales: Scales, data: DataRow[], keyField: Field, margin: BlockMargin, keyAxisOrient: Orient, chart: TwoDimensionalChartModel): void {
         chart.data.valueFields.forEach((valueField, valueIndex) => {
             const lineGenerator = LineHelper.getLineGenerator(keyAxisOrient, scales, keyField.name, valueField.name, margin);
 
@@ -52,12 +51,11 @@ export class Line {
             DomHelper.setCssClasses(path, Helper.getCssClassesWithElementIndex(chart.cssClasses, valueIndex));
             DomHelper.setChartStyle(path, chart.style, valueIndex, 'stroke');
 
-            if (markFlag)
-                MarkDot.render(block, data, keyAxisOrient, scales, margin, keyField.name, valueIndex, valueField.name, chart);
+            MarkDot.render(block, data, keyAxisOrient, scales, margin, keyField.name, valueIndex, valueField.name, chart);
         });
     }
 
-    private static renderSegmented(block: Block, scales: Scales, data: DataRow[], keyField: Field, margin: BlockMargin, keyAxisOrient: Orient, chart: TwoDimensionalChartModel, markFlag: boolean): void {
+    private static renderSegmented(block: Block, scales: Scales, data: DataRow[], keyField: Field, margin: BlockMargin, keyAxisOrient: Orient, chart: TwoDimensionalChartModel): void {
         const stackedData = stack().keys(chart.data.valueFields.map(field => field.name))(data);
         const lineGenerator = LineHelper.getSegmentedLineGenerator(keyAxisOrient, scales, keyField.name, margin);
 
@@ -79,8 +77,7 @@ export class Line {
         this.setSegmentColor(lines, chart.style.elementColors);
 
         stackedData.forEach((dataset, stackIndex) => {
-            if (markFlag)
-                MarkDot.render(block, dataset, keyAxisOrient, scales, margin, keyField.name, stackIndex, '1', chart);
+            MarkDot.render(block, dataset, keyAxisOrient, scales, margin, keyField.name, stackIndex, '1', chart);
         });
     }
 
@@ -95,9 +92,7 @@ export class Line {
                 .duration(block.transitionManager.durations.chartUpdate)
                 .attr('d', lineGenerator(newData));
 
-            if (chart.markersOptions.show) {
-                MarkDot.update(block, newData, keyAxisOrient, scales, margin, keyField.name, valueFieldIndex, valueField.name, chart);
-            }
+            MarkDot.update(block, newData, keyAxisOrient, scales, margin, keyField.name, valueFieldIndex, valueField.name, chart);
         });
     }
 
@@ -116,11 +111,9 @@ export class Line {
             .duration(block.transitionManager.durations.chartUpdate)
             .attr('d', d => lineGenerator(d));
 
-        if (chart.markersOptions.show) {
-            lines.each((dataset, index) => {
-                MarkDot.update(block, dataset, keyAxisOrient, scales, margin, keyField.name, index, '1', chart);
-            });
-        }
+        lines.each((dataset, index) => {
+            MarkDot.update(block, dataset, keyAxisOrient, scales, margin, keyField.name, index, '1', chart);
+        });
     }
 
     private static setSegmentColor(segments: Selection<SVGGElement, unknown, SVGGElement, unknown>, colorPalette: string[]): void {

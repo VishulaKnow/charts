@@ -14,8 +14,6 @@ import { TipBoxHelper } from '../tipBox/tipBoxHelper';
 import { Helper } from '../../helpers/helper';
 import { TooltipHelper } from './tooltipHelper';
 import { TooltipSettings } from '../../../designer/designerConfig';
-import { MarkDot } from '../markDots/markDot';
-import { DomHelper } from '../../helpers/domHelper';
 
 interface OverDetails {
     pointer: [number, number];
@@ -88,13 +86,6 @@ export class Tooltip {
             }
 
             if (!currentKey || currentKey !== keyValue) {
-                charts.forEach(chart => {
-                    if (chart.type !== 'bar' && !chart.markersOptions.show && !block.filterEventManager.isSelected(currentKey)) {
-                        const s = DomHelper.getChartElementsByKeys(MarkDot.getAllDots(block), chart.isSegmented, dataOptions.keyField.name, [currentKey]);
-                        s.remove();
-                    }
-                });
-
                 currentKey = keyValue;
                 TooltipComponentsManager.showComponent(tooltipBlock);
                 TooltipDomHelper.fillForMulty2DCharts(tooltipContent, charts.filter(ch => ch.tooltip.show), data, dataOptions, keyValue, tooltipOptions?.html);
@@ -108,10 +99,6 @@ export class Tooltip {
                 TooltipComponentsManager.setTooltipLineAttributes(tooltipLine, tooltipLineAttributes, block.transitionManager.durations.tooltipSlide);
                 TooltipComponentsManager.showComponent(tooltipLine);
 
-                charts.forEach(chart => {
-                    if (chart.type !== 'bar' && !chart.markersOptions.show)
-                        MarkDot.renderDot(block, data[dataOptions.dataSource].find(row => row[dataOptions.keyField.name] === keyValue), keyAxisOrient, scales, margin, dataOptions.keyField.name, chart);
-                });
                 ElementHighlighter.highlight2DElementsHover(block, dataOptions.keyField.name, keyValue, charts, block.transitionManager.durations.markerHover);
             }
         })
@@ -120,14 +107,6 @@ export class Tooltip {
             TooltipComponentsManager.hideComponent(tooltipBlock);
             TooltipComponentsManager.hideComponent(tooltipLine);
             ElementHighlighter.removeUnselected2DHighlight(block, dataOptions.keyField.name, charts, block.transitionManager.durations.markerHover);
-
-            charts.forEach(chart => {
-                if (chart.type !== 'bar' && !chart.markersOptions.show && !block.filterEventManager.isSelected(currentKey)) {
-                    const s = DomHelper.getChartElementsByKeys(MarkDot.getAllDots(block), chart.isSegmented, dataOptions.keyField.name, [currentKey]);
-                    s.remove();
-                }
-            });
-
             currentKey = null;
         });
     }

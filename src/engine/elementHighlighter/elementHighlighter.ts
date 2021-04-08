@@ -39,7 +39,7 @@ export class ElementHighlighter {
     }
 
     public static setShadowFilter(elemSelection: Selection<BaseType, any, BaseType, any>, block: Block): void {
-        // elemSelection.style('filter', `url(#${NamesManager.getId('shadow', block.id)})`);
+        elemSelection.style('filter', `url(#${NamesManager.getId('shadow', block.id)})`);
         elemSelection.style('filter', 'drop-shadow(0px 0px 6px rgba(0, 0, 0, 0.5))');
     }
 
@@ -110,10 +110,7 @@ export class ElementHighlighter {
         charts.forEach(chart => {
             const elems = DomHelper.get2DChartElements(block, chart);
 
-            if (chart.type !== 'bar' && !chart.markersOptions.show)
-                elems.remove();
-            else
-                this.setElementsStyleByState(block, elems, false, chart.type, transitionDuration);
+            this.setElementsStyleByState(block, elems, false, chart.type, transitionDuration);
         });
     }
 
@@ -122,10 +119,7 @@ export class ElementHighlighter {
             const elems = DomHelper.get2DChartElements(block, chart);
             const selectedElems = DomHelper.getChartElementsByKeys(elems, chart.isSegmented, keyFieldName, block.filterEventManager.getSelectedKeys(), SelectionCondition.Exclude);
 
-            if (chart.type !== 'bar' && !chart.markersOptions.show)
-                selectedElems.remove();
-            else
-                this.setElementsStyleByState(block, selectedElems, false, chart.type, transitionDuration);
+            this.setElementsStyleByState(block, selectedElems, false, chart.type, transitionDuration);
         });
     }
 
@@ -134,10 +128,7 @@ export class ElementHighlighter {
             const elems = DomHelper.get2DChartElements(block, chart);
             const selectedElems = DomHelper.getChartElementsByKeys(elems, chart.isSegmented, keyFieldName, [keyValue]);
 
-            if (chart.type !== 'bar' && !chart.markersOptions.show && !isHighlight)
-                selectedElems.remove();
-            else
-                this.setElementsStyleByState(block, selectedElems, isHighlight, chart.type, transitionDuration);
+            this.setElementsStyleByState(block, selectedElems, isHighlight, chart.type, transitionDuration);
         });
     }
 

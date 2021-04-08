@@ -50,8 +50,7 @@ export class Area {
             DomHelper.setCssClasses(path, Helper.getCssClassesWithElementIndex(chart.cssClasses, valueIndex));
             DomHelper.setChartStyle(path, chart.style, valueIndex, 'fill');
 
-            if (chart.markersOptions.show)
-                MarkDot.render(block, data, keyAxisOrient, scales, margin, keyField.name, valueIndex, field.name, chart);
+            MarkDot.render(block, data, keyAxisOrient, scales, margin, keyField.name, valueIndex, field.name, chart);
         });
     }
 
@@ -75,11 +74,9 @@ export class Area {
 
         this.setSegmentColor(areas, chart.style.elementColors);
 
-        if (chart.markersOptions.show) {
-            stackedData.forEach((dataset, index) => {
-                MarkDot.render(block, dataset, keyAxisOrient, scales, margin, keyField.name, index, '1', chart);
-            });
-        }
+        stackedData.forEach((dataset, index) => {
+            MarkDot.render(block, dataset, keyAxisOrient, scales, margin, keyField.name, index, '1', chart);
+        });
     }
 
     private static updateGrouped(block: Block, scales: Scales, newData: DataRow[], keyField: Field, margin: BlockMargin, chart: TwoDimensionalChartModel, keyAxisOrient: Orient, blockSize: Size): void {
@@ -93,9 +90,7 @@ export class Area {
                 .duration(block.transitionManager.durations.chartUpdate)
                 .attr('d', area(newData));
 
-            if (chart.markersOptions.show) {
-                MarkDot.update(block, newData, keyAxisOrient, scales, margin, keyField.name, valueIndex, field.name, chart);
-            }
+            MarkDot.update(block, newData, keyAxisOrient, scales, margin, keyField.name, valueIndex, field.name, chart);
         });
     }
 
@@ -113,12 +108,10 @@ export class Area {
             .duration(block.transitionManager.durations.chartUpdate)
             .attr('d', d => areaGenerator(d));
 
-        if (chart.markersOptions.show) {
-            areas.each((dataset, index) => {
-                // '1' - атрибут, показывающий координаты согласно полю значения
-                MarkDot.update(block, dataset, keyAxisOrient, scales, margin, keyField.name, index, '1', chart);
-            });
-        }
+        areas.each((dataset, index) => {
+            // '1' - атрибут, показывающий координаты согласно полю значения
+            MarkDot.update(block, dataset, keyAxisOrient, scales, margin, keyField.name, index, '1', chart);
+        });
     }
 
     private static setSegmentColor(segments: Selection<SVGGElement, unknown, SVGGElement, unknown>, colorPalette: string[]): void {

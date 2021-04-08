@@ -5,6 +5,7 @@ import { BlockMargin, Orient, TwoDimensionalChartModel } from "../../../model/mo
 import { Block } from "../../block/block";
 import { DomHelper } from '../../helpers/domHelper';
 import { Helper } from '../../helpers/helper';
+import { NamesManager } from '../../namesManager';
 import { Scales } from "../scale/scale";
 import { MarkDotHelper } from "./markDotsHelper";
 
@@ -16,7 +17,9 @@ export interface DotAttrs {
 select.prototype.transition = transition;
 
 export class MarkDot {
-    public static readonly markerDotClass = 'dot';
+    public static readonly markerDotClass = NamesManager.getClassName('dot');
+    public static readonly hiddenDotClass = NamesManager.getClassName('dot-hidden');
+
     private static dotRadius = 4;
 
     public static render(block: Block, data: DataRow[], keyAxisOrient: Orient, scales: Scales, margin: BlockMargin, keyFieldName: string, vfIndex: number, valueFieldName: string, chart: TwoDimensionalChartModel): void {
@@ -30,6 +33,8 @@ export class MarkDot {
         this.setAttrs(block, dots, attrs);
 
         this.setClassesAndStyle(dots, chart.cssClasses, vfIndex, chart.style.elementColors);
+        if (!chart.markersOptions.show)
+            dots.classed(this.hiddenDotClass, true);
     }
 
     public static update(block: Block, newData: DataRow[], keyAxisOrient: Orient, scales: Scales, margin: BlockMargin, keyField: string, vfIndex: number, valueFieldName: string, chart: TwoDimensionalChartModel): void {
@@ -45,6 +50,8 @@ export class MarkDot {
         this.setAttrs(block, newDots, attrs);
 
         this.setClassesAndStyle(newDots, chart.cssClasses, vfIndex, chart.style.elementColors);
+        if (!chart.markersOptions.show)
+            newDots.classed(this.hiddenDotClass, true);
 
         const animationName = 'data-updating';
         dots
@@ -53,24 +60,6 @@ export class MarkDot {
             .duration(block.transitionManager.durations.chartUpdate)
             .attr('cx', d => attrs.cx(d))
             .attr('cy', d => attrs.cy(d));
-    }
-
-    public static renderDot(block: Block, data: DataRow, keyAxisOrient: Orient, scales: Scales, margin: BlockMargin, keyFieldName: string, chart: TwoDimensionalChartModel): void {
-        chart.data.valueFields.forEach((valueField, vfIndex) => {
-            let dotWrapper = block.getChartGroup(chart.index)
-                .selectAll<SVGCircleElement, DataRow>(`.${this.markerDotClass}${Helper.getCssClassesLine(chart.cssClasses)}.chart-index-${vfIndex}`)
-                .filter(d => d[keyFieldName] === data[keyFieldName]);
-            if (!dotWrapper.empty())
-                return;
-
-            const attrs = MarkDotHelper.getDotAttrs(keyAxisOrient, scales, margin, keyFieldName, valueField.name, chart.isSegmented);
-            const newDot = block.getChartGroup(chart.index)
-                .append('circle')
-                .datum(data);
-            this.setAttrs(block, newDot, attrs);
-
-            this.setClassesAndStyle(newDot, chart.cssClasses, vfIndex, chart.style.elementColors);
-        });
     }
 
     public static updateColors(block: Block, chart: TwoDimensionalChartModel, valueFieldIndex: number): void {
