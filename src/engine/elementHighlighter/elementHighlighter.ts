@@ -167,14 +167,14 @@ export class ElementHighlighter {
         const scaleSize = 5;
         if (isHighlight) {
             elemSelection.each(function () {
-                console.log((this as SVGElemWithAttrs).attrs);
                 const attrs = (this as SVGElemWithAttrs).attrs;
+                const handler = select(this).interrupt().transition().duration(200);
                 if (attrs.orient === 'vertical') {
-                    select(this)
+                    handler
                         .attr('x', attrs.x - scaleSize)
                         .attr('width', attrs.width + scaleSize * 2);
                 } else {
-                    select(this)
+                    handler
                         .attr('y', attrs.y - scaleSize)
                         .attr('height', attrs.height + scaleSize * 2);
                 }
@@ -183,7 +183,8 @@ export class ElementHighlighter {
         else {
             elemSelection.each(function () {
                 const attrs = (this as SVGElemWithAttrs).attrs;
-                select(this)
+                const handler = select(this).interrupt().transition().duration(200);
+                handler
                     .attr('x', attrs.x)
                     .attr('width', attrs.width)
                     .attr('y', attrs.y)
