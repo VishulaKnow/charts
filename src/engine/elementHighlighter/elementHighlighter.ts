@@ -164,6 +164,7 @@ export class ElementHighlighter {
     }
 
     private static toggleBar(elemSelection: Selection<BaseType, any, BaseType, any>, isHighlight: boolean): void {
+        //TODO: вычисление в процентах
         const scaleSize = 2.5;
         if (isHighlight) {
             elemSelection.each(function () {

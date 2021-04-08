@@ -234,6 +234,7 @@ export class Bar {
             .selectAll(`g.${this.barSegmentGroupClass}${Helper.getCssClassesLine(chart.cssClasses)}`)
             .data(stackedData);
 
+        //TODO: запись координат для сегментированного
         const bars = groups
             .selectAll<SVGRectElement, DataRow>(`.${this.barItemClass}${Helper.getCssClassesLine(chart.cssClasses)}`)
             .filter(d => newData.findIndex(row => row[keyField.name] === d.data[keyField.name]) !== -1)

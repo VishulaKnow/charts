@@ -25,7 +25,6 @@ interface TooltipTranslate {
     y: number;
 }
 
-//TODO: refactor
 export class Tooltip {
     public static readonly tooltipBlockClass = 'tooltip-block';
     public static readonly tooltipLineClass = 'tooltip-line';

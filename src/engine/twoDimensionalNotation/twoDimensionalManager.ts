@@ -154,6 +154,7 @@ export class TwoDimensionalManager {
     }
 
     private static updateCharts(block: Block, charts: TwoDimensionalChartModel[], scales: Scales, data: DataSource, dataOptions: OptionsModelData, margin: BlockMargin, keyAxisOrient: Orient, blockSize: Size, barSettings: BarChartSettings): Promise<any>[] {
+        //TODO: привести все к массиву промисов
         block.updateChartClipPath(margin, blockSize);
         let promises: Promise<any>[];
         charts.forEach((chart: TwoDimensionalChartModel) => {
