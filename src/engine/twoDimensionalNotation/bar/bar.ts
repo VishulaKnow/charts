@@ -36,7 +36,8 @@ export class Bar {
             this.renderGrouped(block, scales, data, keyField, margin, keyAxisOrient, chart, barsAmounts, blockSize, firstBarIndex, barSettings);
     }
 
-    public static update(block: Block, newData: DataRow[], scales: Scales, margin: BlockMargin, keyAxisOrient: Orient, chart: TwoDimensionalChartModel, blockSize: Size, barsAmounts: number[], keyField: Field, firstBarIndex: number, barSettings: BarChartSettings, isSegmented: boolean): void {
+    public static update(block: Block, newData: DataRow[], scales: Scales, margin: BlockMargin, keyAxisOrient: Orient, chart: TwoDimensionalChartModel, blockSize: Size, barsAmounts: number[], keyField: Field, firstBarIndex: number, barSettings: BarChartSettings, isSegmented: boolean): Promise<any>[] {
+        let promises: Promise<any>[];
         if (isSegmented) {
             this.updateSegmented(block,
                 newData,
@@ -50,7 +51,7 @@ export class Bar {
                 firstBarIndex,
                 barSettings);
         } else {
-            this.updateGrouped(block,
+            promises = this.updateGrouped(block,
                 newData,
                 scales,
                 margin,
@@ -62,6 +63,7 @@ export class Bar {
                 firstBarIndex,
                 barSettings);
         }
+        return promises;
     }
 
     public static updateColors(block: Block, chart: TwoDimensionalChartModel): void {
@@ -155,7 +157,8 @@ export class Bar {
         });
     }
 
-    private static updateGrouped(block: Block, newData: DataRow[], scales: Scales, margin: BlockMargin, keyAxisOrient: Orient, chart: TwoDimensionalChartModel, blockSize: Size, barsAmounts: number[], keyField: Field, firstBarIndex: number, barSettings: BarChartSettings): void {
+    private static updateGrouped(block: Block, newData: DataRow[], scales: Scales, margin: BlockMargin, keyAxisOrient: Orient, chart: TwoDimensionalChartModel, blockSize: Size, barsAmounts: number[], keyField: Field, firstBarIndex: number, barSettings: BarChartSettings): Promise<any>[] {
+        const promises: Promise<any>[] = [];
         chart.data.valueFields.forEach((valueField, index) => {
             const indexesOfRemoved: number[] = [];
 
@@ -195,10 +198,11 @@ export class Bar {
                 sum(barsAmounts),
                 barSettings);
 
-            this.fillBarAttrs(bars, barAttrs, block.transitionManager.durations.chartUpdate);
+            const prom = this.fillBarAttrs(bars, barAttrs, block.transitionManager.durations.chartUpdate)
+                .then(() => this.setInitialAttrsInfo(bars, keyAxisOrient));
             this.fillBarAttrs(newBars, barAttrs);
+            promises.push(prom);
 
-            this.setInitialAttrsInfo(bars, keyAxisOrient);
             this.setInitialAttrsInfo(newBars, keyAxisOrient);
 
             DomHelper.setCssClasses(newBars, Helper.getCssClassesWithElementIndex(chart.cssClasses, index));
@@ -212,6 +216,7 @@ export class Bar {
                 EmbeddedLabels.restoreRemoved(block, bars, barAttrs, valueField, chart.embeddedLabels, keyAxisOrient, blockSize, margin, index, chart.cssClasses, keyField.name);
             }
         });
+        return promises;
     }
 
     private static updateSegmented(block: Block, newData: DataRow[], scales: Scales, margin: BlockMargin, keyAxisOrient: Orient, chart: TwoDimensionalChartModel, blockSize: Size, barsAmounts: number[], keyField: Field, firstBarIndex: number, barSettings: BarChartSettings): void {
@@ -262,21 +267,24 @@ export class Bar {
         });
     }
 
-    private static fillBarAttrs(bars: Selection<SVGRectElement, DataRow, BaseType, unknown>, barAttrs: BarAttrsHelper, transitionDuration: number = 0): Selection<SVGRectElement, DataRow, BaseType, unknown> | Transition<SVGRectElement, DataRow, BaseType, unknown> {
-        let barsHander: Selection<SVGRectElement, DataRow, BaseType, unknown> | Transition<SVGRectElement, DataRow, BaseType, unknown> = bars;
-        if (transitionDuration > 0) {
-            barsHander = barsHander
-                .interrupt()
-                .transition()
-                .duration(transitionDuration);
-        }
+    private static fillBarAttrs(bars: Selection<SVGRectElement, DataRow, BaseType, unknown>, barAttrs: BarAttrsHelper, transitionDuration: number = 0): Promise<any> {
+        return new Promise((resolve) => {
+            let barsHander: Selection<SVGRectElement, DataRow, BaseType, unknown> | Transition<SVGRectElement, DataRow, BaseType, unknown> = bars;
+            if (transitionDuration > 0) {
+                barsHander = barsHander
+                    .interrupt()
+                    .transition()
+                    .duration(transitionDuration)
+                    .on('end', () => resolve(''));
+            }
 
-        barsHander.attr('x', d => barAttrs.x(d))
-            .attr('y', d => barAttrs.y(d))
-            .attr('height', d => barAttrs.height(d))
-            .attr('width', d => barAttrs.width(d));
-
-        return barsHander;
+            barsHander.attr('x', d => barAttrs.x(d))
+                .attr('y', d => barAttrs.y(d))
+                .attr('height', d => barAttrs.height(d))
+                .attr('width', d => barAttrs.width(d));
+            if (transitionDuration <= 0)
+                resolve('');
+        });
     }
 
     private static setInitialAttrsInfo(bars: Selection<SVGRectElement, DataRow, SVGGElement, any>, keyAxisOrient: Orient): void {

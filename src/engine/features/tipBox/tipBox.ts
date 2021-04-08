@@ -18,6 +18,13 @@ export class TipBox {
         return this.renderBlock(block, attributes);
     }
 
+    public static clearEvents(block: Block): void {
+        block.getSvg()
+            .select(`.${this.tipBoxClass}`)
+            .on('mousemove', null)
+            .on('mouseleave', null);
+    }
+
     private static renderBlock(block: Block, attributes: TipBoxAttributes): Selection<SVGRectElement, unknown, HTMLElement, any> {
         let tipBox = block.getSvg()
             .select<SVGRectElement>(`rect.${this.tipBoxClass}`);

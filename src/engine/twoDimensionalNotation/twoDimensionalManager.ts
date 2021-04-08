@@ -9,6 +9,7 @@ import { GridLine } from "../features/gridLine/gridLine";
 import { Legend } from "../features/legend/legend";
 import { RecordOverflowAlert } from "../features/recordOverflowAlert/recordOverflowAlert";
 import { Scale, Scales } from "../features/scale/scale";
+import { TipBox } from "../features/tipBox/tipBox";
 import { Title } from "../features/title/title";
 import { Tooltip } from "../features/tolltip/tooltip";
 import { Helper } from "../helpers/helper";
@@ -61,6 +62,7 @@ export class TwoDimensionalManager {
     public static updateData(block: Block, model: Model, data: DataSource) {
         block.transitionManager.interruptTransitions();
         block.filterEventManager.updateData(data[model.options.data.dataSource]);
+        TipBox.clearEvents(block);
 
         const options = <TwoDimensionalOptionsModel>model.options;
 
@@ -69,7 +71,6 @@ export class TwoDimensionalManager {
         const scales = Scale.getScales(options.scale.key,
             options.scale.value,
             model.chartSettings.bar);
-
         const keyDomainEquality = Helper.checkDomainsEquality(block.scales.key.domain(), scales.key.domain());
         block.scales = scales;
 
@@ -83,7 +84,7 @@ export class TwoDimensionalManager {
             model.chartBlock.margin,
             options.scale.key);
 
-        this.updateCharts(block,
+        const promises = this.updateCharts(block,
             options.charts,
             scales,
             data,
@@ -96,7 +97,8 @@ export class TwoDimensionalManager {
         block.filterEventManager.event2DUpdate(options);
         block.filterEventManager.registerEventFor2D(scales.key, model.chartBlock.margin, model.blockCanvas.size, options);
 
-        Tooltip.render(block, model, data, model.otherComponents.tooltipBlock, scales);
+        Promise.all(promises)
+            .then(() => Tooltip.render(block, model, data, model.otherComponents.tooltipBlock, scales));
 
         RecordOverflowAlert.update(block, model.dataSettings.scope.hidedRecordsAmount, 'top', options.orient);
     }
@@ -151,11 +153,12 @@ export class TwoDimensionalManager {
         EmbeddedLabels.raiseGroups(block);
     }
 
-    private static updateCharts(block: Block, charts: TwoDimensionalChartModel[], scales: Scales, data: DataSource, dataOptions: OptionsModelData, margin: BlockMargin, keyAxisOrient: Orient, blockSize: Size, barSettings: BarChartSettings): void {
+    private static updateCharts(block: Block, charts: TwoDimensionalChartModel[], scales: Scales, data: DataSource, dataOptions: OptionsModelData, margin: BlockMargin, keyAxisOrient: Orient, blockSize: Size, barSettings: BarChartSettings): Promise<any>[] {
         block.updateChartClipPath(margin, blockSize);
+        let promises: Promise<any>[];
         charts.forEach((chart: TwoDimensionalChartModel) => {
             if (chart.type === 'bar') {
-                Bar.update(block,
+                promises = Bar.update(block,
                     data[dataOptions.dataSource],
                     scales,
                     margin,
@@ -187,5 +190,6 @@ export class TwoDimensionalManager {
                     blockSize);
             }
         });
+        return promises;
     }
 }
