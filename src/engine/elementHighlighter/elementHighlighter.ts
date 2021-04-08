@@ -41,7 +41,7 @@ export class ElementHighlighter {
     }
 
     public static setShadowFilter(elemSelection: Selection<BaseType, any, BaseType, any>, block: Block): void {
-        elemSelection.style('filter', `url(#${NamesManager.getId('shadow', block.id)})`);
+        // elemSelection.style('filter', `url(#${NamesManager.getId('shadow', block.id)})`);
         elemSelection.style('filter', 'drop-shadow(0px 0px 6px rgba(0, 0, 0, 0.5))');
     }
 
@@ -164,7 +164,7 @@ export class ElementHighlighter {
     }
 
     private static toggleBar(elemSelection: Selection<BaseType, any, BaseType, any>, isHighlight: boolean): void {
-        const scaleSize = 5;
+        const scaleSize = 2.5;
         if (isHighlight) {
             elemSelection.each(function () {
                 const attrs = (this as SVGElemWithAttrs).attrs;
