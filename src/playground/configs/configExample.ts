@@ -54,18 +54,13 @@ const configCars: Config = {
         charts: [
             {
                 isSegmented: false,
-                type: 'line',
+                type: 'bar',
                 data: {
                     valueFields: [
                         {
                             name: 'price',
                             format: 'money',
                             title: 'Стоимость за 2020 год'
-                        },
-                        {
-                            name: 'count',
-                            format: 'money',
-                            title: 'Стоимость за 2021 год'
                         }
                     ]
                 },

@@ -10,6 +10,7 @@ import { NamesManager } from '../namesManager';
 import { DataRow, Size, TwoDimensionalChartType } from '../../config/config';
 import { Donut } from '../polarNotation/donut/donut';
 import { MarkDot } from '../features/markDots/markDot';
+import { SVGElemWithAttrs } from '../twoDimensionalNotation/bar/bar';
 
 export class ElementHighlighter {
     private static inactiveElemClass = 'charts-opacity-inactive';
@@ -113,7 +114,7 @@ export class ElementHighlighter {
 
             if (chart.type !== 'bar' && !chart.markersOptions.show)
                 elems.classed(MarkDot.hiddenDotClass, true);
-            this.setElementsStyleByState(block, elems, false, chart.type, transitionDuration);
+            this.setElementsStyleByState(block, elems, false, chart.type, transitionDuration, false);
         });
     }
 
@@ -147,16 +148,47 @@ export class ElementHighlighter {
         this.toggle2DHighlightState(block, keyFieldName, keyValue, charts, false, transitionDuration);
     }
 
-    private static setElementsStyleByState(block: Block, elemSelection: Selection<BaseType, any, BaseType, any>, isHighlight: boolean, chartType: TwoDimensionalChartType, transitionDuration: number): void {
+    private static setElementsStyleByState(block: Block, elemSelection: Selection<BaseType, any, BaseType, any>, isHighlight: boolean, chartType: TwoDimensionalChartType, transitionDuration: number, flag: boolean = true): void {
         if (chartType === 'area' || chartType === 'line') {
             elemSelection.call(this.highlightDot, isHighlight, transitionDuration);
         } else {
+            if (flag)
+                this.toggleBar(elemSelection, isHighlight);
             if (isHighlight) {
                 this.setShadowFilter(elemSelection, block);
             }
             else {
                 this.removeFilter(elemSelection);
             }
+        }
+    }
+
+    private static toggleBar(elemSelection: Selection<BaseType, any, BaseType, any>, isHighlight: boolean): void {
+        const scaleSize = 5;
+        if (isHighlight) {
+            elemSelection.each(function () {
+                console.log((this as SVGElemWithAttrs).attrs);
+                const attrs = (this as SVGElemWithAttrs).attrs;
+                if (attrs.orient === 'vertical') {
+                    select(this)
+                        .attr('x', attrs.x - scaleSize)
+                        .attr('width', attrs.width + scaleSize * 2);
+                } else {
+                    select(this)
+                        .attr('y', attrs.y - scaleSize)
+                        .attr('height', attrs.height + scaleSize * 2);
+                }
+            });
+        }
+        else {
+            elemSelection.each(function () {
+                const attrs = (this as SVGElemWithAttrs).attrs;
+                select(this)
+                    .attr('x', attrs.x)
+                    .attr('width', attrs.width)
+                    .attr('y', attrs.y)
+                    .attr('height', attrs.height);
+            });
         }
     }
 

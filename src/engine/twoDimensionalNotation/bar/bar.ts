@@ -7,11 +7,21 @@ import { Block } from "../../block/block";
 import { EmbeddedLabels } from "../../features/embeddedLabels/embeddedLabels";
 import { EmbeddedLabelsHelper } from "../../features/embeddedLabels/embeddedLabelsHelper";
 import { BarAttrsHelper, BarHelper } from "./barHelper";
-import { index, sum } from "d3-array";
+import { sum } from "d3-array";
 import { Transition } from "d3-transition";
 import { DomHelper } from "../../helpers/domHelper";
 import { Helper } from "../../helpers/helper";
 import { DataRow, Size } from "../../../config/config";
+
+export interface SVGElemWithAttrs extends SVGElement {
+    attrs?: {
+        x: number;
+        y: number;
+        width: number;
+        height: number;
+        orient: 'vertical' | 'horizontal';
+    }
+}
 
 export class Bar {
     public static readonly barItemClass = 'bar-item';
@@ -94,6 +104,8 @@ export class Bar {
 
             DomHelper.setCssClasses(bars, Helper.getCssClassesWithElementIndex(chart.cssClasses, index));
             DomHelper.setChartStyle(bars, chart.style, index, 'fill');
+
+            this.setInitialAttrsInfo(bars, keyAxisOrient);
 
             if (chart.embeddedLabels !== 'none')
                 EmbeddedLabels.render(block, bars, barAttrs, EmbeddedLabelsHelper.getLabelField(chart.embeddedLabels, chart.data.valueFields, keyField, index), chart.embeddedLabels, keyAxisOrient, blockSize, margin, index, chart.cssClasses);
@@ -186,6 +198,9 @@ export class Bar {
             this.fillBarAttrs(bars, barAttrs, block.transitionManager.durations.chartUpdate);
             this.fillBarAttrs(newBars, barAttrs);
 
+            this.setInitialAttrsInfo(bars, keyAxisOrient);
+            this.setInitialAttrsInfo(newBars, keyAxisOrient);
+
             DomHelper.setCssClasses(newBars, Helper.getCssClassesWithElementIndex(chart.cssClasses, index));
             DomHelper.setChartStyle(newBars, chart.style, index, 'fill');
 
@@ -262,6 +277,18 @@ export class Bar {
             .attr('width', d => barAttrs.width(d));
 
         return barsHander;
+    }
+
+    private static setInitialAttrsInfo(bars: Selection<SVGRectElement, DataRow, SVGGElement, any>, keyAxisOrient: Orient): void {
+        bars.each(function () {
+            (this as SVGElemWithAttrs).attrs = {
+                x: DomHelper.getSelectionNumericAttr(select(this), 'x'),
+                y: DomHelper.getSelectionNumericAttr(select(this), 'y'),
+                width: DomHelper.getSelectionNumericAttr(select(this), 'width'),
+                height: DomHelper.getSelectionNumericAttr(select(this), 'height'),
+                orient: keyAxisOrient === 'left' || keyAxisOrient === 'right' ? 'horizontal' : 'vertical'
+            }
+        });
     }
 
     private static setSegmentColor(segments: Selection<SVGGElement, any, BaseType, unknown>, colorPalette: string[], segmentedIndex: number): void {
