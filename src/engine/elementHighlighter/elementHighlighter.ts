@@ -1,4 +1,4 @@
-import { Selection, BaseType } from 'd3-selection';
+import { Selection, BaseType, select } from 'd3-selection';
 import { PieArcDatum } from 'd3-shape'
 import { BlockMargin, TwoDimensionalChartModel } from "../../model/model";
 import { Block } from "../block/block";
@@ -176,10 +176,10 @@ export class ElementHighlighter {
         }
 
         elementsHandler
-            .attr('r', isScaled ? 6 : 4)
-            .style('stroke-width', (isScaled ? 4.3 : 3) + 'px')
-        // .each(function () {
-        //     select(this).style('fill', isScaled ? select(this).style('stroke') : 'white');
-        // });
+            .attr('r', isScaled ? 5 : 4)
+            .style('stroke-width', (isScaled ? 3.5 : 3) + 'px')
+            .each(function () {
+                select(this).style('fill', isScaled ? select(this).style('stroke') : 'white');
+            });
     }
 }

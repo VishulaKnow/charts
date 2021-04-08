@@ -49,6 +49,7 @@
                 "format": "string"
             }
         },
+        "selectable": true,
         "charts": [
             {
                 "title": "Рост стоимости",
@@ -91,7 +92,7 @@
                     "show": true
                 },
                 "markers": {
-                    "show": false
+                    "show": true
                 },
                 "embeddedLabels": "key"
             }
