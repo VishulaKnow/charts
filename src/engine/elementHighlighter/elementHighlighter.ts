@@ -109,7 +109,11 @@ export class ElementHighlighter {
     public static remove2DChartsFullHighlighting(block: Block, charts: TwoDimensionalChartModel[], transitionDuration: number = 0): void {
         charts.forEach(chart => {
             const elems = DomHelper.get2DChartElements(block, chart);
-            this.setElementsStyleByState(block, elems, false, chart.type, transitionDuration);
+
+            if (chart.type !== 'bar' && !chart.markersOptions.show)
+                elems.remove();
+            else
+                this.setElementsStyleByState(block, elems, false, chart.type, transitionDuration);
         });
     }
 
@@ -118,7 +122,10 @@ export class ElementHighlighter {
             const elems = DomHelper.get2DChartElements(block, chart);
             const selectedElems = DomHelper.getChartElementsByKeys(elems, chart.isSegmented, keyFieldName, block.filterEventManager.getSelectedKeys(), SelectionCondition.Exclude);
 
-            this.setElementsStyleByState(block, selectedElems, false, chart.type, transitionDuration);
+            if (chart.type !== 'bar' && !chart.markersOptions.show)
+                selectedElems.remove();
+            else
+                this.setElementsStyleByState(block, selectedElems, false, chart.type, transitionDuration);
         });
     }
 
@@ -127,7 +134,10 @@ export class ElementHighlighter {
             const elems = DomHelper.get2DChartElements(block, chart);
             const selectedElems = DomHelper.getChartElementsByKeys(elems, chart.isSegmented, keyFieldName, [keyValue]);
 
-            this.setElementsStyleByState(block, selectedElems, isHighlight, chart.type, transitionDuration);
+            if (chart.type !== 'bar' && !chart.markersOptions.show && !isHighlight)
+                selectedElems.remove();
+            else
+                this.setElementsStyleByState(block, selectedElems, isHighlight, chart.type, transitionDuration);
         });
     }
 

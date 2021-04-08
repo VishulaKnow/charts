@@ -6,7 +6,6 @@ import { TooltipDomHelper } from "./tooltipDomHelper";
 import { Donut } from "../../polarNotation/donut/donut";
 import { ChartOrientation, DataRow, DataSource, Size, TooltipOptions } from "../../../config/config";
 import { Scales } from '../scale/scale';
-import { AxisScale } from 'd3-axis';
 import { TooltipComponentsManager } from './tooltipComponentsManager';
 import { ElementHighlighter } from '../../elementHighlighter/elementHighlighter';
 import { DonutHelper } from '../../polarNotation/donut/DonutHelper';
@@ -28,6 +27,7 @@ interface TooltipTranslate {
     y: number;
 }
 
+//TODO: refactor
 export class Tooltip {
     public static readonly tooltipBlockClass = 'tooltip-block';
     public static readonly tooltipLineClass = 'tooltip-line';
@@ -76,11 +76,9 @@ export class Tooltip {
         const tooltipContent = TooltipComponentsManager.renderTooltipContentBlock(tooltipBlock);
         const tooltipLine = TooltipComponentsManager.renderTooltipLine(block);
         const tipBox = TipBox.renderOrGet(block, margin, blockSize);
-
         ElementHighlighter.renderShadowFilter(block);
 
         let currentKey: string = null;
-
         tipBox.on('mousemove', function (e) {
             const keyValue = TipBoxHelper.getKeyValueByPointer(pointer(e, this), chartOrientation, margin, blockSize, scales.key, scaleKeyModel.type, 'hover');
 
@@ -90,12 +88,12 @@ export class Tooltip {
             }
 
             if (!currentKey || currentKey !== keyValue) {
-                // charts.forEach(chart => {
-                //     if (chart.type !== 'bar' && !chart.markersOptions.show) {
-                //         const s = DomHelper.getChartElementsByKeys(MarkDot.getAllDots(block), chart.isSegmented, dataOptions.keyField.name, [currentKey]);
-                //         s.remove();
-                //     }
-                // });
+                charts.forEach(chart => {
+                    if (chart.type !== 'bar' && !chart.markersOptions.show && !block.filterEventManager.isSelected(currentKey)) {
+                        const s = DomHelper.getChartElementsByKeys(MarkDot.getAllDots(block), chart.isSegmented, dataOptions.keyField.name, [currentKey]);
+                        s.remove();
+                    }
+                });
 
                 currentKey = keyValue;
                 TooltipComponentsManager.showComponent(tooltipBlock);
@@ -110,10 +108,10 @@ export class Tooltip {
                 TooltipComponentsManager.setTooltipLineAttributes(tooltipLine, tooltipLineAttributes, block.transitionManager.durations.tooltipSlide);
                 TooltipComponentsManager.showComponent(tooltipLine);
 
-                // charts.forEach(chart => {
-                //     if (chart.type !== 'bar' && !chart.markersOptions.show)
-                //         MarkDot.renderDot(block, data[dataOptions.dataSource].find(row => row[dataOptions.keyField.name] === keyValue), keyAxisOrient, scales, margin, dataOptions.keyField.name, chart);
-                // });
+                charts.forEach(chart => {
+                    if (chart.type !== 'bar' && !chart.markersOptions.show)
+                        MarkDot.renderDot(block, data[dataOptions.dataSource].find(row => row[dataOptions.keyField.name] === keyValue), keyAxisOrient, scales, margin, dataOptions.keyField.name, chart);
+                });
                 ElementHighlighter.highlight2DElementsHover(block, dataOptions.keyField.name, keyValue, charts, block.transitionManager.durations.markerHover);
             }
         })
@@ -123,12 +121,12 @@ export class Tooltip {
             TooltipComponentsManager.hideComponent(tooltipLine);
             ElementHighlighter.removeUnselected2DHighlight(block, dataOptions.keyField.name, charts, block.transitionManager.durations.markerHover);
 
-            // charts.forEach(chart => {
-            //     if (chart.type !== 'bar' && !chart.markersOptions.show) {
-            //         const s = DomHelper.getChartElementsByKeys(MarkDot.getAllDots(block), chart.isSegmented, dataOptions.keyField.name, [currentKey]);
-            //         s.remove();
-            //     }
-            // });
+            charts.forEach(chart => {
+                if (chart.type !== 'bar' && !chart.markersOptions.show && !block.filterEventManager.isSelected(currentKey)) {
+                    const s = DomHelper.getChartElementsByKeys(MarkDot.getAllDots(block), chart.isSegmented, dataOptions.keyField.name, [currentKey]);
+                    s.remove();
+                }
+            });
 
             currentKey = null;
         });
