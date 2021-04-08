@@ -1,5 +1,6 @@
-import { BaseType, pointer, Selection } from "d3-selection";
+import { BaseType, pointer, select, Selection } from "d3-selection";
 import { Block } from "../../block/block";
+import { ElementHighlighter } from "../../elementHighlighter/elementHighlighter";
 import { Donut } from "../../polarNotation/donut/donut";
 
 export class LegendEventsManager {
@@ -29,14 +30,17 @@ export class LegendEventsManager {
                 });
         });
 
-        legendItems.on('mouseover', (e, keyValue) => {
+        legendItems.on('mouseover', function (e, keyValue) {
             arcItems.filter((row) => row.data[keyFieldName] === keyValue)
                 .dispatch('mouseover');
+            ElementHighlighter.toggleActivityStyle(select(this), true);
         });
 
-        legendItems.on('mouseleave', (e, keyValue) => {
+        legendItems.on('mouseleave', function (e, keyValue) {
             arcItems.filter((row) => row.data[keyFieldName] === keyValue)
                 .dispatch('mouseleave');
+            if (!block.filterEventManager.isSelected(keyValue) && block.filterEventManager.getSelectedKeys().length > 0)
+                ElementHighlighter.toggleActivityStyle(select(this), false)
         });
     }
 
