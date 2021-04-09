@@ -161,6 +161,7 @@ export class ElementHighlighter {
                 this.removeFilter(elemSelection);
             }
         }
+        this.toggleActivityStyle(elemSelection, isHighlight);
     }
 
     private static toggleBar(elemSelection: Selection<BaseType, any, BaseType, any>, isHighlight: boolean): void {
