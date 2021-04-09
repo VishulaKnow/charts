@@ -18,6 +18,7 @@ import { Bar } from "./bar/bar";
 import { BarHelper } from "./bar/barHelper";
 import { Line } from "./line/line";
 
+//TODO: Idea: append contentHelper
 export class TwoDimensionalManager {
     public static render(engine: Engine, model: Model): void {
         const options = <TwoDimensionalOptionsModel>model.options;
