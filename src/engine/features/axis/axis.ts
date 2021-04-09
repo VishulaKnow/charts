@@ -55,7 +55,7 @@ export class Axis {
             else
                 AxisLabelHelper.cropLabels(block, scale, scaleOptions, axisOptions, blockSize);
 
-            AxisLabelHelper.setTitles(axisElement);
+            // AxisLabelHelper.setTitles(axisElement);
             AxisLabelHelper.alignLabelsInKeyAxis(axisOptions, axisElement);
 
             AxisLabelsEventManager.setHoverEvents(block, axisElement);
@@ -96,7 +96,7 @@ export class Axis {
                 if (axisOptions.orient === 'bottom' || axisOptions.orient === 'top') {
                     AxisLabelHelper.cropLabels(block, scaleKey, scaleOptions, axisOptions, blockSize);
                 }
-                AxisLabelHelper.setTitles(axisElement);
+                // AxisLabelHelper.setTitles(axisElement);
                 AxisLabelsEventManager.setHoverEvents(block, axisElement);
             });
 

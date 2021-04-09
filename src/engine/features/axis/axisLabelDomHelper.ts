@@ -11,6 +11,7 @@ import { Size } from '../../../config/config';
 type TextAnchor = 'start' | 'end' | 'middle';
 
 export class AxisLabelHelper {
+    //TODO: решить, нужно ли это
     public static setTitles(axisElement: Selection<SVGGElement, unknown, HTMLElement, any>): void {
         axisElement.selectAll<SVGTextElement, string>('.tick text')
             .each(function (d, i) {
