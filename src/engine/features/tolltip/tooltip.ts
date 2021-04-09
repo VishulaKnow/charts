@@ -52,6 +52,7 @@ export class Tooltip {
 
     public static hide(block: Block): void {
         TooltipComponentsManager.hideComponent(block.getWrapper().select(`.${this.tooltipBlockClass}`));
+        TooltipComponentsManager.hideComponent(block.getSvg().select(`.${this.tooltipLineClass}`));
     }
 
     private static renderTooltipFor2DCharts(block: Block, data: DataSource, blockSize: Size, margin: BlockMargin, scales: Scales, options: TwoDimensionalOptionsModel, tooltipOptions: TooltipSettings): void {

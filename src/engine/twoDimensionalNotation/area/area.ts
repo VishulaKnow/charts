@@ -1,5 +1,5 @@
-import { stack } from 'd3-shape';
-import { select, Selection } from 'd3-selection'
+import { stack, Area as IArea } from 'd3-shape';
+import { BaseType, select, Selection } from 'd3-selection'
 import { BlockMargin, Field, Orient, TwoDimensionalChartModel } from "../../../model/model";
 import { Scales } from "../../features/scale/scale";
 import { Block } from "../../block/block";
@@ -8,6 +8,7 @@ import { AreaHelper } from './areaHelper';
 import { DomHelper } from '../../helpers/domHelper';
 import { Helper } from '../../helpers/helper';
 import { DataRow, Size } from '../../../config/config';
+import { Transition } from 'd3-transition';
 
 export class Area {
     public static readonly areaChartClass = 'area';
@@ -19,12 +20,14 @@ export class Area {
             this.renderGrouped(block, scales, data, keyField, margin, keyAxisOrient, chart, blockSize);
     }
 
-    public static update(block: Block, scales: Scales, newData: DataRow[], keyField: Field, margin: BlockMargin, chart: TwoDimensionalChartModel, keyAxisOrient: Orient, blockSize: Size): void {
+    public static update(block: Block, scales: Scales, newData: DataRow[], keyField: Field, margin: BlockMargin, chart: TwoDimensionalChartModel, keyAxisOrient: Orient, blockSize: Size): Promise<any>[] {
+        let promises: Promise<any>[];
         if (chart.isSegmented) {
-            this.updateSegmented(block, scales, newData, keyField, margin, chart, keyAxisOrient);
+            promises = this.updateSegmented(block, scales, newData, keyField, margin, chart, keyAxisOrient);
         } else {
-            this.updateGrouped(block, scales, newData, keyField, margin, chart, keyAxisOrient, blockSize);
+            promises = this.updateGrouped(block, scales, newData, keyField, margin, chart, keyAxisOrient, blockSize);
         }
+        return promises;
     }
 
     public static updateColors(block: Block, chart: TwoDimensionalChartModel): void {
@@ -79,38 +82,70 @@ export class Area {
         });
     }
 
-    private static updateGrouped(block: Block, scales: Scales, newData: DataRow[], keyField: Field, margin: BlockMargin, chart: TwoDimensionalChartModel, keyAxisOrient: Orient, blockSize: Size): void {
+    private static updateGrouped(block: Block, scales: Scales, newData: DataRow[], keyField: Field, margin: BlockMargin, chart: TwoDimensionalChartModel, keyAxisOrient: Orient, blockSize: Size): Promise<any>[] {
+        const promises: Promise<any>[] = [];
         chart.data.valueFields.forEach((field, valueIndex) => {
-            const area = AreaHelper.getGroupedAreaGenerator(keyAxisOrient, scales, margin, keyField.name, field.name, blockSize);
-
-            block.getChartGroup(chart.index)
+            const areaGenerator = AreaHelper.getGroupedAreaGenerator(keyAxisOrient, scales, margin, keyField.name, field.name, blockSize);
+            const areaObject = block.getChartGroup(chart.index)
                 .select(`.${this.areaChartClass}${Helper.getCssClassesLine(chart.cssClasses)}.chart-element-${valueIndex}`)
-                .interrupt()
-                .transition()
-                .duration(block.transitionManager.durations.chartUpdate)
-                .attr('d', area(newData));
+
+            const prom = this.updateGroupedPath(block, areaObject, areaGenerator, newData);
+            promises.push(prom);
 
             MarkDot.update(block, newData, keyAxisOrient, scales, margin, keyField.name, valueIndex, field.name, chart);
         });
+        return promises;
     }
 
-    private static updateSegmented(block: Block, scales: Scales, newData: DataRow[], keyField: Field, margin: BlockMargin, chart: TwoDimensionalChartModel, keyAxisOrient: Orient): void {
+    private static updateSegmented(block: Block, scales: Scales, newData: DataRow[], keyField: Field, margin: BlockMargin, chart: TwoDimensionalChartModel, keyAxisOrient: Orient): Promise<any>[] {
         const stackedData = stack().keys(chart.data.valueFields.map(field => field.name))(newData);
-
         const areaGenerator = AreaHelper.getSegmentedAreaGenerator(keyAxisOrient, scales, margin, keyField.name);
         const areas = block.getChartGroup(chart.index)
-            .selectAll<SVGRectElement, DataRow[]>(`path.${this.areaChartClass}${Helper.getCssClassesLine(chart.cssClasses)}`);
+            .selectAll<SVGRectElement, DataRow[]>(`path.${this.areaChartClass}${Helper.getCssClassesLine(chart.cssClasses)}`)
+            .data(stackedData);
 
-        areas
-            .data(stackedData)
-            .interrupt()
-            .transition()
-            .duration(block.transitionManager.durations.chartUpdate)
-            .attr('d', d => areaGenerator(d));
+        const prom = this.updateSegmentedPath(block, areas, areaGenerator);
 
         areas.each((dataset, index) => {
             // '1' - атрибут, показывающий координаты согласно полю значения
             MarkDot.update(block, dataset, keyAxisOrient, scales, margin, keyField.name, index, '1', chart);
+        });
+        return [prom];
+    }
+
+    private static updateGroupedPath(block: Block, areaObject: Selection<BaseType, any, BaseType, any>, areaGenerator: IArea<DataRow>, newData: DataRow[]): Promise<any> {
+        return new Promise(resolve => {
+            let areaHandler: Selection<BaseType, any, BaseType, any> | Transition<BaseType, any, BaseType, any> = areaObject;
+
+            if (block.transitionManager.durations.chartUpdate > 0)
+                areaHandler = areaHandler.interrupt()
+                    .transition()
+                    .duration(block.transitionManager.durations.chartUpdate)
+                    .on('end', () => resolve(''));
+
+            areaHandler
+                .attr('d', areaGenerator(newData));
+
+            if (block.transitionManager.durations.chartUpdate <= 0)
+                resolve('');
+        });
+    }
+
+    private static updateSegmentedPath(block: Block, areasObjects: Selection<BaseType, any, BaseType, any>, areaGenerator: IArea<DataRow>): Promise<any> {
+        return new Promise(resolve => {
+            let areaHandler: Selection<BaseType, any, BaseType, any> | Transition<BaseType, any, BaseType, any> = areasObjects;
+
+            if (block.transitionManager.durations.chartUpdate > 0)
+                areaHandler = areaHandler.interrupt()
+                    .transition()
+                    .duration(block.transitionManager.durations.chartUpdate)
+                    .on('end', () => resolve(''));
+
+            areaHandler
+                .attr('d', d => areaGenerator(d));
+
+            if (block.transitionManager.durations.chartUpdate <= 0)
+                resolve('');
         });
     }
 

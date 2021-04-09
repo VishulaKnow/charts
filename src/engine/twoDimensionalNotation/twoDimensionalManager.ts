@@ -63,6 +63,7 @@ export class TwoDimensionalManager {
         block.transitionManager.interruptTransitions();
         block.filterEventManager.updateData(data[model.options.data.dataSource]);
         TipBox.clearEvents(block);
+        Tooltip.hide(block);
 
         const options = <TwoDimensionalOptionsModel>model.options;
 
@@ -154,12 +155,12 @@ export class TwoDimensionalManager {
     }
 
     private static updateCharts(block: Block, charts: TwoDimensionalChartModel[], scales: Scales, data: DataSource, dataOptions: OptionsModelData, margin: BlockMargin, keyAxisOrient: Orient, blockSize: Size, barSettings: BarChartSettings): Promise<any>[] {
-        //TODO: привести все к массиву промисов
         block.updateChartClipPath(margin, blockSize);
-        let promises: Promise<any>[];
+        let promises: Promise<any>[] = [];
         charts.forEach((chart: TwoDimensionalChartModel) => {
+            let proms: Promise<any>[];
             if (chart.type === 'bar') {
-                promises = Bar.update(block,
+                proms = Bar.update(block,
                     data[dataOptions.dataSource],
                     scales,
                     margin,
@@ -172,7 +173,7 @@ export class TwoDimensionalManager {
                     barSettings,
                     chart.isSegmented);
             } else if (chart.type === 'line') {
-                Line.update(block,
+                proms = Line.update(block,
                     scales,
                     data[dataOptions.dataSource],
                     dataOptions.keyField,
@@ -181,7 +182,7 @@ export class TwoDimensionalManager {
                     chart);
             }
             else if (chart.type === 'area') {
-                Area.update(block,
+                proms = Area.update(block,
                     scales,
                     data[dataOptions.dataSource],
                     dataOptions.keyField,
@@ -190,6 +191,7 @@ export class TwoDimensionalManager {
                     keyAxisOrient,
                     blockSize);
             }
+            promises.push(...proms);
         });
         return promises;
     }

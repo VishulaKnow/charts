@@ -1,5 +1,5 @@
-import { stack } from 'd3-shape';
-import { select, Selection } from 'd3-selection';
+import { stack, Line as ILine } from 'd3-shape';
+import { BaseType, select, Selection } from 'd3-selection';
 import { BlockMargin, Field, Orient, TwoDimensionalChartModel } from "../../../model/model";
 import { Scales } from "../../features/scale/scale";
 import { Block } from "../../block/block";
@@ -8,6 +8,7 @@ import { LineHelper } from './lineHelper';
 import { DomHelper } from '../../helpers/domHelper';
 import { Helper } from '../../helpers/helper';
 import { DataRow } from '../../../config/config';
+import { Transition } from 'd3-transition';
 
 export class Line {
     public static readonly lineChartClass = 'line';
@@ -19,12 +20,14 @@ export class Line {
             this.renderGrouped(block, scales, data, keyField, margin, keyAxisOrient, chart);
     }
 
-    public static update(block: Block, scales: Scales, newData: DataRow[], keyField: Field, margin: BlockMargin, keyAxisOrient: Orient, chart: TwoDimensionalChartModel): void {
+    public static update(block: Block, scales: Scales, newData: DataRow[], keyField: Field, margin: BlockMargin, keyAxisOrient: Orient, chart: TwoDimensionalChartModel): Promise<any>[] {
+        let promises: Promise<any>[];
         if (chart.isSegmented) {
-            this.updateSegmeneted(block, scales, newData, keyField, margin, keyAxisOrient, chart);
+            promises = this.updateSegmeneted(block, scales, newData, keyField, margin, keyAxisOrient, chart);
         } else {
-            this.updateGrouped(block, scales, newData, keyField, margin, keyAxisOrient, chart);
+            promises = this.updateGrouped(block, scales, newData, keyField, margin, keyAxisOrient, chart);
         }
+        return promises;
     }
 
     public static updateColors(block: Block, chart: TwoDimensionalChartModel): void {
@@ -81,38 +84,68 @@ export class Line {
         });
     }
 
-    private static updateGrouped(block: Block, scales: Scales, newData: DataRow[], keyField: Field, margin: BlockMargin, keyAxisOrient: Orient, chart: TwoDimensionalChartModel): void {
+    private static updateGrouped(block: Block, scales: Scales, newData: DataRow[], keyField: Field, margin: BlockMargin, keyAxisOrient: Orient, chart: TwoDimensionalChartModel): Promise<any>[] {
+        const promises: Promise<any>[] = [];
         chart.data.valueFields.forEach((valueField, valueFieldIndex) => {
             const lineGenerator = LineHelper.getLineGenerator(keyAxisOrient, scales, keyField.name, valueField.name, margin);
 
-            block.getChartGroup(chart.index)
-                .select(`.${this.lineChartClass}${Helper.getCssClassesLine(chart.cssClasses)}.chart-element-${valueFieldIndex}`)
-                .interrupt()
-                .transition()
-                .duration(block.transitionManager.durations.chartUpdate)
-                .attr('d', lineGenerator(newData));
+            const lineObject = block.getChartGroup(chart.index)
+                .select(`.${this.lineChartClass}${Helper.getCssClassesLine(chart.cssClasses)}.chart-element-${valueFieldIndex}`);
+
+            const prom = this.updateGroupedPath(block, lineObject, lineGenerator, newData);
+            promises.push(prom);
 
             MarkDot.update(block, newData, keyAxisOrient, scales, margin, keyField.name, valueFieldIndex, valueField.name, chart);
         });
+        return promises;
     }
 
-    private static updateSegmeneted(block: Block, scales: Scales, newData: DataRow[], keyField: Field, margin: BlockMargin, keyAxisOrient: Orient, chart: TwoDimensionalChartModel): void {
+    private static updateSegmeneted(block: Block, scales: Scales, newData: DataRow[], keyField: Field, margin: BlockMargin, keyAxisOrient: Orient, chart: TwoDimensionalChartModel): Promise<any>[] {
         const stackedData = stack().keys(chart.data.valueFields.map(field => field.name))(newData);
-
         const lineGenerator = LineHelper.getSegmentedLineGenerator(keyAxisOrient, scales, keyField.name, margin);
-
         const lines = block.getChartGroup(chart.index)
-            .selectAll<SVGPathElement, DataRow[]>(`path.${this.lineChartClass}${Helper.getCssClassesLine(chart.cssClasses)}`);
+            .selectAll<SVGPathElement, DataRow[]>(`path.${this.lineChartClass}${Helper.getCssClassesLine(chart.cssClasses)}`)
+            .data(stackedData);
 
-        lines
-            .data(stackedData)
-            .interrupt()
-            .transition()
-            .duration(block.transitionManager.durations.chartUpdate)
-            .attr('d', d => lineGenerator(d));
+        const prom = this.updateSegmentedPath(block, lines, lineGenerator);
 
         lines.each((dataset, index) => {
             MarkDot.update(block, dataset, keyAxisOrient, scales, margin, keyField.name, index, '1', chart);
+        });
+        return [prom];
+    }
+
+    private static updateGroupedPath(block: Block, lineObject: Selection<BaseType, any, BaseType, any>, lineGenerator: ILine<DataRow>, newData: DataRow[]): Promise<any> {
+        return new Promise(resolve => {
+            let lineHandler: Selection<BaseType, any, BaseType, any> | Transition<BaseType, any, BaseType, any> = lineObject;
+            if (block.transitionManager.durations.chartUpdate > 0)
+                lineHandler = lineHandler.interrupt()
+                    .transition()
+                    .duration(block.transitionManager.durations.chartUpdate)
+                    .on('end', () => resolve(''));
+
+            lineHandler
+                .attr('d', lineGenerator(newData));
+
+            if (block.transitionManager.durations.chartUpdate <= 0)
+                resolve('');
+        });
+    }
+
+    private static updateSegmentedPath(block: Block, linesObjects: Selection<BaseType, any, BaseType, any>, lineGenerator: ILine<DataRow>): Promise<any> {
+        return new Promise(resolve => {
+            let linesHandler: Selection<BaseType, any, BaseType, any> | Transition<BaseType, any, BaseType, any> = linesObjects;
+            if (block.transitionManager.durations.chartUpdate > 0)
+                linesHandler = linesHandler.interrupt()
+                    .transition()
+                    .duration(block.transitionManager.durations.chartUpdate)
+                    .on('end', () => resolve(''));
+
+            linesHandler
+                .attr('d', d => lineGenerator(d));
+
+            if (block.transitionManager.durations.chartUpdate <= 0)
+                resolve('');
         });
     }
 

@@ -166,10 +166,11 @@ export class ElementHighlighter {
     private static toggleBar(elemSelection: Selection<BaseType, any, BaseType, any>, isHighlight: boolean): void {
         //TODO: вычисление в процентах
         const scaleSize = 2.5;
+        const animationName = 'bar-highlight';
         if (isHighlight) {
             elemSelection.each(function () {
                 const attrs = (this as RectElemWithAttrs).attrs;
-                const handler = select(this).interrupt().transition().duration(200);
+                const handler = select(this).interrupt(animationName).transition(animationName).duration(200);
                 if (attrs.orient === 'vertical') {
                     handler
                         .attr('x', attrs.x - scaleSize)
@@ -184,7 +185,7 @@ export class ElementHighlighter {
         else {
             elemSelection.each(function () {
                 const attrs = (this as RectElemWithAttrs).attrs;
-                const handler = select(this).interrupt().transition().duration(200);
+                const handler = select(this).interrupt(animationName).transition(animationName).duration(200);
                 handler
                     .attr('x', attrs.x)
                     .attr('width', attrs.width)
