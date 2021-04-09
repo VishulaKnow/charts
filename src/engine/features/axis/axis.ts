@@ -82,6 +82,8 @@ export class Axis {
         const axisElement = block.getSvg()
             .select<SVGGElement>(`g.${axisOptions.cssClass}`);
 
+        AxisLabelsEventManager.removeEvents(axisElement);
+
         if (axisOptions.orient === 'left' || axisOptions.orient === 'right') {
             axisElement.selectAll('.tick text').attr('y', null);
             if (axisOptions.orient === 'left')
@@ -95,6 +97,7 @@ export class Axis {
                     AxisLabelHelper.cropLabels(block, scaleKey, scaleOptions, axisOptions, blockSize);
                 }
                 AxisLabelHelper.setTitles(axisElement);
+                AxisLabelsEventManager.setHoverEvents(block, axisElement);
             });
 
         // Ведется отсчет нескольких кадров, чтобы получить уже 100%-отрендеренные лейблы оси.

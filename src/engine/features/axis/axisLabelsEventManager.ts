@@ -20,4 +20,11 @@ export class AxisLabelsEventManager {
             TipBox.get(block).dispatch('mouseleave');
         });
     }
+
+    public static removeEvents(axisElement: Selection<SVGGElement, unknown, HTMLElement, any>): void {
+        const labels = axisElement.selectAll<SVGTextElement, string>('.tick text');
+        labels.on('mousemove', null);
+        labels.on('mouseleave', null);
+        labels.on('click', null);
+    }
 }
