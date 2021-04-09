@@ -15,9 +15,14 @@ import { Helper } from '../../helpers/helper';
 import { TooltipHelper } from './tooltipHelper';
 import { TooltipSettings } from '../../../designer/designerConfig';
 
-interface OverDetails {
+interface DonutOverDetails {
     pointer: [number, number];
     ignoreTranslate?: boolean;
+}
+
+interface TipBoxOverDetails {
+    pointer: [number, number];
+    keyValue: string;
 }
 
 interface TooltipTranslate {
@@ -77,11 +82,11 @@ export class Tooltip {
         ElementHighlighter.renderShadowFilter(block);
 
         let currentKey: string = null;
-        tipBox.on('mousemove', function (e) {
-            const keyValue = TipBoxHelper.getKeyValueByPointer(pointer(e, this), chartOrientation, margin, blockSize, scales.key, scaleKeyModel.type, 'hover');
+        tipBox.on('mousemove', function (e: CustomEvent<TipBoxOverDetails>) {
+            const keyValue = e.detail.keyValue || TipBoxHelper.getKeyValueByPointer(pointer(e, this), chartOrientation, margin, blockSize, scales.key, scaleKeyModel.type, 'hover');
 
             if (tooltipSettings.position === 'followCursor') {
-                const tooltipCoordinate = TooltipHelper.getTooltipCursorCoordinate(pointer(e, this), block.getSvg().node().getBoundingClientRect(), tooltipContent.node().getBoundingClientRect(), window.innerWidth, window.innerHeight);
+                const tooltipCoordinate = TooltipHelper.getTooltipCursorCoordinate(e.detail.pointer || pointer(e, this), block.getSvg().node().getBoundingClientRect(), tooltipContent.node().getBoundingClientRect(), window.innerWidth, window.innerHeight);
                 TooltipComponentsManager.setLineTooltipCoordinate(tooltipBlock, tooltipCoordinate, chartOrientation, 0);
             }
 
@@ -119,7 +124,7 @@ export class Tooltip {
             tooltipArrow = TooltipComponentsManager.renderTooltipArrow(tooltipBlock);
 
         if (tooltipSettings.position === 'followCursor') {
-            elements.on('mousemove', function (e: CustomEvent<OverDetails>) {
+            elements.on('mousemove', function (e: CustomEvent<DonutOverDetails>) {
                 const pointerCoordinate = !pointer(e, block.getSvg().node())[0] ? e.detail.pointer : pointer(e, block.getSvg().node());
                 const tooltipCoordinate = TooltipHelper.getTooltipCursorCoordinate(pointerCoordinate, block.getSvg().node().getBoundingClientRect(), tooltipContent.node().getBoundingClientRect(), window.innerWidth, window.innerHeight);
                 TooltipComponentsManager.setBlockCoordinate(tooltipBlock, tooltipCoordinate);

@@ -18,6 +18,10 @@ export class TipBox {
         return this.renderBlock(block, attributes);
     }
 
+    public static get(block: Block): Selection<SVGRectElement, unknown, HTMLElement, any> {
+        return block.getSvg().select(`.${this.tipBoxClass}`);
+    }
+
     public static clearEvents(block: Block): void {
         block.getSvg()
             .select(`.${this.tipBoxClass}`)

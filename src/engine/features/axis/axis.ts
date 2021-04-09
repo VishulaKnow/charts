@@ -9,6 +9,7 @@ import { AxisLabelHelper } from './axisLabelDomHelper';
 import { AxisDomHelper } from './axisDomHelper';
 import { Size } from '../../../config/config';
 import { select } from 'd3-selection';
+import { AxisLabelsEventManager } from './axisLabelsEventManager';
 
 const MINIMAL_STEP_SIZE_FOR_WRAPPING = 38;
 
@@ -56,6 +57,8 @@ export class Axis {
 
             AxisLabelHelper.setTitles(axisElement);
             AxisLabelHelper.alignLabelsInKeyAxis(axisOptions, axisElement);
+
+            AxisLabelsEventManager.setHoverEvents(block, axisElement);
         }
     }
 
@@ -99,6 +102,7 @@ export class Axis {
         const labelHandler = () => {
             frame++;
             if (frame < 10) requestAnimationFrame(labelHandler);
+
             if (frame === 2) {
                 axisElement.selectAll<SVGTextElement, string>('.tick').each(function (d) {
                     if (scaleKey.domain().findIndex(key => key === d) === -1) {
