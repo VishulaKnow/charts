@@ -13,6 +13,7 @@ export type FilterCallback = (rows: DataRow[]) => void;
 
 export interface SelectDetails {
     multySelect: boolean;
+    keyValue?: string;
 }
 
 export class FilterEventManager {
@@ -100,9 +101,9 @@ export class FilterEventManager {
             const tipBox = TipBox.renderOrGet(this.block, margin, blockSize);
             const thisClass = this;
 
-            tipBox.on('click', function (e: MouseEvent) {
-                const multySelect = e.ctrlKey || e.metaKey;
-                const keyValue = TipBoxHelper.getKeyValueByPointer(pointer(e, this), options.orient, margin, blockSize, scaleKey, options.scale.key.type, 'click');
+            tipBox.on('click', function (e: CustomEvent<SelectDetails>) {
+                const multySelect = thisClass.getMultySelectParam(e);
+                const keyValue = e.detail.keyValue || TipBoxHelper.getKeyValueByPointer(pointer(e, this), options.orient, margin, blockSize, scaleKey, options.scale.key.type, 'click');
                 const appended = thisClass.processKey(multySelect, keyValue);
                 SelectHighlighter.click2DHandler(multySelect, appended, keyValue, thisClass.block, options);
 
@@ -129,8 +130,12 @@ export class FilterEventManager {
         });
     }
 
+    private getMultyParamByEvent(e: Event): boolean {
+        return (e as MouseEvent).ctrlKey || (e as MouseEvent).metaKey;
+    }
+
     private getMultySelectParam(e: CustomEvent<SelectDetails>): boolean {
-        const isMultyButtonToggle = ((e as Event) as MouseEvent).ctrlKey || ((e as Event) as MouseEvent).metaKey;
+        const isMultyButtonToggle = this.getMultyParamByEvent(e);
         return isMultyButtonToggle === undefined
             ? (e.detail.multySelect === undefined ? false : e.detail.multySelect)
             : isMultyButtonToggle;

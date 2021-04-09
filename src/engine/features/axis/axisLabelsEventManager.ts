@@ -19,6 +19,17 @@ export class AxisLabelsEventManager {
         labels.on('mouseleave', function (e, d) {
             TipBox.get(block).dispatch('mouseleave');
         });
+
+        labels.on('click', function (e: MouseEvent, d) {
+            TipBox.get(block).dispatch('click', {
+                bubbles: false,
+                cancelable: true,
+                detail: {
+                    multySelect: e.ctrlKey || e.metaKey,
+                    keyValue: d
+                }
+            })
+        });
     }
 
     public static removeEvents(axisElement: Selection<SVGGElement, unknown, HTMLElement, any>): void {
