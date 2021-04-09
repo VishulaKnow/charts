@@ -73,6 +73,7 @@ export class TwoDimensionalManager {
         const scales = Scale.getScales(options.scale.key,
             options.scale.value,
             model.chartSettings.bar);
+        //TODO: возможно, это больше не нужно
         const keyDomainEquality = Helper.checkDomainsEquality(block.scales.key.domain(), scales.key.domain());
         block.scales = scales;
 
@@ -96,11 +97,12 @@ export class TwoDimensionalManager {
             model.blockCanvas.size,
             model.chartSettings.bar);
 
-        block.filterEventManager.event2DUpdate(options);
-        block.filterEventManager.registerEventFor2D(scales.key, model.chartBlock.margin, model.blockCanvas.size, options);
-
         Promise.all(promises)
-            .then(() => Tooltip.render(block, model, data, model.otherComponents.tooltipBlock, scales));
+            .then(() => {
+                block.filterEventManager.event2DUpdate(options);
+                block.filterEventManager.registerEventFor2D(scales.key, model.chartBlock.margin, model.blockCanvas.size, options);
+                Tooltip.render(block, model, data, model.otherComponents.tooltipBlock, scales);
+            });
 
         RecordOverflowAlert.update(block, model.dataSettings.scope.hidedRecordsAmount, 'top', options.orient);
     }

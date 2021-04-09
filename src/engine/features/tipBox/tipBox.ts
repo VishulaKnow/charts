@@ -22,7 +22,8 @@ export class TipBox {
         block.getSvg()
             .select(`.${this.tipBoxClass}`)
             .on('mousemove', null)
-            .on('mouseleave', null);
+            .on('mouseleave', null)
+            .on('click', null);
     }
 
     private static renderBlock(block: Block, attributes: TipBoxAttributes): Selection<SVGRectElement, unknown, HTMLElement, any> {
