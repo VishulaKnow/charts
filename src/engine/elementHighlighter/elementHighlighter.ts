@@ -15,6 +15,10 @@ import { RectElemWithAttrs } from '../twoDimensionalNotation/bar/bar';
 export class ElementHighlighter {
     private static inactiveElemClass = 'charts-opacity-inactive';
 
+    public static toggleActivityStyle(elementSelection: Selection<BaseType, unknown, BaseType, unknown>, isActive: boolean): void {
+        elementSelection.classed(this.inactiveElemClass, !isActive);
+    }
+
     public static renderShadowFilter(block: Block): Selection<SVGFilterElement, unknown, HTMLElement, unknown> {
         const filterId = NamesManager.getId('shadow', block.id);
 
@@ -92,10 +96,6 @@ export class ElementHighlighter {
             .attr('d', (d, i) => DonutHelper.getArcGeneratorObject(blockSize, margin, donutThickness)
                 .outerRadius(DonutHelper.getOuterRadius(margin, blockSize) + scaleSize)
                 .innerRadius(DonutHelper.getOuterRadius(margin, blockSize) - donutThickness - scaleSize)(d, i));
-    }
-
-    public static toggleActivityStyle(elementSelection: Selection<BaseType, unknown, BaseType, unknown>, isActive: boolean): void {
-        elementSelection.classed(this.inactiveElemClass, !isActive);
     }
 
     public static removeDonutHighlightingByKeys(arcSegments: Selection<SVGGElement, PieArcDatum<DataRow>, BaseType, unknown>, keyFieldName: string, keyValues: string[], margin: BlockMargin, blockSize: Size, donutThickness: number): void {
