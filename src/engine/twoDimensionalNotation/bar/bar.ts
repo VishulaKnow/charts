@@ -13,7 +13,7 @@ import { DomHelper } from "../../helpers/domHelper";
 import { Helper } from "../../helpers/helper";
 import { DataRow, Size } from "../../../config/config";
 
-export interface SVGElemWithAttrs extends SVGElement {
+export interface RectElemWithAttrs extends SVGElement {
     attrs?: {
         x: number;
         y: number;
@@ -39,7 +39,7 @@ export class Bar {
     public static update(block: Block, newData: DataRow[], scales: Scales, margin: BlockMargin, keyAxisOrient: Orient, chart: TwoDimensionalChartModel, blockSize: Size, barsAmounts: number[], keyField: Field, firstBarIndex: number, barSettings: BarChartSettings, isSegmented: boolean): Promise<any>[] {
         let promises: Promise<any>[];
         if (isSegmented) {
-            this.updateSegmented(block,
+            promises = this.updateSegmented(block,
                 newData,
                 scales,
                 margin,
@@ -147,6 +147,8 @@ export class Bar {
 
         this.fillBarAttrs(bars, barAttrs);
 
+        this.setInitialAttrsInfo(bars, keyAxisOrient);
+
         DomHelper.setCssClasses(groups, chart.cssClasses);
         DomHelper.setCssClasses(bars, chart.cssClasses); // Для обозначения принадлежности бара к конкретному чарту
 
@@ -219,7 +221,7 @@ export class Bar {
         return promises;
     }
 
-    private static updateSegmented(block: Block, newData: DataRow[], scales: Scales, margin: BlockMargin, keyAxisOrient: Orient, chart: TwoDimensionalChartModel, blockSize: Size, barsAmounts: number[], keyField: Field, firstBarIndex: number, barSettings: BarChartSettings): void {
+    private static updateSegmented(block: Block, newData: DataRow[], scales: Scales, margin: BlockMargin, keyAxisOrient: Orient, chart: TwoDimensionalChartModel, blockSize: Size, barsAmounts: number[], keyField: Field, firstBarIndex: number, barSettings: BarChartSettings): Promise<any>[] {
         const stackedData = stack().keys(chart.data.valueFields.map(field => field.name))(newData);
 
         block.getChartGroup(chart.index)
@@ -234,7 +236,6 @@ export class Bar {
             .selectAll(`g.${this.barSegmentGroupClass}${Helper.getCssClassesLine(chart.cssClasses)}`)
             .data(stackedData);
 
-        //TODO: запись координат для сегментированного
         const bars = groups
             .selectAll<SVGRectElement, DataRow>(`.${this.barItemClass}${Helper.getCssClassesLine(chart.cssClasses)}`)
             .filter(d => newData.findIndex(row => row[keyField.name] === d.data[keyField.name]) !== -1)
@@ -255,17 +256,21 @@ export class Bar {
             sum(barsAmounts),
             barSettings);
 
-        this.fillBarAttrs(bars, barAttrs, block.transitionManager.durations.chartUpdate);
+        const prom = this.fillBarAttrs(bars, barAttrs, block.transitionManager.durations.chartUpdate)
+            .then(() => this.setInitialAttrsInfo(bars, keyAxisOrient));
         this.fillBarAttrs(newBars, barAttrs);
+
+        this.setInitialAttrsInfo(newBars, keyAxisOrient);
 
         DomHelper.setCssClasses(newBars, chart.cssClasses);
 
         const thisClass = this;
-
         groups.each(function (d, i) {
             DomHelper.setCssClasses(select(this).selectAll(`rect${Helper.getCssClassesLine(chart.cssClasses)}`), Helper.getCssClassesWithElementIndex(chart.cssClasses, i)); // Для обозначения принадлежности бара к конкретной части стака
             thisClass.setSegmentColor(select(this).selectAll(Helper.getCssClassesLine(chart.cssClasses)), chart.style.elementColors, i);
         });
+
+        return [prom];
     }
 
     private static fillBarAttrs(bars: Selection<SVGRectElement, DataRow, BaseType, unknown>, barAttrs: BarAttrsHelper, transitionDuration: number = 0): Promise<any> {
@@ -288,9 +293,18 @@ export class Bar {
         });
     }
 
-    private static setInitialAttrsInfo(bars: Selection<SVGRectElement, DataRow, SVGGElement, any>, keyAxisOrient: Orient): void {
+    private static setSegmentColor(segments: Selection<SVGGElement, any, BaseType, unknown>, colorPalette: string[], segmentedIndex: number): void {
+        segments.style('fill', colorPalette[segmentedIndex % colorPalette.length]);
+    }
+
+    /**
+     * Устноака координат для удобного обновления.
+     * @param bars 
+     * @param keyAxisOrient 
+     */
+    private static setInitialAttrsInfo(bars: Selection<SVGRectElement, any, BaseType, any>, keyAxisOrient: Orient): void {
         bars.each(function () {
-            (this as SVGElemWithAttrs).attrs = {
+            (this as RectElemWithAttrs).attrs = {
                 x: DomHelper.getSelectionNumericAttr(select(this), 'x'),
                 y: DomHelper.getSelectionNumericAttr(select(this), 'y'),
                 width: DomHelper.getSelectionNumericAttr(select(this), 'width'),
@@ -298,9 +312,5 @@ export class Bar {
                 orient: keyAxisOrient === 'left' || keyAxisOrient === 'right' ? 'horizontal' : 'vertical'
             }
         });
-    }
-
-    private static setSegmentColor(segments: Selection<SVGGElement, any, BaseType, unknown>, colorPalette: string[], segmentedIndex: number): void {
-        segments.style('fill', colorPalette[segmentedIndex % colorPalette.length]);
     }
 }

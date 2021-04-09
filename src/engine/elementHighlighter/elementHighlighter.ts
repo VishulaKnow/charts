@@ -10,7 +10,7 @@ import { NamesManager } from '../namesManager';
 import { DataRow, Size, TwoDimensionalChartType } from '../../config/config';
 import { Donut } from '../polarNotation/donut/donut';
 import { MarkDot } from '../features/markDots/markDot';
-import { SVGElemWithAttrs } from '../twoDimensionalNotation/bar/bar';
+import { RectElemWithAttrs } from '../twoDimensionalNotation/bar/bar';
 
 export class ElementHighlighter {
     private static inactiveElemClass = 'charts-opacity-inactive';
@@ -168,7 +168,7 @@ export class ElementHighlighter {
         const scaleSize = 2.5;
         if (isHighlight) {
             elemSelection.each(function () {
-                const attrs = (this as SVGElemWithAttrs).attrs;
+                const attrs = (this as RectElemWithAttrs).attrs;
                 const handler = select(this).interrupt().transition().duration(200);
                 if (attrs.orient === 'vertical') {
                     handler
@@ -183,7 +183,7 @@ export class ElementHighlighter {
         }
         else {
             elemSelection.each(function () {
-                const attrs = (this as SVGElemWithAttrs).attrs;
+                const attrs = (this as RectElemWithAttrs).attrs;
                 const handler = select(this).interrupt().transition().duration(200);
                 handler
                     .attr('x', attrs.x)
