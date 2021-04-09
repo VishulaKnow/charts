@@ -150,7 +150,7 @@ export class ElementHighlighter {
 
     private static setElementsStyleByState(block: Block, elemSelection: Selection<BaseType, any, BaseType, any>, isHighlight: boolean, chartType: TwoDimensionalChartType, transitionDuration: number, flag: boolean = true): void {
         if (chartType === 'area' || chartType === 'line') {
-            elemSelection.call(this.highlightDot, isHighlight, transitionDuration);
+            elemSelection.call(this.toggleDot, isHighlight, transitionDuration);
         } else {
             if (flag)
                 this.toggleBar(elemSelection, isHighlight);
@@ -164,8 +164,7 @@ export class ElementHighlighter {
     }
 
     private static toggleBar(elemSelection: Selection<BaseType, any, BaseType, any>, isHighlight: boolean): void {
-        //TODO: вычисление в процентах
-        const scaleSize = 2.5;
+        const scaleSize = (width: number) => width * 0.1;
         const animationName = 'bar-highlight';
         if (isHighlight) {
             elemSelection.each(function () {
@@ -173,12 +172,12 @@ export class ElementHighlighter {
                 const handler = select(this).interrupt(animationName).transition(animationName).duration(200);
                 if (attrs.orient === 'vertical') {
                     handler
-                        .attr('x', attrs.x - scaleSize)
-                        .attr('width', attrs.width + scaleSize * 2);
+                        .attr('x', attrs.x - scaleSize(attrs.width))
+                        .attr('width', attrs.width + scaleSize(attrs.width) * 2);
                 } else {
                     handler
-                        .attr('y', attrs.y - scaleSize)
-                        .attr('height', attrs.height + scaleSize * 2);
+                        .attr('y', attrs.y - scaleSize(attrs.height))
+                        .attr('height', attrs.height + scaleSize(attrs.height) * 2);
                 }
             });
         }
@@ -195,7 +194,7 @@ export class ElementHighlighter {
         }
     }
 
-    private static highlightDot(elementSelection: Selection<BaseType, DataRow, BaseType, unknown>, isScaled: boolean, transitionDuration: number = 0): void {
+    private static toggleDot(elementSelection: Selection<BaseType, DataRow, BaseType, unknown>, isScaled: boolean, transitionDuration: number = 0): void {
         const animationName = 'size-scale';
         elementSelection.nodes().forEach(node => {
             interrupt(node, animationName);

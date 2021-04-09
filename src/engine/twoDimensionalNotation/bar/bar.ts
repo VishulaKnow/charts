@@ -303,6 +303,7 @@ export class Bar {
      * @param keyAxisOrient 
      */
     private static setInitialAttrsInfo(bars: Selection<SVGRectElement, any, BaseType, any>, keyAxisOrient: Orient): void {
+        //TODO: сделать гибко в зависимости от настроек бара из дизайнер конфига
         bars.each(function () {
             (this as RectElemWithAttrs).attrs = {
                 x: DomHelper.getSelectionNumericAttr(select(this), 'x'),
