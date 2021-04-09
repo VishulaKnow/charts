@@ -11,16 +11,16 @@ import { Size } from '../../../config/config';
 type TextAnchor = 'start' | 'end' | 'middle';
 
 export class AxisLabelHelper {
-    public static setTitles(axisElement: Selection<SVGGElement, unknown, HTMLElement, any>, tickValues: string[]): void {
-        axisElement.selectAll('.tick text')
+    public static setTitles(axisElement: Selection<SVGGElement, unknown, HTMLElement, any>): void {
+        axisElement.selectAll<SVGTextElement, string>('.tick text')
             .each(function (d, i) {
                 const tickTitle = select(this).select('title');
                 if (tickTitle.empty())
                     select(this)
                         .append('title')
-                        .text(tickValues[i]);
+                        .text(d);
                 else
-                    tickTitle.text(tickValues[i]);
+                    tickTitle.text(d);
             });
     }
 
@@ -133,7 +133,6 @@ export class AxisLabelHelper {
                     letter,
                     line: string[] = [], // one line. letters from this var into tpsans.
                     lineNumber = 0,
-                    y = textBlock.attr("y"),
                     dy = 1.4,
                     tspan = textBlock.text(null).append("tspan").attr("dy", dy + "em");
 

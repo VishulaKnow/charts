@@ -54,7 +54,7 @@ export class Axis {
             else
                 AxisLabelHelper.cropLabels(block, scale, scaleOptions, axisOptions, blockSize);
 
-            AxisLabelHelper.setTitles(axisElement, axisGenerator.scale().domain());
+            AxisLabelHelper.setTitles(axisElement);
             AxisLabelHelper.alignLabelsInKeyAxis(axisOptions, axisElement);
         }
     }
@@ -91,7 +91,7 @@ export class Axis {
                 if (axisOptions.orient === 'bottom' || axisOptions.orient === 'top') {
                     AxisLabelHelper.cropLabels(block, scaleKey, scaleOptions, axisOptions, blockSize);
                 }
-                AxisLabelHelper.setTitles(axisElement, axisGenerator.scale().domain());
+                AxisLabelHelper.setTitles(axisElement);
             });
 
         // Ведется отсчет нескольких кадров, чтобы получить уже 100%-отрендеренные лейблы оси.
