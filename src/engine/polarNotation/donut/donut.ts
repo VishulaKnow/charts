@@ -3,7 +3,7 @@ import { Selection, BaseType } from 'd3-selection'
 import { interpolate } from 'd3-interpolate'
 import { BlockMargin, DonutChartSettings, PolarChartModel } from "../../../model/model";
 import { Block } from "../../block/block";
-import { Aggregator } from "../aggregator";
+import { Aggregator } from "../../features/aggregator/aggregator";
 import { DonutHelper } from './DonutHelper';
 import { DomHelper } from '../../helpers/domHelper';
 import { DataRow, Size } from '../../../config/config';

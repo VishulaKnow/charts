@@ -1,13 +1,13 @@
 import { sum } from 'd3-array'
 import { interpolateNumber } from 'd3-interpolate';
 import { Selection } from 'd3-selection'
-import { DataRow } from '../../config/config';
-import { DataType } from '../../designer/designerConfig';
-import { Field } from "../../model/model";
-import { Block } from "../block/block";
-import { Helper } from '../helpers/helper';
-import { ValueFormatter } from '../valueFormatter';
-import { Translate } from "./donut/donut";
+import { DataRow } from '../../../config/config';
+import { DataType } from '../../../designer/designerConfig';
+import { Field } from "../../../model/model";
+import { Block } from "../../block/block";
+import { Helper } from '../../helpers/helper';
+import { ValueFormatter } from '../../valueFormatter';
+import { Translate } from "../../polarNotation/donut/donut";
 
 export interface AggregatorInfo {
     name: string;

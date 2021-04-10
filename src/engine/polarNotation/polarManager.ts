@@ -6,7 +6,7 @@ import { RecordOverflowAlert } from "../features/recordOverflowAlert/recordOverf
 import { Title } from "../features/title/title";
 import { ElementHighlighter } from "../elementHighlighter/elementHighlighter";
 import { Tooltip } from "../features/tolltip/tooltip";
-import { Aggregator } from "./aggregator";
+import { Aggregator } from "../features/aggregator/aggregator";
 import { Donut } from "./donut/donut";
 import { DataSource, Size } from "../../config/config";
 

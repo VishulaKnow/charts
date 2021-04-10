@@ -5,7 +5,7 @@ import { Axis } from "./features/axis/axis";
 import { EmbeddedLabels } from "./features/embeddedLabels/embeddedLabels";
 import { MarkDot } from "./features/markDots/markDot";
 import { Tooltip } from "./features/tolltip/tooltip";
-import { Aggregator } from "./polarNotation/aggregator";
+import { Aggregator } from "./features/aggregator/aggregator";
 import { Donut } from "./polarNotation/donut/donut";
 import { Area } from "./twoDimensionalNotation/area/area";
 import { Bar } from "./twoDimensionalNotation/bar/bar";
