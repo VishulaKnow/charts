@@ -197,7 +197,10 @@ export class Bar {
                 barSettings);
 
             const prom = this.fillBarAttrs(bars, barAttrs, block.transitionManager.durations.chartUpdate)
-                .then(() => this.setInitialAttrsInfo(bars, keyAxisOrient));
+                .then(() => {
+                    bars.style('opacity', null);
+                    this.setInitialAttrsInfo(bars, keyAxisOrient);
+                });
             this.fillBarAttrs(newBars, barAttrs);
             promises.push(prom);
 
@@ -253,7 +256,10 @@ export class Bar {
             barSettings);
 
         const prom = this.fillBarAttrs(bars, barAttrs, block.transitionManager.durations.chartUpdate)
-            .then(() => this.setInitialAttrsInfo(bars, keyAxisOrient));
+            .then(() => {
+                this.setInitialAttrsInfo(bars, keyAxisOrient);
+                bars.style('opacity', null);
+            });
         this.fillBarAttrs(newBars, barAttrs);
 
         this.setInitialAttrsInfo(newBars, keyAxisOrient);

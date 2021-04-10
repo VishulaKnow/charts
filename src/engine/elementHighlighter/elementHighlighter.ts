@@ -103,9 +103,32 @@ export class ElementHighlighter {
         this.toggleDonutHighlightState(segments, margin, blockSize, donutThickness, 0, false);
     }
 
+    public static setInactiveFor2D(block: Block, keyFieldName: string, charts: TwoDimensionalChartModel[]): void {
+        charts.forEach(chart => {
+            const elems = DomHelper.get2DChartElements(block, chart);
+            console.log(elems.nodes());
+            if (block.filterEventManager.getSelectedKeys().length === 0) {
+                this.toggleActivityStyle(elems, true);
+            } else {
+                const unselectedElems = DomHelper.getChartElementsByKeys(elems, chart.isSegmented, keyFieldName, block.filterEventManager.getSelectedKeys(), SelectionCondition.Exclude);
+                const selectedElems = DomHelper.getChartElementsByKeys(elems, chart.isSegmented, keyFieldName, block.filterEventManager.getSelectedKeys());
+                this.toggleActivityStyle(unselectedElems, false);
+                this.toggleActivityStyle(selectedElems, true);
+            }
+        });
+    }
+
     public static highlight2DElementsHover(block: Block, keyFieldName: string, keyValue: string, charts: TwoDimensionalChartModel[], transitionDuration: number): void {
         this.removeUnselected2DHighlight(block, keyFieldName, charts, transitionDuration);
         this.highlightElementsOf2D(block, keyFieldName, keyValue, charts, transitionDuration);
+    }
+
+    public static highlightElementsOf2D(block: Block, keyFieldName: string, keyValue: string, charts: TwoDimensionalChartModel[], transitionDuration: number): void {
+        this.toggle2DHighlightState(block, keyFieldName, keyValue, charts, true, transitionDuration);
+    }
+
+    public static remove2DHighlightingByKey(block: Block, keyFieldName: string, keyValue: string, charts: TwoDimensionalChartModel[], transitionDuration: number): void {
+        this.toggle2DHighlightState(block, keyFieldName, keyValue, charts, false, transitionDuration);
     }
 
     public static remove2DChartsFullHighlighting(block: Block, charts: TwoDimensionalChartModel[], transitionDuration: number = 0): void {
@@ -126,6 +149,8 @@ export class ElementHighlighter {
             if (chart.type !== 'bar' && !chart.markersOptions.show)
                 selectedElems.classed(MarkDot.hiddenDotClass, true);
             this.setElementsStyleByState(block, selectedElems, false, chart.type, transitionDuration);
+            if (block.filterEventManager.getSelectedKeys().length > 0)
+                this.toggleActivityStyle(selectedElems, false);
         });
     }
 
@@ -137,15 +162,10 @@ export class ElementHighlighter {
             if (chart.type !== 'bar' && !chart.markersOptions.show)
                 selectedElems.classed(MarkDot.hiddenDotClass, !isHighlight);
             this.setElementsStyleByState(block, selectedElems, isHighlight, chart.type, transitionDuration);
+            if (block.filterEventManager.getSelectedKeys().length > 0 && block.filterEventManager.getSelectedKeys().findIndex(sk => sk === keyValue) === -1) {
+                this.toggleActivityStyle(selectedElems, isHighlight);
+            }
         });
-    }
-
-    public static highlightElementsOf2D(block: Block, keyFieldName: string, keyValue: string, charts: TwoDimensionalChartModel[], transitionDuration: number): void {
-        this.toggle2DHighlightState(block, keyFieldName, keyValue, charts, true, transitionDuration);
-    }
-
-    public static remove2DHighlightingByKey(block: Block, keyFieldName: string, keyValue: string, charts: TwoDimensionalChartModel[], transitionDuration: number): void {
-        this.toggle2DHighlightState(block, keyFieldName, keyValue, charts, false, transitionDuration);
     }
 
     private static setElementsStyleByState(block: Block, elemSelection: Selection<BaseType, any, BaseType, any>, isHighlight: boolean, chartType: TwoDimensionalChartType, transitionDuration: number, flag: boolean = true): void {

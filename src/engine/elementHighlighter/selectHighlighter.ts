@@ -12,6 +12,7 @@ import { ElementHighlighter } from "./elementHighlighter";
 export class SelectHighlighter {
     public static click2DHandler(multySelection: boolean, appendKey: boolean, keyValue: string, block: Block, options: TwoDimensionalOptionsModel): void {
         ElementHighlighter.renderShadowFilter(block);
+        ElementHighlighter.setInactiveFor2D(block, options.data.keyField.name, options.charts);
         if (!appendKey) {
             ElementHighlighter.remove2DHighlightingByKey(block, options.data.keyField.name, keyValue, options.charts, 0);
             return;

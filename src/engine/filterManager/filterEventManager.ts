@@ -89,10 +89,11 @@ export class FilterEventManager {
             this.selectedKeys.forEach(key => {
                 if (this.fullDataset.findIndex(row => row[options.data.keyField.name] === key) === -1)
                     removedKeys.push(key);
-                else
-                    SelectHighlighter.click2DHandler(true, true, key, this.block, options);
             });
             removedKeys.forEach(rKey => this.selectedKeys.splice(this.selectedKeys.findIndex(sKey => sKey === rKey), 1));
+            this.selectedKeys.forEach(key => {
+                SelectHighlighter.click2DHandler(true, true, key, this.block, options);
+            });
         }
     }
 
