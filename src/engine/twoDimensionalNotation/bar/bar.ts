@@ -78,10 +78,6 @@ export class Bar {
         return block.getSvg().selectAll(`rect.${this.barItemClass}${Helper.getCssClassesLine(chartCssClasses)}`);
     }
 
-    public static getAllBarClones(block: Block): Selection<BaseType, DataRow, BaseType, unknown> {
-        return block.getChartBlock().selectAll(`.${this.barItemCloneClass}`);
-    }
-
     private static renderGrouped(block: Block, scales: Scales, data: DataRow[], keyField: Field, margin: BlockMargin, keyAxisOrient: Orient, chart: TwoDimensionalChartModel, barsAmounts: number[], blockSize: Size, firstBarIndex: number, barSettings: BarChartSettings): void {
         chart.data.valueFields.forEach((field, index) => {
             const bars = block.getChartGroup(chart.index)
