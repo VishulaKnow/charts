@@ -3,7 +3,7 @@ import { AxisModelOptions, IAxisModel, IScaleModel, ScaleKeyModel, ScaleValueMod
 import { Block } from "../../block/block";
 import { Scale, Scales } from "../scale/scale";
 import { AXIS_VERTICAL_LABEL_PADDING } from "../../../model/marginModel";
-import { NamesManager } from '../../namesManager';
+import { NamesHelper } from '../../helpers/namesHelper';
 import { AxisHelper } from './axisHelper';
 import { AxisLabelHelper } from './axisLabelDomHelper';
 import { AxisDomHelper } from './axisDomHelper';
@@ -14,7 +14,7 @@ import { AxisLabelsEventManager } from './axisLabelsEventManager';
 const MINIMAL_STEP_SIZE_FOR_WRAPPING = 38;
 
 export class Axis {
-    public static axesClass = NamesManager.getClassName('axis');
+    public static axesClass = NamesHelper.getClassName('axis');
 
     public static render(block: Block, scales: Scales, scaleModel: IScaleModel, axisModel: IAxisModel, blockSize: Size): void {
         if (axisModel.value.visibility)

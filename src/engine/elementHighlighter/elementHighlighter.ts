@@ -6,7 +6,7 @@ import { easeLinear } from 'd3-ease';
 import { interrupt, Transition } from 'd3-transition';
 import { DonutHelper } from '../polarNotation/donut/DonutHelper';
 import { DomHelper, SelectionCondition } from '../helpers/domHelper';
-import { NamesManager } from '../namesManager';
+import { NamesHelper } from '../helpers/namesHelper';
 import { DataRow, Size, TwoDimensionalChartType } from '../../config/config';
 import { Donut } from '../polarNotation/donut/donut';
 import { MarkDot } from '../features/markDots/markDot';
@@ -20,7 +20,7 @@ export class ElementHighlighter {
     }
 
     public static renderShadowFilter(block: Block): Selection<SVGFilterElement, unknown, HTMLElement, unknown> {
-        const filterId = NamesManager.getId('shadow', block.id);
+        const filterId = NamesHelper.getId('shadow', block.id);
 
         let filter = block.renderDefs()
             .select<SVGFilterElement>(`filter#${filterId}`);
@@ -161,7 +161,7 @@ export class ElementHighlighter {
                 this.removeFilter(elemSelection);
             }
         }
-        this.toggleActivityStyle(elemSelection, isHighlight);
+        // this.toggleActivityStyle(elemSelection, isHighlight);
     }
 
     private static toggleBar(elemSelection: Selection<BaseType, any, BaseType, any>, isHighlight: boolean): void {

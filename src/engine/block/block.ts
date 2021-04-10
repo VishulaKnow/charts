@@ -4,7 +4,7 @@ import { BlockMargin } from "../../model/model";
 import { Scales } from "../features/scale/scale";
 import { TipBox } from "../features/tipBox/tipBox";
 import { Helper } from "../helpers/helper";
-import { NamesManager } from "../namesManager";
+import { NamesHelper } from "../helpers/namesHelper";
 import { FilterEventManager } from "../filterManager/filterEventManager";
 import { Donut } from "../polarNotation/donut/donut";
 import { TransitionManager } from "../transitionManager";
@@ -42,7 +42,7 @@ export class Block {
             .append('svg')
             .attr('width', blockSize.width)
             .attr('height', blockSize.height)
-            .attr('class', this.svgCssClasses.join(' ') + ' ' + NamesManager.getClassName('svg-chart'));
+            .attr('class', this.svgCssClasses.join(' ') + ' ' + NamesHelper.getClassName('svg-chart'));
     }
 
     public renderWrapper(blockSize: Size): void {
@@ -61,7 +61,7 @@ export class Block {
     }
 
     public getSvg(): Selection<SVGElement, unknown, HTMLElement, any> {
-        return this.getWrapper().select(`svg.${NamesManager.getClassName('svg-chart')}`);
+        return this.getWrapper().select(`svg.${NamesHelper.getClassName('svg-chart')}`);
     }
 
     public getWrapper(): Selection<BaseType, unknown, HTMLElement, any> {
@@ -113,7 +113,7 @@ export class Block {
     }
 
     public getClipPathId(): string {
-        return NamesManager.getId('clip-path', this.id);
+        return NamesHelper.getId('clip-path', this.id);
     }
 
     public renderDefs(): Selection<SVGDefsElement, unknown, HTMLElement, unknown> {

@@ -5,7 +5,7 @@ import { BlockMargin, Orient, TwoDimensionalChartModel } from "../../../model/mo
 import { Block } from "../../block/block";
 import { DomHelper } from '../../helpers/domHelper';
 import { Helper } from '../../helpers/helper';
-import { NamesManager } from '../../namesManager';
+import { NamesHelper } from '../../helpers/namesHelper';
 import { Scales } from "../scale/scale";
 import { MarkDotHelper } from "./markDotsHelper";
 
@@ -17,8 +17,8 @@ export interface DotAttrs {
 select.prototype.transition = transition;
 
 export class MarkDot {
-    public static readonly markerDotClass = NamesManager.getClassName('dot');
-    public static readonly hiddenDotClass = NamesManager.getClassName('dot-hidden');
+    public static readonly markerDotClass = NamesHelper.getClassName('dot');
+    public static readonly hiddenDotClass = NamesHelper.getClassName('dot-hidden');
 
     private static dotRadius = 4;
 
