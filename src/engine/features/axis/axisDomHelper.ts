@@ -27,14 +27,4 @@ export class AxisDomHelper {
             .attr('text-anchor', 'middle')
             .attr('x', null);
     }
-
-    public static axisRotation(axisElement: Selection<SVGGElement, unknown, HTMLElement, any>, axisOptions: AxisModelOptions): boolean {
-        let isRotated = false;
-        axisElement.selectAll('.tick text').each(function () {
-            if (select(this).attr('transform') === 'rotate(-90)')
-                isRotated = true;
-        });
-        return isRotated && axisOptions.labels.position === 'straight'
-            || !isRotated && axisOptions.labels.position === 'rotated';
-    }
 }
