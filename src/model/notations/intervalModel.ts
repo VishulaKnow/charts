@@ -49,7 +49,8 @@ export class IntervalModel {
                     labels: {
                         maxSize: AxisModel.getLabelSize(designerConfig.canvas.axisLabel.maxSize.main, data[options.data.dataSource].map(d => d[options.data.keyField.name])).width,
                         position: AxisModel.getKeyAxisLabelPosition(margin, config.canvas.size, DataManagerModel.getDataValuesByKeyField(data, options.data.dataSource, options.data.keyField.name).length),
-                        visible: true
+                        visible: true,
+                        defaultTooltip: designerConfig.elementsOptions.tooltip.position === 'fixed'
                     },
                     visibility: options.axis.key.visibility
                 },
@@ -65,7 +66,8 @@ export class IntervalModel {
                     labels: {
                         maxSize: designerConfig.canvas.axisLabel.maxSize.main,
                         position: 'straight',
-                        visible: true
+                        visible: true,
+                        defaultTooltip: true
                     },
                     visibility: options.axis.value.visibility
                 }

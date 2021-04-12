@@ -60,13 +60,19 @@ export class Axis {
 
             AxisLabelsEventManager.setHoverEvents(block, axisElement);
         }
+        if (axisOptions.labels.defaultTooltip)
+            AxisLabelHelper.setTitles(axisElement);
     }
 
     private static updateValueAxis(block: Block, scaleValue: AxisScale<any>, scaleOptions: ScaleValueModel, axisOptions: AxisModelOptions): void {
         const axisGenerator = AxisHelper.getBaseAxisGenerator(axisOptions, scaleValue, scaleOptions);
         AxisHelper.setLabelsSettings(axisGenerator, scaleOptions.domain, scaleValue.range());
         const axisElement = block.getSvg().select<SVGGElement>(`g.${axisOptions.cssClass}`);
-        AxisDomHelper.updateAxisElement(axisGenerator, axisElement, axisOptions.translate, block.transitionManager.durations.chartUpdate);
+        AxisDomHelper.updateAxisElement(axisGenerator, axisElement, axisOptions.translate, block.transitionManager.durations.chartUpdate)
+            .then(() => {
+                if (axisOptions.labels.defaultTooltip)
+                    AxisLabelHelper.setTitles(axisElement);
+            });
     }
 
     private static updateKeyAxis(block: Block, scaleKey: AxisScale<any>, scaleOptions: ScaleKeyModel, axisOptions: AxisModelOptions, blockSize: Size, domainNotUpdated: boolean): void {
@@ -96,8 +102,9 @@ export class Axis {
                 if (axisOptions.orient === 'bottom' || axisOptions.orient === 'top') {
                     AxisLabelHelper.cropLabels(block, scaleKey, scaleOptions, axisOptions, blockSize);
                 }
-                // AxisLabelHelper.setTitles(axisElement);
                 AxisLabelsEventManager.setHoverEvents(block, axisElement);
+                if (axisOptions.labels.defaultTooltip)
+                    AxisLabelHelper.setTitles(axisElement);
             });
 
         // Ведется отсчет нескольких кадров, чтобы получить уже 100%-отрендеренные лейблы оси.

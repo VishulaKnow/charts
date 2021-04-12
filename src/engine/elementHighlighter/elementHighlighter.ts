@@ -112,6 +112,7 @@ export class ElementHighlighter {
             if (chart.type !== 'bar' && !chart.markersOptions.show)
                 elems.classed(MarkDot.hiddenDotClass, true);
             this.setElementsStyleByState(block, elems, false, chart.type, transitionDuration, false);
+            this.toggleActivityStyle(elems, true);
         });
     }
 

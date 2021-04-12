@@ -4,7 +4,7 @@ import { ModelHelper } from "../modelHelper";
 import { AxisType, CLASSES } from "../modelBuilder";
 import { DataManagerModel } from "../dataManagerModel";
 import { TwoDimensionalModel } from "../notations/twoDimensionalModel";
-import { AxisLabelCanvas } from "../../designer/designerConfig";
+import { AxisLabelCanvas, TooltipSettings } from "../../designer/designerConfig";
 
 export interface LabelSize {
     width: number;
@@ -12,7 +12,7 @@ export interface LabelSize {
 }
 
 export class AxisModel {
-    public static getKeyAxis(charts: TwoDimensionalChart[], data: DataSource, dataOptions: DataOptions, orient: ChartOrientation, axisConfig: DiscreteAxisOptions, labelConfig: AxisLabelCanvas, margin: BlockMargin, blockSize: Size): AxisModelOptions {
+    public static getKeyAxis(charts: TwoDimensionalChart[], data: DataSource, dataOptions: DataOptions, orient: ChartOrientation, axisConfig: DiscreteAxisOptions, labelConfig: AxisLabelCanvas, margin: BlockMargin, blockSize: Size, tooltipSettings: TooltipSettings): AxisModelOptions {
         return {
             type: 'key',
             orient: AxisModel.getAxisOrient(AxisType.Key, orient, axisConfig.position),
@@ -25,7 +25,8 @@ export class AxisModel {
             labels: {
                 maxSize: AxisModel.getLabelSize(labelConfig.maxSize.main, data[dataOptions.dataSource].map(d => d[dataOptions.keyField.name])).width,
                 position: AxisModel.getKeyAxisLabelPosition(margin, blockSize, DataManagerModel.getDataValuesByKeyField(data, dataOptions.dataSource, dataOptions.keyField.name).length),
-                visible: !TwoDimensionalModel.getChartsEmbeddedLabelsFlag(charts, orient)
+                visible: !TwoDimensionalModel.getChartsEmbeddedLabelsFlag(charts, orient),
+                defaultTooltip: tooltipSettings.position === 'fixed'
             },
             visibility: axisConfig.visibility
         }
@@ -44,7 +45,8 @@ export class AxisModel {
             labels: {
                 maxSize: labelConfig.maxSize.main,
                 position: 'straight',
-                visible: true
+                visible: true,
+                defaultTooltip: true
             },
             visibility: axisConfig.visibility
         }

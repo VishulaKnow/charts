@@ -130,6 +130,7 @@ export interface AxisLabelModel {
     maxSize: number;
     position: AxisLabelPosition;
     visible: boolean;
+    defaultTooltip: boolean;
 }
 
 export interface AdditionalElementsOptions {

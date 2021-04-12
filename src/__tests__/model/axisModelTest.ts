@@ -1,4 +1,5 @@
 import { DataOptions, DataSource, DiscreteAxisOptions, NumberAxisOptions, Size, TwoDimensionalChart, TwoDimensionalOptions } from "../../config/config";
+import { TooltipSettings } from "../../designer/designerConfig";
 import { AxisModel } from "../../model/featuresModel/axisModel";
 import { AxisModelOptions, BlockMargin } from "../../model/model";
 
@@ -35,6 +36,7 @@ describe('get axes', () => {
     let dataOptions: DataOptions;
     let margin: BlockMargin;
     let blockSize: Size;
+    let tooltipSettings: TooltipSettings;
 
     beforeEach(() => {
         charts = [
@@ -94,11 +96,14 @@ describe('get axes', () => {
         data = getData();
         dataOptions = { dataSource: "dataSet_poor", keyField: { name: 'brand', format: null } };
         margin = { top: 20, bottom: 20, left: 20, right: 20 };
-        blockSize = { height: 500, width: 1000 }
+        blockSize = { height: 500, width: 1000 };
+        tooltipSettings = {
+            position: 'fixed'
+        }
     });
 
     test('getKeyAxis should return bottom key axis with straight labels', () => {
-        const result = AxisModel.getKeyAxis(charts, data, dataOptions, 'vertical', descreteAxisOptions, { maxSize: { main: 60 } }, margin, blockSize);
+        const result = AxisModel.getKeyAxis(charts, data, dataOptions, 'vertical', descreteAxisOptions, { maxSize: { main: 60 } }, margin, blockSize, tooltipSettings);
         const expected: AxisModelOptions = {
             visibility: true,
             type: "key",
@@ -106,7 +111,8 @@ describe('get axes', () => {
             labels: {
                 maxSize: 0,
                 position: 'straight',
-                visible: true
+                visible: true,
+                defaultTooltip: true
             },
             orient: "bottom",
             ticks: {
@@ -122,7 +128,8 @@ describe('get axes', () => {
 
     test('getKeyAxis should return left key axis with straight labels', () => {
         descreteAxisOptions.position = 'start';
-        const result = AxisModel.getKeyAxis(charts, data, dataOptions, 'horizontal', descreteAxisOptions, { maxSize: { main: 60 } }, margin, blockSize);
+        tooltipSettings.position = 'followCursor';
+        const result = AxisModel.getKeyAxis(charts, data, dataOptions, 'horizontal', descreteAxisOptions, { maxSize: { main: 60 } }, margin, blockSize, tooltipSettings);
         const expected: AxisModelOptions = {
             visibility: true,
             type: "key",
@@ -130,7 +137,8 @@ describe('get axes', () => {
             labels: {
                 maxSize: 0,
                 position: 'straight',
-                visible: true
+                visible: true,
+                defaultTooltip: false
             },
             orient: "left",
             ticks: {
@@ -154,7 +162,8 @@ describe('get axes', () => {
             labels: {
                 maxSize: 60,
                 position: 'straight',
-                visible: true
+                visible: true,
+                defaultTooltip: true
             },
             orient: "left",
             ticks: {
@@ -177,7 +186,8 @@ describe('get axes', () => {
             labels: {
                 maxSize: 60,
                 position: 'straight',
-                visible: true
+                visible: true,
+                defaultTooltip: true
             },
             orient: "right",
             ticks: {
