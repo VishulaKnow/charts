@@ -301,16 +301,14 @@ export class Bar {
     }
 
     /**
-     * Устноака координат для удобного обновления.
-     * @param bars 
-     * @param keyAxisOrient 
+     * Устнановка координат для удобного обновления.
      */
     private static setInitialAttrsInfo(bars: Selection<SVGRectElement, any, BaseType, any>, keyAxisOrient: Orient, barSettings: BarChartSettings): void {
         bars.each(function () {
             const width = DomHelper.getSelectionNumericAttr(select(this), 'width');
             const height = DomHelper.getSelectionNumericAttr(select(this), 'height');
             const orient = keyAxisOrient === 'left' || keyAxisOrient === 'right' ? 'horizontal' : 'vertical';
-            let scaleSize = 0.1 * (orient === 'vertical' ? width : height);
+            let scaleSize = 0.06 * (orient === 'vertical' ? width : height);
             scaleSize = scaleSize > barSettings.barDistance / 2 ? barSettings.barDistance / 2 : scaleSize;
 
             (this as RectElemWithAttrs).attrs = {
