@@ -7,6 +7,7 @@ import { ModelHelper } from "./modelHelper";
 
 export class ChartStyleModel {
     private static safeColorsAmount = 8;
+    private static standartColors = ["#209DE3", "#FF3131", "#FFBA00", "#20B078"];
 
     public static getCssClasses(chartIndex: number): string[] {
         const cssClasses = [`chart-${chartIndex}`];
@@ -15,7 +16,8 @@ export class ChartStyleModel {
 
     public static get2DChartStyle(chartsAmount: number, chartType: TwoDimensionalChartType, chartsFieldsAmounts: number[], chartIndex: number, isSegmented: boolean, styleConfig: ChartStyleConfig): ChartStyle {
         const startIndex = this.getStartIndex(chartIndex, chartsFieldsAmounts);
-        const palette = this.getColorSet(styleConfig.baseColors, ModelHelper.getSum(chartsFieldsAmounts));
+        const baseColors = this.checkAndGet(styleConfig.baseColors);
+        const palette = this.getColorSet(baseColors, ModelHelper.getSum(chartsFieldsAmounts));
 
         return {
             elementColors: this.getChartColors(palette, chartsFieldsAmounts[chartIndex], startIndex, chartType),
@@ -24,8 +26,9 @@ export class ChartStyleModel {
     }
 
     public static getChartStyle(elementsAmount: number, styleConfig: ChartStyleConfig): ChartStyle {
+        const baseColors = this.checkAndGet(styleConfig.baseColors);
         return {
-            elementColors: this.getColorSet(styleConfig.baseColors, elementsAmount),
+            elementColors: this.getColorSet(baseColors, elementsAmount),
             opacity: 1
         }
     }
@@ -54,6 +57,21 @@ export class ChartStyleModel {
             .colors(elementsAmount <= 1 ? 2 : elementsAmount);
     }
 
+    private static checkAndGet(baseColors: string[]): string[] {
+        if (baseColors.length === 0 || baseColors.filter(color => color === 'rgba(0, 0, 0, 0)' || !color).length > 0) {
+            return this.standartColors;
+        }
+        return baseColors;
+    }
+
+    private static getStartIndex(chartIndex: number, chartsFieldsAmounts: number[]): number {
+        let startIndex = 0;
+        for (let i = 0; i < chartIndex; i++) {
+            startIndex += chartsFieldsAmounts[i];
+        }
+        return startIndex;
+    }
+
     private static resetColor(index: number, baseColor: string): string {
         let color = chroma(baseColor)
             .luminance(0.5)
@@ -63,13 +81,5 @@ export class ChartStyleModel {
             .set('hsv.h', chroma(color).get('hsv.h') + Math.floor(index / this.safeColorsAmount) * 4);
 
         return color.hex();
-    }
-
-    private static getStartIndex(chartIndex: number, chartsFieldsAmounts: number[]): number {
-        let startIndex = 0;
-        for (let i = 0; i < chartIndex; i++) {
-            startIndex += chartsFieldsAmounts[i];
-        }
-        return startIndex;
     }
 }
