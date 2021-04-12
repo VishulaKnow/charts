@@ -28,7 +28,7 @@ export class TooltipDomHelper {
     private static readonly groupClass = 'tooltip-group';
     private static readonly headClass = 'tooltip-head';
     private static readonly textItemClass = 'tooltip-text-item';
-    private static readonly maxContentWidth = 450;
+    private static readonly maxContentWidth = 500;
 
     public static fillForMulty2DCharts(contentBlock: Selection<HTMLElement, unknown, BaseType, unknown>, charts: TwoDimensionalChartModel[], data: DataSource, dataOptions: OptionsModelData, keyValue: string, htmlHandler?: TooltipHtml): void {
         contentBlock.html('');
