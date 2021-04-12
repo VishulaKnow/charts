@@ -10,19 +10,41 @@ import { DonutHelper } from "../polarNotation/donut/DonutHelper";
 import { ElementHighlighter } from "./elementHighlighter";
 
 export class SelectHighlighter {
-    public static click2DHandler(multySelection: boolean, appendKey: boolean, keyValue: string, block: Block, options: TwoDimensionalOptionsModel): void {
-        ElementHighlighter.setInactiveFor2D(block, options.data.keyField.name, options.charts);
-        if (!appendKey) {
-            ElementHighlighter.remove2DHighlightingByKey(block, options.data.keyField.name, keyValue, options.charts, 0);
-            return;
-        }
+    public static click2DHandler(multySelection: boolean, appendKey: boolean, keyValue: string, selectedKeys: string[], block: Block, options: TwoDimensionalOptionsModel): void {
+        options.charts.forEach(chart => {
+            const selectedElements = DomHelper.getChartElementsByKeys(DomHelper.get2DChartElements(block, chart), chart.isSegmented, options.data.keyField.name, [keyValue]);
+            const elements = DomHelper.get2DChartElements(block, chart);
+            if (!appendKey) {
+                ElementHighlighter.toggle2DElements(block, selectedElements, false, chart.type, block.transitionManager.durations.markerHover);
+                if (chart.type !== 'bar' && !chart.markersOptions.show)
+                    ElementHighlighter.toggleMarkDotVisible(selectedElements, false);
 
-        if (multySelection) {
-            ElementHighlighter.highlightElementsOf2D(block, options.data.keyField.name, keyValue, options.charts, 0);
-        } else {
-            ElementHighlighter.removeUnselected2DHighlight(block, options.data.keyField.name, options.charts, 0);
-            ElementHighlighter.highlightElementsOf2D(block, options.data.keyField.name, keyValue, options.charts, 0);
-        }
+                if (selectedKeys.length > 0) {
+                    ElementHighlighter.toggleActivityStyle(selectedElements, false);
+                } else {
+                    ElementHighlighter.toggleActivityStyle(elements, true);
+                    if (chart.type !== 'bar' && !chart.markersOptions.show)
+                        ElementHighlighter.toggleMarkDotVisible(elements, false);
+                }
+                return;
+            }
+
+            if (multySelection) {
+                ElementHighlighter.toggle2DElements(block, selectedElements, true, chart.type, block.transitionManager.durations.markerHover);
+                ElementHighlighter.toggleActivityStyle(selectedElements, true);
+                ElementHighlighter.toggleActivityStyle(DomHelper.getChartElementsByKeys(elements, chart.isSegmented, options.data.keyField.name, selectedKeys, SelectionCondition.Exclude), false)
+            } else {
+                ElementHighlighter.toggle2DElements(block, DomHelper.getChartElementsByKeys(elements, chart.isSegmented, options.data.keyField.name, selectedKeys, SelectionCondition.Exclude), false, chart.type, block.transitionManager.durations.markerHover);
+                ElementHighlighter.toggleActivityStyle(elements, false);
+                if (chart.type !== 'bar' && !chart.markersOptions.show)
+                    ElementHighlighter.toggleMarkDotVisible(elements, false);
+
+                ElementHighlighter.toggleActivityStyle(selectedElements, true);
+                ElementHighlighter.toggle2DElements(block, selectedElements, true, chart.type, block.transitionManager.durations.markerHover);
+            }
+            if (chart.type !== 'bar' && !chart.markersOptions.show)
+                ElementHighlighter.toggleMarkDotVisible(selectedElements, true);
+        });
     }
 
     public static clickPolarHandler(multySelection: boolean, appendKey: boolean, selectedSegment: Selection<SVGGElement, PieArcDatum<DataRow>, BaseType, unknown>, selectedKeys: string[], margin: BlockMargin, blockSize: Size, block: Block, options: PolarOptionsModel, arcItems: Selection<SVGGElement, PieArcDatum<DataRow>, SVGGElement, unknown>, donutSettings: DonutChartSettings): void {

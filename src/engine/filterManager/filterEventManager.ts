@@ -92,7 +92,7 @@ export class FilterEventManager {
             });
             removedKeys.forEach(rKey => this.selectedKeys.splice(this.selectedKeys.findIndex(sKey => sKey === rKey), 1));
             this.selectedKeys.forEach(key => {
-                SelectHighlighter.click2DHandler(true, true, key, this.block, options);
+                SelectHighlighter.click2DHandler(true, true, key, this.selectedKeys, this.block, options);
             });
         }
     }
@@ -106,7 +106,7 @@ export class FilterEventManager {
                 const multySelect = thisClass.getMultySelectParam(e);
                 const keyValue = e.detail.keyValue || TipBoxHelper.getKeyValueByPointer(pointer(e, this), options.orient, margin, blockSize, scaleKey, options.scale.key.type, 'click');
                 const appended = thisClass.processKey(multySelect, keyValue);
-                SelectHighlighter.click2DHandler(multySelect, appended, keyValue, thisClass.block, options);
+                SelectHighlighter.click2DHandler(multySelect, appended, keyValue, thisClass.selectedKeys, thisClass.block, options);
 
                 if (thisClass.callback) {
                     thisClass.callback(Helper.getRowsByKeys(thisClass.selectedKeys, options.data.keyField.name, thisClass.fullDataset));

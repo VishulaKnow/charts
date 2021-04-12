@@ -14,6 +14,7 @@ import { TipBoxHelper } from '../tipBox/tipBoxHelper';
 import { Helper } from '../../helpers/helper';
 import { TooltipHelper } from './tooltipHelper';
 import { TooltipSettings } from '../../../designer/designerConfig';
+import { DomHelper } from '../../helpers/domHelper';
 
 interface DonutOverDetails {
     pointer: [number, number];
@@ -90,7 +91,6 @@ export class Tooltip {
             }
 
             if (!currentKey || currentKey !== keyValue) {
-                currentKey = keyValue;
                 TooltipComponentsManager.showComponent(tooltipBlock);
                 TooltipDomHelper.fillForMulty2DCharts(tooltipContent, charts.filter(ch => ch.tooltip.show), data, dataOptions, keyValue, tooltipOptions?.html);
 
@@ -103,7 +103,27 @@ export class Tooltip {
                 TooltipComponentsManager.setTooltipLineAttributes(tooltipLine, tooltipLineAttributes, block.transitionManager.durations.tooltipSlide);
                 TooltipComponentsManager.showComponent(tooltipLine);
 
-                ElementHighlighter.highlight2DElementsHover(block, dataOptions.keyField.name, keyValue, charts, block.transitionManager.durations.markerHover);
+                charts.forEach(chart => {
+                    const elements = DomHelper.get2DChartElements(block, chart);
+                    if (!block.filterEventManager.isSelected(currentKey)) {
+                        const oldElements = DomHelper.getChartElementsByKeys(elements, chart.isSegmented, dataOptions.keyField.name, [currentKey]);
+                        if (chart.type !== 'bar' && !chart.markersOptions.show)
+                            ElementHighlighter.toggleMarkDotVisible(oldElements, false);
+                        ElementHighlighter.toggle2DElements(block, oldElements, false, chart.type, block.transitionManager.durations.markerHover);
+                        if (block.filterEventManager.getSelectedKeys().length > 0) {
+                            ElementHighlighter.toggleActivityStyle(oldElements, false);
+                        }
+                    }
+
+                    const selectedElements = DomHelper.getChartElementsByKeys(elements, chart.isSegmented, dataOptions.keyField.name, [keyValue]);
+                    if (chart.type !== 'bar' && !chart.markersOptions.show)
+                        ElementHighlighter.toggleMarkDotVisible(selectedElements, true);
+                    ElementHighlighter.toggleActivityStyle(selectedElements, true);
+                    if (block.filterEventManager.getSelectedKeys().length === 0 || block.filterEventManager.isSelected(keyValue)) {
+                        ElementHighlighter.toggle2DElements(block, selectedElements, true, chart.type, block.transitionManager.durations.markerHover);
+                    }
+                });
+                currentKey = keyValue;
             }
         })
 

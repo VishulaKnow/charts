@@ -6,12 +6,12 @@ import { easeLinear } from 'd3-ease';
 import { interrupt, Transition } from 'd3-transition';
 import { DonutHelper } from '../polarNotation/donut/DonutHelper';
 import { DomHelper, SelectionCondition } from '../helpers/domHelper';
-import { NamesHelper } from '../helpers/namesHelper';
 import { DataRow, Size, TwoDimensionalChartType } from '../../config/config';
 import { Donut } from '../polarNotation/donut/donut';
 import { MarkDot } from '../features/markDots/markDot';
 import { RectElemWithAttrs } from '../twoDimensionalNotation/bar/bar';
 
+//TODO: привести 2D к такой же реализации как и polar. Добавить прослойку, которая для каждого графика выбирает элементы, а вся дальнейшая реализация - как у polar. 
 export class ElementHighlighter {
     private static inactiveElemClass = 'charts-opacity-inactive';
 
@@ -92,17 +92,8 @@ export class ElementHighlighter {
         });
     }
 
-    public static highlight2DElementsHover(block: Block, keyFieldName: string, keyValue: string, charts: TwoDimensionalChartModel[], transitionDuration: number): void {
-        this.removeUnselected2DHighlight(block, keyFieldName, charts, transitionDuration);
-        this.highlightElementsOf2D(block, keyFieldName, keyValue, charts, transitionDuration);
-    }
-
-    public static highlightElementsOf2D(block: Block, keyFieldName: string, keyValue: string, charts: TwoDimensionalChartModel[], transitionDuration: number): void {
-        this.toggle2DHighlightState(block, keyFieldName, keyValue, charts, true, transitionDuration);
-    }
-
-    public static remove2DHighlightingByKey(block: Block, keyFieldName: string, keyValue: string, charts: TwoDimensionalChartModel[], transitionDuration: number): void {
-        this.toggle2DHighlightState(block, keyFieldName, keyValue, charts, false, transitionDuration);
+    public static toggleMarkDotVisible(markDots: Selection<BaseType, any, BaseType, any>, isHighlight: boolean) {
+        markDots.classed(MarkDot.hiddenDotClass, !isHighlight);
     }
 
     public static remove2DChartsFullHighlighting(block: Block, charts: TwoDimensionalChartModel[], transitionDuration: number = 0): void {
@@ -111,7 +102,7 @@ export class ElementHighlighter {
 
             if (chart.type !== 'bar' && !chart.markersOptions.show)
                 elems.classed(MarkDot.hiddenDotClass, true);
-            this.setElementsStyleByState(block, elems, false, chart.type, transitionDuration, false);
+            this.toggle2DElements(block, elems, false, chart.type, transitionDuration, false);
             this.toggleActivityStyle(elems, true);
         });
     }
@@ -123,7 +114,7 @@ export class ElementHighlighter {
 
             if (chart.type !== 'bar' && !chart.markersOptions.show)
                 selectedElems.classed(MarkDot.hiddenDotClass, true);
-            this.setElementsStyleByState(block, selectedElems, false, chart.type, transitionDuration);
+            this.toggle2DElements(block, selectedElems, false, chart.type, transitionDuration);
             if (block.filterEventManager.getSelectedKeys().length > 0)
                 this.toggleActivityStyle(selectedElems, false);
         });
@@ -136,19 +127,18 @@ export class ElementHighlighter {
 
             if (chart.type !== 'bar' && !chart.markersOptions.show)
                 selectedElems.classed(MarkDot.hiddenDotClass, !isHighlight);
-            this.setElementsStyleByState(block, selectedElems, isHighlight, chart.type, transitionDuration);
-            if (block.filterEventManager.getSelectedKeys().length > 0 && block.filterEventManager.getSelectedKeys().findIndex(sk => sk === keyValue) === -1) {
+            this.toggle2DElements(block, selectedElems, isHighlight, chart.type, transitionDuration, block.filterEventManager.isSelected(keyValue));
+            if (block.filterEventManager.getSelectedKeys().length > 0 && block.filterEventManager.isSelected(keyValue)) {
                 this.toggleActivityStyle(selectedElems, isHighlight);
             }
         });
     }
 
-    private static setElementsStyleByState(block: Block, elemSelection: Selection<BaseType, any, BaseType, any>, isHighlight: boolean, chartType: TwoDimensionalChartType, transitionDuration: number, flag: boolean = true): void {
+    public static toggle2DElements(block: Block, elemSelection: Selection<BaseType, any, BaseType, any>, isHighlight: boolean, chartType: TwoDimensionalChartType, transitionDuration: number, flag: boolean = true): void {
         if (chartType === 'area' || chartType === 'line') {
             elemSelection.call(this.toggleDot, isHighlight, transitionDuration);
         } else {
-            if (flag)
-                this.toggleBar(elemSelection, isHighlight);
+            this.toggleBar(elemSelection, isHighlight);
             if (isHighlight) {
                 this.setShadowFilter(elemSelection, block);
             }

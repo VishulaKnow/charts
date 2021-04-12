@@ -61,11 +61,6 @@ const configCars: Config = {
                             name: 'price',
                             format: 'money',
                             title: 'Стоимость за 2020 год'
-                        },
-                        {
-                            name: 'count',
-                            format: 'money',
-                            title: 'Стоимость за 2020 год'
                         }
                     ]
                 },
