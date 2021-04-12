@@ -11,7 +11,6 @@ import { Donut } from '../polarNotation/donut/donut';
 import { MarkDot } from '../features/markDots/markDot';
 import { RectElemWithAttrs } from '../twoDimensionalNotation/bar/bar';
 
-//TODO: привести 2D к такой же реализации как и polar. Добавить прослойку, которая для каждого графика выбирает элементы, а вся дальнейшая реализация - как у polar. 
 export class ElementHighlighter {
     private static inactiveElemClass = 'charts-opacity-inactive';
 
