@@ -79,7 +79,6 @@ export class Tooltip {
         const tooltipContent = TooltipComponentsManager.renderTooltipContentBlock(tooltipBlock);
         const tooltipLine = TooltipComponentsManager.renderTooltipLine(block);
         const tipBox = TipBox.renderOrGet(block, margin, blockSize);
-        ElementHighlighter.renderShadowFilter(block);
 
         let currentKey: string = null;
         tipBox.on('mousemove', function (e: CustomEvent<TipBoxOverDetails>) {

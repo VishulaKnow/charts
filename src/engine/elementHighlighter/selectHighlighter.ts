@@ -11,7 +11,6 @@ import { ElementHighlighter } from "./elementHighlighter";
 
 export class SelectHighlighter {
     public static click2DHandler(multySelection: boolean, appendKey: boolean, keyValue: string, block: Block, options: TwoDimensionalOptionsModel): void {
-        ElementHighlighter.renderShadowFilter(block);
         ElementHighlighter.setInactiveFor2D(block, options.data.keyField.name, options.charts);
         if (!appendKey) {
             ElementHighlighter.remove2DHighlightingByKey(block, options.data.keyField.name, keyValue, options.charts, 0);
@@ -28,7 +27,6 @@ export class SelectHighlighter {
 
     public static clickPolarHandler(multySelection: boolean, appendKey: boolean, selectedSegment: Selection<SVGGElement, PieArcDatum<DataRow>, BaseType, unknown>, selectedKeys: string[], margin: BlockMargin, blockSize: Size, block: Block, options: PolarOptionsModel, arcItems: Selection<SVGGElement, PieArcDatum<DataRow>, SVGGElement, unknown>, donutSettings: DonutChartSettings): void {
         const donutThickness = DonutHelper.getThickness(donutSettings, blockSize, margin);
-        ElementHighlighter.renderShadowFilter(block);
         if (!appendKey) {
             ElementHighlighter.toggleDonutHighlightState(selectedSegment, margin, blockSize, donutThickness, block.transitionManager.durations.donutHover, false);
             ElementHighlighter.removeCloneForElem(block, options.data.keyField.name, selectedSegment);
