@@ -106,7 +106,6 @@ export class ElementHighlighter {
     public static setInactiveFor2D(block: Block, keyFieldName: string, charts: TwoDimensionalChartModel[]): void {
         charts.forEach(chart => {
             const elems = DomHelper.get2DChartElements(block, chart);
-            console.log(elems.nodes());
             if (block.filterEventManager.getSelectedKeys().length === 0) {
                 this.toggleActivityStyle(elems, true);
             } else {
@@ -185,7 +184,6 @@ export class ElementHighlighter {
     }
 
     private static toggleBar(elemSelection: Selection<BaseType, any, BaseType, any>, isHighlight: boolean): void {
-        const scaleSize = (width: number) => width * 0.1;
         const animationName = 'bar-highlight';
         if (isHighlight) {
             elemSelection.each(function () {
@@ -193,12 +191,12 @@ export class ElementHighlighter {
                 const handler = select(this).interrupt(animationName).transition(animationName).duration(200);
                 if (attrs.orient === 'vertical') {
                     handler
-                        .attr('x', attrs.x - scaleSize(attrs.width))
-                        .attr('width', attrs.width + scaleSize(attrs.width) * 2);
+                        .attr('x', attrs.x - attrs.scaleSize)
+                        .attr('width', attrs.width + attrs.scaleSize * 2);
                 } else {
                     handler
-                        .attr('y', attrs.y - scaleSize(attrs.height))
-                        .attr('height', attrs.height + scaleSize(attrs.height) * 2);
+                        .attr('y', attrs.y - attrs.scaleSize)
+                        .attr('height', attrs.height + attrs.scaleSize * 2);
                 }
             });
         }

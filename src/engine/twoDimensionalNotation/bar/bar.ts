@@ -20,6 +20,7 @@ export interface RectElemWithAttrs extends SVGElement {
         width: number;
         height: number;
         orient: 'vertical' | 'horizontal';
+        scaleSize: number;
     }
 }
 
@@ -103,7 +104,7 @@ export class Bar {
             DomHelper.setCssClasses(bars, Helper.getCssClassesWithElementIndex(chart.cssClasses, index));
             DomHelper.setChartStyle(bars, chart.style, index, 'fill');
 
-            this.setInitialAttrsInfo(bars, keyAxisOrient);
+            this.setInitialAttrsInfo(bars, keyAxisOrient, barSettings);
 
             if (chart.embeddedLabels !== 'none')
                 EmbeddedLabels.render(block, bars, barAttrs, EmbeddedLabelsHelper.getLabelField(chart.embeddedLabels, chart.data.valueFields, keyField, index), chart.embeddedLabels, keyAxisOrient, blockSize, margin, index, chart.cssClasses);
@@ -143,7 +144,7 @@ export class Bar {
 
         this.fillBarAttrs(bars, barAttrs);
 
-        this.setInitialAttrsInfo(bars, keyAxisOrient);
+        this.setInitialAttrsInfo(bars, keyAxisOrient, barSettings);
 
         DomHelper.setCssClasses(groups, chart.cssClasses);
         DomHelper.setCssClasses(bars, chart.cssClasses); // Для обозначения принадлежности бара к конкретному чарту
@@ -199,12 +200,12 @@ export class Bar {
             const prom = this.fillBarAttrs(bars, barAttrs, block.transitionManager.durations.chartUpdate)
                 .then(() => {
                     bars.style('opacity', null);
-                    this.setInitialAttrsInfo(bars, keyAxisOrient);
+                    this.setInitialAttrsInfo(bars, keyAxisOrient, barSettings);
                 });
             this.fillBarAttrs(newBars, barAttrs);
             promises.push(prom);
 
-            this.setInitialAttrsInfo(newBars, keyAxisOrient);
+            this.setInitialAttrsInfo(newBars, keyAxisOrient, barSettings);
 
             DomHelper.setCssClasses(newBars, Helper.getCssClassesWithElementIndex(chart.cssClasses, index));
             DomHelper.setChartStyle(newBars, chart.style, index, 'fill');
@@ -257,12 +258,12 @@ export class Bar {
 
         const prom = this.fillBarAttrs(bars, barAttrs, block.transitionManager.durations.chartUpdate)
             .then(() => {
-                this.setInitialAttrsInfo(bars, keyAxisOrient);
+                this.setInitialAttrsInfo(bars, keyAxisOrient, barSettings);
                 bars.style('opacity', null);
             });
         this.fillBarAttrs(newBars, barAttrs);
 
-        this.setInitialAttrsInfo(newBars, keyAxisOrient);
+        this.setInitialAttrsInfo(newBars, keyAxisOrient, barSettings);
 
         DomHelper.setCssClasses(newBars, chart.cssClasses);
 
@@ -304,15 +305,21 @@ export class Bar {
      * @param bars 
      * @param keyAxisOrient 
      */
-    private static setInitialAttrsInfo(bars: Selection<SVGRectElement, any, BaseType, any>, keyAxisOrient: Orient): void {
-        //TODO: сделать гибко в зависимости от настроек бара из дизайнер конфига
+    private static setInitialAttrsInfo(bars: Selection<SVGRectElement, any, BaseType, any>, keyAxisOrient: Orient, barSettings: BarChartSettings): void {
         bars.each(function () {
+            const width = DomHelper.getSelectionNumericAttr(select(this), 'width');
+            const height = DomHelper.getSelectionNumericAttr(select(this), 'height');
+            const orient = keyAxisOrient === 'left' || keyAxisOrient === 'right' ? 'horizontal' : 'vertical';
+            let scaleSize = 0.1 * (orient === 'vertical' ? width : height);
+            scaleSize = scaleSize > barSettings.barDistance / 2 ? barSettings.barDistance / 2 : scaleSize;
+
             (this as RectElemWithAttrs).attrs = {
                 x: DomHelper.getSelectionNumericAttr(select(this), 'x'),
                 y: DomHelper.getSelectionNumericAttr(select(this), 'y'),
-                width: DomHelper.getSelectionNumericAttr(select(this), 'width'),
-                height: DomHelper.getSelectionNumericAttr(select(this), 'height'),
-                orient: keyAxisOrient === 'left' || keyAxisOrient === 'right' ? 'horizontal' : 'vertical'
+                width,
+                height,
+                orient,
+                scaleSize
             }
         });
     }
