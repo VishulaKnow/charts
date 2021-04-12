@@ -119,20 +119,6 @@ export class ElementHighlighter {
         });
     }
 
-    private static toggle2DHighlightState(block: Block, keyFieldName: string, keyValue: string, charts: TwoDimensionalChartModel[], isHighlight: boolean, transitionDuration: number): void {
-        charts.forEach(chart => {
-            const elems = DomHelper.get2DChartElements(block, chart);
-            const selectedElems = DomHelper.getChartElementsByKeys(elems, chart.isSegmented, keyFieldName, [keyValue]);
-
-            if (chart.type !== 'bar' && !chart.markersOptions.show)
-                selectedElems.classed(MarkDot.hiddenDotClass, !isHighlight);
-            this.toggle2DElements(block, selectedElems, isHighlight, chart.type, transitionDuration, block.filterEventManager.isSelected(keyValue));
-            if (block.filterEventManager.getSelectedKeys().length > 0 && block.filterEventManager.isSelected(keyValue)) {
-                this.toggleActivityStyle(selectedElems, isHighlight);
-            }
-        });
-    }
-
     public static toggle2DElements(block: Block, elemSelection: Selection<BaseType, any, BaseType, any>, isHighlight: boolean, chartType: TwoDimensionalChartType, transitionDuration: number, flag: boolean = true): void {
         if (chartType === 'area' || chartType === 'line') {
             elemSelection.call(this.toggleDot, isHighlight, transitionDuration);
