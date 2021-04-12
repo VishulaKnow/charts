@@ -19,31 +19,6 @@ export class ElementHighlighter {
         elementSelection.classed(this.inactiveElemClass, !isActive);
     }
 
-    public static renderShadowFilter(block: Block): Selection<SVGFilterElement, unknown, HTMLElement, unknown> {
-        const filterId = NamesHelper.getId('shadow', block.id);
-
-        let filter = block.renderDefs()
-            .select<SVGFilterElement>(`filter#${filterId}`);
-
-        if (filter.empty())
-            filter = block.renderDefs()
-                .append('filter')
-                .attr('id', filterId)
-                .attr('width', '300%')
-                .attr('height', '300%')
-                .attr('x', '-100%')
-                .attr('y', '-100%');
-
-        if (filter.select('feDropShadow').empty())
-            filter.append('feDropShadow')
-                .attr('dx', 0)
-                .attr('dy', 0)
-                .attr('flood-color', 'rgba(0, 0, 0, 0.5)')
-                .attr('stdDeviation', 6);
-
-        return filter;
-    }
-
     public static setShadowFilter(elemSelection: Selection<BaseType, any, BaseType, any>, block: Block): void {
         // elemSelection.style('filter', `url(#${NamesManager.getId('shadow', block.id)})`);
         elemSelection.style('filter', 'drop-shadow(0px 0px 6px rgba(0, 0, 0, 0.5))');
@@ -180,7 +155,6 @@ export class ElementHighlighter {
                 this.removeFilter(elemSelection);
             }
         }
-        // this.toggleActivityStyle(elemSelection, isHighlight);
     }
 
     private static toggleBar(elemSelection: Selection<BaseType, any, BaseType, any>, isHighlight: boolean): void {
