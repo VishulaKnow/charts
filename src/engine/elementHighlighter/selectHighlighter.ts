@@ -10,6 +10,7 @@ import { DonutHelper } from "../polarNotation/donut/DonutHelper";
 import { ElementHighlighter } from "./elementHighlighter";
 
 export class SelectHighlighter {
+    //TODO: выделение лейблов
     public static click2DHandler(multySelection: boolean, appendKey: boolean, keyValue: string, selectedKeys: string[], block: Block, options: TwoDimensionalOptionsModel): void {
         options.charts.forEach(chart => {
             const selectedElements = DomHelper.getChartElementsByKeys(DomHelper.get2DChartElements(block, chart), chart.isSegmented, options.data.keyField.name, [keyValue]);
