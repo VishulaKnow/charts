@@ -1,31 +1,31 @@
 import { Size } from "../../../config/config";
-import { AxisModelOptions, BlockMargin, GridLineFlag, ScaleKeyModel } from "../../../model/model";
+import { AxisModelOptions, BlockMargin, GridLineFlag, IAxisModel, ScaleKeyModel } from "../../../model/model";
 import { Block } from "../../block/block";
 import { GridLineAttributes, GridLineHelper } from "./gidLineHelper";
 
 export class GridLine {
     private static readonly gridLineClass = 'grid-line';
 
-    public static render(block: Block, gridLineFlag: GridLineFlag, keyAxis: AxisModelOptions, valueAxis: AxisModelOptions, blockSize: Size, margin: BlockMargin, scaleKey: ScaleKeyModel): void {
+    public static render(block: Block, gridLineFlag: GridLineFlag, axes: IAxisModel, blockSize: Size, margin: BlockMargin, scaleKey: ScaleKeyModel): void {
         if (gridLineFlag.value) {
-            const lineLength = GridLineHelper.getGridLineLength('value', keyAxis, valueAxis, blockSize, margin);
-            const lineAttributes = GridLineHelper.getLineAttributes(valueAxis, lineLength);
-            this.renderLine(block, valueAxis, lineAttributes);
+            const lineLength = GridLineHelper.getGridLineLength('value', axes.key, axes.value, blockSize, margin);
+            const lineAttributes = GridLineHelper.getLineAttributes(axes.value, lineLength);
+            this.renderLine(block, axes.value, lineAttributes);
         }
         if (gridLineFlag.key) {
-            const lineLength = GridLineHelper.getGridLineLength('key', keyAxis, valueAxis, blockSize, margin);
-            const lineAttributes = GridLineHelper.getLineAttributes(keyAxis, lineLength);
-            this.renderLine(block, keyAxis, lineAttributes);
+            const lineLength = GridLineHelper.getGridLineLength('key', axes.key, axes.value, blockSize, margin);
+            const lineAttributes = GridLineHelper.getLineAttributes(axes.key, lineLength);
+            this.renderLine(block, axes.key, lineAttributes);
         }
         if (scaleKey.type === 'point' && (gridLineFlag.key || gridLineFlag.value))
-            this.removeGridLinesOnAxes(block, keyAxis, valueAxis, false);
+            this.removeGridLinesOnAxes(block, axes.key, axes.value, false);
         else if (gridLineFlag.key || gridLineFlag.value)
-            this.removeGridLinesOnAxes(block, keyAxis, valueAxis, true);
+            this.removeGridLinesOnAxes(block, axes.key, axes.value, true);
     }
 
-    public static update(block: Block, gridLineFlag: GridLineFlag, keyAxis: AxisModelOptions, valueAxis: AxisModelOptions, blockSize: Size, margin: BlockMargin, scaleKey: ScaleKeyModel): void {
-        this.clear(block, keyAxis.cssClass, valueAxis.cssClass);
-        this.render(block, gridLineFlag, keyAxis, valueAxis, blockSize, margin, scaleKey);
+    public static update(block: Block, gridLineFlag: GridLineFlag, axes: IAxisModel, blockSize: Size, margin: BlockMargin, scaleKey: ScaleKeyModel): void {
+        this.clear(block, axes.key.cssClass, axes.value.cssClass);
+        this.render(block, gridLineFlag, axes, blockSize, margin, scaleKey);
     }
 
     private static renderLine(block: Block, axis: AxisModelOptions, lineAttributes: GridLineAttributes): void {

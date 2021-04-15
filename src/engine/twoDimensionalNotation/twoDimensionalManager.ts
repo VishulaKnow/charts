@@ -31,7 +31,7 @@ export class TwoDimensionalManager {
 
         Axis.render(engine.block, scales, options.scale, options.axis, model.blockCanvas.size);
 
-        GridLine.render(engine.block, options.additionalElements.gridLine.flag, options.axis.key, options.axis.value, model.blockCanvas.size, model.chartBlock.margin, options.scale.key);
+        GridLine.render(engine.block, options.additionalElements.gridLine.flag, options.axis, model.blockCanvas.size, model.chartBlock.margin, options.scale.key);
 
         this.renderCharts(engine.block,
             options.charts,
@@ -72,16 +72,14 @@ export class TwoDimensionalManager {
         const scales = Scale.getScales(options.scale.key,
             options.scale.value,
             model.chartSettings.bar);
-        //TODO: возможно, это больше не нужно
+
         const keyDomainEquality = Helper.checkDomainsEquality(block.scales.key.domain(), scales.key.domain());
         block.scales = scales;
-
         Axis.update(block, scales, options.scale, options.axis, model.blockCanvas.size, keyDomainEquality);
 
         GridLine.update(block,
             options.additionalElements.gridLine.flag,
-            options.axis.key,
-            options.axis.value,
+            options.axis,
             model.blockCanvas.size,
             model.chartBlock.margin,
             options.scale.key);

@@ -22,7 +22,7 @@ export class IntervalManager {
 
         Axis.render(block, scales, options.scale, options.axis, model.blockCanvas.size);
 
-        GridLine.render(block, options.additionalElements.gridLine.flag, options.axis.key, options.axis.value, model.blockCanvas.size, model.chartBlock.margin, options.scale.key);
+        GridLine.render(block, options.additionalElements.gridLine.flag, options.axis, model.blockCanvas.size, model.chartBlock.margin, options.scale.key);
 
         this.renderCharts(block,
             options.charts,
