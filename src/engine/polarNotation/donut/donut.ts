@@ -44,7 +44,6 @@ export class Donut {
         Aggregator.render(block, data, chart.data.valueField, innerRadius, translateAttr, thickness, settings.aggregatorPad);
     }
 
-    //TODO: удаляемые сегменты отправлять в opacity.
     public static update(block: Block, data: DataRow[], margin: BlockMargin, chart: PolarChartModel, blockSize: Size, donutSettings: DonutChartSettings, keyField: string): Promise<any> {
         const outerRadius = DonutHelper.getOuterRadius(margin, blockSize);
         const thickness = DonutHelper.getThickness(donutSettings, blockSize, margin);

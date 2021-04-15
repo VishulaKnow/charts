@@ -51,8 +51,8 @@ export class ElementHighlighter {
 
     public static renderArcCloneAndHighlight(block: Block, margin: BlockMargin, arcSelection: Selection<SVGGElement, PieArcDatum<DataRow>, BaseType, unknown>, blockSize: Size, donutThickness: number): void {
         const clones = this.makeArcClone(arcSelection, block)
-        this.toggleDonutHighlightState(arcSelection, margin, blockSize, donutThickness, block.transitionManager.durations.donutHover, true);
-        this.toggleDonutHighlightState(clones, margin, blockSize, donutThickness, block.transitionManager.durations.donutHover, true)
+        this.toggleDonutHighlightState(arcSelection, margin, blockSize, donutThickness, block.transitionManager.durations.higlightedScale, true);
+        this.toggleDonutHighlightState(clones, margin, blockSize, donutThickness, block.transitionManager.durations.higlightedScale, true)
     }
 
     public static toggleDonutHighlightState(segment: Selection<SVGGElement, PieArcDatum<DataRow>, BaseType, unknown>, margin: BlockMargin, blockSize: Size, donutThickness: number, transitionDuration: number, on: boolean): void {

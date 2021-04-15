@@ -88,6 +88,6 @@ export interface Transitions {
     chartUpdate?: number;
     elementFadeOut?: number;
     tooltipSlide?: number;
-    donutHover?: number;
+    higlightedScale?: number;
     markerHover?: number;
 }

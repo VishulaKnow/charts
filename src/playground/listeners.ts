@@ -367,7 +367,7 @@ export default class Listeners {
             thisClass.updateFull();
         });
         document.querySelector('#chart-block-transition-donutHover').addEventListener('input', function () {
-            thisClass.transition.donutHover = parseFloat(ListenersHelper.getInputValue('#chart-block-transition-donutHover'));
+            thisClass.transition.higlightedScale = parseFloat(ListenersHelper.getInputValue('#chart-block-transition-donutHover'));
             thisClass.designerConfig.transitions = thisClass.transition;
             thisClass.updateFull();
         });

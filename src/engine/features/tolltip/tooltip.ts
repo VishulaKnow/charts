@@ -174,7 +174,7 @@ export class Tooltip {
             TooltipComponentsManager.hideComponent(tooltipBlock);
             if (!block.filterEventManager.isSelected(dataRow.data[dataOptions.keyField.name])) {
                 ElementHighlighter.removeCloneForElem(block, dataOptions.keyField.name, select(this));
-                ElementHighlighter.toggleDonutHighlightState(select(this), margin, blockSize, donutThickness, block.transitionManager.durations.donutHover, false);
+                ElementHighlighter.toggleDonutHighlightState(select(this), margin, blockSize, donutThickness, block.transitionManager.durations.higlightedScale, false);
                 if (block.filterEventManager.getSelectedKeys().length > 0) {
                     ElementHighlighter.toggleActivityStyle(select(this), false);
                 }

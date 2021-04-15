@@ -20,7 +20,7 @@ export class TransitionManager {
     public durations: Durations = {
         chartUpdate: 1000,
         tooltipSlide: 75,
-        donutHover: 200,
+        higlightedScale: 200,
         markerHover: 50,
         elementFadeOut: 400
     }
@@ -62,7 +62,7 @@ export class TransitionManager {
 
     private setDurations(durations: Transitions): void {
         if (durations.chartUpdate !== undefined && durations.chartUpdate >= 0) this.durations.chartUpdate = durations.chartUpdate;
-        if (durations.donutHover !== undefined && durations.donutHover >= 0) this.durations.donutHover = durations.donutHover;
+        if (durations.higlightedScale !== undefined && durations.higlightedScale >= 0) this.durations.higlightedScale = durations.higlightedScale;
         if (durations.elementFadeOut !== undefined && durations.elementFadeOut >= 0) this.durations.elementFadeOut = durations.elementFadeOut;
         if (durations.markerHover !== undefined && durations.markerHover >= 0) this.durations.markerHover = durations.markerHover;
         if (durations.tooltipSlide !== undefined && durations.tooltipSlide >= 0) this.durations.tooltipSlide = durations.tooltipSlide;
