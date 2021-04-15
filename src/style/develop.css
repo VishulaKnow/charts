@@ -32,6 +32,8 @@
 .charts-opacity-inactive {
     opacity: 0.6;
 }
+
+/* EXTENDED FOR SPECIFIC STYLES */
 .legend-item.charts-opacity-inactive {
     opacity: 0.45;
 }

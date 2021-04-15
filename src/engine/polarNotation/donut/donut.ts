@@ -8,7 +8,6 @@ import { DonutHelper } from './DonutHelper';
 import { DomHelper } from '../../helpers/domHelper';
 import { DataRow, Size } from '../../../config/config';
 import { ElementHighlighter } from '../../elementHighlighter/elementHighlighter';
-import { Helper } from '../../helpers/helper';
 
 export interface Translate {
     x: number;
@@ -40,7 +39,7 @@ export class Donut {
             .attr('transform', `translate(${translateAttr.x}, ${translateAttr.y})`);
 
         this.renderNewArcItems(arcGenerator, pieGenerator, donutBlock, data, chart);
-        this.renderClonesG(block, donutBlock);
+        this.renderClonesG(donutBlock);
 
         Aggregator.render(block, data, chart.data.valueField, innerRadius, translateAttr, thickness, settings.aggregatorPad);
     }
@@ -135,9 +134,9 @@ export class Donut {
     /**
      * Рендер группы для клонов сегментов доната внутри donut-block. Объекдиняет в себе стили для клонов 
      */
-    private static renderClonesG(block: Block, donutBlock: Selection<SVGGElement, unknown, BaseType, unknown>): void {
+    private static renderClonesG(donutBlock: Selection<SVGGElement, unknown, BaseType, unknown>): void {
         const clonesG = donutBlock.append('g').attr('class', this.clonesGroupClass).raise();
-        ElementHighlighter.setShadowFilter(clonesG, block);
+        ElementHighlighter.setShadowFilter(clonesG);
     }
 
     private static raiseClonesG(block: Block): void {

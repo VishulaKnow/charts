@@ -18,9 +18,8 @@ export class ElementHighlighter {
         elementSelection.classed(this.inactiveElemClass, !isActive);
     }
 
-    public static setShadowFilter(elemSelection: Selection<BaseType, any, BaseType, any>, block: Block): void {
-        // elemSelection.style('filter', `url(#${NamesManager.getId('shadow', block.id)})`);
-        elemSelection.style('filter', 'drop-shadow(0px 0px 6px rgba(0, 0, 0, 0.5))');
+    public static setShadowFilter(elemSelection: Selection<BaseType, any, BaseType, any>, blurSize: number = 6): void {
+        elemSelection.style('filter', `drop-shadow(0px 0px ${blurSize}px rgba(0, 0, 0, 0.5))`);
     }
 
     public static removeFilter(elemSelection: Selection<BaseType, any, BaseType, any>): void {
@@ -101,7 +100,7 @@ export class ElementHighlighter {
 
             if (chart.type !== 'bar' && !chart.markersOptions.show)
                 elems.classed(MarkDot.hiddenDotClass, true);
-            this.toggle2DElements(block, elems, false, chart.type, transitionDuration, false);
+            this.toggle2DElements(elems, false, chart.type, transitionDuration);
             this.toggleActivityStyle(elems, true);
         });
     }
@@ -113,19 +112,19 @@ export class ElementHighlighter {
 
             if (chart.type !== 'bar' && !chart.markersOptions.show)
                 selectedElems.classed(MarkDot.hiddenDotClass, true);
-            this.toggle2DElements(block, selectedElems, false, chart.type, transitionDuration);
+            this.toggle2DElements(selectedElems, false, chart.type, transitionDuration);
             if (block.filterEventManager.getSelectedKeys().length > 0)
                 this.toggleActivityStyle(selectedElems, false);
         });
     }
 
-    public static toggle2DElements(block: Block, elemSelection: Selection<BaseType, any, BaseType, any>, isHighlight: boolean, chartType: TwoDimensionalChartType, transitionDuration: number, flag: boolean = true): void {
+    public static toggle2DElements(elemSelection: Selection<BaseType, any, BaseType, any>, isHighlight: boolean, chartType: TwoDimensionalChartType, transitionDuration: number): void {
         if (chartType === 'area' || chartType === 'line') {
             elemSelection.call(this.toggleDot, isHighlight, transitionDuration);
         } else {
             this.toggleBar(elemSelection, isHighlight);
             if (isHighlight) {
-                this.setShadowFilter(elemSelection, block);
+                this.setShadowFilter(elemSelection, 4);
             }
             else {
                 this.removeFilter(elemSelection);
