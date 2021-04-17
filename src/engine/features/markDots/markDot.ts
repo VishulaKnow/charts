@@ -68,10 +68,6 @@ export class MarkDot {
         DomHelper.setChartElementColor(dots, chart.style.elementColors, valueFieldIndex, 'stroke');
     }
 
-    public static getAllDots(block: Block): Selection<BaseType, DataRow, BaseType, unknown> {
-        return block.getSvg().selectAll(`.${this.markerDotClass}`);
-    }
-
     public static getMarkDotForChart(block: Block, chartCssClasses: string[]): Selection<BaseType, DataRow, BaseType, unknown> {
         return block.getSvg()
             .selectAll(`.${MarkDot.markerDotClass}${Helper.getCssClassesLine(chartCssClasses)}`);
