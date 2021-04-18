@@ -20,6 +20,16 @@ export class TipBoxHelper {
         return keyValue;
     }
 
+    public static getAttributes(margin: BlockMargin, blockSize: Size): TipBoxAttributes {
+        const pad = 5;
+        return {
+            x: margin.left - pad,
+            y: margin.top - pad,
+            width: blockSize.width - margin.left - margin.right + pad * 2,
+            height: blockSize.height - margin.top - margin.bottom + pad * 2,
+        }
+    }
+
     public static getKeyIndex(pointer: [number, number], chartOrient: ChartOrientation, margin: BlockMargin, blockSize: Size, scaleKey: AxisScale<any>, scaleKeyType: ScaleKeyType): number {
         const pointerAxisType = chartOrient === 'vertical' ? 0 : 1; // 0 - координата поинтера по оси x, 1 - по оси y
         const marginByOrient = chartOrient === 'vertical' ? margin.left : margin.top;
@@ -29,16 +39,6 @@ export class TipBoxHelper {
             return this.getKeyIndexOfPoint(pointer, scaleStep, marginByOrient, pointerAxisType);
         } else {
             return this.getKeyIndexOfBand(pointer, scaleStep, marginByOrient, pointerAxisType, blockSize, margin, chartOrient, scaleKey);
-        }
-    }
-
-    public static getAttributes(margin: BlockMargin, blockSize: Size): TipBoxAttributes {
-        const pad = 5;
-        return {
-            x: margin.left - pad,
-            y: margin.top - pad,
-            width: blockSize.width - margin.left - margin.right + pad * 2,
-            height: blockSize.height - margin.top - margin.bottom + pad * 2,
         }
     }
 
