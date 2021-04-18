@@ -104,7 +104,7 @@ export class FilterEventManager {
 
             tipBox.on('click', function (e: CustomEvent<SelectDetails>) {
                 const multySelect = thisClass.getMultySelectParam(e);
-                const keyValue = e.detail.keyValue || TipBoxHelper.getKeyValueByPointer(pointer(e, this), options.orient, margin, blockSize, scaleKey, options.scale.key.type, 'click');
+                const keyValue = e.detail.keyValue || TipBoxHelper.getKeyValueByPointer(pointer(e, this), options.orient, margin, blockSize, scaleKey, options.scale.key.type);
                 const appended = thisClass.processKey(multySelect, keyValue);
                 SelectHighlighter.click2DHandler(multySelect, appended, keyValue, thisClass.selectedKeys, thisClass.block, options);
 

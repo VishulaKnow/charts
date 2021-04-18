@@ -83,7 +83,7 @@ export class Tooltip {
 
         let currentKey: string = null;
         tipBox.on('mousemove', function (e: CustomEvent<TipBoxOverDetails>) {
-            const keyValue = e.detail.keyValue || TipBoxHelper.getKeyValueByPointer(pointer(e, this), chartOrientation, margin, blockSize, scales.key, scaleKeyModel.type, 'hover');
+            const keyValue = e.detail.keyValue || TipBoxHelper.getKeyValueByPointer(pointer(e, this), chartOrientation, margin, blockSize, scales.key, scaleKeyModel.type);
 
             if (tooltipSettings.position === 'followCursor') {
                 const tooltipCoordinate = TooltipHelper.getTooltipCursorCoordinate(e.detail.pointer || pointer(e, this), block.getSvg().node().getBoundingClientRect(), tooltipContent.node().getBoundingClientRect(), window.innerWidth, window.innerHeight);

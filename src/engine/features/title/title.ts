@@ -7,8 +7,7 @@ import { DomHelper } from '../../helpers/domHelper';
 interface TitleAttributes {
     x: number;
     y: number;
-    height: number;
-    width: number;
+    maxWidth: number;
     dominantBaseline: string;
 }
 
@@ -28,27 +27,23 @@ export class Title {
         titleBlock
             .attr('x', attributes.x)
             .attr('y', attributes.y)
-            .attr('width', attributes.width)
-            .attr('height', attributes.height)
             .attr('dominant-baseline', attributes.dominantBaseline)
             .text(text);
 
-        DomHelper.cropSvgLabels(titleBlock, attributes.width);
+        DomHelper.cropSvgLabels(titleBlock, attributes.maxWidth);
     }
 
     private static getTitleAttributes(blockSize: Size, titleBlockModel: TitleBlockModel): TitleAttributes {
         const coordinate: TitleAttributes = {
             x: 0,
             y: 0,
-            width: 0,
-            height: 0,
+            maxWidth: 0,
             dominantBaseline: "hanging"
         };
 
         coordinate.x = titleBlockModel.margin.left;
         coordinate.y = titleBlockModel.margin.top;
-        coordinate.width = blockSize.width - titleBlockModel.margin.left - titleBlockModel.margin.right;
-        coordinate.height = titleBlockModel.size;
+        coordinate.maxWidth = blockSize.width - titleBlockModel.margin.left - titleBlockModel.margin.right;
 
         return coordinate;
     }
