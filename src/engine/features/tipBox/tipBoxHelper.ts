@@ -3,6 +3,13 @@ import { ChartOrientation, Size } from "../../../config/config";
 import { BlockMargin, ScaleKeyType } from "../../../model/model";
 import { Scale } from "../scale/scale";
 
+export interface TipBoxAttributes {
+    x: number;
+    y: number;
+    width: number;
+    height: number;
+}
+
 export class TipBoxHelper {
     public static getKeyValueByPointer(pointer: [number, number], chartOrient: ChartOrientation, margin: BlockMargin, blockSize: Size, scaleKey: AxisScale<any>, scaleKeyType: ScaleKeyType, t: 'click' | 'hover' = 'hover'): string {
         const index = TipBoxHelper.getKeyIndex(pointer, chartOrient, margin, blockSize, scaleKey, scaleKeyType);
@@ -22,6 +29,16 @@ export class TipBoxHelper {
             return this.getKeyIndexOfPoint(pointer, scaleStep, marginByOrient, pointerAxisType);
         } else {
             return this.getKeyIndexOfBand(pointer, scaleStep, marginByOrient, pointerAxisType, blockSize, margin, chartOrient, scaleKey);
+        }
+    }
+
+    public static getAttributes(margin: BlockMargin, blockSize: Size): TipBoxAttributes {
+        const pad = 5;
+        return {
+            x: margin.left - pad,
+            y: margin.top - pad,
+            width: blockSize.width - margin.left - margin.right + pad * 2,
+            height: blockSize.height - margin.top - margin.bottom + pad * 2,
         }
     }
 
