@@ -11,7 +11,7 @@ export interface TipBoxAttributes {
 }
 
 export class TipBoxHelper {
-    public static getKeyValueByPointer(pointer: [number, number], chartOrient: ChartOrientation, margin: BlockMargin, blockSize: Size, scaleKey: AxisScale<any>, scaleKeyType: ScaleKeyType, t: 'click' | 'hover' = 'hover'): string {
+    public static getKeyValueByPointer(pointer: [number, number], chartOrient: ChartOrientation, margin: BlockMargin, blockSize: Size, scaleKey: AxisScale<any>, scaleKeyType: ScaleKeyType): string {
         const index = TipBoxHelper.getKeyIndex(pointer, chartOrient, margin, blockSize, scaleKey, scaleKeyType);
         let keyValue = scaleKey.domain()[index];
         if (index >= scaleKey.domain().length)
