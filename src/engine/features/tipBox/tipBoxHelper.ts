@@ -30,7 +30,7 @@ export class TipBoxHelper {
         }
     }
 
-    public static getKeyIndex(pointer: [number, number], chartOrient: ChartOrientation, margin: BlockMargin, blockSize: Size, scaleKey: AxisScale<any>, scaleKeyType: ScaleKeyType): number {
+    private static getKeyIndex(pointer: [number, number], chartOrient: ChartOrientation, margin: BlockMargin, blockSize: Size, scaleKey: AxisScale<any>, scaleKeyType: ScaleKeyType): number {
         const pointerAxisType = chartOrient === 'vertical' ? 0 : 1; // 0 - координата поинтера по оси x, 1 - по оси y
         const marginByOrient = chartOrient === 'vertical' ? margin.left : margin.top;
         const scaleStep = Scale.getScaleStep(scaleKey);
