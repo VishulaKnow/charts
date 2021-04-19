@@ -3,8 +3,15 @@ import { ChartOrientation, Size } from "../../../config/config";
 import { BlockMargin, ScaleKeyType } from "../../../model/model";
 import { Scale } from "../scale/scale";
 
+export interface TipBoxAttributes {
+    x: number;
+    y: number;
+    width: number;
+    height: number;
+}
+
 export class TipBoxHelper {
-    public static getKeyValueByPointer(pointer: [number, number], chartOrient: ChartOrientation, margin: BlockMargin, blockSize: Size, scaleKey: AxisScale<any>, scaleKeyType: ScaleKeyType, t: 'click' | 'hover' = 'hover'): string {
+    public static getKeyValueByPointer(pointer: [number, number], chartOrient: ChartOrientation, margin: BlockMargin, blockSize: Size, scaleKey: AxisScale<any>, scaleKeyType: ScaleKeyType): string {
         const index = TipBoxHelper.getKeyIndex(pointer, chartOrient, margin, blockSize, scaleKey, scaleKeyType);
         let keyValue = scaleKey.domain()[index];
         if (index >= scaleKey.domain().length)
@@ -13,7 +20,17 @@ export class TipBoxHelper {
         return keyValue;
     }
 
-    public static getKeyIndex(pointer: [number, number], chartOrient: ChartOrientation, margin: BlockMargin, blockSize: Size, scaleKey: AxisScale<any>, scaleKeyType: ScaleKeyType): number {
+    public static getAttributes(margin: BlockMargin, blockSize: Size): TipBoxAttributes {
+        const pad = 5;
+        return {
+            x: margin.left - pad,
+            y: margin.top - pad,
+            width: blockSize.width - margin.left - margin.right + pad * 2,
+            height: blockSize.height - margin.top - margin.bottom + pad * 2,
+        }
+    }
+
+    private static getKeyIndex(pointer: [number, number], chartOrient: ChartOrientation, margin: BlockMargin, blockSize: Size, scaleKey: AxisScale<any>, scaleKeyType: ScaleKeyType): number {
         const pointerAxisType = chartOrient === 'vertical' ? 0 : 1; // 0 - координата поинтера по оси x, 1 - по оси y
         const marginByOrient = chartOrient === 'vertical' ? margin.left : margin.top;
         const scaleStep = Scale.getScaleStep(scaleKey);

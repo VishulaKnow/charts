@@ -24,7 +24,7 @@
     cursor: default;
 }
 .bar-item {
-    transition: filter 0.3s, opacity 0.3s;
+    transition: opacity 0.3s, filter 0.3s;
 }
 
 

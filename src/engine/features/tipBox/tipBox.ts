@@ -2,19 +2,13 @@ import { Selection } from 'd3-selection';
 import { Block } from "../../block/block";
 import { BlockMargin } from '../../../model/model';
 import { Size } from "../../../config/config";
-
-export interface TipBoxAttributes {
-    x: number;
-    y: number;
-    width: number;
-    height: number;
-}
+import { TipBoxAttributes, TipBoxHelper } from './tipBoxHelper';
 
 export class TipBox {
     public static readonly tipBoxClass = 'tipbox';
 
     public static renderOrGet(block: Block, margin: BlockMargin, blockSize: Size): Selection<SVGRectElement, unknown, HTMLElement, any> {
-        const attributes = this.getAttributes(margin, blockSize);
+        const attributes = TipBoxHelper.getAttributes(margin, blockSize);
         return this.renderBlock(block, attributes);
     }
 
@@ -45,15 +39,5 @@ export class TipBox {
                 .style('opacity', 0);
 
         return tipBox;
-    }
-
-    private static getAttributes(margin: BlockMargin, blockSize: Size): TipBoxAttributes {
-        const pad = 5;
-        return {
-            x: margin.left - pad,
-            y: margin.top - pad,
-            width: blockSize.width - margin.left - margin.right + pad * 2,
-            height: blockSize.height - margin.top - margin.bottom + pad * 2,
-        }
     }
 }
