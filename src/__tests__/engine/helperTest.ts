@@ -66,8 +66,15 @@ describe('calcDigitesAfterDot', () => {
 });
 
 
-test('getTranslateNumbers should return tuple of zeros if transform attr is null', () => {
-    expect(Helper.getTranslateNumbers(null)).toEqual([0, 0]);
+describe('string transformers', () => {
+    test('getTranslateNumbers should return tuple of zeros if transform attr is null', () => {
+        expect(Helper.getTranslateNumbers(null)).toEqual([0, 0]);
+    });
+
+    test('getRgbaFromRgb', () => {
+        const result = Helper.getRgbaFromRgb('rgb(13, 123, 23)', 0.5);
+        expect(result).toBe('rgba(13, 123, 23, 0.5)');
+    });
 });
 
 describe('test id and keyValue manipulations', () => {
@@ -266,4 +273,4 @@ describe('simple methods', () => {
         }
         expect(Helper.getKeyFieldValue(row, 'key', true)).toBe('key');
     });
-})
+});

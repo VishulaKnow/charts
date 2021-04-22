@@ -29,6 +29,11 @@ export class Helper {
         return cssClasses.concat([`chart-element-${index}`]);
     }
 
+    public static getRgbaFromRgb(rgbValue: string, opacity: number): string {
+        const rgbNumbers = rgbValue.substring(3, rgbValue.length - 1);
+        return `rgba${rgbNumbers}, ${opacity})`;
+    }
+
     public static getTranslateNumbers(transformValue: string): [number, number] {
         if (!transformValue)
             return [0, 0];
