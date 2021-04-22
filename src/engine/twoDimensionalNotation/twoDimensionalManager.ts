@@ -1,4 +1,3 @@
-import { select } from "d3-selection";
 import { DataSource, Size } from "../../config/config";
 import { BarChartSettings, BlockMargin, Model, OptionsModelData, Orient, TwoDimensionalChartModel, TwoDimensionalOptionsModel } from "../../model/model";
 import { Block } from "../block/block";
@@ -58,6 +57,12 @@ export class TwoDimensionalManager {
 
         if (model.dataSettings.scope.hidedRecordsAmount !== 0)
             RecordOverflowAlert.render(engine.block, model.dataSettings.scope.hidedRecordsAmount, 'top', options.orient);
+
+        engine.block.getSvg()
+            .on('click', (e: MouseEvent) => {
+                if (e.target === engine.block.getSvg().node())
+                    engine.block.filterEventManager.clearKeysFor2D(options);
+            });
     }
 
     public static updateData(block: Block, model: Model, data: DataSource) {

@@ -8,7 +8,7 @@ import { ElementHighlighter } from "../elementHighlighter/elementHighlighter";
 import { Tooltip } from "../features/tolltip/tooltip";
 import { Aggregator } from "../features/aggregator/aggregator";
 import { Donut } from "./donut/donut";
-import { DataSource, PolarOptions, Size } from "../../config/config";
+import { DataSource, Size } from "../../config/config";
 
 export class PolarManager {
     public static render(engine: Engine, model: Model) {
@@ -36,6 +36,12 @@ export class PolarManager {
 
         if (model.dataSettings.scope.hidedRecordsAmount !== 0 && model.options.legend.position !== 'off')
             RecordOverflowAlert.render(engine.block, model.dataSettings.scope.hidedRecordsAmount, model.options.legend.position);
+
+        engine.block.getSvg()
+            .on('click', (e: MouseEvent) => {
+                if (e.target === engine.block.getSvg().node())
+                    engine.block.filterEventManager.clearKeysForPolar(model.chartBlock.margin, model.blockCanvas.size, options, model.chartSettings.donut);
+            });
     }
 
     public static update(block: Block, model: Model, data: DataSource): void {
