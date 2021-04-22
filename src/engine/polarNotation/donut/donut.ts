@@ -7,7 +7,6 @@ import { Aggregator } from "../../features/aggregator/aggregator";
 import { DonutHelper } from './DonutHelper';
 import { DomHelper } from '../../helpers/domHelper';
 import { DataRow, Size } from '../../../config/config';
-import { ElementHighlighter } from '../../elementHighlighter/elementHighlighter';
 
 export interface Translate {
     x: number;
@@ -19,7 +18,8 @@ export class Donut {
     public static readonly arcPathClass = 'arc-path';
     public static readonly arcItemClass = 'arc';
     public static readonly arcHighlightedClass = 'arc-highlighted';
-    public static readonly clonesGroupClass = 'arc-clones';
+    public static readonly arcClonesGroupClass = 'arc-clones';
+    public static readonly arcShadowsGroupClass = 'arc-shadow-clones';
 
     public static render(block: Block, data: DataRow[], margin: BlockMargin, chart: PolarChartModel, blockSize: Size, settings: DonutChartSettings): void {
         const outerRadius = DonutHelper.getOuterRadius(margin, blockSize);
@@ -134,14 +134,20 @@ export class Donut {
      * Рендер группы для клонов сегментов доната внутри donut-block. Объекдиняет в себе стили для клонов 
      */
     private static renderClonesG(donutBlock: Selection<SVGGElement, unknown, BaseType, unknown>): void {
-        const clonesG = donutBlock.append('g').attr('class', this.clonesGroupClass).raise();
-        ElementHighlighter.setShadowFilter(clonesG);
+        const clonesShadowsG = donutBlock.append('g').attr('class', this.arcShadowsGroupClass).raise();
+        const clonesG = donutBlock.append('g').attr('class', this.arcClonesGroupClass).raise();
+        // ElementHighlighter.setShadowFilter(clonesG);
     }
 
     private static raiseClonesG(block: Block): void {
         block.getSvg()
             .select(`.${this.donutBlockClass}`)
-            .select(`.${this.clonesGroupClass}`)
+            .select(`.${this.arcShadowsGroupClass}`)
+            .raise();
+
+        block.getSvg()
+            .select(`.${this.donutBlockClass}`)
+            .select(`.${this.arcClonesGroupClass}`)
             .raise();
     }
 }

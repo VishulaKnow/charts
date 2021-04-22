@@ -40,7 +40,7 @@ export class ElementHighlighter {
             .classed(`${Donut.arcItemClass}`, false)
             .classed(`${Donut.arcItemClass}-clone`, true)
             .remove();
-        block.getSvg().select(`.${Donut.clonesGroupClass}`).append(function () { return clone.node() });
+        block.getSvg().select(`.${Donut.arcClonesGroupClass}`).append(function () { return clone.node() });
 
         return clone as Selection<SVGGElement, PieArcDatum<DataRow>, SVGGElement, unknown>;
     }
