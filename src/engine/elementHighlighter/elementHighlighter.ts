@@ -10,6 +10,7 @@ import { DataRow, Size, TwoDimensionalChartType } from '../../config/config';
 import { Donut } from '../polarNotation/donut/donut';
 import { MarkDot } from '../features/markDots/markDot';
 import { RectElemWithAttrs } from '../twoDimensionalNotation/bar/bar';
+import { Helper } from '../helpers/helper';
 
 export class ElementHighlighter {
     private static inactiveElemClass = 'charts-opacity-inactive';
@@ -19,6 +20,11 @@ export class ElementHighlighter {
     }
 
     public static setShadowFilter(elemSelection: Selection<BaseType, any, BaseType, any>, blurSize: number = 6): void {
+        // elemSelection.each(function () {
+        //     const elemFill = select(this).style('fill') || 'rgb(0, 0, 0)';
+        //     const shadowColor = Helper.getRgbaFromRgb(elemFill, 0.1);
+        //     select(this).style('filter', `drop-shadow(0px 0px ${blurSize}px ${shadowColor})`);
+        // });
         elemSelection.style('filter', `drop-shadow(0px 0px ${blurSize}px rgba(0, 0, 0, 0.5))`);
     }
 

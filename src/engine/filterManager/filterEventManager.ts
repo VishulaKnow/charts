@@ -1,6 +1,6 @@
 import { AxisScale } from "d3-axis";
 import { pointer, select } from "d3-selection";
-import { DataRow, Size } from "../../config/config";
+import { ChartNotation, DataRow, Size } from "../../config/config";
 import { BlockMargin, TwoDimensionalOptionsModel, PolarOptionsModel, DonutChartSettings } from "../../model/model";
 import { Block } from "../block/block";
 import { SelectHighlighter } from "../elementHighlighter/selectHighlighter";
@@ -40,6 +40,18 @@ export class FilterEventManager {
 
     public isSelected(keyValue: string): boolean {
         return this.selectedKeys.findIndex(key => key === keyValue) !== -1;
+    }
+
+    public clearKeysFor2D(options: TwoDimensionalOptionsModel): void {
+        this.selectedKeys = [];
+        this.callback([]);
+        SelectHighlighter.clear2D(this.block, options);
+    }
+
+    public clearKeysForPolar(margin: BlockMargin, blockSize: Size, options: PolarOptionsModel, donutSettings: DonutChartSettings): void {
+        this.selectedKeys = [];
+        this.callback([]);
+        SelectHighlighter.clearPolar(margin, blockSize, this.block, options, Donut.getAllArcGroups(this.block), donutSettings);
     }
 
     private setKey(key: string): void {

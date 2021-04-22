@@ -8,7 +8,7 @@ import { ElementHighlighter } from "../elementHighlighter/elementHighlighter";
 import { Tooltip } from "../features/tolltip/tooltip";
 import { Aggregator } from "../features/aggregator/aggregator";
 import { Donut } from "./donut/donut";
-import { DataSource, Size } from "../../config/config";
+import { DataSource, PolarOptions, Size } from "../../config/config";
 
 export class PolarManager {
     public static render(engine: Engine, model: Model) {

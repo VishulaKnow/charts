@@ -1,4 +1,4 @@
-import { BaseType, Selection } from "d3-selection";
+import { BaseType, select, Selection } from "d3-selection";
 import { PieArcDatum } from "d3-shape";
 import { DataRow, Size } from "../../config/config";
 import { BlockMargin, DonutChartSettings, PolarOptionsModel, TwoDimensionalOptionsModel } from "../../model/model";
@@ -80,5 +80,25 @@ export class SelectHighlighter {
 
         ElementHighlighter.toggleActivityStyle(Legend.getItemsByKeys(block, selectedKeys, SelectionCondition.Exclude), false);
         ElementHighlighter.toggleActivityStyle(Legend.getItemsByKeys(block, selectedKeys), true);
+    }
+
+    public static clear2D(block: Block, options: TwoDimensionalOptionsModel): void {
+        options.charts.forEach(chart => {
+            const elements = DomHelper.get2DChartElements(block, chart);
+            ElementHighlighter.toggle2DElements(elements, false, chart.type, block.transitionManager.durations.markerHover);
+            ElementHighlighter.toggleActivityStyle(elements, true);
+            if (chart.type !== 'bar' && !chart.markersOptions.show)
+                ElementHighlighter.toggleMarkDotVisible(elements, false);
+        });
+    }
+
+    public static clearPolar(margin: BlockMargin, blockSize: Size, block: Block, options: PolarOptionsModel, arcItems: Selection<SVGGElement, PieArcDatum<DataRow>, SVGGElement, unknown>, donutSettings: DonutChartSettings): void {
+        const donutThickness = DonutHelper.getThickness(donutSettings, blockSize, margin);
+        ElementHighlighter.toggleDonutHighlightState(arcItems, margin, blockSize, donutThickness, block.transitionManager.durations.higlightedScale, false);
+        arcItems.each(function () {
+            ElementHighlighter.removeCloneForElem(block, options.data.keyField.name, select(this));
+        });
+        ElementHighlighter.toggleActivityStyle(Donut.getAllArcGroups(block), true);
+        ElementHighlighter.toggleActivityStyle(Legend.getItemsByKeys(block, [], SelectionCondition.Exclude), true);
     }
 }

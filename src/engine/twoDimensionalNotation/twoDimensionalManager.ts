@@ -1,3 +1,4 @@
+import { select } from "d3-selection";
 import { DataSource, Size } from "../../config/config";
 import { BarChartSettings, BlockMargin, Model, OptionsModelData, Orient, TwoDimensionalChartModel, TwoDimensionalOptionsModel } from "../../model/model";
 import { Block } from "../block/block";
