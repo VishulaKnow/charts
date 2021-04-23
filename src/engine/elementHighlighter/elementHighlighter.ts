@@ -140,15 +140,14 @@ export class ElementHighlighter {
         }
     }
 
-    //TODO: отрефакторить классы клонов
     private static makeArcClone(segment: Selection<SVGGElement, PieArcDatum<DataRow>, BaseType, unknown>, block: Block): Selection<SVGGElement, PieArcDatum<DataRow>, SVGGElement, unknown> {
-        const clone = this.renderDonutSegmentClone(segment, `${Donut.arcItemClass}-clone`);
+        const clone = this.renderDonutSegmentClone(segment, `${Donut.arcCloneClass}`);
         block.getSvg().select(`.${Donut.arcClonesGroupClass}`).append(function () { return clone.node() });
         return clone as Selection<SVGGElement, PieArcDatum<DataRow>, SVGGElement, unknown>;
     }
 
     private static makeArcShadow(segment: Selection<SVGGElement, PieArcDatum<DataRow>, BaseType, unknown>, block: Block): Selection<SVGGElement, PieArcDatum<DataRow>, SVGGElement, unknown> {
-        const shadowClone = this.renderDonutSegmentClone(segment, `${Donut.arcItemClass}-shadow-clone`);
+        const shadowClone = this.renderDonutSegmentClone(segment, `${Donut.arcShadowClass}`);
         block.getSvg().select(`.${Donut.arcShadowsGroupClass}`).append(function () { return shadowClone.node() });
         return shadowClone as Selection<SVGGElement, PieArcDatum<DataRow>, SVGGElement, unknown>;
     }
@@ -157,7 +156,7 @@ export class ElementHighlighter {
         return segment
             .clone(true)
             .style('pointer-events', 'none')
-            .classed(`${Donut.arcItemClass}-clone`, false)
+            .classed(`${Donut.arcCloneClass}`, false)
             .classed(newClass, true)
             .remove();
     }

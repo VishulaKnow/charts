@@ -20,6 +20,8 @@ export class Donut {
     public static readonly arcHighlightedClass = 'arc-highlighted';
     public static readonly arcClonesGroupClass = 'arc-clones';
     public static readonly arcShadowsGroupClass = 'arc-shadow-clones';
+    public static readonly arcCloneClass = 'arc-clone';
+    public static readonly arcShadowClass = 'arc-shadow-clone';
 
     public static render(block: Block, data: DataRow[], margin: BlockMargin, chart: PolarChartModel, blockSize: Size, settings: DonutChartSettings): void {
         const outerRadius = DonutHelper.getOuterRadius(margin, blockSize);
@@ -103,12 +105,12 @@ export class Donut {
 
     public static getAllArcClones(block: Block): Selection<SVGGElement, PieArcDatum<DataRow>, SVGGElement, unknown> {
         return block.getSvg()
-            .selectAll(`.${Donut.arcItemClass}-clone`) as Selection<SVGGElement, PieArcDatum<DataRow>, SVGGElement, unknown>;
+            .selectAll(`.${Donut.arcCloneClass}`) as Selection<SVGGElement, PieArcDatum<DataRow>, SVGGElement, unknown>;
     }
 
     public static getAllArcShadows(block: Block): Selection<SVGGElement, PieArcDatum<DataRow>, SVGGElement, unknown> {
         return block.getSvg()
-            .selectAll(`.${this.arcItemClass}-shadow-clone`) as Selection<SVGGElement, PieArcDatum<DataRow>, SVGGElement, unknown>;
+            .selectAll(`.${this.arcShadowClass}`) as Selection<SVGGElement, PieArcDatum<DataRow>, SVGGElement, unknown>;
     }
 
     private static renderNewArcItems(arcGenerator: Arc<any, PieArcDatum<DataRow>>, pieGenerator: Pie<any, DataRow>, donutBlock: Selection<SVGGElement, unknown, HTMLElement, any>, data: DataRow[], chart: PolarChartModel): void {
