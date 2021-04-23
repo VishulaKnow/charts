@@ -1,4 +1,4 @@
-import { Selection, BaseType, select, selectAll } from 'd3-selection';
+import { Selection, BaseType, select } from 'd3-selection';
 import { PieArcDatum } from 'd3-shape'
 import { BlockMargin, TwoDimensionalChartModel } from "../../model/model";
 import { Block } from "../block/block";
@@ -20,25 +20,30 @@ export class ElementHighlighter {
     }
 
     public static setShadowFilter(elemSelection: Selection<BaseType, any, BaseType, any>, blurSize: number = 6): void {
-        // elemSelection.each(function () {
-        //     const elemFill = select(this).style('fill') || 'rgb(0, 0, 0)';
-        //     const shadowColor = Helper.getRgbaFromRgb(elemFill, 0.1);
-        //     select(this).style('filter', `drop-shadow(0px 0px ${blurSize}px ${shadowColor})`);
-        // });
-        elemSelection.style('filter', `drop-shadow(0px 0px ${blurSize}px rgba(0, 0, 0, 0.5))`);
+        elemSelection.each(function () {
+            const elemFill = select(this).style('fill') || 'rgb(0, 0, 0)';
+            const shadowColor = Helper.getRgbaFromRgb(elemFill, 0.32);
+            select(this).style('filter', `drop-shadow(0px 4px ${blurSize}px ${shadowColor})`);
+        });
+        // elemSelection.style('filter', `drop-shadow(0px 0px ${blurSize}px rgba(0, 0, 0, 0.5))`);
     }
 
     public static removeFilter(elemSelection: Selection<BaseType, any, BaseType, any>): void {
         elemSelection.style('filter', null);
     }
 
+    public static removeShadowClone(block: Block, keyFieldName: string, selectedSegment: Selection<SVGGElement, PieArcDatum<DataRow>, BaseType, unknown>, margin: BlockMargin, blockSize: Size, donutThickness: number,): void {
+        const shadowClone = Donut.getAllArcShadows(block)
+            .filter((d: PieArcDatum<DataRow>) => d.data[keyFieldName] === selectedSegment.datum().data[keyFieldName]);
+        this.removeFilter(shadowClone);
+        this.toggleDonutHighlightState(shadowClone, margin, blockSize, donutThickness, block.transitionManager.durations.higlightedScale, false)
+            .then(() => shadowClone.remove());
+    }
+
     public static removeCloneForElem(block: Block, keyFieldName: string, selectedSegment: Selection<SVGGElement, PieArcDatum<DataRow>, BaseType, unknown>): void {
         const clone = Donut.getAllArcClones(block)
             .filter((d: PieArcDatum<DataRow>) => d.data[keyFieldName] === selectedSegment.datum().data[keyFieldName]);
-        const shadowClone = Donut.getAllArcShadows(block)
-            .filter((d: PieArcDatum<DataRow>) => d.data[keyFieldName] === selectedSegment.datum().data[keyFieldName]);
         clone.remove();
-        shadowClone.remove();
     }
 
     public static removeDonutArcClones(block: Block): void {
@@ -52,22 +57,26 @@ export class ElementHighlighter {
         this.toggleDonutHighlightState(arcSelection, margin, blockSize, donutThickness, block.transitionManager.durations.higlightedScale, true);
         this.toggleDonutHighlightState(clone, margin, blockSize, donutThickness, block.transitionManager.durations.higlightedScale, true);
         this.toggleDonutHighlightState(shadowClone, margin, blockSize, donutThickness, block.transitionManager.durations.higlightedScale, true);
+        this.setShadowFilter(shadowClone.select('path'), 16);
     }
 
-    public static toggleDonutHighlightState(segment: Selection<SVGGElement, PieArcDatum<DataRow>, BaseType, unknown>, margin: BlockMargin, blockSize: Size, donutThickness: number, transitionDuration: number, on: boolean): void {
-        let scaleSize = 0;
-        if (on)
-            scaleSize = 5; // Если нужно выделить сегмент, то scaleSize не равен нулю и отображается увеличенным
+    public static toggleDonutHighlightState(segment: Selection<SVGGElement, PieArcDatum<DataRow>, BaseType, unknown>, margin: BlockMargin, blockSize: Size, donutThickness: number, transitionDuration: number, on: boolean): Promise<any> {
+        return new Promise(resolve => {
+            let scaleSize = 0;
+            if (on)
+                scaleSize = 5; // Если нужно выделить сегмент, то scaleSize не равен нулю и отображается увеличенным
 
-        segment
-            .select('path')
-            .interrupt()
-            .transition()
-            .duration(transitionDuration)
-            .ease(easeLinear)
-            .attr('d', (d, i) => DonutHelper.getArcGeneratorObject(blockSize, margin, donutThickness)
-                .outerRadius(DonutHelper.getOuterRadius(margin, blockSize) + scaleSize)
-                .innerRadius(DonutHelper.getOuterRadius(margin, blockSize) - donutThickness - scaleSize)(d, i));
+            segment
+                .select('path')
+                .interrupt()
+                .transition()
+                .duration(transitionDuration)
+                .on('end', () => resolve(''))
+                .ease(easeLinear)
+                .attr('d', (d, i) => DonutHelper.getArcGeneratorObject(blockSize, margin, donutThickness)
+                    .outerRadius(DonutHelper.getOuterRadius(margin, blockSize) + scaleSize)
+                    .innerRadius(DonutHelper.getOuterRadius(margin, blockSize) - donutThickness - scaleSize)(d, i));
+        });
     }
 
     public static removeDonutHighlightingByKeys(arcSegments: Selection<SVGGElement, PieArcDatum<DataRow>, BaseType, unknown>, keyFieldName: string, keyValues: string[], margin: BlockMargin, blockSize: Size, donutThickness: number): void {

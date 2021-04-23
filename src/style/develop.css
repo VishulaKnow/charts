@@ -11,6 +11,9 @@
     fill: none;
     stroke-width: 4;
 }
+.donut-block * {
+    transition: filter 0.2s;
+}
 .arc {
     transition: opacity 0.3s;
 }

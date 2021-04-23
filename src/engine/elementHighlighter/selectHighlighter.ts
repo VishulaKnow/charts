@@ -52,6 +52,7 @@ export class SelectHighlighter {
         if (!appendKey) {
             ElementHighlighter.toggleDonutHighlightState(selectedSegment, margin, blockSize, donutThickness, block.transitionManager.durations.higlightedScale, false);
             ElementHighlighter.removeCloneForElem(block, options.data.keyField.name, selectedSegment);
+            ElementHighlighter.removeShadowClone(block, options.data.keyField.name, selectedSegment, margin, blockSize, donutThickness);
 
             if (selectedKeys.length > 0) {
                 ElementHighlighter.toggleActivityStyle(selectedSegment, false);
@@ -65,6 +66,7 @@ export class SelectHighlighter {
 
         if (multySelection) {
             ElementHighlighter.removeCloneForElem(block, options.data.keyField.name, selectedSegment);
+            ElementHighlighter.removeShadowClone(block, options.data.keyField.name, selectedSegment, margin, blockSize, donutThickness);
             ElementHighlighter.renderArcCloneAndHighlight(block, margin, selectedSegment, blockSize, donutThickness);
 
             ElementHighlighter.toggleActivityStyle(selectedSegment, true);
@@ -97,6 +99,7 @@ export class SelectHighlighter {
         ElementHighlighter.toggleDonutHighlightState(arcItems, margin, blockSize, donutThickness, block.transitionManager.durations.higlightedScale, false);
         arcItems.each(function () {
             ElementHighlighter.removeCloneForElem(block, options.data.keyField.name, select(this));
+            ElementHighlighter.removeShadowClone(block, options.data.keyField.name, select(this), margin, blockSize, donutThickness);
         });
         ElementHighlighter.toggleActivityStyle(Donut.getAllArcGroups(block), true);
         ElementHighlighter.toggleActivityStyle(Legend.getItemsByKeys(block, [], SelectionCondition.Exclude), true);
