@@ -106,6 +106,11 @@ export class Donut {
             .selectAll(`.${Donut.arcItemClass}-clone`) as Selection<SVGGElement, PieArcDatum<DataRow>, SVGGElement, unknown>;
     }
 
+    public static getAllArcShadows(block: Block): Selection<SVGGElement, PieArcDatum<DataRow>, SVGGElement, unknown> {
+        return block.getSvg()
+            .selectAll(`.${this.arcItemClass}-shadow-clone`) as Selection<SVGGElement, PieArcDatum<DataRow>, SVGGElement, unknown>;
+    }
+
     private static renderNewArcItems(arcGenerator: Arc<any, PieArcDatum<DataRow>>, pieGenerator: Pie<any, DataRow>, donutBlock: Selection<SVGGElement, unknown, HTMLElement, any>, data: DataRow[], chart: PolarChartModel): void {
         const items = donutBlock
             .selectAll(`.${this.arcItemClass}`)
