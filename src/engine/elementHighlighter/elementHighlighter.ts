@@ -23,7 +23,7 @@ export class ElementHighlighter {
         elemSelection.each(function () {
             const elemFill = select(this).style('fill') || 'rgb(0, 0, 0)';
             const shadowColor = Helper.getRgbaFromRgb(elemFill, 0.32);
-            select(this).style('filter', `drop-shadow(0px 4px ${blurSize}px ${shadowColor})`);
+            select(this).style('filter', `drop-shadow(0px 4px 16px ${shadowColor})`);
         });
         // elemSelection.style('filter', `drop-shadow(0px 0px ${blurSize}px rgba(0, 0, 0, 0.5))`);
     }
@@ -35,7 +35,7 @@ export class ElementHighlighter {
     public static removeShadowClone(block: Block, keyFieldName: string, selectedSegment: Selection<SVGGElement, PieArcDatum<DataRow>, BaseType, unknown>, margin: BlockMargin, blockSize: Size, donutThickness: number,): void {
         const shadowClone = Donut.getAllArcShadows(block)
             .filter((d: PieArcDatum<DataRow>) => d.data[keyFieldName] === selectedSegment.datum().data[keyFieldName]);
-        this.removeFilter(shadowClone);
+        this.removeFilter(shadowClone.select('path'));
         this.toggleDonutHighlightState(shadowClone, margin, blockSize, donutThickness, block.transitionManager.durations.higlightedScale, false)
             .then(() => shadowClone.remove());
     }
