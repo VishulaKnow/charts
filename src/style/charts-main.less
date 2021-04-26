@@ -9,6 +9,9 @@
     fill: none;
     stroke-width: 4;
 }
+.donut-block * {
+    transition: filter 0.15s;
+}
 .arc {
     transition: opacity 0.3s;
 }
@@ -22,7 +25,7 @@
     cursor: default;
 }
 .bar-item {
-    transition: filter 0.3s, opacity 0.3s;
+    transition: opacity 0.3s, filter 0.3s;
 }
 
 
@@ -30,6 +33,8 @@
 .charts-opacity-inactive {
     opacity: 0.6;
 }
+
+/* EXTENDED FOR SPECIFIC STYLES */
 .legend-item.charts-opacity-inactive {
     opacity: 0.45;
 }
