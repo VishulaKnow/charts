@@ -19,11 +19,16 @@ export class ElementHighlighter {
         elementSelection.classed(this.inactiveElemClass, !isActive);
     }
 
-    public static setShadowFilter(elemSelection: Selection<BaseType, any, BaseType, any>, blurSize: number = 6): void {
+    /**
+     * @param blurPercent процент от макс. размера блюра
+     */
+    public static setShadowFilter(elemSelection: Selection<BaseType, any, BaseType, any>, blurPercent: number = 1): void {
+        const maxBlurSize = 8;
+
         elemSelection.each(function () {
             const elemFill = select(this).style('fill') || 'rgb(0, 0, 0)';
-            const shadowColor = Helper.getRgbaFromRgb(elemFill, 0.32);
-            select(this).style('filter', `drop-shadow(0px 4px 16px ${shadowColor})`);
+            const shadowColor = Helper.getRgbaFromRgb(elemFill, 0.6);
+            select(this).style('filter', `drop-shadow(0px 0px ${blurPercent * maxBlurSize}px ${shadowColor})`);
         });
         // elemSelection.style('filter', `drop-shadow(0px 0px ${blurSize}px rgba(0, 0, 0, 0.5))`);
     }
@@ -57,7 +62,7 @@ export class ElementHighlighter {
         this.toggleDonutHighlightState(arcSelection, margin, blockSize, donutThickness, block.transitionManager.durations.higlightedScale, true);
         this.toggleDonutHighlightState(clone, margin, blockSize, donutThickness, block.transitionManager.durations.higlightedScale, true);
         this.toggleDonutHighlightState(shadowClone, margin, blockSize, donutThickness, block.transitionManager.durations.higlightedScale, true);
-        this.setShadowFilter(shadowClone.select('path'), 16);
+        this.setShadowFilter(shadowClone.select('path'), donutThickness / 60);
     }
 
     public static toggleDonutHighlightState(segment: Selection<SVGGElement, PieArcDatum<DataRow>, BaseType, unknown>, margin: BlockMargin, blockSize: Size, donutThickness: number, transitionDuration: number, on: boolean): Promise<any> {
@@ -132,7 +137,11 @@ export class ElementHighlighter {
         } else {
             this.toggleBar(elemSelection, isHighlight);
             if (isHighlight) {
-                this.setShadowFilter(elemSelection, 4);
+                elemSelection.each(function (d) {
+                    const attrs = (this as RectElemWithAttrs).attrs;
+                    const blurPercent = (attrs.orient === 'vertical' ? attrs.width : attrs.height) / 30; // 30px = max bar size, 13px - max blurSize 
+                    ElementHighlighter.setShadowFilter(select(this), blurPercent);
+                });
             }
             else {
                 this.removeFilter(elemSelection);
