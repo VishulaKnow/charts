@@ -33,8 +33,8 @@ export class Axis {
     private static renderAxis(block: Block, scale: AxisScale<any>, scaleOptions: ScaleKeyModel | ScaleValueModel, axisOptions: AxisModelOptions, blockSize: Size): void {
         const axisGenerator = AxisHelper.getBaseAxisGenerator(axisOptions, scale, scaleOptions);
 
-        if (axisOptions.type === 'value')
-            AxisHelper.setLabelsSettings(axisGenerator, scaleOptions.domain, scale.range());
+        if (axisOptions.type === 'value' && (scaleOptions.type === 'linear' || scaleOptions.type === 'datetime'))
+            AxisHelper.setLabelsSettings(axisGenerator, scale.range(), scaleOptions);
 
         const axisElement = block.getSvg()
             .append('g')
@@ -55,9 +55,7 @@ export class Axis {
             else
                 AxisLabelHelper.cropLabels(block, scale, scaleOptions, axisOptions, blockSize);
 
-            // AxisLabelHelper.setTitles(axisElement);
             AxisLabelHelper.alignLabelsInKeyAxis(axisOptions, axisElement);
-
             AxisLabelsEventManager.setHoverEvents(block, axisElement);
         }
         if (axisOptions.labels.defaultTooltip)
@@ -66,7 +64,7 @@ export class Axis {
 
     private static updateValueAxis(block: Block, scaleValue: AxisScale<any>, scaleOptions: ScaleValueModel, axisOptions: AxisModelOptions): void {
         const axisGenerator = AxisHelper.getBaseAxisGenerator(axisOptions, scaleValue, scaleOptions);
-        AxisHelper.setLabelsSettings(axisGenerator, scaleOptions.domain, scaleValue.range());
+        AxisHelper.setLabelsSettings(axisGenerator, scaleValue.range(), scaleOptions);
         const axisElement = block.getSvg().select<SVGGElement>(`g.${axisOptions.cssClass}`);
         AxisDomHelper.updateAxisElement(axisGenerator, axisElement, axisOptions.translate, block.transitionManager.durations.chartUpdate)
             .then(() => {

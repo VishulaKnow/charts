@@ -18,7 +18,7 @@ export class AxisHelper {
     }
 
 
-    public static setLabelsSettings(axisGenerator: IAxis<any>, scaleDomain: any[], range: number[]): void {
+    public static setLabelsSettings(axisGenerator: IAxis<any>, range: number[], scaleOptions: ScaleValueModel): void {
         const axisLength = range[1] - range[0];
         let ticksAmount: number;
         if (axisLength / 10 < MINIMAL_STEP_SIZE) {
@@ -28,14 +28,16 @@ export class AxisHelper {
             }
             else {
                 ticksAmount = 2;
-                axisGenerator.tickValues([min(scaleDomain), max(scaleDomain)]);
+                axisGenerator.tickValues([min(scaleOptions.domain), max(scaleOptions.domain)]);
             }
         }
-        (axisGenerator.scale() as any).ticks(ticksAmount).forEach((value: number) => {
-            if (format('~s')(value).indexOf('.') !== -1) {
-                this.setNumTickFormat(axisGenerator, '.2s');
-            }
-        });
+        if (scaleOptions.type === 'linear') {
+            (axisGenerator.scale() as any).ticks(ticksAmount).forEach((value: number) => {
+                if (format('~s')(value).indexOf('.') !== -1) {
+                    this.setNumTickFormat(axisGenerator, '.2s');
+                }
+            });
+        }
     }
 
     public static getBaseAxisGenerator(axisOptions: AxisModelOptions, scale: AxisScale<any>, scaleOptions: ScaleKeyModel | ScaleValueModel): IAxis<any> {
