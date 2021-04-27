@@ -31,6 +31,19 @@ interface TooltipTranslate {
     y: number;
 }
 
+interface LineTooltip2DParams {
+    scales: Scales;
+    margin: BlockMargin;
+    blockSize: Size;
+    charts: TwoDimensionalChartModel[];
+    chartOrientation: ChartOrientation;
+    keyAxisOrient: Orient;
+    dataOptions: OptionsModelData;
+    scaleKeyModel: ScaleKeyModel;
+    tooltipSettings: TooltipSettings;
+    tooltipOptions: TooltipOptions;
+}
+
 export class Tooltip {
     public static readonly tooltipBlockClass = 'tooltip-block';
     public static readonly tooltipLineClass = 'tooltip-line';
@@ -65,7 +78,20 @@ export class Tooltip {
         if (scales.key.domain().length === 0)
             return;
 
-        this.renderLineTooltip(block, scales, margin, blockSize, options.charts, options.orient, options.axis.key.orient, data, options.data, options.scale.key, tooltipOptions, options.tooltip);
+        const tooltipParams: LineTooltip2DParams = {
+            scales,
+            margin,
+            blockSize,
+            charts: options.charts,
+            chartOrientation: options.orient,
+            keyAxisOrient: options.axis.key.orient,
+            dataOptions: options.data,
+            scaleKeyModel: options.scale.key,
+            tooltipSettings: tooltipOptions,
+            tooltipOptions: options.tooltip
+        }
+
+        this.renderLineTooltip(block, data, tooltipParams);
     }
 
     private static renderTooltipForPolar(block: Block, options: PolarOptionsModel, data: DataSource, blockSize: Size, margin: BlockMargin, chartThickness: number, tooltipOptions: TooltipSettings): void {
@@ -75,38 +101,38 @@ export class Tooltip {
         this.renderTooltipForDonut(block, arcItems, data, options.data, options.charts[0], blockSize, margin, chartThickness, tooltipOptions, options.tooltip, { x: translateNums[0], y: translateNums[1] });
     }
 
-    private static renderLineTooltip(block: Block, scales: Scales, margin: BlockMargin, blockSize: Size, charts: TwoDimensionalChartModel[], chartOrientation: ChartOrientation, keyAxisOrient: Orient, data: DataSource, dataOptions: OptionsModelData, scaleKeyModel: ScaleKeyModel, tooltipSettings: TooltipSettings, tooltipOptions: TooltipOptions): void {
+    private static renderLineTooltip(block: Block, data: DataSource, args: LineTooltip2DParams): void {
         const tooltipBlock = TooltipComponentsManager.renderTooltipBlock(block);
         const tooltipContent = TooltipComponentsManager.renderTooltipContentBlock(tooltipBlock);
         const tooltipLine = TooltipComponentsManager.renderTooltipLine(block);
-        const tipBox = TipBox.renderOrGet(block, margin, blockSize);
+        const tipBox = TipBox.renderOrGet(block, args.margin, args.blockSize);
 
         let currentKey: string = null;
         tipBox.on('mousemove', function (e: CustomEvent<TipBoxOverDetails>) {
-            const keyValue = e.detail.keyValue || TipBoxHelper.getKeyValueByPointer(pointer(e, this), chartOrientation, margin, blockSize, scales.key, scaleKeyModel.type);
+            const keyValue = e.detail.keyValue || TipBoxHelper.getKeyValueByPointer(pointer(e, this), args.chartOrientation, args.margin, args.blockSize, args.scales.key, args.scaleKeyModel.type);
 
-            if (tooltipSettings.position === 'followCursor') {
+            if (args.tooltipSettings.position === 'followCursor') {
                 const tooltipCoordinate = TooltipHelper.getTooltipCursorCoordinate(e.detail.pointer || pointer(e, this), block.getSvg().node().getBoundingClientRect(), tooltipContent.node().getBoundingClientRect(), window.innerWidth, window.innerHeight);
-                TooltipComponentsManager.setLineTooltipCoordinate(tooltipBlock, tooltipCoordinate, chartOrientation, 0);
+                TooltipComponentsManager.setLineTooltipCoordinate(tooltipBlock, tooltipCoordinate, args.chartOrientation, 0);
             }
 
             if (!currentKey || currentKey !== keyValue) {
                 TooltipComponentsManager.showComponent(tooltipBlock);
-                TooltipDomHelper.fillForMulty2DCharts(tooltipContent, charts.filter(ch => ch.tooltip.show), data, dataOptions, keyValue, tooltipOptions?.html);
+                TooltipDomHelper.fillForMulty2DCharts(tooltipContent, args.charts.filter(ch => ch.tooltip.show), data, args.dataOptions, keyValue, args.tooltipOptions?.html);
 
-                if (tooltipSettings.position === 'fixed') {
-                    const tooltipCoordinate = TooltipHelper.getTooltipFixedCoordinate(scales.key, margin, keyValue, block.getSvg().node().getBoundingClientRect(), tooltipContent.node().getBoundingClientRect(), keyAxisOrient, window.innerWidth, window.innerHeight);
-                    TooltipComponentsManager.setLineTooltipCoordinate(tooltipBlock, tooltipCoordinate, chartOrientation, block.transitionManager.durations.tooltipSlide);
+                if (args.tooltipSettings.position === 'fixed') {
+                    const tooltipCoordinate = TooltipHelper.getTooltipFixedCoordinate(args.scales.key, args.margin, keyValue, block.getSvg().node().getBoundingClientRect(), tooltipContent.node().getBoundingClientRect(), args.keyAxisOrient, window.innerWidth, window.innerHeight);
+                    TooltipComponentsManager.setLineTooltipCoordinate(tooltipBlock, tooltipCoordinate, args.chartOrientation, block.transitionManager.durations.tooltipSlide);
                 }
 
-                const tooltipLineAttributes = TooltipHelper.getTooltipLineAttributes(scales.key, margin, keyValue, chartOrientation, blockSize);
+                const tooltipLineAttributes = TooltipHelper.getTooltipLineAttributes(args.scales.key, args.margin, keyValue, args.chartOrientation, args.blockSize);
                 TooltipComponentsManager.setTooltipLineAttributes(tooltipLine, tooltipLineAttributes, block.transitionManager.durations.tooltipSlide);
                 TooltipComponentsManager.showComponent(tooltipLine);
 
-                charts.forEach(chart => {
+                args.charts.forEach(chart => {
                     const elements = DomHelper.get2DChartElements(block, chart);
                     if (!block.filterEventManager.isSelected(currentKey)) {
-                        const oldElements = DomHelper.getChartElementsByKeys(elements, chart.isSegmented, dataOptions.keyField.name, [currentKey]);
+                        const oldElements = DomHelper.getChartElementsByKeys(elements, chart.isSegmented, args.dataOptions.keyField.name, [currentKey]);
                         if (chart.type !== 'bar' && !chart.markersOptions.show)
                             ElementHighlighter.toggleMarkDotVisible(oldElements, false);
                         ElementHighlighter.toggle2DElements(oldElements, false, chart.type, block.transitionManager.durations.markerHover);
@@ -115,7 +141,7 @@ export class Tooltip {
                         }
                     }
 
-                    const selectedElements = DomHelper.getChartElementsByKeys(elements, chart.isSegmented, dataOptions.keyField.name, [keyValue]);
+                    const selectedElements = DomHelper.getChartElementsByKeys(elements, chart.isSegmented, args.dataOptions.keyField.name, [keyValue]);
                     if (chart.type !== 'bar' && !chart.markersOptions.show)
                         ElementHighlighter.toggleMarkDotVisible(selectedElements, true);
                     ElementHighlighter.toggleActivityStyle(selectedElements, true);
@@ -130,7 +156,7 @@ export class Tooltip {
         tipBox.on('mouseleave', function () {
             TooltipComponentsManager.hideComponent(tooltipBlock);
             TooltipComponentsManager.hideComponent(tooltipLine);
-            ElementHighlighter.removeUnselected2DHighlight(block, dataOptions.keyField.name, charts, block.transitionManager.durations.markerHover);
+            ElementHighlighter.removeUnselected2DHighlight(block, args.dataOptions.keyField.name, args.charts, block.transitionManager.durations.markerHover);
             currentKey = null;
         });
     }
