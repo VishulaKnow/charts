@@ -31,17 +31,26 @@ interface TooltipTranslate {
     y: number;
 }
 
-interface LineTooltip2DParams {
+interface LineTooltipParams {
     scales: Scales;
     margin: BlockMargin;
     blockSize: Size;
-    charts: TwoDimensionalChartModel[];
     chartOrientation: ChartOrientation;
     keyAxisOrient: Orient;
     dataOptions: OptionsModelData;
     scaleKeyModel: ScaleKeyModel;
     tooltipSettings: TooltipSettings;
     tooltipOptions: TooltipOptions;
+}
+
+interface LineTooltip2DParams extends LineTooltipParams {
+    type: '2d';
+    charts: TwoDimensionalChartModel[];
+}
+
+interface LineTooltipIntervalParams extends LineTooltipParams {
+    type: 'interval';
+    charts: IntervalChartModel[];
 }
 
 export class Tooltip {
@@ -79,6 +88,7 @@ export class Tooltip {
             return;
 
         const tooltipParams: LineTooltip2DParams = {
+            type: '2d',
             scales,
             margin,
             blockSize,
@@ -101,7 +111,7 @@ export class Tooltip {
         this.renderTooltipForDonut(block, arcItems, data, options.data, options.charts[0], blockSize, margin, chartThickness, tooltipOptions, options.tooltip, { x: translateNums[0], y: translateNums[1] });
     }
 
-    private static renderLineTooltip(block: Block, data: DataSource, args: LineTooltip2DParams): void {
+    private static renderLineTooltip(block: Block, data: DataSource, args: LineTooltip2DParams | LineTooltipIntervalParams): void {
         const tooltipBlock = TooltipComponentsManager.renderTooltipBlock(block);
         const tooltipContent = TooltipComponentsManager.renderTooltipContentBlock(tooltipBlock);
         const tooltipLine = TooltipComponentsManager.renderTooltipLine(block);
@@ -118,7 +128,10 @@ export class Tooltip {
 
             if (!currentKey || currentKey !== keyValue) {
                 TooltipComponentsManager.showComponent(tooltipBlock);
-                TooltipDomHelper.fillForMulty2DCharts(tooltipContent, args.charts.filter(ch => ch.tooltip.show), data, args.dataOptions, keyValue, args.tooltipOptions?.html);
+                if (args.type === '2d')
+                    TooltipDomHelper.fillForMulty2DCharts(tooltipContent, args.charts.filter(ch => ch.tooltip.show), data, args.dataOptions, keyValue, args.tooltipOptions?.html);
+                else 
+                    TooltipDomHelper.fillForIntervalChart(tooltipContent, args.charts.filter(ch => ch.tooltip.show), data, args.dataOptions, keyValue, args.tooltipOptions?.html);
 
                 if (args.tooltipSettings.position === 'fixed') {
                     const tooltipCoordinate = TooltipHelper.getTooltipFixedCoordinate(args.scales.key, args.margin, keyValue, block.getSvg().node().getBoundingClientRect(), tooltipContent.node().getBoundingClientRect(), args.keyAxisOrient, window.innerWidth, window.innerHeight);
@@ -129,26 +142,29 @@ export class Tooltip {
                 TooltipComponentsManager.setTooltipLineAttributes(tooltipLine, tooltipLineAttributes, block.transitionManager.durations.tooltipSlide);
                 TooltipComponentsManager.showComponent(tooltipLine);
 
-                args.charts.forEach(chart => {
-                    const elements = DomHelper.get2DChartElements(block, chart);
-                    if (!block.filterEventManager.isSelected(currentKey)) {
-                        const oldElements = DomHelper.getChartElementsByKeys(elements, chart.isSegmented, args.dataOptions.keyField.name, [currentKey]);
-                        if (chart.type !== 'bar' && !chart.markersOptions.show)
-                            ElementHighlighter.toggleMarkDotVisible(oldElements, false);
-                        ElementHighlighter.toggle2DElements(oldElements, false, chart.type, block.transitionManager.durations.markerHover);
-                        if (block.filterEventManager.getSelectedKeys().length > 0) {
-                            ElementHighlighter.toggleActivityStyle(oldElements, false);
+                //TODO: append highlight for interval / Extract this highlighting in method 
+                if (args.type === '2d') {
+                    args.charts.forEach(chart => {
+                        const elements = DomHelper.get2DChartElements(block, chart);
+                        if (!block.filterEventManager.isSelected(currentKey)) {
+                            const oldElements = DomHelper.getChartElementsByKeys(elements, chart.isSegmented, args.dataOptions.keyField.name, [currentKey]);
+                            if (chart.type !== 'bar' && !chart.markersOptions.show)
+                                ElementHighlighter.toggleMarkDotVisible(oldElements, false);
+                            ElementHighlighter.toggle2DElements(oldElements, false, chart.type, block.transitionManager.durations.markerHover);
+                            if (block.filterEventManager.getSelectedKeys().length > 0) {
+                                ElementHighlighter.toggleActivityStyle(oldElements, false);
+                            }
                         }
-                    }
-
-                    const selectedElements = DomHelper.getChartElementsByKeys(elements, chart.isSegmented, args.dataOptions.keyField.name, [keyValue]);
-                    if (chart.type !== 'bar' && !chart.markersOptions.show)
-                        ElementHighlighter.toggleMarkDotVisible(selectedElements, true);
-                    ElementHighlighter.toggleActivityStyle(selectedElements, true);
-                    if (block.filterEventManager.getSelectedKeys().length === 0 || block.filterEventManager.isSelected(keyValue)) {
-                        ElementHighlighter.toggle2DElements(selectedElements, true, chart.type, block.transitionManager.durations.markerHover);
-                    }
-                });
+    
+                        const selectedElements = DomHelper.getChartElementsByKeys(elements, chart.isSegmented, args.dataOptions.keyField.name, [keyValue]);
+                        if (chart.type !== 'bar' && !chart.markersOptions.show)
+                            ElementHighlighter.toggleMarkDotVisible(selectedElements, true);
+                        ElementHighlighter.toggleActivityStyle(selectedElements, true);
+                        if (block.filterEventManager.getSelectedKeys().length === 0 || block.filterEventManager.isSelected(keyValue)) {
+                            ElementHighlighter.toggle2DElements(selectedElements, true, chart.type, block.transitionManager.durations.markerHover);
+                        }
+                    });
+                }
                 currentKey = keyValue;
             }
         })
@@ -156,7 +172,8 @@ export class Tooltip {
         tipBox.on('mouseleave', function () {
             TooltipComponentsManager.hideComponent(tooltipBlock);
             TooltipComponentsManager.hideComponent(tooltipLine);
-            ElementHighlighter.removeUnselected2DHighlight(block, args.dataOptions.keyField.name, args.charts, block.transitionManager.durations.markerHover);
+            if (args.type === '2d')
+                ElementHighlighter.removeUnselected2DHighlight(block, args.dataOptions.keyField.name, args.charts, block.transitionManager.durations.markerHover);
             currentKey = null;
         });
     }

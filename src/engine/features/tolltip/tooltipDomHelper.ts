@@ -1,6 +1,6 @@
 import { Selection, BaseType } from 'd3-selection'
 import { DataSource, TooltipHtml, ValueField } from "../../../config/config";
-import { OptionsModelData, PolarChartModel, TwoDimensionalChartModel } from "../../../model/model";
+import { IntervalChartModel, OptionsModelData, PolarChartModel, TwoDimensionalChartModel } from "../../../model/model";
 import { ValueFormatter, } from "../../valueFormatter";
 import { TooltipHelper } from './tooltipHelper';
 import { Size } from "../../../config/config";
@@ -56,6 +56,23 @@ export class TooltipDomHelper {
         } else {
             this.fillContentByFunction(contentBlock, data, dataOptions, keyValue, htmlHandler);
         }
+    }
+
+    public static fillForIntervalChart(contentBlock: Selection<HTMLElement, unknown, BaseType, unknown>, charts: IntervalChartModel[], data: DataSource, dataOptions: OptionsModelData, keyValue: string, htmlHandler?: TooltipHtml): void {
+        // contentBlock.html('');
+
+        // if (!htmlHandler) {
+        //     this.renderHead(contentBlock, keyValue);
+        //     charts.forEach(chart => {
+        //         let html = this.getTooltipItemHtml(data, dataOptions, keyValue, chart.data.valueField1);
+        //         this.fillValuesContent(contentBlock, chart.style.elementColors[0 % chart.style.elementColors.length], html);
+
+        //         html = this.getTooltipItemHtml(data, dataOptions, keyValue, chart.data.valueField2);
+        //         this.fillValuesContent(contentBlock, chart.style.elementColors[0 % chart.style.elementColors.length], html);
+        //     });
+        // } else {
+        //     this.fillContentByFunction(contentBlock, data, dataOptions, keyValue, htmlHandler);
+        // }
     }
 
     public static getRecalcedCoordinateByArrow(coordinate: [number, number], tooltipBlock: Selection<HTMLElement, unknown, HTMLElement, any>, blockSize: Size, tooltipArrow: Selection<BaseType, unknown, HTMLElement, any>, translateX: number = 0, translateY: number = 0): [number, number] {
