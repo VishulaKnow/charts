@@ -1,6 +1,6 @@
 import { select, Selection, pointer, BaseType, } from 'd3-selection';
 import { PieArcDatum } from 'd3-shape'
-import { BlockMargin, IntervalChartModel, Model, OptionsModelData, Orient, PolarChartModel, PolarOptionsModel, ScaleKeyModel, TwoDimensionalChartModel, TwoDimensionalOptionsModel } from "../../../model/model";
+import { BlockMargin, IntervalChartModel, IntervalOptionsModel, Model, OptionsModelData, Orient, PolarChartModel, PolarOptionsModel, ScaleKeyModel, TwoDimensionalChartModel, TwoDimensionalOptionsModel } from "../../../model/model";
 import { Block } from "../../block/block";
 import { TooltipDomHelper } from "./tooltipDomHelper";
 import { Donut } from "../../polarNotation/donut/donut";
@@ -74,6 +74,8 @@ export class Tooltip {
                     model.chartBlock.margin,
                     DonutHelper.getThickness(model.chartSettings.donut, model.blockCanvas.size, model.chartBlock.margin),
                     model.otherComponents.tooltipBlock);
+            } else if (model.options.type === 'interval') {
+                this.renderTooltipForIntervalCharts(block, data, model.blockCanvas.size, model.chartBlock.margin, scales, model.options, tooltipOptions);
             }
         }
     }
@@ -89,6 +91,27 @@ export class Tooltip {
 
         const tooltipParams: LineTooltip2DParams = {
             type: '2d',
+            scales,
+            margin,
+            blockSize,
+            charts: options.charts,
+            chartOrientation: options.orient,
+            keyAxisOrient: options.axis.key.orient,
+            dataOptions: options.data,
+            scaleKeyModel: options.scale.key,
+            tooltipSettings: tooltipOptions,
+            tooltipOptions: options.tooltip
+        }
+
+        this.renderLineTooltip(block, data, tooltipParams);
+    }
+
+    private static renderTooltipForIntervalCharts(block: Block, data: DataSource, blockSize: Size, margin: BlockMargin, scales: Scales, options: IntervalOptionsModel, tooltipOptions: TooltipSettings): void {
+        if (scales.key.domain().length === 0)
+            return;
+
+        const tooltipParams: LineTooltipIntervalParams = {
+            type: 'interval',
             scales,
             margin,
             blockSize,
@@ -130,7 +153,7 @@ export class Tooltip {
                 TooltipComponentsManager.showComponent(tooltipBlock);
                 if (args.type === '2d')
                     TooltipDomHelper.fillForMulty2DCharts(tooltipContent, args.charts.filter(ch => ch.tooltip.show), data, args.dataOptions, keyValue, args.tooltipOptions?.html);
-                else 
+                else
                     TooltipDomHelper.fillForIntervalChart(tooltipContent, args.charts.filter(ch => ch.tooltip.show), data, args.dataOptions, keyValue, args.tooltipOptions?.html);
 
                 if (args.tooltipSettings.position === 'fixed') {
@@ -155,7 +178,7 @@ export class Tooltip {
                                 ElementHighlighter.toggleActivityStyle(oldElements, false);
                             }
                         }
-    
+
                         const selectedElements = DomHelper.getChartElementsByKeys(elements, chart.isSegmented, args.dataOptions.keyField.name, [keyValue]);
                         if (chart.type !== 'bar' && !chart.markersOptions.show)
                             ElementHighlighter.toggleMarkDotVisible(selectedElements, true);

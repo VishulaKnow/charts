@@ -192,8 +192,8 @@ export interface MarkersOptions {
 
 //====================================================== IntervalChartModel
 interface IntervalChartDataModel {
-    valueField1: Field;
-    valueField2: Field;
+    valueField1: ValueField;
+    valueField2: ValueField;
 }
 
 
