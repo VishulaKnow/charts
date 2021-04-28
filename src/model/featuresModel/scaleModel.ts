@@ -7,7 +7,7 @@ export enum ScaleType {
 }
 
 export class ScaleModel {
-    public static getScaleKey(allowableKeys: string[], orient: ChartOrientation, margin: BlockMargin, blockSize: Size, charts: TwoDimensionalChart[] | IntervalChart[], barCharts: TwoDimensionalChart[]): ScaleKeyModel {
+    public static getScaleKey(allowableKeys: string[], orient: ChartOrientation, margin: BlockMargin, blockSize: Size, charts: TwoDimensionalChart[], barCharts: TwoDimensionalChart[]): ScaleKeyModel {
         return {
             domain: allowableKeys,
             range: {
@@ -41,8 +41,8 @@ export class ScaleModel {
             : blockSize.width - margin.left - margin.right;
     }
 
-    public static getDateValueDomain(data: DataSource, charts: IntervalChart[], keyAxisPosition: AxisPosition, dataSource: string): [Date, Date] {
-        const minMax = ModelHelper.getMinAndMaxOfIntervalData(data, dataSource, charts);
+    public static getDateValueDomain(data: DataSource, chart: IntervalChart, keyAxisPosition: AxisPosition, dataSource: string): [Date, Date] {
+        const minMax = ModelHelper.getMinAndMaxOfIntervalData(data, dataSource, chart);
         let domainPeekMin = minMax[0];
         let domainPeekMax = minMax[1];
 
@@ -68,8 +68,8 @@ export class ScaleModel {
         return [domainPeekMax, domainPeekMin];
     }
 
-    public static getScaleKeyType(charts: TwoDimensionalChart[] | IntervalChart[]): ScaleKeyType {
-        if (charts.findIndex((chart: TwoDimensionalChart | IntervalChart) => chart.type === 'bar' || chart.type === 'gantt') === -1)
+    public static getScaleKeyType(charts: TwoDimensionalChart[]): ScaleKeyType {
+        if (charts.findIndex((chart: TwoDimensionalChart) => chart.type === 'bar') === -1)
             return 'point';
 
         return 'band';

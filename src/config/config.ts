@@ -58,7 +58,7 @@ export interface PolarOptions extends Options {
 export interface IntervalOptions extends Options {
     type: 'interval';
     axis: IntervalAxis;
-    charts: IntervalChart[];
+    chart: IntervalChart;
     additionalElements: AdditionalElements;
     orientation: ChartOrientation;
 }

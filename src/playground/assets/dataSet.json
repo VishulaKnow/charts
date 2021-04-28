@@ -149,69 +149,29 @@
     ],
     "dataSet_gantt": [
         {
-            "id": 2,
-            "task": "task2",
+            "task": "Planning",
             "start": "2020-12-03",
-            "end": "2020-12-05",
-            "next_task_id": 2
+            "end": "2020-12-05"
         },
         {
-            "id": 3,
-            "task": "task3",
+            "task": "Build architecture",
+            "start": "2020-12-05",
+            "end": "2020-12-10"
+        },
+        {
+            "task": "Programming",
             "start": "2020-12-10",
-            "end": "2020-12-20",
-            "next_task_id": 3
+            "end": "2020-12-11"
         },
         {
-            "id": 4,
-            "task": "task4",
-            "start": "2020-12-01",
-            "end": "2020-12-11",
-            "next_task_id": 4
-        },
-        {
-            "id": 1,
-            "task": "task1",
+            "task": "Testing",
             "start": "2020-12-12",
-            "end": "2020-12-30",
-            "next_task_id": 5
+            "end": "2020-12-19"
         },
         {
-            "id": 5,
-            "task": "task5",
+            "task": "Deploying",
             "start": "2020-12-20",
-            "end": "2020-12-31",
-            "next_task_id": 6
-        },
-        {
-            "id": 6,
-            "task": "task6",
-            "start": "2020-12-12",
-            "end": "2020-12-16",
-            "next_task_id": 1
-        }
-    ],
-    "dataSet_poor": [
-        {
-            "brand": "BMW",
-            "price": 120,
-            "count": 12,
-            "simple": 300,
-            "$id": 0
-        },
-        {
-            "brand": "LADA",
-            "price": 50,
-            "count": 10,
-            "simple": 30,
-            "$id": 0
-        },
-        {
-            "brand": "MERCEDES",
-            "price": 15,
-            "count": 12,
-            "simple": 500,
-            "$id": 0
+            "end": "2020-12-31"
         }
     ],
     "dataSet_72": [

@@ -6,25 +6,23 @@ export class ModelHelper {
         return items.reduce((acc, item) => acc + item, 0);
     }
 
-    public static getMinAndMaxOfIntervalData(data: DataSource, dataSource: string, charts: IntervalChart[]): [Date, Date] {
-        let min = data[dataSource][0][charts[0].data.valueField1.name];
-        let max = data[dataSource][0][charts[0].data.valueField1.name];
+    public static getMinAndMaxOfIntervalData(data: DataSource, dataSource: string, chart: IntervalChart): [Date, Date] {
+        let min = data[dataSource][0][chart.data.valueField1.name];
+        let max = data[dataSource][0][chart.data.valueField1.name];
 
-        charts.forEach(chart => {
-            const chartData = data[dataSource];
-            const valueField1 = chart.data.valueField1.name;
-            const valueField2 = chart.data.valueField2.name;
-            chartData.forEach(dataRow => {
-                if (dataRow[valueField1] > max)
-                    max = dataRow[valueField1];
-                if (dataRow[valueField1] < min)
-                    min = dataRow[valueField1];
+        const chartData = data[dataSource];
+        const valueField1 = chart.data.valueField1.name;
+        const valueField2 = chart.data.valueField2.name;
+        chartData.forEach(dataRow => {
+            if (dataRow[valueField1] > max)
+                max = dataRow[valueField1];
+            if (dataRow[valueField1] < min)
+                min = dataRow[valueField1];
 
-                if (dataRow[valueField2] > max)
-                    max = dataRow[valueField2];
-                if (dataRow[valueField2] < min)
-                    min = dataRow[valueField2];
-            });
+            if (dataRow[valueField2] > max)
+                max = dataRow[valueField2];
+            if (dataRow[valueField2] < min)
+                min = dataRow[valueField2];
         });
 
         return [min, max];

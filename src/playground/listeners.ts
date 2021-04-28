@@ -244,13 +244,11 @@ export default class Listeners {
                 },
                 orientation: ListenersHelper.getInputValue('#chart-orient') as 'horizontal' | 'vertical',
                 type: notationType,
-                charts: [
-                    {
-                        data: this.getDataConfig(notationType),
-                        tooltip: this.getTooltipConfig(),
-                        type: 'gantt'
-                    }
-                ],
+                chart: {
+                    data: this.getDataConfig(notationType),
+                    tooltip: this.getTooltipConfig(),
+                    type: 'gantt'
+                },
                 axis: {
                     key: {
                         visibility: true,

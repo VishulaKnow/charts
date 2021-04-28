@@ -29,15 +29,17 @@ export class DataManagerModel {
 
     private static getDataScopeFor2D(configOptions: TwoDimensionalOptions | IntervalOptions, blockSize: Size, margin: BlockMargin, data: DataSource, designerConfig: DesignerConfig): DataScope {
         // Выбор чартов, которые используют столбики
-        const chartsWithBarElement = (configOptions.charts as Array<TwoDimensionalChart | IntervalChart>)
-            .filter((chart: TwoDimensionalChart | IntervalChart) => chart.type === 'bar' || chart.type === 'gantt');
+        let barsLength: number = 1;
+        if (configOptions.type === '2d')
+            barsLength = (configOptions.charts as Array<TwoDimensionalChart>)
+                .filter((chart: TwoDimensionalChart | IntervalChart) => chart.type === 'bar' || chart.type === 'gantt').length;
 
-        if (chartsWithBarElement.length !== 0) {
+        if (barsLength !== 0) {
             const axisLength = AxisModel.getAxisLength(configOptions.orientation, margin, blockSize);
             const uniqueKeys = ModelHelper.getUniqueValues(data[configOptions.data.dataSource].map(d => d[configOptions.data.keyField.name]));
             const dataLength = uniqueKeys.length;
 
-            const limit = this.getDataLimitByBarSize(this.getElementsInGroupAmount(configOptions, chartsWithBarElement.length), dataLength, axisLength, designerConfig.canvas.chartOptions.bar);
+            const limit = this.getDataLimitByBarSize(this.getElementsInGroupAmount(configOptions, barsLength), dataLength, axisLength, designerConfig.canvas.chartOptions.bar);
             const allowableKeys = uniqueKeys.slice(0, limit);
 
             return {
@@ -125,14 +127,13 @@ export class DataManagerModel {
             //     data[config.options.data.dataSource] = this.getTypedData(data[config.options.data.dataSource], config.options.data.keyField);
             // }
         } else if (config.options.type === 'interval') {
-            config.options.charts.forEach((chart: IntervalChart) => {
-                if (chart.data.valueField1.format === 'date') {
-                    data[config.options.data.dataSource] = this.getTypedData(data[config.options.data.dataSource], chart.data.valueField1);
-                }
-                if (chart.data.valueField2.format === 'date') {
-                    data[config.options.data.dataSource] = this.getTypedData(data[config.options.data.dataSource], chart.data.valueField2);
-                }
-            });
+            const chart = config.options.chart;
+            if (chart.data.valueField1.format === 'date') {
+                data[config.options.data.dataSource] = this.getTypedData(data[config.options.data.dataSource], chart.data.valueField1);
+            }
+            if (chart.data.valueField2.format === 'date') {
+                data[config.options.data.dataSource] = this.getTypedData(data[config.options.data.dataSource], chart.data.valueField2);
+            }
         }
     }
 

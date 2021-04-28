@@ -24,16 +24,16 @@ export class IntervalModel {
                         start: 0,
                         end: ScaleModel.getRangePeek(ScaleType.Key, options.orientation, margin, config.canvas.size)
                     },
-                    type: ScaleModel.getScaleKeyType(options.charts),
-                    elementsAmount: options.charts.length
+                    type: 'band',
+                    elementsAmount: 1
                 },
                 value: {
-                    domain: ScaleModel.getDateValueDomain(data, options.charts, options.axis.key.position, options.data.dataSource),
+                    domain: ScaleModel.getDateValueDomain(data, options.chart, options.axis.key.position, options.data.dataSource),
                     range: {
                         start: 0,
                         end: ScaleModel.getRangePeek(ScaleType.Value, options.orientation, margin, config.canvas.size)
                     },
-                    type: ScaleModel.getScaleValueType(options.charts)
+                    type: 'datetime'
                 }
             },
             axis: {
@@ -74,7 +74,7 @@ export class IntervalModel {
             },
             data: { ...options.data },
             type: options.type,
-            charts: this.getChartsModel(options.charts, designerConfig.chartStyle),
+            charts: this.getChartsModel(options.chart, designerConfig.chartStyle),
             additionalElements: this.getAdditionalElements(options),
             tooltip: options.tooltip
         }
@@ -86,17 +86,16 @@ export class IntervalModel {
         }
     }
 
-    private static getChartsModel(charts: IntervalChart[], chartStyleConfig: ChartStyleConfig): IntervalChartModel[] {
+    private static getChartsModel(chart: IntervalChart, chartStyleConfig: ChartStyleConfig): IntervalChartModel[] {
         const chartsModel: IntervalChartModel[] = [];
-        charts.forEach((chart, index) => {
-            chartsModel.push({
-                type: chart.type,
-                data: { ...chart.data },
-                tooltip: chart.tooltip,
-                cssClasses: ChartStyleModel.getCssClasses(index),
-                style: ChartStyleModel.getChartStyle(charts.length, chartStyleConfig)
-            });
+        chartsModel.push({
+            type: chart.type,
+            data: { ...chart.data },
+            tooltip: chart.tooltip,
+            cssClasses: ChartStyleModel.getCssClasses(0),
+            style: ChartStyleModel.getChartStyle(1, chartStyleConfig)
         });
+
         return chartsModel;
     }
 }

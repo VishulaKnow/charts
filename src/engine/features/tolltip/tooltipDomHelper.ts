@@ -97,11 +97,12 @@ export class TooltipDomHelper {
         const group = contentBlock.append('div')
             .attr('class', this.groupClass);
 
-        group.append('div')
-            .attr('class', 'tooltip-color')
-            .append('span')
-            .attr('class', 'tooltip-circle')
-            .style('background-color', markColor);
+        if (markColor)
+            group.append('div')
+                .attr('class', 'tooltip-color')
+                .append('span')
+                .attr('class', 'tooltip-circle')
+                .style('background-color', markColor);
 
         const textBlock = group.append('div')
             .attr('class', 'tooltip-texts')
