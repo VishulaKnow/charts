@@ -44,13 +44,15 @@ export class FilterEventManager {
 
     public clearKeysFor2D(options: TwoDimensionalOptionsModel): void {
         this.selectedKeys = [];
-        this.callback([]);
+        if (this.callback)
+            this.callback([]);
         SelectHighlighter.clear2D(this.block, options);
     }
 
     public clearKeysForPolar(margin: BlockMargin, blockSize: Size, options: PolarOptionsModel, donutSettings: DonutChartSettings): void {
         this.selectedKeys = [];
-        this.callback([]);
+        if (this.callback)
+            this.callback([]);
         SelectHighlighter.clearPolar(margin, blockSize, this.block, options, Donut.getAllArcGroups(this.block), donutSettings);
     }
 
