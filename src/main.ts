@@ -4,7 +4,7 @@ import Engine from "./engine/engine";
 import { FilterCallback } from "./engine/filterManager/filterEventManager";
 import { Model } from "./model/model";
 import { assembleModel, getPreparedData } from "./model/modelBuilder";
-//TESTTSTSTTSTS
+
 export class Chart {
     public static chartCounter = 0;
 
