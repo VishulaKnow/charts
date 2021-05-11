@@ -46,6 +46,7 @@
 .legend-item {
     cursor: default;
     transition: opacity 0.1s;
+    /* will-change: opacity;      */
 }
 .legend-item-inline {
     white-space: nowrap;
