@@ -18,7 +18,7 @@ export class Chart {
     private engine: Engine;
 
     private resizeHandler = this.resizeListener.bind(this);
-
+    //asd
     /**
      * @param config Объект конфигуратора
      * @param designerConfig Объект конфигуратора дизайнера
