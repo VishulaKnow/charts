@@ -117,6 +117,11 @@ export class Line {
 
     private static updateGroupedPath(block: Block, lineObject: Selection<BaseType, any, BaseType, any>, lineGenerator: ILine<DataRow>, newData: DataRow[]): Promise<any> {
         return new Promise(resolve => {
+            if (lineObject.size() === 0) {
+                resolve('');
+                return;
+            }
+
             let lineHandler: Selection<BaseType, any, BaseType, any> | Transition<BaseType, any, BaseType, any> = lineObject;
             if (block.transitionManager.durations.chartUpdate > 0)
                 lineHandler = lineHandler.interrupt()
@@ -134,6 +139,11 @@ export class Line {
 
     private static updateSegmentedPath(block: Block, linesObjects: Selection<BaseType, any, BaseType, any>, lineGenerator: ILine<DataRow>): Promise<any> {
         return new Promise(resolve => {
+            if (linesObjects.size() === 0) {
+                resolve('');
+                return;
+            }
+
             let linesHandler: Selection<BaseType, any, BaseType, any> | Transition<BaseType, any, BaseType, any> = linesObjects;
             if (block.transitionManager.durations.chartUpdate > 0)
                 linesHandler = linesHandler.interrupt()

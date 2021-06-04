@@ -278,6 +278,11 @@ export class Bar {
 
     private static fillBarAttrs(bars: Selection<SVGRectElement, DataRow, BaseType, unknown>, barAttrs: BarAttrsHelper, transitionDuration: number = 0): Promise<any> {
         return new Promise((resolve) => {
+            if (bars.size() === 0) {
+                resolve('');
+                return;
+            }
+
             let barsHander: Selection<SVGRectElement, DataRow, BaseType, unknown> | Transition<SVGRectElement, DataRow, BaseType, unknown> = bars;
             if (transitionDuration > 0) {
                 barsHander = barsHander

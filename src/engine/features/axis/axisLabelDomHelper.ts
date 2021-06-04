@@ -93,6 +93,9 @@ export class AxisLabelHelper {
     private static cropAndAlignExtremeLabels(block: Block, maxLabelSize: number, axisOptions: AxisModelOptions, blockSize: Size): void {
         const lastTick = block.getSvg().select(`.${axisOptions.cssClass}`).select<SVGGraphicsElement>('.tick:last-of-type');
         const lastLabel = lastTick.select<SVGGraphicsElement>('text');
+        if (lastTick.size() === 0 || lastLabel.size() === 0)
+            return;
+
         const tickTranslateX = Helper.getTranslateNumbers(lastTick.attr('transform'))[0];
 
         const marginRight = blockSize.width - axisOptions.translate.translateX - tickTranslateX;

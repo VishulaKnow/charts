@@ -115,6 +115,11 @@ export class Area {
 
     private static updateGroupedPath(block: Block, areaObject: Selection<BaseType, any, BaseType, any>, areaGenerator: IArea<DataRow>, newData: DataRow[]): Promise<any> {
         return new Promise(resolve => {
+            if (areaObject.size() === 0) {
+                resolve('');
+                return;
+            }
+
             let areaHandler: Selection<BaseType, any, BaseType, any> | Transition<BaseType, any, BaseType, any> = areaObject;
 
             if (block.transitionManager.durations.chartUpdate > 0)
@@ -133,6 +138,11 @@ export class Area {
 
     private static updateSegmentedPath(block: Block, areasObjects: Selection<BaseType, any, BaseType, any>, areaGenerator: IArea<DataRow>): Promise<any> {
         return new Promise(resolve => {
+            if (areasObjects.size() === 0) {
+                resolve('');
+                return;
+            }
+
             let areaHandler: Selection<BaseType, any, BaseType, any> | Transition<BaseType, any, BaseType, any> = areasObjects;
 
             if (block.transitionManager.durations.chartUpdate > 0)
