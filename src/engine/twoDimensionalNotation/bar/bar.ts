@@ -95,7 +95,7 @@ export class Bar {
                 keyField.name,
                 field.name,
                 blockSize,
-                BarHelper.getBarIndex(barsAmounts, chart.index) + index - firstBarIndex,
+                BarHelper.getBarIndex(barsAmounts, chart.index - firstBarIndex) + index,
                 sum(barsAmounts),
                 barSettings);
 
