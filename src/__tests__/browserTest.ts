@@ -14,6 +14,7 @@ function browserByUserAgent(userAgent: string): BrowserByUserAgentData {
     const safari = regExp("Safari");
     const opera = regExp("OPR|Opera");
     const edge = regExp("Edge");
+    const edg = regExp("Edg"); // В новых версиях Edge версия идет после 'Edg/' (предополжительно, после 82 версии)
     const ie = /(MSIE|rv)(?::|\s)([\w\.]+)/i;
 
     const is = (exp: any) => exp.test(userAgent);
@@ -25,6 +26,7 @@ function browserByUserAgent(userAgent: string): BrowserByUserAgentData {
     if (is(seamonkey)) return info(seamonkey);
     if (is(yandex)) return info(yandex, "Yandex");
     if (is(opera)) return info(opera, "Opera");
+    if (is(edg)) return info(edg, "Edge");
     if (is(edge)) return info(edge);
     if (is(chrome) && !is(chromium)) return info(chrome);
     if (is(chromium)) return info(chromium);
@@ -75,6 +77,10 @@ const userAgents = {
     edge: {
         agent: "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/64.0.3282.140 Safari/537.36 Edge/17.17134",
         ver: "42.17134",
+    },
+    edg: {
+        agent: "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.77 Safari/537.36 Edg/91.0.864.37",
+        ver: "91.0.864.37",
     },
     based: {
         agent: "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_6) AppleWebKit/603.3.8 (KHTML, like Gecko)",
@@ -136,6 +142,14 @@ describe("agents versions test", () => {
         expect(result).toEqual({
             name: "Edge",
             ver: userAgents.edge.ver,
+        });
+    });
+
+    it("edg 91", () => {
+        const result = browserByUserAgent(userAgents.edg.agent);
+        expect(result).toEqual({
+            name: "Edge",
+            ver: userAgents.edg.ver,
         });
     });
 
