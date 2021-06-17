@@ -1,4 +1,4 @@
-import { Config, DataSource, Size } from "./config/config";
+import { Config, DataSource, NewSize, Size } from "./config/config";
 import { DesignerConfig } from "./designer/designerConfig";
 import Engine from "./engine/engine";
 import { FilterCallback } from "./engine/filterManager/filterEventManager";
@@ -99,7 +99,7 @@ export class Chart implements IChart {
      * Изменение размера блока с графиком
      * @param newSize Новый размер
      */
-    public updateSize(newSize: Size): void {
+    public updateSize(newSize: NewSize): void {
         if (newSize.height)
             this.config.canvas.size.height = newSize.height;
         if (newSize.width)
