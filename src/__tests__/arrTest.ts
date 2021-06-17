@@ -1,120 +1,214 @@
-const compare = (groupList: string[], userGroups: string[], and: boolean = true): boolean => {
-    if (!groupList || !userGroups) return false;
-    if (and && groupList.length > userGroups.length) return false;
-    if (groupList.length === 0 || userGroups.length === 0) return false;
+function checkRoles(rolesList: string[], userRoles: string[], and: boolean = true, not: boolean = false): boolean {
+    if (!rolesList || !userRoles) return false;
 
-    let findedOne = false;
-    for (let i = 0; i < groupList.length; i++) {
-        const finded = userGroups.findIndex((el) => el === groupList[i]) !== -1;
-        if (and && !finded) return false;
-        if (!findedOne && finded) findedOne = true;
-    }
+    if (!not && (rolesList.length === 0 || userRoles.length === 0)) return false;
+    if (not && rolesList.length === 0) return true;
 
-    return findedOne;
-};
+    let includes: boolean;
+    if (and) includes = userRoles.filter((g) => rolesList.includes(g)).length == rolesList.length;
+    else includes = userRoles.some((g) => rolesList.includes(g));
+    return not ? !includes : includes;
+}
 
-describe("AND", () => {
-    let arrPri: string[];
-    let arrInp: string[];
-
-    beforeEach(() => {
-        arrPri = ["apple", "samsung", "lg"];
-        arrInp = ["samsung", "lg", "apple"];
-    });
-
+describe("common", () => {
     it("nulls arrays", () => {
-        arrPri = null;
-        arrInp = null;
-        const res = compare(arrPri, arrInp);
+        let arrPri = null;
+        let arrInp = null;
+        const res = checkRoles(arrPri, arrInp);
         expect(res).toEqual(false);
-    });
-
-    it("empty arrays", () => {
-        arrPri = [];
-        arrInp = [];
-        const res = compare(arrPri, arrInp);
-        expect(res).toEqual(false);
-    });
-
-    it("arrays with diff length but has common", () => {
-        arrPri = ["apple"];
-        const res = compare(arrPri, arrInp);
-        expect(res).toEqual(true);
-    });
-
-    it("arrays with diff length hasn't common", () => {
-        arrPri = ["test1"];
-        const res = compare(arrPri, arrInp);
-        expect(res).toEqual(false);
-    });
-
-    it("equal arrays", () => {
-        arrPri = ["samsung", "lg", "apple"];
-        const res = compare(arrPri, arrInp);
-        expect(res).toEqual(true);
-    });
-
-    it("equal arrays with diff orders", () => {
-        const res = compare(arrPri, arrInp);
-        expect(res).toEqual(true);
     });
 });
 
-describe("OR", () => {
-    let arrPri: string[];
-    let arrInp: string[];
+describe("must include", () => {
+    describe("AND", () => {
+        let rolesList: string[];
+        let userRoles: string[];
 
-    beforeEach(() => {
-        arrPri = ["apple", "samsung", "lg"];
-        arrInp = ["samsung", "lg", "apple"];
+        beforeEach(() => {
+            rolesList = ["a", "b", "c"];
+            userRoles = ["b", "c", "a"];
+        });
+
+        it("empty arrays", () => {
+            rolesList = [];
+            userRoles = [];
+            const res = checkRoles(rolesList, userRoles);
+            expect(res).toEqual(false);
+        });
+
+        it("arrays with diff length but has common", () => {
+            rolesList = ["a"];
+            const res = checkRoles(rolesList, userRoles);
+            expect(res).toEqual(true);
+        });
+
+        it("arrays with diff length hasn't common", () => {
+            rolesList = ["test1"];
+            const res = checkRoles(rolesList, userRoles);
+            expect(res).toEqual(false);
+        });
+
+        it("equal arrays", () => {
+            rolesList = ["b", "c", "a"];
+            const res = checkRoles(rolesList, userRoles);
+            expect(res).toEqual(true);
+        });
+
+        it("equal arrays with diff orders", () => {
+            const res = checkRoles(rolesList, userRoles);
+            expect(res).toEqual(true);
+        });
+
+        it("includes groups", () => {
+            const userGroups = ["a", "b", "c"];
+            const groups = ["a", "c"];
+            const res = checkRoles(groups, userGroups);
+            expect(res).toEqual(true);
+        });
     });
 
-    it("nulls arrays", () => {
-        arrPri = null;
-        arrInp = null;
-        const res = compare(arrPri, arrInp, false);
-        expect(res).toEqual(false);
+    describe("OR", () => {
+        let rolesList: string[];
+        let userRoles: string[];
+
+        beforeEach(() => {
+            rolesList = ["a", "b", "c"];
+            userRoles = ["b", "c", "a"];
+        });
+
+        it("empty arrays", () => {
+            rolesList = [];
+            userRoles = [];
+            const res = checkRoles(rolesList, userRoles, false);
+            expect(res).toEqual(false);
+        });
+
+        it("arrays with diff length but has common", () => {
+            rolesList = ["a"];
+            const res = checkRoles(rolesList, userRoles, false);
+            expect(res).toEqual(true);
+        });
+
+        it("arrays with diff length but has common 2", () => {
+            rolesList = ["a", "test", "test2"];
+            const res = checkRoles(rolesList, userRoles, false);
+            expect(res).toEqual(true);
+        });
+
+        it("arrays with diff length without common", () => {
+            rolesList = ["test"];
+            const res = checkRoles(rolesList, userRoles, false);
+            expect(res).toEqual(false);
+        });
+
+        it("arrays with diff length without common 2", () => {
+            rolesList = ["test", "test2", "test3"];
+            const res = checkRoles(rolesList, userRoles, false);
+            expect(res).toEqual(false);
+        });
+
+        it("equal arrays", () => {
+            rolesList = ["b", "c", "a"];
+            const res = checkRoles(rolesList, userRoles, false);
+            expect(res).toEqual(true);
+        });
+
+        it("equal arrays with diff orders", () => {
+            const res = checkRoles(rolesList, userRoles, false);
+            expect(res).toEqual(true);
+        });
+
+        it("includes groups", () => {
+            const userGroups = ["a", "b", "c"];
+            const groups = ["a", "c"];
+            const res = checkRoles(groups, userGroups, false);
+            expect(res).toEqual(true);
+        });
+    });
+});
+
+describe("must not include", () => {
+    describe("AND", () => {
+        let rolesList: string[];
+        let userRoles: string[];
+
+        beforeEach(() => {
+            rolesList = ["a", "b", "c"];
+            userRoles = ["b", "c", "a"];
+        });
+
+        it("empty roles", () => {
+            rolesList = [];
+            const result = checkRoles(rolesList, userRoles, true, true);
+            expect(result).toBe(true);
+        });
+
+        it("one role and user has it", () => {
+            rolesList = ["a"];
+            const result = checkRoles(rolesList, userRoles, true, true);
+            expect(result).toBe(false);
+        });
+
+        it("one role and user doesn't have it", () => {
+            rolesList = ["d"];
+            const result = checkRoles(rolesList, userRoles, true, true);
+            expect(result).toBe(true);
+        });
+
+        it("user has some roles, but not all", () => {
+            rolesList = ["a", "c", "d", "f"];
+            const result = checkRoles(rolesList, userRoles, true, true);
+            expect(result).toBe(true);
+        });
+
+        it("user has all roles", () => {
+            const result = checkRoles(rolesList, userRoles, true, true);
+            expect(result).toBe(false);
+        });
+
+        it("empty user roles", () => {
+            userRoles = [];
+            const result = checkRoles(rolesList, userRoles, true, true);
+            expect(result).toBe(true);
+        });
     });
 
-    it("empty arrays", () => {
-        arrPri = [];
-        arrInp = [];
-        const res = compare(arrPri, arrInp, false);
-        expect(res).toEqual(false);
-    });
+    describe("OR", () => {
+        let rolesList: string[];
+        let userRoles: string[];
 
-    it("arrays with diff length but has common", () => {
-        arrPri = ["apple"];
-        const res = compare(arrPri, arrInp, false);
-        expect(res).toEqual(true);
-    });
+        beforeEach(() => {
+            rolesList = ["a", "b", "c"];
+            userRoles = ["b", "c", "a"];
+        });
 
-    it("arrays with diff length but has common 2", () => {
-        arrPri = ["apple", "test", "test2"];
-        const res = compare(arrPri, arrInp, false);
-        expect(res).toEqual(true);
-    });
+        it("one role and user has it", () => {
+            rolesList = ["a"];
+            const result = checkRoles(rolesList, userRoles, false, true);
+            expect(result).toBe(false);
+        });
 
-    it("arrays with diff length without common", () => {
-        arrPri = ["test"];
-        const res = compare(arrPri, arrInp, false);
-        expect(res).toEqual(false);
-    });
+        it("one role and user doesn't have it", () => {
+            rolesList = ["d"];
+            const result = checkRoles(rolesList, userRoles, false, true);
+            expect(result).toBe(true);
+        });
 
-    it("arrays with diff length without common 2", () => {
-        arrPri = ["test", "test2", "test3"];
-        const res = compare(arrPri, arrInp, false);
-        expect(res).toEqual(false);
-    });
+        it("user has one role from roles list", () => {
+            rolesList = ["a", "f", "k"];
+            const result = checkRoles(rolesList, userRoles, false, true);
+            expect(result).toBe(false);
+        });
 
-    it("equal arrays", () => {
-        arrPri = ["samsung", "lg", "apple"];
-        const res = compare(arrPri, arrInp, false);
-        expect(res).toEqual(true);
-    });
+        it("user has all roles", () => {
+            const result = checkRoles(rolesList, userRoles, false, true);
+            expect(result).toBe(false);
+        });
 
-    it("equal arrays with diff orders", () => {
-        const res = compare(arrPri, arrInp, false);
-        expect(res).toEqual(true);
+        it("empty user roles", () => {
+            userRoles = [];
+            const result = checkRoles(rolesList, userRoles, true, true);
+            expect(result).toBe(true);
+        });
     });
 });

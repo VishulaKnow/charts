@@ -14,7 +14,7 @@ function browserByUserAgent(userAgent: string): BrowserByUserAgentData {
     const safari = regExp("Safari");
     const opera = regExp("OPR|Opera");
     const edge = regExp("Edge");
-    const edg = regExp("Edg"); // В новых версиях Edge версия идет после 'Edg/' (предополжительно, начиная с 75 версии)
+    const edg = regExp("Edg");
     const ie = /(MSIE|rv)(?::|\s)([\w\.]+)/i;
 
     const is = (exp: any) => exp.test(userAgent);
