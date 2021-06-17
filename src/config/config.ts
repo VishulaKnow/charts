@@ -31,6 +31,10 @@ export interface Size {
     width: number;
     height: number;
 }
+export interface NewSize {
+    width?: number;
+    height?: number;
+}
 
 
 //====================================================== Options

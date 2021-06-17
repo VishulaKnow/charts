@@ -5,7 +5,34 @@ import { FilterCallback } from "./engine/filterManager/filterEventManager";
 import { Model } from "./model/model";
 import { assembleModel, getPreparedData } from "./model/modelBuilder";
 
-export class Chart {
+export interface IChart {
+    /**
+     * Рендер графика
+     * @param parentElement родительский элемент для графика 
+     */
+    render(parentElement: HTMLElement): void;
+    /**
+     * Удаление графика со страницы
+     */
+    destroy(): void;
+    /**
+     * Обновление графика для новых данных
+     * @param data Новые данные
+     */
+    updateData(data: DataSource): void;
+    /**
+     * Изменение размера блока с графиком
+     * @param newSize Новый размер
+     */
+    updateSize(newSize: Size): void;
+    /**
+     * Обновление цветов графиков на основе новых базовых цветов
+     * @param newColors Новые базовые цвета
+     */
+    updateColors(newColors: string[]): void;
+}
+
+export class Chart implements IChart {
     public static chartCounter = 0;
 
     private config: Config;
@@ -18,7 +45,6 @@ export class Chart {
     private engine: Engine;
 
     private resizeHandler = this.resizeListener.bind(this);
-    //asds
     /**
      * @param config Объект конфигуратора
      * @param designerConfig Объект конфигуратора дизайнера
