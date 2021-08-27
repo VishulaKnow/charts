@@ -28,18 +28,20 @@ export class DataManagerModel {
 
 
     private static getDataScopeFor2D(configOptions: TwoDimensionalOptions | IntervalOptions, blockSize: Size, margin: BlockMargin, data: DataSource, designerConfig: DesignerConfig): DataScope {
-        // Выбор чартов, которые используют столбики
-        let barsLength: number = 1;
-        if (configOptions.type === '2d')
-            barsLength = (configOptions.charts as Array<TwoDimensionalChart>)
-                .filter((chart: TwoDimensionalChart | IntervalChart) => chart.type === 'bar' || chart.type === 'gantt').length;
+        // Для interval всегда один элемент, так как там может быть только один столбик
+        let itemsLength: number = 1;
+        if (configOptions.type === '2d') {
+            itemsLength = (configOptions.charts)
+                .filter((chart) => chart.type === 'bar').length;
+            if (itemsLength === 0) itemsLength = 1; // Если баров нет, то для одной записи выделяется столько же места, сколько для одного столбика
+        }
 
-        if (barsLength !== 0) {
+        if (itemsLength !== 0) {
             const axisLength = AxisModel.getAxisLength(configOptions.orientation, margin, blockSize);
             const uniqueKeys = ModelHelper.getUniqueValues(data[configOptions.data.dataSource].map(d => d[configOptions.data.keyField.name]));
             const dataLength = uniqueKeys.length;
 
-            const limit = this.getDataLimitByBarSize(this.getElementsInGroupAmount(configOptions, barsLength), dataLength, axisLength, designerConfig.canvas.chartOptions.bar);
+            const limit = this.getDataLimitByItemSize(this.getElementsInGroupAmount(configOptions, itemsLength), dataLength, axisLength, designerConfig.canvas.chartOptions.bar);
             const allowableKeys = uniqueKeys.slice(0, limit);
 
             return {
@@ -145,7 +147,7 @@ export class DataManagerModel {
         return data;
     }
 
-    private static getDataLimitByBarSize(elementsInGroupAmount: number, dataLength: number, axisLength: number, barOptions: BarOptionsCanvas): number {
+    private static getDataLimitByItemSize(elementsInGroupAmount: number, dataLength: number, axisLength: number, barOptions: BarOptionsCanvas): number {
         let sumSize = dataLength * (elementsInGroupAmount * barOptions.minBarWidth + (elementsInGroupAmount - 1) * barOptions.barDistance + barOptions.groupMinDistance);
         while (dataLength !== 0 && axisLength < sumSize) {
             dataLength--;
