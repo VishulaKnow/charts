@@ -1,6 +1,6 @@
-import { Config } from '../../config/config';
+import { MdtChartsConfig } from '../../config/config';
 
-const configCars: Config = {
+const configCars: MdtChartsConfig = {
     canvas: {
         class: 'outline',
         size: {

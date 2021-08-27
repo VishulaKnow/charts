@@ -8,15 +8,15 @@ export type TwoDimensionalChartType = 'line' | 'bar' | 'area';
 export type PolarChartType = 'donut';
 export type IntervalChartType = 'gantt';
 export type EmbeddedLabelType = 'none' | 'key' | 'value';
-export type TooltipHtml = (dataRow: DataRow) => string;
-export type DataRow = {
+export type TooltipHtml = (dataRow: MdtChartsDataRow) => string;
+export type MdtChartsDataRow = {
     [field: string]: any
 }
-export interface DataSource {
-    [source: string]: DataRow[];
+export interface MdtChartsDataSource {
+    [source: string]: MdtChartsDataRow[];
 }
 
-export interface Config {
+export interface MdtChartsConfig {
     canvas: ChartBlockCanvas;
     options: PolarOptions | TwoDimensionalOptions | IntervalOptions;
 }
@@ -75,15 +75,15 @@ export interface Legend {
 
 export interface DataOptions {
     dataSource: string;
-    keyField: Field;
+    keyField: MdtChartsField;
 }
 
-interface Field {
+export interface MdtChartsField {
     name: string;
     format: DataType;
 }
 
-export interface ValueField extends Field {
+export interface ValueField extends MdtChartsField {
     title: string;
 }
 

@@ -1,6 +1,6 @@
 import { AxisScale } from "d3-axis";
 import { pointer, select } from "d3-selection";
-import { ChartNotation, DataRow, Size } from "../../config/config";
+import { ChartNotation, MdtChartsDataRow, Size } from "../../config/config";
 import { BlockMargin, TwoDimensionalOptionsModel, PolarOptionsModel, DonutChartSettings } from "../../model/model";
 import { Block } from "../block/block";
 import { SelectHighlighter } from "../elementHighlighter/selectHighlighter";
@@ -9,7 +9,7 @@ import { TipBoxHelper } from "../features/tipBox/tipBoxHelper";
 import { Helper } from "../helpers/helper";
 import { Donut } from "../polarNotation/donut/donut";
 
-export type FilterCallback = (rows: DataRow[]) => void;
+export type FilterCallback = (rows: MdtChartsDataRow[]) => void;
 
 export interface SelectDetails {
     multySelect: boolean;
@@ -21,7 +21,7 @@ export class FilterEventManager {
     private block: Block;
     private selectedKeys: string[];
 
-    constructor(private callback: FilterCallback, private fullDataset: DataRow[], filtrable: boolean, keyFieldName: string, selectedIds: number[] = []) {
+    constructor(private callback: FilterCallback, private fullDataset: MdtChartsDataRow[], filtrable: boolean, keyFieldName: string, selectedIds: number[] = []) {
         this.selectedKeys = Helper.getKeysByIds(selectedIds, keyFieldName, fullDataset);
         this.filterable = filtrable;
     }
@@ -34,7 +34,7 @@ export class FilterEventManager {
         return this.selectedKeys;
     }
 
-    public updateData(newDataset: DataRow[]): void {
+    public updateData(newDataset: MdtChartsDataRow[]): void {
         this.fullDataset = newDataset;
     }
 

@@ -3,12 +3,12 @@ import { BaseType, Selection } from 'd3-selection';
 import { BlockMargin } from "../../../model/model";
 import { Transition } from "d3-transition";
 import { DomHelper } from "../../helpers/domHelper";
-import { DataRow, Size } from "../../../config/config";
+import { MdtChartsDataRow, Size } from "../../../config/config";
 
 export class EmbeddedLabelsDomHelper {
-    public static setLabelBlockAttrs(attrs: LabelAttrs, labelBlock: Selection<SVGTextElement, DataRow, HTMLElement, unknown>, transitionDuration: number = 0): Promise<any> {
+    public static setLabelBlockAttrs(attrs: LabelAttrs, labelBlock: Selection<SVGTextElement, MdtChartsDataRow, HTMLElement, unknown>, transitionDuration: number = 0): Promise<any> {
         return new Promise((resolve) => {
-            let labelBlockHandler: Selection<SVGTextElement, DataRow, HTMLElement, unknown> | Transition<SVGTextElement, DataRow, HTMLElement, unknown> = labelBlock;
+            let labelBlockHandler: Selection<SVGTextElement, MdtChartsDataRow, HTMLElement, unknown> | Transition<SVGTextElement, MdtChartsDataRow, HTMLElement, unknown> = labelBlock;
 
             if (transitionDuration > 0) {
                 labelBlockHandler = labelBlockHandler

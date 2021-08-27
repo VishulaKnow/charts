@@ -1,6 +1,6 @@
 import { ModelHelper } from "../modelHelper";
 import { BlockMargin, ScaleKeyModel, ScaleKeyType, ScaleValueModel, ScaleValueType } from "../model";
-import { AxisPosition, NumberDomain, IntervalChart, TwoDimensionalChart, TwoDimensionalOptions, Size, ChartOrientation, DataSource } from "../../config/config";
+import { AxisPosition, NumberDomain, IntervalChart, TwoDimensionalChart, TwoDimensionalOptions, Size, ChartOrientation, MdtChartsDataSource } from "../../config/config";
 
 export enum ScaleType {
     Key, Value
@@ -19,7 +19,7 @@ export class ScaleModel {
         }
     }
 
-    public static getScaleLinear(options: TwoDimensionalOptions, data: DataSource, margin: BlockMargin, blockSize: Size): ScaleValueModel {
+    public static getScaleLinear(options: TwoDimensionalOptions, data: MdtChartsDataSource, margin: BlockMargin, blockSize: Size): ScaleValueModel {
         return {
             domain: ScaleModel.getLinearDomain(options.axis.value.domain, data, options),
             range: {
@@ -41,7 +41,7 @@ export class ScaleModel {
             : blockSize.width - margin.left - margin.right;
     }
 
-    public static getDateValueDomain(data: DataSource, chart: IntervalChart, keyAxisPosition: AxisPosition, dataSource: string): [Date, Date] {
+    public static getDateValueDomain(data: MdtChartsDataSource, chart: IntervalChart, keyAxisPosition: AxisPosition, dataSource: string): [Date, Date] {
         const minMax = ModelHelper.getMinAndMaxOfIntervalData(data, dataSource, chart);
         let domainPeekMin = minMax[0];
         let domainPeekMax = minMax[1];
@@ -51,7 +51,7 @@ export class ScaleModel {
         return [domainPeekMax, domainPeekMin];
     }
 
-    public static getLinearDomain(configDomain: NumberDomain, data: DataSource, configOptions: TwoDimensionalOptions): [number, number] {
+    public static getLinearDomain(configDomain: NumberDomain, data: MdtChartsDataSource, configOptions: TwoDimensionalOptions): [number, number] {
         let domainPeekMin: number;
         let domainPeekMax: number;
         if (configDomain.start === -1)
@@ -97,7 +97,7 @@ export class ScaleModel {
         return barsAmount;
     }
 
-    public static getScaleMaxValue(charts: TwoDimensionalChart[], dataSource: string, data: DataSource): number {
+    public static getScaleMaxValue(charts: TwoDimensionalChart[], dataSource: string, data: MdtChartsDataSource): number {
         let max: number = 0;
 
         charts.forEach(chart => {

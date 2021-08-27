@@ -1,6 +1,6 @@
 import { select, Selection, BaseType } from 'd3-selection';
 import { transition } from 'd3-transition';
-import { DataRow } from '../../../config/config';
+import { MdtChartsDataRow } from '../../../config/config';
 import { BlockMargin, Orient, TwoDimensionalChartModel } from "../../../model/model";
 import { Block } from "../../block/block";
 import { DomHelper } from '../../helpers/domHelper';
@@ -10,8 +10,8 @@ import { Scales } from "../scale/scale";
 import { MarkDotHelper } from "./markDotsHelper";
 
 export interface DotAttrs {
-    cx: (data: DataRow) => number;
-    cy: (data: DataRow) => number;
+    cx: (data: MdtChartsDataRow) => number;
+    cy: (data: MdtChartsDataRow) => number;
 }
 
 select.prototype.transition = transition;
@@ -22,7 +22,7 @@ export class MarkDot {
 
     private static dotRadius = 4;
 
-    public static render(block: Block, data: DataRow[], keyAxisOrient: Orient, scales: Scales, margin: BlockMargin, keyFieldName: string, vfIndex: number, valueFieldName: string, chart: TwoDimensionalChartModel): void {
+    public static render(block: Block, data: MdtChartsDataRow[], keyAxisOrient: Orient, scales: Scales, margin: BlockMargin, keyFieldName: string, vfIndex: number, valueFieldName: string, chart: TwoDimensionalChartModel): void {
         const dotsWrapper = block.getChartGroup(chart.index)
             .selectAll(`.${this.markerDotClass}${Helper.getCssClassesLine(chart.cssClasses)}.chart-index-${vfIndex}`)
             .data(data)
@@ -37,7 +37,7 @@ export class MarkDot {
             dots.classed(this.hiddenDotClass, true);
     }
 
-    public static update(block: Block, newData: DataRow[], keyAxisOrient: Orient, scales: Scales, margin: BlockMargin, keyField: string, vfIndex: number, valueFieldName: string, chart: TwoDimensionalChartModel): void {
+    public static update(block: Block, newData: MdtChartsDataRow[], keyAxisOrient: Orient, scales: Scales, margin: BlockMargin, keyField: string, vfIndex: number, valueFieldName: string, chart: TwoDimensionalChartModel): void {
         const dots = block.getChartGroup(chart.index)
             .selectAll(`.${this.markerDotClass}${Helper.getCssClassesLine(chart.cssClasses)}.chart-element-${vfIndex}`)
             .data(newData);
@@ -68,17 +68,17 @@ export class MarkDot {
         DomHelper.setChartElementColor(dots, chart.style.elementColors, valueFieldIndex, 'stroke');
     }
 
-    public static getMarkDotForChart(block: Block, chartCssClasses: string[]): Selection<BaseType, DataRow, BaseType, unknown> {
+    public static getMarkDotForChart(block: Block, chartCssClasses: string[]): Selection<BaseType, MdtChartsDataRow, BaseType, unknown> {
         return block.getSvg()
             .selectAll(`.${MarkDot.markerDotClass}${Helper.getCssClassesLine(chartCssClasses)}`);
     }
 
-    private static setClassesAndStyle(dots: Selection<SVGCircleElement, DataRow, BaseType, any>, cssClasses: string[], vfIndex: number, elementColors: string[]): void {
+    private static setClassesAndStyle(dots: Selection<SVGCircleElement, MdtChartsDataRow, BaseType, any>, cssClasses: string[], vfIndex: number, elementColors: string[]): void {
         DomHelper.setCssClasses(dots, Helper.getCssClassesWithElementIndex(cssClasses, vfIndex));
         DomHelper.setChartElementColor(dots, elementColors, vfIndex, 'stroke');
     }
 
-    private static setAttrs(block: Block, dots: Selection<SVGCircleElement, DataRow, BaseType, any>, attrs: DotAttrs): void {
+    private static setAttrs(block: Block, dots: Selection<SVGCircleElement, MdtChartsDataRow, BaseType, any>, attrs: DotAttrs): void {
         dots
             .attr('class', this.markerDotClass)
             .attr('cx', d => attrs.cx(d))

@@ -1,5 +1,5 @@
 import { Selection, BaseType } from 'd3-selection'
-import { DataRow } from '../../config/config';
+import { MdtChartsDataRow } from '../../config/config';
 import { ChartStyle, TwoDimensionalChartModel } from "../../model/model";
 import { Block } from "../block/block";
 import { MarkDot } from "../features/markDots/markDot";
@@ -18,7 +18,7 @@ export class DomHelper {
         });
     }
 
-    public static get2DChartElements(block: Block, chart: TwoDimensionalChartModel): Selection<BaseType, DataRow, BaseType, unknown> {
+    public static get2DChartElements(block: Block, chart: TwoDimensionalChartModel): Selection<BaseType, MdtChartsDataRow, BaseType, unknown> {
         if (chart.type === 'line' || chart.type === 'area')
             return MarkDot.getMarkDotForChart(block, chart.cssClasses);
         else
@@ -65,7 +65,7 @@ export class DomHelper {
      * @param condition включать или исключать элменты по ключам
      * @returns Выборка по ключам
      */
-    public static getChartElementsByKeys<T extends BaseType>(initialSelection: Selection<T, DataRow, BaseType, unknown>, dataWrapped: boolean, keyFieldName: string, keyValues: string[], condition: SelectionCondition = SelectionCondition.Include): Selection<T, any, BaseType, unknown> {
+    public static getChartElementsByKeys<T extends BaseType>(initialSelection: Selection<T, MdtChartsDataRow, BaseType, unknown>, dataWrapped: boolean, keyFieldName: string, keyValues: string[], condition: SelectionCondition = SelectionCondition.Include): Selection<T, any, BaseType, unknown> {
         return initialSelection.filter(d => {
             let i: number;
             if (dataWrapped)

@@ -1,7 +1,7 @@
-import { DataSource, TwoDimensionalChart, TwoDimensionalOptions } from "../../config/config";
+import { MdtChartsDataSource, TwoDimensionalChart, TwoDimensionalOptions } from "../../config/config";
 import { ScaleModel } from "../../model/featuresModel/scaleModel";
 
-function getData(): DataSource {
+function getData(): MdtChartsDataSource {
     let data = JSON.parse(`{
         "dataSet": [
             { "brand": "BMW", "price": 10, "count": 12 },
@@ -28,7 +28,7 @@ function getData(): DataSource {
 
 describe('getScaleMaxValue test', () => {
     let charts: TwoDimensionalChart[];
-    let data: DataSource;
+    let data: MdtChartsDataSource;
     let dataSource: string;
 
     beforeEach(() => {
@@ -424,7 +424,7 @@ describe('getScaleMaxValue test', () => {
 
 describe('get scales tests', () => {
     let charts: TwoDimensionalChart[];
-    let data: DataSource;
+    let data: MdtChartsDataSource;
     let dataSource: string;
     let options: TwoDimensionalOptions;
 

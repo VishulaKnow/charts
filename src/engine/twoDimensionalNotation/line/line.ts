@@ -7,20 +7,20 @@ import { MarkDot } from "../../features/markDots/markDot";
 import { LineHelper } from './lineHelper';
 import { DomHelper } from '../../helpers/domHelper';
 import { Helper } from '../../helpers/helper';
-import { DataRow } from '../../../config/config';
+import { MdtChartsDataRow } from '../../../config/config';
 import { Transition } from 'd3-transition';
 
 export class Line {
     public static readonly lineChartClass = 'line';
 
-    public static render(block: Block, scales: Scales, data: DataRow[], keyField: Field, margin: BlockMargin, keyAxisOrient: Orient, chart: TwoDimensionalChartModel): void {
+    public static render(block: Block, scales: Scales, data: MdtChartsDataRow[], keyField: Field, margin: BlockMargin, keyAxisOrient: Orient, chart: TwoDimensionalChartModel): void {
         if (chart.isSegmented)
             this.renderSegmented(block, scales, data, keyField, margin, keyAxisOrient, chart);
         else
             this.renderGrouped(block, scales, data, keyField, margin, keyAxisOrient, chart);
     }
 
-    public static update(block: Block, scales: Scales, newData: DataRow[], keyField: Field, margin: BlockMargin, keyAxisOrient: Orient, chart: TwoDimensionalChartModel): Promise<any>[] {
+    public static update(block: Block, scales: Scales, newData: MdtChartsDataRow[], keyField: Field, margin: BlockMargin, keyAxisOrient: Orient, chart: TwoDimensionalChartModel): Promise<any>[] {
         let promises: Promise<any>[];
         if (chart.isSegmented) {
             promises = this.updateSegmeneted(block, scales, newData, keyField, margin, keyAxisOrient, chart);
@@ -39,7 +39,7 @@ export class Line {
         });
     }
 
-    private static renderGrouped(block: Block, scales: Scales, data: DataRow[], keyField: Field, margin: BlockMargin, keyAxisOrient: Orient, chart: TwoDimensionalChartModel): void {
+    private static renderGrouped(block: Block, scales: Scales, data: MdtChartsDataRow[], keyField: Field, margin: BlockMargin, keyAxisOrient: Orient, chart: TwoDimensionalChartModel): void {
         chart.data.valueFields.forEach((valueField, valueIndex) => {
             const lineGenerator = LineHelper.getLineGenerator(keyAxisOrient, scales, keyField.name, valueField.name, margin);
 
@@ -58,7 +58,7 @@ export class Line {
         });
     }
 
-    private static renderSegmented(block: Block, scales: Scales, data: DataRow[], keyField: Field, margin: BlockMargin, keyAxisOrient: Orient, chart: TwoDimensionalChartModel): void {
+    private static renderSegmented(block: Block, scales: Scales, data: MdtChartsDataRow[], keyField: Field, margin: BlockMargin, keyAxisOrient: Orient, chart: TwoDimensionalChartModel): void {
         const stackedData = stack().keys(chart.data.valueFields.map(field => field.name))(data);
         const lineGenerator = LineHelper.getSegmentedLineGenerator(keyAxisOrient, scales, keyField.name, margin);
 
@@ -84,7 +84,7 @@ export class Line {
         });
     }
 
-    private static updateGrouped(block: Block, scales: Scales, newData: DataRow[], keyField: Field, margin: BlockMargin, keyAxisOrient: Orient, chart: TwoDimensionalChartModel): Promise<any>[] {
+    private static updateGrouped(block: Block, scales: Scales, newData: MdtChartsDataRow[], keyField: Field, margin: BlockMargin, keyAxisOrient: Orient, chart: TwoDimensionalChartModel): Promise<any>[] {
         const promises: Promise<any>[] = [];
         chart.data.valueFields.forEach((valueField, valueFieldIndex) => {
             const lineGenerator = LineHelper.getLineGenerator(keyAxisOrient, scales, keyField.name, valueField.name, margin);
@@ -100,11 +100,11 @@ export class Line {
         return promises;
     }
 
-    private static updateSegmeneted(block: Block, scales: Scales, newData: DataRow[], keyField: Field, margin: BlockMargin, keyAxisOrient: Orient, chart: TwoDimensionalChartModel): Promise<any>[] {
+    private static updateSegmeneted(block: Block, scales: Scales, newData: MdtChartsDataRow[], keyField: Field, margin: BlockMargin, keyAxisOrient: Orient, chart: TwoDimensionalChartModel): Promise<any>[] {
         const stackedData = stack().keys(chart.data.valueFields.map(field => field.name))(newData);
         const lineGenerator = LineHelper.getSegmentedLineGenerator(keyAxisOrient, scales, keyField.name, margin);
         const lines = block.getChartGroup(chart.index)
-            .selectAll<SVGPathElement, DataRow[]>(`path.${this.lineChartClass}${Helper.getCssClassesLine(chart.cssClasses)}`)
+            .selectAll<SVGPathElement, MdtChartsDataRow[]>(`path.${this.lineChartClass}${Helper.getCssClassesLine(chart.cssClasses)}`)
             .data(stackedData);
 
         const prom = this.updateSegmentedPath(block, lines, lineGenerator);
@@ -115,7 +115,7 @@ export class Line {
         return [prom];
     }
 
-    private static updateGroupedPath(block: Block, lineObject: Selection<BaseType, any, BaseType, any>, lineGenerator: ILine<DataRow>, newData: DataRow[]): Promise<any> {
+    private static updateGroupedPath(block: Block, lineObject: Selection<BaseType, any, BaseType, any>, lineGenerator: ILine<MdtChartsDataRow>, newData: MdtChartsDataRow[]): Promise<any> {
         return new Promise(resolve => {
             if (lineObject.size() === 0) {
                 resolve('');
@@ -137,7 +137,7 @@ export class Line {
         });
     }
 
-    private static updateSegmentedPath(block: Block, linesObjects: Selection<BaseType, any, BaseType, any>, lineGenerator: ILine<DataRow>): Promise<any> {
+    private static updateSegmentedPath(block: Block, linesObjects: Selection<BaseType, any, BaseType, any>, lineGenerator: ILine<MdtChartsDataRow>): Promise<any> {
         return new Promise(resolve => {
             if (linesObjects.size() === 0) {
                 resolve('');

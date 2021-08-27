@@ -1,5 +1,5 @@
 import { BaseType, select, Selection } from 'd3-selection';
-import { DataRow, Size } from '../../../config/config';
+import { MdtChartsDataRow, Size } from '../../../config/config';
 import { BlockMargin, EmbeddedLabelTypeModel, Field, Orient } from "../../../model/model";
 import { Block } from "../../block/block";
 import { DomHelper } from '../../helpers/domHelper';
@@ -17,7 +17,7 @@ export class EmbeddedLabels {
     private static innerLabelColor = '#FFFFFF';
     private static outerLabelColor = '#000000';
 
-    public static render(block: Block, bars: Selection<SVGRectElement, DataRow, SVGGElement, any>, barAttrsHelper: BarAttrsHelper, field: Field, type: EmbeddedLabelTypeModel, keyAxisOrient: Orient, blockSize: Size, margin: BlockMargin, index: number, cssClasses: string[]): void {
+    public static render(block: Block, bars: Selection<SVGRectElement, MdtChartsDataRow, SVGGElement, any>, barAttrsHelper: BarAttrsHelper, field: Field, type: EmbeddedLabelTypeModel, keyAxisOrient: Orient, blockSize: Size, margin: BlockMargin, index: number, cssClasses: string[]): void {
         const labelsGroup = this.renderGroup(block, Helper.getCssClassesWithElementIndex(cssClasses, index));
         DomHelper.setCssClasses(labelsGroup, Helper.getCssClassesWithElementIndex(cssClasses, index));
 
@@ -26,11 +26,11 @@ export class EmbeddedLabels {
         });
     }
 
-    public static restoreRemoved(block: Block, bars: Selection<SVGRectElement, DataRow, SVGGElement, any>, barAttrsHelper: BarAttrsHelper, field: Field, type: EmbeddedLabelTypeModel, keyAxisOrient: Orient, blockSize: Size, margin: BlockMargin, index: number, cssClasses: string[], keyFieldName: string): void {
+    public static restoreRemoved(block: Block, bars: Selection<SVGRectElement, MdtChartsDataRow, SVGGElement, any>, barAttrsHelper: BarAttrsHelper, field: Field, type: EmbeddedLabelTypeModel, keyAxisOrient: Orient, blockSize: Size, margin: BlockMargin, index: number, cssClasses: string[], keyFieldName: string): void {
         const untaggedBars = bars.filter(d => {
             return block.getChartBlock()
                 .selectAll<SVGGElement, unknown>(`.${EmbeddedLabels.embeddedLabelsGroupClass}${Helper.getCssClassesLine(cssClasses)}.chart-element-${index}`)
-                .selectAll<SVGTextElement, DataRow>(`.${this.embeddedLabelClass}`)
+                .selectAll<SVGTextElement, MdtChartsDataRow>(`.${this.embeddedLabelClass}`)
                 .filter(row => row[keyFieldName] === d[keyFieldName])
                 .empty()
         });
@@ -43,20 +43,20 @@ export class EmbeddedLabels {
     public static removeUnused(block: Block, chartCssClasses: string[], fieldIndex: number, indexes: number[]): void {
         block.getChartBlock()
             .selectAll<SVGGElement, unknown>(`.${EmbeddedLabels.embeddedLabelsGroupClass}${Helper.getCssClassesLine(chartCssClasses)}.chart-element-${fieldIndex}`)
-            .selectAll<SVGTextElement, DataRow>(`.${this.embeddedLabelClass}`)
+            .selectAll<SVGTextElement, MdtChartsDataRow>(`.${this.embeddedLabelClass}`)
             .filter((d, i) => indexes.findIndex(ind => ind === i) !== -1)
             .remove();
     }
 
-    public static update(block: Block, bars: Selection<SVGRectElement, DataRow, SVGGElement, unknown>, keyAxisOrient: Orient, barAttrsHelper: BarAttrsHelper, margin: BlockMargin, valueField: Field, type: EmbeddedLabelTypeModel, blockSize: Size, newData: DataRow[], index: number, cssClasses: string[]) {
+    public static update(block: Block, bars: Selection<SVGRectElement, MdtChartsDataRow, SVGGElement, unknown>, keyAxisOrient: Orient, barAttrsHelper: BarAttrsHelper, margin: BlockMargin, valueField: Field, type: EmbeddedLabelTypeModel, blockSize: Size, newData: MdtChartsDataRow[], index: number, cssClasses: string[]) {
         const labelsGroup = block.getChartBlock()
             .selectAll<SVGGElement, unknown>(`.${EmbeddedLabels.embeddedLabelsGroupClass}${Helper.getCssClassesLine(cssClasses)}.chart-element-${index}`);
 
-        labelsGroup.selectAll<SVGRectElement, DataRow>(`.${this.embeddedLabelBgClass}`)
+        labelsGroup.selectAll<SVGRectElement, MdtChartsDataRow>(`.${this.embeddedLabelBgClass}`)
             .remove();
 
         const labelsSelection = labelsGroup
-            .selectAll<SVGTextElement, DataRow>(`.${this.embeddedLabelClass}`)
+            .selectAll<SVGTextElement, MdtChartsDataRow>(`.${this.embeddedLabelClass}`)
             .data(newData);
 
         bars.each((dataRow, barIndex) => {
@@ -70,7 +70,7 @@ export class EmbeddedLabels {
         block.getChartBlock().selectAll(`.${this.embeddedLabelsGroupClass}`).raise();
     }
 
-    private static renderLabel(labelsGroup: Selection<SVGGElement, unknown, HTMLElement, unknown>, barAttrsHelper: BarAttrsHelper, dataRow: DataRow, field: Field, type: EmbeddedLabelTypeModel, keyAxisOrient: Orient, blockSize: Size, margin: BlockMargin): void {
+    private static renderLabel(labelsGroup: Selection<SVGGElement, unknown, HTMLElement, unknown>, barAttrsHelper: BarAttrsHelper, dataRow: MdtChartsDataRow, field: Field, type: EmbeddedLabelTypeModel, keyAxisOrient: Orient, blockSize: Size, margin: BlockMargin): void {
         const labelBlock = labelsGroup.append('text').datum(dataRow);
 
         labelBlock
@@ -102,7 +102,7 @@ export class EmbeddedLabels {
         EmbeddedLabelsDomHelper.cropText(labelBlock, barAttrs, position, labelUnserveFlag, margin, blockSize);
     }
 
-    private static updateLabel(block: Block, dataRow: DataRow, keyAxisOrient: Orient, barAttrsHelper: BarAttrsHelper, margin: BlockMargin, type: EmbeddedLabelTypeModel, blockSize: Size, labelBlock: Selection<SVGTextElement, DataRow, HTMLElement, unknown>, labelsGroup: Selection<SVGGElement, unknown, SVGGElement, unknown>): void {
+    private static updateLabel(block: Block, dataRow: MdtChartsDataRow, keyAxisOrient: Orient, barAttrsHelper: BarAttrsHelper, margin: BlockMargin, type: EmbeddedLabelTypeModel, blockSize: Size, labelBlock: Selection<SVGTextElement, MdtChartsDataRow, HTMLElement, unknown>, labelsGroup: Selection<SVGGElement, unknown, SVGGElement, unknown>): void {
         const barAttrs: BarAttrs = {
             x: barAttrsHelper.x(dataRow),
             width: barAttrsHelper.width(dataRow),
@@ -160,7 +160,7 @@ export class EmbeddedLabels {
         return group;
     }
 
-    private static renderBackground(labelsGroup: Selection<SVGGElement, unknown, BaseType, unknown>, labelBlock: Selection<SVGTextElement, DataRow, HTMLElement, unknown>, attrs: LabelAttrs): void {
+    private static renderBackground(labelsGroup: Selection<SVGGElement, unknown, BaseType, unknown>, labelBlock: Selection<SVGTextElement, MdtChartsDataRow, HTMLElement, unknown>, attrs: LabelAttrs): void {
         labelsGroup.append('rect')
             .attr('class', this.embeddedLabelBgClass)
             .attr('x', attrs.x)
@@ -173,8 +173,8 @@ export class EmbeddedLabels {
 
 
 
-    private static getLabelByIndex(labelsSelection: Selection<SVGTextElement, DataRow, SVGGElement, unknown>, barIndex: number, valueField: Field, dataRow: DataRow): Selection<SVGTextElement, DataRow, HTMLElement, unknown> {
-        let labelBlock: Selection<SVGTextElement, DataRow, HTMLElement, unknown>;
+    private static getLabelByIndex(labelsSelection: Selection<SVGTextElement, MdtChartsDataRow, SVGGElement, unknown>, barIndex: number, valueField: Field, dataRow: MdtChartsDataRow): Selection<SVGTextElement, MdtChartsDataRow, HTMLElement, unknown> {
+        let labelBlock: Selection<SVGTextElement, MdtChartsDataRow, HTMLElement, unknown>;
 
         labelsSelection.each(function (d, indexLabel) {
             if (barIndex === indexLabel) {

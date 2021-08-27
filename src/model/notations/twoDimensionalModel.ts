@@ -1,4 +1,4 @@
-import { ChartOrientation, Config, DataSource, TwoDimensionalChart, TwoDimensionalChartType, TwoDimensionalOptions } from "../../config/config";
+import { ChartOrientation, MdtChartsConfig, MdtChartsDataSource, TwoDimensionalChart, TwoDimensionalChartType, TwoDimensionalOptions } from "../../config/config";
 import { ChartStyleConfig, DesignerConfig } from "../../designer/designerConfig";
 import { ChartStyleModel } from "../chartStyleModel";
 import { AxisModel } from "../featuresModel/axisModel";
@@ -8,7 +8,7 @@ import { BlockMargin, DataScope, TwoDimensionalOptionsModel, TwoDimensionalChart
 
 
 export class TwoDimensionalModel {
-    public static getOptions(config: Config, designerConfig: DesignerConfig, margin: BlockMargin, dataScope: DataScope, data: DataSource): TwoDimensionalOptionsModel {
+    public static getOptions(config: MdtChartsConfig, designerConfig: DesignerConfig, margin: BlockMargin, dataScope: DataScope, data: MdtChartsDataSource): TwoDimensionalOptionsModel {
         const options = <TwoDimensionalOptions>config.options;
         return {
             legend: LegendModel.getLegendModel(config.options.type, config.options.legend.show, config.canvas.size, margin),

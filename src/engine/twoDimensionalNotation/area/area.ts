@@ -7,20 +7,20 @@ import { MarkDot } from "../../features/markDots/markDot";
 import { AreaHelper } from './areaHelper';
 import { DomHelper } from '../../helpers/domHelper';
 import { Helper } from '../../helpers/helper';
-import { DataRow, Size } from '../../../config/config';
+import { MdtChartsDataRow, Size } from '../../../config/config';
 import { Transition } from 'd3-transition';
 
 export class Area {
     public static readonly areaChartClass = 'area';
 
-    public static render(block: Block, scales: Scales, data: DataRow[], keyField: Field, margin: BlockMargin, keyAxisOrient: Orient, chart: TwoDimensionalChartModel, blockSize: Size): void {
+    public static render(block: Block, scales: Scales, data: MdtChartsDataRow[], keyField: Field, margin: BlockMargin, keyAxisOrient: Orient, chart: TwoDimensionalChartModel, blockSize: Size): void {
         if (chart.isSegmented)
             this.renderSegmented(block, scales, data, keyField, margin, keyAxisOrient, chart);
         else
             this.renderGrouped(block, scales, data, keyField, margin, keyAxisOrient, chart, blockSize);
     }
 
-    public static update(block: Block, scales: Scales, newData: DataRow[], keyField: Field, margin: BlockMargin, chart: TwoDimensionalChartModel, keyAxisOrient: Orient, blockSize: Size): Promise<any>[] {
+    public static update(block: Block, scales: Scales, newData: MdtChartsDataRow[], keyField: Field, margin: BlockMargin, chart: TwoDimensionalChartModel, keyAxisOrient: Orient, blockSize: Size): Promise<any>[] {
         let promises: Promise<any>[];
         if (chart.isSegmented) {
             promises = this.updateSegmented(block, scales, newData, keyField, margin, chart, keyAxisOrient);
@@ -39,7 +39,7 @@ export class Area {
         });
     }
 
-    private static renderGrouped(block: Block, scales: Scales, data: DataRow[], keyField: Field, margin: BlockMargin, keyAxisOrient: Orient, chart: TwoDimensionalChartModel, blockSize: Size): void {
+    private static renderGrouped(block: Block, scales: Scales, data: MdtChartsDataRow[], keyField: Field, margin: BlockMargin, keyAxisOrient: Orient, chart: TwoDimensionalChartModel, blockSize: Size): void {
         chart.data.valueFields.forEach((field, valueIndex) => {
             const area = AreaHelper.getGroupedAreaGenerator(keyAxisOrient, scales, margin, keyField.name, field.name, blockSize);
 
@@ -57,7 +57,7 @@ export class Area {
         });
     }
 
-    private static renderSegmented(block: Block, scales: Scales, data: DataRow[], keyField: Field, margin: BlockMargin, keyAxisOrient: Orient, chart: TwoDimensionalChartModel): void {
+    private static renderSegmented(block: Block, scales: Scales, data: MdtChartsDataRow[], keyField: Field, margin: BlockMargin, keyAxisOrient: Orient, chart: TwoDimensionalChartModel): void {
         const stackedData = stack().keys(chart.data.valueFields.map(field => field.name))(data);
         const areaGenerator = AreaHelper.getSegmentedAreaGenerator(keyAxisOrient, scales, margin, keyField.name);
 
@@ -82,7 +82,7 @@ export class Area {
         });
     }
 
-    private static updateGrouped(block: Block, scales: Scales, newData: DataRow[], keyField: Field, margin: BlockMargin, chart: TwoDimensionalChartModel, keyAxisOrient: Orient, blockSize: Size): Promise<any>[] {
+    private static updateGrouped(block: Block, scales: Scales, newData: MdtChartsDataRow[], keyField: Field, margin: BlockMargin, chart: TwoDimensionalChartModel, keyAxisOrient: Orient, blockSize: Size): Promise<any>[] {
         const promises: Promise<any>[] = [];
         chart.data.valueFields.forEach((field, valueIndex) => {
             const areaGenerator = AreaHelper.getGroupedAreaGenerator(keyAxisOrient, scales, margin, keyField.name, field.name, blockSize);
@@ -97,11 +97,11 @@ export class Area {
         return promises;
     }
 
-    private static updateSegmented(block: Block, scales: Scales, newData: DataRow[], keyField: Field, margin: BlockMargin, chart: TwoDimensionalChartModel, keyAxisOrient: Orient): Promise<any>[] {
+    private static updateSegmented(block: Block, scales: Scales, newData: MdtChartsDataRow[], keyField: Field, margin: BlockMargin, chart: TwoDimensionalChartModel, keyAxisOrient: Orient): Promise<any>[] {
         const stackedData = stack().keys(chart.data.valueFields.map(field => field.name))(newData);
         const areaGenerator = AreaHelper.getSegmentedAreaGenerator(keyAxisOrient, scales, margin, keyField.name);
         const areas = block.getChartGroup(chart.index)
-            .selectAll<SVGRectElement, DataRow[]>(`path.${this.areaChartClass}${Helper.getCssClassesLine(chart.cssClasses)}`)
+            .selectAll<SVGRectElement, MdtChartsDataRow[]>(`path.${this.areaChartClass}${Helper.getCssClassesLine(chart.cssClasses)}`)
             .data(stackedData);
 
         const prom = this.updateSegmentedPath(block, areas, areaGenerator);
@@ -113,7 +113,7 @@ export class Area {
         return [prom];
     }
 
-    private static updateGroupedPath(block: Block, areaObject: Selection<BaseType, any, BaseType, any>, areaGenerator: IArea<DataRow>, newData: DataRow[]): Promise<any> {
+    private static updateGroupedPath(block: Block, areaObject: Selection<BaseType, any, BaseType, any>, areaGenerator: IArea<MdtChartsDataRow>, newData: MdtChartsDataRow[]): Promise<any> {
         return new Promise(resolve => {
             if (areaObject.size() === 0) {
                 resolve('');
@@ -136,7 +136,7 @@ export class Area {
         });
     }
 
-    private static updateSegmentedPath(block: Block, areasObjects: Selection<BaseType, any, BaseType, any>, areaGenerator: IArea<DataRow>): Promise<any> {
+    private static updateSegmentedPath(block: Block, areasObjects: Selection<BaseType, any, BaseType, any>, areaGenerator: IArea<MdtChartsDataRow>): Promise<any> {
         return new Promise(resolve => {
             if (areasObjects.size() === 0) {
                 resolve('');

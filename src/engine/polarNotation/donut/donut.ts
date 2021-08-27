@@ -6,7 +6,7 @@ import { Block } from "../../block/block";
 import { Aggregator } from "../../features/aggregator/aggregator";
 import { DonutHelper } from './DonutHelper';
 import { DomHelper } from '../../helpers/domHelper';
-import { DataRow, Size } from '../../../config/config';
+import { MdtChartsDataRow, Size } from '../../../config/config';
 
 export interface Translate {
     x: number;
@@ -23,7 +23,7 @@ export class Donut {
     public static readonly arcCloneClass = 'arc-clone';
     public static readonly arcShadowClass = 'arc-shadow-clone';
 
-    public static render(block: Block, data: DataRow[], margin: BlockMargin, chart: PolarChartModel, blockSize: Size, settings: DonutChartSettings): void {
+    public static render(block: Block, data: MdtChartsDataRow[], margin: BlockMargin, chart: PolarChartModel, blockSize: Size, settings: DonutChartSettings): void {
         const outerRadius = DonutHelper.getOuterRadius(margin, blockSize);
         const thickness = DonutHelper.getThickness(settings, blockSize, margin);
         const innerRadius = DonutHelper.getInnerRadius(outerRadius, thickness);
@@ -46,7 +46,7 @@ export class Donut {
         Aggregator.render(block, data, chart.data.valueField, innerRadius, translateAttr, thickness, settings.aggregatorPad);
     }
 
-    public static update(block: Block, data: DataRow[], margin: BlockMargin, chart: PolarChartModel, blockSize: Size, donutSettings: DonutChartSettings, keyField: string): Promise<any> {
+    public static update(block: Block, data: MdtChartsDataRow[], margin: BlockMargin, chart: PolarChartModel, blockSize: Size, donutSettings: DonutChartSettings, keyField: string): Promise<any> {
         const outerRadius = DonutHelper.getOuterRadius(margin, blockSize);
         const thickness = DonutHelper.getThickness(donutSettings, blockSize, margin);
         const innerRadius = DonutHelper.getInnerRadius(outerRadius, thickness);
@@ -56,7 +56,7 @@ export class Donut {
 
         const oldData = block.getSvg()
             .selectAll(`.${this.donutBlockClass}`)
-            .selectAll<SVGPathElement, PieArcDatum<DataRow>>('path')
+            .selectAll<SVGPathElement, PieArcDatum<MdtChartsDataRow>>('path')
             .data()
             .map(d => d.data);
 
@@ -98,22 +98,22 @@ export class Donut {
         this.setElementsColor(this.getAllArcGroups(block), chart.style.elementColors);
     }
 
-    public static getAllArcGroups(block: Block): Selection<SVGGElement, PieArcDatum<DataRow>, SVGGElement, unknown> {
+    public static getAllArcGroups(block: Block): Selection<SVGGElement, PieArcDatum<MdtChartsDataRow>, SVGGElement, unknown> {
         return block.getSvg()
-            .selectAll(`.${this.arcItemClass}`) as Selection<SVGGElement, PieArcDatum<DataRow>, SVGGElement, unknown>;
+            .selectAll(`.${this.arcItemClass}`) as Selection<SVGGElement, PieArcDatum<MdtChartsDataRow>, SVGGElement, unknown>;
     }
 
-    public static getAllArcClones(block: Block): Selection<SVGGElement, PieArcDatum<DataRow>, SVGGElement, unknown> {
+    public static getAllArcClones(block: Block): Selection<SVGGElement, PieArcDatum<MdtChartsDataRow>, SVGGElement, unknown> {
         return block.getSvg()
-            .selectAll(`.${Donut.arcCloneClass}`) as Selection<SVGGElement, PieArcDatum<DataRow>, SVGGElement, unknown>;
+            .selectAll(`.${Donut.arcCloneClass}`) as Selection<SVGGElement, PieArcDatum<MdtChartsDataRow>, SVGGElement, unknown>;
     }
 
-    public static getAllArcShadows(block: Block): Selection<SVGGElement, PieArcDatum<DataRow>, SVGGElement, unknown> {
+    public static getAllArcShadows(block: Block): Selection<SVGGElement, PieArcDatum<MdtChartsDataRow>, SVGGElement, unknown> {
         return block.getSvg()
-            .selectAll(`.${this.arcShadowClass}`) as Selection<SVGGElement, PieArcDatum<DataRow>, SVGGElement, unknown>;
+            .selectAll(`.${this.arcShadowClass}`) as Selection<SVGGElement, PieArcDatum<MdtChartsDataRow>, SVGGElement, unknown>;
     }
 
-    private static renderNewArcItems(arcGenerator: Arc<any, PieArcDatum<DataRow>>, pieGenerator: Pie<any, DataRow>, donutBlock: Selection<SVGGElement, unknown, HTMLElement, any>, data: DataRow[], chart: PolarChartModel): void {
+    private static renderNewArcItems(arcGenerator: Arc<any, PieArcDatum<MdtChartsDataRow>>, pieGenerator: Pie<any, MdtChartsDataRow>, donutBlock: Selection<SVGGElement, unknown, HTMLElement, any>, data: MdtChartsDataRow[], chart: PolarChartModel): void {
         const items = donutBlock
             .selectAll(`.${this.arcItemClass}`)
             .data(pieGenerator(data))

@@ -2,13 +2,13 @@ import { AxisScale } from "d3-axis";
 import { BarChartSettings, BlockMargin, Orient, TwoDimensionalChartModel } from "../../../model/model";
 import { Scale, Scales } from "../../features/scale/scale";
 import { Helper } from "../../helpers/helper";
-import { DataRow, Size } from "../../../config/config";
+import { MdtChartsDataRow, Size } from "../../../config/config";
 
 export interface BarAttrsHelper {
-    x: (dataRow: DataRow) => number;
-    y: (dataRow: DataRow) => number;
-    width: (dataRow: DataRow) => number;
-    height: (dataRow: DataRow) => number;
+    x: (dataRow: MdtChartsDataRow) => number;
+    y: (dataRow: MdtChartsDataRow) => number;
+    width: (dataRow: MdtChartsDataRow) => number;
+    height: (dataRow: MdtChartsDataRow) => number;
 }
 
 export class BarHelper {

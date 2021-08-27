@@ -1,5 +1,5 @@
 import { BaseType, select, Selection } from "d3-selection";
-import { DataSource, Size } from "../../../config/config";
+import { MdtChartsDataSource, Size } from "../../../config/config";
 import { LegendItemsDirection } from "../../../model/featuresModel/legendModel/legendCanvasModel";
 import { IntervalOptionsModel, LegendBlockModel, LegendPosition, Model, Orient, PolarOptionsModel, TwoDimensionalOptionsModel } from "../../../model/model";
 import { Block } from "../../block/block";
@@ -16,14 +16,14 @@ export class Legend {
 
     private static readonly legendBlockClass = 'legend-block';
 
-    public static render(block: Block, data: DataSource, options: TwoDimensionalOptionsModel | PolarOptionsModel | IntervalOptionsModel, model: Model): void {
+    public static render(block: Block, data: MdtChartsDataSource, options: TwoDimensionalOptionsModel | PolarOptionsModel | IntervalOptionsModel, model: Model): void {
         if (options.legend.position !== 'off') {
             const legendObject = this.renderObject(block, options.legend.position, model.otherComponents.legendBlock, model.blockCanvas.size);
             this.setContent(block, data, options, legendObject);
         }
     }
 
-    public static update(block: Block, data: DataSource, options: TwoDimensionalOptionsModel | PolarOptionsModel | IntervalOptionsModel): void {
+    public static update(block: Block, data: MdtChartsDataSource, options: TwoDimensionalOptionsModel | PolarOptionsModel | IntervalOptionsModel): void {
         if (options.legend.position !== 'off') {
             const legendObject = this.getObject(block);
             this.removeContent(legendObject);
@@ -49,7 +49,7 @@ export class Legend {
             });
     }
 
-    private static setContent(block: Block, data: DataSource, options: TwoDimensionalOptionsModel | PolarOptionsModel | IntervalOptionsModel, legendObject: Selection<SVGForeignObjectElement, unknown, HTMLElement, any>): void {
+    private static setContent(block: Block, data: MdtChartsDataSource, options: TwoDimensionalOptionsModel | PolarOptionsModel | IntervalOptionsModel, legendObject: Selection<SVGForeignObjectElement, unknown, HTMLElement, any>): void {
         const items = LegendHelper.getLegendItemsContent(options, data);
         const colors = LegendHelper.getMarksColor(options);
         const itemsDirection = LegendHelper.getLegendItemsDirection(options.type, options.legend.position);

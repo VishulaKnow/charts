@@ -1,4 +1,4 @@
-import { Config, TwoDimensionalChart, IntervalOptions, IntervalChart, TwoDimensionalOptions, PolarOptions, Size, DataSource, DataRow } from "../config/config";
+import { MdtChartsConfig, TwoDimensionalChart, IntervalOptions, IntervalChart, TwoDimensionalOptions, PolarOptions, Size, MdtChartsDataSource, MdtChartsDataRow } from "../config/config";
 import { BarOptionsCanvas, DesignerConfig, LegendBlockCanvas } from "../designer/designerConfig";
 import { AxisModel } from "./featuresModel/axisModel";
 import { LegendCanvasModel } from "./featuresModel/legendModel/legendCanvasModel";
@@ -7,14 +7,14 @@ import { BlockMargin, DataScope, Field, LegendBlockModel, LegendPosition } from 
 import { ModelHelper } from "./modelHelper";
 
 export class DataManagerModel {
-    public static getPreparedData(data: DataSource, allowableKeys: string[], config: Config): DataSource {
+    public static getPreparedData(data: MdtChartsDataSource, allowableKeys: string[], config: MdtChartsConfig): MdtChartsDataSource {
         const scopedData = this.getScopedData(data, allowableKeys, config);
         this.setDataType(scopedData, config);
 
         return scopedData;
     }
 
-    public static getDataScope(config: Config, margin: BlockMargin, data: DataSource, designerConfig: DesignerConfig, legendBlock: LegendBlockModel): DataScope {
+    public static getDataScope(config: MdtChartsConfig, margin: BlockMargin, data: MdtChartsDataSource, designerConfig: DesignerConfig, legendBlock: LegendBlockModel): DataScope {
         if (config.options.type === '2d' || config.options.type === 'interval') {
             return this.getDataScopeFor2D(config.options, config.canvas.size, margin, data, designerConfig);
         } else if (config.options.type === 'polar') {
@@ -22,12 +22,12 @@ export class DataManagerModel {
         }
     }
 
-    public static getDataValuesByKeyField(data: DataSource, dataSourceName: string, keyFieldName: string): string[] {
+    public static getDataValuesByKeyField(data: MdtChartsDataSource, dataSourceName: string, keyFieldName: string): string[] {
         return data[dataSourceName].map(dataRow => dataRow[keyFieldName]);
     }
 
 
-    private static getDataScopeFor2D(configOptions: TwoDimensionalOptions | IntervalOptions, blockSize: Size, margin: BlockMargin, data: DataSource, designerConfig: DesignerConfig): DataScope {
+    private static getDataScopeFor2D(configOptions: TwoDimensionalOptions | IntervalOptions, blockSize: Size, margin: BlockMargin, data: MdtChartsDataSource, designerConfig: DesignerConfig): DataScope {
         // Для interval всегда один элемент, так как там может быть только один столбик
         let itemsLength: number = 1;
         if (configOptions.type === '2d') {
@@ -56,7 +56,7 @@ export class DataManagerModel {
         }
     }
 
-    private static getDataScopeForPolar(configOptions: PolarOptions, blockSize: Size, margin: BlockMargin, data: DataSource, legendBlock: LegendBlockModel, legendCanvas: LegendBlockCanvas): DataScope {
+    private static getDataScopeForPolar(configOptions: PolarOptions, blockSize: Size, margin: BlockMargin, data: MdtChartsDataSource, legendBlock: LegendBlockModel, legendCanvas: LegendBlockCanvas): DataScope {
         const dataset = data[configOptions.data.dataSource];
         const keyFieldName = configOptions.data.keyField.name;
         const keys = dataset.map(dataRow => dataRow[keyFieldName]);
@@ -111,18 +111,18 @@ export class DataManagerModel {
         return barsAmount;
     }
 
-    private static getScopedData(data: DataSource, allowableKeys: string[], config: Config): DataSource {
-        const newData: DataSource = {};
+    private static getScopedData(data: MdtChartsDataSource, allowableKeys: string[], config: MdtChartsConfig): MdtChartsDataSource {
+        const newData: MdtChartsDataSource = {};
         newData[config.options.data.dataSource] = this.getScopedChartData(data[config.options.data.dataSource], allowableKeys, config.options.data.keyField.name);
 
         return newData;
     }
 
-    private static getScopedChartData(data: DataRow[], allowableKeys: string[], keyFieldName: string): DataRow[] {
+    private static getScopedChartData(data: MdtChartsDataRow[], allowableKeys: string[], keyFieldName: string): MdtChartsDataRow[] {
         return data.filter(d => allowableKeys.findIndex(key => key === d[keyFieldName]) !== -1);
     }
 
-    private static setDataType(data: DataSource, config: Config): void {
+    private static setDataType(data: MdtChartsDataSource, config: MdtChartsConfig): void {
         if (config.options.type === 'polar' || config.options.type === '2d') {
             // Форматиривание для оси ключей пока не совсем верно установлено
             // if(config.options.data.keyField.format === 'date') {
@@ -139,7 +139,7 @@ export class DataManagerModel {
         }
     }
 
-    private static getTypedData(data: DataRow[], field: Field): DataRow[] {
+    private static getTypedData(data: MdtChartsDataRow[], field: Field): MdtChartsDataRow[] {
         if (field.format === 'date')
             data.forEach(d => {
                 d[field.name] = new Date(d[field.name]);

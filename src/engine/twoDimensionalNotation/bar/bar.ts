@@ -11,7 +11,7 @@ import { sum } from "d3-array";
 import { Transition } from "d3-transition";
 import { DomHelper } from "../../helpers/domHelper";
 import { Helper } from "../../helpers/helper";
-import { DataRow, Size } from "../../../config/config";
+import { MdtChartsDataRow, Size } from "../../../config/config";
 
 export interface RectElemWithAttrs extends SVGElement {
     attrs?: {
@@ -30,14 +30,14 @@ export class Bar {
 
     private static readonly barSegmentGroupClass = 'bar-segment-group';
 
-    public static render(block: Block, scales: Scales, data: DataRow[], keyField: Field, margin: BlockMargin, keyAxisOrient: Orient, chart: TwoDimensionalChartModel, blockSize: Size, barSettings: BarChartSettings, barsAmounts: number[], isSegmented: boolean, firstBarIndex: number): void {
+    public static render(block: Block, scales: Scales, data: MdtChartsDataRow[], keyField: Field, margin: BlockMargin, keyAxisOrient: Orient, chart: TwoDimensionalChartModel, blockSize: Size, barSettings: BarChartSettings, barsAmounts: number[], isSegmented: boolean, firstBarIndex: number): void {
         if (isSegmented)
             this.renderSegmented(block, scales, data, keyField, margin, keyAxisOrient, chart, barsAmounts, blockSize, firstBarIndex, barSettings);
         else
             this.renderGrouped(block, scales, data, keyField, margin, keyAxisOrient, chart, barsAmounts, blockSize, firstBarIndex, barSettings);
     }
 
-    public static update(block: Block, newData: DataRow[], scales: Scales, margin: BlockMargin, keyAxisOrient: Orient, chart: TwoDimensionalChartModel, blockSize: Size, barsAmounts: number[], keyField: Field, firstBarIndex: number, barSettings: BarChartSettings, isSegmented: boolean): Promise<any>[] {
+    public static update(block: Block, newData: MdtChartsDataRow[], scales: Scales, margin: BlockMargin, keyAxisOrient: Orient, chart: TwoDimensionalChartModel, blockSize: Size, barsAmounts: number[], keyField: Field, firstBarIndex: number, barSettings: BarChartSettings, isSegmented: boolean): Promise<any>[] {
         let promises: Promise<any>[];
         if (isSegmented) {
             promises = this.updateSegmented(block,
@@ -75,11 +75,11 @@ export class Bar {
         });
     }
 
-    public static getAllBarsForChart(block: Block, chartCssClasses: string[]): Selection<BaseType, DataRow, BaseType, unknown> {
+    public static getAllBarsForChart(block: Block, chartCssClasses: string[]): Selection<BaseType, MdtChartsDataRow, BaseType, unknown> {
         return block.getSvg().selectAll(`rect.${this.barItemClass}${Helper.getCssClassesLine(chartCssClasses)}`);
     }
 
-    private static renderGrouped(block: Block, scales: Scales, data: DataRow[], keyField: Field, margin: BlockMargin, keyAxisOrient: Orient, chart: TwoDimensionalChartModel, barsAmounts: number[], blockSize: Size, firstBarIndex: number, barSettings: BarChartSettings): void {
+    private static renderGrouped(block: Block, scales: Scales, data: MdtChartsDataRow[], keyField: Field, margin: BlockMargin, keyAxisOrient: Orient, chart: TwoDimensionalChartModel, barsAmounts: number[], blockSize: Size, firstBarIndex: number, barSettings: BarChartSettings): void {
         chart.data.valueFields.forEach((field, index) => {
             const bars = block.getChartGroup(chart.index)
                 .selectAll(`.${this.barItemClass}${Helper.getCssClassesLine(chart.cssClasses)}${Helper.getCssClassesLine(Helper.getCssClassesWithElementIndex(chart.cssClasses, index))}`)
@@ -111,11 +111,11 @@ export class Bar {
         });
     }
 
-    private static renderSegmented(block: Block, scales: Scales, data: DataRow[], keyField: Field, margin: BlockMargin, keyAxisOrient: Orient, chart: TwoDimensionalChartModel, barsAmounts: number[], blockSize: Size, firstBarIndex: number, barSettings: BarChartSettings): void {
+    private static renderSegmented(block: Block, scales: Scales, data: MdtChartsDataRow[], keyField: Field, margin: BlockMargin, keyAxisOrient: Orient, chart: TwoDimensionalChartModel, barsAmounts: number[], blockSize: Size, firstBarIndex: number, barSettings: BarChartSettings): void {
         const stackedData = stack().keys(chart.data.valueFields.map(field => field.name))(data);
 
         let groups = block.getChartGroup(chart.index)
-            .selectAll<SVGGElement, DataRow>(`g.${this.barSegmentGroupClass}${Helper.getCssClassesLine(chart.cssClasses)}`)
+            .selectAll<SVGGElement, MdtChartsDataRow>(`g.${this.barSegmentGroupClass}${Helper.getCssClassesLine(chart.cssClasses)}`)
             .data(stackedData);
 
         if (groups.empty())
@@ -156,13 +156,13 @@ export class Bar {
         });
     }
 
-    private static updateGrouped(block: Block, newData: DataRow[], scales: Scales, margin: BlockMargin, keyAxisOrient: Orient, chart: TwoDimensionalChartModel, blockSize: Size, barsAmounts: number[], keyField: Field, firstBarIndex: number, barSettings: BarChartSettings): Promise<any>[] {
+    private static updateGrouped(block: Block, newData: MdtChartsDataRow[], scales: Scales, margin: BlockMargin, keyAxisOrient: Orient, chart: TwoDimensionalChartModel, blockSize: Size, barsAmounts: number[], keyField: Field, firstBarIndex: number, barSettings: BarChartSettings): Promise<any>[] {
         const promises: Promise<any>[] = [];
         chart.data.valueFields.forEach((valueField, index) => {
             const indexesOfRemoved: number[] = [];
 
             block.getChartGroup(chart.index)
-                .selectAll<SVGRectElement, DataRow>(`.${this.barItemClass}${Helper.getCssClassesLine(chart.cssClasses)}.chart-element-${index}`)
+                .selectAll<SVGRectElement, MdtChartsDataRow>(`.${this.barItemClass}${Helper.getCssClassesLine(chart.cssClasses)}.chart-element-${index}`)
                 .filter((d, i) => {
                     if (newData.findIndex(row => row[keyField.name] === d[keyField.name]) === -1) {
                         indexesOfRemoved.push(i); // Набор индексов для встроенных лейблов
@@ -176,7 +176,7 @@ export class Bar {
                 .remove();
 
             const bars = block.getChartGroup(chart.index)
-                .selectAll<SVGRectElement, DataRow>(`.${this.barItemClass}${Helper.getCssClassesLine(chart.cssClasses)}.chart-element-${index}`)
+                .selectAll<SVGRectElement, MdtChartsDataRow>(`.${this.barItemClass}${Helper.getCssClassesLine(chart.cssClasses)}.chart-element-${index}`)
                 .filter(d => newData.findIndex(row => row[keyField.name] === d[keyField.name]) !== -1)
                 .style('opacity', 1)
                 .data(newData);
@@ -221,11 +221,11 @@ export class Bar {
         return promises;
     }
 
-    private static updateSegmented(block: Block, newData: DataRow[], scales: Scales, margin: BlockMargin, keyAxisOrient: Orient, chart: TwoDimensionalChartModel, blockSize: Size, barsAmounts: number[], keyField: Field, firstBarIndex: number, barSettings: BarChartSettings): Promise<any>[] {
+    private static updateSegmented(block: Block, newData: MdtChartsDataRow[], scales: Scales, margin: BlockMargin, keyAxisOrient: Orient, chart: TwoDimensionalChartModel, blockSize: Size, barsAmounts: number[], keyField: Field, firstBarIndex: number, barSettings: BarChartSettings): Promise<any>[] {
         const stackedData = stack().keys(chart.data.valueFields.map(field => field.name))(newData);
 
         block.getChartGroup(chart.index)
-            .selectAll<SVGRectElement, DataRow>(`.${this.barItemClass}${Helper.getCssClassesLine(chart.cssClasses)}`)
+            .selectAll<SVGRectElement, MdtChartsDataRow>(`.${this.barItemClass}${Helper.getCssClassesLine(chart.cssClasses)}`)
             .filter(d => newData.findIndex(row => row[keyField.name] === d.data[keyField.name]) === -1)
             .transition()
             .duration(block.transitionManager.durations.elementFadeOut)
@@ -237,7 +237,7 @@ export class Bar {
             .data(stackedData);
 
         const bars = groups
-            .selectAll<SVGRectElement, DataRow>(`.${this.barItemClass}${Helper.getCssClassesLine(chart.cssClasses)}`)
+            .selectAll<SVGRectElement, MdtChartsDataRow>(`.${this.barItemClass}${Helper.getCssClassesLine(chart.cssClasses)}`)
             .filter(d => newData.findIndex(row => row[keyField.name] === d.data[keyField.name]) !== -1)
             .style('opacity', 1)
             .data(d => d);
@@ -276,14 +276,14 @@ export class Bar {
         return [prom];
     }
 
-    private static fillBarAttrs(bars: Selection<SVGRectElement, DataRow, BaseType, unknown>, barAttrs: BarAttrsHelper, transitionDuration: number = 0): Promise<any> {
+    private static fillBarAttrs(bars: Selection<SVGRectElement, MdtChartsDataRow, BaseType, unknown>, barAttrs: BarAttrsHelper, transitionDuration: number = 0): Promise<any> {
         return new Promise((resolve) => {
             if (bars.size() === 0) {
                 resolve('');
                 return;
             }
 
-            let barsHander: Selection<SVGRectElement, DataRow, BaseType, unknown> | Transition<SVGRectElement, DataRow, BaseType, unknown> = bars;
+            let barsHander: Selection<SVGRectElement, MdtChartsDataRow, BaseType, unknown> | Transition<SVGRectElement, MdtChartsDataRow, BaseType, unknown> = bars;
             if (transitionDuration > 0) {
                 barsHander = barsHander
                     .interrupt()

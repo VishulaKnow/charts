@@ -1,4 +1,4 @@
-import { ChartNotation, DataRow, DataSource, Size } from "../../../config/config";
+import { ChartNotation, MdtChartsDataRow, MdtChartsDataSource, Size } from "../../../config/config";
 import { LegendItemsDirection } from "../../../model/featuresModel/legendModel/legendCanvasModel";
 
 import { IntervalOptionsModel, LegendBlockModel, LegendPosition, Orient, PolarOptionsModel, TwoDimensionalOptionsModel } from "../../../model/model";
@@ -12,7 +12,7 @@ export interface LegendCoordinate {
     width: number;
 }
 export class LegendHelper {
-    public static getLegendItemsContent(options: TwoDimensionalOptionsModel | PolarOptionsModel | IntervalOptionsModel, data: DataSource): string[] {
+    public static getLegendItemsContent(options: TwoDimensionalOptionsModel | PolarOptionsModel | IntervalOptionsModel, data: MdtChartsDataSource): string[] {
         if (options.type === '2d') {
             let texts: string[] = [];
             options.charts.forEach(chart => {
@@ -20,7 +20,7 @@ export class LegendHelper {
             });
             return texts;
         } else if (options.type === 'polar') {
-            return data[options.data.dataSource].map((record: DataRow) => record[options.data.keyField.name]);
+            return data[options.data.dataSource].map((record: MdtChartsDataRow) => record[options.data.keyField.name]);
         } else if (options.type === 'interval') {
             return options.charts.map(chart => chart.data.valueField1.name);
         }

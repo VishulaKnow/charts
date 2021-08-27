@@ -4,19 +4,19 @@ import { ContentManager } from './contentManager';
 import { IntervalOptionsModel, Model, PolarOptionsModel, TwoDimensionalOptionsModel } from '../model/model';
 import { FilterCallback, FilterEventManager } from './filterManager/filterEventManager';
 import { Helper } from './helpers/helper';
-import { DataSource } from '../config/config';
+import { MdtChartsDataSource } from '../config/config';
 
 export default class Engine {
     public block: Block;
     public filterEventManager: FilterEventManager;
-    public data: DataSource;
+    public data: MdtChartsDataSource;
     private chartId: number;
 
     constructor(id: number, private filterCallback: FilterCallback, private initializeSelected: number[]) {
         this.chartId = id;
     }
 
-    public render(model: Model, data: DataSource, parentElement: HTMLElement): void {
+    public render(model: Model, data: MdtChartsDataSource, parentElement: HTMLElement): void {
         this.data = data;
         this.setFilterEventManager(model?.options);
         this.block = new Block(model.blockCanvas.cssClass, parentElement, this.chartId, this.filterEventManager, model.transitions);
@@ -29,7 +29,7 @@ export default class Engine {
         }
     }
 
-    public updateFullBlock(model: Model, data: DataSource): void {
+    public updateFullBlock(model: Model, data: MdtChartsDataSource): void {
         this.destroy();
         this.render(model, data, this.block.parentElement);
     }
@@ -38,7 +38,7 @@ export default class Engine {
         this.block.destroy();
     }
 
-    public updateData(model: Model, newData: DataSource): void {
+    public updateData(model: Model, newData: MdtChartsDataSource): void {
         if (!newData) {
             this.data = newData;
             this.block.clearWrapper();
@@ -59,7 +59,7 @@ export default class Engine {
         ContentManager.updateColors(this, model);
     }
 
-    private renderCharts(model: Model, data: DataSource): void {
+    private renderCharts(model: Model, data: MdtChartsDataSource): void {
         ContentManager.render(model, data, this);
     }
 

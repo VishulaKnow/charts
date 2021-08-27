@@ -1,4 +1,4 @@
-import { DataSource, IntervalChart } from "../config/config";
+import { MdtChartsDataSource, IntervalChart } from "../config/config";
 
 
 export class ModelHelper {
@@ -6,7 +6,7 @@ export class ModelHelper {
         return items.reduce((acc, item) => acc + item, 0);
     }
 
-    public static getMinAndMaxOfIntervalData(data: DataSource, dataSource: string, chart: IntervalChart): [Date, Date] {
+    public static getMinAndMaxOfIntervalData(data: MdtChartsDataSource, dataSource: string, chart: IntervalChart): [Date, Date] {
         let min = data[dataSource][0][chart.data.valueField1.name];
         let max = data[dataSource][0][chart.data.valueField1.name];
 

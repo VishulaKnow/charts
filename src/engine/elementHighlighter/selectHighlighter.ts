@@ -1,6 +1,6 @@
 import { BaseType, select, Selection } from "d3-selection";
 import { PieArcDatum } from "d3-shape";
-import { DataRow, Size } from "../../config/config";
+import { MdtChartsDataRow, Size } from "../../config/config";
 import { BlockMargin, DonutChartSettings, PolarOptionsModel, TwoDimensionalOptionsModel } from "../../model/model";
 import { Block } from "../block/block";
 import { Legend } from "../features/legend/legend";
@@ -47,7 +47,7 @@ export class SelectHighlighter {
         });
     }
 
-    public static clickPolarHandler(multySelection: boolean, appendKey: boolean, selectedSegment: Selection<SVGGElement, PieArcDatum<DataRow>, BaseType, unknown>, selectedKeys: string[], margin: BlockMargin, blockSize: Size, block: Block, options: PolarOptionsModel, arcItems: Selection<SVGGElement, PieArcDatum<DataRow>, SVGGElement, unknown>, donutSettings: DonutChartSettings): void {
+    public static clickPolarHandler(multySelection: boolean, appendKey: boolean, selectedSegment: Selection<SVGGElement, PieArcDatum<MdtChartsDataRow>, BaseType, unknown>, selectedKeys: string[], margin: BlockMargin, blockSize: Size, block: Block, options: PolarOptionsModel, arcItems: Selection<SVGGElement, PieArcDatum<MdtChartsDataRow>, SVGGElement, unknown>, donutSettings: DonutChartSettings): void {
         const donutThickness = DonutHelper.getThickness(donutSettings, blockSize, margin);
         if (!appendKey) {
             ElementHighlighter.toggleDonutHighlightState(selectedSegment, margin, blockSize, donutThickness, block.transitionManager.durations.higlightedScale, false);
@@ -94,7 +94,7 @@ export class SelectHighlighter {
         });
     }
 
-    public static clearPolar(margin: BlockMargin, blockSize: Size, block: Block, options: PolarOptionsModel, arcItems: Selection<SVGGElement, PieArcDatum<DataRow>, SVGGElement, unknown>, donutSettings: DonutChartSettings): void {
+    public static clearPolar(margin: BlockMargin, blockSize: Size, block: Block, options: PolarOptionsModel, arcItems: Selection<SVGGElement, PieArcDatum<MdtChartsDataRow>, SVGGElement, unknown>, donutSettings: DonutChartSettings): void {
         const donutThickness = DonutHelper.getThickness(donutSettings, blockSize, margin);
         ElementHighlighter.toggleDonutHighlightState(arcItems, margin, blockSize, donutThickness, block.transitionManager.durations.higlightedScale, false);
         arcItems.each(function () {

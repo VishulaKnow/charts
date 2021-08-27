@@ -1,7 +1,7 @@
 import { sum } from 'd3-array'
 import { interpolateNumber } from 'd3-interpolate';
 import { Selection } from 'd3-selection'
-import { DataRow } from '../../../config/config';
+import { MdtChartsDataRow } from '../../../config/config';
 import { DataType } from '../../../designer/designerConfig';
 import { Field } from "../../../model/model";
 import { Block } from "../../block/block";
@@ -21,7 +21,7 @@ export class Aggregator {
     private static readonly aggregatorNameClass = 'aggregator-name';
     private static readonly aggregatorObjectClass = 'aggregator-object';
 
-    public static render(block: Block, data: DataRow[], valueField: Field, innerRadius: number, translate: Translate, fontSize: number, pad: number): void {
+    public static render(block: Block, data: MdtChartsDataRow[], valueField: Field, innerRadius: number, translate: Translate, fontSize: number, pad: number): void {
         const aggregator: AggregatorInfo = {
             name: 'Сумма',
             value: sum(data.map(d => d[valueField.name])),
@@ -31,7 +31,7 @@ export class Aggregator {
         this.renderText(block, innerRadius, aggregator, translate, fontSize, pad);
     }
 
-    public static update(block: Block, data: DataRow[], valueField: Field, pad: number): void {
+    public static update(block: Block, data: MdtChartsDataRow[], valueField: Field, pad: number): void {
         const aggregator: AggregatorInfo = {
             name: 'Сумма',
             value: sum(data.map(d => d[valueField.name])),

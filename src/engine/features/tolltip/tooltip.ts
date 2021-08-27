@@ -4,7 +4,7 @@ import { BlockMargin, IntervalChartModel, IntervalOptionsModel, Model, OptionsMo
 import { Block } from "../../block/block";
 import { TooltipDomHelper } from "./tooltipDomHelper";
 import { Donut } from "../../polarNotation/donut/donut";
-import { ChartOrientation, DataRow, DataSource, Size, TooltipOptions } from "../../../config/config";
+import { ChartOrientation, MdtChartsDataRow, MdtChartsDataSource, Size, TooltipOptions } from "../../../config/config";
 import { Scales } from '../scale/scale';
 import { TooltipComponentsManager } from './tooltipComponentsManager';
 import { ElementHighlighter } from '../../elementHighlighter/elementHighlighter';
@@ -60,7 +60,7 @@ export class Tooltip {
     public static readonly tooltipContentClass = 'tooltip-content';
     public static readonly tooltipArrowClass = 'tooltip-arrow';
 
-    public static render(block: Block, model: Model, data: DataSource, tooltipOptions: TooltipSettings, scales?: Scales): void {
+    public static render(block: Block, model: Model, data: MdtChartsDataSource, tooltipOptions: TooltipSettings, scales?: Scales): void {
         TooltipComponentsManager.renderTooltipWrapper(block);
         const withTooltipIndex = model.options.charts.findIndex((chart: TwoDimensionalChartModel | PolarChartModel | IntervalChartModel) => chart.tooltip.show);
         if (withTooltipIndex !== -1) {
@@ -85,7 +85,7 @@ export class Tooltip {
         TooltipComponentsManager.hideComponent(block.getSvg().select(`.${this.tooltipLineClass}`));
     }
 
-    private static renderTooltipFor2DCharts(block: Block, data: DataSource, blockSize: Size, margin: BlockMargin, scales: Scales, options: TwoDimensionalOptionsModel, tooltipOptions: TooltipSettings): void {
+    private static renderTooltipFor2DCharts(block: Block, data: MdtChartsDataSource, blockSize: Size, margin: BlockMargin, scales: Scales, options: TwoDimensionalOptionsModel, tooltipOptions: TooltipSettings): void {
         if (scales.key.domain().length === 0)
             return;
 
@@ -106,7 +106,7 @@ export class Tooltip {
         this.renderLineTooltip(block, data, tooltipParams);
     }
 
-    private static renderTooltipForIntervalCharts(block: Block, data: DataSource, blockSize: Size, margin: BlockMargin, scales: Scales, options: IntervalOptionsModel, tooltipOptions: TooltipSettings): void {
+    private static renderTooltipForIntervalCharts(block: Block, data: MdtChartsDataSource, blockSize: Size, margin: BlockMargin, scales: Scales, options: IntervalOptionsModel, tooltipOptions: TooltipSettings): void {
         if (scales.key.domain().length === 0)
             return;
 
@@ -127,14 +127,14 @@ export class Tooltip {
         this.renderLineTooltip(block, data, tooltipParams);
     }
 
-    private static renderTooltipForPolar(block: Block, options: PolarOptionsModel, data: DataSource, blockSize: Size, margin: BlockMargin, chartThickness: number, tooltipOptions: TooltipSettings): void {
+    private static renderTooltipForPolar(block: Block, options: PolarOptionsModel, data: MdtChartsDataSource, blockSize: Size, margin: BlockMargin, chartThickness: number, tooltipOptions: TooltipSettings): void {
         const attrTransform = block.getSvg().select(`.${Donut.donutBlockClass}`).attr('transform');
         const translateNums = Helper.getTranslateNumbers(attrTransform);
         const arcItems = Donut.getAllArcGroups(block);
         this.renderTooltipForDonut(block, arcItems, data, options.data, options.charts[0], blockSize, margin, chartThickness, tooltipOptions, options.tooltip, { x: translateNums[0], y: translateNums[1] });
     }
 
-    private static renderLineTooltip(block: Block, data: DataSource, args: LineTooltip2DParams | LineTooltipIntervalParams): void {
+    private static renderLineTooltip(block: Block, data: MdtChartsDataSource, args: LineTooltip2DParams | LineTooltipIntervalParams): void {
         const tooltipBlock = TooltipComponentsManager.renderTooltipBlock(block);
         const tooltipContent = TooltipComponentsManager.renderTooltipContentBlock(tooltipBlock);
         const tooltipLine = TooltipComponentsManager.renderTooltipLine(block);
@@ -201,7 +201,7 @@ export class Tooltip {
         });
     }
 
-    private static renderTooltipForDonut(block: Block, elements: Selection<SVGGElement, PieArcDatum<DataRow>, SVGGElement, unknown>, data: DataSource, dataOptions: OptionsModelData, chart: PolarChartModel, blockSize: Size, margin: BlockMargin, donutThickness: number, tooltipSettings: TooltipSettings, tooltipOptions: TooltipOptions, translate: TooltipTranslate): void {
+    private static renderTooltipForDonut(block: Block, elements: Selection<SVGGElement, PieArcDatum<MdtChartsDataRow>, SVGGElement, unknown>, data: MdtChartsDataSource, dataOptions: OptionsModelData, chart: PolarChartModel, blockSize: Size, margin: BlockMargin, donutThickness: number, tooltipSettings: TooltipSettings, tooltipOptions: TooltipOptions, translate: TooltipTranslate): void {
         const tooltipBlock = TooltipComponentsManager.renderTooltipBlock(block);
         const tooltipContent = TooltipComponentsManager.renderTooltipContentBlock(tooltipBlock);
         let tooltipArrow: Selection<BaseType, unknown, HTMLElement, any>;
@@ -216,7 +216,7 @@ export class Tooltip {
             });
         }
 
-        elements.on('mouseover', function (e, dataRow: PieArcDatum<DataRow>) {
+        elements.on('mouseover', function (e, dataRow: PieArcDatum<MdtChartsDataRow>) {
             TooltipComponentsManager.showComponent(tooltipBlock);
             TooltipDomHelper.fillForPolarChart(tooltipContent, chart, data, dataOptions, dataRow.data[dataOptions.keyField.name], select(this).select('path').style('fill'), tooltipOptions?.html)
 
@@ -230,13 +230,13 @@ export class Tooltip {
 
             ElementHighlighter.toggleActivityStyle(select(this), true);
             const clones = Donut.getAllArcClones(block)
-                .filter((d: PieArcDatum<DataRow>) => d.data[dataOptions.keyField.name] === dataRow.data[dataOptions.keyField.name]);
+                .filter((d: PieArcDatum<MdtChartsDataRow>) => d.data[dataOptions.keyField.name] === dataRow.data[dataOptions.keyField.name]);
             if (clones.nodes().length === 0 && (block.filterEventManager.getSelectedKeys().length === 0 || block.filterEventManager.isSelected(dataRow.data[dataOptions.keyField.name]))) {
                 ElementHighlighter.renderArcCloneAndHighlight(block, margin, select(this), blockSize, donutThickness);
             }
         });
 
-        elements.on('mouseleave', function (e, dataRow: PieArcDatum<DataRow>) {
+        elements.on('mouseleave', function (e, dataRow: PieArcDatum<MdtChartsDataRow>) {
             TooltipComponentsManager.hideComponent(tooltipBlock);
             if (!block.filterEventManager.isSelected(dataRow.data[dataOptions.keyField.name])) {
                 ElementHighlighter.removeCloneForElem(block, dataOptions.keyField.name, select(this));

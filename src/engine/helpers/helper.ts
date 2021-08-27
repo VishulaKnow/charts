@@ -1,19 +1,19 @@
-import { DataRow, DataSource } from "../../config/config";
+import { MdtChartsDataRow, MdtChartsDataSource } from "../../config/config";
 
 export class Helper {
-    public static getRowsByKeys(keys: string[], keyFieldName: string, dataSet: DataRow[]): DataRow[] {
+    public static getRowsByKeys(keys: string[], keyFieldName: string, dataSet: MdtChartsDataRow[]): MdtChartsDataRow[] {
         return dataSet.filter(row => keys.findIndex(key => key === row[keyFieldName]) !== -1);
     }
 
-    public static getKeysByIds(ids: number[], keyFieldName: string, dataSet: DataRow[]): string[] {
+    public static getKeysByIds(ids: number[], keyFieldName: string, dataSet: MdtChartsDataRow[]): string[] {
         return this.extractKeysFromRows(keyFieldName, this.getRowsByIds(ids, dataSet));
     }
 
-    public static extractKeysFromRows(keyFieldName: string, dataSet: DataRow[]): string[] {
+    public static extractKeysFromRows(keyFieldName: string, dataSet: MdtChartsDataRow[]): string[] {
         return dataSet.map(row => row[keyFieldName]);
     }
 
-    public static getRowsByIds(ids: number[], dataSet: DataRow[]): DataRow[] {
+    public static getRowsByIds(ids: number[], dataSet: MdtChartsDataRow[]): MdtChartsDataRow[] {
         return dataSet.filter(row => ids.findIndex(id => id === row.$id) !== -1);
     }
 
@@ -86,14 +86,14 @@ export class Helper {
      * @param isSegmented 
      * @returns 
      */
-    public static getKeyFieldValue(row: DataRow, keyFieldName: string, isSegmented: boolean): string {
+    public static getKeyFieldValue(row: MdtChartsDataRow, keyFieldName: string, isSegmented: boolean): string {
         return isSegmented ? row.data[keyFieldName] : row[keyFieldName];
     }
 
     /**
      * Сравнивает старые и новые данные
      */
-    public static compareData(oldSource: DataSource, newSource: DataSource, sourceName: string): boolean {
+    public static compareData(oldSource: MdtChartsDataSource, newSource: MdtChartsDataSource, sourceName: string): boolean {
         if (!oldSource || !newSource || !sourceName || !oldSource[sourceName] || !newSource[sourceName] || oldSource[sourceName].length !== newSource[sourceName].length)
             return false;
 

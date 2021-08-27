@@ -1,6 +1,6 @@
 import Engine from '../engine/engine';
 import { assembleModel, getPreparedData, getUpdatedModel } from '../model/modelBuilder';
-import { Config, DataRow, DataSource, IntervalOptions, PolarOptions, TwoDimensionalChart, TwoDimensionalOptions } from '../config/config'
+import { MdtChartsConfig, MdtChartsDataRow, MdtChartsDataSource, IntervalOptions, PolarOptions, TwoDimensionalChart, TwoDimensionalOptions } from '../config/config'
 import { DesignerConfig, Transitions } from '../designer/designerConfig';
 
 class ListenersHelper {
@@ -42,11 +42,11 @@ class ListenersHelper {
 
 export default class Listeners {
     private engine: Engine;
-    private config: Config;
+    private config: MdtChartsConfig;
     private designerConfig: DesignerConfig;
-    private data: DataSource
+    private data: MdtChartsDataSource
     private transition: Transitions = {};
-    constructor(engine: Engine, config: Config, designerConfig: DesignerConfig, data: DataSource) {
+    constructor(engine: Engine, config: MdtChartsConfig, designerConfig: DesignerConfig, data: MdtChartsDataSource) {
         this.engine = engine;
         this.config = config;
         this.designerConfig = designerConfig;
@@ -67,7 +67,7 @@ export default class Listeners {
         const preparedData = getPreparedData(model, this.data, this.config);
         this.engine.updateFullBlock(model, preparedData);
     }
-    private dropAxisDomain(config: Config) {
+    private dropAxisDomain(config: MdtChartsConfig) {
         if (config.options.type === '2d') {
             config.options.axis.value.domain.end = -1;
             config.options.axis.value.domain.start = -1;
@@ -649,7 +649,7 @@ const data = require('./assets/dataSet.json');
 // const chart = new Chart(config, designerConfig, data, false);
 // chart.render(document.querySelector('.main-wrapper'));
 
-const engine = new Engine(2, (rows: DataRow[]) => {
+const engine = new Engine(2, (rows: MdtChartsDataRow[]) => {
     console.log('Selected keys:', rows.map(row => row.brand))
 }, undefined);
 const model = assembleModel(config, data, designerConfig);
@@ -711,7 +711,7 @@ class DataUpdater {
         clearTimeout(DataUpdater.timeOut)
     }
 
-    private static changeData(newData: DataSource) {
+    private static changeData(newData: MdtChartsDataSource) {
         const random = Math.random();
         if (random > 0.66) {
             for (let i = 0; i < ListenersHelper.randInt(1, 4); i++) {

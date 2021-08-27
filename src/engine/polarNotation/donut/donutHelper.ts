@@ -1,6 +1,6 @@
 import { merge } from "d3-array";
 import { PieArcDatum, Arc, arc, Pie, pie } from "d3-shape";
-import { DataRow, Size } from "../../../config/config";
+import { MdtChartsDataRow, Size } from "../../../config/config";
 import { BlockMargin, DonutChartSettings } from "../../../model/model";
 import { Translate } from "./donut";
 
@@ -11,13 +11,13 @@ export class DonutHelper {
         return donutSettings.minThickness;
     }
 
-    public static getArcCentroid(blockSize: Size, margin: BlockMargin, dataItem: PieArcDatum<DataRow>, donutThickness: number): [number, number] {
+    public static getArcCentroid(blockSize: Size, margin: BlockMargin, dataItem: PieArcDatum<MdtChartsDataRow>, donutThickness: number): [number, number] {
         const arc = this.getArcGeneratorObject(blockSize, margin, donutThickness);
 
         return arc.centroid(dataItem);
     }
 
-    public static getArcGeneratorObject(blockSize: Size, margin: BlockMargin, donutThickness: number): Arc<any, PieArcDatum<DataRow>> {
+    public static getArcGeneratorObject(blockSize: Size, margin: BlockMargin, donutThickness: number): Arc<any, PieArcDatum<MdtChartsDataRow>> {
         const outerRadius = this.getOuterRadius(margin, blockSize);
         const arc = this.getArcGenerator(outerRadius, outerRadius - donutThickness);
 
@@ -40,20 +40,20 @@ export class DonutHelper {
         }
     }
 
-    public static getArcGenerator(outerRadius: number, innerRadius: number): Arc<any, PieArcDatum<DataRow>> {
-        return arc<PieArcDatum<DataRow>>()
+    public static getArcGenerator(outerRadius: number, innerRadius: number): Arc<any, PieArcDatum<MdtChartsDataRow>> {
+        return arc<PieArcDatum<MdtChartsDataRow>>()
             .innerRadius(innerRadius)
             .outerRadius(outerRadius);
     }
 
-    public static getPieGenerator(valueField: string, padAngle: number): Pie<any, DataRow> {
-        return pie<DataRow>()
+    public static getPieGenerator(valueField: string, padAngle: number): Pie<any, MdtChartsDataRow> {
+        return pie<MdtChartsDataRow>()
             .padAngle(padAngle)
             .sort(null)
             .value(d => d[valueField]);
     }
 
-    public static mergeDataWithZeros(firstDataset: DataRow[], secondDataset: DataRow[], keyField: string): DataRow[] {
+    public static mergeDataWithZeros(firstDataset: MdtChartsDataRow[], secondDataset: MdtChartsDataRow[], keyField: string): MdtChartsDataRow[] {
         const secondSet = new Set()
         secondDataset.forEach(dataRow => {
             secondSet.add(dataRow[keyField]);
@@ -61,7 +61,7 @@ export class DonutHelper {
         const onlyNew = firstDataset
             .filter(d => !secondSet.has(d[keyField]))
             .map((d, index, array) => {
-                const data: DataRow = {
+                const data: MdtChartsDataRow = {
                     keyField: array[index][keyField],
                     valueField: 0
                 }

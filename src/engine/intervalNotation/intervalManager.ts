@@ -1,4 +1,4 @@
-import { DataSource } from "../../config/config";
+import { MdtChartsDataSource } from "../../config/config";
 import { Model, IntervalOptionsModel, IntervalChartModel, OptionsModelData, BlockMargin, Orient, ChartElementsSettings } from "../../model/model";
 import { Block } from "../block/block";
 import { Axis } from "../features/axis/axis";
@@ -11,7 +11,7 @@ import { Tooltip } from "../features/tolltip/tooltip";
 import { Gantt } from "./gantt";
 
 export class IntervalManager {
-    public static render(block: Block, model: Model, data: DataSource): void {
+    public static render(block: Block, model: Model, data: MdtChartsDataSource): void {
         const options = <IntervalOptionsModel>model.options;
 
         block.renderSvg(model.blockCanvas.size);
@@ -46,7 +46,7 @@ export class IntervalManager {
             RecordOverflowAlert.render(block, model.dataSettings.scope.hidedRecordsAmount, 'top', options.orient);
     }
 
-    private static renderCharts(block: Block, charts: IntervalChartModel[], scales: Scales, data: DataSource, dataOptions: OptionsModelData, margin: BlockMargin, keyAxisOrient: Orient, chartSettings: ChartElementsSettings): void {
+    private static renderCharts(block: Block, charts: IntervalChartModel[], scales: Scales, data: MdtChartsDataSource, dataOptions: OptionsModelData, margin: BlockMargin, keyAxisOrient: Orient, chartSettings: ChartElementsSettings): void {
         block.renderChartsBlock();
         charts.forEach(chart => {
             if (chart.type === 'gantt')

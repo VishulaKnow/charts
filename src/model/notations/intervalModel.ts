@@ -1,4 +1,4 @@
-import { Config, DataSource, IntervalChart, IntervalOptions } from "../../config/config";
+import { MdtChartsConfig, MdtChartsDataSource, IntervalChart, IntervalOptions } from "../../config/config";
 import { ChartStyleConfig, DesignerConfig } from "../../designer/designerConfig";
 import { AxisModel } from "../featuresModel/axisModel";
 import { ChartStyleModel } from "../chartStyleModel";
@@ -9,7 +9,7 @@ import { AxisType } from "../modelBuilder";
 import { ScaleModel, ScaleType } from "../featuresModel/scaleModel";
 
 export class IntervalModel {
-    public static getOptions(config: Config, designerConfig: DesignerConfig, margin: BlockMargin, dataScope: DataScope, data: DataSource): IntervalOptionsModel {
+    public static getOptions(config: MdtChartsConfig, designerConfig: DesignerConfig, margin: BlockMargin, dataScope: DataScope, data: MdtChartsDataSource): IntervalOptionsModel {
         const options = <IntervalOptions>config.options;
 
         return {

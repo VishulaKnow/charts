@@ -1,9 +1,9 @@
-import { DataOptions, DataSource, DiscreteAxisOptions, NumberAxisOptions, Size, TwoDimensionalChart, TwoDimensionalOptions } from "../../config/config";
+import { DataOptions, MdtChartsDataSource, DiscreteAxisOptions, NumberAxisOptions, Size, TwoDimensionalChart, TwoDimensionalOptions } from "../../config/config";
 import { TooltipSettings } from "../../designer/designerConfig";
 import { AxisModel } from "../../model/featuresModel/axisModel";
 import { AxisModelOptions, BlockMargin } from "../../model/model";
 
-function getData(): DataSource {
+function getData(): MdtChartsDataSource {
     let data = JSON.parse(`{
         "dataSet": [
             { "brand": "BMW", "price": 10, "count": 12 },
@@ -30,7 +30,7 @@ function getData(): DataSource {
 
 describe('get axes', () => {
     let charts: TwoDimensionalChart[];
-    let data: DataSource;
+    let data: MdtChartsDataSource;
     let descreteAxisOptions: DiscreteAxisOptions;
     let numberAxisOptions: NumberAxisOptions;
     let dataOptions: DataOptions;

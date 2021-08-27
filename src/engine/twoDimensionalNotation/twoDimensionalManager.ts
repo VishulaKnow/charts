@@ -1,4 +1,4 @@
-import { DataSource, Size } from "../../config/config";
+import { MdtChartsDataSource, Size } from "../../config/config";
 import { BarChartSettings, BlockMargin, Model, OptionsModelData, Orient, TwoDimensionalChartModel, TwoDimensionalOptionsModel } from "../../model/model";
 import { Block } from "../block/block";
 import { ElementHighlighter } from "../elementHighlighter/elementHighlighter";
@@ -65,7 +65,7 @@ export class TwoDimensionalManager {
             });
     }
 
-    public static updateData(block: Block, model: Model, data: DataSource) {
+    public static updateData(block: Block, model: Model, data: MdtChartsDataSource) {
         block.transitionManager.interruptTransitions();
         block.filterEventManager.updateData(data[model.options.data.dataSource]);
         TipBox.clearEvents(block);
@@ -122,7 +122,7 @@ export class TwoDimensionalManager {
         });
     }
 
-    private static renderCharts(block: Block, charts: TwoDimensionalChartModel[], scales: Scales, data: DataSource, dataOptions: OptionsModelData, margin: BlockMargin, keyAxisOrient: Orient, barSettings: BarChartSettings, blockSize: Size) {
+    private static renderCharts(block: Block, charts: TwoDimensionalChartModel[], scales: Scales, data: MdtChartsDataSource, dataOptions: OptionsModelData, margin: BlockMargin, keyAxisOrient: Orient, barSettings: BarChartSettings, blockSize: Size) {
         block.renderChartClipPath(margin, blockSize);
         block.renderChartsBlock();
         charts.forEach((chart: TwoDimensionalChartModel) => {
@@ -160,7 +160,7 @@ export class TwoDimensionalManager {
         EmbeddedLabels.raiseGroups(block);
     }
 
-    private static updateCharts(block: Block, charts: TwoDimensionalChartModel[], scales: Scales, data: DataSource, dataOptions: OptionsModelData, margin: BlockMargin, keyAxisOrient: Orient, blockSize: Size, barSettings: BarChartSettings): Promise<any>[] {
+    private static updateCharts(block: Block, charts: TwoDimensionalChartModel[], scales: Scales, data: MdtChartsDataSource, dataOptions: OptionsModelData, margin: BlockMargin, keyAxisOrient: Orient, blockSize: Size, barSettings: BarChartSettings): Promise<any>[] {
         block.updateChartClipPath(margin, blockSize);
         let promises: Promise<any>[] = [];
         charts.forEach((chart: TwoDimensionalChartModel) => {

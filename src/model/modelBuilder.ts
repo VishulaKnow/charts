@@ -1,4 +1,4 @@
-import { Config, DataSource } from '../config/config';
+import { MdtChartsConfig, MdtChartsDataSource } from '../config/config';
 import { Model, BlockCanvas, ChartBlock, TwoDimensionalOptionsModel, PolarOptionsModel, BlockMargin, DataSettings, ChartElementsSettings, DataFormat, DataScope, IntervalOptionsModel } from './model';
 import { MarginModel } from './marginModel';
 import { TwoDimensionalModel } from './notations/twoDimensionalModel';
@@ -20,7 +20,7 @@ export const CLASSES = {
     legendItem: 'legend-item',
 }
 
-function getBlockCanvas(config: Config): BlockCanvas {
+function getBlockCanvas(config: MdtChartsConfig): BlockCanvas {
     return {
         size: {
             width: config.canvas.size.width,
@@ -36,7 +36,7 @@ function getChartBlock(margin: BlockMargin): ChartBlock {
     }
 }
 
-function getOptions(config: Config, designerConfig: DesignerConfig, margin: BlockMargin, dataScope: DataScope, data: DataSource): TwoDimensionalOptionsModel | PolarOptionsModel | IntervalOptionsModel {
+function getOptions(config: MdtChartsConfig, designerConfig: DesignerConfig, margin: BlockMargin, dataScope: DataScope, data: MdtChartsDataSource): TwoDimensionalOptionsModel | PolarOptionsModel | IntervalOptionsModel {
     if (config.options.type === '2d') {
         return TwoDimensionalModel.getOptions(config, designerConfig, margin, dataScope, data);
     } else if (config.options.type === 'polar') {
@@ -77,7 +77,7 @@ function roundMargin(margin: BlockMargin): void {
     margin.right = Math.ceil(margin.right);
 }
 
-export function assembleModel(config: Config, data: DataSource, designerConfig: DesignerConfig): Model {
+export function assembleModel(config: MdtChartsConfig, data: MdtChartsDataSource, designerConfig: DesignerConfig): Model {
     if (!data || Object.keys(data).length === 0)
         return {
             blockCanvas: getBlockCanvas(config),
@@ -121,7 +121,7 @@ export function assembleModel(config: Config, data: DataSource, designerConfig: 
     }
 }
 
-function resetFalsyValues(data: DataSource, keyFieldName: string): void {
+function resetFalsyValues(data: MdtChartsDataSource, keyFieldName: string): void {
     for (let setName in data) {
         data[setName].forEach(dataRow => {
             for (let fieldName in dataRow) {
@@ -135,7 +135,7 @@ function resetFalsyValues(data: DataSource, keyFieldName: string): void {
     }
 }
 
-export function getPreparedData(model: Model, data: DataSource, config: Config): DataSource {
+export function getPreparedData(model: Model, data: MdtChartsDataSource, config: MdtChartsConfig): MdtChartsDataSource {
     resetFalsyValues(data, config.options.data.keyField.name);
 
     if (!model || Object.keys(model).length === 0 || !data || Object.keys(data).length === 0)
@@ -145,6 +145,6 @@ export function getPreparedData(model: Model, data: DataSource, config: Config):
     return preparedData;
 }
 
-export function getUpdatedModel(config: Config, data: DataSource, designerConfig: DesignerConfig): Model {
+export function getUpdatedModel(config: MdtChartsConfig, data: MdtChartsDataSource, designerConfig: DesignerConfig): Model {
     return assembleModel(config, data, designerConfig);
 }

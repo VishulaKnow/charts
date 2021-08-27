@@ -1,4 +1,4 @@
-import { Config, DataSource, NewSize, Size } from "./config/config";
+import { MdtChartsConfig, MdtChartsDataSource, NewSize, Size } from "./config/config";
 import { DesignerConfig } from "./designer/designerConfig";
 import Engine from "./engine/engine";
 import { FilterCallback } from "./engine/filterManager/filterEventManager";
@@ -19,7 +19,7 @@ export interface IChart {
      * Обновление графика для новых данных
      * @param data Новые данные
      */
-    updateData(data: DataSource): void;
+    updateData(data: MdtChartsDataSource): void;
     /**
      * Изменение размера блока с графиком
      * @param newSize Новый размер
@@ -35,10 +35,10 @@ export interface IChart {
 export class Chart implements IChart {
     public static chartCounter = 0;
 
-    private config: Config;
+    private config: MdtChartsConfig;
     private designerConfig: DesignerConfig;
     private model: Model;
-    private data: DataSource;
+    private data: MdtChartsDataSource;
     private parentElement: HTMLElement;
     private isResizable: boolean;
 
@@ -49,10 +49,11 @@ export class Chart implements IChart {
      * @param config Объект конфигуратора
      * @param designerConfig Объект конфигуратора дизайнера
      * @param data Данные
-     * @param selectedIds Id выделенных записей
      * @param isResizable Флаг подстройки размера блока графика под родительский элемент
+     * @param filterCallback Функция коллбэк, вызываемая во время клика на элемент графика. Предназначена для обеспечения кросс-фильтрации
+     * @param selectedIds Id выделенных записей
      */
-    constructor(config: Config, designerConfig: DesignerConfig, data: DataSource, isResizable: boolean = false, filterCallback: FilterCallback = null, selectedIds: number[] = []) {
+    constructor(config: MdtChartsConfig, designerConfig: DesignerConfig, data: MdtChartsDataSource, isResizable: boolean = false, filterCallback: FilterCallback = null, selectedIds: number[] = []) {
         Chart.chartCounter++;
         this.config = config;
         this.designerConfig = designerConfig;
@@ -89,7 +90,7 @@ export class Chart implements IChart {
      * Обновление графика для новых данных
      * @param data Новые данные
      */
-    public updateData(data: DataSource): void {
+    public updateData(data: MdtChartsDataSource): void {
         this.model = assembleModel(this.config, data, this.designerConfig);
         this.data = data;
         this.engine.updateData(this.model, getPreparedData(this.model, this.data, this.config));
@@ -99,7 +100,7 @@ export class Chart implements IChart {
      * Изменение размера блока с графиком
      * @param newSize Новый размер
      */
-    public updateSize(newSize: NewSize): void {
+    public updateSize(newSize: Partial<NewSize>): void {
         if (newSize.height)
             this.config.canvas.size.height = newSize.height;
         if (newSize.width)

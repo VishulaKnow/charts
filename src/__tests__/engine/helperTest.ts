@@ -1,4 +1,4 @@
-import { DataRow, DataSource } from "../../config/config";
+import { MdtChartsDataRow, MdtChartsDataSource } from "../../config/config";
 import { Helper } from "../../engine/helpers/helper";
 import { TwoDimensionalOptionsModel } from "../../model/model";
 import { assembleModel } from "../../model/modelBuilder";
@@ -78,7 +78,7 @@ describe('string transformers', () => {
 });
 
 describe('test id and keyValue manipulations', () => {
-    let dataset: DataRow[];
+    let dataset: MdtChartsDataRow[];
     beforeEach(() => {
         dataset = [
             {
@@ -143,8 +143,8 @@ describe('test id and keyValue manipulations', () => {
 });
 
 describe('compareData', () => {
-    let oldSet: DataSource;
-    let newSet: DataSource;
+    let oldSet: MdtChartsDataSource;
+    let newSet: MdtChartsDataSource;
     let dataSetName = 'data';
 
     beforeEach(() => {

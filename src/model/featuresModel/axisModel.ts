@@ -1,4 +1,4 @@
-import { AxisPosition, ChartOrientation, DataOptions, DataSource, DiscreteAxisOptions, NumberAxisOptions, Size, TwoDimensionalChart } from "../../config/config";
+import { AxisPosition, ChartOrientation, DataOptions, MdtChartsDataSource, DiscreteAxisOptions, NumberAxisOptions, Size, TwoDimensionalChart } from "../../config/config";
 import { AxisLabelPosition, AxisModelOptions, BlockMargin, Orient } from "../model";
 import { ModelHelper } from "../modelHelper";
 import { AxisType, CLASSES } from "../modelBuilder";
@@ -12,7 +12,7 @@ export interface LabelSize {
 }
 
 export class AxisModel {
-    public static getKeyAxis(charts: TwoDimensionalChart[], data: DataSource, dataOptions: DataOptions, orient: ChartOrientation, axisConfig: DiscreteAxisOptions, labelConfig: AxisLabelCanvas, margin: BlockMargin, blockSize: Size, tooltipSettings: TooltipSettings): AxisModelOptions {
+    public static getKeyAxis(charts: TwoDimensionalChart[], data: MdtChartsDataSource, dataOptions: DataOptions, orient: ChartOrientation, axisConfig: DiscreteAxisOptions, labelConfig: AxisLabelCanvas, margin: BlockMargin, blockSize: Size, tooltipSettings: TooltipSettings): AxisModelOptions {
         return {
             type: 'key',
             orient: AxisModel.getAxisOrient(AxisType.Key, orient, axisConfig.position),

@@ -1,5 +1,5 @@
 import { Selection, BaseType } from 'd3-selection'
-import { DataSource, TooltipHtml, ValueField } from "../../../config/config";
+import { MdtChartsDataSource, TooltipHtml, ValueField } from "../../../config/config";
 import { IntervalChartModel, OptionsModelData, PolarChartModel, TwoDimensionalChartModel } from "../../../model/model";
 import { ValueFormatter, } from "../../valueFormatter";
 import { TooltipHelper } from './tooltipHelper';
@@ -30,7 +30,7 @@ export class TooltipDomHelper {
     private static readonly textItemClass = 'tooltip-text-item';
     private static readonly maxContentWidth = 500;
 
-    public static fillForMulty2DCharts(contentBlock: Selection<HTMLElement, unknown, BaseType, unknown>, charts: TwoDimensionalChartModel[], data: DataSource, dataOptions: OptionsModelData, keyValue: string, htmlHandler?: TooltipHtml): void {
+    public static fillForMulty2DCharts(contentBlock: Selection<HTMLElement, unknown, BaseType, unknown>, charts: TwoDimensionalChartModel[], data: MdtChartsDataSource, dataOptions: OptionsModelData, keyValue: string, htmlHandler?: TooltipHtml): void {
         contentBlock.html('');
 
         if (!htmlHandler) {
@@ -46,7 +46,7 @@ export class TooltipDomHelper {
         }
     }
 
-    public static fillForPolarChart(contentBlock: Selection<HTMLElement, unknown, BaseType, unknown>, chart: PolarChartModel, data: DataSource, dataOptions: OptionsModelData, keyValue: string, markColor: string, htmlHandler?: TooltipHtml): void {
+    public static fillForPolarChart(contentBlock: Selection<HTMLElement, unknown, BaseType, unknown>, chart: PolarChartModel, data: MdtChartsDataSource, dataOptions: OptionsModelData, keyValue: string, markColor: string, htmlHandler?: TooltipHtml): void {
         contentBlock.html('');
 
         if (!htmlHandler) {
@@ -58,7 +58,7 @@ export class TooltipDomHelper {
         }
     }
 
-    public static fillForIntervalChart(contentBlock: Selection<HTMLElement, unknown, BaseType, unknown>, charts: IntervalChartModel[], data: DataSource, dataOptions: OptionsModelData, keyValue: string, htmlHandler?: TooltipHtml): void {
+    public static fillForIntervalChart(contentBlock: Selection<HTMLElement, unknown, BaseType, unknown>, charts: IntervalChartModel[], data: MdtChartsDataSource, dataOptions: OptionsModelData, keyValue: string, htmlHandler?: TooltipHtml): void {
         contentBlock.html('');
 
         if (!htmlHandler) {
@@ -117,7 +117,7 @@ export class TooltipDomHelper {
         }
     }
 
-    private static getTooltipItemHtml(data: DataSource, dataOptions: OptionsModelData, keyValue: string, valueField: ValueField): string {
+    private static getTooltipItemHtml(data: MdtChartsDataSource, dataOptions: OptionsModelData, keyValue: string, valueField: ValueField): string {
         const row = data[dataOptions.dataSource].find(d => d[dataOptions.keyField.name] === keyValue);
         const text = `<span class="tooltip-field-title">${valueField.title}</span>
             <span class="tooltip-field-value">${ValueFormatter.formatField(valueField.format, row[valueField.name])}</span>`;
@@ -132,7 +132,7 @@ export class TooltipDomHelper {
             tooltipArrow.style('left', `${ARROW_DEFAULT_POSITION}px`);
     }
 
-    private static fillContentByFunction(contentBlock: Selection<HTMLElement, unknown, BaseType, unknown>, data: DataSource, dataOptions: OptionsModelData, keyValue: string, htmlHandler: TooltipHtml): void {
+    private static fillContentByFunction(contentBlock: Selection<HTMLElement, unknown, BaseType, unknown>, data: MdtChartsDataSource, dataOptions: OptionsModelData, keyValue: string, htmlHandler: TooltipHtml): void {
         const row = Helper.getRowsByKeys([keyValue], dataOptions.keyField.name, data[dataOptions.dataSource])[0];
         contentBlock.html(htmlHandler(row));
         this.setWhiteSpaceForTextBlocks(contentBlock);

@@ -1,4 +1,4 @@
-import { TwoDimensionalAxis, Config, IntervalAxis, TwoDimensionalOptions, PolarOptions, IntervalOptions, ChartOrientation, DataSource } from "../config/config";
+import { TwoDimensionalAxis, MdtChartsConfig, IntervalAxis, TwoDimensionalOptions, PolarOptions, IntervalOptions, ChartOrientation, MdtChartsDataSource } from "../config/config";
 import { DesignerConfig } from "../designer/designerConfig";
 import { AxisModel, LabelSize } from "./featuresModel/axisModel";
 import { DataManagerModel } from "./dataManagerModel";
@@ -12,7 +12,7 @@ export const AXIS_HORIZONTAL_LABEL_PADDING = 15;
 export const AXIS_VERTICAL_LABEL_PADDING = 10;
 
 export class MarginModel {
-    public static getMargin(designerConfig: DesignerConfig, config: Config, otherComponents: OtherComponents, data: DataSource): BlockMargin {
+    public static getMargin(designerConfig: DesignerConfig, config: MdtChartsConfig, otherComponents: OtherComponents, data: MdtChartsDataSource): BlockMargin {
         const margin: BlockMargin = { ...designerConfig.canvas.chartBlockMargin }
 
         this.recalcMarginWithLegend(margin, config, designerConfig.canvas.legendBlock.maxWidth, otherComponents.legendBlock, data);
@@ -35,7 +35,7 @@ export class MarginModel {
         return margin;
     }
 
-    public static recalcPolarMarginWithScopedData(margin: BlockMargin, blockSize: Size, designerConfig: DesignerConfig, config: Config, legendBlockModel: LegendBlockModel, dataScope: DataScope, options: PolarOptionsModel): void {
+    public static recalcPolarMarginWithScopedData(margin: BlockMargin, blockSize: Size, designerConfig: DesignerConfig, config: MdtChartsConfig, legendBlockModel: LegendBlockModel, dataScope: DataScope, options: PolarOptionsModel): void {
         let position = LegendModel.getLegendModel(config.options.type, config.options.legend.show, config.canvas.size, margin).position;
 
         if (position !== 'off') {
@@ -55,7 +55,7 @@ export class MarginModel {
         }
     }
 
-    public static recalcMarginByVerticalAxisLabel(margin: BlockMargin, config: Config, designerConfig: DesignerConfig, dataScope: DataScope): void {
+    public static recalcMarginByVerticalAxisLabel(margin: BlockMargin, config: MdtChartsConfig, designerConfig: DesignerConfig, dataScope: DataScope): void {
         if ((config.options.type === '2d' || config.options.type === 'interval') && config.options.orientation === 'vertical') {
             const axisLabelSize = AxisModel.getLabelSize(designerConfig.canvas.axisLabel.maxSize.main, dataScope.allowableKeys);
             const axisConfig = AxisModel.getKeyAxisLabelPosition(margin, config.canvas.size, dataScope.allowableKeys.length);
@@ -67,7 +67,7 @@ export class MarginModel {
         }
     }
 
-    private static getHorizontalMarginByAxisLabels(labelsMaxWidth: number, axis: TwoDimensionalAxis | IntervalAxis, data: DataSource, options: TwoDimensionalOptions | IntervalOptions): LabelSize {
+    private static getHorizontalMarginByAxisLabels(labelsMaxWidth: number, axis: TwoDimensionalAxis | IntervalAxis, data: MdtChartsDataSource, options: TwoDimensionalOptions | IntervalOptions): LabelSize {
         const keyAxisOrient = AxisModel.getAxisOrient(AxisType.Key, options.orientation, axis.key.position);
         let labelsTexts: string[];
 
@@ -103,7 +103,7 @@ export class MarginModel {
         }
     }
 
-    private static recalcMarginWithLegend(margin: BlockMargin, config: Config, legendMaxWidth: number, legendBlockModel: LegendBlockModel, data: DataSource): void {
+    private static recalcMarginWithLegend(margin: BlockMargin, config: MdtChartsConfig, legendMaxWidth: number, legendBlockModel: LegendBlockModel, data: MdtChartsDataSource): void {
         const legendPosition = LegendModel.getLegendModel(config.options.type, config.options.legend.show, config.canvas.size, margin).position;
         if (legendPosition !== 'off') {
             const legendItemsContent = this.getLegendItemsContent(config.options, data);
@@ -118,7 +118,7 @@ export class MarginModel {
         }
     }
 
-    private static getLegendItemsContent(options: TwoDimensionalOptions | PolarOptions | IntervalOptions, data: DataSource): string[] {
+    private static getLegendItemsContent(options: TwoDimensionalOptions | PolarOptions | IntervalOptions, data: MdtChartsDataSource): string[] {
         if (options.type === '2d') {
             let texts: string[] = [];
             options.charts.forEach(chart => {

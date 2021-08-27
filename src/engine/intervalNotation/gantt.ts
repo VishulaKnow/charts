@@ -1,21 +1,21 @@
 import { Selection, BaseType } from 'd3-selection'
-import { DataRow } from '../../config/config';
+import { MdtChartsDataRow } from '../../config/config';
 import { BarChartSettings, BlockMargin, IntervalChartModel, OptionsModelData, Orient } from "../../model/model";
 import { Block } from "../block/block";
 import { Scale, Scales } from "../features/scale/scale";
 import { DomHelper } from '../helpers/domHelper';
 
 interface GanttItemsAttrs {
-    x: (data: DataRow) => number;
-    y: (data: DataRow) => number;
-    width: (data: DataRow) => number;
-    height: (data: DataRow) => number;
+    x: (data: MdtChartsDataRow) => number;
+    y: (data: MdtChartsDataRow) => number;
+    width: (data: MdtChartsDataRow) => number;
+    height: (data: MdtChartsDataRow) => number;
 }
 
 export class Gantt {
     private static readonly ganttItemClass = 'gantt-item';
 
-    public static render(block: Block, data: DataRow[], dataOptions: OptionsModelData, scales: Scales, margin: BlockMargin, keyAxisOrient: Orient, chart: IntervalChartModel, barSettings: BarChartSettings): void {
+    public static render(block: Block, data: MdtChartsDataRow[], dataOptions: OptionsModelData, scales: Scales, margin: BlockMargin, keyAxisOrient: Orient, chart: IntervalChartModel, barSettings: BarChartSettings): void {
         const ganttItems = block.getChartBlock()
             .selectAll(`.${this.ganttItemClass}`)
             .data(data)
@@ -38,7 +38,7 @@ export class Gantt {
         DomHelper.setChartStyle(ganttItems, chart.style, 0, 'fill');
     }
 
-    private static fillItemsAttrs(ganttItems: Selection<SVGRectElement, DataRow, BaseType, unknown>, attrs: GanttItemsAttrs): void {
+    private static fillItemsAttrs(ganttItems: Selection<SVGRectElement, MdtChartsDataRow, BaseType, unknown>, attrs: GanttItemsAttrs): void {
         ganttItems
             .attr('x', d => attrs.x(d))
             .attr('y', d => attrs.y(d))
