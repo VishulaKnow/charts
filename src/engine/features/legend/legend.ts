@@ -23,11 +23,13 @@ export class Legend {
         }
     }
 
-    public static update(block: Block, data: MdtChartsDataSource, options: TwoDimensionalOptionsModel | PolarOptionsModel | IntervalOptionsModel): void {
-        if (options.legend.position !== 'off') {
+    public static update(block: Block, data: MdtChartsDataSource, model: Model): void {
+        if (model.options.legend.position !== 'off') {
             const legendObject = this.getObject(block);
+            const legendCoordinate = LegendHelper.getLegendCoordinateByPosition(model.options.legend.position, model.otherComponents.legendBlock, model.blockCanvas.size);
+            this.fillCoordinate(legendObject, legendCoordinate);
             this.removeContent(legendObject);
-            this.setContent(block, data, options, legendObject);
+            this.setContent(block, data, model.options, legendObject);
         }
     }
 

@@ -64,7 +64,7 @@ export class PolarManager {
 
         Aggregator.update(block, data[options.data.dataSource], options.charts[0].data.valueField, model.chartSettings.donut.aggregatorPad);
 
-        Legend.update(block, data, model.options);
+        Legend.update(block, data, model);
 
         if (model.options.legend.position !== 'off')
             RecordOverflowAlert.update(block, model.dataSettings.scope.hidedRecordsAmount, model.options.legend.position);
