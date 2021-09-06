@@ -1,4 +1,4 @@
-export type DataType = 'integer' | 'decimal' | 'date' | 'money' | 'string';
+export type DataType = string;
 export type DataTypeOptions = {
     [option: string]: any
 }
