@@ -1,4 +1,4 @@
-type DataType = 'integer' | 'decimal' | 'date' | 'money' | 'string';
+type DataType = string;
 
 export type AxisPosition = 'start' | 'end';
 export type ChartOrientation = 'vertical' | 'horizontal';
