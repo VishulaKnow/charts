@@ -1,17 +1,24 @@
-import { ChartOrientation, IntervalChartType, PolarChartType, Size, TooltipOptions, TwoDimensionalChartType } from "../config/config";
+import {
+    ChartOrientation,
+    IntervalChartType,
+    PolarChartType,
+    Size,
+    TooltipOptions,
+    TwoDimensionalChartType,
+} from "../config/config";
 import { DataType, DonutOptionsCanvas, Formatter, TooltipSettings, Transitions } from "../designer/designerConfig";
 
-type AxisType = 'key' | 'value';
+type AxisType = "key" | "value";
 
-export type Orient = 'top' | 'bottom' | 'left' | 'right';
-export type ScaleKeyType = 'band' | 'point';
-export type ScaleValueType = 'linear' | 'datetime';
-export type AxisLabelPosition = 'straight' | 'rotated';
-export type LegendPosition = 'off' | 'top' | 'bottom' | 'left' | 'right';
-export type EmbeddedLabelTypeModel = 'none' | 'key' | 'value';
+export type Orient = "top" | "bottom" | "left" | "right";
+export type ScaleKeyType = "band" | "point";
+export type ScaleValueType = "linear" | "datetime";
+export type AxisLabelPosition = "straight" | "rotated";
+export type LegendPosition = "off" | "top" | "bottom" | "left" | "right";
+export type EmbeddedLabelTypeModel = "none" | "key" | "value";
 export type DataOptions = {
-    [option: string]: any
-}
+    [option: string]: any;
+};
 
 export interface Model {
     blockCanvas: BlockCanvas;
@@ -22,7 +29,6 @@ export interface Model {
     chartSettings: ChartElementsSettings;
     transitions?: Transitions;
 }
-
 
 //====================================================== Canvas
 export interface BlockCanvas {
@@ -40,7 +46,6 @@ export interface BlockMargin {
     right: number;
 }
 
-
 //====================================================== Options
 interface OptionsModel {
     legend: ILegendModel;
@@ -50,7 +55,7 @@ interface OptionsModel {
     tooltip: TooltipOptions;
 }
 export interface TwoDimensionalOptionsModel extends OptionsModel {
-    type: '2d';
+    type: "2d";
     scale: IScaleModel;
     axis: IAxisModel;
     charts: TwoDimensionalChartModel[];
@@ -58,18 +63,17 @@ export interface TwoDimensionalOptionsModel extends OptionsModel {
     orient: ChartOrientation;
 }
 export interface PolarOptionsModel extends OptionsModel {
-    type: 'polar';
+    type: "polar";
     charts: PolarChartModel[];
 }
 export interface IntervalOptionsModel extends OptionsModel {
-    type: 'interval';
+    type: "interval";
     scale: IScaleModel;
     axis: IAxisModel;
     charts: IntervalChartModel[];
     additionalElements: AdditionalElementsOptions;
     orient: ChartOrientation;
 }
-
 
 //====================================================== Options Model Common
 export interface ILegendModel {
@@ -83,7 +87,6 @@ export interface Field {
     name: string;
     format: DataType;
 }
-
 
 //====================================================== TwoDimensionalOptionsModel & IntervalOptionsModel
 export interface IScaleModel {
@@ -119,7 +122,7 @@ export interface AxisModelOptions {
     ticks: AxisTicksModel;
     labels: AxisLabelModel;
 }
-interface TranslateModel {
+export interface TranslateModel {
     translateX: number;
     translateY: number;
 }
@@ -143,7 +146,6 @@ export interface GridLineFlag {
     key: boolean;
     value: boolean;
 }
-
 
 //====================================================== Charts
 interface ChartModel {
@@ -176,7 +178,6 @@ export interface PolarChartModel extends ChartModel {
     data: PolarChartDataModel;
 }
 
-
 //====================================================== TwoDimensionalChartModel
 export interface TwoDimensionalChartDataModel {
     valueFields: ValueField[];
@@ -189,19 +190,16 @@ export interface MarkersOptions {
     show: boolean;
 }
 
-
 //====================================================== IntervalChartModel
 interface IntervalChartDataModel {
     valueField1: ValueField;
     valueField2: ValueField;
 }
 
-
 //====================================================== PolarChartModel
 interface PolarChartDataModel {
     valueField: ValueField;
 }
-
 
 //====================================================== DataSettings
 export interface DataSettings {
@@ -216,7 +214,6 @@ export interface DataFormat {
     formatters: Formatter;
 }
 
-
 //====================================================== ChartElementsSettings
 export interface ChartElementsSettings {
     bar: BarChartSettings;
@@ -229,8 +226,7 @@ export interface BarChartSettings {
     maxBarWidth: number;
     minBarWidth: number;
 }
-export interface DonutChartSettings extends DonutOptionsCanvas { }
-
+export interface DonutChartSettings extends DonutOptionsCanvas {}
 
 //====================================================== OtherComponents
 export interface OtherComponents {
@@ -254,5 +250,5 @@ export interface LegendCoordinate {
     right: LegendCanvasCoordinate;
 }
 
-export interface TitleBlockModel extends ComponentBlockModel { }
-interface LegendCanvasCoordinate extends ComponentBlockModel { }
+export interface TitleBlockModel extends ComponentBlockModel {}
+interface LegendCanvasCoordinate extends ComponentBlockModel {}
