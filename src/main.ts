@@ -136,6 +136,8 @@ export class Chart implements IChart {
     }
 }
 
+(globalThis as any).MdtChart = Chart;
+
 export * from "./config/config";
 export * from "./designer/designerConfig";
 export { FilterCallback } from "./engine/filterManager/filterEventManager";
