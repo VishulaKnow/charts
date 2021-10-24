@@ -3,9 +3,12 @@ const HtmlWebpackPlugin = require("html-webpack-plugin");
 const { CleanWebpackPlugin } = require("clean-webpack-plugin");
 
 module.exports = {
-    entry: "./src/main.ts",
+    entry: {
+        main: "./src/main.ts",
+        listeners: "./src/playground/listeners.ts"
+    },
     output: {
-        filename: "bundle.js",
+        filename: "[name].[contenthash].js",
         path: path.resolve(__dirname, "dist")
     },
     plugins: [
@@ -14,6 +17,11 @@ module.exports = {
         }),
         new CleanWebpackPlugin()
     ],
+    optimization: {
+        splitChunks: {
+            chunks: "all"
+        }
+    },
     resolve: {
         extensions: [".js", ".ts"]
     },
