@@ -100,7 +100,6 @@ export class Chart implements IChart {
      * Изменение размера блока с графиком
      * @param newSize Новый размер
      */
-    //tst
     public updateSize(newSize: Partial<NewSize>): void {
         if (newSize.height)
             this.config.canvas.size.height = newSize.height;
