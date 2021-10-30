@@ -15,6 +15,7 @@ import { Helper } from '../../helpers/helper';
 import { TooltipHelper } from './tooltipHelper';
 import { TooltipSettings } from '../../../designer/designerConfig';
 import { DomHelper } from '../../helpers/domHelper';
+import { NewTooltip } from './newTooltip/newTooltip';
 
 interface DonutOverDetails {
     pointer: [number, number];
@@ -54,7 +55,7 @@ interface LineTooltipIntervalParams extends LineTooltipParams {
 }
 
 export class Tooltip {
-    public static readonly tooltipBlockClass = 'tooltip-block';
+    public static readonly tooltipBlockClass = NewTooltip.tooltipBlockClass;
     public static readonly tooltipLineClass = 'tooltip-line';
     public static readonly tooltipWrapperClass = 'tooltip-wrapper';
     public static readonly tooltipContentClass = 'tooltip-content';
@@ -136,7 +137,7 @@ export class Tooltip {
 
     private static renderLineTooltip(block: Block, data: MdtChartsDataSource, args: LineTooltip2DParams | LineTooltipIntervalParams): void {
         const tooltipBlock = TooltipComponentsManager.renderTooltipBlock(block);
-        const tooltipContent = TooltipComponentsManager.renderTooltipContentBlock(tooltipBlock);
+        const tooltipContent = TooltipComponentsManager.renderTooltipContentBlock(tooltipBlock.getEl());
         const tooltipLine = TooltipComponentsManager.renderTooltipLine(block);
         const tipBox = TipBox.renderOrGet(block, args.margin, args.blockSize);
 
@@ -146,11 +147,11 @@ export class Tooltip {
 
             if (args.tooltipSettings.position === 'followCursor') {
                 const tooltipCoordinate = TooltipHelper.getTooltipCursorCoordinate(e.detail.pointer || pointer(e, this), block.getSvg().node().getBoundingClientRect(), tooltipContent.node().getBoundingClientRect(), window.innerWidth, window.innerHeight);
-                TooltipComponentsManager.setLineTooltipCoordinate(tooltipBlock, tooltipCoordinate, args.chartOrientation, 0);
+                TooltipComponentsManager.setLineTooltipCoordinate(tooltipBlock.getEl(), tooltipCoordinate, args.chartOrientation, 0);
             }
 
             if (!currentKey || currentKey !== keyValue) {
-                TooltipComponentsManager.showComponent(tooltipBlock);
+                TooltipComponentsManager.showComponent(tooltipBlock.getEl());
                 if (args.type === '2d')
                     TooltipDomHelper.fillForMulty2DCharts(tooltipContent, args.charts.filter(ch => ch.tooltip.show), data, args.dataOptions, keyValue, args.tooltipOptions?.html);
                 else
@@ -158,7 +159,7 @@ export class Tooltip {
 
                 if (args.tooltipSettings.position === 'fixed') {
                     const tooltipCoordinate = TooltipHelper.getTooltipFixedCoordinate(args.scales.key, args.margin, keyValue, block.getSvg().node().getBoundingClientRect(), tooltipContent.node().getBoundingClientRect(), args.keyAxisOrient, window.innerWidth, window.innerHeight);
-                    TooltipComponentsManager.setLineTooltipCoordinate(tooltipBlock, tooltipCoordinate, args.chartOrientation, block.transitionManager.durations.tooltipSlide);
+                    TooltipComponentsManager.setLineTooltipCoordinate(tooltipBlock.getEl(), tooltipCoordinate, args.chartOrientation, block.transitionManager.durations.tooltipSlide);
                 }
 
                 const tooltipLineAttributes = TooltipHelper.getTooltipLineAttributes(args.scales.key, args.margin, keyValue, args.chartOrientation, args.blockSize);
@@ -193,7 +194,7 @@ export class Tooltip {
         })
 
         tipBox.on('mouseleave', function () {
-            TooltipComponentsManager.hideComponent(tooltipBlock);
+            TooltipComponentsManager.hideComponent(tooltipBlock.getEl());
             TooltipComponentsManager.hideComponent(tooltipLine);
             if (args.type === '2d')
                 ElementHighlighter.removeUnselected2DHighlight(block, args.dataOptions.keyField.name, args.charts, block.transitionManager.durations.markerHover);
@@ -203,29 +204,29 @@ export class Tooltip {
 
     private static renderTooltipForDonut(block: Block, elements: Selection<SVGGElement, PieArcDatum<MdtChartsDataRow>, SVGGElement, unknown>, data: MdtChartsDataSource, dataOptions: OptionsModelData, chart: PolarChartModel, blockSize: Size, margin: BlockMargin, donutThickness: number, tooltipSettings: TooltipSettings, tooltipOptions: TooltipOptions, translate: TooltipTranslate): void {
         const tooltipBlock = TooltipComponentsManager.renderTooltipBlock(block);
-        const tooltipContent = TooltipComponentsManager.renderTooltipContentBlock(tooltipBlock);
+        const tooltipContent = TooltipComponentsManager.renderTooltipContentBlock(tooltipBlock.getEl());
         let tooltipArrow: Selection<BaseType, unknown, HTMLElement, any>;
         if (tooltipSettings.position === 'fixed')
-            tooltipArrow = TooltipComponentsManager.renderTooltipArrow(tooltipBlock);
+            tooltipArrow = TooltipComponentsManager.renderTooltipArrow(tooltipBlock.getEl());
 
         if (tooltipSettings.position === 'followCursor') {
             elements.on('mousemove', function (e: CustomEvent<DonutOverDetails>) {
                 const pointerCoordinate = !pointer(e, block.getSvg().node())[0] ? e.detail.pointer : pointer(e, block.getSvg().node());
                 const tooltipCoordinate = TooltipHelper.getTooltipCursorCoordinate(pointerCoordinate, block.getSvg().node().getBoundingClientRect(), tooltipContent.node().getBoundingClientRect(), window.innerWidth, window.innerHeight);
-                TooltipComponentsManager.setBlockCoordinate(tooltipBlock, tooltipCoordinate);
+                TooltipComponentsManager.setBlockCoordinate(tooltipBlock.getEl(), tooltipCoordinate);
             });
         }
 
         elements.on('mouseover', function (e, dataRow: PieArcDatum<MdtChartsDataRow>) {
-            TooltipComponentsManager.showComponent(tooltipBlock);
+            TooltipComponentsManager.showComponent(tooltipBlock.getEl());
             TooltipDomHelper.fillForPolarChart(tooltipContent, chart, data, dataOptions, dataRow.data[dataOptions.keyField.name], select(this).select('path').style('fill'), tooltipOptions?.html)
 
             if (tooltipSettings.position === 'fixed') {
-                const coordinatePointer = TooltipDomHelper.getRecalcedCoordinateByArrow(DonutHelper.getArcCentroid(blockSize, margin, dataRow, donutThickness), tooltipBlock, blockSize, tooltipArrow, translate.x, translate.y);
+                const coordinatePointer = TooltipDomHelper.getRecalcedCoordinateByArrow(DonutHelper.getArcCentroid(blockSize, margin, dataRow, donutThickness), tooltipBlock.getEl(), blockSize, tooltipArrow, translate.x, translate.y);
                 coordinatePointer[0] = coordinatePointer[0] + translate.x;
                 coordinatePointer[1] = coordinatePointer[1] + translate.y;
                 const tooltipCoordinate = TooltipHelper.getCoordinateByPointer(coordinatePointer);
-                TooltipComponentsManager.setBlockCoordinate(tooltipBlock, tooltipCoordinate);
+                TooltipComponentsManager.setBlockCoordinate(tooltipBlock.getEl(), tooltipCoordinate);
             }
 
             ElementHighlighter.toggleActivityStyle(select(this), true);
@@ -237,7 +238,7 @@ export class Tooltip {
         });
 
         elements.on('mouseleave', function (e, dataRow: PieArcDatum<MdtChartsDataRow>) {
-            TooltipComponentsManager.hideComponent(tooltipBlock);
+            TooltipComponentsManager.hideComponent(tooltipBlock.getEl());
             if (!block.filterEventManager.isSelected(dataRow.data[dataOptions.keyField.name])) {
                 ElementHighlighter.removeCloneForElem(block, dataOptions.keyField.name, select(this));
                 ElementHighlighter.removeShadowClone(block, dataOptions.keyField.name, select(this), margin, blockSize, donutThickness);

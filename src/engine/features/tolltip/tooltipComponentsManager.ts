@@ -5,6 +5,7 @@ import { ChartOrientation } from "../../../config/config";
 import { easeLinear } from 'd3-ease';
 import { interrupt } from 'd3-transition';
 import { Tooltip } from './tooltip';
+import { NewTooltip } from './newTooltip/newTooltip';
 
 export class TooltipComponentsManager {
     public static showComponent(tooltipBlock: Selection<BaseType, unknown, HTMLElement, any>): void {
@@ -25,14 +26,14 @@ export class TooltipComponentsManager {
                 .attr('class', Tooltip.tooltipWrapperClass);
     }
 
-    public static renderTooltipBlock(block: Block, translateX: number = 0, translateY: number = 0): Selection<HTMLElement, unknown, HTMLElement, any> {
+    public static renderTooltipBlock(block: Block, translateX: number = 0, translateY: number = 0) {
         const wrapper = block.getWrapper().select<HTMLElement>(`.${Tooltip.tooltipWrapperClass}`);
 
-        let tooltipBlock = wrapper.select<HTMLElement>(`.${Tooltip.tooltipBlockClass}`);
+        const tooltipService = new NewTooltip();
+        let tooltipBlock = tooltipService.findInWrapper(wrapper);
         if (tooltipBlock.empty()) {
-            tooltipBlock = wrapper
-                .append('div')
-                .attr('class', Tooltip.tooltipBlockClass)
+            tooltipBlock = tooltipService.render(wrapper);
+            tooltipBlock
                 .style('position', 'absolute')
                 .style('display', 'none');
         }
@@ -40,7 +41,7 @@ export class TooltipComponentsManager {
         if (translateX !== 0 || translateY !== 0)
             tooltipBlock.style('transform', `translate(${translateX}px, ${translateY}px)`);
 
-        return tooltipBlock;
+        return tooltipService;
     }
 
     public static renderTooltipContentBlock(tooltipBlock: Selection<BaseType, unknown, HTMLElement, any>): Selection<HTMLDivElement, unknown, HTMLElement, any> {
