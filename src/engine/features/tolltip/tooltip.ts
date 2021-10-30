@@ -137,7 +137,7 @@ export class Tooltip {
 
     private static renderLineTooltip(block: Block, data: MdtChartsDataSource, args: LineTooltip2DParams | LineTooltipIntervalParams): void {
         const tooltipBlock = TooltipComponentsManager.renderTooltipBlock(block);
-        const tooltipContent = TooltipComponentsManager.renderTooltipContentBlock(tooltipBlock.getEl());
+        const tooltipContent = TooltipComponentsManager.renderTooltipContentBlock(tooltipBlock);
         const tooltipLine = TooltipComponentsManager.renderTooltipLine(block);
         const tipBox = TipBox.renderOrGet(block, args.margin, args.blockSize);
 
@@ -204,7 +204,7 @@ export class Tooltip {
 
     private static renderTooltipForDonut(block: Block, elements: Selection<SVGGElement, PieArcDatum<MdtChartsDataRow>, SVGGElement, unknown>, data: MdtChartsDataSource, dataOptions: OptionsModelData, chart: PolarChartModel, blockSize: Size, margin: BlockMargin, donutThickness: number, tooltipSettings: TooltipSettings, tooltipOptions: TooltipOptions, translate: TooltipTranslate): void {
         const tooltipBlock = TooltipComponentsManager.renderTooltipBlock(block);
-        const tooltipContent = TooltipComponentsManager.renderTooltipContentBlock(tooltipBlock.getEl());
+        const tooltipContent = TooltipComponentsManager.renderTooltipContentBlock(tooltipBlock);
         let tooltipArrow: Selection<BaseType, unknown, HTMLElement, any>;
         if (tooltipSettings.position === 'fixed')
             tooltipArrow = TooltipComponentsManager.renderTooltipArrow(tooltipBlock.getEl());

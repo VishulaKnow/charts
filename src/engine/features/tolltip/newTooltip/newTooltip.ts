@@ -20,4 +20,8 @@ export class NewTooltip {
             .attr('class', NewTooltip.tooltipBlockClass);
         return this.elSelection;
     }
+
+    appendContent(content: HTMLElement) {
+        this.elSelection.node().appendChild(content);
+    }
 }

@@ -1,4 +1,4 @@
-import { Selection, BaseType } from 'd3-selection';
+import { Selection, BaseType, select } from 'd3-selection';
 import { Block } from "../../block/block";
 import { ARROW_DEFAULT_POSITION, ARROW_SIZE, TooltipCoordinate, TooltipLineAttributes } from "./tooltipDomHelper";
 import { ChartOrientation } from "../../../config/config";
@@ -44,12 +44,14 @@ export class TooltipComponentsManager {
         return tooltipService;
     }
 
-    public static renderTooltipContentBlock(tooltipBlock: Selection<BaseType, unknown, HTMLElement, any>): Selection<HTMLDivElement, unknown, HTMLElement, any> {
-        let tooltipContentBlock = tooltipBlock.select<HTMLDivElement>(`.${Tooltip.tooltipContentClass}`);
+    public static renderTooltipContentBlock(tooltipBlock: NewTooltip): Selection<HTMLDivElement, unknown, HTMLElement, any> {
+        let tooltipContentBlock = tooltipBlock.getEl().select<HTMLDivElement>(`.${Tooltip.tooltipContentClass}`);
 
-        if (tooltipContentBlock.empty())
-            tooltipContentBlock = tooltipBlock.append('div')
-                .attr('class', Tooltip.tooltipContentClass);
+        if (tooltipContentBlock.empty()) {
+            tooltipContentBlock = select(document.createElement("div"))
+                .attr("class", Tooltip.tooltipContentClass);
+            tooltipBlock.appendContent(tooltipContentBlock.node());
+        }
 
         return tooltipContentBlock;
     }
