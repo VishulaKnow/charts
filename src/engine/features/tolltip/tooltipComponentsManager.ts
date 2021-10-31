@@ -1,11 +1,11 @@
 import { Selection, BaseType, select } from 'd3-selection';
 import { Block } from "../../block/block";
-import { ARROW_DEFAULT_POSITION, ARROW_SIZE, TooltipCoordinate, TooltipLineAttributes } from "./tooltipDomHelper";
+import { ARROW_DEFAULT_POSITION, ARROW_SIZE, TooltipLineAttributes } from "./tooltipDomHelper";
 import { ChartOrientation } from "../../../config/config";
 import { easeLinear } from 'd3-ease';
 import { interrupt } from 'd3-transition';
 import { Tooltip } from './tooltip';
-import { NewTooltip } from './newTooltip/newTooltip';
+import { NewTooltip, TooltipCoordinate } from './newTooltip/newTooltip';
 
 export class TooltipComponentsManager {
     public static showComponent(tooltipBlock: Selection<BaseType, unknown, HTMLElement, any>): void {
@@ -112,19 +112,12 @@ export class TooltipComponentsManager {
         return tooltipArrow;
     }
 
-    public static setBlockCoordinate(tooltipBlock: Selection<BaseType, unknown, HTMLElement, any>, tooltipCoordinate: TooltipCoordinate): void {
-        tooltipBlock
-            .style('right', tooltipCoordinate.right)
-            .style('bottom', tooltipCoordinate.bottom)
-            .style('left', tooltipCoordinate.left)
-            .style('top', tooltipCoordinate.top);
-    }
-
-    public static setLineTooltipCoordinate(tooltipBlock: Selection<BaseType, unknown, HTMLElement, any>, tooltipCoordinate: TooltipCoordinate, chartOrientation: ChartOrientation, transition: number = null): void {
+    public static setLineTooltipCoordinate(tooltip: NewTooltip, tooltipCoordinate: TooltipCoordinate, chartOrientation: ChartOrientation, transition: number = null): void {
+        const tooltipBlock = tooltip.getEl();
         interrupt(tooltipBlock.node());
 
         if (!transition || transition <= 0)
-            this.setBlockCoordinate(tooltipBlock, tooltipCoordinate);
+            tooltip.setCoordinate(tooltipCoordinate);
 
         if (chartOrientation === 'vertical' && tooltipBlock.style('left') !== '0px' && tooltipBlock.style('right') !== '0px' && tooltipCoordinate.right !== '0px' && tooltipCoordinate.left !== null) {
             tooltipBlock
@@ -138,16 +131,16 @@ export class TooltipComponentsManager {
                 .style('left', tooltipCoordinate.left);
         } else if (chartOrientation === 'horizontal' && tooltipBlock.style('top') !== '0px' && parseInt(tooltipBlock.style('bottom')) > 0 && tooltipCoordinate.bottom === null) {
             tooltipBlock
-                .style('left', tooltipCoordinate.left)
-                .style('bottom', tooltipCoordinate.bottom)
                 .style('right', tooltipCoordinate.right)
+                .style('bottom', tooltipCoordinate.bottom)
+                .style('left', tooltipCoordinate.left)
                 .interrupt()
                 .transition()
                 .duration(transition)
                 .ease(easeLinear)
                 .style('top', tooltipCoordinate.top);
         } else {
-            this.setBlockCoordinate(tooltipBlock, tooltipCoordinate);
+            tooltip.setCoordinate(tooltipCoordinate);
         }
     }
 }

@@ -12,12 +12,6 @@ export interface TooltipLineAttributes {
     y1: number;
     y2: number;
 }
-export interface TooltipCoordinate {
-    left: string;
-    top: string;
-    right: string;
-    bottom: string;
-}
 
 export const ARROW_SIZE = 20;
 export const ARROW_DEFAULT_POSITION = 9;

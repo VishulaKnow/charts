@@ -3,8 +3,9 @@ import { ChartOrientation } from "../../../config/config";
 import { BlockMargin, Orient } from "../../../model/model";
 import { Helper } from "../../helpers/helper";
 import { Scale } from "../scale/scale";
-import { ARROW_DEFAULT_POSITION, TooltipCoordinate, TooltipLineAttributes, TOOLTIP_ARROW_PADDING_X, TOOLTIP_ARROW_PADDING_Y } from "./tooltipDomHelper";
+import { ARROW_DEFAULT_POSITION, TooltipLineAttributes, TOOLTIP_ARROW_PADDING_X, TOOLTIP_ARROW_PADDING_Y } from "./tooltipDomHelper";
 import { Size } from "../../../config/config";
+import { TooltipCoordinate } from "./newTooltip/newTooltip";
 
 export class TooltipHelper {
     private static convexsize = 5;

@@ -1,5 +1,12 @@
 import { Selection } from 'd3-selection';
 
+export interface TooltipCoordinate {
+    left: string;
+    top: string;
+    right: string;
+    bottom: string;
+}
+
 export class NewTooltip {
     static tooltipBlockClass = 'tooltip-block';
 
@@ -23,5 +30,13 @@ export class NewTooltip {
 
     appendContent(content: HTMLElement) {
         this.elSelection.node().appendChild(content);
+    }
+
+    setCoordinate(coordinate: TooltipCoordinate) {
+        this.elSelection
+            .style('right', coordinate.right)
+            .style('bottom', coordinate.bottom)
+            .style('left', coordinate.left)
+            .style('top', coordinate.top);
     }
 }
