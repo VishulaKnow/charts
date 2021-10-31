@@ -7,6 +7,11 @@ import { ARROW_DEFAULT_POSITION, TooltipLineAttributes, TOOLTIP_ARROW_PADDING_X,
 import { Size } from "../../../config/config";
 import { TooltipCoordinate } from "./newTooltip/newTooltip";
 
+interface TooltipPreCoordinate {
+    top: number;
+    left: number;
+}
+
 export class TooltipHelper {
     private static convexsize = 5;
     public static getHorizontalPad(coordinateX: number, tooltipBlockWidth: number, blockSize: Size, translateX: number): number {
@@ -46,40 +51,36 @@ export class TooltipHelper {
     }
 
     public static getTooltipFixedCoordinate(scaleKey: AxisScale<any>, margin: BlockMargin, keyValue: string, blockBoundingRect: DOMRect, tooltipBoundingRect: DOMRect, keyAxisOrient: Orient, winWidth: number, winHeight: number): TooltipCoordinate {
-        const coordinate: TooltipCoordinate = {
+        const coordinate: TooltipPreCoordinate = {
             top: null,
-            bottom: null,
-            left: null,
-            right: null
+            left: null
         }
         if (keyAxisOrient === 'bottom' || keyAxisOrient === 'top') {
-            coordinate.left = Scale.getScaledValue(scaleKey, keyValue) + margin.left - tooltipBoundingRect.width / 2 + 'px';
+            coordinate.left = Scale.getScaledValue(scaleKey, keyValue) + margin.left - tooltipBoundingRect.width / 2;
             if (keyAxisOrient === 'bottom')
-                coordinate.top = margin.top - 5 - tooltipBoundingRect.height + 'px';
+                coordinate.top = margin.top - 5 - tooltipBoundingRect.height;
             else
-                coordinate.top = blockBoundingRect.height - margin.bottom + 'px';
+                coordinate.top = blockBoundingRect.height - margin.bottom;
         }
         if (keyAxisOrient === 'left' || keyAxisOrient === 'right') {
-            coordinate.top = Scale.getScaledValue(scaleKey, keyValue) + margin.top - tooltipBoundingRect.height / 2 + 'px';
+            coordinate.top = Scale.getScaledValue(scaleKey, keyValue) + margin.top - tooltipBoundingRect.height / 2;
             if (keyAxisOrient === 'left')
-                coordinate.left = blockBoundingRect.width - margin.right + 'px';
+                coordinate.left = blockBoundingRect.width - margin.right;
             else
-                coordinate.left = margin.left - tooltipBoundingRect.width + 'px';
+                coordinate.left = margin.left - tooltipBoundingRect.width;
         }
 
         return this.recalcToolTipCoordinateByViewPort(blockBoundingRect, tooltipBoundingRect, coordinate, winWidth, winHeight);
     }
 
-    public static getTooltipCursorCoordinate(pointer: [number, number], blockBoundingRect: DOMRect, tooltipBoundingRect: DOMRect, winWidth: number, winHeight: number): TooltipCoordinate {
+    public static getTooltipCursorCoordinate(pointer: [number, number], blockBoundingRect: DOMRect, tooltipBoundingRect: DOMRect): TooltipCoordinate {
         const pad = 10;
-        const coordinate: TooltipCoordinate = {
-            top: pointer[1] + pad + 'px',
-            bottom: null,
-            left: pointer[0] + pad + 'px',
-            right: null
+        const coordinate: TooltipPreCoordinate = {
+            top: pointer[1] + pad,
+            left: pointer[0] + pad
         }
 
-        return this.recalcToolTipCoordinateByViewPort(blockBoundingRect, tooltipBoundingRect, coordinate, winWidth, winHeight)
+        return this.recalcToolTipCoordinateByViewPort(blockBoundingRect, tooltipBoundingRect, coordinate, window.innerWidth, window.innerHeight)
     }
 
     public static getTooltipLineAttributes(scaleKey: AxisScale<any>, margin: BlockMargin, key: string, chartOrientation: ChartOrientation, blockSize: Size): TooltipLineAttributes {
@@ -102,16 +103,22 @@ export class TooltipHelper {
         return attributes;
     }
 
-    public static recalcToolTipCoordinateByViewPort(blockBounding: DOMRect, tooltipBounding: DOMRect, coordinate: TooltipCoordinate, winWidth: number, winHeight: number): TooltipCoordinate {
+    public static recalcToolTipCoordinateByViewPort(blockBounding: DOMRect, tooltipBounding: DOMRect, preCoordinate: TooltipPreCoordinate, winWidth: number, winHeight: number): TooltipCoordinate {
         const scrollPad = 18;
+        const coordinate: TooltipCoordinate = {
+            top: preCoordinate.top + 'px',
+            bottom: null,
+            left: preCoordinate.left + 'px',
+            right: null
+        }
 
-        const tooltipLeftAtBlock = Helper.getPXValueFromString(coordinate.left);
+        const tooltipLeftAtBlock = preCoordinate.left;
         if (tooltipLeftAtBlock < 0 && -tooltipLeftAtBlock > blockBounding.left)
             coordinate.left = -blockBounding.left + 'px';
         if (blockBounding.left + tooltipLeftAtBlock + tooltipBounding.width > winWidth - scrollPad)
             coordinate.left = winWidth - blockBounding.left - tooltipBounding.width - scrollPad + 'px';
 
-        const tooltipTopAtBlock = Helper.getPXValueFromString(coordinate.top);
+        const tooltipTopAtBlock = preCoordinate.top;
         if (tooltipTopAtBlock + blockBounding.top < 0 && -tooltipTopAtBlock > blockBounding.top)
             coordinate.top = -blockBounding.top + 'px';
         if (blockBounding.top + tooltipTopAtBlock + tooltipBounding.height > winHeight)

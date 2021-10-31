@@ -146,7 +146,7 @@ export class Tooltip {
             const keyValue = e.detail.keyValue || TipBoxHelper.getKeyValueByPointer(pointer(e, this), args.chartOrientation, args.margin, args.blockSize, args.scales.key, args.scaleKeyModel.type);
 
             if (args.tooltipSettings.position === 'followCursor') {
-                const tooltipCoordinate = TooltipHelper.getTooltipCursorCoordinate(e.detail.pointer || pointer(e, this), block.getSvg().node().getBoundingClientRect(), tooltipBlock.getEl().node().getBoundingClientRect(), window.innerWidth, window.innerHeight);
+                const tooltipCoordinate = TooltipHelper.getTooltipCursorCoordinate(e.detail.pointer || pointer(e, this), block.getSvg().node().getBoundingClientRect(), tooltipBlock.getEl().node().getBoundingClientRect());
                 TooltipComponentsManager.setLineTooltipCoordinate(tooltipBlock, tooltipCoordinate, args.chartOrientation, 0);
             }
 
@@ -212,7 +212,7 @@ export class Tooltip {
         if (tooltipSettings.position === 'followCursor') {
             elements.on('mousemove', function (e: CustomEvent<DonutOverDetails>) {
                 const pointerCoordinate = !pointer(e, block.getSvg().node())[0] ? e.detail.pointer : pointer(e, block.getSvg().node());
-                const tooltipCoordinate = TooltipHelper.getTooltipCursorCoordinate(pointerCoordinate, block.getSvg().node().getBoundingClientRect(), tooltipBlock.getEl().node().getBoundingClientRect(), window.innerWidth, window.innerHeight);
+                const tooltipCoordinate = TooltipHelper.getTooltipCursorCoordinate(pointerCoordinate, block.getSvg().node().getBoundingClientRect(), tooltipBlock.getEl().node().getBoundingClientRect());
                 tooltipBlock.setCoordinate(tooltipCoordinate);
             });
         }
