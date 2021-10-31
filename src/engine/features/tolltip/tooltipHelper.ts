@@ -112,16 +112,14 @@ export class TooltipHelper {
             right: null
         }
 
-        const tooltipLeftAtBlock = preCoordinate.left;
-        if (tooltipLeftAtBlock < 0 && -tooltipLeftAtBlock > blockBounding.left)
+        if (preCoordinate.left < 0 && Math.abs(preCoordinate.left) > blockBounding.left)
             coordinate.left = -blockBounding.left + 'px';
-        if (blockBounding.left + tooltipLeftAtBlock + tooltipBounding.width > winWidth - scrollPad)
+        if (blockBounding.left + preCoordinate.left + tooltipBounding.width > winWidth - scrollPad)
             coordinate.left = winWidth - blockBounding.left - tooltipBounding.width - scrollPad + 'px';
 
-        const tooltipTopAtBlock = preCoordinate.top;
-        if (tooltipTopAtBlock + blockBounding.top < 0 && -tooltipTopAtBlock > blockBounding.top)
+        if (preCoordinate.top + blockBounding.top < 0 && -preCoordinate.top > blockBounding.top)
             coordinate.top = -blockBounding.top + 'px';
-        if (blockBounding.top + tooltipTopAtBlock + tooltipBounding.height > winHeight)
+        if (blockBounding.top + preCoordinate.top + tooltipBounding.height > winHeight)
             coordinate.top = blockBounding.height - tooltipBounding.height - (blockBounding.bottom - winHeight) + 'px';
 
         return coordinate;
