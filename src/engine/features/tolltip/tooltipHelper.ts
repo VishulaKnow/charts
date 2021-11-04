@@ -100,6 +100,9 @@ export class TooltipHelper {
     }
 
     public static recalcToolTipCoordinateByViewPort(blockBounding: DOMRect, tooltipBounding: DOMRect, preCoordinate: TooltipPreCoordinate, winWidth: number, winHeight: number) {
-        return TooltipService.getTooltipByWindow(blockBounding, tooltipBounding, preCoordinate, winWidth, winHeight);
+        return TooltipService.getTooltipByWindow(blockBounding, tooltipBounding, preCoordinate, {
+            width: winWidth,
+            height: winHeight
+        });
     }
 }
