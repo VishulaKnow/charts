@@ -17,25 +17,23 @@ interface ElBounding extends Sizable {
 }
 
 export class NewTooltipServiceClass {
-    getTooltipByWindow(blockBounding: ElBounding, tooltipBounding: Sizable, preCoordinate: TooltipPreCoordinate, windowSize: Sizable) {
+    getTooltipByWindow(tooltipBounding: Sizable, preCoordinate: TooltipPreCoordinate, windowSize: Sizable, blockBounding?: ElBounding) {
         const scrollPad = 18;
 
-        const coordinate: TooltipCoordinate = {
-            top: preCoordinate.top + 'px',
-            bottom: null,
-            left: preCoordinate.left + 'px',
-            right: null
+        const coordinate: TooltipPreCoordinate = {
+            top: preCoordinate.top,
+            left: preCoordinate.left
         }
 
         if (preCoordinate.left < 0 && Math.abs(preCoordinate.left) > blockBounding.left)
-            coordinate.left = -blockBounding.left + 'px';
+            coordinate.left = -blockBounding.left;
         if (blockBounding.left + preCoordinate.left + tooltipBounding.width > windowSize.width - scrollPad)
-            coordinate.left = windowSize.width - blockBounding.left - tooltipBounding.width - scrollPad + 'px';
+            coordinate.left = windowSize.width - blockBounding.left - tooltipBounding.width - scrollPad;
 
         if (preCoordinate.top + blockBounding.top < 0 && -preCoordinate.top > blockBounding.top)
-            coordinate.top = -blockBounding.top + 'px';
+            coordinate.top = -blockBounding.top;
         if (blockBounding.top + preCoordinate.top + tooltipBounding.height > windowSize.height)
-            coordinate.top = blockBounding.height - tooltipBounding.height - (blockBounding.bottom - windowSize.height) + 'px';
+            coordinate.top = blockBounding.height - tooltipBounding.height - (blockBounding.bottom - windowSize.height);
 
         return coordinate;
     }

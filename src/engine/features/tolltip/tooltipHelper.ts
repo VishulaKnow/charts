@@ -99,10 +99,16 @@ export class TooltipHelper {
         return attributes;
     }
 
-    public static recalcToolTipCoordinateByViewPort(blockBounding: DOMRect, tooltipBounding: DOMRect, preCoordinate: TooltipPreCoordinate, winWidth: number, winHeight: number) {
-        return TooltipService.getTooltipByWindow(blockBounding, tooltipBounding, preCoordinate, {
+    public static recalcToolTipCoordinateByViewPort(blockBounding: DOMRect, tooltipBounding: DOMRect, preCoordinate: TooltipPreCoordinate, winWidth: number, winHeight: number): TooltipCoordinate {
+        const res = TooltipService.getTooltipByWindow(tooltipBounding, preCoordinate, {
             width: winWidth,
             height: winHeight
-        });
+        }, blockBounding);
+        return {
+            left: res.left + 'px',
+            top: res.top + 'px',
+            right: null,
+            bottom: null
+        }
     }
 }
