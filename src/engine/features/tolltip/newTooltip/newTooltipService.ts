@@ -1,16 +1,14 @@
-import { TooltipCoordinate } from "./newTooltip";
-
 export interface TooltipPreCoordinate {
     top: number;
     left: number;
 }
 
-interface Sizable {
+export interface Sizable {
     width: number;
     height: number;
 }
 
-interface ElBounding extends Sizable {
+export interface ElBounding extends Sizable {
     left: number;
     top: number;
     bottom: number;
