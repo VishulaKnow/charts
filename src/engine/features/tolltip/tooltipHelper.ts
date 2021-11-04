@@ -1,19 +1,15 @@
 import { AxisScale } from "d3-axis";
 import { ChartOrientation } from "../../../config/config";
 import { BlockMargin, Orient } from "../../../model/model";
-import { Helper } from "../../helpers/helper";
 import { Scale } from "../scale/scale";
 import { ARROW_DEFAULT_POSITION, TooltipLineAttributes, TOOLTIP_ARROW_PADDING_X, TOOLTIP_ARROW_PADDING_Y } from "./tooltipDomHelper";
 import { Size } from "../../../config/config";
 import { TooltipCoordinate } from "./newTooltip/newTooltip";
-
-interface TooltipPreCoordinate {
-    top: number;
-    left: number;
-}
+import { TooltipPreCoordinate, TooltipService } from "./newTooltip/newTooltipService";
 
 export class TooltipHelper {
     private static convexsize = 5;
+
     public static getHorizontalPad(coordinateX: number, tooltipBlockWidth: number, blockSize: Size, translateX: number): number {
         let pad = 0;
         if (tooltipBlockWidth + coordinateX - TOOLTIP_ARROW_PADDING_X + translateX > blockSize.width)
@@ -103,25 +99,7 @@ export class TooltipHelper {
         return attributes;
     }
 
-    public static recalcToolTipCoordinateByViewPort(blockBounding: DOMRect, tooltipBounding: DOMRect, preCoordinate: TooltipPreCoordinate, winWidth: number, winHeight: number): TooltipCoordinate {
-        const scrollPad = 18;
-        const coordinate: TooltipCoordinate = {
-            top: preCoordinate.top + 'px',
-            bottom: null,
-            left: preCoordinate.left + 'px',
-            right: null
-        }
-
-        if (preCoordinate.left < 0 && Math.abs(preCoordinate.left) > blockBounding.left)
-            coordinate.left = -blockBounding.left + 'px';
-        if (blockBounding.left + preCoordinate.left + tooltipBounding.width > winWidth - scrollPad)
-            coordinate.left = winWidth - blockBounding.left - tooltipBounding.width - scrollPad + 'px';
-
-        if (preCoordinate.top + blockBounding.top < 0 && -preCoordinate.top > blockBounding.top)
-            coordinate.top = -blockBounding.top + 'px';
-        if (blockBounding.top + preCoordinate.top + tooltipBounding.height > winHeight)
-            coordinate.top = blockBounding.height - tooltipBounding.height - (blockBounding.bottom - winHeight) + 'px';
-
-        return coordinate;
+    public static recalcToolTipCoordinateByViewPort(blockBounding: DOMRect, tooltipBounding: DOMRect, preCoordinate: TooltipPreCoordinate, winWidth: number, winHeight: number) {
+        return TooltipService.getTooltipByWindow(blockBounding, tooltipBounding, preCoordinate, winWidth, winHeight);
     }
 }
