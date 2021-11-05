@@ -15,12 +15,19 @@ export interface ElBounding extends Sizable {
 }
 
 export class NewTooltipServiceClass {
-    getTooltipByWindow(tooltipBounding: Sizable, preCoordinate: TooltipPreCoordinate, windowSize: Sizable, blockBounding?: ElBounding) {
+    getTooltipByWindow(tooltipBounding: Sizable, preCoordinate: TooltipPreCoordinate, windowSize: Sizable, parentBounding?: ElBounding) {
         const scrollPad = 18;
 
         const coordinate: TooltipPreCoordinate = {
             top: preCoordinate.top,
             left: preCoordinate.left
+        }
+        const blockBounding = parentBounding ?? {
+            top: 0,
+            left: 0,
+            height: windowSize.height,
+            width: windowSize.width,
+            bottom: windowSize.height
         }
 
         if (preCoordinate.left < 0 && Math.abs(preCoordinate.left) > blockBounding.left)
