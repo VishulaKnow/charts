@@ -83,7 +83,6 @@ export class TooltipDomHelper {
     private static renderHead(contentBlock: Selection<BaseType, unknown, BaseType, unknown>, keyValue: string): void {
         contentBlock.append('div')
             .attr('class', `${this.groupClass} ${this.headClass}`)
-            .style('white-space', 'nowrap')
             .text(keyValue);
     }
 
@@ -98,17 +97,11 @@ export class TooltipDomHelper {
                 .attr('class', 'tooltip-circle')
                 .style('background-color', markColor);
 
-        const textBlock = group.append('div')
+        group.append('div')
             .attr('class', 'tooltip-texts')
             .append('div')
             .attr('class', this.textItemClass)
             .html(tooltipHtml)
-            .style('white-space', 'nowrap');
-
-        if (textBlock.node().getBoundingClientRect().width > this.maxContentWidth) {
-            textBlock.style('white-space', 'normal');
-            contentBlock.select(`.${this.headClass}`).style('white-space', 'normal');
-        }
     }
 
     private static getTooltipItemHtml(data: MdtChartsDataSource, dataOptions: OptionsModelData, keyValue: string, valueField: ValueField): string {
@@ -134,11 +127,6 @@ export class TooltipDomHelper {
     }
 
     private static setWhiteSpaceForTextBlocks(contentBlock: Selection<HTMLElement, unknown, BaseType, unknown>): void {
-        contentBlock.style('min-width', null);
-        contentBlock.selectAll(`.${this.textItemClass}`).style('white-space', 'pre');
-        if (contentBlock.node().getBoundingClientRect().width > this.maxContentWidth) {
-            contentBlock.selectAll(`.${this.textItemClass}`).style('white-space', 'pre-wrap');
-            contentBlock.style('min-width', this.maxContentWidth + 'px');
-        }
+        contentBlock.selectAll(`.${this.textItemClass}`).style('white-space', 'pre-wrap');
     }
 }
