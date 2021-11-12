@@ -4,6 +4,7 @@ import Engine from "./engine/engine";
 import { FilterCallback } from "./engine/filterManager/filterEventManager";
 import { Model } from "./model/model";
 import { assembleModel, getPreparedData } from "./model/modelBuilder";
+import { PublicOptionsService } from "./optionsServices/publicOptionsService";
 
 export interface IChart {
     /**
@@ -101,6 +102,8 @@ export class Chart implements IChart {
      * @param newSize Новый размер
      */
     public updateSize(newSize: Partial<NewSize>): void {
+        if (!PublicOptionsService.validateSize(newSize)) return;
+
         if (newSize.height)
             this.config.canvas.size.height = newSize.height;
         if (newSize.width)

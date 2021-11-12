@@ -1,4 +1,4 @@
-import { MdtChartsConfig, MdtChartsDataSource } from '../config/config';
+import { MdtChartsConfig, MdtChartsDataSource, Size } from '../config/config';
 import { Model, BlockCanvas, ChartBlock, TwoDimensionalOptionsModel, PolarOptionsModel, BlockMargin, DataSettings, ChartElementsSettings, DataFormat, DataScope, IntervalOptionsModel } from './model';
 import { MarginModel } from './marginModel';
 import { TwoDimensionalModel } from './notations/twoDimensionalModel';
@@ -7,6 +7,7 @@ import { DataManagerModel } from './dataManagerModel';
 import { BarOptionsCanvas, DesignerConfig, DonutOptionsCanvas, Transitions } from '../designer/designerConfig';
 import { IntervalModel } from './notations/intervalModel';
 import { OtherComponentsModel } from './featuresModel/otherComponents';
+import { ConfigValidator } from './configsValidator/configValidator';
 
 
 export enum AxisType {
@@ -21,11 +22,9 @@ export const CLASSES = {
 }
 
 function getBlockCanvas(config: MdtChartsConfig): BlockCanvas {
+    const size: Size = ConfigValidator.validateCanvasSize(config.canvas.size) ? { ...config.canvas.size } : { width: 0, height: 0 }
     return {
-        size: {
-            width: config.canvas.size.width,
-            height: config.canvas.size.height
-        },
+        size,
         cssClass: config.canvas.class
     }
 }
@@ -138,7 +137,8 @@ function resetFalsyValues(data: MdtChartsDataSource, keyFieldName: string): void
 export function getPreparedData(model: Model, data: MdtChartsDataSource, config: MdtChartsConfig): MdtChartsDataSource {
     resetFalsyValues(data, config.options.data.keyField.name);
 
-    if (!model || Object.keys(model).length === 0 || !data || Object.keys(data).length === 0)
+    const isModelOrDataEmpty = !model || Object.keys(model).length === 0 || !data || Object.keys(data).length === 0;
+    if (isModelOrDataEmpty)
         return null;
 
     const preparedData = DataManagerModel.getPreparedData(data, model.dataSettings.scope.allowableKeys, config);
