@@ -674,6 +674,7 @@ class DataUpdater {
     private static dataSetName = 'dataSet';
     private static keyFieldName = 'brand';
     private static valueFieldNames = ['price', 'count'];
+    private static colorFieldName = 'color';
 
     static counter = 1;
 
@@ -720,6 +721,7 @@ class DataUpdater {
                 }
                 row[this.keyFieldName] = this.makeHASH(ListenersHelper.randInt(4, 10)).toUpperCase();
                 this.valueFieldNames.forEach(vField => row[vField] = ListenersHelper.randInt(0, 150));
+                row[this.colorFieldName] = this.getRandomColor();
                 newData[this.dataSetName].push(row);
             }
         } else if (random < 0.33) {
@@ -737,6 +739,11 @@ class DataUpdater {
         for (var i = 0; i < length; i++) {
             result += characters.charAt(Math.floor(Math.random() * charactersLength));
         }
-        return result;
+        return result + "  AAA";
+    }
+
+    private static getRandomColor(): string {
+        const colors = ["red", "green", "blue", "orange", "yellow"];
+        return colors[Math.floor(Math.random() * colors.length)];
     }
 }

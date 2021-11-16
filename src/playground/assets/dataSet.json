@@ -4,55 +4,64 @@
             "$id": 1,
             "brand": "BMW",
             "price": 100,
-            "count": 12
+            "count": 12,
+            "color": "red"
         },
         {
             "$id": 2,
             "brand": "LADA",
             "price": 50,
-            "count": 10
+            "count": 10,
+            "color": "green"
         },
         {
             "$id": 3,
             "brand": "MERCEDES",
             "price": 15,
-            "count": 12
+            "count": 12,
+            "color": "blue"
         },
         {
             "$id": 4,
             "brand": "AUDI",
             "price": 20,
-            "count": 5
+            "count": 5,
+            "color": "yellow"
         },
         {
             "$id": 5,
             "brand": "VOLKSWAGEN",
             "price": 115,
-            "count": 6
+            "count": 6,
+            "color": "cyan"
         },
         {
             "$id": 6,
             "brand": "DODGE",
             "price": 115,
-            "count": 4
+            "count": 4,
+            "color": "red"
         },
         {
             "$id": 7,
             "brand": "SAAB",
             "price": 50,
-            "count": 11
+            "count": 11,
+            "color": "orange"
         },
         {
             "$id": 8,
             "brand": "HONDA",
             "price": 20,
-            "count": 2
+            "count": 2,
+            "color": "brown"
         },
         {
             "$id": 9,
             "brand": "TOYOTA",
             "price": 40,
-            "count": 15
+            "count": 15,
+            "color": "pink"
         }
     ],
     "dataSet_large": [
