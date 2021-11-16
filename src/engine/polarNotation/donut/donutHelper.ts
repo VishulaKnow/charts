@@ -1,6 +1,6 @@
 import { merge } from "d3-array";
 import { PieArcDatum, Arc, arc, Pie, pie } from "d3-shape";
-import { MdtChartsDataRow, Size } from "../../../config/config";
+import { MdtChartsDataRow, Size, MdtChartsColorField } from "../../../config/config";
 import { BlockMargin, DonutChartSettings } from "../../../model/model";
 import { Translate } from "./donut";
 
@@ -53,7 +53,7 @@ export class DonutHelper {
             .value(d => d[valueField]);
     }
 
-    public static mergeDataWithZeros(firstDataset: MdtChartsDataRow[], secondDataset: MdtChartsDataRow[], keyField: string): MdtChartsDataRow[] {
+    public static mergeDataWithZeros(firstDataset: MdtChartsDataRow[], secondDataset: MdtChartsDataRow[], keyField: string, colorField: MdtChartsColorField): MdtChartsDataRow[] {
         const secondSet = new Set()
         secondDataset.forEach(dataRow => {
             secondSet.add(dataRow[keyField]);
@@ -61,9 +61,12 @@ export class DonutHelper {
         const onlyNew = firstDataset
             .filter(d => !secondSet.has(d[keyField]))
             .map((d, index, array) => {
+                console.log(array);
                 const data: MdtChartsDataRow = {
                     keyField: array[index][keyField],
-                    valueField: 0
+                    valueField: 0,
+                    [colorField]: array[index][colorField]
+                    //TODO: добавить цвет из ColorReader'а
                 }
                 return data;
             });

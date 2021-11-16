@@ -7,6 +7,7 @@ import { Aggregator } from "../../features/aggregator/aggregator";
 import { DonutHelper } from './DonutHelper';
 import { DomHelper } from '../../helpers/domHelper';
 import { MdtChartsDataRow, Size } from '../../../config/config';
+import { ColorReader } from '../../colorReader/colorReader';
 
 export interface Translate {
     x: number;
@@ -60,19 +61,19 @@ export class Donut {
             .data()
             .map(d => d.data);
 
-        const dataNewZeroRows = DonutHelper.mergeDataWithZeros(data, oldData, keyField);
-        const dataExtraZeroRows = DonutHelper.mergeDataWithZeros(oldData, data, keyField);
+        const dataNewZeroRows = DonutHelper.mergeDataWithZeros(data, oldData, keyField, ColorReader.getChartColorField(chart));
+        const dataExtraZeroRows = DonutHelper.mergeDataWithZeros(oldData, data, keyField, ColorReader.getChartColorField(chart));
 
         const donutBlock = block.getSvg().select<SVGGElement>(`.${this.donutBlockClass}`);
 
         this.renderNewArcItems(arcGenerator, pieGenerator, donutBlock, dataNewZeroRows, chart);
-        this.setElementsColor(this.getAllArcGroups(block), chart.style.elementColors);
 
         const path = this.getAllArcGroups(block)
             .data(pieGenerator(dataExtraZeroRows))
             .select<SVGPathElement>('path');
         const items = this.getAllArcGroups(block)
             .data(pieGenerator(data));
+        this.setElementsColor(this.getAllArcGroups(block), chart);
 
         return new Promise(resolve => {
             this.raiseClonesG(block);
@@ -95,7 +96,7 @@ export class Donut {
     }
 
     public static updateColors(block: Block, chart: PolarChartModel): void {
-        this.setElementsColor(this.getAllArcGroups(block), chart.style.elementColors);
+        this.setElementsColor(this.getAllArcGroups(block), chart);
     }
 
     public static getAllArcGroups(block: Block): Selection<SVGGElement, PieArcDatum<MdtChartsDataRow>, SVGGElement, unknown> {
@@ -128,13 +129,13 @@ export class Donut {
             .each(function (d) { (this as any)._currentData = d; }); // _currentData используется для получения текущих данных внутри функции обновления.
 
         DomHelper.setCssClasses(arcs, chart.cssClasses);
-        this.setElementsColor(items, chart.style.elementColors);
+        this.setElementsColor(items, chart);
     }
 
-    private static setElementsColor(arcItems: Selection<SVGGElement, unknown, BaseType, unknown>, colorPalette: string[]): void {
+    private static setElementsColor(arcItems: Selection<SVGGElement, PieArcDatum<MdtChartsDataRow>, BaseType, unknown>, chart: PolarChartModel): void {
         arcItems
             .select('path')
-            .style('fill', (d, i) => colorPalette[i % colorPalette.length]);
+            .style('fill', ({ data }, i) => ColorReader.getColorForArc(data, chart, i));
     }
 
     /**

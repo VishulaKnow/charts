@@ -1,5 +1,6 @@
 import {
     ChartOrientation,
+    MdtChartsColorField,
     IntervalChartType,
     PolarChartType,
     Size,
@@ -197,8 +198,9 @@ interface IntervalChartDataModel {
 }
 
 //====================================================== PolarChartModel
-interface PolarChartDataModel {
+export interface PolarChartDataModel {
     valueField: ValueField;
+    colorField?: MdtChartsColorField;
 }
 
 //====================================================== DataSettings
@@ -226,7 +228,7 @@ export interface BarChartSettings {
     maxBarWidth: number;
     minBarWidth: number;
 }
-export interface DonutChartSettings extends DonutOptionsCanvas {}
+export interface DonutChartSettings extends DonutOptionsCanvas { }
 
 //====================================================== OtherComponents
 export interface OtherComponents {
@@ -250,5 +252,5 @@ export interface LegendCoordinate {
     right: LegendCanvasCoordinate;
 }
 
-export interface TitleBlockModel extends ComponentBlockModel {}
-interface LegendCanvasCoordinate extends ComponentBlockModel {}
+export interface TitleBlockModel extends ComponentBlockModel { }
+interface LegendCanvasCoordinate extends ComponentBlockModel { }

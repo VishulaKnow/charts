@@ -183,8 +183,10 @@ interface MarkersOptions {
 
 
 //====================================================== PolarChart
+export type MdtChartsColorField = string;
 export interface PolarChartData {
     valueField: ValueField;
+    colorField?: MdtChartsColorField
 }
 
 
