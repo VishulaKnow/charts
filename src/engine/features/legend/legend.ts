@@ -3,6 +3,7 @@ import { MdtChartsDataSource, Size } from "../../../config/config";
 import { LegendItemsDirection } from "../../../model/featuresModel/legendModel/legendCanvasModel";
 import { IntervalOptionsModel, LegendBlockModel, LegendPosition, Model, Orient, PolarOptionsModel, TwoDimensionalOptionsModel } from "../../../model/model";
 import { Block } from "../../block/block";
+import { ColorReader } from "../../colorReader/colorReader";
 import { SelectionCondition } from "../../helpers/domHelper";
 import { LegendDomHelper } from "./legendDomHelper";
 import { LegendEventsManager } from "./legendEventsManager";
@@ -34,6 +35,8 @@ export class Legend {
     }
 
     public static updateColors(block: Block, options: TwoDimensionalOptionsModel | PolarOptionsModel | IntervalOptionsModel): void {
+        if (options.type === "polar" && ColorReader.isNeedReadFromData(options.charts[0])) return;
+
         const legendObject = this.getObject(block);
         const colors = LegendHelper.getMarksColor(options);
         const itemWrappers = legendObject
@@ -53,7 +56,7 @@ export class Legend {
 
     private static setContent(block: Block, data: MdtChartsDataSource, options: TwoDimensionalOptionsModel | PolarOptionsModel | IntervalOptionsModel, legendObject: Selection<SVGForeignObjectElement, unknown, HTMLElement, any>): void {
         const items = LegendHelper.getLegendItemsContent(options, data);
-        const colors = LegendHelper.getMarksColor(options);
+        const colors = LegendHelper.getMarksColor(options, data[options.data.dataSource]);
         const itemsDirection = LegendHelper.getLegendItemsDirection(options.type, options.legend.position);
 
         const itemBlocks = this.renderContent(legendObject, items, colors, itemsDirection, options.legend.position);

@@ -26,7 +26,7 @@ export class LegendHelper {
         }
     }
 
-    public static getMarksColor(options: TwoDimensionalOptionsModel | PolarOptionsModel | IntervalOptionsModel): string[] {
+    public static getMarksColor(options: TwoDimensionalOptionsModel | PolarOptionsModel | IntervalOptionsModel, dataRows?: MdtChartsDataRow[]): string[] {
         if (options.type === '2d') {
             let colors: string[] = [];
             options.charts.forEach(chart => {
@@ -34,7 +34,9 @@ export class LegendHelper {
             });
             return colors;
         } else if (options.type === 'polar') {
-            return options.charts.map(chart => chart.style.elementColors)[0];
+            if (!options.charts[0].data.colorField)
+                return options.charts.map(chart => chart.style.elementColors)[0];
+            return dataRows.map(row => row[options.charts[0].data.colorField])
         } else if (options.type === 'interval') {
             return options.charts.map(chart => chart.style.elementColors[0]);
         }
