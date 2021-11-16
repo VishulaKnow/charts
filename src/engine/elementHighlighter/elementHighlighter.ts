@@ -11,6 +11,7 @@ import { Donut } from '../polarNotation/donut/donut';
 import { MarkDot } from '../features/markDots/markDot';
 import { RectElemWithAttrs } from '../twoDimensionalNotation/bar/bar';
 import { Helper } from '../helpers/helper';
+import * as chroma from 'chroma-js';
 
 export class ElementHighlighter {
     private static inactiveElemClass = 'charts-opacity-inactive';
@@ -27,10 +28,10 @@ export class ElementHighlighter {
 
         elemSelection.each(function () {
             const elemFill = select(this).style('fill') || 'rgb(0, 0, 0)';
-            const shadowColor = Helper.getRgbaFromRgb(elemFill, 0.6);
+            const colorInRgb = chroma(elemFill).css();
+            const shadowColor = Helper.getRgbaFromRgb(colorInRgb, 0.6);
             select(this).style('filter', `drop-shadow(0px 0px ${blurPercent * maxBlurSize}px ${shadowColor})`);
         });
-        // elemSelection.style('filter', `drop-shadow(0px 0px ${blurSize}px rgba(0, 0, 0, 0.5))`);
     }
 
     public static removeFilter(elemSelection: Selection<BaseType, any, BaseType, any>): void {
@@ -215,9 +216,9 @@ export class ElementHighlighter {
                 .ease(easeLinear);
         }
 
-        elementsHandler
+        (elementsHandler
             .attr('r', isScaled ? 5 : 4)
-            .style('stroke-width', (isScaled ? 3.5 : 3) + 'px')
+            .style('stroke-width', (isScaled ? 3.5 : 3) + 'px') as Selection<BaseType, MdtChartsDataRow, BaseType, unknown> | Transition<BaseType, MdtChartsDataRow, BaseType, unknown>)
             .each(function () {
                 select(this).style('fill', isScaled ? select(this).style('stroke') : 'white');
             });
