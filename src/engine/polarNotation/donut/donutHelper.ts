@@ -61,7 +61,6 @@ export class DonutHelper {
         const onlyNew = firstDataset
             .filter(d => !secondSet.has(d[keyField]))
             .map((d, index, array) => {
-                console.log(array);
                 const data: MdtChartsDataRow = {
                     keyField: array[index][keyField],
                     valueField: 0,
