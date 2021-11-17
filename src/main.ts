@@ -5,7 +5,7 @@ import { FilterCallback } from "./engine/filterManager/filterEventManager";
 import { Model } from "./model/model";
 import { assembleModel, getPreparedData } from "./model/modelBuilder";
 import { PublicOptionsService } from "./optionsServices/publicOptionsService";
-
+//
 export interface IChart {
     /**
      * Рендер графика
