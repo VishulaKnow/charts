@@ -88,18 +88,13 @@ const configCars: MdtChartsConfig = {
                 format: 'string'
             }
         },
-        tooltip: {
-            html: (row) => {
-                return `${row.color}<br>${row.brand}`
-            }
-        },
         chart: {
             type: 'donut',
             data: {
                 valueField: {
                     name: 'price',
                     format: 'money',
-                    title: 'some title'
+                    title: 'Стоимость очень большой текст'
                 },
                 colorField: "color"
             },
