@@ -89,7 +89,7 @@ export function assembleModel(config: MdtChartsConfig, data: MdtChartsDataSource
 
     resetFalsyValues(data, config.options.data.keyField.name);
 
-    const otherComponents = OtherComponentsModel.getOtherComponentsModel(designerConfig.elementsOptions, config.options.type);
+    const otherComponents = OtherComponentsModel.getOtherComponentsModel({ elementsOptions: designerConfig.elementsOptions, notation: config.options.type, title: config.options.title });
     const margin = MarginModel.getMargin(designerConfig, config, otherComponents, data);
     const dataScope = DataManagerModel.getDataScope(config, margin, data, designerConfig, otherComponents.legendBlock);
     const preparedData = DataManagerModel.getPreparedData(data, dataScope.allowableKeys, config);

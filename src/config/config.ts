@@ -41,7 +41,7 @@ export interface NewSize {
 interface Options {
     legend: Legend;
     data: DataOptions;
-    title: string;
+    title?: string;
     selectable: boolean;
     tooltip?: TooltipOptions;
 }

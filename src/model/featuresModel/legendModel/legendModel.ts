@@ -1,5 +1,5 @@
 import { ChartNotation, Size } from "../../../config/config";
-import { BlockMargin, ILegendModel, LegendBlockModel, LegendPosition, Orient } from "../../model";
+import { BlockMargin, ILegendModel, LegendBlockModel, LegendPosition, Orient, TitleBlockModel } from "../../model";
 import { ModelHelper } from "../../modelHelper";
 import { TitleModel } from "../titleModel";
 import { LegendCanvasModel, LegendItemsDirection } from "./legendCanvasModel";
@@ -21,9 +21,8 @@ export class LegendModel {
         }
     }
 
-    public static getBaseLegendBlockModel(notation: ChartNotation): LegendBlockModel {
+    public static getBaseLegendBlockModel(notation: ChartNotation, titleModelTemplate: TitleBlockModel): LegendBlockModel {
         const mt = 20, mb = 20, ml = 20, mr = 20;
-        const titleModelTemplate = TitleModel.getTitleModel()
 
         return {
             coordinate: {

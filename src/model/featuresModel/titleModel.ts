@@ -1,15 +1,17 @@
 import { TitleBlockModel } from "../model";
 
 export class TitleModel {
-    public static getTitleModel(): TitleBlockModel {
+    public static getTitleModel(titleText: string): TitleBlockModel {
+        const defaultPads = 20;
+        const pad = titleText ? defaultPads : 0;
         return {
             margin: {
                 bottom: 0,
-                left: 20,
-                right: 20,
-                top: 20
+                left: pad,
+                right: pad,
+                top: pad
             },
-            size: 20,
+            size: pad,
             pad: 0
         }
     }

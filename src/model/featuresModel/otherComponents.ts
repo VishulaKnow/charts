@@ -5,12 +5,19 @@ import { ElementsOptions } from "../../designer/designerConfig";
 import { TooltipModel } from "./tooltipModel";
 import { ChartNotation } from "../../config/config";
 
+interface OtherComponentsModelDependencies {
+    elementsOptions: ElementsOptions;
+    title: string;
+    notation: ChartNotation;
+}
+
 export class OtherComponentsModel {
-    public static getOtherComponentsModel(elementsOptions: ElementsOptions, notation: ChartNotation): OtherComponents {
+    public static getOtherComponentsModel(dependencies: OtherComponentsModelDependencies): OtherComponents {
+        const titleBlock = TitleModel.getTitleModel(dependencies.title);
         return {
-            legendBlock: LegendModel.getBaseLegendBlockModel(notation),
-            titleBlock: TitleModel.getTitleModel(),
-            tooltipBlock: TooltipModel.getTooltipModel(elementsOptions.tooltip)
+            legendBlock: LegendModel.getBaseLegendBlockModel(dependencies.notation, titleBlock),
+            titleBlock,
+            tooltipBlock: TooltipModel.getTooltipModel(dependencies.elementsOptions.tooltip)
         }
     }
 }

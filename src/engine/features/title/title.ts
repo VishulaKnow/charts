@@ -13,6 +13,8 @@ interface TitleAttributes {
 
 export class Title {
     public static render(block: Block, text: string, titleBlockModel: TitleBlockModel, blockSize: Size): void {
+        if (!text) return;
+
         const titleBlock = block.getSvg()
             .append('text')
             .attr('class', 'chart-title');

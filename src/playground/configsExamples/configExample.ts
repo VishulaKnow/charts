@@ -5,7 +5,7 @@ const configCars: MdtChartsConfig = {
         class: 'outline',
         size: {
             width: 800,
-            height: 510
+            height: 200
         }
     },
     // options: {
@@ -76,7 +76,6 @@ const configCars: MdtChartsConfig = {
     // }
     options: {
         type: 'polar',
-        title: 'Title',
         selectable: true,
         legend: {
             show: true
@@ -95,8 +94,7 @@ const configCars: MdtChartsConfig = {
                     name: 'price',
                     format: 'money',
                     title: 'Стоимость очень большой текст'
-                },
-                colorField: "color"
+                }
             },
             tooltip: {
                 show: true
