@@ -55,7 +55,7 @@ function getDataSettings(dataScope: DataScope, designerConfig: DesignerConfig): 
 function getChartSettings(barSettings: BarOptionsCanvas, donutSettings: DonutOptionsCanvas): ChartElementsSettings {
     return {
         bar: { ...barSettings },
-        donut: { ...donutSettings }
+        donut: PolarModel.getChartSettings(donutSettings)
     }
 }
 

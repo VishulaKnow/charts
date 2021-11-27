@@ -5,6 +5,7 @@ export type DataTypeOptions = {
 
 export type Formatter = (value: any, options?: any) => string;
 export type TooltipPosition = 'followCursor' | 'fixed';
+export type MdtChartsDonutThicknessUnit = "px" | "%";
 
 export interface DesignerConfig {
     canvas: Canvas;
@@ -56,9 +57,15 @@ export interface BarOptionsCanvas {
 
 export interface DonutOptionsCanvas {
     padAngle: number;
-    minThickness: number;
-    maxThickness: number;
     aggregatorPad: number;
+    thickness: MdtChartsDonutThicknessOptions;
+}
+
+export interface MdtChartsDonutThicknessOptions {
+    min: number;
+    max: number;
+    value: number;
+    unit: MdtChartsDonutThicknessUnit;
 }
 
 

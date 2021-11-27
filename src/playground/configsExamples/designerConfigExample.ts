@@ -26,8 +26,12 @@ const designerConfig: DesignerConfig = {
             },
             donut: {
                 padAngle: 0,
-                minThickness: 40,
-                maxThickness: 60,
+                thickness: {
+                    min: 40,
+                    max: 60,
+                    unit: "%",
+                    value: 40
+                },
                 aggregatorPad: 30
             }
         }

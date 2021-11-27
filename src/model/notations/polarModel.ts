@@ -1,8 +1,8 @@
 import { MdtChartsConfig, MdtChartsDataSource, PolarChart, PolarOptions } from "../../config/config";
-import { ChartStyleConfig, DesignerConfig } from "../../designer/designerConfig";
+import { ChartStyleConfig, DesignerConfig, DonutOptionsCanvas } from "../../designer/designerConfig";
 import { ChartStyleModel } from "../chartStyleModel";
 import { LegendModel } from "../featuresModel/legendModel/legendModel";
-import { BlockMargin, PolarOptionsModel, PolarChartModel } from "../model";
+import { BlockMargin, PolarOptionsModel, PolarChartModel, DonutChartSettings } from "../model";
 
 
 export class PolarModel {
@@ -16,6 +16,13 @@ export class PolarModel {
             charts: this.getChartsModel(options.chart, data[options.data.dataSource].length, designerConfig.chartStyle),
             legend: LegendModel.getLegendModel(config.options.type, config.options.legend.show, config.canvas.size, margin),
             tooltip: options.tooltip
+        }
+    }
+
+    public static getChartSettings(donutSettings: DonutOptionsCanvas): DonutChartSettings {
+        return {
+            ...donutSettings,
+            thickness: { ...donutSettings.thickness }
         }
     }
 
