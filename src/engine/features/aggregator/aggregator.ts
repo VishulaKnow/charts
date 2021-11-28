@@ -59,6 +59,7 @@ export class Aggregator {
             wrapper
                 .append('div')
                 .attr('class', this.aggregatorNameClass)
+                .attr('title', aggregatorInfo.name)
                 .style('text-align', 'center')
                 .style('font-size', '18px')
                 .text(aggregatorInfo.name);

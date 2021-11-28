@@ -191,6 +191,7 @@
 }
 .aggregator-name {
     margin-top: 10px;
+    pointer-events: auto;
 }
 
 /* Grid */

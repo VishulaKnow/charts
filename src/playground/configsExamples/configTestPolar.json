@@ -32,6 +32,9 @@
             },
             "tooltip": {
                 "show": true
+            },
+            "aggregator": {
+                "text": "Сумма"
             }
         }
     }
