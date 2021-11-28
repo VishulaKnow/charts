@@ -7,14 +7,14 @@ describe('DonutHelper', () => {
         const getSize = (width: number, height: number): Size => ({ width, height });
         const getMargin = (margin: number): BlockMargin => ({ top: margin, left: margin, right: margin, bottom: margin });
         const getDefaultDonutSettings = (): DonutChartSettings => ({
-            aggregatorPad: 0,
             padAngle: 0,
             thickness: {
                 max: 60,
                 min: 40,
                 unit: "px",
                 value: null
-            }
+            },
+            aggregator: { margin: 0, text: "" }
         })
 
         test('should return max thickness if donut block size is greater than 400px', () => {

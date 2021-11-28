@@ -164,6 +164,7 @@ export interface TwoDimensionalChart extends ChartSettings {
 export interface PolarChart extends ChartSettings {
     type: PolarChartType;
     data: PolarChartData;
+    aggregator: MdtChartsPolarChartAggregator;
 }
 
 export interface IntervalChart extends ChartSettings {
@@ -187,6 +188,10 @@ export type MdtChartsColorField = string;
 export interface PolarChartData {
     valueField: ValueField;
     colorField?: MdtChartsColorField
+}
+
+export interface MdtChartsPolarChartAggregator {
+    text: string;
 }
 
 

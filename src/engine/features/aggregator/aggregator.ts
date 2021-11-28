@@ -3,7 +3,7 @@ import { interpolateNumber } from 'd3-interpolate';
 import { Selection } from 'd3-selection'
 import { MdtChartsDataRow } from '../../../config/config';
 import { DataType } from '../../../designer/designerConfig';
-import { Field } from "../../../model/model";
+import { DonutChartAggreagorModel, Field } from "../../../model/model";
 import { Block } from "../../block/block";
 import { Helper } from '../../helpers/helper';
 import { ValueFormatter } from '../../valueFormatter';
@@ -13,6 +13,7 @@ export interface AggregatorInfo {
     name: string;
     value: number;
     format: DataType;
+    margin: number;
 }
 
 export class Aggregator {
@@ -21,27 +22,29 @@ export class Aggregator {
     private static readonly aggregatorNameClass = 'aggregator-name';
     private static readonly aggregatorObjectClass = 'aggregator-object';
 
-    public static render(block: Block, data: MdtChartsDataRow[], valueField: Field, innerRadius: number, translate: Translate, fontSize: number, pad: number): void {
+    public static render(block: Block, data: MdtChartsDataRow[], valueField: Field, innerRadius: number, translate: Translate, fontSize: number, settings: DonutChartAggreagorModel): void {
+        const aggregator: AggregatorInfo = {
+            name: settings.text,
+            value: sum(data.map(d => d[valueField.name])),
+            format: valueField.format,
+            margin: settings.margin
+        }
+
+        this.renderText(block, innerRadius, aggregator, translate, fontSize);
+    }
+
+    public static update(block: Block, data: MdtChartsDataRow[], valueField: Field, settings: DonutChartAggreagorModel): void {
         const aggregator: AggregatorInfo = {
             name: 'Сумма',
             value: sum(data.map(d => d[valueField.name])),
-            format: valueField.format
+            format: valueField.format,
+            margin: settings.margin
         }
 
-        this.renderText(block, innerRadius, aggregator, translate, fontSize, pad);
+        this.updateText(block, aggregator);
     }
 
-    public static update(block: Block, data: MdtChartsDataRow[], valueField: Field, pad: number): void {
-        const aggregator: AggregatorInfo = {
-            name: 'Сумма',
-            value: sum(data.map(d => d[valueField.name])),
-            format: valueField.format
-        }
-
-        this.updateText(block, aggregator, pad);
-    }
-
-    private static renderText(block: Block, innerRadius: number, aggregatorInfo: AggregatorInfo, translate: Translate, fontSize: number, pad: number): void {
+    private static renderText(block: Block, innerRadius: number, aggregatorInfo: AggregatorInfo, translate: Translate, fontSize: number): void {
         if (innerRadius > 50) {
             const aggregatorObject = this.renderAggregatorObject(block, innerRadius, translate);
             const wrapper = this.renderWrapper(aggregatorObject);
@@ -60,11 +63,11 @@ export class Aggregator {
                 .style('font-size', '18px')
                 .text(aggregatorInfo.name);
 
-            this.reCalculateAggregatorFontSize(aggregatorObject.node().getBoundingClientRect().width, block, pad);
+            this.reCalculateAggregatorFontSize(aggregatorObject.node().getBoundingClientRect().width, block, aggregatorInfo.margin);
         }
     }
 
-    private static updateText(block: Block, newAggregator: AggregatorInfo, pad: number): void {
+    private static updateText(block: Block, newAggregator: AggregatorInfo): void {
         const aggregatorObject = block.getSvg()
             .select<SVGForeignObjectElement>(`.${this.aggregatorObjectClass}`);
 
@@ -81,7 +84,7 @@ export class Aggregator {
 
                 return t => {
                     this.textContent = ValueFormatter.formatField(newAggregator.format, (interpolateFunc(t)).toFixed(precision));
-                    thisClass.reCalculateAggregatorFontSize(aggregatorObject.node().getBoundingClientRect().width, block, pad);
+                    thisClass.reCalculateAggregatorFontSize(aggregatorObject.node().getBoundingClientRect().width, block, newAggregator.margin);
                 }
             });
     }

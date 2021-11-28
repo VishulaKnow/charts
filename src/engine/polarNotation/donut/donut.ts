@@ -44,7 +44,7 @@ export class Donut {
         this.renderNewArcItems(arcGenerator, pieGenerator, donutBlock, data, chart);
         this.renderClonesG(donutBlock);
 
-        Aggregator.render(block, data, chart.data.valueField, innerRadius, translateAttr, thickness, settings.aggregatorPad);
+        Aggregator.render(block, data, chart.data.valueField, innerRadius, translateAttr, thickness, settings.aggregator);
     }
 
     public static update(block: Block, data: MdtChartsDataRow[], margin: BlockMargin, chart: PolarChartModel, blockSize: Size, donutSettings: DonutChartSettings, keyField: string): Promise<any> {

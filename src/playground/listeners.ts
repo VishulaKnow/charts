@@ -225,7 +225,10 @@ export default class Listeners {
                 chart: {
                     data: this.getDataConfig(notationType),
                     tooltip: this.getTooltipConfig(),
-                    type: 'donut'
+                    type: 'donut',
+                    aggregator: {
+                        text: 'Сумма'
+                    }
                 },
                 tooltip: this.config.options.tooltip
             }

@@ -4,8 +4,8 @@ const configCars: MdtChartsConfig = {
     canvas: {
         class: 'outline',
         size: {
-            width: 800,
-            height: 200
+            width: 450,
+            height: 400
         }
     },
     // options: {
@@ -98,6 +98,9 @@ const configCars: MdtChartsConfig = {
             },
             tooltip: {
                 show: true
+            },
+            aggregator: {
+                text: 'Сумма очень большая прям очент'
             }
         }
     }
