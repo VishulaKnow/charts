@@ -7,6 +7,7 @@ import { LegendModel } from "../featuresModel/legendModel/legendModel";
 import { AdditionalElementsOptions, BlockMargin, DataScope, IntervalChartModel, IntervalOptionsModel } from "../model";
 import { AxisType } from "../modelBuilder";
 import { ScaleModel, ScaleType } from "../featuresModel/scaleModel";
+import { TwoDimensionalModel } from "./twoDimensionalModel";
 
 export class IntervalModel {
     public static getOptions(config: MdtChartsConfig, designerConfig: DesignerConfig, margin: BlockMargin, dataScope: DataScope, data: MdtChartsDataSource): IntervalOptionsModel {
@@ -76,7 +77,8 @@ export class IntervalModel {
             type: options.type,
             charts: this.getChartsModel(options.chart, designerConfig.chartStyle),
             additionalElements: this.getAdditionalElements(options),
-            tooltip: options.tooltip
+            tooltip: options.tooltip,
+            chartSettings: TwoDimensionalModel.getChartsSettings(designerConfig.canvas.chartOptions.bar)
         }
     }
 

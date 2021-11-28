@@ -1,5 +1,5 @@
 import { MdtChartsConfig, MdtChartsDataSource, Size } from '../config/config';
-import { Model, BlockCanvas, ChartBlock, TwoDimensionalOptionsModel, PolarOptionsModel, BlockMargin, DataSettings, ChartElementsSettings, DataFormat, DataScope, IntervalOptionsModel } from './model';
+import { Model, BlockCanvas, ChartBlock, TwoDimensionalOptionsModel, PolarOptionsModel, BlockMargin, DataSettings, TwoDimChartElementsSettings, DataFormat, DataScope, IntervalOptionsModel } from './model';
 import { MarginModel } from './marginModel';
 import { TwoDimensionalModel } from './notations/twoDimensionalModel';
 import { PolarModel } from './notations/polarModel';
@@ -52,12 +52,6 @@ function getDataSettings(dataScope: DataScope, designerConfig: DesignerConfig): 
     }
 }
 
-function getChartSettings(barSettings: BarOptionsCanvas): ChartElementsSettings {
-    return {
-        bar: { ...barSettings }
-    }
-}
-
 function getDataFormat(designerConfig: DesignerConfig): DataFormat {
     return {
         formatters: designerConfig.dataFormat.formatters
@@ -82,8 +76,7 @@ export function assembleModel(config: MdtChartsConfig, data: MdtChartsDataSource
             chartBlock: null,
             otherComponents: null,
             options: null,
-            dataSettings: null,
-            chartSettings: null
+            dataSettings: null
         }
 
     resetFalsyValues(data, config.options.data.keyField.name);
@@ -100,7 +93,6 @@ export function assembleModel(config: MdtChartsConfig, data: MdtChartsDataSource
     const chartBlock = getChartBlock(margin);
     const options = getOptions(config, designerConfig, margin, dataScope, preparedData);
     const dataSettings = getDataSettings(dataScope, designerConfig);
-    const chartSettings = getChartSettings(designerConfig.canvas.chartOptions.bar);
     const transitions = getTransitions(designerConfig);
 
     if (options.type === 'polar')
@@ -114,7 +106,6 @@ export function assembleModel(config: MdtChartsConfig, data: MdtChartsDataSource
         otherComponents,
         options,
         dataSettings,
-        chartSettings,
         transitions
     }
 }

@@ -24,7 +24,7 @@ export class TwoDimensionalManager {
 
         const scales = Scale.getScales(options.scale.key,
             options.scale.value,
-            model.chartSettings.bar);
+            options.chartSettings.bar);
         engine.block.scales = scales;
 
         engine.block.renderSvg(model.blockCanvas.size);
@@ -40,7 +40,7 @@ export class TwoDimensionalManager {
             options.data,
             model.chartBlock.margin,
             options.axis.key.orient,
-            model.chartSettings.bar,
+            options.chartSettings.bar,
             model.blockCanvas.size);
 
         engine.block.filterEventManager.registerEventFor2D(scales.key, model.chartBlock.margin, model.blockCanvas.size, options);
@@ -77,7 +77,7 @@ export class TwoDimensionalManager {
 
         const scales = Scale.getScales(options.scale.key,
             options.scale.value,
-            model.chartSettings.bar);
+            options.chartSettings.bar);
 
         const keyDomainEquality = Helper.checkDomainsEquality(block.scales.key.domain(), scales.key.domain());
         block.scales = scales;
@@ -98,7 +98,7 @@ export class TwoDimensionalManager {
             model.chartBlock.margin,
             options.axis.key.orient,
             model.blockCanvas.size,
-            model.chartSettings.bar);
+            options.chartSettings.bar);
 
         Promise.all(promises)
             .then(() => {

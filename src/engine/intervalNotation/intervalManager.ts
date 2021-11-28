@@ -1,5 +1,5 @@
 import { MdtChartsDataSource } from "../../config/config";
-import { Model, IntervalOptionsModel, IntervalChartModel, OptionsModelData, BlockMargin, Orient, ChartElementsSettings } from "../../model/model";
+import { Model, IntervalOptionsModel, IntervalChartModel, OptionsModelData, BlockMargin, Orient, TwoDimChartElementsSettings } from "../../model/model";
 import { Block } from "../block/block";
 import { Axis } from "../features/axis/axis";
 import { GridLine } from "../features/gridLine/gridLine";
@@ -18,7 +18,7 @@ export class IntervalManager {
 
         const scales = Scale.getScales(options.scale.key,
             options.scale.value,
-            model.chartSettings.bar);
+            options.chartSettings.bar);
 
         Axis.render(block, scales, options.scale, options.axis, model.blockCanvas.size);
 
@@ -31,7 +31,7 @@ export class IntervalManager {
             options.data,
             model.chartBlock.margin,
             options.axis.key.orient,
-            model.chartSettings);
+            options.chartSettings);
 
         Title.render(block,
             options.title,
@@ -46,7 +46,7 @@ export class IntervalManager {
             RecordOverflowAlert.render(block, model.dataSettings.scope.hidedRecordsAmount, 'top', options.orient);
     }
 
-    private static renderCharts(block: Block, charts: IntervalChartModel[], scales: Scales, data: MdtChartsDataSource, dataOptions: OptionsModelData, margin: BlockMargin, keyAxisOrient: Orient, chartSettings: ChartElementsSettings): void {
+    private static renderCharts(block: Block, charts: IntervalChartModel[], scales: Scales, data: MdtChartsDataSource, dataOptions: OptionsModelData, margin: BlockMargin, keyAxisOrient: Orient, chartSettings: TwoDimChartElementsSettings): void {
         block.renderChartsBlock();
         charts.forEach(chart => {
             if (chart.type === 'gantt')

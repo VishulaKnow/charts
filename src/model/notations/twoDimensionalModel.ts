@@ -1,10 +1,10 @@
 import { ChartOrientation, MdtChartsConfig, MdtChartsDataSource, TwoDimensionalChart, TwoDimensionalChartType, TwoDimensionalOptions } from "../../config/config";
-import { ChartStyleConfig, DesignerConfig } from "../../designer/designerConfig";
+import { BarOptionsCanvas, ChartStyleConfig, DesignerConfig } from "../../designer/designerConfig";
 import { ChartStyleModel } from "../chartStyleModel";
 import { AxisModel } from "../featuresModel/axisModel";
 import { LegendModel } from "../featuresModel/legendModel/legendModel";
 import { ScaleModel } from "../featuresModel/scaleModel";
-import { BlockMargin, DataScope, TwoDimensionalOptionsModel, TwoDimensionalChartModel, EmbeddedLabelTypeModel, AdditionalElementsOptions } from "../model";
+import { BlockMargin, DataScope, TwoDimensionalOptionsModel, TwoDimensionalChartModel, EmbeddedLabelTypeModel, AdditionalElementsOptions, TwoDimChartElementsSettings } from "../model";
 
 
 export class TwoDimensionalModel {
@@ -27,7 +27,8 @@ export class TwoDimensionalModel {
             data: { ...options.data },
             charts: this.getChartsModel(options.charts, options.orientation, designerConfig.chartStyle),
             additionalElements: this.getAdditionalElements(options),
-            tooltip: options.tooltip
+            tooltip: options.tooltip,
+            chartSettings: this.getChartsSettings(designerConfig.canvas.chartOptions.bar)
         }
     }
 
@@ -46,6 +47,12 @@ export class TwoDimensionalModel {
     public static sortCharts(charts: TwoDimensionalChart[]): void {
         const chartOrder: TwoDimensionalChartType[] = ['area', 'bar', 'line'];
         charts.sort((chart1, chart2) => chartOrder.indexOf(chart1.type) - chartOrder.indexOf(chart2.type));
+    }
+
+    public static getChartsSettings(barSettings: BarOptionsCanvas): TwoDimChartElementsSettings {
+        return {
+            bar: { ...barSettings }
+        }
     }
 
     private static getChartsModel(charts: TwoDimensionalChart[], chartOrientation: ChartOrientation, chartStyleConfig: ChartStyleConfig): TwoDimensionalChartModel[] {

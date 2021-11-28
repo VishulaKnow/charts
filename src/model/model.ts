@@ -27,7 +27,6 @@ export interface Model {
     options: TwoDimensionalOptionsModel | PolarOptionsModel | IntervalOptionsModel;
     otherComponents: OtherCommonComponents;
     dataSettings: DataSettings;
-    chartSettings: ChartElementsSettings;
     transitions?: Transitions;
 }
 
@@ -62,6 +61,7 @@ export interface TwoDimensionalOptionsModel extends OptionsModel {
     charts: TwoDimensionalChartModel[];
     additionalElements: AdditionalElementsOptions;
     orient: ChartOrientation;
+    chartSettings: TwoDimChartElementsSettings;
 }
 export interface PolarOptionsModel extends OptionsModel {
     type: "polar";
@@ -75,6 +75,7 @@ export interface IntervalOptionsModel extends OptionsModel {
     charts: IntervalChartModel[];
     additionalElements: AdditionalElementsOptions;
     orient: ChartOrientation;
+    chartSettings: TwoDimChartElementsSettings;
 }
 
 //====================================================== Options Model Common
@@ -149,6 +150,26 @@ export interface GridLineFlag {
     value: boolean;
 }
 
+export interface TwoDimChartElementsSettings {
+    bar: BarChartSettings;
+}
+export interface BarChartSettings {
+    groupMaxDistance: number;
+    groupMinDistance: number;
+    barDistance: number;
+    maxBarWidth: number;
+    minBarWidth: number;
+}
+
+//====================================================== PolarOptionsModel
+export interface DonutChartSettings extends Omit<DonutOptionsCanvas, "aggregatorPad"> {
+    aggregator: DonutChartAggreagorModel;
+}
+export interface DonutChartAggreagorModel {
+    margin: number;
+    text: string;
+}
+
 //====================================================== Charts
 interface ChartModel {
     tooltip: TooltipModel;
@@ -215,26 +236,6 @@ export interface DataScope {
 }
 export interface DataFormat {
     formatters: Formatter;
-}
-
-//====================================================== ChartElementsSettings
-export interface ChartElementsSettings {
-    bar: BarChartSettings;
-}
-export interface BarChartSettings {
-    groupMaxDistance: number;
-    groupMinDistance: number;
-    barDistance: number;
-    maxBarWidth: number;
-    minBarWidth: number;
-}
-export interface DonutChartSettings extends Omit<DonutOptionsCanvas, "aggregatorPad"> {
-    aggregator: DonutChartAggreagorModel;
-}
-
-export interface DonutChartAggreagorModel {
-    margin: number;
-    text: string;
 }
 
 //====================================================== OtherComponents
