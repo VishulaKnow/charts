@@ -15,14 +15,19 @@ export class PolarModel {
             data: { ...options.data },
             charts: this.getChartsModel(options.chart, data[options.data.dataSource].length, designerConfig.chartStyle),
             legend: LegendModel.getLegendModel(config.options.type, config.options.legend.show, config.canvas.size, margin),
-            tooltip: options.tooltip
+            tooltip: options.tooltip,
+            chartCanvas: this.getDonutSettings(designerConfig.canvas.chartOptions.donut, options.chart)
         }
     }
 
-    public static getChartSettings(donutSettings: DonutOptionsCanvas): DonutChartSettings {
+    private static getDonutSettings(settings: DonutOptionsCanvas, chartOptions: PolarChart): DonutChartSettings {
         return {
-            ...donutSettings,
-            thickness: { ...donutSettings.thickness }
+            padAngle: settings.padAngle,
+            thickness: { ...settings.thickness },
+            aggregator: {
+                margin: settings.aggregatorPad,
+                text: chartOptions.aggregator.text
+            }
         }
     }
 

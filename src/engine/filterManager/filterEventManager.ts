@@ -49,11 +49,11 @@ export class FilterEventManager {
         SelectHighlighter.clear2D(this.block, options);
     }
 
-    public clearKeysForPolar(margin: BlockMargin, blockSize: Size, options: PolarOptionsModel, donutSettings: DonutChartSettings): void {
+    public clearKeysForPolar(margin: BlockMargin, blockSize: Size, options: PolarOptionsModel): void {
         this.selectedKeys = [];
         if (this.callback)
             this.callback([]);
-        SelectHighlighter.clearPolar(margin, blockSize, this.block, options, Donut.getAllArcGroups(this.block), donutSettings);
+        SelectHighlighter.clearPolar(margin, blockSize, this.block, options, Donut.getAllArcGroups(this.block), options.chartCanvas);
     }
 
     private setKey(key: string): void {
@@ -88,9 +88,9 @@ export class FilterEventManager {
         }
     }
 
-    public setListenerPolar(margin: BlockMargin, blockSize: Size, options: PolarOptionsModel, donutSettings: DonutChartSettings): void {
+    public setListenerPolar(margin: BlockMargin, blockSize: Size, options: PolarOptionsModel): void {
         if (this.filterable) {
-            this.registerEventToDonut(margin, blockSize, options, donutSettings);
+            this.registerEventToDonut(margin, blockSize, options, options.chartCanvas);
             const selectedElems = Donut.getAllArcGroups(this.block).filter(d => this.selectedKeys.findIndex(sid => sid === d.data[options.data.keyField.name]) !== -1);
             this.selectedKeys = [];
             selectedElems.dispatch('click', { bubbles: false, cancelable: true, detail: { multySelect: true } });

@@ -52,10 +52,9 @@ function getDataSettings(dataScope: DataScope, designerConfig: DesignerConfig): 
     }
 }
 
-function getChartSettings(barSettings: BarOptionsCanvas, donutSettings: DonutOptionsCanvas): ChartElementsSettings {
+function getChartSettings(barSettings: BarOptionsCanvas): ChartElementsSettings {
     return {
-        bar: { ...barSettings },
-        donut: PolarModel.getChartSettings(donutSettings)
+        bar: { ...barSettings }
     }
 }
 
@@ -101,7 +100,7 @@ export function assembleModel(config: MdtChartsConfig, data: MdtChartsDataSource
     const chartBlock = getChartBlock(margin);
     const options = getOptions(config, designerConfig, margin, dataScope, preparedData);
     const dataSettings = getDataSettings(dataScope, designerConfig);
-    const chartSettings = getChartSettings(designerConfig.canvas.chartOptions.bar, designerConfig.canvas.chartOptions.donut);
+    const chartSettings = getChartSettings(designerConfig.canvas.chartOptions.bar);
     const transitions = getTransitions(designerConfig);
 
     if (options.type === 'polar')

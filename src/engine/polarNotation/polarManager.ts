@@ -22,17 +22,17 @@ export class PolarManager {
             options.data.dataSource,
             model.chartBlock.margin,
             model.blockCanvas.size,
-            model.chartSettings.donut);
+            options.chartCanvas);
 
         Title.render(engine.block,
             options.title,
             model.otherComponents.titleBlock,
             model.blockCanvas.size);
 
-        Legend.render(engine.block, engine.data, options, model); ``
+        Legend.render(engine.block, engine.data, options, model);
         Tooltip.render(engine.block, model, engine.data, model.otherComponents.tooltipBlock);
 
-        engine.block.filterEventManager.setListenerPolar(model.chartBlock.margin, model.blockCanvas.size, options, model.chartSettings.donut);
+        engine.block.filterEventManager.setListenerPolar(model.chartBlock.margin, model.blockCanvas.size, options);
 
         if (model.dataSettings.scope.hidedRecordsAmount !== 0 && model.options.legend.position !== 'off')
             RecordOverflowAlert.render(engine.block, model.dataSettings.scope.hidedRecordsAmount, model.options.legend.position);
@@ -40,7 +40,7 @@ export class PolarManager {
         engine.block.getSvg()
             .on('click', (e: MouseEvent) => {
                 if (e.target === engine.block.getSvg().node())
-                    engine.block.filterEventManager.clearKeysForPolar(model.chartBlock.margin, model.blockCanvas.size, options, model.chartSettings.donut);
+                    engine.block.filterEventManager.clearKeysForPolar(model.chartBlock.margin, model.blockCanvas.size, options);
             });
     }
 
@@ -56,13 +56,13 @@ export class PolarManager {
 
         const options = <PolarOptionsModel>model.options;
 
-        Donut.update(block, data[options.data.dataSource], model.chartBlock.margin, options.charts[0], model.blockCanvas.size, model.chartSettings.donut, options.data.keyField.name)
+        Donut.update(block, data[options.data.dataSource], model.chartBlock.margin, options.charts[0], model.blockCanvas.size, options.chartCanvas, options.data.keyField.name)
             .then(() => {
                 Tooltip.render(block, model, data, model.otherComponents.tooltipBlock);
-                block.filterEventManager.setListenerPolar(model.chartBlock.margin, model.blockCanvas.size, options, model.chartSettings.donut);
+                block.filterEventManager.setListenerPolar(model.chartBlock.margin, model.blockCanvas.size, options);
             });
 
-        Aggregator.update(block, data[options.data.dataSource], options.charts[0].data.valueField, model.chartSettings.donut.aggregatorPad);
+        Aggregator.update(block, data[options.data.dataSource], options.charts[0].data.valueField, options.chartCanvas.aggregator);
 
         Legend.update(block, data, model);
 

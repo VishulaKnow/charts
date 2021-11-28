@@ -1,5 +1,5 @@
 import { LegendModel } from "./legendModel/legendModel";
-import { OtherComponents } from "../model";
+import { OtherCommonComponents } from "../model";
 import { TitleModel } from "./titleModel";
 import { ElementsOptions } from "../../designer/designerConfig";
 import { TooltipModel } from "./tooltipModel";
@@ -12,7 +12,7 @@ interface OtherComponentsModelDependencies {
 }
 
 export class OtherComponentsModel {
-    public static getOtherComponentsModel(dependencies: OtherComponentsModelDependencies): OtherComponents {
+    public static getOtherComponentsModel(dependencies: OtherComponentsModelDependencies): OtherCommonComponents {
         const titleBlock = TitleModel.getTitleModel(dependencies.title);
         return {
             legendBlock: LegendModel.getBaseLegendBlockModel(dependencies.notation, titleBlock),

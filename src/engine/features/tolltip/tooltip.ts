@@ -73,7 +73,7 @@ export class Tooltip {
                     data,
                     model.blockCanvas.size,
                     model.chartBlock.margin,
-                    DonutHelper.getThickness(model.chartSettings.donut, model.blockCanvas.size, model.chartBlock.margin),
+                    DonutHelper.getThickness(model.options.chartCanvas, model.blockCanvas.size, model.chartBlock.margin),
                     model.otherComponents.tooltipBlock);
             } else if (model.options.type === 'interval') {
                 this.renderTooltipForIntervalCharts(block, data, model.blockCanvas.size, model.chartBlock.margin, scales, model.options, tooltipOptions);

@@ -25,7 +25,7 @@ export interface Model {
     blockCanvas: BlockCanvas;
     chartBlock: ChartBlock;
     options: TwoDimensionalOptionsModel | PolarOptionsModel | IntervalOptionsModel;
-    otherComponents: OtherComponents;
+    otherComponents: OtherCommonComponents;
     dataSettings: DataSettings;
     chartSettings: ChartElementsSettings;
     transitions?: Transitions;
@@ -66,6 +66,7 @@ export interface TwoDimensionalOptionsModel extends OptionsModel {
 export interface PolarOptionsModel extends OptionsModel {
     type: "polar";
     charts: PolarChartModel[];
+    chartCanvas: DonutChartSettings;
 }
 export interface IntervalOptionsModel extends OptionsModel {
     type: "interval";
@@ -219,7 +220,6 @@ export interface DataFormat {
 //====================================================== ChartElementsSettings
 export interface ChartElementsSettings {
     bar: BarChartSettings;
-    donut: DonutChartSettings;
 }
 export interface BarChartSettings {
     groupMaxDistance: number;
@@ -228,10 +228,17 @@ export interface BarChartSettings {
     maxBarWidth: number;
     minBarWidth: number;
 }
-export interface DonutChartSettings extends DonutOptionsCanvas { }
+export interface DonutChartSettings extends Omit<DonutOptionsCanvas, "aggregatorPad"> {
+    aggregator: DonutChartAggreagorModel;
+}
+
+export interface DonutChartAggreagorModel {
+    margin: number;
+    text: string;
+}
 
 //====================================================== OtherComponents
-export interface OtherComponents {
+export interface OtherCommonComponents {
     legendBlock: LegendBlockModel;
     titleBlock: TitleBlockModel;
     tooltipBlock: TooltipSettings;
