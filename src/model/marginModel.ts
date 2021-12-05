@@ -3,24 +3,26 @@ import { DesignerConfig } from "../designer/designerConfig";
 import { AxisModel, LabelSize } from "./featuresModel/axisModel";
 import { DataManagerModel } from "./dataManagerModel";
 import { LegendModel, MIN_DONUT_BLOCK_SIZE } from "./featuresModel/legendModel/legendModel";
-import { BlockMargin, DataScope, LegendBlockModel, Orient, OtherComponents, PolarOptionsModel, TitleBlockModel } from "./model";
+import { BlockMargin, DataScope, LegendBlockModel, Orient, OtherCommonComponents, PolarOptionsModel, TitleBlockModel } from "./model";
 import { AxisType } from "./modelBuilder";
 import { TwoDimensionalModel } from "./notations/twoDimensionalModel";
 import { Size } from "../config/config";
+import { ModelInstance } from "./modelInstance/modelInstance";
 
 export const AXIS_HORIZONTAL_LABEL_PADDING = 15;
 export const AXIS_VERTICAL_LABEL_PADDING = 10;
 
 export class MarginModel {
-    public static getMargin(designerConfig: DesignerConfig, config: MdtChartsConfig, otherComponents: OtherComponents, data: MdtChartsDataSource): BlockMargin {
-        const margin: BlockMargin = { ...designerConfig.canvas.chartBlockMargin }
+    public static initMargin(designerConfig: DesignerConfig, config: MdtChartsConfig, otherComponents: OtherCommonComponents, data: MdtChartsDataSource, modelInstance: ModelInstance): BlockMargin {
+        const canvasModel = modelInstance.canvasModel
+        canvasModel.initMargin({ ...designerConfig.canvas.chartBlockMargin });
 
-        this.recalcMarginWithLegend(margin, config, designerConfig.canvas.legendBlock.maxWidth, otherComponents.legendBlock, data);
-        this.recalcMarginByTitle(margin, otherComponents.titleBlock);
+        this.recalcMarginWithLegend(modelInstance, config, designerConfig.canvas.legendBlock.maxWidth, otherComponents.legendBlock, data);
+        this.recalcMarginByTitle(canvasModel.getMargin(), otherComponents.titleBlock);
 
         if (config.options.type === '2d' || config.options.type === 'interval') {
             const labelSize = this.getHorizontalMarginByAxisLabels(designerConfig.canvas.axisLabel.maxSize.main, config.options.axis, data, config.options);
-            this.recalcVerticalMarginByAxisLabelHeight(labelSize, margin, config.options.orientation, config.options.axis);
+            this.recalcVerticalMarginByAxisLabelHeight(labelSize, canvasModel.getMargin(), config.options.orientation, config.options.axis);
 
             // Если встроенный лейбл показывает ключи, то лейблы оси ключей не показываются
             // При этом все графики должны иметь: embeddedLabels = 'key'
@@ -29,14 +31,15 @@ export class MarginModel {
                 ? !TwoDimensionalModel.getChartsEmbeddedLabelsFlag(config.options.charts, config.options.orientation)
                 : true;
 
-            this.recalcHorizontalMarginByAxisLabelWidth(labelSize, margin, config.options.orientation, config.options.axis, showingFlag);
+            this.recalcHorizontalMarginByAxisLabelWidth(labelSize, canvasModel.getMargin(), config.options.orientation, config.options.axis, showingFlag);
         }
 
-        return margin;
+        return canvasModel.getMargin();
     }
 
-    public static recalcPolarMarginWithScopedData(margin: BlockMargin, blockSize: Size, designerConfig: DesignerConfig, config: MdtChartsConfig, legendBlockModel: LegendBlockModel, dataScope: DataScope, options: PolarOptionsModel): void {
-        let position = LegendModel.getLegendModel(config.options.type, config.options.legend.show, config.canvas.size, margin).position;
+    public static recalcPolarMarginWithScopedData(modelInstance: ModelInstance, blockSize: Size, designerConfig: DesignerConfig, config: MdtChartsConfig, legendBlockModel: LegendBlockModel, dataScope: DataScope, options: PolarOptionsModel): void {
+        const margin = modelInstance.canvasModel.getMargin();
+        let position = LegendModel.getLegendModel(config.options.type, config.options.legend.show, modelInstance.canvasModel).position;
 
         if (position !== 'off') {
             if (position === 'right' && blockSize.width - margin.left - margin.right < MIN_DONUT_BLOCK_SIZE)
@@ -55,15 +58,15 @@ export class MarginModel {
         }
     }
 
-    public static recalcMarginByVerticalAxisLabel(margin: BlockMargin, config: MdtChartsConfig, designerConfig: DesignerConfig, dataScope: DataScope): void {
+    public static recalcMarginByVerticalAxisLabel(modelInstance: ModelInstance, config: MdtChartsConfig, designerConfig: DesignerConfig, dataScope: DataScope): void {
         if ((config.options.type === '2d' || config.options.type === 'interval') && config.options.orientation === 'vertical') {
             const axisLabelSize = AxisModel.getLabelSize(designerConfig.canvas.axisLabel.maxSize.main, dataScope.allowableKeys);
-            const axisConfig = AxisModel.getKeyAxisLabelPosition(margin, config.canvas.size, dataScope.allowableKeys.length);
+            const axisConfig = AxisModel.getKeyAxisLabelPosition(modelInstance.canvasModel, dataScope.allowableKeys.length);
 
             const marginOrient = config.options.axis.key.position === 'end' ? 'bottom' : 'top';
 
             if (axisConfig === 'rotated')
-                margin[marginOrient] += (axisLabelSize.width - axisLabelSize.height);
+                modelInstance.canvasModel.setMarginSide(marginOrient, modelInstance.canvasModel.getMarginSide(marginOrient) + (axisLabelSize.width - axisLabelSize.height));
         }
     }
 
@@ -103,8 +106,9 @@ export class MarginModel {
         }
     }
 
-    private static recalcMarginWithLegend(margin: BlockMargin, config: MdtChartsConfig, legendMaxWidth: number, legendBlockModel: LegendBlockModel, data: MdtChartsDataSource): void {
-        const legendPosition = LegendModel.getLegendModel(config.options.type, config.options.legend.show, config.canvas.size, margin).position;
+    private static recalcMarginWithLegend(modelInstance: ModelInstance, config: MdtChartsConfig, legendMaxWidth: number, legendBlockModel: LegendBlockModel, data: MdtChartsDataSource): void {
+        const margin = modelInstance.canvasModel.getMargin();
+        const legendPosition = LegendModel.getLegendModel(config.options.type, config.options.legend.show, modelInstance.canvasModel).position;
         if (legendPosition !== 'off') {
             const legendItemsContent = this.getLegendItemsContent(config.options, data);
             const legendSize = LegendModel.getLegendSize(config.options.type, legendPosition, legendItemsContent, legendMaxWidth, config.canvas.size, legendBlockModel);

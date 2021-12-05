@@ -3,18 +3,18 @@ import { ChartStyleConfig, DesignerConfig, DonutOptionsCanvas } from "../../desi
 import { ChartStyleModel } from "../chartStyleModel";
 import { LegendModel } from "../featuresModel/legendModel/legendModel";
 import { BlockMargin, PolarOptionsModel, PolarChartModel, DonutChartSettings } from "../model";
+import { ModelInstance } from "../modelInstance/modelInstance";
 
 
 export class PolarModel {
-    public static getOptions(config: MdtChartsConfig, data: MdtChartsDataSource, margin: BlockMargin, designerConfig: DesignerConfig): PolarOptionsModel {
-        const options = <PolarOptions>config.options;
+    public static getOptions(options: PolarOptions, data: MdtChartsDataSource, designerConfig: DesignerConfig, modelInstance: ModelInstance): PolarOptionsModel {
         return {
             type: options.type,
             selectable: !!options.selectable,
             title: options.title,
             data: { ...options.data },
             charts: this.getChartsModel(options.chart, data[options.data.dataSource].length, designerConfig.chartStyle),
-            legend: LegendModel.getLegendModel(config.options.type, config.options.legend.show, config.canvas.size, margin),
+            legend: LegendModel.getLegendModel(options.type, options.legend.show, modelInstance.canvasModel),
             tooltip: options.tooltip,
             chartCanvas: this.getDonutSettings(designerConfig.canvas.chartOptions.donut, options.chart)
         }

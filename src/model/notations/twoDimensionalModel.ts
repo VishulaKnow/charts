@@ -5,23 +5,24 @@ import { AxisModel } from "../featuresModel/axisModel";
 import { LegendModel } from "../featuresModel/legendModel/legendModel";
 import { ScaleModel } from "../featuresModel/scaleModel";
 import { BlockMargin, DataScope, TwoDimensionalOptionsModel, TwoDimensionalChartModel, EmbeddedLabelTypeModel, AdditionalElementsOptions, TwoDimChartElementsSettings } from "../model";
+import { ModelInstance } from "../modelInstance/modelInstance";
 
 
 export class TwoDimensionalModel {
-    public static getOptions(config: MdtChartsConfig, designerConfig: DesignerConfig, margin: BlockMargin, dataScope: DataScope, data: MdtChartsDataSource): TwoDimensionalOptionsModel {
-        const options = <TwoDimensionalOptions>config.options;
+    public static getOptions(options: TwoDimensionalOptions, designerConfig: DesignerConfig, dataScope: DataScope, data: MdtChartsDataSource, modelInstance: ModelInstance): TwoDimensionalOptionsModel {
+        const canvasModel = modelInstance.canvasModel;
         return {
-            legend: LegendModel.getLegendModel(config.options.type, config.options.legend.show, config.canvas.size, margin),
+            legend: LegendModel.getLegendModel(options.type, options.legend.show, canvasModel),
             title: options.title,
             selectable: !!options.selectable,
             orient: options.orientation,
             scale: {
-                key: ScaleModel.getScaleKey(dataScope.allowableKeys, options.orientation, margin, config.canvas.size, options.charts, this.getChartsByType(options.charts, 'bar')),
-                value: ScaleModel.getScaleLinear(options, data, margin, config.canvas.size)
+                key: ScaleModel.getScaleKey(dataScope.allowableKeys, options.orientation, canvasModel, options.charts, this.getChartsByType(options.charts, 'bar')),
+                value: ScaleModel.getScaleLinear(options, data, canvasModel)
             },
             axis: {
-                key: AxisModel.getKeyAxis(options.charts, data, options.data, options.orientation, options.axis.key, designerConfig.canvas.axisLabel, margin, config.canvas.size, designerConfig.elementsOptions.tooltip),
-                value: AxisModel.getValueAxis(options.orientation, options.axis.value, designerConfig.canvas.axisLabel, margin, config.canvas.size)
+                key: AxisModel.getKeyAxis(options.charts, data, options.data, options.orientation, options.axis.key, designerConfig.canvas.axisLabel, canvasModel, designerConfig.elementsOptions.tooltip),
+                value: AxisModel.getValueAxis(options.orientation, options.axis.value, designerConfig.canvas.axisLabel, canvasModel)
             },
             type: options.type,
             data: { ...options.data },

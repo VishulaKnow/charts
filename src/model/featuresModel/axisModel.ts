@@ -1,10 +1,11 @@
-import { AxisPosition, ChartOrientation, DataOptions, MdtChartsDataSource, DiscreteAxisOptions, NumberAxisOptions, Size, TwoDimensionalChart } from "../../config/config";
-import { AxisLabelPosition, AxisModelOptions, BlockMargin, Orient } from "../model";
+import { AxisPosition, ChartOrientation, DataOptions, MdtChartsDataSource, DiscreteAxisOptions, NumberAxisOptions, TwoDimensionalChart } from "../../config/config";
+import { AxisLabelPosition, AxisModelOptions, Orient } from "../model";
 import { ModelHelper } from "../modelHelper";
 import { AxisType, CLASSES } from "../modelBuilder";
 import { DataManagerModel } from "../dataManagerModel";
 import { TwoDimensionalModel } from "../notations/twoDimensionalModel";
 import { AxisLabelCanvas, TooltipSettings } from "../../designer/designerConfig";
+import { CanvasModel } from "../modelInstance/canvasModel";
 
 export interface LabelSize {
     width: number;
@@ -12,19 +13,19 @@ export interface LabelSize {
 }
 
 export class AxisModel {
-    public static getKeyAxis(charts: TwoDimensionalChart[], data: MdtChartsDataSource, dataOptions: DataOptions, orient: ChartOrientation, axisConfig: DiscreteAxisOptions, labelConfig: AxisLabelCanvas, margin: BlockMargin, blockSize: Size, tooltipSettings: TooltipSettings): AxisModelOptions {
+    public static getKeyAxis(charts: TwoDimensionalChart[], data: MdtChartsDataSource, dataOptions: DataOptions, orient: ChartOrientation, axisConfig: DiscreteAxisOptions, labelConfig: AxisLabelCanvas, canvasModel: CanvasModel, tooltipSettings: TooltipSettings): AxisModelOptions {
         return {
             type: 'key',
             orient: AxisModel.getAxisOrient(AxisType.Key, orient, axisConfig.position),
             translate: {
-                translateX: AxisModel.getAxisTranslateX(AxisType.Key, orient, axisConfig.position, margin, blockSize.width),
-                translateY: AxisModel.getAxisTranslateY(AxisType.Key, orient, axisConfig.position, margin, blockSize.height)
+                translateX: AxisModel.getAxisTranslateX(AxisType.Key, orient, axisConfig.position, canvasModel),
+                translateY: AxisModel.getAxisTranslateY(AxisType.Key, orient, axisConfig.position, canvasModel)
             },
             cssClass: 'key-axis',
             ticks: axisConfig.ticks,
             labels: {
                 maxSize: AxisModel.getLabelSize(labelConfig.maxSize.main, data[dataOptions.dataSource].map(d => d[dataOptions.keyField.name])).width,
-                position: AxisModel.getKeyAxisLabelPosition(margin, blockSize, DataManagerModel.getDataValuesByKeyField(data, dataOptions.dataSource, dataOptions.keyField.name).length),
+                position: AxisModel.getKeyAxisLabelPosition(canvasModel, DataManagerModel.getDataValuesByKeyField(data, dataOptions.dataSource, dataOptions.keyField.name).length),
                 visible: !TwoDimensionalModel.getChartsEmbeddedLabelsFlag(charts, orient),
                 defaultTooltip: tooltipSettings.position === 'fixed'
             },
@@ -32,13 +33,13 @@ export class AxisModel {
         }
     }
 
-    public static getValueAxis(orient: ChartOrientation, axisConfig: NumberAxisOptions, labelConfig: AxisLabelCanvas, margin: BlockMargin, blockSize: Size): AxisModelOptions {
+    public static getValueAxis(orient: ChartOrientation, axisConfig: NumberAxisOptions, labelConfig: AxisLabelCanvas, canvasModel: CanvasModel): AxisModelOptions {
         return {
             type: 'value',
             orient: AxisModel.getAxisOrient(AxisType.Value, orient, axisConfig.position),
             translate: {
-                translateX: AxisModel.getAxisTranslateX(AxisType.Value, orient, axisConfig.position, margin, blockSize.width),
-                translateY: AxisModel.getAxisTranslateY(AxisType.Value, orient, axisConfig.position, margin, blockSize.height)
+                translateX: AxisModel.getAxisTranslateX(AxisType.Value, orient, axisConfig.position, canvasModel),
+                translateY: AxisModel.getAxisTranslateY(AxisType.Value, orient, axisConfig.position, canvasModel)
             },
             cssClass: 'value-axis',
             ticks: axisConfig.ticks,
@@ -52,11 +53,11 @@ export class AxisModel {
         }
     }
 
-    public static getAxisLength(chartOrientation: ChartOrientation, margin: BlockMargin, blockSize: Size): number {
+    public static getAxisLength(chartOrientation: ChartOrientation, canvasModel: CanvasModel): number {
         if (chartOrientation === 'horizontal') {
-            return blockSize.height - margin.top - margin.bottom;
+            return canvasModel.getChartBlockHeight();
         } else {
-            return blockSize.width - margin.left - margin.right;
+            return canvasModel.getChartBlockWidth();
         }
     }
 
@@ -71,27 +72,27 @@ export class AxisModel {
         return axisType === AxisType.Key ? 'right' : 'bottom'
     }
 
-    public static getAxisTranslateX(axisType: AxisType, chartOrientation: ChartOrientation, axisPosition: AxisPosition, margin: BlockMargin, blockWidth: number): number {
+    public static getAxisTranslateX(axisType: AxisType, chartOrientation: ChartOrientation, axisPosition: AxisPosition, canvasModel: CanvasModel): number {
         const orient = AxisModel.getAxisOrient(axisType, chartOrientation, axisPosition);
         if (orient === 'top' || orient === 'left')
-            return margin.left;
+            return canvasModel.getMarginSide("left");
         else if (orient === 'bottom')
-            return margin.left;
-        return blockWidth - margin.right;
+            return canvasModel.getMarginSide("left");
+        return canvasModel.getBlockSize().width - canvasModel.getMarginSide("right");
     }
 
-    public static getAxisTranslateY(axisType: AxisType, chartOrientation: ChartOrientation, axisPosition: AxisPosition, margin: BlockMargin, blockHeight: number): number {
+    public static getAxisTranslateY(axisType: AxisType, chartOrientation: ChartOrientation, axisPosition: AxisPosition, canvasModel: CanvasModel): number {
         const orient = AxisModel.getAxisOrient(axisType, chartOrientation, axisPosition);
         if (orient === 'top' || orient === 'left')
-            return margin.top;
+            return canvasModel.getMarginSide("top");
         else if (orient === 'bottom')
-            return blockHeight - margin.bottom;
-        return margin.top;
+            return canvasModel.getBlockSize().height - canvasModel.getMarginSide("bottom");
+        return canvasModel.getMarginSide("top");
     }
 
-    public static getKeyAxisLabelPosition(margin: BlockMargin, blockSize: Size, scopedDataLength: number): AxisLabelPosition {
+    public static getKeyAxisLabelPosition(canvasModel: CanvasModel, scopedDataLength: number): AxisLabelPosition {
         const minBandSize = 50;
-        if ((blockSize.width - margin.left - margin.right) / scopedDataLength < minBandSize)
+        if (canvasModel.getChartBlockWidth() / scopedDataLength < minBandSize)
             return 'rotated';
 
         return 'straight';

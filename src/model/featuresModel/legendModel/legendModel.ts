@@ -1,6 +1,7 @@
 import { ChartNotation, Size } from "../../../config/config";
 import { BlockMargin, ILegendModel, LegendBlockModel, LegendPosition, Orient, TitleBlockModel } from "../../model";
 import { ModelHelper } from "../../modelHelper";
+import { CanvasModel } from "../../modelInstance/canvasModel";
 import { TitleModel } from "../titleModel";
 import { LegendCanvasModel, LegendItemsDirection } from "./legendCanvasModel";
 
@@ -51,13 +52,13 @@ export class LegendModel {
         }
     }
 
-    public static getLegendModel(chartNotation: ChartNotation, legendShow: boolean, blockSize: Size, margin: BlockMargin): ILegendModel {
+    public static getLegendModel(chartNotation: ChartNotation, legendShow: boolean, canvasModel: CanvasModel): ILegendModel {
         let legendPosition: LegendPosition = 'off';
         if (legendShow) {
             if (chartNotation === '2d' || chartNotation === 'interval')
                 legendPosition = 'top';
             else if (chartNotation === 'polar') {
-                legendPosition = blockSize.width - margin.left - margin.right < MIN_DONUT_BLOCK_SIZE ? 'bottom' : 'right';
+                legendPosition = canvasModel.getChartBlockWidth() < MIN_DONUT_BLOCK_SIZE ? 'bottom' : 'right';
             }
         }
 

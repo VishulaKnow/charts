@@ -5,6 +5,7 @@ import { LegendCanvasModel } from "./featuresModel/legendModel/legendCanvasModel
 import { MIN_DONUT_BLOCK_SIZE } from "./featuresModel/legendModel/legendModel";
 import { BlockMargin, DataScope, Field, LegendBlockModel, LegendPosition } from "./model";
 import { ModelHelper } from "./modelHelper";
+import { ModelInstance } from "./modelInstance/modelInstance";
 
 export class DataManagerModel {
     public static getPreparedData(data: MdtChartsDataSource, allowableKeys: string[], config: MdtChartsConfig): MdtChartsDataSource {
@@ -14,11 +15,11 @@ export class DataManagerModel {
         return scopedData;
     }
 
-    public static getDataScope(config: MdtChartsConfig, margin: BlockMargin, data: MdtChartsDataSource, designerConfig: DesignerConfig, legendBlock: LegendBlockModel): DataScope {
+    public static getDataScope(config: MdtChartsConfig, data: MdtChartsDataSource, designerConfig: DesignerConfig, legendBlock: LegendBlockModel, modelInstance: ModelInstance): DataScope {
         if (config.options.type === '2d' || config.options.type === 'interval') {
-            return this.getDataScopeFor2D(config.options, config.canvas.size, margin, data, designerConfig);
+            return this.getDataScopeFor2D(config.options, modelInstance, data, designerConfig);
         } else if (config.options.type === 'polar') {
-            return this.getDataScopeForPolar(config.options, config.canvas.size, margin, data, legendBlock, designerConfig.canvas.legendBlock);
+            return this.getDataScopeForPolar(config.options, modelInstance, data, legendBlock, designerConfig.canvas.legendBlock);
         }
     }
 
@@ -27,7 +28,7 @@ export class DataManagerModel {
     }
 
 
-    private static getDataScopeFor2D(configOptions: TwoDimensionalOptions | IntervalOptions, blockSize: Size, margin: BlockMargin, data: MdtChartsDataSource, designerConfig: DesignerConfig): DataScope {
+    private static getDataScopeFor2D(configOptions: TwoDimensionalOptions | IntervalOptions, modelInstance: ModelInstance, data: MdtChartsDataSource, designerConfig: DesignerConfig): DataScope {
         // Для interval всегда один элемент, так как там может быть только один столбик
         let itemsLength: number = 1;
         if (configOptions.type === '2d') {
@@ -37,7 +38,7 @@ export class DataManagerModel {
         }
 
         if (itemsLength !== 0) {
-            const axisLength = AxisModel.getAxisLength(configOptions.orientation, margin, blockSize);
+            const axisLength = AxisModel.getAxisLength(configOptions.orientation, modelInstance.canvasModel);
             const uniqueKeys = ModelHelper.getUniqueValues(data[configOptions.data.dataSource].map(d => d[configOptions.data.keyField.name]));
             const dataLength = uniqueKeys.length;
 
@@ -56,7 +57,8 @@ export class DataManagerModel {
         }
     }
 
-    private static getDataScopeForPolar(configOptions: PolarOptions, blockSize: Size, margin: BlockMargin, data: MdtChartsDataSource, legendBlock: LegendBlockModel, legendCanvas: LegendBlockCanvas): DataScope {
+    private static getDataScopeForPolar(configOptions: PolarOptions, modelInstance: ModelInstance, data: MdtChartsDataSource, legendBlock: LegendBlockModel, legendCanvas: LegendBlockCanvas): DataScope {
+        const canvas = modelInstance.canvasModel;
         const dataset = data[configOptions.data.dataSource];
         const keyFieldName = configOptions.data.keyField.name;
         const keys = dataset.map(dataRow => dataRow[keyFieldName]);
@@ -69,17 +71,19 @@ export class DataManagerModel {
         }
 
         let position: LegendPosition;
-        if (blockSize.width - margin.left - margin.right >= MIN_DONUT_BLOCK_SIZE)
+        if (canvas.getChartBlockWidth() >= MIN_DONUT_BLOCK_SIZE)
             position = 'right';
         else
             position = 'bottom';
 
         let maxItemsNumber: number;
         if (position === 'right') {
-            maxItemsNumber = LegendCanvasModel.findElementsAmountByLegendSize(keys, position, legendCanvas.maxWidth, blockSize.height - margin.top - margin.bottom);
+            maxItemsNumber = LegendCanvasModel.findElementsAmountByLegendSize(keys, position, legendCanvas.maxWidth, canvas.getChartBlockHeight());
         } else {
-            let marginBottom = margin.bottom - (legendBlock.coordinate.bottom.size === 0 ? legendBlock.coordinate.bottom.size : legendBlock.coordinate.bottom.size - legendBlock.coordinate.bottom.margin.bottom);
-            maxItemsNumber = LegendCanvasModel.findElementsAmountByLegendSize(keys, position, blockSize.width - margin.left - margin.right, blockSize.height - margin.top - marginBottom - legendBlock.coordinate.bottom.margin.bottom - MIN_DONUT_BLOCK_SIZE);
+            const margin = canvas.getMargin();
+            const blockSize = canvas.getBlockSize();
+            const marginBottom = margin.bottom - (legendBlock.coordinate.bottom.size === 0 ? legendBlock.coordinate.bottom.size : legendBlock.coordinate.bottom.size - legendBlock.coordinate.bottom.margin.bottom);
+            maxItemsNumber = LegendCanvasModel.findElementsAmountByLegendSize(keys, position, canvas.getChartBlockWidth(), blockSize.height - margin.top - marginBottom - legendBlock.coordinate.bottom.margin.bottom - MIN_DONUT_BLOCK_SIZE);
         }
 
         return {

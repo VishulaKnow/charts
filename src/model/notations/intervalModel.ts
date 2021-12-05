@@ -8,13 +8,15 @@ import { AdditionalElementsOptions, BlockMargin, DataScope, IntervalChartModel, 
 import { AxisType } from "../modelBuilder";
 import { ScaleModel, ScaleType } from "../featuresModel/scaleModel";
 import { TwoDimensionalModel } from "./twoDimensionalModel";
+import { ModelInstance } from "../modelInstance/modelInstance";
 
 export class IntervalModel {
-    public static getOptions(config: MdtChartsConfig, designerConfig: DesignerConfig, margin: BlockMargin, dataScope: DataScope, data: MdtChartsDataSource): IntervalOptionsModel {
+    public static getOptions(config: MdtChartsConfig, designerConfig: DesignerConfig, margin: BlockMargin, dataScope: DataScope, data: MdtChartsDataSource, modelInstance: ModelInstance): IntervalOptionsModel {
         const options = <IntervalOptions>config.options;
+        const canvasModel = modelInstance.canvasModel;
 
         return {
-            legend: LegendModel.getLegendModel(config.options.type, config.options.legend.show, config.canvas.size, margin),
+            legend: LegendModel.getLegendModel(config.options.type, config.options.legend.show, canvasModel),
             title: options.title,
             selectable: !!options.selectable,
             orient: options.orientation,
@@ -23,7 +25,7 @@ export class IntervalModel {
                     domain: dataScope.allowableKeys,
                     range: {
                         start: 0,
-                        end: ScaleModel.getRangePeek(ScaleType.Key, options.orientation, margin, config.canvas.size)
+                        end: ScaleModel.getRangePeek(ScaleType.Key, options.orientation, canvasModel)
                     },
                     type: 'band',
                     elementsAmount: 1
@@ -32,7 +34,7 @@ export class IntervalModel {
                     domain: ScaleModel.getDateValueDomain(data, options.chart, options.axis.key.position, options.data.dataSource),
                     range: {
                         start: 0,
-                        end: ScaleModel.getRangePeek(ScaleType.Value, options.orientation, margin, config.canvas.size)
+                        end: ScaleModel.getRangePeek(ScaleType.Value, options.orientation, canvasModel)
                     },
                     type: 'datetime'
                 }
@@ -42,14 +44,14 @@ export class IntervalModel {
                     type: 'key',
                     orient: AxisModel.getAxisOrient(AxisType.Key, options.orientation, options.axis.key.position),
                     translate: {
-                        translateX: AxisModel.getAxisTranslateX(AxisType.Key, options.orientation, options.axis.key.position, margin, config.canvas.size.width),
-                        translateY: AxisModel.getAxisTranslateY(AxisType.Key, options.orientation, options.axis.key.position, margin, config.canvas.size.height)
+                        translateX: AxisModel.getAxisTranslateX(AxisType.Key, options.orientation, options.axis.key.position, canvasModel),
+                        translateY: AxisModel.getAxisTranslateY(AxisType.Key, options.orientation, options.axis.key.position, canvasModel)
                     },
                     cssClass: 'key-axis',
                     ticks: options.axis.key.ticks,
                     labels: {
                         maxSize: AxisModel.getLabelSize(designerConfig.canvas.axisLabel.maxSize.main, data[options.data.dataSource].map(d => d[options.data.keyField.name])).width,
-                        position: AxisModel.getKeyAxisLabelPosition(margin, config.canvas.size, DataManagerModel.getDataValuesByKeyField(data, options.data.dataSource, options.data.keyField.name).length),
+                        position: AxisModel.getKeyAxisLabelPosition(canvasModel, DataManagerModel.getDataValuesByKeyField(data, options.data.dataSource, options.data.keyField.name).length),
                         visible: true,
                         defaultTooltip: designerConfig.elementsOptions.tooltip.position === 'fixed'
                     },
@@ -59,8 +61,8 @@ export class IntervalModel {
                     type: 'value',
                     orient: AxisModel.getAxisOrient(AxisType.Value, options.orientation, options.axis.value.position),
                     translate: {
-                        translateX: AxisModel.getAxisTranslateX(AxisType.Value, options.orientation, options.axis.value.position, margin, config.canvas.size.width),
-                        translateY: AxisModel.getAxisTranslateY(AxisType.Value, options.orientation, options.axis.value.position, margin, config.canvas.size.height)
+                        translateX: AxisModel.getAxisTranslateX(AxisType.Value, options.orientation, options.axis.value.position, canvasModel),
+                        translateY: AxisModel.getAxisTranslateY(AxisType.Value, options.orientation, options.axis.value.position, canvasModel)
                     },
                     cssClass: 'value-axis',
                     ticks: options.axis.value.ticks,

@@ -23,7 +23,7 @@ export type DataOptions = {
 
 export interface Model {
     blockCanvas: BlockCanvas;
-    chartBlock: ChartBlock;
+    chartBlock: ChartBlockModel;
     options: TwoDimensionalOptionsModel | PolarOptionsModel | IntervalOptionsModel;
     otherComponents: OtherCommonComponents;
     dataSettings: DataSettings;
@@ -36,7 +36,7 @@ export interface BlockCanvas {
     cssClass: string;
 }
 
-export interface ChartBlock {
+export interface ChartBlockModel {
     margin: BlockMargin;
 }
 export interface BlockMargin {

@@ -2,6 +2,7 @@ import { DataOptions, MdtChartsDataSource, DiscreteAxisOptions, NumberAxisOption
 import { TooltipSettings } from "../../designer/designerConfig";
 import { AxisModel } from "../../model/featuresModel/axisModel";
 import { AxisModelOptions, BlockMargin } from "../../model/model";
+import { CanvasModel } from "../../model/modelInstance/canvasModel";
 
 function getData(): MdtChartsDataSource {
     let data = JSON.parse(`{
@@ -103,7 +104,11 @@ describe('get axes', () => {
     });
 
     test('getKeyAxis should return bottom key axis with straight labels', () => {
-        const result = AxisModel.getKeyAxis(charts, data, dataOptions, 'vertical', descreteAxisOptions, { maxSize: { main: 60 } }, margin, blockSize, tooltipSettings);
+        const canvasModel = new CanvasModel();
+        canvasModel.initMargin(margin);
+        canvasModel.initBlockSize(blockSize);
+
+        const result = AxisModel.getKeyAxis(charts, data, dataOptions, 'vertical', descreteAxisOptions, { maxSize: { main: 60 } }, canvasModel, tooltipSettings);
         const expected: AxisModelOptions = {
             visibility: true,
             type: "key",
@@ -127,9 +132,13 @@ describe('get axes', () => {
     });
 
     test('getKeyAxis should return left key axis with straight labels', () => {
+        const canvasModel = new CanvasModel();
+        canvasModel.initMargin(margin);
+        canvasModel.initBlockSize(blockSize);
+
         descreteAxisOptions.position = 'start';
         tooltipSettings.position = 'followCursor';
-        const result = AxisModel.getKeyAxis(charts, data, dataOptions, 'horizontal', descreteAxisOptions, { maxSize: { main: 60 } }, margin, blockSize, tooltipSettings);
+        const result = AxisModel.getKeyAxis(charts, data, dataOptions, 'horizontal', descreteAxisOptions, { maxSize: { main: 60 } }, canvasModel, tooltipSettings);
         const expected: AxisModelOptions = {
             visibility: true,
             type: "key",
@@ -153,8 +162,12 @@ describe('get axes', () => {
     });
 
     test('getValueAxis should return left axis', () => {
+        const canvasModel = new CanvasModel();
+        canvasModel.initMargin(margin);
+        canvasModel.initBlockSize(blockSize);
+
         numberAxisOptions.position = 'start';
-        const result = AxisModel.getValueAxis('vertical', numberAxisOptions, { maxSize: { main: 60 } }, margin, blockSize);
+        const result = AxisModel.getValueAxis('vertical', numberAxisOptions, { maxSize: { main: 60 } }, canvasModel);
         const expected: AxisModelOptions = {
             visibility: true,
             type: "value",
@@ -178,7 +191,11 @@ describe('get axes', () => {
     });
 
     test('getValueAxis should return right axis', () => {
-        const result = AxisModel.getValueAxis('vertical', numberAxisOptions, { maxSize: { main: 60 } }, margin, blockSize);
+        const canvasModel = new CanvasModel();
+        canvasModel.initMargin(margin);
+        canvasModel.initBlockSize(blockSize);
+
+        const result = AxisModel.getValueAxis('vertical', numberAxisOptions, { maxSize: { main: 60 } }, canvasModel);
         const expected: AxisModelOptions = {
             visibility: true,
             type: "value",

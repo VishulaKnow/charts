@@ -1,5 +1,6 @@
 import { MdtChartsDataSource, TwoDimensionalChart, TwoDimensionalOptions } from "../../config/config";
 import { ScaleModel } from "../../model/featuresModel/scaleModel";
+import { CanvasModel } from "../../model/modelInstance/canvasModel";
 
 function getData(): MdtChartsDataSource {
     let data = JSON.parse(`{
@@ -522,7 +523,11 @@ describe('get scales tests', () => {
     });
 
     test('get scale key band', () => {
-        const result = ScaleModel.getScaleKey(['BMW', 'LADA', 'MECEDES'], 'vertical', { bottom: 20, left: 20, right: 20, top: 20 }, { height: 500, width: 1000 }, charts, charts.filter(chart => chart.type === 'bar'));
+        const canvasModel = new CanvasModel();
+        canvasModel.initMargin({ bottom: 20, left: 20, right: 20, top: 20 });
+        canvasModel.initBlockSize({ height: 500, width: 1000 });
+
+        const result = ScaleModel.getScaleKey(['BMW', 'LADA', 'MECEDES'], 'vertical', canvasModel, charts, charts.filter(chart => chart.type === 'bar'));
         expect(result).toEqual({
             domain: ['BMW', 'LADA', 'MECEDES'],
             range: {
@@ -535,8 +540,12 @@ describe('get scales tests', () => {
     });
 
     test('get scale key', () => {
+        const canvasModel = new CanvasModel();
+        canvasModel.initMargin({ bottom: 20, left: 20, right: 20, top: 20 });
+        canvasModel.initBlockSize({ height: 500, width: 1000 });
+
         charts[1].type = 'line'
-        const result = ScaleModel.getScaleKey(['BMW', 'LADA', 'MECEDES'], 'vertical', { bottom: 20, left: 20, right: 20, top: 20 }, { height: 500, width: 1000 }, charts, charts.filter(chart => chart.type === 'bar'));
+        const result = ScaleModel.getScaleKey(['BMW', 'LADA', 'MECEDES'], 'vertical', canvasModel, charts, charts.filter(chart => chart.type === 'bar'));
         expect(result).toEqual({
             domain: ['BMW', 'LADA', 'MECEDES'],
             range: {
@@ -549,7 +558,11 @@ describe('get scales tests', () => {
     });
 
     test('get scale linear', () => {
-        const result = ScaleModel.getScaleLinear(options, data, { bottom: 20, left: 20, right: 20, top: 20 }, { height: 500, width: 1000 });
+        const canvasModel = new CanvasModel();
+        canvasModel.initMargin({ bottom: 20, left: 20, right: 20, top: 20 });
+        canvasModel.initBlockSize({ height: 500, width: 1000 });
+
+        const result = ScaleModel.getScaleLinear(options, data, canvasModel);
         expect(result).toEqual({
             domain: [0, 120],
             range: {

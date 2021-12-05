@@ -1,5 +1,5 @@
 import { MdtChartsConfig, MdtChartsDataSource, Size } from '../config/config';
-import { Model, BlockCanvas, ChartBlock, TwoDimensionalOptionsModel, PolarOptionsModel, BlockMargin, DataSettings, TwoDimChartElementsSettings, DataFormat, DataScope, IntervalOptionsModel } from './model';
+import { Model, BlockCanvas, ChartBlockModel, TwoDimensionalOptionsModel, PolarOptionsModel, BlockMargin, DataSettings, TwoDimChartElementsSettings, DataFormat, DataScope, IntervalOptionsModel } from './model';
 import { MarginModel } from './marginModel';
 import { TwoDimensionalModel } from './notations/twoDimensionalModel';
 import { PolarModel } from './notations/polarModel';
@@ -8,6 +8,7 @@ import { BarOptionsCanvas, DesignerConfig, DonutOptionsCanvas, Transitions } fro
 import { IntervalModel } from './notations/intervalModel';
 import { OtherComponentsModel } from './featuresModel/otherComponents';
 import { ConfigValidator } from './configsValidator/configValidator';
+import { ModelInstance } from './modelInstance/modelInstance';
 
 
 export enum AxisType {
@@ -21,27 +22,29 @@ export const CLASSES = {
     legendItem: 'legend-item',
 }
 
-function getBlockCanvas(config: MdtChartsConfig): BlockCanvas {
-    const size: Size = ConfigValidator.validateCanvasSize(config.canvas.size) ? { ...config.canvas.size } : { width: 0, height: 0 }
+function getBlockCanvas(config: MdtChartsConfig, modelInstance: ModelInstance): BlockCanvas {
+    const emptyBlockParams: Size = { width: 0, height: 0 };
+    const size: Size = ConfigValidator.validateCanvasSize(modelInstance.canvasModel.getBlockSize()) ? { ...modelInstance.canvasModel.getBlockSize() } : emptyBlockParams
     return {
         size,
         cssClass: config.canvas.class
     }
 }
 
-function getChartBlock(margin: BlockMargin): ChartBlock {
+function getChartBlockModel(modelInstance: ModelInstance): ChartBlockModel {
     return {
-        margin
+        margin: modelInstance.canvasModel.getMargin()
     }
 }
 
-function getOptions(config: MdtChartsConfig, designerConfig: DesignerConfig, margin: BlockMargin, dataScope: DataScope, data: MdtChartsDataSource): TwoDimensionalOptionsModel | PolarOptionsModel | IntervalOptionsModel {
+function getOptions(config: MdtChartsConfig, designerConfig: DesignerConfig, modelInstance: ModelInstance, dataScope: DataScope, data: MdtChartsDataSource): TwoDimensionalOptionsModel | PolarOptionsModel | IntervalOptionsModel {
+    //TODO: migrate to polymorphism
     if (config.options.type === '2d') {
-        return TwoDimensionalModel.getOptions(config, designerConfig, margin, dataScope, data);
+        return TwoDimensionalModel.getOptions(config.options, designerConfig, dataScope, data, modelInstance);
     } else if (config.options.type === 'polar') {
-        return PolarModel.getOptions(config, data, margin, designerConfig);
+        return PolarModel.getOptions(config.options, data, designerConfig, modelInstance);
     } else if (config.options.type === 'interval') {
-        return IntervalModel.getOptions(config, designerConfig, margin, dataScope, data)
+        return IntervalModel.getOptions(config, designerConfig, modelInstance.canvasModel.getMargin(), dataScope, data, modelInstance)
     }
 }
 
@@ -62,17 +65,13 @@ function getTransitions(designerConfig: DesignerConfig): Transitions {
     return designerConfig.transitions;
 }
 
-function roundMargin(margin: BlockMargin): void {
-    margin.top = Math.ceil(margin.top);
-    margin.bottom = Math.ceil(margin.bottom);
-    margin.left = Math.ceil(margin.left);
-    margin.right = Math.ceil(margin.right);
-}
-
 export function assembleModel(config: MdtChartsConfig, data: MdtChartsDataSource, designerConfig: DesignerConfig): Model {
+    const modelInstance = new ModelInstance();
+    modelInstance.canvasModel.initBlockSize(config.canvas.size);
+
     if (!data || Object.keys(data).length === 0)
         return {
-            blockCanvas: getBlockCanvas(config),
+            blockCanvas: getBlockCanvas(config, modelInstance),
             chartBlock: null,
             otherComponents: null,
             options: null,
@@ -82,23 +81,23 @@ export function assembleModel(config: MdtChartsConfig, data: MdtChartsDataSource
     resetFalsyValues(data, config.options.data.keyField.name);
 
     const otherComponents = OtherComponentsModel.getOtherComponentsModel({ elementsOptions: designerConfig.elementsOptions, notation: config.options.type, title: config.options.title });
-    const margin = MarginModel.getMargin(designerConfig, config, otherComponents, data);
-    const dataScope = DataManagerModel.getDataScope(config, margin, data, designerConfig, otherComponents.legendBlock);
+    MarginModel.initMargin(designerConfig, config, otherComponents, data, modelInstance);
+    const dataScope = DataManagerModel.getDataScope(config, data, designerConfig, otherComponents.legendBlock, modelInstance);
     const preparedData = DataManagerModel.getPreparedData(data, dataScope.allowableKeys, config);
 
     if (config.options.type === '2d' && config.options.axis.key.visibility)
-        MarginModel.recalcMarginByVerticalAxisLabel(margin, config, designerConfig, dataScope);
+        MarginModel.recalcMarginByVerticalAxisLabel(modelInstance, config, designerConfig, dataScope);
 
-    const blockCanvas = getBlockCanvas(config);
-    const chartBlock = getChartBlock(margin);
-    const options = getOptions(config, designerConfig, margin, dataScope, preparedData);
+    const blockCanvas = getBlockCanvas(config, modelInstance);
+    const chartBlock = getChartBlockModel(modelInstance);
+    const options = getOptions(config, designerConfig, modelInstance, dataScope, preparedData);
     const dataSettings = getDataSettings(dataScope, designerConfig);
     const transitions = getTransitions(designerConfig);
 
     if (options.type === 'polar')
-        MarginModel.recalcPolarMarginWithScopedData(margin, config.canvas.size, designerConfig, config, otherComponents.legendBlock, dataScope, options);
+        MarginModel.recalcPolarMarginWithScopedData(modelInstance, config.canvas.size, designerConfig, config, otherComponents.legendBlock, dataScope, options);
 
-    roundMargin(margin);
+    modelInstance.canvasModel.roundMargin();
 
     return {
         blockCanvas,

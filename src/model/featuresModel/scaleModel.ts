@@ -1,44 +1,45 @@
 import { ModelHelper } from "../modelHelper";
 import { BlockMargin, ScaleKeyModel, ScaleKeyType, ScaleValueModel, ScaleValueType } from "../model";
 import { AxisPosition, NumberDomain, IntervalChart, TwoDimensionalChart, TwoDimensionalOptions, Size, ChartOrientation, MdtChartsDataSource } from "../../config/config";
+import { CanvasModel } from "../modelInstance/canvasModel";
 
 export enum ScaleType {
     Key, Value
 }
 
 export class ScaleModel {
-    public static getScaleKey(allowableKeys: string[], orient: ChartOrientation, margin: BlockMargin, blockSize: Size, charts: TwoDimensionalChart[], barCharts: TwoDimensionalChart[]): ScaleKeyModel {
+    public static getScaleKey(allowableKeys: string[], orient: ChartOrientation, canvasModel: CanvasModel, charts: TwoDimensionalChart[], barCharts: TwoDimensionalChart[]): ScaleKeyModel {
         return {
             domain: allowableKeys,
             range: {
                 start: 0,
-                end: ScaleModel.getRangePeek(ScaleType.Key, orient, margin, blockSize)
+                end: ScaleModel.getRangePeek(ScaleType.Key, orient, canvasModel)
             },
             type: ScaleModel.getScaleKeyType(charts),
             elementsAmount: this.getElementsAmount(barCharts)
         }
     }
 
-    public static getScaleLinear(options: TwoDimensionalOptions, data: MdtChartsDataSource, margin: BlockMargin, blockSize: Size): ScaleValueModel {
+    public static getScaleLinear(options: TwoDimensionalOptions, data: MdtChartsDataSource, canvasModel: CanvasModel): ScaleValueModel {
         return {
             domain: ScaleModel.getLinearDomain(options.axis.value.domain, data, options),
             range: {
                 start: 0,
-                end: ScaleModel.getRangePeek(ScaleType.Value, options.orientation, margin, blockSize)
+                end: ScaleModel.getRangePeek(ScaleType.Value, options.orientation, canvasModel)
             },
             type: ScaleModel.getScaleValueType(options.charts)
         }
     }
 
-    public static getRangePeek(scaleType: ScaleType, chartOrientation: string, margin: BlockMargin, blockSize: Size): number {
+    public static getRangePeek(scaleType: ScaleType, chartOrientation: string, canvasModel: CanvasModel): number {
         if (chartOrientation === 'vertical')
             return scaleType === ScaleType.Key
-                ? blockSize.width - margin.left - margin.right
-                : blockSize.height - margin.top - margin.bottom;
+                ? canvasModel.getChartBlockWidth()
+                : canvasModel.getChartBlockHeight();
 
         return scaleType === ScaleType.Key
-            ? blockSize.height - margin.top - margin.bottom
-            : blockSize.width - margin.left - margin.right;
+            ? canvasModel.getChartBlockHeight()
+            : canvasModel.getChartBlockWidth();
     }
 
     public static getDateValueDomain(data: MdtChartsDataSource, chart: IntervalChart, keyAxisPosition: AxisPosition, dataSource: string): [Date, Date] {
