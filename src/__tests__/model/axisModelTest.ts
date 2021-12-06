@@ -2,7 +2,7 @@ import { DataOptions, MdtChartsDataSource, DiscreteAxisOptions, NumberAxisOption
 import { TooltipSettings } from "../../designer/designerConfig";
 import { AxisModel } from "../../model/featuresModel/axisModel";
 import { AxisModelOptions, BlockMargin } from "../../model/model";
-import { CanvasModel } from "../../model/modelInstance/canvasModel";
+import { CanvasModel } from "../../model/modelInstance/canvasModel/canvasModel";
 
 function getData(): MdtChartsDataSource {
     let data = JSON.parse(`{

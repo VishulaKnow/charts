@@ -1,7 +1,7 @@
 import { ModelHelper } from "../modelHelper";
 import { BlockMargin, ScaleKeyModel, ScaleKeyType, ScaleValueModel, ScaleValueType } from "../model";
 import { AxisPosition, NumberDomain, IntervalChart, TwoDimensionalChart, TwoDimensionalOptions, Size, ChartOrientation, MdtChartsDataSource } from "../../config/config";
-import { CanvasModel } from "../modelInstance/canvasModel";
+import { CanvasModel } from "../modelInstance/canvasModel/canvasModel";
 
 export enum ScaleType {
     Key, Value

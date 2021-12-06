@@ -81,9 +81,8 @@ export class DataManagerModel {
             maxItemsNumber = LegendCanvasModel.findElementsAmountByLegendSize(keys, position, legendCanvas.maxWidth, canvas.getChartBlockHeight());
         } else {
             const margin = canvas.getMargin();
-            const blockSize = canvas.getBlockSize();
-            const marginBottom = margin.bottom - (legendBlock.coordinate.bottom.size === 0 ? legendBlock.coordinate.bottom.size : legendBlock.coordinate.bottom.size - legendBlock.coordinate.bottom.margin.bottom);
-            maxItemsNumber = LegendCanvasModel.findElementsAmountByLegendSize(keys, position, canvas.getChartBlockWidth(), blockSize.height - margin.top - marginBottom - legendBlock.coordinate.bottom.margin.bottom - MIN_DONUT_BLOCK_SIZE);
+            const marginBottomWithoutLegendBlock = margin.bottom - (legendBlock.coordinate.bottom.size === 0 ? legendBlock.coordinate.bottom.size : legendBlock.coordinate.bottom.size - legendBlock.coordinate.bottom.margin.bottom);
+            maxItemsNumber = LegendCanvasModel.findElementsAmountByLegendSize(keys, position, canvas.getChartBlockWidth(), canvas.getBlockSize().height - margin.top - marginBottomWithoutLegendBlock - legendBlock.coordinate.bottom.margin.bottom - MIN_DONUT_BLOCK_SIZE);
         }
 
         return {

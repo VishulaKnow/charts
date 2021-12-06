@@ -1,6 +1,6 @@
 import { MdtChartsDataSource, TwoDimensionalChart, TwoDimensionalOptions } from "../../config/config";
 import { ScaleModel } from "../../model/featuresModel/scaleModel";
-import { CanvasModel } from "../../model/modelInstance/canvasModel";
+import { CanvasModel } from "../../model/modelInstance/canvasModel/canvasModel";
 
 function getData(): MdtChartsDataSource {
     let data = JSON.parse(`{

@@ -3,26 +3,26 @@ import { DesignerConfig } from "../designer/designerConfig";
 import { AxisModel, LabelSize } from "./featuresModel/axisModel";
 import { DataManagerModel } from "./dataManagerModel";
 import { LegendModel, MIN_DONUT_BLOCK_SIZE } from "./featuresModel/legendModel/legendModel";
-import { BlockMargin, DataScope, LegendBlockModel, Orient, OtherCommonComponents, PolarOptionsModel, TitleBlockModel } from "./model";
+import { DataScope, LegendBlockModel, Orient, OtherCommonComponents, PolarOptionsModel, TitleBlockModel } from "./model";
 import { AxisType } from "./modelBuilder";
 import { TwoDimensionalModel } from "./notations/twoDimensionalModel";
-import { Size } from "../config/config";
 import { ModelInstance } from "./modelInstance/modelInstance";
+import { CanvasModel } from "./modelInstance/canvasModel/canvasModel";
 
 export const AXIS_HORIZONTAL_LABEL_PADDING = 15;
 export const AXIS_VERTICAL_LABEL_PADDING = 10;
 
 export class MarginModel {
-    public static initMargin(designerConfig: DesignerConfig, config: MdtChartsConfig, otherComponents: OtherCommonComponents, data: MdtChartsDataSource, modelInstance: ModelInstance): BlockMargin {
-        const canvasModel = modelInstance.canvasModel
+    public static initMargin(designerConfig: DesignerConfig, config: MdtChartsConfig, otherComponents: OtherCommonComponents, data: MdtChartsDataSource, modelInstance: ModelInstance): void {
+        const canvasModel = modelInstance.canvasModel;
         canvasModel.initMargin({ ...designerConfig.canvas.chartBlockMargin });
 
         this.recalcMarginWithLegend(modelInstance, config, designerConfig.canvas.legendBlock.maxWidth, otherComponents.legendBlock, data);
-        this.recalcMarginByTitle(canvasModel.getMargin(), otherComponents.titleBlock);
+        this.recalcMarginByTitle(canvasModel, otherComponents.titleBlock);
 
         if (config.options.type === '2d' || config.options.type === 'interval') {
             const labelSize = this.getHorizontalMarginByAxisLabels(designerConfig.canvas.axisLabel.maxSize.main, config.options.axis, data, config.options);
-            this.recalcVerticalMarginByAxisLabelHeight(labelSize, canvasModel.getMargin(), config.options.orientation, config.options.axis);
+            this.recalcVerticalMarginByAxisLabelHeight(labelSize, canvasModel, config.options.orientation, config.options.axis);
 
             // Если встроенный лейбл показывает ключи, то лейблы оси ключей не показываются
             // При этом все графики должны иметь: embeddedLabels = 'key'
@@ -31,28 +31,26 @@ export class MarginModel {
                 ? !TwoDimensionalModel.getChartsEmbeddedLabelsFlag(config.options.charts, config.options.orientation)
                 : true;
 
-            this.recalcHorizontalMarginByAxisLabelWidth(labelSize, canvasModel.getMargin(), config.options.orientation, config.options.axis, showingFlag);
+            this.recalcHorizontalMarginByAxisLabelWidth(labelSize, canvasModel, config.options.orientation, config.options.axis, showingFlag);
         }
-
-        return canvasModel.getMargin();
     }
 
-    public static recalcPolarMarginWithScopedData(modelInstance: ModelInstance, blockSize: Size, designerConfig: DesignerConfig, config: MdtChartsConfig, legendBlockModel: LegendBlockModel, dataScope: DataScope, options: PolarOptionsModel): void {
-        const margin = modelInstance.canvasModel.getMargin();
+    public static recalcPolarMarginWithScopedData(modelInstance: ModelInstance, designerConfig: DesignerConfig, config: MdtChartsConfig, legendBlockModel: LegendBlockModel, dataScope: DataScope, options: PolarOptionsModel): void {
+        const canvasModel = modelInstance.canvasModel;
         let position = LegendModel.getLegendModel(config.options.type, config.options.legend.show, modelInstance.canvasModel).position;
 
         if (position !== 'off') {
-            if (position === 'right' && blockSize.width - margin.left - margin.right < MIN_DONUT_BLOCK_SIZE)
+            if (position === 'right' && canvasModel.getChartBlockWidth() < MIN_DONUT_BLOCK_SIZE)
                 position = 'bottom';
 
-            this.clearMarginByLegendBlockPosition(margin, legendBlockModel);
+            this.clearMarginByLegendBlockPosition(canvasModel, legendBlockModel);
 
             let allowableKeys = [...dataScope.allowableKeys];
             if (dataScope.hidedRecordsAmount !== 0 && position === 'bottom')
                 allowableKeys.push('1'); // Если есть спрятанные записи, то в массив добавляется объект, чтобы выделить место в легенде для индикатора переполнения
 
             const legendSize = LegendModel.getLegendSize(config.options.type, position, allowableKeys, designerConfig.canvas.legendBlock.maxWidth, config.canvas.size, legendBlockModel);
-            margin[position] += legendSize + legendBlockModel.coordinate[position].margin[position];
+            canvasModel.increaseMarginSide(position, legendSize + legendBlockModel.coordinate[position].margin[position])
             legendBlockModel.coordinate[position].size = legendSize;
             options.legend.position = position;
         }
@@ -83,40 +81,40 @@ export class MarginModel {
         return AxisModel.getLabelSize(labelsMaxWidth, labelsTexts);
     }
 
-    private static recalcVerticalMarginByAxisLabelHeight(labelSize: LabelSize, margin: BlockMargin, orientation: ChartOrientation, axis: TwoDimensionalAxis | IntervalAxis): void {
+    private static recalcVerticalMarginByAxisLabelHeight(labelSize: LabelSize, canvasModel: CanvasModel, orientation: ChartOrientation, axis: TwoDimensionalAxis | IntervalAxis): void {
         const keyAxisOrient = AxisModel.getAxisOrient(AxisType.Key, orientation, axis.key.position);
         const valueAxisOrient = AxisModel.getAxisOrient(AxisType.Value, orientation, axis.value.position);
 
         if ((keyAxisOrient === 'bottom' || keyAxisOrient === 'top')) {
             if (axis.key.visibility)
-                margin[keyAxisOrient] += labelSize.height + AXIS_HORIZONTAL_LABEL_PADDING;
-        } else if (axis.value.visibility) {
-            margin[valueAxisOrient] += labelSize.height + AXIS_HORIZONTAL_LABEL_PADDING;
-        }
+                canvasModel.increaseMarginSide(keyAxisOrient, labelSize.height + AXIS_HORIZONTAL_LABEL_PADDING);
+        } else if (axis.value.visibility)
+            canvasModel.increaseMarginSide(valueAxisOrient, labelSize.height + AXIS_HORIZONTAL_LABEL_PADDING);
     }
 
-    private static recalcHorizontalMarginByAxisLabelWidth(labelSize: LabelSize, margin: BlockMargin, orientation: ChartOrientation, axis: TwoDimensionalAxis | IntervalAxis, isShow: boolean): void {
+    private static recalcHorizontalMarginByAxisLabelWidth(labelSize: LabelSize, canvasModel: CanvasModel, orientation: ChartOrientation, axis: TwoDimensionalAxis | IntervalAxis, isShow: boolean): void {
         const keyAxisOrient = AxisModel.getAxisOrient(AxisType.Key, orientation, axis.key.position);
         const valueAxisOrient = AxisModel.getAxisOrient(AxisType.Value, orientation, axis.value.position);
 
         if ((keyAxisOrient === 'left' || keyAxisOrient === 'right') && isShow && axis.key.visibility) {
-            margin[keyAxisOrient] += labelSize.width + AXIS_VERTICAL_LABEL_PADDING;
+            canvasModel.increaseMarginSide(keyAxisOrient, labelSize.width + AXIS_VERTICAL_LABEL_PADDING);
         } else if ((valueAxisOrient === 'left' || valueAxisOrient === 'right') && axis.value.visibility) {
-            margin[valueAxisOrient] += labelSize.width + AXIS_VERTICAL_LABEL_PADDING;
+            canvasModel.increaseMarginSide(valueAxisOrient, labelSize.width + AXIS_VERTICAL_LABEL_PADDING);
         }
     }
 
     private static recalcMarginWithLegend(modelInstance: ModelInstance, config: MdtChartsConfig, legendMaxWidth: number, legendBlockModel: LegendBlockModel, data: MdtChartsDataSource): void {
-        const margin = modelInstance.canvasModel.getMargin();
+        const canvasModel = modelInstance.canvasModel;
+
         const legendPosition = LegendModel.getLegendModel(config.options.type, config.options.legend.show, modelInstance.canvasModel).position;
         if (legendPosition !== 'off') {
             const legendItemsContent = this.getLegendItemsContent(config.options, data);
-            const legendSize = LegendModel.getLegendSize(config.options.type, legendPosition, legendItemsContent, legendMaxWidth, config.canvas.size, legendBlockModel);
+            const legendSize = LegendModel.getLegendSize(config.options.type, legendPosition, legendItemsContent, legendMaxWidth, canvasModel.getBlockSize(), legendBlockModel);
 
-            margin[legendPosition] += legendSize;
+            canvasModel.increaseMarginSide(legendPosition, legendSize);
 
             if (legendSize !== 0)
-                this.appendToGlobalMarginValuesLegendMargin(margin, legendPosition, legendBlockModel);
+                this.appendToGlobalMarginValuesLegendMargin(canvasModel, legendPosition, legendBlockModel);
 
             legendBlockModel.coordinate[legendPosition].size = legendSize;
         }
@@ -136,24 +134,25 @@ export class MarginModel {
         }
     }
 
-    private static appendToGlobalMarginValuesLegendMargin(margin: BlockMargin, position: Orient, legendBlockModel: LegendBlockModel): void {
+    private static appendToGlobalMarginValuesLegendMargin(canvasModel: CanvasModel, position: Orient, legendBlockModel: LegendBlockModel): void {
         const legendCoordinate = legendBlockModel.coordinate;
         if (position === 'left' || position === 'right')
-            margin[position] += legendCoordinate[position].margin.left + legendCoordinate[position].margin.right;
+            canvasModel.increaseMarginSide(position, legendCoordinate[position].margin.left + legendCoordinate[position].margin.right);
         else
-            margin[position] += legendCoordinate[position].margin.top + legendCoordinate[position].margin.bottom;
+            canvasModel.increaseMarginSide(position, legendCoordinate[position].margin.top + legendCoordinate[position].margin.bottom)
     }
 
-    private static clearMarginByLegendBlockPosition(margin: BlockMargin, legendBlockModel: LegendBlockModel): void {
+    private static clearMarginByLegendBlockPosition(canvasModel: CanvasModel, legendBlockModel: LegendBlockModel): void {
         const legendCoordinate = legendBlockModel.coordinate;
         ['left', 'right', 'top', 'bottom'].forEach((position: Orient) => {
-            margin[position] -= legendCoordinate[position].size === 0
+            const decreaseByValue = legendCoordinate[position].size === 0
                 ? 0
                 : legendCoordinate[position].size + legendCoordinate[position].margin[position];
+            canvasModel.descreaseMarginSide(position, decreaseByValue);
         });
     }
 
-    private static recalcMarginByTitle(margin: BlockMargin, titleBlockModel: TitleBlockModel): void {
-        margin.top += titleBlockModel.margin.top + titleBlockModel.size;
+    private static recalcMarginByTitle(canvasModel: CanvasModel, titleBlockModel: TitleBlockModel): void {
+        canvasModel.increaseMarginSide("top", titleBlockModel.margin.top + titleBlockModel.size);
     }
 }

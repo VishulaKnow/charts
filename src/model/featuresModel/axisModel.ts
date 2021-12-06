@@ -5,7 +5,7 @@ import { AxisType, CLASSES } from "../modelBuilder";
 import { DataManagerModel } from "../dataManagerModel";
 import { TwoDimensionalModel } from "../notations/twoDimensionalModel";
 import { AxisLabelCanvas, TooltipSettings } from "../../designer/designerConfig";
-import { CanvasModel } from "../modelInstance/canvasModel";
+import { CanvasModel } from "../modelInstance/canvasModel/canvasModel";
 
 export interface LabelSize {
     width: number;

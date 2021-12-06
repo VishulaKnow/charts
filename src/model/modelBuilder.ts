@@ -66,8 +66,7 @@ function getTransitions(designerConfig: DesignerConfig): Transitions {
 }
 
 export function assembleModel(config: MdtChartsConfig, data: MdtChartsDataSource, designerConfig: DesignerConfig): Model {
-    const modelInstance = new ModelInstance();
-    modelInstance.canvasModel.initBlockSize(config.canvas.size);
+    const modelInstance = ModelInstance.create(config);
 
     if (!data || Object.keys(data).length === 0)
         return {
@@ -80,7 +79,7 @@ export function assembleModel(config: MdtChartsConfig, data: MdtChartsDataSource
 
     resetFalsyValues(data, config.options.data.keyField.name);
 
-    const otherComponents = OtherComponentsModel.getOtherComponentsModel({ elementsOptions: designerConfig.elementsOptions, notation: config.options.type, title: config.options.title });
+    const otherComponents = OtherComponentsModel.getOtherComponentsModel({ elementsOptions: designerConfig.elementsOptions, notation: config.options.type, title: config.options.title }, modelInstance);
     MarginModel.initMargin(designerConfig, config, otherComponents, data, modelInstance);
     const dataScope = DataManagerModel.getDataScope(config, data, designerConfig, otherComponents.legendBlock, modelInstance);
     const preparedData = DataManagerModel.getPreparedData(data, dataScope.allowableKeys, config);
@@ -95,7 +94,7 @@ export function assembleModel(config: MdtChartsConfig, data: MdtChartsDataSource
     const transitions = getTransitions(designerConfig);
 
     if (options.type === 'polar')
-        MarginModel.recalcPolarMarginWithScopedData(modelInstance, config.canvas.size, designerConfig, config, otherComponents.legendBlock, dataScope, options);
+        MarginModel.recalcPolarMarginWithScopedData(modelInstance, designerConfig, config, otherComponents.legendBlock, dataScope, options);
 
     modelInstance.canvasModel.roundMargin();
 

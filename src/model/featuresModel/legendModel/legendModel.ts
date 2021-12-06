@@ -1,8 +1,7 @@
 import { ChartNotation, Size } from "../../../config/config";
-import { BlockMargin, ILegendModel, LegendBlockModel, LegendPosition, Orient, TitleBlockModel } from "../../model";
+import { ILegendModel, LegendBlockModel, LegendPosition, Orient, TitleBlockModel } from "../../model";
 import { ModelHelper } from "../../modelHelper";
-import { CanvasModel } from "../../modelInstance/canvasModel";
-import { TitleModel } from "../titleModel";
+import { CanvasModel } from "../../modelInstance/canvasModel/canvasModel";
 import { LegendCanvasModel, LegendItemsDirection } from "./legendCanvasModel";
 
 
@@ -22,7 +21,7 @@ export class LegendModel {
         }
     }
 
-    public static getBaseLegendBlockModel(notation: ChartNotation, titleModelTemplate: TitleBlockModel): LegendBlockModel {
+    public static getBaseLegendBlockModel(notation: ChartNotation, canvasModel: CanvasModel): LegendBlockModel {
         const mt = 20, mb = 20, ml = 20, mr = 20;
 
         return {
@@ -39,13 +38,13 @@ export class LegendModel {
                 },
                 right: {
                     size: 0,
-                    margin: { top: titleModelTemplate.pad + titleModelTemplate.margin.top + titleModelTemplate.size, bottom: mb, left: 0, right: mr },
+                    margin: { top: canvasModel.titleCanvas.getAllNeededSpace(), bottom: mb, left: 0, right: mr },
                     pad: 0
                 },
                 top: {
                     size: 0,
                     margin: { top: 20, bottom: 0, left: 20, right: 20 },
-                    pad: titleModelTemplate.pad + titleModelTemplate.margin.top + titleModelTemplate.size
+                    pad: canvasModel.titleCanvas.getAllNeededSpace()
                 }
             },
             standartTooltip: notation === 'polar' ? false : true

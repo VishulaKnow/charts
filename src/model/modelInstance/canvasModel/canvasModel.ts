@@ -1,9 +1,18 @@
-import { Size } from "../../config/config";
-import { BlockMargin } from "../model";
+import { Size } from "../../../config/config";
+import { BlockMargin } from "../../model";
+import { TitleCanvasModel } from "./titleCanvas";
+
+type MarginSide = keyof BlockMargin;
 
 export class CanvasModel {
+    titleCanvas: TitleCanvasModel;
+
     private blockSize: Size;
     private margin: BlockMargin;
+
+    constructor() {
+        this.titleCanvas = new TitleCanvasModel();
+    }
 
     initMargin(margin: BlockMargin) {
         this.margin = margin;
@@ -13,12 +22,20 @@ export class CanvasModel {
         return this.margin;
     }
 
-    getMarginSide(side: keyof BlockMargin) {
+    getMarginSide(side: MarginSide) {
         return this.margin[side];
     }
 
-    setMarginSide(side: keyof BlockMargin, size: number) {
+    setMarginSide(side: MarginSide, size: number) {
         this.margin[side] = size;
+    }
+
+    increaseMarginSide(side: MarginSide, byValue: number) {
+        this.margin[side] += byValue;
+    }
+
+    descreaseMarginSide(side: MarginSide, byValue: number) {
+        this.margin[side] -= byValue;
     }
 
     roundMargin() {
