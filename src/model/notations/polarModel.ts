@@ -1,6 +1,6 @@
 import { MdtChartsConfig, MdtChartsDataSource, PolarChart, PolarOptions } from "../../config/config";
 import { ChartStyleConfig, DesignerConfig, DonutOptionsCanvas } from "../../designer/designerConfig";
-import { ChartStyleModel } from "../chartStyleModel";
+import { ChartStyleModelService } from "../chartStyleModel/chartStyleModel";
 import { LegendModel } from "../featuresModel/legendModel/legendModel";
 import { BlockMargin, PolarOptionsModel, PolarChartModel, DonutChartSettings } from "../model";
 import { ModelInstance } from "../modelInstance/modelInstance";
@@ -37,8 +37,8 @@ export class PolarModel {
             type: chart.type,
             data: { ...chart.data },
             tooltip: chart.tooltip,
-            cssClasses: ChartStyleModel.getCssClasses(0),
-            style: ChartStyleModel.getChartStyle(dataLength, chartStyleConfig)
+            cssClasses: ChartStyleModelService.getCssClasses(0),
+            style: ChartStyleModelService.getChartStyle(dataLength, chartStyleConfig)
         });
         return chartsModel;
     }

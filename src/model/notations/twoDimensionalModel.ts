@@ -1,10 +1,11 @@
-import { ChartOrientation, MdtChartsConfig, MdtChartsDataSource, TwoDimensionalChart, TwoDimensionalChartType, TwoDimensionalOptions } from "../../config/config";
+import { ChartOrientation, MdtChartsDataSource, TwoDimensionalChart, TwoDimensionalChartType, TwoDimensionalOptions } from "../../config/config";
 import { BarOptionsCanvas, ChartStyleConfig, DesignerConfig } from "../../designer/designerConfig";
-import { ChartStyleModel } from "../chartStyleModel";
+import { ChartStyleModelService } from "../chartStyleModel/chartStyleModel";
+import { TwoDimensionalChartStyleModel } from "../chartStyleModel/TwoDimensionalChartStyleModel";
 import { AxisModel } from "../featuresModel/axisModel";
 import { LegendModel } from "../featuresModel/legendModel/legendModel";
 import { ScaleModel } from "../featuresModel/scaleModel";
-import { BlockMargin, DataScope, TwoDimensionalOptionsModel, TwoDimensionalChartModel, EmbeddedLabelTypeModel, AdditionalElementsOptions, TwoDimChartElementsSettings } from "../model";
+import { DataScope, TwoDimensionalOptionsModel, TwoDimensionalChartModel, EmbeddedLabelTypeModel, AdditionalElementsOptions, TwoDimChartElementsSettings } from "../model";
 import { ModelInstance } from "../modelInstance/modelInstance";
 
 
@@ -57,16 +58,18 @@ export class TwoDimensionalModel {
     }
 
     private static getChartsModel(charts: TwoDimensionalChart[], chartOrientation: ChartOrientation, chartStyleConfig: ChartStyleConfig): TwoDimensionalChartModel[] {
+        const styleModel = new TwoDimensionalChartStyleModel(charts, chartStyleConfig);
         this.sortCharts(charts);
         const chartsModel: TwoDimensionalChartModel[] = [];
+
         charts.forEach((chart, index) => {
             chartsModel.push({
                 type: chart.type,
                 isSegmented: chart.isSegmented,
                 data: { ...chart.data },
                 tooltip: chart.tooltip,
-                cssClasses: ChartStyleModel.getCssClasses(index),
-                style: ChartStyleModel.get2DChartStyle(charts.length, chart.type, this.getChartsValueFieldsAmount(charts), index, chart.isSegmented, chartStyleConfig),
+                cssClasses: ChartStyleModelService.getCssClasses(index),
+                style: styleModel.getChartStyle(chart, index),
                 embeddedLabels: this.getEmbeddedLabelType(chart, chartOrientation),
                 markersOptions: chart.markers,
                 index
@@ -103,7 +106,7 @@ export class TwoDimensionalModel {
         return charts.filter(chart => chart.type === type);
     }
 
-    private static getChartsValueFieldsAmount(charts: TwoDimensionalChart[]): number[] {
+    public static getChartsValueFieldsAmount(charts: TwoDimensionalChart[]): number[] {
         return charts.map(chart => chart.data.valueFields.length);
     }
 }

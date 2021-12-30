@@ -1,7 +1,7 @@
 import { MdtChartsConfig, MdtChartsDataSource, IntervalChart, IntervalOptions } from "../../config/config";
 import { ChartStyleConfig, DesignerConfig } from "../../designer/designerConfig";
 import { AxisModel } from "../featuresModel/axisModel";
-import { ChartStyleModel } from "../chartStyleModel";
+import { ChartStyleModelService } from "../chartStyleModel/chartStyleModel";
 import { DataManagerModel } from "../dataManagerModel";
 import { LegendModel } from "../featuresModel/legendModel/legendModel";
 import { AdditionalElementsOptions, BlockMargin, DataScope, IntervalChartModel, IntervalOptionsModel } from "../model";
@@ -96,8 +96,8 @@ export class IntervalModel {
             type: chart.type,
             data: { ...chart.data },
             tooltip: chart.tooltip,
-            cssClasses: ChartStyleModel.getCssClasses(0),
-            style: ChartStyleModel.getChartStyle(1, chartStyleConfig)
+            cssClasses: ChartStyleModelService.getCssClasses(0),
+            style: ChartStyleModelService.getChartStyle(1, chartStyleConfig)
         });
 
         return chartsModel;

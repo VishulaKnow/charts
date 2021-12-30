@@ -30,7 +30,7 @@ const designerConfig: DesignerConfig = {
                     min: 40,
                     max: 60,
                     unit: "%",
-                    value: 40
+                    value: 25
                 },
                 aggregatorPad: 30
             }

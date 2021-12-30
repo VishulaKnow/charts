@@ -87,6 +87,10 @@ export interface ValueField extends MdtChartsField {
     title: string;
 }
 
+export interface TwoDimValueField extends ValueField {
+    color?: string;
+}
+
 export interface TooltipOptions {
     html: TooltipHtml;
 }
@@ -175,7 +179,7 @@ export interface IntervalChart extends ChartSettings {
 
 //====================================================== TwoDimensionalChart
 export interface TwoDimensionalChartData {
-    valueFields: ValueField[];
+    valueFields: TwoDimValueField[];
 }
 
 interface MarkersOptions {

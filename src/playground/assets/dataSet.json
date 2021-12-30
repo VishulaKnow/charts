@@ -4,63 +4,63 @@
             "$id": 1,
             "brand": "BMW",
             "price": 100000,
-            "count": 12,
+            "count": 12000,
             "color": "red"
         },
         {
             "$id": 2,
             "brand": "LADA",
             "price": 50000,
-            "count": 10,
+            "count": 1000,
             "color": "green"
         },
         {
             "$id": 3,
             "brand": "MERCEDES",
             "price": 15000,
-            "count": 12,
+            "count": 1200,
             "color": "blue"
         },
         {
             "$id": 4,
             "brand": "AUDI",
             "price": 20000,
-            "count": 5,
+            "count": 500,
             "color": "yellow"
         },
         {
             "$id": 5,
             "brand": "VOLKSWAGEN",
             "price": 115000,
-            "count": 6,
+            "count": 6000,
             "color": "cyan"
         },
         {
             "$id": 6,
             "brand": "DODGE",
             "price": 115000,
-            "count": 4,
+            "count": 4000,
             "color": "red"
         },
         {
             "$id": 7,
             "brand": "SAAB",
             "price": 50000,
-            "count": 11,
+            "count": 11000,
             "color": "orange"
         },
         {
             "$id": 8,
             "brand": "HONDA",
             "price": 20000,
-            "count": 2,
+            "count": 2000,
             "color": "brown"
         },
         {
             "$id": 9,
             "brand": "TOYOTA",
             "price": 40000,
-            "count": 15,
+            "count": 15000,
             "color": "pink"
         }
     ],
@@ -548,44 +548,44 @@
     "dataSet_data": [
         {
             "SortOrder": 202007,
-            "ec": 19000.00,
-            "ac": 8000.00,
+            "ec": 19000.0,
+            "ac": 8000.0,
             "x": "Jul 20"
         },
         {
             "SortOrder": 202008,
-            "ec": 166000.00,
-            "ac": 31000.00,
+            "ec": 166000.0,
+            "ac": 31000.0,
             "x": "Aug 20"
         },
         {
             "SortOrder": 202010,
-            "ec": 17000.00,
-            "ac": 0.00,
+            "ec": 17000.0,
+            "ac": 0.0,
             "x": "Oct 20"
         },
         {
             "SortOrder": 202011,
-            "ec": 15000.00,
-            "ac": 0.00,
+            "ec": 15000.0,
+            "ac": 0.0,
             "x": "Nov 20"
         },
         {
             "SortOrder": 202012,
-            "ec": 317007.00,
-            "ac": 36000.00,
+            "ec": 317007.0,
+            "ac": 36000.0,
             "x": "Dec 20"
         },
         {
             "SortOrder": 202101,
-            "ec": 4500.00,
-            "ac": 0.00,
+            "ec": 4500.0,
+            "ac": 0.0,
             "x": "Jan 21"
         },
         {
             "SortOrder": 202102,
-            "ec": 200000.00,
-            "ac": 0.00,
+            "ec": 200000.0,
+            "ac": 0.0,
             "x": "Feb 21"
         }
     ],
