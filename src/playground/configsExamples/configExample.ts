@@ -4,7 +4,7 @@ const configCars: MdtChartsConfig = {
     canvas: {
         class: 'outline',
         size: {
-            width: 450,
+            width: 800,
             height: 400
         }
     },
@@ -66,8 +66,7 @@ const configCars: MdtChartsConfig = {
                         {
                             name: 'count',
                             format: 'money',
-                            title: 'Стоимость за 2020 год',
-                            color: "red"
+                            title: 'Стоимость за 2020 год'
                         }
                     ]
                 },

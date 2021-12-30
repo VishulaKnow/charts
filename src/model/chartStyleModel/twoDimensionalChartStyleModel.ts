@@ -25,7 +25,13 @@ export class TwoDimensionalChartStyleModel {
 
 export class TwoDimensionalChartStyleService {
     getChartColors(chart: TwoDimensionalChart, styleConfig: ChartStyleConfig, chartsFieldsAmounts: number[], chartIndex: number) {
-        return this.generateNewChartColors(chart.type, styleConfig, chartsFieldsAmounts, chartIndex);
+        const generatedColors = this.generateNewChartColors(chart.type, styleConfig, chartsFieldsAmounts, chartIndex);
+
+        chart.data.valueFields.forEach((field, fieldIndex) => {
+            if (field.color) generatedColors[fieldIndex] = field.color;
+        });
+
+        return generatedColors;
     }
 
     getChartOpacity(chartsLength: number, chartType: TwoDimensionalChartType, chartsValueFieldAmount: number, isChartSegmented: boolean): number {
