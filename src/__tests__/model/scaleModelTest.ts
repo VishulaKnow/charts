@@ -1,4 +1,4 @@
-import { MdtChartsDataSource, TwoDimensionalChart, TwoDimensionalOptions } from "../../config/config";
+import { MdtChartsDataSource, TwoDimensionalChart, MdtChartsTwoDimensionalOptions } from "../../config/config";
 import { ScaleModel } from "../../model/featuresModel/scaleModel";
 import { CanvasModel } from "../../model/modelInstance/canvasModel/canvasModel";
 
@@ -427,7 +427,7 @@ describe('get scales tests', () => {
     let charts: TwoDimensionalChart[];
     let data: MdtChartsDataSource;
     let dataSource: string;
-    let options: TwoDimensionalOptions;
+    let options: MdtChartsTwoDimensionalOptions;
 
     beforeEach(() => {
         charts = [

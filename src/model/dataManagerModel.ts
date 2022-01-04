@@ -1,4 +1,4 @@
-import { MdtChartsConfig, TwoDimensionalChart, IntervalOptions, IntervalChart, TwoDimensionalOptions, PolarOptions, Size, MdtChartsDataSource, MdtChartsDataRow } from "../config/config";
+import { MdtChartsConfig, TwoDimensionalChart, IntervalOptions, IntervalChart, MdtChartsTwoDimensionalOptions, MdtChartsPolarOptions, Size, MdtChartsDataSource, MdtChartsDataRow } from "../config/config";
 import { BarOptionsCanvas, DesignerConfig, LegendBlockCanvas } from "../designer/designerConfig";
 import { AxisModel } from "./featuresModel/axisModel";
 import { LegendCanvasModel } from "./featuresModel/legendModel/legendCanvasModel";
@@ -28,7 +28,7 @@ export class DataManagerModel {
     }
 
 
-    private static getDataScopeFor2D(configOptions: TwoDimensionalOptions | IntervalOptions, modelInstance: ModelInstance, data: MdtChartsDataSource, designerConfig: DesignerConfig): DataScope {
+    private static getDataScopeFor2D(configOptions: MdtChartsTwoDimensionalOptions | IntervalOptions, modelInstance: ModelInstance, data: MdtChartsDataSource, designerConfig: DesignerConfig): DataScope {
         // Для interval всегда один элемент, так как там может быть только один столбик
         let itemsLength: number = 1;
         if (configOptions.type === '2d') {
@@ -57,7 +57,7 @@ export class DataManagerModel {
         }
     }
 
-    private static getDataScopeForPolar(configOptions: PolarOptions, modelInstance: ModelInstance, data: MdtChartsDataSource, legendBlock: LegendBlockModel, legendCanvas: LegendBlockCanvas): DataScope {
+    private static getDataScopeForPolar(configOptions: MdtChartsPolarOptions, modelInstance: ModelInstance, data: MdtChartsDataSource, legendBlock: LegendBlockModel, legendCanvas: LegendBlockCanvas): DataScope {
         const canvas = modelInstance.canvasModel;
         const dataset = data[configOptions.data.dataSource];
         const keyFieldName = configOptions.data.keyField.name;
@@ -96,7 +96,7 @@ export class DataManagerModel {
      * @param configOptions 
      * @param chartsLength 
      */
-    private static getElementsInGroupAmount(configOptions: TwoDimensionalOptions | IntervalOptions, chartsLength: number): number {
+    private static getElementsInGroupAmount(configOptions: MdtChartsTwoDimensionalOptions | IntervalOptions, chartsLength: number): number {
         if (configOptions.type === '2d')
             return this.getBarChartsInGroupAmount(configOptions.charts);
 

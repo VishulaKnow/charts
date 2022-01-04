@@ -1,4 +1,4 @@
-import { MdtChartsConfig, MdtChartsDataSource, PolarChart, PolarOptions } from "../../config/config";
+import { MdtChartsConfig, MdtChartsDataSource, PolarChart, MdtChartsPolarOptions } from "../../config/config";
 import { ChartStyleConfig, DesignerConfig, DonutOptionsCanvas } from "../../designer/designerConfig";
 import { ChartStyleModelService } from "../chartStyleModel/chartStyleModel";
 import { LegendModel } from "../featuresModel/legendModel/legendModel";
@@ -7,7 +7,7 @@ import { ModelInstance } from "../modelInstance/modelInstance";
 
 
 export class PolarModel {
-    public static getOptions(options: PolarOptions, data: MdtChartsDataSource, designerConfig: DesignerConfig, modelInstance: ModelInstance): PolarOptionsModel {
+    public static getOptions(options: MdtChartsPolarOptions, data: MdtChartsDataSource, designerConfig: DesignerConfig, modelInstance: ModelInstance): PolarOptionsModel {
         return {
             type: options.type,
             selectable: !!options.selectable,

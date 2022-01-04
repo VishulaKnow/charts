@@ -18,7 +18,7 @@ export interface MdtChartsDataSource {
 
 export interface MdtChartsConfig {
     canvas: ChartBlockCanvas;
-    options: PolarOptions | TwoDimensionalOptions | IntervalOptions;
+    options: MdtChartsPolarOptions | MdtChartsTwoDimensionalOptions | IntervalOptions;
 }
 
 
@@ -46,7 +46,7 @@ interface Options {
     tooltip?: TooltipOptions;
 }
 
-export interface TwoDimensionalOptions extends Options {
+export interface MdtChartsTwoDimensionalOptions extends Options {
     type: '2d';
     axis: TwoDimensionalAxis;
     additionalElements: AdditionalElements;
@@ -54,7 +54,7 @@ export interface TwoDimensionalOptions extends Options {
     orientation: ChartOrientation;
 }
 
-export interface PolarOptions extends Options {
+export interface MdtChartsPolarOptions extends Options {
     type: 'polar';
     chart: PolarChart;
 }

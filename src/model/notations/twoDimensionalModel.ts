@@ -1,4 +1,4 @@
-import { ChartOrientation, MdtChartsDataSource, TwoDimensionalChart, TwoDimensionalChartType, TwoDimensionalOptions } from "../../config/config";
+import { ChartOrientation, MdtChartsDataSource, TwoDimensionalChart, TwoDimensionalChartType, MdtChartsTwoDimensionalOptions } from "../../config/config";
 import { BarOptionsCanvas, ChartStyleConfig, DesignerConfig } from "../../designer/designerConfig";
 import { ChartStyleModelService } from "../chartStyleModel/chartStyleModel";
 import { TwoDimensionalChartStyleModel } from "../chartStyleModel/TwoDimensionalChartStyleModel";
@@ -10,7 +10,7 @@ import { ModelInstance } from "../modelInstance/modelInstance";
 
 
 export class TwoDimensionalModel {
-    public static getOptions(options: TwoDimensionalOptions, designerConfig: DesignerConfig, dataScope: DataScope, data: MdtChartsDataSource, modelInstance: ModelInstance): TwoDimensionalOptionsModel {
+    public static getOptions(options: MdtChartsTwoDimensionalOptions, designerConfig: DesignerConfig, dataScope: DataScope, data: MdtChartsDataSource, modelInstance: ModelInstance): TwoDimensionalOptionsModel {
         const canvasModel = modelInstance.canvasModel;
         return {
             legend: LegendModel.getLegendModel(options.type, options.legend.show, canvasModel),
@@ -96,7 +96,7 @@ export class TwoDimensionalModel {
         return 'none';
     }
 
-    private static getAdditionalElements(options: TwoDimensionalOptions): AdditionalElementsOptions {
+    private static getAdditionalElements(options: MdtChartsTwoDimensionalOptions): AdditionalElementsOptions {
         return {
             gridLine: options.additionalElements.gridLine
         }

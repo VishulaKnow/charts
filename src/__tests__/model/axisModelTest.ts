@@ -1,4 +1,4 @@
-import { DataOptions, MdtChartsDataSource, DiscreteAxisOptions, NumberAxisOptions, Size, TwoDimensionalChart, TwoDimensionalOptions } from "../../config/config";
+import { DataOptions, MdtChartsDataSource, DiscreteAxisOptions, NumberAxisOptions, Size, TwoDimensionalChart, MdtChartsTwoDimensionalOptions } from "../../config/config";
 import { TooltipSettings } from "../../designer/designerConfig";
 import { AxisModel } from "../../model/featuresModel/axisModel";
 import { AxisModelOptions, BlockMargin } from "../../model/model";

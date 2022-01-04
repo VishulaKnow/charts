@@ -1,6 +1,6 @@
 import { ModelHelper } from "../modelHelper";
 import { BlockMargin, ScaleKeyModel, ScaleKeyType, ScaleValueModel, ScaleValueType } from "../model";
-import { AxisPosition, NumberDomain, IntervalChart, TwoDimensionalChart, TwoDimensionalOptions, Size, ChartOrientation, MdtChartsDataSource } from "../../config/config";
+import { AxisPosition, NumberDomain, IntervalChart, TwoDimensionalChart, MdtChartsTwoDimensionalOptions, Size, ChartOrientation, MdtChartsDataSource } from "../../config/config";
 import { CanvasModel } from "../modelInstance/canvasModel/canvasModel";
 
 export enum ScaleType {
@@ -20,7 +20,7 @@ export class ScaleModel {
         }
     }
 
-    public static getScaleLinear(options: TwoDimensionalOptions, data: MdtChartsDataSource, canvasModel: CanvasModel): ScaleValueModel {
+    public static getScaleLinear(options: MdtChartsTwoDimensionalOptions, data: MdtChartsDataSource, canvasModel: CanvasModel): ScaleValueModel {
         return {
             domain: ScaleModel.getLinearDomain(options.axis.value.domain, data, options),
             range: {
@@ -52,7 +52,7 @@ export class ScaleModel {
         return [domainPeekMax, domainPeekMin];
     }
 
-    public static getLinearDomain(configDomain: NumberDomain, data: MdtChartsDataSource, configOptions: TwoDimensionalOptions): [number, number] {
+    public static getLinearDomain(configDomain: NumberDomain, data: MdtChartsDataSource, configOptions: MdtChartsTwoDimensionalOptions): [number, number] {
         let domainPeekMin: number;
         let domainPeekMax: number;
         if (configDomain.start === -1)
