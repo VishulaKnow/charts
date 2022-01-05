@@ -1,17 +1,20 @@
 import { Size } from "../../../config/config";
 import { BlockMargin } from "../../model";
+import { LegendCanvasModelInstance } from "./legendCanvasModel";
 import { TitleCanvasModel } from "./titleCanvas";
 
 type MarginSide = keyof BlockMargin;
 
 export class CanvasModel {
     titleCanvas: TitleCanvasModel;
+    legendCanvas: LegendCanvasModelInstance;
 
     private blockSize: Size;
     private margin: BlockMargin;
 
     constructor() {
         this.titleCanvas = new TitleCanvasModel();
+        this.legendCanvas = new LegendCanvasModelInstance();
     }
 
     initMargin(margin: BlockMargin) {

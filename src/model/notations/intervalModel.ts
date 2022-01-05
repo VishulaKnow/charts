@@ -16,7 +16,7 @@ export class IntervalModel {
         const canvasModel = modelInstance.canvasModel;
 
         return {
-            legend: LegendModel.getLegendModel(config.options.type, config.options.legend.show, canvasModel),
+            legend: canvasModel.legendCanvas.getModel(),
             title: options.title,
             selectable: !!options.selectable,
             orient: options.orientation,

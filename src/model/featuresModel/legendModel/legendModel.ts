@@ -2,11 +2,9 @@ import { ChartNotation, Size } from "../../../config/config";
 import { ILegendModel, LegendBlockModel, LegendPosition, Orient, TitleBlockModel } from "../../model";
 import { ModelHelper } from "../../modelHelper";
 import { CanvasModel } from "../../modelInstance/canvasModel/canvasModel";
+import { PolarModel } from "../../notations/polarModel";
 import { LegendCanvasModel, LegendItemsDirection } from "./legendCanvasModel";
 
-
-/** If donut block has width less than this const, legend change postion from "right" to "bottom" */
-export const MIN_DONUT_BLOCK_SIZE = 260;
 
 export class LegendModel {
     public static getLegendSize(chartNotation: ChartNotation, position: Orient, texts: string[], legendMaxWidth: number, blockSize: Size, legendBlockModel: LegendBlockModel): number {
@@ -53,11 +51,12 @@ export class LegendModel {
 
     public static getLegendModel(chartNotation: ChartNotation, legendShow: boolean, canvasModel: CanvasModel): ILegendModel {
         let legendPosition: LegendPosition = 'off';
+
         if (legendShow) {
             if (chartNotation === '2d' || chartNotation === 'interval')
                 legendPosition = 'top';
             else if (chartNotation === 'polar') {
-                legendPosition = canvasModel.getChartBlockWidth() < MIN_DONUT_BLOCK_SIZE ? 'bottom' : 'right';
+                legendPosition = PolarModel.getLegendPositionByBlockSize(canvasModel);
             }
         }
 

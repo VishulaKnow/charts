@@ -1,11 +1,11 @@
-import { MdtChartsConfig, TwoDimensionalChart, IntervalOptions, IntervalChart, MdtChartsTwoDimensionalOptions, MdtChartsPolarOptions, Size, MdtChartsDataSource, MdtChartsDataRow } from "../config/config";
+import { MdtChartsConfig, TwoDimensionalChart, IntervalOptions, MdtChartsTwoDimensionalOptions, MdtChartsPolarOptions, MdtChartsDataSource, MdtChartsDataRow } from "../config/config";
 import { BarOptionsCanvas, DesignerConfig, LegendBlockCanvas } from "../designer/designerConfig";
 import { AxisModel } from "./featuresModel/axisModel";
 import { LegendCanvasModel } from "./featuresModel/legendModel/legendCanvasModel";
-import { MIN_DONUT_BLOCK_SIZE } from "./featuresModel/legendModel/legendModel";
-import { BlockMargin, DataScope, Field, LegendBlockModel, LegendPosition } from "./model";
+import { DataScope, Field, LegendBlockModel } from "./model";
 import { ModelHelper } from "./modelHelper";
 import { ModelInstance } from "./modelInstance/modelInstance";
+import { MIN_DONUT_BLOCK_SIZE, PolarModel } from "./notations/polarModel";
 
 export class DataManagerModel {
     public static getPreparedData(data: MdtChartsDataSource, allowableKeys: string[], config: MdtChartsConfig): MdtChartsDataSource {
@@ -70,11 +70,7 @@ export class DataManagerModel {
             }
         }
 
-        let position: LegendPosition;
-        if (canvas.getChartBlockWidth() >= MIN_DONUT_BLOCK_SIZE)
-            position = 'right';
-        else
-            position = 'bottom';
+        const position = PolarModel.getLegendPositionByBlockSize(modelInstance.canvasModel);
 
         let maxItemsNumber: number;
         if (position === 'right') {

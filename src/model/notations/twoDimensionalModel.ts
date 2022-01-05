@@ -13,7 +13,7 @@ export class TwoDimensionalModel {
     public static getOptions(options: MdtChartsTwoDimensionalOptions, designerConfig: DesignerConfig, dataScope: DataScope, data: MdtChartsDataSource, modelInstance: ModelInstance): TwoDimensionalOptionsModel {
         const canvasModel = modelInstance.canvasModel;
         return {
-            legend: LegendModel.getLegendModel(options.type, options.legend.show, canvasModel),
+            legend: canvasModel.legendCanvas.getModel(),
             title: options.title,
             selectable: !!options.selectable,
             orient: options.orientation,

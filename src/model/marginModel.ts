@@ -2,12 +2,13 @@ import { TwoDimensionalAxis, MdtChartsConfig, IntervalAxis, MdtChartsTwoDimensio
 import { DesignerConfig } from "../designer/designerConfig";
 import { AxisModel, LabelSize } from "./featuresModel/axisModel";
 import { DataManagerModel } from "./dataManagerModel";
-import { LegendModel, MIN_DONUT_BLOCK_SIZE } from "./featuresModel/legendModel/legendModel";
+import { LegendModel } from "./featuresModel/legendModel/legendModel";
 import { DataScope, LegendBlockModel, Orient, OtherCommonComponents, PolarOptionsModel, TitleBlockModel } from "./model";
 import { AxisType } from "./modelBuilder";
 import { TwoDimensionalModel } from "./notations/twoDimensionalModel";
 import { ModelInstance } from "./modelInstance/modelInstance";
 import { CanvasModel } from "./modelInstance/canvasModel/canvasModel";
+import { PolarModel } from "./notations/polarModel";
 
 export const AXIS_HORIZONTAL_LABEL_PADDING = 15;
 export const AXIS_VERTICAL_LABEL_PADDING = 10;
@@ -37,11 +38,10 @@ export class MarginModel {
 
     public static recalcPolarMarginWithScopedData(modelInstance: ModelInstance, designerConfig: DesignerConfig, config: MdtChartsConfig, legendBlockModel: LegendBlockModel, dataScope: DataScope, options: PolarOptionsModel): void {
         const canvasModel = modelInstance.canvasModel;
-        let position = LegendModel.getLegendModel(config.options.type, config.options.legend.show, modelInstance.canvasModel).position;
+        let position = modelInstance.canvasModel.legendCanvas.getPosition();
 
         if (position !== 'off') {
-            if (position === 'right' && canvasModel.getChartBlockWidth() < MIN_DONUT_BLOCK_SIZE)
-                position = 'bottom';
+            position = PolarModel.getLegendPositionByBlockSize(canvasModel); // reset position
 
             this.clearMarginByLegendBlockPosition(canvasModel, legendBlockModel);
 
@@ -107,6 +107,8 @@ export class MarginModel {
         const canvasModel = modelInstance.canvasModel;
 
         const legendPosition = LegendModel.getLegendModel(config.options.type, config.options.legend.show, modelInstance.canvasModel).position;
+        modelInstance.canvasModel.legendCanvas.setPosition(legendPosition);
+
         if (legendPosition !== 'off') {
             const legendItemsContent = this.getLegendItemsContent(config.options, data);
             const legendSize = LegendModel.getLegendSize(config.options.type, legendPosition, legendItemsContent, legendMaxWidth, canvasModel.getBlockSize(), legendBlockModel);
