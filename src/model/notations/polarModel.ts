@@ -7,7 +7,7 @@ import { CanvasModel } from "../modelInstance/canvasModel/canvasModel";
 import { ModelInstance } from "../modelInstance/modelInstance";
 
 /** If donut block has width less than this const, legend change postion from "right" to "bottom" */
-export const MIN_DONUT_BLOCK_SIZE = 260;
+export const MIN_DONUT_BLOCK_SIZE = 120;
 
 export class PolarModel {
     public static getOptions(options: MdtChartsPolarOptions, data: MdtChartsDataSource, designerConfig: DesignerConfig, modelInstance: ModelInstance): PolarOptionsModel {
@@ -25,7 +25,14 @@ export class PolarModel {
 
     //TODO: type for returned value
     public static getLegendPositionByBlockSize(canvasModel: CanvasModel): "bottom" | "right" {
-        return canvasModel.getChartBlockWidth() < MIN_DONUT_BLOCK_SIZE ? 'bottom' : 'right';
+        const widthCoefficientWhenLegendShouldInBottom = 1.5;
+        const blockWidth = canvasModel.getBlockSize().width;
+        const blockHeight = canvasModel.getBlockSize().height;
+
+        return canvasModel.getChartBlockWidth() < MIN_DONUT_BLOCK_SIZE
+            && blockWidth * widthCoefficientWhenLegendShouldInBottom < blockHeight
+            ? 'bottom'
+            : 'right';
     }
 
     private static getDonutSettings(settings: DonutOptionsCanvas, chartOptions: PolarChart): DonutChartSettings {

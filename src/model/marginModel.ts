@@ -38,7 +38,7 @@ export class MarginModel {
 
     public static recalcPolarMarginWithScopedData(modelInstance: ModelInstance, designerConfig: DesignerConfig, config: MdtChartsConfig, legendBlockModel: LegendBlockModel, dataScope: DataScope, options: PolarOptionsModel): void {
         const canvasModel = modelInstance.canvasModel;
-        let position = modelInstance.canvasModel.legendCanvas.getPosition();
+        let position = canvasModel.legendCanvas.getPosition();
 
         if (position !== 'off') {
             position = PolarModel.getLegendPositionByBlockSize(canvasModel); // reset position
@@ -51,6 +51,7 @@ export class MarginModel {
 
             const legendSize = LegendModel.getLegendSize(config.options.type, position, allowableKeys, designerConfig.canvas.legendBlock.maxWidth, config.canvas.size, legendBlockModel);
             canvasModel.increaseMarginSide(position, legendSize + legendBlockModel.coordinate[position].margin[position])
+
             legendBlockModel.coordinate[position].size = legendSize;
             options.legend.position = position;
         }
