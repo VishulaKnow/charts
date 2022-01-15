@@ -34,8 +34,8 @@ export class PolarManager {
 
         engine.block.filterEventManager.setListenerPolar(model.chartBlock.margin, model.blockCanvas.size, options);
 
-        if (model.dataSettings.scope.hidedRecordsAmount !== 0 && model.options.legend.position !== 'off')
-            RecordOverflowAlert.render(engine.block, model.dataSettings.scope.hidedRecordsAmount, model.options.legend.position);
+        if (model.dataSettings.scope.hidedRecordsAmount !== 0)
+            RecordOverflowAlert.render(engine.block, model.dataSettings.scope.hidedRecordsAmount, RecordOverflowAlert.polarRecordOverflowAlertPosition(model.options.legend.position));
 
         engine.block.getSvg()
             .on('click', (e: MouseEvent) => {

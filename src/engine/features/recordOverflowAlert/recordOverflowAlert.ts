@@ -1,5 +1,6 @@
 import { Selection } from 'd3-selection'
 import { ChartOrientation } from "../../../config/config";
+import { LegendPosition } from '../../../model/model';
 import { Block } from "../../block/block";
 import { DomHelper } from '../../helpers/domHelper';
 import { Legend } from '../legend/legend';
@@ -14,6 +15,10 @@ type AlertBlockPosition = 'top' | 'bottom' | 'right' | 'left';
 
 export class RecordOverflowAlert {
     private static readonly blockClass = 'record-overflow-alert';
+
+    public static polarRecordOverflowAlertPosition(legendPosition: LegendPosition): AlertBlockPosition {
+        return legendPosition === 'off' ? 'bottom' : legendPosition;
+    }
 
     public static render(block: Block, hidedRecordsAmount: number, position: AlertBlockPosition, chartOrientation: ChartOrientation = null): void {
         const alertBlock = block.getWrapper()
@@ -115,7 +120,7 @@ export class RecordOverflowAlert {
     private static getLeftAttrForRightBlock(block: Block): number {
         const legendBlock = block.getSvg().select(`.${Legend.objectClass}`);
         if (legendBlock.empty())
-            return null;
+            return 17;
 
         return DomHelper.getSelectionNumericAttr(legendBlock, 'x');
     }
