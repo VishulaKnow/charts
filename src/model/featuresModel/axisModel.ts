@@ -2,7 +2,7 @@ import { AxisPosition, ChartOrientation, DataOptions, MdtChartsDataSource, Discr
 import { AxisLabelPosition, AxisModelOptions, Orient } from "../model";
 import { ModelHelper } from "../modelHelper";
 import { AxisType, CLASSES } from "../modelBuilder";
-import { DataManagerModel } from "../dataManagerModel";
+import { DataManagerModel } from "../dataManagerModel/dataManagerModel";
 import { TwoDimensionalModel } from "../notations/twoDimensionalModel";
 import { AxisLabelCanvas, TooltipSettings } from "../../designer/designerConfig";
 import { CanvasModel } from "../modelInstance/canvasModel/canvasModel";

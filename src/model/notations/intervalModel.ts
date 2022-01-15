@@ -2,7 +2,7 @@ import { MdtChartsConfig, MdtChartsDataSource, IntervalChart, IntervalOptions } 
 import { ChartStyleConfig, DesignerConfig } from "../../designer/designerConfig";
 import { AxisModel } from "../featuresModel/axisModel";
 import { ChartStyleModelService } from "../chartStyleModel/chartStyleModel";
-import { DataManagerModel } from "../dataManagerModel";
+import { DataManagerModel } from "../dataManagerModel/dataManagerModel";
 import { LegendModel } from "../featuresModel/legendModel/legendModel";
 import { AdditionalElementsOptions, BlockMargin, DataScope, IntervalChartModel, IntervalOptionsModel } from "../model";
 import { AxisType } from "../modelBuilder";

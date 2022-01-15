@@ -76,6 +76,7 @@ export interface Legend {
 export interface DataOptions {
     dataSource: string;
     keyField: MdtChartsField;
+    maxRecordsAmount?: number;
 }
 
 export interface MdtChartsField {

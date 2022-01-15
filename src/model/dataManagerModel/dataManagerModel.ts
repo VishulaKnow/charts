@@ -1,13 +1,17 @@
-import { MdtChartsConfig, TwoDimensionalChart, IntervalOptions, MdtChartsTwoDimensionalOptions, MdtChartsPolarOptions, MdtChartsDataSource, MdtChartsDataRow } from "../config/config";
-import { BarOptionsCanvas, DesignerConfig, LegendBlockCanvas } from "../designer/designerConfig";
-import { AxisModel } from "./featuresModel/axisModel";
-import { LegendCanvasModel } from "./featuresModel/legendModel/legendCanvasModel";
-import { DataScope, Field, LegendBlockModel } from "./model";
-import { ModelHelper } from "./modelHelper";
-import { ModelInstance } from "./modelInstance/modelInstance";
-import { MIN_DONUT_BLOCK_SIZE, PolarModel } from "./notations/polarModel";
+import { MdtChartsConfig, TwoDimensionalChart, IntervalOptions, MdtChartsTwoDimensionalOptions, MdtChartsPolarOptions, MdtChartsDataSource, MdtChartsDataRow } from "../../config/config";
+import { BarOptionsCanvas, DesignerConfig, LegendBlockCanvas } from "../../designer/designerConfig";
+import { AxisModel } from "../featuresModel/axisModel";
+import { LegendCanvasModel } from "../featuresModel/legendModel/legendCanvasModel";
+import { DataScope, Field, LegendBlockModel } from "../model";
+import { ModelHelper } from "../modelHelper";
+import { DataModelInstance } from "../modelInstance/dataModel";
+import { ModelInstance } from "../modelInstance/modelInstance";
+import { MIN_DONUT_BLOCK_SIZE, PolarModel } from "../notations/polarModel";
+import { DataManagerModelService } from "./dataManagerModelService";
 
 export class DataManagerModel {
+    private static service = new DataManagerModelService();
+
     public static getPreparedData(data: MdtChartsDataSource, allowableKeys: string[], config: MdtChartsConfig): MdtChartsDataSource {
         const scopedData = this.getScopedData(data, allowableKeys, config);
         this.setDataType(scopedData, config);
@@ -15,11 +19,11 @@ export class DataManagerModel {
         return scopedData;
     }
 
-    public static getDataScope(config: MdtChartsConfig, data: MdtChartsDataSource, designerConfig: DesignerConfig, legendBlock: LegendBlockModel, modelInstance: ModelInstance): DataScope {
+    public static initDataScope(config: MdtChartsConfig, data: MdtChartsDataSource, designerConfig: DesignerConfig, legendBlock: LegendBlockModel, modelInstance: ModelInstance): void {
         if (config.options.type === '2d' || config.options.type === 'interval') {
-            return this.getDataScopeFor2D(config.options, modelInstance, data, designerConfig);
+            this.initDataScopeFor2D(config.options, modelInstance, data, designerConfig);
         } else if (config.options.type === 'polar') {
-            return this.getDataScopeForPolar(config.options, modelInstance, data, legendBlock, designerConfig.canvas.legendBlock);
+            this.initDataScopeForPolar(config.options, modelInstance, data, legendBlock, designerConfig.canvas.legendBlock);
         }
     }
 
@@ -28,7 +32,7 @@ export class DataManagerModel {
     }
 
 
-    private static getDataScopeFor2D(configOptions: MdtChartsTwoDimensionalOptions | IntervalOptions, modelInstance: ModelInstance, data: MdtChartsDataSource, designerConfig: DesignerConfig): DataScope {
+    private static initDataScopeFor2D(configOptions: MdtChartsTwoDimensionalOptions | IntervalOptions, modelInstance: ModelInstance, data: MdtChartsDataSource, designerConfig: DesignerConfig): void {
         // Для interval всегда один элемент, так как там может быть только один столбик
         let itemsLength: number = 1;
         if (configOptions.type === '2d') {
@@ -44,30 +48,24 @@ export class DataManagerModel {
 
             const limit = this.getDataLimitByItemSize(this.getElementsInGroupAmount(configOptions, itemsLength), dataLength, axisLength, designerConfig.canvas.chartOptions.bar);
             const allowableKeys = uniqueKeys.slice(0, limit);
+            const hidedRecordsAmount = dataLength - allowableKeys.length;
 
-            return {
-                allowableKeys,
-                hidedRecordsAmount: dataLength - allowableKeys.length
-            }
-        }
-
-        return {
-            allowableKeys: this.getDataValuesByKeyField(data, configOptions.data.dataSource, configOptions.data.keyField.name),
-            hidedRecordsAmount: 0
+            modelInstance.dataModel.initScope(this.limitAllowableKeys(allowableKeys, hidedRecordsAmount, modelInstance.dataModel));
+        } else {
+            const allKeys = this.getDataValuesByKeyField(data, configOptions.data.dataSource, configOptions.data.keyField.name);
+            modelInstance.dataModel.initScope(this.getMaximumPossibleScope(allKeys, modelInstance.dataModel));
         }
     }
 
-    private static getDataScopeForPolar(configOptions: MdtChartsPolarOptions, modelInstance: ModelInstance, data: MdtChartsDataSource, legendBlock: LegendBlockModel, legendCanvas: LegendBlockCanvas): DataScope {
+    private static initDataScopeForPolar(configOptions: MdtChartsPolarOptions, modelInstance: ModelInstance, data: MdtChartsDataSource, legendBlock: LegendBlockModel, legendCanvas: LegendBlockCanvas): void {
         const canvas = modelInstance.canvasModel;
         const dataset = data[configOptions.data.dataSource];
         const keyFieldName = configOptions.data.keyField.name;
-        const keys = dataset.map(dataRow => dataRow[keyFieldName]);
+        const keys = dataset.map<string>(dataRow => dataRow[keyFieldName]);
 
         if (!configOptions.legend.show) {
-            return {
-                allowableKeys: keys,
-                hidedRecordsAmount: 0
-            }
+            modelInstance.dataModel.initScope(this.getMaximumPossibleScope(keys, modelInstance.dataModel));
+            return;
         }
 
         const position = PolarModel.getLegendPositionByBlockSize(modelInstance.canvasModel);
@@ -81,10 +79,18 @@ export class DataManagerModel {
             maxItemsNumber = LegendCanvasModel.findElementsAmountByLegendSize(keys, position, canvas.getChartBlockWidth(), canvas.getBlockSize().height - margin.top - marginBottomWithoutLegendBlock - legendBlock.coordinate.bottom.margin.bottom - MIN_DONUT_BLOCK_SIZE);
         }
 
-        return {
-            allowableKeys: keys.slice(0, maxItemsNumber),
-            hidedRecordsAmount: keys.length - maxItemsNumber
-        }
+        const allowableKeys = keys.slice(0, maxItemsNumber);
+        const hidedRecordsAmount = keys.length - maxItemsNumber
+
+        modelInstance.dataModel.initScope(this.limitAllowableKeys(allowableKeys, hidedRecordsAmount, modelInstance.dataModel));
+    }
+
+    private static getMaximumPossibleScope(keys: string[], dataModel: DataModelInstance): DataScope {
+        return this.service.getMaximumPossibleAmount(keys, dataModel.getMaxRecordsAmount());
+    }
+
+    private static limitAllowableKeys(allowableKeys: string[], hidedRecordsAmount: number, dataModel: DataModelInstance) {
+        return this.service.limitAllowableKeys(allowableKeys, hidedRecordsAmount, dataModel.getMaxRecordsAmount());
     }
 
     /**
@@ -122,12 +128,7 @@ export class DataManagerModel {
     }
 
     private static setDataType(data: MdtChartsDataSource, config: MdtChartsConfig): void {
-        if (config.options.type === 'polar' || config.options.type === '2d') {
-            // Форматиривание для оси ключей пока не совсем верно установлено
-            // if(config.options.data.keyField.format === 'date') {
-            //     data[config.options.data.dataSource] = this.getTypedData(data[config.options.data.dataSource], config.options.data.keyField);
-            // }
-        } else if (config.options.type === 'interval') {
+        if (config.options.type === 'interval') {
             const chart = config.options.chart;
             if (chart.data.valueField1.format === 'date') {
                 data[config.options.data.dataSource] = this.getTypedData(data[config.options.data.dataSource], chart.data.valueField1);

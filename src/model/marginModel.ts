@@ -1,7 +1,7 @@
 import { TwoDimensionalAxis, MdtChartsConfig, IntervalAxis, MdtChartsTwoDimensionalOptions, MdtChartsPolarOptions, IntervalOptions, ChartOrientation, MdtChartsDataSource } from "../config/config";
 import { DesignerConfig } from "../designer/designerConfig";
 import { AxisModel, LabelSize } from "./featuresModel/axisModel";
-import { DataManagerModel } from "./dataManagerModel";
+import { DataManagerModel } from "./dataManagerModel/dataManagerModel";
 import { LegendModel } from "./featuresModel/legendModel/legendModel";
 import { DataScope, LegendBlockModel, Orient, OtherCommonComponents, PolarOptionsModel, TitleBlockModel } from "./model";
 import { AxisType } from "./modelBuilder";
