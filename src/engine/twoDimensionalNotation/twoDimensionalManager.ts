@@ -7,7 +7,6 @@ import { Axis } from "../features/axis/axis";
 import { EmbeddedLabels } from "../features/embeddedLabels/embeddedLabels";
 import { GridLine } from "../features/gridLine/gridLine";
 import { Legend } from "../features/legend/legend";
-import { RecordOverflowAlert } from "../features/recordOverflowAlert/recordOverflowAlert";
 import { Scale, Scales } from "../features/scale/scale";
 import { TipBox } from "../features/tipBox/tipBox";
 import { Title } from "../features/title/title";
@@ -16,6 +15,7 @@ import { Helper } from "../helpers/helper";
 import { Area } from "./area/area";
 import { Bar } from "./bar/bar";
 import { BarHelper } from "./bar/barHelper";
+import { TwoDimRecordOverflowAlert } from "./extenders/twoDimRecordOverflowAlert";
 import { Line } from "./line/line";
 
 export class TwoDimensionalManager {
@@ -56,7 +56,10 @@ export class TwoDimensionalManager {
         Tooltip.render(engine.block, model, engine.data, model.otherComponents.tooltipBlock, scales);
 
         if (model.dataSettings.scope.hidedRecordsAmount !== 0)
-            RecordOverflowAlert.render(engine.block, model.dataSettings.scope.hidedRecordsAmount, 'top', options.orient);
+            TwoDimRecordOverflowAlert.render(engine.block, {
+                hidedRecordsAmount: model.dataSettings.scope.hidedRecordsAmount,
+                chartOrientation: options.orient
+            });
 
         engine.block.getSvg()
             .on('click', (e: MouseEvent) => {
@@ -107,7 +110,10 @@ export class TwoDimensionalManager {
                 Tooltip.render(block, model, data, model.otherComponents.tooltipBlock, scales);
             });
 
-        RecordOverflowAlert.update(block, model.dataSettings.scope.hidedRecordsAmount, 'top', options.orient);
+        TwoDimRecordOverflowAlert.update(block, {
+            hidedRecordsAmount: model.dataSettings.scope.hidedRecordsAmount,
+            chartOrientation: options.orient
+        });
     }
 
     public static updateColors(block: Block, model: Model): void {
