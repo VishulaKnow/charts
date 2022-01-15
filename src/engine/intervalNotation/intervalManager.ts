@@ -4,7 +4,6 @@ import { Block } from "../block/block";
 import { Axis } from "../features/axis/axis";
 import { GridLine } from "../features/gridLine/gridLine";
 import { Legend } from "../features/legend/legend";
-import { RecordOverflowAlert } from "../features/recordOverflowAlert/recordOverflowAlert";
 import { Scale, Scales } from "../features/scale/scale";
 import { Title } from "../features/title/title";
 import { Tooltip } from "../features/tolltip/tooltip";
@@ -41,9 +40,6 @@ export class IntervalManager {
         Legend.render(block, data, options, model);
 
         Tooltip.render(block, model, data, model.otherComponents.tooltipBlock, scales);
-
-        if (model.dataSettings.scope.hidedRecordsAmount !== 0)
-            RecordOverflowAlert.render(block, model.dataSettings.scope.hidedRecordsAmount, 'top', options.orient);
     }
 
     private static renderCharts(block: Block, charts: IntervalChartModel[], scales: Scales, data: MdtChartsDataSource, dataOptions: OptionsModelData, margin: BlockMargin, keyAxisOrient: Orient, chartSettings: TwoDimChartElementsSettings): void {
