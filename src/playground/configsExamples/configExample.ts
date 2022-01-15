@@ -87,7 +87,7 @@ const configCars: MdtChartsConfig = {
             show: true
         },
         data: {
-            dataSource: 'dataSet_72',
+            dataSource: 'dataSet',
             keyField: {
                 name: 'brand',
                 format: 'string'

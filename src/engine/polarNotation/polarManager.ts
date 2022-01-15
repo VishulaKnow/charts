@@ -2,13 +2,13 @@ import { BlockMargin, DonutChartSettings, Model, PolarChartModel, PolarOptionsMo
 import { Block } from "../block/block";
 import Engine from "../engine";
 import { Legend } from "../features/legend/legend";
-import { RecordOverflowAlert } from "../features/recordOverflowAlert/recordOverflowAlert";
 import { Title } from "../features/title/title";
 import { ElementHighlighter } from "../elementHighlighter/elementHighlighter";
 import { Tooltip } from "../features/tolltip/tooltip";
 import { Aggregator } from "../features/aggregator/aggregator";
 import { Donut } from "./donut/donut";
 import { MdtChartsDataSource, Size } from "../../config/config";
+import { PolarRecordOverflowAlert } from "./extenders/polarRecordOverflowAlert";
 
 export class PolarManager {
     public static render(engine: Engine, model: Model) {
@@ -35,7 +35,10 @@ export class PolarManager {
         engine.block.filterEventManager.setListenerPolar(model.chartBlock.margin, model.blockCanvas.size, options);
 
         if (model.dataSettings.scope.hidedRecordsAmount !== 0)
-            RecordOverflowAlert.render(engine.block, model.dataSettings.scope.hidedRecordsAmount, RecordOverflowAlert.polarRecordOverflowAlertPosition(model.options.legend.position));
+            PolarRecordOverflowAlert.render(engine.block, {
+                hidedRecordsAmount: model.dataSettings.scope.hidedRecordsAmount,
+                legendPosition: model.options.legend.position
+            });
 
         engine.block.getSvg()
             .on('click', (e: MouseEvent) => {
@@ -66,8 +69,10 @@ export class PolarManager {
 
         Legend.update(block, data, model);
 
-        if (model.options.legend.position !== 'off')
-            RecordOverflowAlert.update(block, model.dataSettings.scope.hidedRecordsAmount, model.options.legend.position);
+        PolarRecordOverflowAlert.update(block, {
+            hidedRecordsAmount: model.dataSettings.scope.hidedRecordsAmount,
+            legendPosition: model.options.legend.position
+        });
     }
 
     public static updateColors(block: Block, model: Model): void {
