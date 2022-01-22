@@ -43,6 +43,20 @@
 
 
 /*========================================================================== Legend */
+.legend-block {
+    display: flex;
+    height: 100%;
+}
+.legend-block-column {
+    flex-direction: column;
+}
+.legend-block-row {
+    flex-direction: row;
+    flex-wrap: wrap;
+}
+.legend-block-centered {
+    justify-content: center;
+}
 .legend-item {
     cursor: default;
     transition: opacity 0.1s;
@@ -50,9 +64,14 @@
 }
 .legend-item-inline {
     white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
-.legend-item-inline:not(:first-of-type) {
+.legend-wrapper-without-wrap .legend-item-inline:not(:first-of-type) {
     margin-left: 20px;
+}
+.legend-wrapper-with-wrap .legend-item-inline {
+    margin: 5px;
 }
 .legend-item-row {
     display: flex;
@@ -61,10 +80,10 @@
     display: block;
 }
 .mt-15 {
-    margin-top: 15px;
+    /* margin-top: 15px; */
 }
 .mt-10 {
-    margin-top: 10px;
+    /* margin-top: 10px; */
 }
 
 .legend-label {

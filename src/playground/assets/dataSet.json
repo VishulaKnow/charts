@@ -2,7 +2,7 @@
     "dataSet": [
         {
             "$id": 1,
-            "brand": "BMW",
+            "brand": "BMW BMW BMW",
             "price": 100000,
             "count": 12000,
             "color": "red"

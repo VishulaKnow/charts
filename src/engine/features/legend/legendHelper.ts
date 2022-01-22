@@ -3,7 +3,8 @@ import { LegendItemsDirection } from "../../../model/featuresModel/legendModel/l
 
 import { IntervalOptionsModel, LegendBlockModel, LegendPosition, Orient, PolarOptionsModel, TwoDimensionalOptionsModel } from "../../../model/model";
 import { Helper } from '../../helpers/helper';
-import { Legend } from "./legend";
+import { Legend, LegendContentRenderingOptions } from "./legend";
+import { LegendHelperService } from "./legendHelperService";
 
 export interface LegendCoordinate {
     x: number;
@@ -12,6 +13,8 @@ export interface LegendCoordinate {
     width: number;
 }
 export class LegendHelper {
+    static service = new LegendHelperService();
+
     public static getLegendItemsContent(options: TwoDimensionalOptionsModel | PolarOptionsModel | IntervalOptionsModel, data: MdtChartsDataSource): string[] {
         if (options.type === '2d') {
             let texts: string[] = [];
@@ -49,34 +52,6 @@ export class LegendHelper {
         }
 
         return parseFloat(legendBlockWidth);
-    }
-
-    public static getItemClasses(itemsDirection: LegendItemsDirection, position: LegendPosition, index: number): string {
-        let cssClasses = this.getLegendItemClassByDirection(itemsDirection);
-        if (itemsDirection === 'column' && index !== 0)
-            cssClasses += ` ${this.getLegendItemsMarginClass(position)}`;
-        return cssClasses;
-    }
-
-    public static getLegendItemClassByDirection(itemsDirection: LegendItemsDirection): string {
-        return itemsDirection === 'column' ? 'legend-item-row' : 'legend-item-inline';
-    }
-
-    public static getLegendItemsMarginClass(legendPosition: LegendPosition): string {
-        return legendPosition === 'right' ? 'mt-15' : 'mt-10';
-    }
-
-    public static getLegendLabelClassByPosition(position: LegendPosition): string {
-        if (position === 'top' || position === 'bottom')
-            return `${Legend.labelClass} ${Legend.labelClass + '-nowrap'}`;
-        return Legend.labelClass;
-    }
-
-    public static getLegendItemsDirection(chartNotation: ChartNotation, legendPosition: LegendPosition): LegendItemsDirection {
-        if (legendPosition === 'right' || legendPosition === 'left')
-            return 'column';
-        else
-            return chartNotation === 'polar' ? 'column' : 'row';
     }
 
 
@@ -117,5 +92,24 @@ export class LegendHelper {
             coordinate.y = blockSize.height - legendModel.size - legendModel.margin.bottom;
 
         return coordinate;
+    }
+
+    public static getContentRenderingOptions(chartNotation: ChartNotation, legendPosition: LegendPosition): LegendContentRenderingOptions {
+        const itemsDirection: LegendItemsDirection = this.service.getLegendItemsDirection(legendPosition);
+
+        return {
+            wrapperClasses: [
+                Legend.legendBlockClass,
+                this.service.getWrapperClassByItemsDirection(itemsDirection),
+                this.service.getWrapperJustifyContentClass(itemsDirection, legendPosition),
+                this.service.getWrapperClassByWrappingItems(legendPosition, chartNotation)
+            ],
+            shouldCropLabels: chartNotation === "2d",
+            itemsOptions: {
+                markerClass: Legend.markerClass,
+                labelClass: this.service.getLegendLabelClassByPosition(legendPosition, chartNotation, Legend.labelClass),
+                wrapperClasses: [Legend.itemClass, this.service.getItemClasses(itemsDirection)]
+            }
+        }
     }
 }

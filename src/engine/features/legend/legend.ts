@@ -1,7 +1,6 @@
-import { BaseType, select, Selection } from "d3-selection";
+import { BaseType, Selection } from "d3-selection";
 import { MdtChartsDataSource, Size } from "../../../config/config";
-import { LegendItemsDirection } from "../../../model/featuresModel/legendModel/legendCanvasModel";
-import { IntervalOptionsModel, LegendBlockModel, LegendPosition, Model, Orient, PolarOptionsModel, TwoDimensionalOptionsModel } from "../../../model/model";
+import { IntervalOptionsModel, LegendBlockModel, Model, Orient, PolarOptionsModel, TwoDimensionalOptionsModel } from "../../../model/model";
 import { Block } from "../../block/block";
 import { ColorReader } from "../../colorReader/colorReader";
 import { SelectionCondition } from "../../helpers/domHelper";
@@ -9,13 +8,22 @@ import { LegendDomHelper } from "./legendDomHelper";
 import { LegendEventsManager } from "./legendEventsManager";
 import { LegendCoordinate, LegendHelper } from "./legendHelper";
 
+export interface LegendContentRenderingOptions {
+    wrapperClasses: string[];
+    shouldCropLabels: boolean;
+    itemsOptions: {
+        wrapperClasses: string[];
+        markerClass: string;
+        labelClass: string;
+    }
+}
+
 export class Legend {
     public static readonly objectClass = 'legend-object';
     public static readonly labelClass = 'legend-label';
     public static readonly itemClass = 'legend-item';
     public static readonly markerClass = 'legend-circle';
-
-    private static readonly legendBlockClass = 'legend-block';
+    public static readonly legendBlockClass = 'legend-block';
 
     public static render(block: Block, data: MdtChartsDataSource, options: TwoDimensionalOptionsModel | PolarOptionsModel | IntervalOptionsModel, model: Model): void {
         if (options.legend.position !== 'off') {
@@ -57,9 +65,9 @@ export class Legend {
     private static setContent(block: Block, data: MdtChartsDataSource, options: TwoDimensionalOptionsModel | PolarOptionsModel | IntervalOptionsModel, legendObject: Selection<SVGForeignObjectElement, unknown, HTMLElement, any>): void {
         const items = LegendHelper.getLegendItemsContent(options, data);
         const colors = LegendHelper.getMarksColor(options, data[options.data.dataSource]);
-        const itemsDirection = LegendHelper.getLegendItemsDirection(options.type, options.legend.position);
+        const renderingOptions = LegendHelper.getContentRenderingOptions(options.type, options.legend.position);
 
-        const itemBlocks = this.renderContent(legendObject, items, colors, itemsDirection, options.legend.position);
+        const itemBlocks = this.renderContent(legendObject, items, colors, renderingOptions);
         if (options.type === 'polar') {
             LegendEventsManager.setListeners(block, options.data.keyField.name, itemBlocks, options.selectable);
         } else {
@@ -78,43 +86,29 @@ export class Legend {
         return legendObject;
     }
 
-    private static renderContent(legendObject: Selection<SVGForeignObjectElement, unknown, HTMLElement, any>, items: string[], colorPalette: string[], itemsDirection: LegendItemsDirection, position: LegendPosition): Selection<HTMLDivElement, string, BaseType, unknown> {
-        const wrapper = legendObject.append('xhtml:div')
-            .attr('class', Legend.legendBlockClass);
-        wrapper
-            .style('height', '100%')
-            .style('display', 'flex');
-
-        if (itemsDirection === 'column') {
-            wrapper.style('flex-direction', 'column');
-            if (position === 'right')
-                wrapper.style('justify-content', 'center');
-        }
+    private static renderContent(foreignObject: Selection<SVGForeignObjectElement, unknown, HTMLElement, any>, items: string[], colorPalette: string[], options: LegendContentRenderingOptions): Selection<HTMLDivElement, string, BaseType, unknown> {
+        const wrapper = foreignObject.append('xhtml:div');
+        wrapper.classed(options.wrapperClasses.join(" "), true);
 
         const itemWrappers = wrapper
             .selectAll(`.${this.itemClass}`)
             .data(items)
             .enter()
             .append('div');
-
-        const thisClass = this;
-        itemWrappers.each(function (d, i) {
-            select(this).attr('class', `${thisClass.itemClass} ${LegendHelper.getItemClasses(itemsDirection, position, i)}`);
-        });
+        itemWrappers.classed(options.itemsOptions.wrapperClasses.join(" "), true);
 
         itemWrappers
             .append('span')
-            .attr('class', this.markerClass);
-
+            .classed(options.itemsOptions.markerClass, true);
         LegendDomHelper.setItemsColors(itemWrappers, colorPalette);
 
         itemWrappers
             .append('span')
-            .attr('class', LegendHelper.getLegendLabelClassByPosition(position))
+            .attr('class', options.itemsOptions.labelClass)
             .text(d => d);
 
-        if (itemsDirection === 'row')
-            LegendDomHelper.cropRowLabels(legendObject, itemWrappers);
+        if (options.shouldCropLabels)
+            LegendDomHelper.cropRowLabels(foreignObject, itemWrappers);
 
         return itemWrappers;
     }
