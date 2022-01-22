@@ -659,15 +659,15 @@ const model = assembleModel(config, data, designerConfig);
 engine.render(model, getPreparedData(model, data, config), document.querySelector('.main-wrapper'));
 new Listeners(engine, config, designerConfig, data);
 
-const config3 = require('./configsExamples/configTest2D.json');
-const model3 = assembleModel(config3, data, designerConfig);
-const engine3 = new Engine(3, void 0, undefined);
-engine3.render(model3, getPreparedData(model3, data, config3), document.querySelector('.main-wrapper2'));
+// const config3 = require('./configsExamples/configTest2D.json');
+// const model3 = assembleModel(config3, data, designerConfig);
+// const engine3 = new Engine(3, void 0, undefined);
+// engine3.render(model3, getPreparedData(model3, data, config3), document.querySelector('.main-wrapper2'));
 
-const config2 = require('./configsExamples/configTestPolar.json');
-const model2 = assembleModel(config2, data, designerConfig);
-const engine2 = new Engine(4, null, undefined);
-engine2.render(model2, getPreparedData(model2, data, config2), document.querySelector('.main-wrapper2'));
+// const config2 = require('./configsExamples/configTestPolar.json');
+// const model2 = assembleModel(config2, data, designerConfig);
+// const engine2 = new Engine(4, null, undefined);
+// engine2.render(model2, getPreparedData(model2, data, config2), document.querySelector('.main-wrapper2'));
 
 //====================================================================================================== Data updating
 class DataUpdater {

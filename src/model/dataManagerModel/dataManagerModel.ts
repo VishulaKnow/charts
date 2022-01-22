@@ -68,7 +68,7 @@ export class DataManagerModel {
             return;
         }
 
-        const position = PolarModel.getLegendPositionByBlockSize(modelInstance.canvasModel);
+        const position = modelInstance.canvasModel.legendCanvas.getPosition();
 
         let maxItemsNumber: number;
         if (position === 'right') {
@@ -76,7 +76,12 @@ export class DataManagerModel {
         } else {
             const margin = canvas.getMargin();
             const marginBottomWithoutLegendBlock = margin.bottom - (legendBlock.coordinate.bottom.size === 0 ? legendBlock.coordinate.bottom.size : legendBlock.coordinate.bottom.size - legendBlock.coordinate.bottom.margin.bottom);
-            maxItemsNumber = LegendCanvasModel.findElementsAmountByLegendSize(keys, position, canvas.getChartBlockWidth(), canvas.getBlockSize().height - margin.top - marginBottomWithoutLegendBlock - legendBlock.coordinate.bottom.margin.bottom - MIN_DONUT_BLOCK_SIZE);
+            maxItemsNumber = LegendCanvasModel.findElementsAmountByLegendSize(
+                keys,
+                position,
+                canvas.getChartBlockWidth(true),
+                canvas.getBlockSize().height - margin.top - marginBottomWithoutLegendBlock - legendBlock.coordinate.bottom.margin.bottom - MIN_DONUT_BLOCK_SIZE
+            );
         }
 
         const allowableKeys = keys.slice(0, maxItemsNumber);

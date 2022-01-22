@@ -26,10 +26,11 @@ export class PolarModel {
     //TODO: type for returned value
     public static getLegendPositionByBlockSize(canvasModel: CanvasModel): "bottom" | "right" {
         const widthCoefficientWhenLegendShouldInBottom = 1.5;
+        const avgLegendWidth = 100;
         const blockWidth = canvasModel.getBlockSize().width;
         const blockHeight = canvasModel.getBlockSize().height;
 
-        return canvasModel.getChartBlockWidth() < MIN_DONUT_BLOCK_SIZE
+        return canvasModel.getChartBlockWidth() < MIN_DONUT_BLOCK_SIZE + avgLegendWidth
             && blockWidth * widthCoefficientWhenLegendShouldInBottom < blockHeight
             ? 'bottom'
             : 'right';

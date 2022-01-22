@@ -50,14 +50,17 @@ export class LegendModel {
     }
 
     public static getLegendModel(chartNotation: ChartNotation, legendShow: boolean, canvasModel: CanvasModel): ILegendModel {
+        if (!legendShow)
+            return {
+                position: 'off'
+            }
+
         let legendPosition: LegendPosition = 'off';
 
-        if (legendShow) {
-            if (chartNotation === '2d' || chartNotation === 'interval')
-                legendPosition = 'top';
-            else if (chartNotation === 'polar') {
-                legendPosition = PolarModel.getLegendPositionByBlockSize(canvasModel);
-            }
+        if (chartNotation === '2d' || chartNotation === 'interval')
+            legendPosition = 'top';
+        else if (chartNotation === 'polar') {
+            legendPosition = PolarModel.getLegendPositionByBlockSize(canvasModel);
         }
 
         return {
@@ -67,10 +70,6 @@ export class LegendModel {
 
     public static getLegendItemClass(itemsPosition: LegendItemsDirection): string {
         return itemsPosition === 'column' ? 'legend-item-row' : 'legend-item-inline';
-    }
-
-    public static getMarginClass(legendPosition: LegendPosition): string {
-        return legendPosition === 'right' ? 'mt-15' : 'mt-10';
     }
 
     private static getLegendWidth(texts: string[], legendMaxWidth: number): number {

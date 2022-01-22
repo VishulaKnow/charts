@@ -20,7 +20,7 @@ export class LegendCanvasModel {
             itemWrapper.classList.add(LegendModel.getLegendItemClass(itemsPosition));
             if (itemsPosition === 'column') {
                 itemWrapper.style.whiteSpace = 'nowrap';
-                itemWrapper.classList.add(LegendModel.getMarginClass(legendPosition));
+                // itemWrapper.classList.add(LegendModel.getMarginClass(legendPosition));
             }
             colorBlock.classList.add(CLASSES.legendColor);
             textBlock.classList.add(CLASSES.legendLabel);
@@ -62,8 +62,12 @@ export class LegendCanvasModel {
         const legendWrapper = document.createElement('div');
         legendWrapper.style.opacity = '0';
         legendWrapper.style.display = 'flex';
-        legendWrapper.style.flexDirection = 'column';
         legendWrapper.style.position = 'absolute';
+
+        if (position === "right")
+            legendWrapper.style.flexDirection = 'column';
+        else
+            legendWrapper.style.flexWrap = "wrap";
 
         legendWrapper.style.width = legendBlockWidth + 'px';
         document.body.append(legendWrapper);
@@ -76,7 +80,7 @@ export class LegendCanvasModel {
             itemWrapper.classList.add('legend-item-row');
 
             if (position === 'bottom')
-                textBlock.classList.add('legend-label-nowrap', 'mt-10');
+                textBlock.classList.add('legend-label-nowrap');
             else
                 itemWrapper.classList.add('mt-15');
 
@@ -96,6 +100,7 @@ export class LegendCanvasModel {
             }
             amount++;
         }
+
         legendWrapper.remove();
 
         return amount < 0 ? 0 : amount;

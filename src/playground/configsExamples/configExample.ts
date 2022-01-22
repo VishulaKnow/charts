@@ -4,7 +4,7 @@ const configCars: MdtChartsConfig = {
     canvas: {
         class: 'outline',
         size: {
-            width: 300,
+            width: 170,
             height: 400
         }
     },
