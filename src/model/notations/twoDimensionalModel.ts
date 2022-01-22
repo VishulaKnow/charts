@@ -3,7 +3,6 @@ import { BarOptionsCanvas, ChartStyleConfig, DesignerConfig } from "../../design
 import { ChartStyleModelService } from "../chartStyleModel/chartStyleModel";
 import { TwoDimensionalChartStyleModel } from "../chartStyleModel/TwoDimensionalChartStyleModel";
 import { AxisModel } from "../featuresModel/axisModel";
-import { LegendModel } from "../featuresModel/legendModel/legendModel";
 import { ScaleModel } from "../featuresModel/scaleModel";
 import { DataScope, TwoDimensionalOptionsModel, TwoDimensionalChartModel, EmbeddedLabelTypeModel, AdditionalElementsOptions, TwoDimChartElementsSettings } from "../model";
 import { ModelInstance } from "../modelInstance/modelInstance";
@@ -22,7 +21,7 @@ export class TwoDimensionalModel {
                 value: ScaleModel.getScaleLinear(options, data, canvasModel)
             },
             axis: {
-                key: AxisModel.getKeyAxis(options.charts, data, options.data, options.orientation, options.axis.key, designerConfig.canvas.axisLabel, canvasModel, designerConfig.elementsOptions.tooltip),
+                key: AxisModel.getKeyAxis(options, data, designerConfig.canvas.axisLabel, canvasModel, designerConfig.elementsOptions.tooltip),
                 value: AxisModel.getValueAxis(options.orientation, options.axis.value, designerConfig.canvas.axisLabel, canvasModel)
             },
             type: options.type,

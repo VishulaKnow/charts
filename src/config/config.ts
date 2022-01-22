@@ -15,6 +15,7 @@ export type MdtChartsDataRow = {
 export interface MdtChartsDataSource {
     [source: string]: MdtChartsDataRow[];
 }
+export type AxisLabelPosition = "straight" | "rotated";
 
 export interface MdtChartsConfig {
     canvas: ChartBlockCanvas;
@@ -137,7 +138,13 @@ export interface NumberDomain {
     end: number;
 }
 
-export interface DiscreteAxisOptions extends AxisOptions { }
+export interface DiscreteAxisOptions extends AxisOptions {
+    labels?: MdtChartsDiscreteAxisLabel;
+}
+
+export interface MdtChartsDiscreteAxisLabel {
+    position?: AxisLabelPosition;
+}
 
 
 //====================================================== IntervalOptions

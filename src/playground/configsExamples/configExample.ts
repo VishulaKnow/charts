@@ -18,6 +18,9 @@ const configCars: MdtChartsConfig = {
                 position: 'end',
                 ticks: {
                     flag: false
+                },
+                labels: {
+                    position: "straight"
                 }
             },
             value: {
@@ -63,11 +66,11 @@ const configCars: MdtChartsConfig = {
                             title: 'Стоимость за 2020 год',
                             color: "red"
                         },
-                        {
-                            name: 'count',
-                            format: 'money',
-                            title: 'Стоимость за 2020 год'
-                        }
+                        // {
+                        //     name: 'count',
+                        //     format: 'money',
+                        //     title: 'Стоимость за 2020 год'
+                        // }
                     ]
                 },
                 tooltip: {

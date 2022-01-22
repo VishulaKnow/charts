@@ -1,11 +1,12 @@
-import { AxisPosition, ChartOrientation, DataOptions, MdtChartsDataSource, DiscreteAxisOptions, NumberAxisOptions, TwoDimensionalChart } from "../../config/config";
-import { AxisLabelPosition, AxisModelOptions, Orient } from "../model";
+import { AxisPosition, ChartOrientation, MdtChartsDataSource, NumberAxisOptions, AxisLabelPosition, MdtChartsTwoDimensionalOptions, DiscreteAxisOptions } from "../../config/config";
+import { AxisModelOptions, Orient } from "../model";
 import { ModelHelper } from "../modelHelper";
 import { AxisType, CLASSES } from "../modelBuilder";
 import { DataManagerModel } from "../dataManagerModel/dataManagerModel";
 import { TwoDimensionalModel } from "../notations/twoDimensionalModel";
 import { AxisLabelCanvas, TooltipSettings } from "../../designer/designerConfig";
 import { CanvasModel } from "../modelInstance/canvasModel/canvasModel";
+import { AxisModelService } from "./axisModelService";
 
 export interface LabelSize {
     width: number;
@@ -13,20 +14,25 @@ export interface LabelSize {
 }
 
 export class AxisModel {
-    public static getKeyAxis(charts: TwoDimensionalChart[], data: MdtChartsDataSource, dataOptions: DataOptions, orient: ChartOrientation, axisConfig: DiscreteAxisOptions, labelConfig: AxisLabelCanvas, canvasModel: CanvasModel, tooltipSettings: TooltipSettings): AxisModelOptions {
+    private static service = new AxisModelService();
+
+    public static getKeyAxis(options: MdtChartsTwoDimensionalOptions, data: MdtChartsDataSource, labelConfig: AxisLabelCanvas, canvasModel: CanvasModel, tooltipSettings: TooltipSettings): AxisModelOptions {
+        const { charts, orientation, data: dataOptions } = options
+        const axisConfig = options.axis.key;
+
         return {
             type: 'key',
-            orient: AxisModel.getAxisOrient(AxisType.Key, orient, axisConfig.position),
+            orient: AxisModel.getAxisOrient(AxisType.Key, orientation, axisConfig.position),
             translate: {
-                translateX: AxisModel.getAxisTranslateX(AxisType.Key, orient, axisConfig.position, canvasModel),
-                translateY: AxisModel.getAxisTranslateY(AxisType.Key, orient, axisConfig.position, canvasModel)
+                translateX: AxisModel.getAxisTranslateX(AxisType.Key, orientation, axisConfig.position, canvasModel),
+                translateY: AxisModel.getAxisTranslateY(AxisType.Key, orientation, axisConfig.position, canvasModel)
             },
             cssClass: 'key-axis',
             ticks: axisConfig.ticks,
             labels: {
                 maxSize: AxisModel.getLabelSize(labelConfig.maxSize.main, data[dataOptions.dataSource].map(d => d[dataOptions.keyField.name])).width,
-                position: AxisModel.getKeyAxisLabelPosition(canvasModel, DataManagerModel.getDataValuesByKeyField(data, dataOptions.dataSource, dataOptions.keyField.name).length),
-                visible: !TwoDimensionalModel.getChartsEmbeddedLabelsFlag(charts, orient),
+                position: AxisModel.getKeyAxisLabelPosition(canvasModel, DataManagerModel.getDataValuesByKeyField(data, dataOptions.dataSource, dataOptions.keyField.name).length, axisConfig),
+                visible: !TwoDimensionalModel.getChartsEmbeddedLabelsFlag(charts, orientation),
                 defaultTooltip: tooltipSettings.position === 'fixed'
             },
             visibility: axisConfig.visibility
@@ -90,12 +96,8 @@ export class AxisModel {
         return canvasModel.getMarginSide("top");
     }
 
-    public static getKeyAxisLabelPosition(canvasModel: CanvasModel, scopedDataLength: number): AxisLabelPosition {
-        const minBandSize = 50;
-        if (canvasModel.getChartBlockWidth() / scopedDataLength < minBandSize)
-            return 'rotated';
-
-        return 'straight';
+    public static getKeyAxisLabelPosition(canvasModel: CanvasModel, scopedDataLength: number, axisConfig?: DiscreteAxisOptions): AxisLabelPosition {
+        return this.service.getKeyAxisLabelPosition(canvasModel.getChartBlockWidth(), scopedDataLength, axisConfig?.labels?.position);
     }
 
     public static getLabelSize(labelMaxWidth: number, labelTexts: any[]): LabelSize {

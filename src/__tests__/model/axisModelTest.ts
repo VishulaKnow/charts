@@ -1,6 +1,7 @@
-import { DataOptions, MdtChartsDataSource, DiscreteAxisOptions, NumberAxisOptions, Size, TwoDimensionalChart, MdtChartsTwoDimensionalOptions } from "../../config/config";
+import { DataOptions, MdtChartsDataSource, DiscreteAxisOptions, NumberAxisOptions, Size, TwoDimensionalChart, MdtChartsTwoDimensionalOptions, AxisLabelPosition } from "../../config/config";
 import { TooltipSettings } from "../../designer/designerConfig";
 import { AxisModel } from "../../model/featuresModel/axisModel";
+import { AxisModelService } from "../../model/featuresModel/axisModelService";
 import { AxisModelOptions, BlockMargin } from "../../model/model";
 import { CanvasModel } from "../../model/modelInstance/canvasModel/canvasModel";
 
@@ -32,7 +33,7 @@ function getData(): MdtChartsDataSource {
 describe('get axes', () => {
     let charts: TwoDimensionalChart[];
     let data: MdtChartsDataSource;
-    let descreteAxisOptions: DiscreteAxisOptions;
+    let discreteAxisOptions: DiscreteAxisOptions;
     let numberAxisOptions: NumberAxisOptions;
     let dataOptions: DataOptions;
     let margin: BlockMargin;
@@ -92,8 +93,8 @@ describe('get axes', () => {
                 embeddedLabels: 'key'
             }
         ];
-        descreteAxisOptions = { ticks: { flag: false }, position: 'end', visibility: true }
-        numberAxisOptions = { ...descreteAxisOptions, domain: { start: 0, end: 120 } }
+        discreteAxisOptions = { ticks: { flag: false }, position: 'end', visibility: true }
+        numberAxisOptions = { ...discreteAxisOptions, domain: { start: 0, end: 120 } }
         data = getData();
         dataOptions = { dataSource: "dataSet_poor", keyField: { name: 'brand', format: null } };
         margin = { top: 20, bottom: 20, left: 20, right: 20 };
@@ -108,7 +109,8 @@ describe('get axes', () => {
         canvasModel.initMargin(margin);
         canvasModel.initBlockSize(blockSize);
 
-        const result = AxisModel.getKeyAxis(charts, data, dataOptions, 'vertical', descreteAxisOptions, { maxSize: { main: 60 } }, canvasModel, tooltipSettings);
+        // const result = AxisModel.getKeyAxis(charts, data, dataOptions, 'vertical', discreteAxisOptions, { maxSize: { main: 60 } }, canvasModel, tooltipSettings);
+        const result = AxisModel.getKeyAxis({ charts, orientation: "vertical", data: dataOptions, axis: { key: discreteAxisOptions } } as any, data, { maxSize: { main: 60 } }, canvasModel, tooltipSettings);
         const expected: AxisModelOptions = {
             visibility: true,
             type: "key",
@@ -136,9 +138,9 @@ describe('get axes', () => {
         canvasModel.initMargin(margin);
         canvasModel.initBlockSize(blockSize);
 
-        descreteAxisOptions.position = 'start';
+        discreteAxisOptions.position = 'start';
         tooltipSettings.position = 'followCursor';
-        const result = AxisModel.getKeyAxis(charts, data, dataOptions, 'horizontal', descreteAxisOptions, { maxSize: { main: 60 } }, canvasModel, tooltipSettings);
+        const result = AxisModel.getKeyAxis({ charts, orientation: "horizontal", data: dataOptions, axis: { key: discreteAxisOptions } } as any, data, { maxSize: { main: 60 } }, canvasModel, tooltipSettings);
         const expected: AxisModelOptions = {
             visibility: true,
             type: "key",
@@ -216,5 +218,40 @@ describe('get axes', () => {
             }
         }
         expect(result).toEqual(expected);
+    });
+});
+
+describe('AXisModelService', () => {
+    describe('getKeyAxisLabelPosition', () => {
+        const service = new AxisModelService();
+
+        test('should return value from config if it exists and equal values from type', () => {
+            let res = service.getKeyAxisLabelPosition(0, 0, "rotated");
+            expect(res).toBe<AxisLabelPosition>("rotated");
+
+            res = service.getKeyAxisLabelPosition(0, 0, "straight");
+            expect(res).toBe<AxisLabelPosition>("straight");
+        });
+
+        test('should return "straight" if band has more or equal 50px', () => {
+            let res = service.getKeyAxisLabelPosition(1000, 20);
+            expect(res).toBe<AxisLabelPosition>("straight"); // 1000 / 20 = 50
+
+            res = service.getKeyAxisLabelPosition(1000, 10);
+            expect(res).toBe<AxisLabelPosition>("straight"); // 1000 / 10 = 1000
+        });
+
+        test('should return "rotated" if band has less than 50px', () => {
+            let res = service.getKeyAxisLabelPosition(1000, 40);
+            expect(res).toBe<AxisLabelPosition>("rotated"); // 1000 / 40 = 25
+        });
+
+        test('should ignore value from config if it is not from type', () => {
+            let res = service.getKeyAxisLabelPosition(1000, 40, "straight2" as any);
+            expect(res).toBe<AxisLabelPosition>("rotated"); // 1000 / 40 = 25
+
+            res = service.getKeyAxisLabelPosition(1000, 10, "rotated2" as any);
+            expect(res).toBe<AxisLabelPosition>("straight"); // 1000 / 10 = 1000
+        });
     });
 });

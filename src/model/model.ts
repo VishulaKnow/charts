@@ -6,6 +6,7 @@ import {
     Size,
     TooltipOptions,
     TwoDimensionalChartType,
+    AxisLabelPosition,
 } from "../config/config";
 import { DataType, DonutOptionsCanvas, Formatter, TooltipSettings, Transitions } from "../designer/designerConfig";
 
@@ -14,7 +15,6 @@ type AxisType = "key" | "value";
 export type Orient = "top" | "bottom" | "left" | "right";
 export type ScaleKeyType = "band" | "point";
 export type ScaleValueType = "linear" | "datetime";
-export type AxisLabelPosition = "straight" | "rotated";
 export type LegendPosition = "off" | "top" | "bottom" | "left" | "right";
 export type EmbeddedLabelTypeModel = "none" | "key" | "value";
 export type DataOptions = {
