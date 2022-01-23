@@ -93,8 +93,8 @@ export function assembleModel(config: MdtChartsConfig, data: MdtChartsDataSource
     const dataSettings = getDataSettings(modelInstance.dataModel.getScope(), designerConfig);
     const transitions = getTransitions(designerConfig);
 
-    if (options.type === 'polar')
-        MarginModel.recalcPolarMarginWithScopedData(modelInstance, designerConfig, config, otherComponents.legendBlock, modelInstance.dataModel.getScope(), options);
+    // if (options.type === 'polar')
+    //     MarginModel.recalcPolarMarginWithScopedData(modelInstance, designerConfig, config, otherComponents.legendBlock, modelInstance.dataModel.getScope(), options);
 
     modelInstance.canvasModel.roundMargin();
 

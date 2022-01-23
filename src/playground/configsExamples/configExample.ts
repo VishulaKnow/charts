@@ -4,7 +4,7 @@ const configCars: MdtChartsConfig = {
     canvas: {
         class: 'outline',
         size: {
-            width: 170,
+            width: 270,
             height: 400
         }
     },
@@ -86,6 +86,7 @@ const configCars: MdtChartsConfig = {
     options: {
         type: 'polar',
         selectable: true,
+        title: "ChartChartChartChartChartChartChartChartChartChartChartChartChart",
         legend: {
             show: true
         },

@@ -105,6 +105,10 @@ export class MarginModel {
     }
 
     private static recalcMarginWithLegend(modelInstance: ModelInstance, config: MdtChartsConfig, legendMaxWidth: number, legendBlockModel: LegendBlockModel, data: MdtChartsDataSource): void {
+        if (config.options.type === "polar") {
+            return;
+        }
+
         const canvasModel = modelInstance.canvasModel;
 
         const legendPosition = LegendModel.getLegendModel(config.options.type, config.options.legend.show, modelInstance.canvasModel).position;
@@ -137,7 +141,7 @@ export class MarginModel {
         }
     }
 
-    private static appendToGlobalMarginValuesLegendMargin(canvasModel: CanvasModel, position: Orient, legendBlockModel: LegendBlockModel): void {
+    public static appendToGlobalMarginValuesLegendMargin(canvasModel: CanvasModel, position: Orient, legendBlockModel: LegendBlockModel): void {
         const legendCoordinate = legendBlockModel.coordinate;
         if (position === 'left' || position === 'right')
             canvasModel.increaseMarginSide(position, legendCoordinate[position].margin.left + legendCoordinate[position].margin.right);
@@ -156,6 +160,6 @@ export class MarginModel {
     }
 
     private static recalcMarginByTitle(canvasModel: CanvasModel, titleBlockModel: TitleBlockModel): void {
-        canvasModel.increaseMarginSide("top", titleBlockModel.margin.top + titleBlockModel.size);
+        canvasModel.increaseMarginSide("top", titleBlockModel.margin.top + titleBlockModel.size + titleBlockModel.margin.bottom);
     }
 }

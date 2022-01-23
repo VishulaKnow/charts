@@ -11,10 +11,12 @@ export class LegendModel {
         if (position === 'left' || position === 'right')
             return this.getLegendWidth(texts, legendMaxWidth);
 
+
+        //TODO: rm duplicate
         if (chartNotation === '2d' || chartNotation === 'interval') {
-            return LegendCanvasModel.getLegendHeight(texts, blockSize.width, legendBlockModel.coordinate[position].margin.left, legendBlockModel.coordinate[position].margin.right, 'row', position);
+            return LegendCanvasModel.getLegendHeight(texts, blockSize.width - legendBlockModel.coordinate[position].margin.left - legendBlockModel.coordinate[position].margin.right, 'row', position);
         } else if (chartNotation === 'polar') {
-            const size = LegendCanvasModel.getLegendHeight(texts, blockSize.width, legendBlockModel.coordinate[position].margin.left, legendBlockModel.coordinate[position].margin.right, 'column', position);
+            const size = LegendCanvasModel.getLegendHeight(texts, blockSize.width - legendBlockModel.coordinate[position].margin.left - legendBlockModel.coordinate[position].margin.right, 'row', position);
             return size;
         }
     }
@@ -36,7 +38,7 @@ export class LegendModel {
                 },
                 right: {
                     size: 0,
-                    margin: { top: canvasModel.titleCanvas.getAllNeededSpace(), bottom: mb, left: 0, right: mr },
+                    margin: { top: canvasModel.titleCanvas.getAllNeededSpace(), bottom: mb, left: 10, right: mr },
                     pad: 0
                 },
                 top: {

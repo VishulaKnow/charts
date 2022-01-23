@@ -5,28 +5,28 @@ import { LegendModel } from "./legendModel";
 export type LegendItemsDirection = 'row' | 'column'
 
 export class LegendCanvasModel {
-    public static getLegendHeight(texts: string[], blockWidth: number, marginLeft: number, marginRight: number, itemsPosition: LegendItemsDirection, legendPosition: LegendPosition): number {
-        const legendWrapper = document.createElement('div');
-        legendWrapper.style.opacity = '0';
-        legendWrapper.style.display = 'flex';
-        if (itemsPosition === 'column')
-            legendWrapper.style.flexDirection = 'column';
-        legendWrapper.style.position = 'absolute';
-        legendWrapper.style.width = blockWidth - marginLeft - marginRight + 'px';
+    public static getLegendHeight(texts: string[], chartBlockWidth: number, itemsDirection: LegendItemsDirection, legendPosition: LegendPosition): number {
+        const legendWrapper = this.getLegendWrapperEl(chartBlockWidth, itemsDirection);
         texts.forEach(text => {
             const itemWrapper = document.createElement('div');
             const colorBlock = document.createElement('span');
             const textBlock = document.createElement('span');
-            itemWrapper.classList.add(LegendModel.getLegendItemClass(itemsPosition));
-            if (itemsPosition === 'column') {
-                itemWrapper.style.whiteSpace = 'nowrap';
-                // itemWrapper.classList.add(LegendModel.getMarginClass(legendPosition));
+
+            itemWrapper.classList.add("legend-item");
+
+            if (legendPosition === 'bottom') {
+                itemWrapper.classList.add('legend-item-inline');
+                textBlock.classList.add('legend-label-nowrap');
             }
+            else {
+                itemWrapper.classList.add('legend-item-row');
+            }
+
             colorBlock.classList.add(CLASSES.legendColor);
             textBlock.classList.add(CLASSES.legendLabel);
             textBlock.textContent = text;
             itemWrapper.append(colorBlock, textBlock);
-            legendWrapper.append(itemWrapper)
+            legendWrapper.append(itemWrapper);
         });
         document.body.append(legendWrapper);
         const height = legendWrapper.offsetHeight;
@@ -58,18 +58,8 @@ export class LegendCanvasModel {
         return sumWidth;
     }
 
-    public static findElementsAmountByLegendSize(texts: string[], position: LegendPosition, legendBlockWidth: number, legendBlockHeight: number): number {
-        const legendWrapper = document.createElement('div');
-        legendWrapper.style.opacity = '0';
-        legendWrapper.style.display = 'flex';
-        legendWrapper.style.position = 'absolute';
-
-        if (position === "right")
-            legendWrapper.style.flexDirection = 'column';
-        else
-            legendWrapper.style.flexWrap = "wrap";
-
-        legendWrapper.style.width = legendBlockWidth + 'px';
+    public static findElementsAmountByLegendSize(texts: string[], position: LegendPosition, legendBlockWidth: number, legendBlockHeight: number): { amount: number; size: { width: number; height: number; } } {
+        const legendWrapper = this.getLegendWrapperEl(legendBlockWidth, position === "right" ? "column" : "row");
         document.body.append(legendWrapper);
         let amount = 0;
 
@@ -77,12 +67,16 @@ export class LegendCanvasModel {
             const itemWrapper = document.createElement('div');
             const colorBlock = document.createElement('span');
             const textBlock = document.createElement('span');
-            itemWrapper.classList.add('legend-item-row');
 
-            if (position === 'bottom')
+            itemWrapper.classList.add("legend-item");
+
+            if (position === 'bottom') {
+                itemWrapper.classList.add('legend-item-inline');
                 textBlock.classList.add('legend-label-nowrap');
-            else
-                itemWrapper.classList.add('mt-15');
+            }
+            else {
+                itemWrapper.classList.add('legend-item-row');
+            }
 
             colorBlock.classList.add(CLASSES.legendColor);
             textBlock.classList.add(CLASSES.legendLabel);
@@ -100,9 +94,33 @@ export class LegendCanvasModel {
             }
             amount++;
         }
+        const size = {
+            width: legendWrapper.offsetWidth,
+            height: legendWrapper.offsetHeight
+        }
+        // debugger;
 
         legendWrapper.remove();
 
-        return amount < 0 ? 0 : amount;
+        return {
+            amount: amount < 0 ? 0 : amount,
+            size
+        }
+    }
+
+    private static getLegendWrapperEl(legendBlockWidth: number, itemsDirection: LegendItemsDirection) {
+        const legendWrapper = document.createElement('div');
+        legendWrapper.style.opacity = '0';
+        legendWrapper.style.position = 'absolute';
+
+        legendWrapper.style.display = "flex";
+        if (itemsDirection === "column")
+            legendWrapper.classList.add("legend-block-column");
+        else
+            legendWrapper.classList.add("legend-block-row", "legend-wrapper-with-wrap");
+
+        legendWrapper.style.maxWidth = legendBlockWidth + 'px';
+
+        return legendWrapper;
     }
 }

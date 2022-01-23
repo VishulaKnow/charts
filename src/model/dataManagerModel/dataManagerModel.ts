@@ -2,6 +2,7 @@ import { MdtChartsConfig, TwoDimensionalChart, IntervalOptions, MdtChartsTwoDime
 import { BarOptionsCanvas, DesignerConfig, LegendBlockCanvas } from "../../designer/designerConfig";
 import { AxisModel } from "../featuresModel/axisModel";
 import { LegendCanvasModel } from "../featuresModel/legendModel/legendCanvasModel";
+import { LegendPolarMarginCalculator } from "../featuresModel/legendModel/polarMarginCalculator";
 import { DataScope, Field, LegendBlockModel } from "../model";
 import { ModelHelper } from "../modelHelper";
 import { DataModelInstance } from "../modelInstance/dataModel";
@@ -58,7 +59,7 @@ export class DataManagerModel {
     }
 
     private static initDataScopeForPolar(configOptions: MdtChartsPolarOptions, modelInstance: ModelInstance, data: MdtChartsDataSource, legendBlock: LegendBlockModel, legendCanvas: LegendBlockCanvas): void {
-        const canvas = modelInstance.canvasModel;
+        const canvasModel = modelInstance.canvasModel;
         const dataset = data[configOptions.data.dataSource];
         const keyFieldName = configOptions.data.keyField.name;
         const keys = dataset.map<string>(dataRow => dataRow[keyFieldName]);
@@ -68,24 +69,34 @@ export class DataManagerModel {
             return;
         }
 
-        const position = modelInstance.canvasModel.legendCanvas.getPosition();
+        const position = PolarModel.getLegendPositionByBlockSize(modelInstance.canvasModel);
 
         let maxItemsNumber: number;
         if (position === 'right') {
-            maxItemsNumber = LegendCanvasModel.findElementsAmountByLegendSize(keys, position, legendCanvas.maxWidth, canvas.getChartBlockHeight());
+            const { amount } = LegendCanvasModel.findElementsAmountByLegendSize(keys, position, legendCanvas.maxWidth, canvasModel.getChartBlockHeight() - legendBlock.coordinate.bottom.margin.bottom);
+            maxItemsNumber = amount;
         } else {
-            const margin = canvas.getMargin();
-            const marginBottomWithoutLegendBlock = margin.bottom - (legendBlock.coordinate.bottom.size === 0 ? legendBlock.coordinate.bottom.size : legendBlock.coordinate.bottom.size - legendBlock.coordinate.bottom.margin.bottom);
-            maxItemsNumber = LegendCanvasModel.findElementsAmountByLegendSize(
+            console.log(canvasModel.getChartBlockWidth());
+            const { amount } = LegendCanvasModel.findElementsAmountByLegendSize(
                 keys,
                 position,
-                canvas.getChartBlockWidth(true),
-                canvas.getBlockSize().height - margin.top - marginBottomWithoutLegendBlock - legendBlock.coordinate.bottom.margin.bottom - MIN_DONUT_BLOCK_SIZE
+                canvasModel.getChartBlockWidth() - legendBlock.coordinate.bottom.margin.left - legendBlock.coordinate.bottom.margin.right,
+                canvasModel.getChartBlockHeight() - legendBlock.coordinate.bottom.margin.bottom - MIN_DONUT_BLOCK_SIZE
             );
+            maxItemsNumber = amount;
         }
 
         const allowableKeys = keys.slice(0, maxItemsNumber);
-        const hidedRecordsAmount = keys.length - maxItemsNumber
+        const hidedRecordsAmount = keys.length - maxItemsNumber;
+
+
+        //=================
+        // debugger;
+        const marginCalculator = new LegendPolarMarginCalculator();
+        marginCalculator.updateMargin(position, allowableKeys, legendCanvas.maxWidth, canvasModel, legendBlock);
+        // debugger;
+
+        //=================
 
         modelInstance.dataModel.initScope(this.limitAllowableKeys(allowableKeys, hidedRecordsAmount, modelInstance.dataModel));
     }

@@ -6,7 +6,7 @@ export class TitleModel {
         const pad = titleText ? defaultPads : 0;
         return {
             margin: {
-                bottom: 0,
+                bottom: 10,
                 left: pad,
                 right: pad,
                 top: pad
