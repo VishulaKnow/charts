@@ -31,7 +31,7 @@ export class LegendCanvasModel {
         document.body.append(legendWrapper);
         const height = legendWrapper.offsetHeight;
         legendWrapper.remove();
-        return height;
+        return height + 1;
     }
 
     public static getLegendItemWidth(text: string): number {
