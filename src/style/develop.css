@@ -62,6 +62,9 @@
     transition: opacity 0.1s;
     /* will-change: opacity;      */
 }
+.legend-block-column .legend-item:not(:first-of-type) {
+    margin-top: 15px;
+}
 .legend-item-inline {
     white-space: nowrap;
     overflow: hidden;
@@ -78,12 +81,6 @@
 }
 .legend-item-row > span {
     display: block;
-}
-.mt-15 {
-    /* margin-top: 15px; */
-}
-.mt-10 {
-    /* margin-top: 10px; */
 }
 
 .legend-label {
