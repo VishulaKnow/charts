@@ -2,7 +2,7 @@ import { MdtChartsConfig, MdtChartsDataSource, PolarChart, MdtChartsPolarOptions
 import { ChartStyleConfig, DesignerConfig, DonutOptionsCanvas } from "../../designer/designerConfig";
 import { ChartStyleModelService } from "../chartStyleModel/chartStyleModel";
 import { LegendModel } from "../featuresModel/legendModel/legendModel";
-import { BlockMargin, PolarOptionsModel, PolarChartModel, DonutChartSettings, LegendPosition } from "../model";
+import { BlockMargin, PolarOptionsModel, PolarChartModel, DonutChartSettings, LegendPosition, LegendCoordinate } from "../model";
 import { CanvasModel } from "../modelInstance/canvasModel/canvasModel";
 import { ModelInstance } from "../modelInstance/modelInstance";
 
@@ -34,6 +34,10 @@ export class PolarModel {
             && blockWidth * widthCoefficientWhenLegendShouldInBottom < blockHeight
             ? 'bottom'
             : 'right';
+    }
+
+    public static doesChartBlockHasEnoughWidth(chartBlockWidth: number, legendWidth: number, legendCoordinate: LegendCoordinate) {
+        return chartBlockWidth - legendWidth - legendCoordinate.right.margin.left - legendCoordinate.right.margin.right > MIN_DONUT_BLOCK_SIZE;
     }
 
     private static getDonutSettings(settings: DonutOptionsCanvas, chartOptions: PolarChart): DonutChartSettings {

@@ -1,3 +1,4 @@
+import { DataLegendParams } from "../../dataManagerModel/dataManagerModel";
 import { LegendPosition } from "../../model";
 import { CLASSES } from "../../modelBuilder";
 import { LegendModel } from "./legendModel";
@@ -58,7 +59,7 @@ export class LegendCanvasModel {
         return sumWidth;
     }
 
-    public static findElementsAmountByLegendSize(texts: string[], position: LegendPosition, legendBlockWidth: number, legendBlockHeight: number): { amount: number; size: { width: number; height: number; } } {
+    public static findElementsAmountByLegendSize(texts: string[], position: LegendPosition, legendBlockWidth: number, legendBlockHeight: number): DataLegendParams {
         const legendWrapper = this.getLegendWrapperEl(legendBlockWidth, position === "right" ? "column" : "row");
         document.body.append(legendWrapper);
         let amount = 0;

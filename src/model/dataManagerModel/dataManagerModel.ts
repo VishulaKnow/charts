@@ -5,10 +5,19 @@ import { LegendCanvasModel } from "../featuresModel/legendModel/legendCanvasMode
 import { LegendPolarMarginCalculator } from "../featuresModel/legendModel/polarMarginCalculator";
 import { DataScope, Field, LegendBlockModel } from "../model";
 import { ModelHelper } from "../modelHelper";
+import { CanvasModel } from "../modelInstance/canvasModel/canvasModel";
 import { DataModelInstance } from "../modelInstance/dataModel";
 import { ModelInstance } from "../modelInstance/modelInstance";
 import { MIN_DONUT_BLOCK_SIZE, PolarModel } from "../notations/polarModel";
 import { DataManagerModelService } from "./dataManagerModelService";
+
+export interface DataLegendParams {
+    amount: number;
+    size: {
+        width: number;
+        height: number;
+    }
+}
 
 export class DataManagerModel {
     private static service = new DataManagerModelService();
@@ -60,9 +69,8 @@ export class DataManagerModel {
 
     private static initDataScopeForPolar(configOptions: MdtChartsPolarOptions, modelInstance: ModelInstance, data: MdtChartsDataSource, legendBlock: LegendBlockModel, legendCanvas: LegendBlockCanvas): void {
         const canvasModel = modelInstance.canvasModel;
-        const dataset = data[configOptions.data.dataSource];
         const keyFieldName = configOptions.data.keyField.name;
-        const keys = dataset.map<string>(dataRow => dataRow[keyFieldName]);
+        const keys = data[configOptions.data.dataSource].map<string>(dataRow => dataRow[keyFieldName]);
 
         if (!configOptions.legend.show) {
             modelInstance.dataModel.initScope(this.getMaximumPossibleScope(keys, modelInstance.dataModel));
@@ -71,34 +79,29 @@ export class DataManagerModel {
 
         const position = PolarModel.getLegendPositionByBlockSize(modelInstance.canvasModel);
 
-        let maxItemsNumber: number;
+        let maxItemsNumber = this.getLegendDataParams(position, keys, legendCanvas, canvasModel, legendBlock).amount;
+
+        const allowableKeys = keys.slice(0, maxItemsNumber);
+        const hidedRecordsAmount = keys.length - maxItemsNumber;
+
+        const marginCalculator = new LegendPolarMarginCalculator();
+        marginCalculator.updateMargin(position, allowableKeys, legendCanvas.maxWidth, canvasModel, legendBlock);
+
+        modelInstance.dataModel.initScope(this.limitAllowableKeys(allowableKeys, hidedRecordsAmount, modelInstance.dataModel));
+    }
+
+    //TODO: position type
+    private static getLegendDataParams(position: "bottom" | "right", keys: string[], legendCanvas: LegendBlockCanvas, canvasModel: CanvasModel, legendBlock: LegendBlockModel) {
         if (position === 'right') {
-            const { amount } = LegendCanvasModel.findElementsAmountByLegendSize(keys, position, legendCanvas.maxWidth, canvasModel.getChartBlockHeight() - legendBlock.coordinate.bottom.margin.bottom);
-            maxItemsNumber = amount;
+            return LegendCanvasModel.findElementsAmountByLegendSize(keys, position, legendCanvas.maxWidth, canvasModel.getChartBlockHeight() - legendBlock.coordinate.bottom.margin.bottom);
         } else {
-            console.log(canvasModel.getChartBlockWidth());
-            const { amount } = LegendCanvasModel.findElementsAmountByLegendSize(
+            return LegendCanvasModel.findElementsAmountByLegendSize(
                 keys,
                 position,
                 canvasModel.getChartBlockWidth() - legendBlock.coordinate.bottom.margin.left - legendBlock.coordinate.bottom.margin.right,
                 canvasModel.getChartBlockHeight() - legendBlock.coordinate.bottom.margin.bottom - MIN_DONUT_BLOCK_SIZE
             );
-            maxItemsNumber = amount;
         }
-
-        const allowableKeys = keys.slice(0, maxItemsNumber);
-        const hidedRecordsAmount = keys.length - maxItemsNumber;
-
-
-        //=================
-        // debugger;
-        const marginCalculator = new LegendPolarMarginCalculator();
-        marginCalculator.updateMargin(position, allowableKeys, legendCanvas.maxWidth, canvasModel, legendBlock);
-        // debugger;
-
-        //=================
-
-        modelInstance.dataModel.initScope(this.limitAllowableKeys(allowableKeys, hidedRecordsAmount, modelInstance.dataModel));
     }
 
     private static getMaximumPossibleScope(keys: string[], dataModel: DataModelInstance): DataScope {
