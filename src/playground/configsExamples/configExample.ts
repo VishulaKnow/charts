@@ -4,8 +4,8 @@ const configCars: MdtChartsConfig = {
     canvas: {
         class: 'outline',
         size: {
-            width: 270,
-            height: 400
+            width: 300,
+            height: 150
         }
     },
     // options: {
@@ -86,12 +86,11 @@ const configCars: MdtChartsConfig = {
     options: {
         type: 'polar',
         selectable: true,
-        title: "ChartChartChartChartChartChartChartChartChartChartChartChartChart",
         legend: {
             show: true
         },
         data: {
-            dataSource: 'dataSet_72',
+            dataSource: 'dataSet',
             keyField: {
                 name: 'brand',
                 format: 'string'

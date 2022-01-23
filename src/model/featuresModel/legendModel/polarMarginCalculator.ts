@@ -32,9 +32,8 @@ export class LegendPolarMarginCalculator {
         legendBlockModel.coordinate[legendPosition].size = legendSize;
     }
 
-    updateMargin(legendPosition: "right" | "bottom", items: string[], legendMaxWidth: number, canvasModel: CanvasModel, legendBlockModel: LegendBlockModel) {
+    updateMargin(legendPosition: "right" | "bottom", canvasModel: CanvasModel, legendBlockModel: LegendBlockModel, size: number) {
         canvasModel.legendCanvas.setPosition(legendPosition);
-        const size = LegendModel.getLegendSize("polar", legendPosition, items, legendMaxWidth, canvasModel.getBlockSize(), legendBlockModel);
         this.updateMarginObj(legendBlockModel, legendPosition, size, canvasModel);
     }
 

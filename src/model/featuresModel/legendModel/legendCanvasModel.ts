@@ -85,21 +85,21 @@ export class LegendCanvasModel {
             itemWrapper.append(colorBlock, textBlock);
             legendWrapper.append(itemWrapper);
 
+            amount++;
+
             if (legendWrapper.offsetHeight > legendBlockHeight) {
                 itemWrapper.remove();
                 if (legendBlockHeight - legendWrapper.offsetHeight >= 15 && position !== 'bottom')
-                    amount = i;
+                    amount = amount; //TODO: remove
                 else
-                    amount = i - 1;
+                    amount -= 1;
                 break;
             }
-            amount++;
         }
         const size = {
             width: legendWrapper.offsetWidth,
             height: legendWrapper.offsetHeight
         }
-        // debugger;
 
         legendWrapper.remove();
 

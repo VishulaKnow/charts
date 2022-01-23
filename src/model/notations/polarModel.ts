@@ -1,8 +1,7 @@
-import { MdtChartsConfig, MdtChartsDataSource, PolarChart, MdtChartsPolarOptions } from "../../config/config";
+import { MdtChartsDataSource, PolarChart, MdtChartsPolarOptions } from "../../config/config";
 import { ChartStyleConfig, DesignerConfig, DonutOptionsCanvas } from "../../designer/designerConfig";
 import { ChartStyleModelService } from "../chartStyleModel/chartStyleModel";
-import { LegendModel } from "../featuresModel/legendModel/legendModel";
-import { BlockMargin, PolarOptionsModel, PolarChartModel, DonutChartSettings, LegendPosition, LegendCoordinate } from "../model";
+import { PolarOptionsModel, PolarChartModel, DonutChartSettings, LegendCoordinate } from "../model";
 import { CanvasModel } from "../modelInstance/canvasModel/canvasModel";
 import { ModelInstance } from "../modelInstance/modelInstance";
 
@@ -36,8 +35,16 @@ export class PolarModel {
             : 'right';
     }
 
-    public static doesChartBlockHasEnoughWidth(chartBlockWidth: number, legendWidth: number, legendCoordinate: LegendCoordinate) {
-        return chartBlockWidth - legendWidth - legendCoordinate.right.margin.left - legendCoordinate.right.margin.right > MIN_DONUT_BLOCK_SIZE;
+    public static doesChartBlockHasEnoughWidthForContainsLegend(chartBlockWidth: number, legendWidth: number, legendCoordinate: LegendCoordinate) {
+        const rightLegendMargin = legendCoordinate.right.margin;
+        return chartBlockWidth - legendWidth - rightLegendMargin.left - rightLegendMargin.right >= MIN_DONUT_BLOCK_SIZE;
+    }
+
+    public static doesChartBlockHasEnoughHeightForContainsLegend(chartBlockHeight: number, legendCoordinate: LegendCoordinate) {
+        const minHeightForLegend = 30;
+        const bottomLegendMargin = legendCoordinate.bottom.margin;
+        const heightForLegend = chartBlockHeight - bottomLegendMargin.bottom - bottomLegendMargin.top - MIN_DONUT_BLOCK_SIZE;
+        return heightForLegend >= minHeightForLegend;
     }
 
     private static getDonutSettings(settings: DonutOptionsCanvas, chartOptions: PolarChart): DonutChartSettings {

@@ -77,15 +77,26 @@ export class DataManagerModel {
             return;
         }
 
-        const position = PolarModel.getLegendPositionByBlockSize(modelInstance.canvasModel);
+        let position = PolarModel.getLegendPositionByBlockSize(modelInstance.canvasModel);
+        let { amount: maxItemsNumber, size } = this.getLegendDataParams(position, keys, legendCanvas, canvasModel, legendBlock);
 
-        let maxItemsNumber = this.getLegendDataParams(position, keys, legendCanvas, canvasModel, legendBlock).amount;
+        if (position === "right" && !PolarModel.doesChartBlockHasEnoughWidthForContainsLegend(canvasModel.getChartBlockWidth(), size.width, legendBlock.coordinate)) {
+            const doesFreeSpaceExist = PolarModel.doesChartBlockHasEnoughHeightForContainsLegend(canvasModel.getChartBlockHeight(), legendBlock.coordinate);
+            if (doesFreeSpaceExist) {
+                const newParams = this.getLegendDataParams("bottom", keys, legendCanvas, canvasModel, legendBlock);
+                position = "bottom";
+                maxItemsNumber = newParams.amount;
+                size = newParams.size;
+            }
+        }
+
+        //TODO: global refactor of method
 
         const allowableKeys = keys.slice(0, maxItemsNumber);
         const hidedRecordsAmount = keys.length - maxItemsNumber;
 
         const marginCalculator = new LegendPolarMarginCalculator();
-        marginCalculator.updateMargin(position, allowableKeys, legendCanvas.maxWidth, canvasModel, legendBlock);
+        marginCalculator.updateMargin(position, canvasModel, legendBlock, position === "bottom" ? size.height : size.width);
 
         modelInstance.dataModel.initScope(this.limitAllowableKeys(allowableKeys, hidedRecordsAmount, modelInstance.dataModel));
     }
@@ -99,7 +110,7 @@ export class DataManagerModel {
                 keys,
                 position,
                 canvasModel.getChartBlockWidth() - legendBlock.coordinate.bottom.margin.left - legendBlock.coordinate.bottom.margin.right,
-                canvasModel.getChartBlockHeight() - legendBlock.coordinate.bottom.margin.bottom - MIN_DONUT_BLOCK_SIZE
+                canvasModel.getChartBlockHeight() - legendBlock.coordinate.bottom.margin.bottom - legendBlock.coordinate.bottom.margin.top - MIN_DONUT_BLOCK_SIZE
             );
         }
     }

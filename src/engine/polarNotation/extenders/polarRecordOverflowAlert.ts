@@ -1,8 +1,6 @@
 import { LegendPosition } from "../../../model/model";
 import { Block } from "../../block/block";
-import { Legend } from "../../features/legend/legend";
 import { AlertBlockPositionAttrs, RecordOverflowAlertCore, RecordOverflowAlertOptions, RecordOverflowAlertText } from "../../features/recordOverflowAlert/recordOverflowAlertCore";
-import { DomHelper } from "../../helpers/domHelper";
 
 interface PolarRecordOverflowAlertOptions {
     hidedRecordsAmount: number;
@@ -18,44 +16,36 @@ class PolarRecordOverflowAlertClass {
     }
 
     render(block: Block, options: PolarRecordOverflowAlertOptions) {
-        RecordOverflowAlertCore.render(block, this.buildCoreOptions(block, options));
+        RecordOverflowAlertCore.render(block, this.buildCoreOptions(options));
     }
 
     update(block: Block, options: PolarRecordOverflowAlertOptions) {
-        RecordOverflowAlertCore.update(block, this.buildCoreOptions(block, options));
+        RecordOverflowAlertCore.update(block, this.buildCoreOptions(options));
     }
 
-    private buildCoreOptions(block: Block, options: PolarRecordOverflowAlertOptions): RecordOverflowAlertOptions {
+    private buildCoreOptions(options: PolarRecordOverflowAlertOptions): RecordOverflowAlertOptions {
         return {
             hidedRecordsAmount: options.hidedRecordsAmount,
             text: this.text,
-            positionAttrs: this.getPositionAttrs(block, options)
+            positionAttrs: this.getPositionAttrs(options)
         }
     }
 
-    private getPositionAttrs(block: Block, options: PolarRecordOverflowAlertOptions): AlertBlockPositionAttrs {
+    private getPositionAttrs(options: PolarRecordOverflowAlertOptions): AlertBlockPositionAttrs {
         const position = options.legendPosition === 'off' ? 'bottom' : options.legendPosition;
         if (position === 'right') {
             return {
-                bottom: '20px',
-                left: this.getLeftAttrForRightBlock(block) + 'px'
+                bottom: '0px',
+                right: '0px'
             }
         }
 
         if (position === 'bottom') {
             return {
-                bottom: '20px',
+                bottom: '0',
                 left: '20px'
             }
         }
-    }
-
-    private getLeftAttrForRightBlock(block: Block): number {
-        const legendBlock = block.getSvg().select(`.${Legend.objectClass}`);
-        if (legendBlock.empty())
-            return 17;
-
-        return DomHelper.getSelectionNumericAttr(legendBlock, 'x');
     }
 }
 
