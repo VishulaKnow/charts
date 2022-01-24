@@ -642,7 +642,8 @@ export default class Listeners {
     }
 }
 
-import '../style/develop.css'
+import '../style/fonts.css';
+import '../style/develop.css';
 import config from './configsExamples/configExample';
 import designerConfig from './configsExamples/designerConfigExample';
 import { Chart } from '../main';
