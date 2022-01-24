@@ -65,7 +65,7 @@ export class PolarManager {
                 block.filterEventManager.setListenerPolar(model.chartBlock.margin, model.blockCanvas.size, options);
             });
 
-        Aggregator.update(block, data[options.data.dataSource], options.charts[0].data.valueField, options.chartCanvas.aggregator);
+        Aggregator.update(block, options.charts[0].data.valueField, options.chartCanvas.aggregator);
 
         Legend.update(block, data, model);
 

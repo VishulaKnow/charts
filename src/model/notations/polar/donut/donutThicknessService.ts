@@ -2,13 +2,15 @@ import { MdtChartsDonutThicknessOptions } from "../../../../designer/designerCon
 import { DonutThicknessUnit } from "../../../model";
 
 export class DonutThicknessService {
+    private defaultUnit: DonutThicknessUnit = "px";
+
     getUnit(settingsFromConfig: MdtChartsDonutThicknessOptions): DonutThicknessUnit {
         if (settingsFromConfig.value) return this.getUnitByValue(settingsFromConfig.value);
 
         const minUnit = this.getUnitByValue(settingsFromConfig.min);
         const maxUnit = this.getUnitByValue(settingsFromConfig.max);
 
-        return minUnit === maxUnit ? minUnit : "px";
+        return minUnit === maxUnit ? minUnit : this.defaultUnit;
     }
 
     valueToNumber(value: string | number) {
@@ -17,12 +19,12 @@ export class DonutThicknessService {
     }
 
     private getUnitByValue(value: string | number): DonutThicknessUnit {
-        if (typeof value !== "string") return "px";
+        if (typeof value !== "string") return this.defaultUnit;
         return this.getLastUnitFromString(value);
     }
 
     private getLastUnitFromString(value: string): DonutThicknessUnit {
-        let resultUnit: DonutThicknessUnit = "px";
+        let resultUnit: DonutThicknessUnit = this.defaultUnit;
 
         (<DonutThicknessUnit[]>["%", "px"]).forEach(unit => {
             if (value.endsWith(unit)) resultUnit = unit;

@@ -111,7 +111,7 @@ const configCars: MdtChartsConfig = {
             },
             aggregator: {
                 content: (model) => ({
-                    title: "Text",
+                    title: "Big Text text word another one",
                     value: model.data.reduce((acc, row) => acc + row.price, 0)
                 })
             }

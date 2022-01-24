@@ -33,7 +33,7 @@ export class Donut {
         const pieGenerator = DonutHelper.getPieGenerator(chart.data.valueField.name, settings.padAngle);
 
         const translateAttr = DonutHelper.getTranslate(margin, blockSize);
-        Aggregator.render(block, data, chart.data.valueField, innerRadius, translateAttr, thickness, settings.aggregator);
+        Aggregator.render(block, chart.data.valueField, innerRadius, translateAttr, thickness, settings.aggregator);
 
         const donutBlock = block.getSvg()
             .append('g')

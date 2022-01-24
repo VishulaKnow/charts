@@ -1,7 +1,5 @@
-import { sum } from 'd3-array'
 import { interpolateNumber } from 'd3-interpolate';
 import { Selection } from 'd3-selection'
-import { MdtChartsDataRow } from '../../../config/config';
 import { DataType } from '../../../designer/designerConfig';
 import { DonutAggregatorModel, Field } from "../../../model/model";
 import { Block } from "../../block/block";
@@ -19,33 +17,30 @@ export interface AggregatorInfo {
 export class Aggregator {
     public static readonly aggregatorValueClass = 'aggregator-value';
 
-    private static readonly aggregatorNameClass = 'aggregator-name';
+    private static readonly aggregatorTitleClass = 'aggregator-name';
     private static readonly aggregatorObjectClass = 'aggregator-object';
 
-    public static render(block: Block, data: MdtChartsDataRow[], valueField: Field, innerRadius: number, translate: Translate, fontSize: number, settings: DonutAggregatorModel): void {
-        const aggregator: AggregatorInfo = {
-            name: settings.content.title,
-            value: settings.content.value,
-            format: valueField.format,
-            margin: settings.margin
-        }
-
-        this.renderText(block, innerRadius, aggregator, translate, fontSize);
+    public static render(block: Block, valueField: Field, innerRadius: number, translate: Translate, fontSize: number, settings: DonutAggregatorModel): void {
+        const aggregator = this.buildConfig(valueField, settings);
+        this.renderText(block, innerRadius, aggregator, fontSize, translate);
     }
 
-    public static update(block: Block, data: MdtChartsDataRow[], valueField: Field, settings: DonutAggregatorModel): void {
-        const aggregator: AggregatorInfo = {
-            name: settings.content.title,
-            value: settings.content.value,
-            format: valueField.format,
-            margin: settings.margin
-        }
-
+    public static update(block: Block, valueField: Field, settings: DonutAggregatorModel): void {
+        const aggregator = this.buildConfig(valueField, settings);
         this.updateText(block, aggregator, typeof aggregator.value === "string");
     }
 
-    private static renderText(block: Block, innerRadius: number, aggregatorInfo: AggregatorInfo, translate: Translate, fontSize: number): void {
-        if (innerRadius > 50) {
+    private static buildConfig(valueField: Field, settings: DonutAggregatorModel): AggregatorInfo {
+        return {
+            name: settings.content.title,
+            value: settings.content.value,
+            format: valueField.format,
+            margin: settings.margin
+        }
+    }
+
+    private static renderText(block: Block, innerRadius: number, aggregatorInfo: AggregatorInfo, fontSize: number, translate: Translate): void {
+        if (innerRadius > 40) {
             const aggregatorObject = this.renderAggregatorObject(block, innerRadius, translate);
             const wrapper = this.renderWrapper(aggregatorObject);
 
@@ -58,10 +53,9 @@ export class Aggregator {
 
             wrapper
                 .append('div')
-                .attr('class', this.aggregatorNameClass)
+                .attr('class', this.aggregatorTitleClass)
                 .attr('title', aggregatorInfo.name)
                 .style('text-align', 'center')
-                .style('font-size', '18px')
                 .text(aggregatorInfo.name);
 
             this.reCalculateAggregatorFontSize(aggregatorObject.node().getBoundingClientRect().width, block, aggregatorInfo.margin);
@@ -107,15 +101,24 @@ export class Aggregator {
         const aggregatorValue = block.getSvg()
             .select<HTMLDivElement>(`.${this.aggregatorValueClass}`);
 
+        const aggregatorTitle = block.getSvg()
+            .select<HTMLDivElement>(`.${this.aggregatorTitleClass}`);
+
         let fontSize = parseInt(aggregatorValue.style('font-size'));
 
-        while (aggregatorValue.node().getBoundingClientRect().width > wrapperSize - pad * 2 && fontSize > 15) {
+        while (aggregatorValue.node().getBoundingClientRect().width > wrapperSize - pad * 2 && fontSize > 12) {
             aggregatorValue.style('font-size', `${fontSize -= 2}px`);
         }
 
         while (aggregatorValue.node().getBoundingClientRect().width < wrapperSize - pad * 2 && fontSize < 60) {
             aggregatorValue.style('font-size', `${fontSize += 2}px`);
         }
+
+        this.setTitleFontSize(aggregatorTitle, fontSize);
+    }
+
+    private static setTitleFontSize(aggregatorTitle: Selection<HTMLDivElement, unknown, HTMLElement, any>, valueFontSize: number) {
+        aggregatorTitle.style('font-size', `${Math.round(valueFontSize * 0.5)}px`);
     }
 
     private static renderAggregatorObject(block: Block, innerRadius: number, translate: Translate): Selection<SVGForeignObjectElement, unknown, HTMLElement, any> {
