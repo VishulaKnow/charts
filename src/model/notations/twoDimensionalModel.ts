@@ -1,4 +1,4 @@
-import { ChartOrientation, MdtChartsDataSource, TwoDimensionalChart, TwoDimensionalChartType, MdtChartsTwoDimensionalOptions } from "../../config/config";
+import { ChartOrientation, MdtChartsDataSource, MdtChartsTwoDimensionalChart, TwoDimensionalChartType, MdtChartsTwoDimensionalOptions } from "../../config/config";
 import { BarOptionsCanvas, ChartStyleConfig, DesignerConfig } from "../../designer/designerConfig";
 import { ChartStyleModelService } from "../chartStyleModel/chartStyleModel";
 import { TwoDimensionalChartStyleModel } from "../chartStyleModel/TwoDimensionalChartStyleModel";
@@ -33,7 +33,7 @@ export class TwoDimensionalModel {
         }
     }
 
-    public static getChartsEmbeddedLabelsFlag(charts: TwoDimensionalChart[], chartOrientation: ChartOrientation): boolean {
+    public static getChartsEmbeddedLabelsFlag(charts: MdtChartsTwoDimensionalChart[], chartOrientation: ChartOrientation): boolean {
         // Если НЕ найден хотя бы один чарт, который сегментированный или хотя бы один НЕ бар чарт, то лейблы можно прятать
         return charts.findIndex(chart => chart.isSegmented || chart.type !== 'bar') === -1
             && chartOrientation === 'horizontal'
@@ -45,7 +45,7 @@ export class TwoDimensionalModel {
      * Используется для того, чтобы при рендере графики с наибольшей площадью (area) не перекрывали графики с меньшей площадью (bar, line).
      * @param charts Чарты из конфига
      */
-    public static sortCharts(charts: TwoDimensionalChart[]): void {
+    public static sortCharts(charts: MdtChartsTwoDimensionalChart[]): void {
         const chartOrder: TwoDimensionalChartType[] = ['area', 'bar', 'line'];
         charts.sort((chart1, chart2) => chartOrder.indexOf(chart1.type) - chartOrder.indexOf(chart2.type));
     }
@@ -56,7 +56,7 @@ export class TwoDimensionalModel {
         }
     }
 
-    private static getChartsModel(charts: TwoDimensionalChart[], chartOrientation: ChartOrientation, chartStyleConfig: ChartStyleConfig): TwoDimensionalChartModel[] {
+    private static getChartsModel(charts: MdtChartsTwoDimensionalChart[], chartOrientation: ChartOrientation, chartStyleConfig: ChartStyleConfig): TwoDimensionalChartModel[] {
         const styleModel = new TwoDimensionalChartStyleModel(charts, chartStyleConfig);
         this.sortCharts(charts);
         const chartsModel: TwoDimensionalChartModel[] = [];
@@ -78,8 +78,8 @@ export class TwoDimensionalModel {
         return chartsModel;
     }
 
-    private static findChartsWithEmbeddedKeyLabels(charts: TwoDimensionalChart[]): TwoDimensionalChart[] {
-        const chartsWithEmbeddedLabels: TwoDimensionalChart[] = [];
+    private static findChartsWithEmbeddedKeyLabels(charts: MdtChartsTwoDimensionalChart[]): MdtChartsTwoDimensionalChart[] {
+        const chartsWithEmbeddedLabels: MdtChartsTwoDimensionalChart[] = [];
 
         charts.forEach(chart => {
             if (chart.type === 'bar' && chart.embeddedLabels === 'key')
@@ -89,7 +89,7 @@ export class TwoDimensionalModel {
         return chartsWithEmbeddedLabels;
     }
 
-    private static getEmbeddedLabelType(currentChart: TwoDimensionalChart, chartOrientation: ChartOrientation): EmbeddedLabelTypeModel {
+    private static getEmbeddedLabelType(currentChart: MdtChartsTwoDimensionalChart, chartOrientation: ChartOrientation): EmbeddedLabelTypeModel {
         if (chartOrientation === 'horizontal' && currentChart.type === 'bar')
             return currentChart.embeddedLabels;
         return 'none';
@@ -101,11 +101,11 @@ export class TwoDimensionalModel {
         }
     }
 
-    private static getChartsByType(charts: TwoDimensionalChart[], type: TwoDimensionalChartType): TwoDimensionalChart[] {
+    private static getChartsByType(charts: MdtChartsTwoDimensionalChart[], type: TwoDimensionalChartType): MdtChartsTwoDimensionalChart[] {
         return charts.filter(chart => chart.type === type);
     }
 
-    public static getChartsValueFieldsAmount(charts: TwoDimensionalChart[]): number[] {
+    public static getChartsValueFieldsAmount(charts: MdtChartsTwoDimensionalChart[]): number[] {
         return charts.map(chart => chart.data.valueFields.length);
     }
 }

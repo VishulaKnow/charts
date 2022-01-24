@@ -1,4 +1,4 @@
-import { MdtChartsConfig, MdtChartsDataSource, IntervalChart, IntervalOptions } from "../../config/config";
+import { MdtChartsConfig, MdtChartsDataSource, IntervalChart, MdtChartsIntervalOptions } from "../../config/config";
 import { ChartStyleConfig, DesignerConfig } from "../../designer/designerConfig";
 import { AxisModel } from "../featuresModel/axisModel";
 import { ChartStyleModelService } from "../chartStyleModel/chartStyleModel";
@@ -12,7 +12,7 @@ import { ModelInstance } from "../modelInstance/modelInstance";
 
 export class IntervalModel {
     public static getOptions(config: MdtChartsConfig, designerConfig: DesignerConfig, margin: BlockMargin, dataScope: DataScope, data: MdtChartsDataSource, modelInstance: ModelInstance): IntervalOptionsModel {
-        const options = <IntervalOptions>config.options;
+        const options = <MdtChartsIntervalOptions>config.options;
         const canvasModel = modelInstance.canvasModel;
 
         return {
@@ -84,7 +84,7 @@ export class IntervalModel {
         }
     }
 
-    public static getAdditionalElements(options: IntervalOptions): AdditionalElementsOptions {
+    public static getAdditionalElements(options: MdtChartsIntervalOptions): AdditionalElementsOptions {
         return {
             gridLine: options.additionalElements.gridLine
         }

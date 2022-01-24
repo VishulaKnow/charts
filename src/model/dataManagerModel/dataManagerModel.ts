@@ -1,4 +1,4 @@
-import { MdtChartsConfig, TwoDimensionalChart, IntervalOptions, MdtChartsTwoDimensionalOptions, MdtChartsPolarOptions, MdtChartsDataSource, MdtChartsDataRow } from "../../config/config";
+import { MdtChartsConfig, MdtChartsTwoDimensionalChart, MdtChartsIntervalOptions, MdtChartsTwoDimensionalOptions, MdtChartsPolarOptions, MdtChartsDataSource, MdtChartsDataRow } from "../../config/config";
 import { BarOptionsCanvas, DesignerConfig, LegendBlockCanvas } from "../../designer/designerConfig";
 import { AxisModel } from "../featuresModel/axisModel";
 import { LegendCanvasModel } from "../featuresModel/legendModel/legendCanvasModel";
@@ -42,7 +42,7 @@ export class DataManagerModel {
     }
 
 
-    private static initDataScopeFor2D(configOptions: MdtChartsTwoDimensionalOptions | IntervalOptions, modelInstance: ModelInstance, data: MdtChartsDataSource, designerConfig: DesignerConfig): void {
+    private static initDataScopeFor2D(configOptions: MdtChartsTwoDimensionalOptions | MdtChartsIntervalOptions, modelInstance: ModelInstance, data: MdtChartsDataSource, designerConfig: DesignerConfig): void {
         // Для interval всегда один элемент, так как там может быть только один столбик
         let itemsLength: number = 1;
         if (configOptions.type === '2d') {
@@ -128,14 +128,14 @@ export class DataManagerModel {
      * @param configOptions 
      * @param chartsLength 
      */
-    private static getElementsInGroupAmount(configOptions: MdtChartsTwoDimensionalOptions | IntervalOptions, chartsLength: number): number {
+    private static getElementsInGroupAmount(configOptions: MdtChartsTwoDimensionalOptions | MdtChartsIntervalOptions, chartsLength: number): number {
         if (configOptions.type === '2d')
             return this.getBarChartsInGroupAmount(configOptions.charts);
 
         return chartsLength;
     }
 
-    private static getBarChartsInGroupAmount(charts: TwoDimensionalChart[]): number {
+    private static getBarChartsInGroupAmount(charts: MdtChartsTwoDimensionalChart[]): number {
         let barsAmount = 0;
         charts.forEach(chart => {
             if (chart.type === 'bar' && chart.isSegmented)

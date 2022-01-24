@@ -1,5 +1,5 @@
 import * as chroma from "chroma-js";
-import { TwoDimensionalChart, TwoDimensionalChartType } from "../../config/config";
+import { MdtChartsTwoDimensionalChart, TwoDimensionalChartType } from "../../config/config";
 import { ChartStyleConfig } from "../../designer/designerConfig";
 import { ChartStyle } from "../model";
 import { ModelHelper } from "../modelHelper";
@@ -8,9 +8,9 @@ import { ChartStyleModelService } from "./chartStyleModel";
 export class TwoDimensionalChartStyleModel {
     private service = new TwoDimensionalChartStyleService();
 
-    constructor(private charts: TwoDimensionalChart[], private chartStyleConfig: ChartStyleConfig) { }
+    constructor(private charts: MdtChartsTwoDimensionalChart[], private chartStyleConfig: ChartStyleConfig) { }
 
-    getChartStyle(chart: TwoDimensionalChart, chartIndex: number): ChartStyle {
+    getChartStyle(chart: MdtChartsTwoDimensionalChart, chartIndex: number): ChartStyle {
         const fieldsAmounts = this.getChartsValueFieldsAmounts();
         return {
             elementColors: this.service.getChartColors(chart, this.chartStyleConfig, fieldsAmounts, chartIndex),
@@ -24,7 +24,7 @@ export class TwoDimensionalChartStyleModel {
 }
 
 export class TwoDimensionalChartStyleService {
-    getChartColors(chart: TwoDimensionalChart, styleConfig: ChartStyleConfig, chartsFieldsAmounts: number[], chartIndex: number) {
+    getChartColors(chart: MdtChartsTwoDimensionalChart, styleConfig: ChartStyleConfig, chartsFieldsAmounts: number[], chartIndex: number) {
         const generatedColors = this.generateNewChartColors(chart.type, styleConfig, chartsFieldsAmounts, chartIndex);
 
         chart.data.valueFields.forEach((field, fieldIndex) => {

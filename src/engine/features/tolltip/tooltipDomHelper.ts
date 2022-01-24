@@ -1,5 +1,5 @@
 import { Selection, BaseType } from 'd3-selection'
-import { MdtChartsDataSource, TooltipHtml, ValueField } from "../../../config/config";
+import { MdtChartsDataSource, TooltipHtml, MdtChartsValueField } from "../../../config/config";
 import { IntervalChartModel, OptionsModelData, PolarChartModel, TwoDimensionalChartModel } from "../../../model/model";
 import { ValueFormatter, } from "../../valueFormatter";
 import { TooltipHelper } from './tooltipHelper';
@@ -104,7 +104,7 @@ export class TooltipDomHelper {
             .html(tooltipHtml)
     }
 
-    private static getTooltipItemHtml(data: MdtChartsDataSource, dataOptions: OptionsModelData, keyValue: string, valueField: ValueField): string {
+    private static getTooltipItemHtml(data: MdtChartsDataSource, dataOptions: OptionsModelData, keyValue: string, valueField: MdtChartsValueField): string {
         const row = data[dataOptions.dataSource].find(d => d[dataOptions.keyField.name] === keyValue);
         const text = `<span class="tooltip-field-title">${valueField.title}</span>
             <span class="tooltip-field-value">${ValueFormatter.formatField(valueField.format, row[valueField.name])}</span>`;

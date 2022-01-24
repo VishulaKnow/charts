@@ -1,6 +1,6 @@
 import Engine from '../engine/engine';
 import { assembleModel, getPreparedData, getUpdatedModel } from '../model/modelBuilder';
-import { MdtChartsConfig, MdtChartsDataRow, MdtChartsDataSource, IntervalOptions, MdtChartsPolarOptions, TwoDimensionalChart, MdtChartsTwoDimensionalOptions } from '../config/config'
+import { MdtChartsConfig, MdtChartsDataRow, MdtChartsDataSource, MdtChartsIntervalOptions, MdtChartsPolarOptions, MdtChartsTwoDimensionalChart, MdtChartsTwoDimensionalOptions } from '../config/config'
 import { DesignerConfig, Transitions } from '../designer/designerConfig';
 
 class ListenersHelper {
@@ -93,7 +93,7 @@ export default class Listeners {
 
     private getDataWithRandomValues(data: any, maxRand: number) {
         if (this.config.options.type === '2d')
-            this.config.options.charts.forEach((chart: TwoDimensionalChart) => {
+            this.config.options.charts.forEach((chart: MdtChartsTwoDimensionalChart) => {
                 data[config.options.data.dataSource].forEach((row: any) => {
                     row[chart.data.valueFields[0].name] = ListenersHelper.randInt(0, maxRand);
                 });
@@ -234,7 +234,7 @@ export default class Listeners {
             }
             this.config.options = options;
         } else if (notationType === 'interval') {
-            const options: IntervalOptions = {
+            const options: MdtChartsIntervalOptions = {
                 title: this.config.options.title,
                 legend: this.config.options.legend,
                 selectable: this.config.options.selectable,

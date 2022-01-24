@@ -1,5 +1,5 @@
 import { ChartStyleConfig } from "../../designer/designerConfig";
-import { TwoDimensionalChart, TwoDimValueField } from "../../config/config";
+import { MdtChartsTwoDimensionalChart, TwoDimValueField } from "../../config/config";
 import { TwoDimensionalChartStyleService } from "../../model/chartStyleModel/TwoDimensionalChartStyleModel";
 
 describe('TwoDimensionalChartStyleService', () => {
@@ -19,7 +19,7 @@ describe('TwoDimensionalChartStyleService', () => {
             "#20b078"
         ];
 
-        const getChart = (fieldsColors?: string[]): TwoDimensionalChart => {
+        const getChart = (fieldsColors?: string[]): MdtChartsTwoDimensionalChart => {
             return {
                 type: "bar",
                 embeddedLabels: null,

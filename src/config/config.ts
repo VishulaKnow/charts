@@ -19,7 +19,7 @@ export type AxisLabelPosition = "straight" | "rotated";
 
 export interface MdtChartsConfig {
     canvas: ChartBlockCanvas;
-    options: MdtChartsPolarOptions | MdtChartsTwoDimensionalOptions | IntervalOptions;
+    options: MdtChartsPolarOptions | MdtChartsTwoDimensionalOptions | MdtChartsIntervalOptions;
 }
 
 
@@ -51,7 +51,7 @@ export interface MdtChartsTwoDimensionalOptions extends Options {
     type: '2d';
     axis: TwoDimensionalAxis;
     additionalElements: AdditionalElements;
-    charts: TwoDimensionalChart[];
+    charts: MdtChartsTwoDimensionalChart[];
     orientation: ChartOrientation;
 }
 
@@ -60,7 +60,7 @@ export interface MdtChartsPolarOptions extends Options {
     chart: PolarChart;
 }
 
-export interface IntervalOptions extends Options {
+export interface MdtChartsIntervalOptions extends Options {
     type: 'interval';
     axis: IntervalAxis;
     chart: IntervalChart;
@@ -85,11 +85,11 @@ export interface MdtChartsField {
     format: DataType;
 }
 
-export interface ValueField extends MdtChartsField {
+export interface MdtChartsValueField extends MdtChartsField {
     title: string;
 }
 
-export interface TwoDimValueField extends ValueField {
+export interface TwoDimValueField extends MdtChartsValueField {
     color?: string;
 }
 
@@ -165,7 +165,7 @@ interface Tooltip {
     show: boolean;
 }
 
-export interface TwoDimensionalChart extends ChartSettings {
+export interface MdtChartsTwoDimensionalChart extends ChartSettings {
     type: TwoDimensionalChartType;
     data: TwoDimensionalChartData;
     embeddedLabels: EmbeddedLabelType;
@@ -198,7 +198,7 @@ interface MarkersOptions {
 //====================================================== PolarChart
 export type MdtChartsColorField = string;
 export interface PolarChartData {
-    valueField: ValueField;
+    valueField: MdtChartsValueField;
     colorField?: MdtChartsColorField
 }
 
@@ -209,6 +209,6 @@ export interface MdtChartsPolarChartAggregator {
 
 //====================================================== IntervalChart
 interface IntervalChartData {
-    valueField1: ValueField;
-    valueField2: ValueField;
+    valueField1: MdtChartsValueField;
+    valueField2: MdtChartsValueField;
 }

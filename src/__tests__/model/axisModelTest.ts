@@ -1,4 +1,4 @@
-import { DataOptions, MdtChartsDataSource, DiscreteAxisOptions, NumberAxisOptions, Size, TwoDimensionalChart, MdtChartsTwoDimensionalOptions, AxisLabelPosition } from "../../config/config";
+import { DataOptions, MdtChartsDataSource, DiscreteAxisOptions, NumberAxisOptions, Size, MdtChartsTwoDimensionalChart, MdtChartsTwoDimensionalOptions, AxisLabelPosition } from "../../config/config";
 import { TooltipSettings } from "../../designer/designerConfig";
 import { AxisModel } from "../../model/featuresModel/axisModel";
 import { AxisModelService } from "../../model/featuresModel/axisModelService";
@@ -31,7 +31,7 @@ function getData(): MdtChartsDataSource {
 }
 
 describe('get axes', () => {
-    let charts: TwoDimensionalChart[];
+    let charts: MdtChartsTwoDimensionalChart[];
     let data: MdtChartsDataSource;
     let discreteAxisOptions: DiscreteAxisOptions;
     let numberAxisOptions: NumberAxisOptions;

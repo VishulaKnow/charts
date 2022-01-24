@@ -1,9 +1,9 @@
-import { TwoDimensionalChart } from "../../config/config";
+import { MdtChartsTwoDimensionalChart } from "../../config/config";
 import { TwoDimensionalModel } from "../../model/notations/twoDimensionalModel";
 
 describe('check chart sorting in order: [area, bar, line]', () => {
     test('charts must be sorted', () => {
-        const charts: TwoDimensionalChart[] = [
+        const charts: MdtChartsTwoDimensionalChart[] = [
             {
                 type: 'line',
                 markers: {
@@ -60,7 +60,7 @@ describe('check chart sorting in order: [area, bar, line]', () => {
     });
 
     test('charts must be sorted', () => {
-        const charts: TwoDimensionalChart[] = [
+        const charts: MdtChartsTwoDimensionalChart[] = [
             {
                 type: 'area',
                 markers: {

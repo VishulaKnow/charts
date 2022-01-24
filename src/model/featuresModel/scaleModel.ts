@@ -1,6 +1,6 @@
 import { ModelHelper } from "../modelHelper";
 import { BlockMargin, ScaleKeyModel, ScaleKeyType, ScaleValueModel, ScaleValueType } from "../model";
-import { AxisPosition, NumberDomain, IntervalChart, TwoDimensionalChart, MdtChartsTwoDimensionalOptions, Size, ChartOrientation, MdtChartsDataSource } from "../../config/config";
+import { AxisPosition, NumberDomain, IntervalChart, MdtChartsTwoDimensionalChart, MdtChartsTwoDimensionalOptions, Size, ChartOrientation, MdtChartsDataSource } from "../../config/config";
 import { CanvasModel } from "../modelInstance/canvasModel/canvasModel";
 
 export enum ScaleType {
@@ -8,7 +8,7 @@ export enum ScaleType {
 }
 
 export class ScaleModel {
-    public static getScaleKey(allowableKeys: string[], orient: ChartOrientation, canvasModel: CanvasModel, charts: TwoDimensionalChart[], barCharts: TwoDimensionalChart[]): ScaleKeyModel {
+    public static getScaleKey(allowableKeys: string[], orient: ChartOrientation, canvasModel: CanvasModel, charts: MdtChartsTwoDimensionalChart[], barCharts: MdtChartsTwoDimensionalChart[]): ScaleKeyModel {
         return {
             domain: allowableKeys,
             range: {
@@ -69,21 +69,21 @@ export class ScaleModel {
         return [domainPeekMax, domainPeekMin];
     }
 
-    public static getScaleKeyType(charts: TwoDimensionalChart[]): ScaleKeyType {
-        if (charts.findIndex((chart: TwoDimensionalChart) => chart.type === 'bar') === -1)
+    public static getScaleKeyType(charts: MdtChartsTwoDimensionalChart[]): ScaleKeyType {
+        if (charts.findIndex((chart: MdtChartsTwoDimensionalChart) => chart.type === 'bar') === -1)
             return 'point';
 
         return 'band';
     }
 
-    public static getScaleValueType(charts: TwoDimensionalChart[] | IntervalChart[]): ScaleValueType {
-        if (charts.findIndex((chart: TwoDimensionalChart | IntervalChart) => chart.type === 'gantt') !== -1)
+    public static getScaleValueType(charts: MdtChartsTwoDimensionalChart[] | IntervalChart[]): ScaleValueType {
+        if (charts.findIndex((chart: MdtChartsTwoDimensionalChart | IntervalChart) => chart.type === 'gantt') !== -1)
             return 'datetime';
 
         return 'linear';
     }
 
-    public static getElementsAmount(barCharts: TwoDimensionalChart[]): number {
+    public static getElementsAmount(barCharts: MdtChartsTwoDimensionalChart[]): number {
         if (barCharts.length === 0)
             return 1;
 
@@ -98,7 +98,7 @@ export class ScaleModel {
         return barsAmount;
     }
 
-    public static getScaleMaxValue(charts: TwoDimensionalChart[], dataSource: string, data: MdtChartsDataSource): number {
+    public static getScaleMaxValue(charts: MdtChartsTwoDimensionalChart[], dataSource: string, data: MdtChartsDataSource): number {
         let max: number = 0;
 
         charts.forEach(chart => {

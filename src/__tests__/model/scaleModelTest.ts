@@ -1,4 +1,4 @@
-import { MdtChartsDataSource, TwoDimensionalChart, MdtChartsTwoDimensionalOptions } from "../../config/config";
+import { MdtChartsDataSource, MdtChartsTwoDimensionalChart, MdtChartsTwoDimensionalOptions } from "../../config/config";
 import { ScaleModel } from "../../model/featuresModel/scaleModel";
 import { CanvasModel } from "../../model/modelInstance/canvasModel/canvasModel";
 
@@ -28,7 +28,7 @@ function getData(): MdtChartsDataSource {
 }
 
 describe('getScaleMaxValue test', () => {
-    let charts: TwoDimensionalChart[];
+    let charts: MdtChartsTwoDimensionalChart[];
     let data: MdtChartsDataSource;
     let dataSource: string;
 
@@ -424,7 +424,7 @@ describe('getScaleMaxValue test', () => {
 });
 
 describe('get scales tests', () => {
-    let charts: TwoDimensionalChart[];
+    let charts: MdtChartsTwoDimensionalChart[];
     let data: MdtChartsDataSource;
     let dataSource: string;
     let options: MdtChartsTwoDimensionalOptions;

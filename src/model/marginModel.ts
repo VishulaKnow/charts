@@ -1,4 +1,4 @@
-import { TwoDimensionalAxis, MdtChartsConfig, IntervalAxis, MdtChartsTwoDimensionalOptions, MdtChartsPolarOptions, IntervalOptions, ChartOrientation, MdtChartsDataSource } from "../config/config";
+import { TwoDimensionalAxis, MdtChartsConfig, IntervalAxis, MdtChartsTwoDimensionalOptions, MdtChartsPolarOptions, MdtChartsIntervalOptions, ChartOrientation, MdtChartsDataSource } from "../config/config";
 import { DesignerConfig } from "../designer/designerConfig";
 import { AxisModel, LabelSize } from "./featuresModel/axisModel";
 import { DataManagerModel } from "./dataManagerModel/dataManagerModel";
@@ -69,7 +69,7 @@ export class MarginModel {
         }
     }
 
-    private static getHorizontalMarginByAxisLabels(labelsMaxWidth: number, axis: TwoDimensionalAxis | IntervalAxis, data: MdtChartsDataSource, options: MdtChartsTwoDimensionalOptions | IntervalOptions): LabelSize {
+    private static getHorizontalMarginByAxisLabels(labelsMaxWidth: number, axis: TwoDimensionalAxis | IntervalAxis, data: MdtChartsDataSource, options: MdtChartsTwoDimensionalOptions | MdtChartsIntervalOptions): LabelSize {
         const keyAxisOrient = AxisModel.getAxisOrient(AxisType.Key, options.orientation, axis.key.position);
         let labelsTexts: string[];
 
@@ -127,7 +127,7 @@ export class MarginModel {
         }
     }
 
-    private static getLegendItemsContent(options: MdtChartsTwoDimensionalOptions | MdtChartsPolarOptions | IntervalOptions, data: MdtChartsDataSource): string[] {
+    private static getLegendItemsContent(options: MdtChartsTwoDimensionalOptions | MdtChartsPolarOptions | MdtChartsIntervalOptions, data: MdtChartsDataSource): string[] {
         if (options.type === '2d') {
             let texts: string[] = [];
             options.charts.forEach(chart => {
