@@ -8,7 +8,7 @@
     "build": "npx webpack --mode production",
     "watch": "npx webpack --mode development --watch",
     "test": "jest",
-    "build-lib": "npx tsc -p ."
+    "build-lib": "npx tsc -p tsconfig.production.json"
   },
   "homepage": "https://github.com/VishulaKnow/charts",
   "author": "",
