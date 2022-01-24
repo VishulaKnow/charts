@@ -35,15 +35,15 @@ class PolarRecordOverflowAlertClass {
         const position = options.legendPosition === 'off' ? 'bottom' : options.legendPosition;
         if (position === 'right') {
             return {
-                bottom: '0px',
-                right: '0px'
+                bottom: '0',
+                right: '0'
             }
         }
 
         if (position === 'bottom') {
             return {
                 bottom: '0',
-                left: '20px'
+                left: '0'
             }
         }
     }
