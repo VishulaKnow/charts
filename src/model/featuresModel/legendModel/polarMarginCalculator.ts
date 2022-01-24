@@ -4,7 +4,7 @@ import { MarginModel } from "../../marginModel";
 import { LegendBlockModel, Orient } from "../../model";
 import { CanvasModel } from "../../modelInstance/canvasModel/canvasModel";
 import { ModelInstance } from "../../modelInstance/modelInstance";
-import { MIN_DONUT_BLOCK_SIZE } from "../../notations/polarModel";
+import { MIN_DONUT_BLOCK_SIZE } from "../../notations/polar/polarModel";
 import { LegendModel } from "./legendModel";
 
 export class LegendPolarMarginCalculator {

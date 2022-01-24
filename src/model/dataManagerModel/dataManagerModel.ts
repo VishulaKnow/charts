@@ -8,7 +8,7 @@ import { ModelHelper } from "../modelHelper";
 import { CanvasModel } from "../modelInstance/canvasModel/canvasModel";
 import { DataModelInstance } from "../modelInstance/dataModel";
 import { ModelInstance } from "../modelInstance/modelInstance";
-import { MIN_DONUT_BLOCK_SIZE, PolarModel } from "../notations/polarModel";
+import { MIN_DONUT_BLOCK_SIZE, PolarModel } from "../notations/polar/polarModel";
 import { DataManagerModelService } from "./dataManagerModelService";
 
 export interface DataLegendParams {

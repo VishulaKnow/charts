@@ -7,9 +7,9 @@ export class TitleModel {
         return {
             margin: {
                 bottom: 10,
-                left: pad,
-                right: pad,
-                top: pad
+                left: 0,
+                right: 0,
+                top: 0
             },
             size: pad,
             pad: 0

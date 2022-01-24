@@ -21,10 +21,10 @@ export type DataOptions = {
     [option: string]: any;
 };
 
-export interface Model {
+export interface Model<O = TwoDimensionalOptionsModel | PolarOptionsModel | IntervalOptionsModel> {
     blockCanvas: BlockCanvas;
     chartBlock: ChartBlockModel;
-    options: TwoDimensionalOptionsModel | PolarOptionsModel | IntervalOptionsModel;
+    options: O;
     otherComponents: OtherCommonComponents;
     dataSettings: DataSettings;
     transitions?: Transitions;
@@ -162,12 +162,21 @@ export interface BarChartSettings {
 }
 
 //====================================================== PolarOptionsModel
-export interface DonutChartSettings extends Omit<DonutOptionsCanvas, "aggregatorPad"> {
-    aggregator: DonutChartAggreagorModel;
+export interface DonutChartSettings extends Omit<DonutOptionsCanvas, "aggregatorPad" | "thickness"> {
+    aggregator: DonutChartAggregatorModel;
+    thickness: DonutThicknessOptions;
 }
-export interface DonutChartAggreagorModel {
+export interface DonutChartAggregatorModel {
     margin: number;
     text: string;
+}
+
+export type DonutThicknessUnit = "px" | "%";
+export interface DonutThicknessOptions {
+    min: number;
+    max: number;
+    value: number;
+    unit: DonutThicknessUnit;
 }
 
 //====================================================== Charts

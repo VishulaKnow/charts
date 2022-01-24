@@ -2,7 +2,7 @@ import { MdtChartsConfig, MdtChartsDataSource, Size } from '../config/config';
 import { Model, BlockCanvas, ChartBlockModel, TwoDimensionalOptionsModel, PolarOptionsModel, BlockMargin, DataSettings, TwoDimChartElementsSettings, DataFormat, DataScope, IntervalOptionsModel } from './model';
 import { MarginModel } from './marginModel';
 import { TwoDimensionalModel } from './notations/twoDimensionalModel';
-import { PolarModel } from './notations/polarModel';
+import { PolarModel } from './notations/polar/polarModel';
 import { DataManagerModel } from './dataManagerModel/dataManagerModel';
 import { BarOptionsCanvas, DesignerConfig, DonutOptionsCanvas, Transitions } from '../designer/designerConfig';
 import { IntervalModel } from './notations/intervalModel';

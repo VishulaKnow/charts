@@ -8,7 +8,7 @@ import { AxisType } from "./modelBuilder";
 import { TwoDimensionalModel } from "./notations/twoDimensionalModel";
 import { ModelInstance } from "./modelInstance/modelInstance";
 import { CanvasModel } from "./modelInstance/canvasModel/canvasModel";
-import { PolarModel } from "./notations/polarModel";
+import { PolarModel } from "./notations/polar/polarModel";
 
 export const AXIS_HORIZONTAL_LABEL_PADDING = 15;
 export const AXIS_VERTICAL_LABEL_PADDING = 10;

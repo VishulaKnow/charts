@@ -1,8 +1,7 @@
 import { merge } from "d3-array";
 import { PieArcDatum, Arc, arc, Pie, pie } from "d3-shape";
 import { MdtChartsDataRow, Size, MdtChartsColorField } from "../../../config/config";
-import { MdtChartsDonutThicknessUnit } from "../../../main";
-import { BlockMargin, DonutChartSettings } from "../../../model/model";
+import { BlockMargin, DonutChartSettings, DonutThicknessUnit } from "../../../model/model";
 import { Translate } from "./donut";
 
 const MIN_CHART_BLOCK_SIZE_FOR_MAX_THICKNESS = 400;
@@ -81,7 +80,7 @@ export class DonutHelper {
         return sortedMerge;
     }
 
-    private static getThicknessByUnit(chartBlockSize: Size, valueInPx: number, unit: MdtChartsDonutThicknessUnit) {
+    private static getThicknessByUnit(chartBlockSize: Size, valueInPx: number, unit: DonutThicknessUnit) {
         if (unit === "px") return valueInPx;
 
         const minSideSize = Math.min(chartBlockSize.width, chartBlockSize.height);

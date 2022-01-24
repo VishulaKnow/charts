@@ -1,14 +1,17 @@
-import { MdtChartsDataSource, PolarChart, MdtChartsPolarOptions } from "../../config/config";
-import { ChartStyleConfig, DesignerConfig, DonutOptionsCanvas } from "../../designer/designerConfig";
-import { ChartStyleModelService } from "../chartStyleModel/chartStyleModel";
-import { PolarOptionsModel, PolarChartModel, DonutChartSettings, LegendCoordinate } from "../model";
-import { CanvasModel } from "../modelInstance/canvasModel/canvasModel";
-import { ModelInstance } from "../modelInstance/modelInstance";
+import { MdtChartsDataSource, PolarChart, MdtChartsPolarOptions } from "../../../config/config";
+import { ChartStyleConfig, DesignerConfig, DonutOptionsCanvas } from "../../../designer/designerConfig";
+import { ChartStyleModelService } from "../../chartStyleModel/chartStyleModel";
+import { PolarOptionsModel, PolarChartModel, DonutChartSettings, LegendCoordinate } from "../../model";
+import { CanvasModel } from "../../modelInstance/canvasModel/canvasModel";
+import { ModelInstance } from "../../modelInstance/modelInstance";
+import { DonutModel } from "./donut/donutModel";
 
 /** If donut block has width less than this const, legend change postion from "right" to "bottom" */
 export const MIN_DONUT_BLOCK_SIZE = 120;
 
 export class PolarModel {
+    private static donutModel = new DonutModel();
+
     public static getOptions(options: MdtChartsPolarOptions, data: MdtChartsDataSource, designerConfig: DesignerConfig, modelInstance: ModelInstance): PolarOptionsModel {
         return {
             type: options.type,
@@ -48,14 +51,7 @@ export class PolarModel {
     }
 
     private static getDonutSettings(settings: DonutOptionsCanvas, chartOptions: PolarChart): DonutChartSettings {
-        return {
-            padAngle: settings.padAngle,
-            thickness: { ...settings.thickness },
-            aggregator: {
-                margin: settings.aggregatorPad,
-                text: chartOptions.aggregator.text
-            }
-        }
+        return this.donutModel.getSettings(settings, chartOptions);
     }
 
     private static getChartsModel(chart: PolarChart, dataLength: number, chartStyleConfig: ChartStyleConfig): PolarChartModel[] {

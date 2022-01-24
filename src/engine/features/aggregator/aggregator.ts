@@ -3,7 +3,7 @@ import { interpolateNumber } from 'd3-interpolate';
 import { Selection } from 'd3-selection'
 import { MdtChartsDataRow } from '../../../config/config';
 import { DataType } from '../../../designer/designerConfig';
-import { DonutChartAggreagorModel, Field } from "../../../model/model";
+import { DonutChartAggregatorModel, Field } from "../../../model/model";
 import { Block } from "../../block/block";
 import { Helper } from '../../helpers/helper';
 import { ValueFormatter } from '../../valueFormatter';
@@ -22,7 +22,7 @@ export class Aggregator {
     private static readonly aggregatorNameClass = 'aggregator-name';
     private static readonly aggregatorObjectClass = 'aggregator-object';
 
-    public static render(block: Block, data: MdtChartsDataRow[], valueField: Field, innerRadius: number, translate: Translate, fontSize: number, settings: DonutChartAggreagorModel): void {
+    public static render(block: Block, data: MdtChartsDataRow[], valueField: Field, innerRadius: number, translate: Translate, fontSize: number, settings: DonutChartAggregatorModel): void {
         const aggregator: AggregatorInfo = {
             name: settings.text,
             value: sum(data.map(d => d[valueField.name])),
@@ -33,9 +33,9 @@ export class Aggregator {
         this.renderText(block, innerRadius, aggregator, translate, fontSize);
     }
 
-    public static update(block: Block, data: MdtChartsDataRow[], valueField: Field, settings: DonutChartAggreagorModel): void {
+    public static update(block: Block, data: MdtChartsDataRow[], valueField: Field, settings: DonutChartAggregatorModel): void {
         const aggregator: AggregatorInfo = {
-            name: 'Сумма',
+            name: settings.text,
             value: sum(data.map(d => d[valueField.name])),
             format: valueField.format,
             margin: settings.margin
@@ -91,17 +91,17 @@ export class Aggregator {
     }
 
     private static reCalculateAggregatorFontSize(wrapperSize: number, block: Block, pad: number): void {
-        const aggreggatorValue = block.getSvg()
+        const aggregatorValue = block.getSvg()
             .select<HTMLDivElement>(`.${this.aggregatorValueClass}`);
 
-        let fontSize = parseInt(aggreggatorValue.style('font-size'));
+        let fontSize = parseInt(aggregatorValue.style('font-size'));
 
-        while (aggreggatorValue.node().getBoundingClientRect().width > wrapperSize - pad * 2 && fontSize > 15) {
-            aggreggatorValue.style('font-size', `${fontSize -= 2}px`);
+        while (aggregatorValue.node().getBoundingClientRect().width > wrapperSize - pad * 2 && fontSize > 15) {
+            aggregatorValue.style('font-size', `${fontSize -= 2}px`);
         }
 
-        while (aggreggatorValue.node().getBoundingClientRect().width < wrapperSize - pad * 2 && fontSize < 60) {
-            aggreggatorValue.style('font-size', `${fontSize += 2}px`);
+        while (aggregatorValue.node().getBoundingClientRect().width < wrapperSize - pad * 2 && fontSize < 60) {
+            aggregatorValue.style('font-size', `${fontSize += 2}px`);
         }
     }
 

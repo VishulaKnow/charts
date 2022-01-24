@@ -2,7 +2,7 @@ import { ChartNotation, Size } from "../../../config/config";
 import { ILegendModel, LegendBlockModel, LegendPosition, Orient, TitleBlockModel } from "../../model";
 import { ModelHelper } from "../../modelHelper";
 import { CanvasModel } from "../../modelInstance/canvasModel/canvasModel";
-import { PolarModel } from "../../notations/polarModel";
+import { PolarModel } from "../../notations/polar/polarModel";
 import { LegendCanvasModel, LegendItemsDirection } from "./legendCanvasModel";
 
 

@@ -4,8 +4,8 @@ const configCars: MdtChartsConfig = {
     canvas: {
         class: 'outline',
         size: {
-            width: 300,
-            height: 150
+            width: 400,
+            height: 300
         }
     },
     // options: {
@@ -86,6 +86,7 @@ const configCars: MdtChartsConfig = {
     options: {
         type: 'polar',
         selectable: true,
+        title: "Chart header",
         legend: {
             show: true
         },
