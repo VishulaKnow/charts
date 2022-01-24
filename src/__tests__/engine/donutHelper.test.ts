@@ -14,7 +14,7 @@ describe('DonutHelper', () => {
                 unit: "px",
                 value: null
             },
-            aggregator: { margin: 0, text: "" }
+            aggregator: null
         })
 
         test('should return max thickness if donut block size is greater than 400px', () => {

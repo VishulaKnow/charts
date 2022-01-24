@@ -1,19 +1,18 @@
-import { PolarChart } from "../../../../config/config";
+import { MdtChartsDataRow, PolarChart } from "../../../../config/config";
 import { DonutOptionsCanvas, MdtChartsDonutThicknessOptions } from "../../../../designer/designerConfig";
-import { DonutChartSettings, DonutThicknessOptions } from "../../../model";
+import { DonutAggregatorModel, DonutChartSettings, DonutThicknessOptions } from "../../../model";
+import { DonutAggregatorService } from "./donutAggregatorService";
 import { DonutThicknessService } from "./donutThicknessService";
 
 export class DonutModel {
     private thicknessService = new DonutThicknessService();
+    private aggregatorService = new DonutAggregatorService();
 
-    getSettings(settingsFromConfig: DonutOptionsCanvas, chartOptions: PolarChart): DonutChartSettings {
+    getSettings(settingsFromConfig: DonutOptionsCanvas, chartOptions: PolarChart, dataRows: MdtChartsDataRow[]): DonutChartSettings {
         return {
             padAngle: settingsFromConfig.padAngle,
             thickness: this.getThicknessOptions(settingsFromConfig.thickness),
-            aggregator: {
-                margin: settingsFromConfig.aggregatorPad,
-                text: chartOptions.aggregator.text
-            }
+            aggregator: this.getAggregatorOptions(settingsFromConfig, chartOptions, dataRows)
         }
     }
 
@@ -23,6 +22,16 @@ export class DonutModel {
             max: this.thicknessService.valueToNumber(settingsFromConfig.max),
             min: this.thicknessService.valueToNumber(settingsFromConfig.min),
             value: this.thicknessService.valueToNumber(settingsFromConfig.value),
+        }
+    }
+
+    private getAggregatorOptions(settingsFromConfig: DonutOptionsCanvas, chartOptions: PolarChart, dataRows: MdtChartsDataRow[]): DonutAggregatorModel {
+        return {
+            margin: settingsFromConfig.aggregatorPad,
+            content: this.aggregatorService.getContent(chartOptions.aggregator, {
+                rows: dataRows,
+                valueFieldName: chartOptions.data.valueField.name
+            })
         }
     }
 }

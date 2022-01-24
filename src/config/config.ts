@@ -176,7 +176,7 @@ export interface MdtChartsTwoDimensionalChart extends ChartSettings {
 export interface PolarChart extends ChartSettings {
     type: PolarChartType;
     data: PolarChartData;
-    aggregator: MdtChartsPolarChartAggregator;
+    aggregator?: MdtChartsDonutAggregator;
 }
 
 export interface IntervalChart extends ChartSettings {
@@ -202,8 +202,17 @@ export interface PolarChartData {
     colorField?: MdtChartsColorField
 }
 
-export interface MdtChartsPolarChartAggregator {
-    text: string;
+export interface MdtChartsDonutAggregator {
+    content?: (model: MdtChartsAggregatorModel) => MdtChartsAggregatorContent;
+}
+
+export interface MdtChartsAggregatorModel {
+    data: MdtChartsDataRow[];
+}
+
+export interface MdtChartsAggregatorContent {
+    value: string | number;
+    title: string;
 }
 
 

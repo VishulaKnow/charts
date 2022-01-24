@@ -1,4 +1,4 @@
-import { MdtChartsDataSource, PolarChart, MdtChartsPolarOptions } from "../../../config/config";
+import { MdtChartsDataSource, PolarChart, MdtChartsPolarOptions, MdtChartsDataRow } from "../../../config/config";
 import { ChartStyleConfig, DesignerConfig, DonutOptionsCanvas } from "../../../designer/designerConfig";
 import { ChartStyleModelService } from "../../chartStyleModel/chartStyleModel";
 import { PolarOptionsModel, PolarChartModel, DonutChartSettings, LegendCoordinate } from "../../model";
@@ -13,15 +13,17 @@ export class PolarModel {
     private static donutModel = new DonutModel();
 
     public static getOptions(options: MdtChartsPolarOptions, data: MdtChartsDataSource, designerConfig: DesignerConfig, modelInstance: ModelInstance): PolarOptionsModel {
+        const dataRows = data[options.data.dataSource];
+
         return {
             type: options.type,
             selectable: !!options.selectable,
             title: options.title,
             data: { ...options.data },
-            charts: this.getChartsModel(options.chart, data[options.data.dataSource].length, designerConfig.chartStyle),
+            charts: this.getChartsModel(options.chart, dataRows.length, designerConfig.chartStyle),
             legend: modelInstance.canvasModel.legendCanvas.getModel(),
             tooltip: options.tooltip,
-            chartCanvas: this.getDonutSettings(designerConfig.canvas.chartOptions.donut, options.chart)
+            chartCanvas: this.getDonutSettings(designerConfig.canvas.chartOptions.donut, options.chart, dataRows)
         }
     }
 
@@ -50,8 +52,8 @@ export class PolarModel {
         return heightForLegend >= minHeightForLegend;
     }
 
-    private static getDonutSettings(settings: DonutOptionsCanvas, chartOptions: PolarChart): DonutChartSettings {
-        return this.donutModel.getSettings(settings, chartOptions);
+    private static getDonutSettings(settings: DonutOptionsCanvas, chartOptions: PolarChart, dataRows: MdtChartsDataRow[]): DonutChartSettings {
+        return this.donutModel.getSettings(settings, chartOptions, dataRows);
     }
 
     private static getChartsModel(chart: PolarChart, dataLength: number, chartStyleConfig: ChartStyleConfig): PolarChartModel[] {

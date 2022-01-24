@@ -163,12 +163,16 @@ export interface BarChartSettings {
 
 //====================================================== PolarOptionsModel
 export interface DonutChartSettings extends Omit<DonutOptionsCanvas, "aggregatorPad" | "thickness"> {
-    aggregator: DonutChartAggregatorModel;
+    aggregator: DonutAggregatorModel;
     thickness: DonutThicknessOptions;
 }
-export interface DonutChartAggregatorModel {
+export interface DonutAggregatorModel {
     margin: number;
-    text: string;
+    content: DonutAggregatorContent;
+}
+export interface DonutAggregatorContent {
+    value: string | number;
+    title: string;
 }
 
 export type DonutThicknessUnit = "px" | "%";
