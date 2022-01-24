@@ -1,5 +1,6 @@
 {
     "compilerOptions": {
+        "outDir": "./lib/",
         "noImplicitAny": true,
         "target": "es6",
         "lib": ["ES2017", "DOM"],
