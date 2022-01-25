@@ -8,10 +8,10 @@ const designerConfig: DesignerConfig = {
             }
         },
         chartBlockMargin: {
-            top: 0,
-            bottom: 0,
-            left: 0,
-            right: 0
+            top: 5,
+            bottom: 5,
+            left: 5,
+            right: 5
         },
         legendBlock: {
             maxWidth: 200
@@ -31,7 +31,7 @@ const designerConfig: DesignerConfig = {
                     max: "30%",
                     value: "25%"
                 },
-                aggregatorPad: 30
+                aggregatorPad: 10
             }
         }
     },

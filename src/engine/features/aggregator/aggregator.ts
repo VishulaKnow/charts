@@ -11,7 +11,7 @@ export interface AggregatorInfo {
     name: string;
     value: number | string;
     format: DataType;
-    margin: number;
+    marginInPercent: number;
 }
 
 export class Aggregator {
@@ -35,30 +35,32 @@ export class Aggregator {
             name: settings.content.title,
             value: settings.content.value,
             format: valueField.format,
-            margin: settings.margin
+            marginInPercent: settings.margin
         }
     }
 
     private static renderText(block: Block, innerRadius: number, aggregatorInfo: AggregatorInfo, fontSize: number, translate: Translate): void {
-        if (innerRadius > 40) {
+        if (innerRadius > 30) {
             const aggregatorObject = this.renderAggregatorObject(block, innerRadius, translate);
             const wrapper = this.renderWrapper(aggregatorObject);
 
             wrapper
                 .append<HTMLDivElement>('div')
                 .attr('class', this.aggregatorValueClass)
+                .attr('title', this.formatValue(aggregatorInfo.format, aggregatorInfo.value))
                 .style('text-align', 'center')
                 .style('font-size', `${fontSize}px`)
                 .text(this.formatValue(aggregatorInfo.format, aggregatorInfo.value));
 
-            wrapper
+            const titleBlock = wrapper
                 .append('div')
                 .attr('class', this.aggregatorTitleClass)
                 .attr('title', aggregatorInfo.name)
                 .style('text-align', 'center')
                 .text(aggregatorInfo.name);
 
-            this.reCalculateAggregatorFontSize(aggregatorObject.node().getBoundingClientRect().width, block, aggregatorInfo.margin);
+            this.setTitleFontSize(titleBlock, innerRadius);
+            this.reCalculateAggregatorFontSize(aggregatorObject.node().getBoundingClientRect().width, block, aggregatorInfo.marginInPercent);
         }
     }
 
@@ -92,7 +94,7 @@ export class Aggregator {
 
                 return t => {
                     this.textContent = thisClass.formatValue(newAggregator.format, parseFloat((interpolateFunc(t)).toFixed(precision)));
-                    thisClass.reCalculateAggregatorFontSize(aggregatorObject.node().getBoundingClientRect().width, block, newAggregator.margin);
+                    thisClass.reCalculateAggregatorFontSize(aggregatorObject.node().getBoundingClientRect().width, block, newAggregator.marginInPercent);
                 }
             });
     }
@@ -101,24 +103,21 @@ export class Aggregator {
         const aggregatorValue = block.getSvg()
             .select<HTMLDivElement>(`.${this.aggregatorValueClass}`);
 
-        const aggregatorTitle = block.getSvg()
-            .select<HTMLDivElement>(`.${this.aggregatorTitleClass}`);
+        const sizeCoefficient = 0.25;
+        let fontSize = wrapperSize * sizeCoefficient;
+        aggregatorValue.style('font-size', `${fontSize}px`);
 
-        let fontSize = parseInt(aggregatorValue.style('font-size'));
+        const margin = pad / 100 * wrapperSize;
 
-        while (aggregatorValue.node().getBoundingClientRect().width > wrapperSize - pad * 2 && fontSize > 12) {
+        while (aggregatorValue.node().getBoundingClientRect().width > wrapperSize - margin * 2 && fontSize > 12) {
             aggregatorValue.style('font-size', `${fontSize -= 2}px`);
         }
-
-        while (aggregatorValue.node().getBoundingClientRect().width < wrapperSize - pad * 2 && fontSize < 60) {
-            aggregatorValue.style('font-size', `${fontSize += 2}px`);
-        }
-
-        this.setTitleFontSize(aggregatorTitle, fontSize);
     }
 
-    private static setTitleFontSize(aggregatorTitle: Selection<HTMLDivElement, unknown, HTMLElement, any>, valueFontSize: number) {
-        aggregatorTitle.style('font-size', `${Math.round(valueFontSize * 0.5)}px`);
+    private static setTitleFontSize(aggregatorTitle: Selection<HTMLDivElement, unknown, HTMLElement, any>, innerRadius: number) {
+        const sizeCoefficient = 0.15;
+        aggregatorTitle.style('font-size', `${Math.round(innerRadius * sizeCoefficient)}px`);
+        aggregatorTitle.style('max-height', `${sizeCoefficient * 100}%`);
     }
 
     private static renderAggregatorObject(block: Block, innerRadius: number, translate: Translate): Selection<SVGForeignObjectElement, unknown, HTMLElement, any> {
