@@ -36,27 +36,6 @@ export class MarginModel {
         }
     }
 
-    public static recalcPolarMarginWithScopedData(modelInstance: ModelInstance, designerConfig: DesignerConfig, config: MdtChartsConfig, legendBlockModel: LegendBlockModel, dataScope: DataScope, options: PolarOptionsModel): void {
-        const canvasModel = modelInstance.canvasModel;
-        let position = canvasModel.legendCanvas.getPosition();
-
-        if (position !== 'off') {
-            position = PolarModel.getLegendPositionByBlockSize(canvasModel); // reset position
-
-            this.clearMarginByLegendBlockPosition(canvasModel, legendBlockModel);
-
-            let allowableKeys = [...dataScope.allowableKeys];
-            if (dataScope.hidedRecordsAmount !== 0 && position === 'bottom')
-                allowableKeys.push('1'); // Если есть спрятанные записи, то в массив добавляется объект, чтобы выделить место в легенде для индикатора переполнения
-
-            const legendSize = LegendModel.getLegendSize(config.options.type, position, allowableKeys, designerConfig.canvas.legendBlock.maxWidth, config.canvas.size, legendBlockModel);
-            canvasModel.increaseMarginSide(position, legendSize + legendBlockModel.coordinate[position].margin[position])
-
-            legendBlockModel.coordinate[position].size = legendSize;
-            options.legend.position = position;
-        }
-    }
-
     public static recalcMarginByVerticalAxisLabel(modelInstance: ModelInstance, config: MdtChartsConfig, designerConfig: DesignerConfig, dataScope: DataScope): void {
         if ((config.options.type === '2d' || config.options.type === 'interval') && config.options.orientation === 'vertical') {
             const axisLabelSize = AxisModel.getLabelSize(designerConfig.canvas.axisLabel.maxSize.main, dataScope.allowableKeys);
@@ -147,16 +126,6 @@ export class MarginModel {
             canvasModel.increaseMarginSide(position, legendCoordinate[position].margin.left + legendCoordinate[position].margin.right);
         else
             canvasModel.increaseMarginSide(position, legendCoordinate[position].margin.top + legendCoordinate[position].margin.bottom)
-    }
-
-    private static clearMarginByLegendBlockPosition(canvasModel: CanvasModel, legendBlockModel: LegendBlockModel): void {
-        const legendCoordinate = legendBlockModel.coordinate;
-        ['left', 'right', 'top', 'bottom'].forEach((position: Orient) => {
-            const decreaseByValue = legendCoordinate[position].size === 0
-                ? 0
-                : legendCoordinate[position].size + legendCoordinate[position].margin[position];
-            canvasModel.descreaseMarginSide(position, decreaseByValue);
-        });
     }
 
     private static recalcMarginByTitle(canvasModel: CanvasModel, titleBlockModel: TitleBlockModel): void {
