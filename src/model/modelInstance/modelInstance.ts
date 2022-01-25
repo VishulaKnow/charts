@@ -1,17 +1,22 @@
-import { MdtChartsConfig } from "../../main";
+
+import { MdtChartsConfig, MdtChartsDataSource } from "../../config/config";
 import { CanvasModel } from "./canvasModel/canvasModel";
-import { DataModelInstance } from "./dataModel";
+import { DataModelInstance } from "./dataModel/dataModel";
 
 export class ModelInstance {
-    static create(config: MdtChartsConfig) {
+    static create(config: MdtChartsConfig, data: MdtChartsDataSource) {
         const modelInstance = new ModelInstance();
-        this.initInitialParams(modelInstance, config);
+        this.initInitialParams(modelInstance, config, data);
         return modelInstance;
     }
 
-    private static initInitialParams(modelInstance: ModelInstance, config: MdtChartsConfig) {
+    private static initInitialParams(modelInstance: ModelInstance, config: MdtChartsConfig, data: MdtChartsDataSource) {
         modelInstance.canvasModel.initBlockSize(config.canvas.size);
+
         modelInstance.dataModel.initMaxRecordsAmount(config.options.data.maxRecordsAmount);
+
+        modelInstance.dataModel.repository.initSourceName(config.options.data.keyField.name);
+        modelInstance.dataModel.repository.initRawFullSource(data);
     }
 
     canvasModel: CanvasModel;

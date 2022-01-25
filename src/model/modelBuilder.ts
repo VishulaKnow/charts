@@ -1,10 +1,10 @@
 import { MdtChartsConfig, MdtChartsDataSource, Size } from '../config/config';
-import { Model, BlockCanvas, ChartBlockModel, TwoDimensionalOptionsModel, PolarOptionsModel, BlockMargin, DataSettings, TwoDimChartElementsSettings, DataFormat, DataScope, IntervalOptionsModel } from './model';
+import { Model, BlockCanvas, ChartBlockModel, TwoDimensionalOptionsModel, PolarOptionsModel, DataSettings, DataFormat, DataScope, IntervalOptionsModel } from './model';
 import { MarginModel } from './marginModel';
 import { TwoDimensionalModel } from './notations/twoDimensionalModel';
 import { PolarModel } from './notations/polar/polarModel';
 import { DataManagerModel } from './dataManagerModel/dataManagerModel';
-import { BarOptionsCanvas, DesignerConfig, DonutOptionsCanvas, Transitions } from '../designer/designerConfig';
+import { DesignerConfig, Transitions } from '../designer/designerConfig';
 import { IntervalModel } from './notations/intervalModel';
 import { OtherComponentsModel } from './featuresModel/otherComponents';
 import { ConfigValidator } from './configsValidator/configValidator';
@@ -37,14 +37,14 @@ function getChartBlockModel(modelInstance: ModelInstance): ChartBlockModel {
     }
 }
 
-function getOptions(config: MdtChartsConfig, designerConfig: DesignerConfig, modelInstance: ModelInstance, dataScope: DataScope, data: MdtChartsDataSource): TwoDimensionalOptionsModel | PolarOptionsModel | IntervalOptionsModel {
+function getOptions(config: MdtChartsConfig, designerConfig: DesignerConfig, modelInstance: ModelInstance, data: MdtChartsDataSource): TwoDimensionalOptionsModel | PolarOptionsModel | IntervalOptionsModel {
     //TODO: migrate to polymorphism
     if (config.options.type === '2d') {
-        return TwoDimensionalModel.getOptions(config.options, designerConfig, dataScope, data, modelInstance);
+        return TwoDimensionalModel.getOptions(config.options, designerConfig, data, modelInstance);
     } else if (config.options.type === 'polar') {
         return PolarModel.getOptions(config.options, data, designerConfig, modelInstance);
     } else if (config.options.type === 'interval') {
-        return IntervalModel.getOptions(config, designerConfig, modelInstance.canvasModel.getMargin(), dataScope, data, modelInstance)
+        return IntervalModel.getOptions(config, designerConfig, modelInstance.canvasModel.getMargin(), modelInstance.dataModel.getScope(), data, modelInstance)
     }
 }
 
@@ -66,7 +66,7 @@ function getTransitions(designerConfig: DesignerConfig): Transitions {
 }
 
 export function assembleModel(config: MdtChartsConfig, data: MdtChartsDataSource, designerConfig: DesignerConfig): Model {
-    const modelInstance = ModelInstance.create(config);
+    const modelInstance = ModelInstance.create(config, data);
 
     if (!data || Object.keys(data).length === 0)
         return {
@@ -83,18 +83,16 @@ export function assembleModel(config: MdtChartsConfig, data: MdtChartsDataSource
     MarginModel.initMargin(designerConfig, config, otherComponents, data, modelInstance);
     DataManagerModel.initDataScope(config, data, designerConfig, otherComponents.legendBlock, modelInstance);
     const preparedData = DataManagerModel.getPreparedData(data, modelInstance.dataModel.getAllowableKeys(), config);
+    modelInstance.dataModel.repository.initScopedFullSource(preparedData);
 
     if (config.options.type === '2d' && config.options.axis.key.visibility)
         MarginModel.recalcMarginByVerticalAxisLabel(modelInstance, config, designerConfig, modelInstance.dataModel.getScope());
 
     const blockCanvas = getBlockCanvas(config, modelInstance);
     const chartBlock = getChartBlockModel(modelInstance);
-    const options = getOptions(config, designerConfig, modelInstance, modelInstance.dataModel.getScope(), preparedData);
+    const options = getOptions(config, designerConfig, modelInstance, preparedData);
     const dataSettings = getDataSettings(modelInstance.dataModel.getScope(), designerConfig);
     const transitions = getTransitions(designerConfig);
-
-    // if (options.type === 'polar')
-    //     MarginModel.recalcPolarMarginWithScopedData(modelInstance, designerConfig, config, otherComponents.legendBlock, modelInstance.dataModel.getScope(), options);
 
     modelInstance.canvasModel.roundMargin();
 

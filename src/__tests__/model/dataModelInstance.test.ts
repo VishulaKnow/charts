@@ -1,4 +1,4 @@
-import { DataModelInstance, DEFAULT_MAX_RECORDS_AMOUNT } from "../../model/modelInstance/dataModel";
+import { DataModelInstance, DEFAULT_MAX_RECORDS_AMOUNT } from "../../model/modelInstance/dataModel/dataModel";
 
 describe('DataModelInstance', () => {
     describe('Max records amount section', () => {

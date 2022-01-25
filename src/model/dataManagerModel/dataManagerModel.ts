@@ -6,7 +6,7 @@ import { LegendPolarMarginCalculator } from "../featuresModel/legendModel/polarM
 import { DataScope, Field, LegendBlockModel } from "../model";
 import { ModelHelper } from "../modelHelper";
 import { CanvasModel } from "../modelInstance/canvasModel/canvasModel";
-import { DataModelInstance } from "../modelInstance/dataModel";
+import { DataModelInstance } from "../modelInstance/dataModel/dataModel";
 import { ModelInstance } from "../modelInstance/modelInstance";
 import { MIN_DONUT_BLOCK_SIZE, PolarModel } from "../notations/polar/polarModel";
 import { DataManagerModelService } from "./dataManagerModelService";

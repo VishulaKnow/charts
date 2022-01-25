@@ -9,7 +9,7 @@ import { ModelInstance } from "../modelInstance/modelInstance";
 
 
 export class TwoDimensionalModel {
-    public static getOptions(options: MdtChartsTwoDimensionalOptions, designerConfig: DesignerConfig, dataScope: DataScope, data: MdtChartsDataSource, modelInstance: ModelInstance): TwoDimensionalOptionsModel {
+    public static getOptions(options: MdtChartsTwoDimensionalOptions, designerConfig: DesignerConfig, data: MdtChartsDataSource, modelInstance: ModelInstance): TwoDimensionalOptionsModel {
         const canvasModel = modelInstance.canvasModel;
         return {
             legend: canvasModel.legendCanvas.getModel(),
@@ -17,7 +17,7 @@ export class TwoDimensionalModel {
             selectable: !!options.selectable,
             orient: options.orientation,
             scale: {
-                key: ScaleModel.getScaleKey(dataScope.allowableKeys, options.orientation, canvasModel, options.charts, this.getChartsByType(options.charts, 'bar')),
+                key: ScaleModel.getScaleKey(modelInstance.dataModel.getAllowableKeys(), options.orientation, canvasModel, options.charts, this.getChartsByType(options.charts, 'bar')),
                 value: ScaleModel.getScaleLinear(options, data, canvasModel)
             },
             axis: {
