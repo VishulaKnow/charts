@@ -8,12 +8,12 @@ export class AreaHelper {
         if (keyAxisOrient === 'bottom' || keyAxisOrient === 'top')
             return area<MdtChartsDataRow>()
                 .x(d => Scale.getScaledValue(scales.key, d[keyFieldName]) + margin.left)
-                .y0(d => this.getZeroCoordinate(keyAxisOrient, margin, blockSize))
+                .y0(d => scales.value(0) + margin.top)
                 .y1(d => scales.value(d[valueFieldName]) + margin.top);
         if (keyAxisOrient === 'left' || keyAxisOrient === 'right')
             return area<MdtChartsDataRow>()
-                .x0(d => this.getZeroCoordinate(keyAxisOrient, margin, blockSize))
-                .x1(d => scales.value(d[valueFieldName]) + margin.left,)
+                .x0(d => scales.value(0) + margin.left)
+                .x1(d => scales.value(d[valueFieldName]) + margin.left)
                 .y(d => Scale.getScaledValue(scales.key, d[keyFieldName]) + margin.top);
     }
 
