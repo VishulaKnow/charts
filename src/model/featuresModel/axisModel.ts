@@ -1,5 +1,5 @@
 import { AxisPosition, ChartOrientation, MdtChartsDataSource, NumberAxisOptions, AxisLabelPosition, MdtChartsTwoDimensionalOptions, DiscreteAxisOptions } from "../../config/config";
-import { AxisModelOptions, Orient } from "../model";
+import { AxisModelOptions, Orient, TranslateModel } from "../model";
 import { ModelHelper } from "../modelHelper";
 import { AxisType, CLASSES } from "../modelBuilder";
 import { DataManagerModel } from "../dataManagerModel/dataManagerModel";
@@ -16,17 +16,16 @@ export interface LabelSize {
 export class AxisModel {
     private static service = new AxisModelService();
 
-    public static getKeyAxis(options: MdtChartsTwoDimensionalOptions, data: MdtChartsDataSource, labelConfig: AxisLabelCanvas, canvasModel: CanvasModel, tooltipSettings: TooltipSettings): AxisModelOptions {
+    public static getKeyAxis(options: MdtChartsTwoDimensionalOptions, data: MdtChartsDataSource, labelConfig: AxisLabelCanvas, canvasModel: CanvasModel, tooltipSettings: TooltipSettings, getZeroCoordinate?: () => number): AxisModelOptions {
         const { charts, orientation, data: dataOptions } = options
         const axisConfig = options.axis.key;
+
+        const translate: TranslateModel = this.getKeyAxisTranslateModel(orientation, axisConfig.position, canvasModel, getZeroCoordinate);
 
         return {
             type: 'key',
             orient: AxisModel.getAxisOrient(AxisType.Key, orientation, axisConfig.position),
-            translate: {
-                translateX: AxisModel.getAxisTranslateX(AxisType.Key, orientation, axisConfig.position, canvasModel),
-                translateY: AxisModel.getAxisTranslateY(AxisType.Key, orientation, axisConfig.position, canvasModel)
-            },
+            translate,
             cssClass: 'key-axis',
             ticks: axisConfig.ticks,
             labels: {
@@ -126,5 +125,24 @@ export class AxisModel {
         labelSize.width = maxWidth > labelMaxWidth ? labelMaxWidth : maxWidth;
         textBlock.remove();
         return labelSize;
+    }
+
+    private static getKeyAxisTranslateModel(chartOrientation: ChartOrientation, axisPosition: AxisPosition, canvasModel: CanvasModel, getZeroCoordinate?: () => number) {
+        let translateY
+        let translateX
+        if (chartOrientation === "vertical") {
+            translateY = getZeroCoordinate() + canvasModel.getMarginSide("top");
+            translateX = AxisModel.getAxisTranslateX(AxisType.Key, chartOrientation, axisPosition, canvasModel);
+        } else {
+            translateX = getZeroCoordinate() + canvasModel.getMarginSide("left");
+            translateY = AxisModel.getAxisTranslateY(AxisType.Key, chartOrientation, axisPosition, canvasModel);
+        }
+
+        console.log(translateX, translateY);
+
+        return {
+            translateX,
+            translateY
+        }
     }
 }

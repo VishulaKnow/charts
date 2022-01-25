@@ -1,5 +1,6 @@
 import { ChartOrientation, MdtChartsDataSource, MdtChartsTwoDimensionalChart, TwoDimensionalChartType, MdtChartsTwoDimensionalOptions } from "../../config/config";
 import { BarOptionsCanvas, ChartStyleConfig, DesignerConfig } from "../../designer/designerConfig";
+import { Scale } from "../../engine/features/scale/scale";
 import { ChartStyleModelService } from "../chartStyleModel/chartStyleModel";
 import { TwoDimensionalChartStyleModel } from "../chartStyleModel/TwoDimensionalChartStyleModel";
 import { AxisModel } from "../featuresModel/axisModel";
@@ -11,17 +12,25 @@ import { ModelInstance } from "../modelInstance/modelInstance";
 export class TwoDimensionalModel {
     public static getOptions(options: MdtChartsTwoDimensionalOptions, designerConfig: DesignerConfig, data: MdtChartsDataSource, modelInstance: ModelInstance): TwoDimensionalOptionsModel {
         const canvasModel = modelInstance.canvasModel;
+
+        const scaleKey = ScaleModel.getScaleKey(modelInstance.dataModel.getAllowableKeys(), options.orientation, canvasModel, options.charts, this.getChartsByType(options.charts, 'bar'));
+        const scaleValue = ScaleModel.getScaleLinear(options, data, canvasModel);
+        const chartSettings = this.getChartsSettings(designerConfig.canvas.chartOptions.bar);
+
+        //TODO: rm import from engine
+        const scaleValueFn = Scale.getScaleValue(scaleValue);
+
         return {
             legend: canvasModel.legendCanvas.getModel(),
             title: options.title,
             selectable: !!options.selectable,
             orient: options.orientation,
             scale: {
-                key: ScaleModel.getScaleKey(modelInstance.dataModel.getAllowableKeys(), options.orientation, canvasModel, options.charts, this.getChartsByType(options.charts, 'bar')),
-                value: ScaleModel.getScaleLinear(options, data, canvasModel)
+                key: scaleKey,
+                value: scaleValue
             },
             axis: {
-                key: AxisModel.getKeyAxis(options, data, designerConfig.canvas.axisLabel, canvasModel, designerConfig.elementsOptions.tooltip),
+                key: AxisModel.getKeyAxis(options, data, designerConfig.canvas.axisLabel, canvasModel, designerConfig.elementsOptions.tooltip, () => scaleValueFn(0)),
                 value: AxisModel.getValueAxis(options.orientation, options.axis.value, designerConfig.canvas.axisLabel, canvasModel)
             },
             type: options.type,
@@ -29,7 +38,7 @@ export class TwoDimensionalModel {
             charts: this.getChartsModel(options.charts, options.orientation, designerConfig.chartStyle),
             additionalElements: this.getAdditionalElements(options),
             tooltip: options.tooltip,
-            chartSettings: this.getChartsSettings(designerConfig.canvas.chartOptions.bar)
+            chartSettings
         }
     }
 

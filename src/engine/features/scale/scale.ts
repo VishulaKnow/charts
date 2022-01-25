@@ -19,12 +19,16 @@ export class Scale {
         else if (scaleKey.type === 'point')
             scales.key = this.getScalePoint(scaleKey.domain, scaleKey.range);
 
-        if (scaleValue.type === 'linear')
-            scales.value = this.getScaleLinear(scaleValue.domain, scaleValue.range);
-        else if (scaleValue.type === 'datetime')
-            scales.value = this.getScaleTime(scaleValue.domain, scaleValue.range);
+        scales.value = this.getScaleValue(scaleValue);
 
         return scales;
+    }
+
+    public static getScaleValue(scaleValue: ScaleValueModel) {
+        if (scaleValue.type === 'linear')
+            return this.getScaleLinear(scaleValue.domain, scaleValue.range);
+        else if (scaleValue.type === 'datetime')
+            return this.getScaleTime(scaleValue.domain, scaleValue.range);
     }
 
     public static getScaleBandWidth(scale: AxisScale<any>): number {
