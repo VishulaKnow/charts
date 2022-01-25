@@ -1,6 +1,6 @@
 import { ModelHelper } from "../modelHelper";
-import { BlockMargin, ScaleKeyModel, ScaleKeyType, ScaleValueModel, ScaleValueType } from "../model";
-import { AxisPosition, NumberDomain, IntervalChart, MdtChartsTwoDimensionalChart, MdtChartsTwoDimensionalOptions, Size, ChartOrientation, MdtChartsDataSource } from "../../config/config";
+import { ScaleKeyModel, ScaleKeyType, ScaleValueModel, ScaleValueType } from "../model";
+import { AxisPosition, NumberDomain, IntervalChart, MdtChartsTwoDimensionalChart, MdtChartsTwoDimensionalOptions, ChartOrientation, MdtChartsDataSource, MdtChartsDataRow } from "../../config/config";
 import { CanvasModel } from "../modelInstance/canvasModel/canvasModel";
 
 export enum ScaleType {
@@ -56,11 +56,12 @@ export class ScaleModel {
         let domainPeekMin: number;
         let domainPeekMax: number;
         if (configDomain.start === -1)
-            domainPeekMin = 0;
+            domainPeekMin = this.getScaleMinValue(configOptions.charts, data[configOptions.data.dataSource])
         else
             domainPeekMin = configDomain.start;
+
         if (configDomain.end === -1)
-            domainPeekMax = this.getScaleMaxValue(configOptions.charts, configOptions.data.dataSource, data);
+            domainPeekMax = this.getScaleMaxValue(configOptions.charts, data[configOptions.data.dataSource]);
         else
             domainPeekMax = configDomain.end;
 
@@ -98,11 +99,11 @@ export class ScaleModel {
         return barsAmount;
     }
 
-    public static getScaleMaxValue(charts: MdtChartsTwoDimensionalChart[], dataSource: string, data: MdtChartsDataSource): number {
+    public static getScaleMaxValue(charts: MdtChartsTwoDimensionalChart[], dataRows: MdtChartsDataRow[]): number {
         let max: number = 0;
 
         charts.forEach(chart => {
-            data[dataSource].forEach(dataRow => {
+            dataRows.forEach(dataRow => {
                 let sumInRow = 0;
                 chart.data.valueFields.forEach(field => {
                     if (chart.isSegmented)
@@ -117,5 +118,23 @@ export class ScaleModel {
         });
 
         return max;
+    }
+
+    public static getScaleMinValue(charts: MdtChartsTwoDimensionalChart[], dataRows: MdtChartsDataRow[]) {
+        let min: number = 0;
+
+        charts.forEach(chart => {
+            dataRows.forEach(dataRow => {
+                let sumInRow = 0;
+                chart.data.valueFields.forEach(field => {
+                    if (dataRow[field.name] < sumInRow)
+                        sumInRow = dataRow[field.name];
+                });
+                if (min > sumInRow)
+                    min = sumInRow;
+            });
+        });
+
+        return min;
     }
 }
