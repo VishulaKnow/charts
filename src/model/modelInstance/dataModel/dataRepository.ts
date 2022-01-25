@@ -5,7 +5,6 @@ export class DataRepositoryModel {
     private scopedFullSource: MdtChartsDataSource;
 
     private sourceName: string;
-    private keyFieldName: string;
 
     initSourceName(sourceName: string) {
         this.sourceName = sourceName;
@@ -16,7 +15,6 @@ export class DataRepositoryModel {
     }
 
     getRawRows() {
-        if (!this.sourceName) throw new Error("Source name is not initialized");
         return this.rawFullSource[this.sourceName];
     }
 
@@ -26,5 +24,9 @@ export class DataRepositoryModel {
 
     getScopedFullSource() {
         return this.scopedFullSource;
+    }
+
+    getScopedRows() {
+        return this.scopedFullSource[this.sourceName];
     }
 }

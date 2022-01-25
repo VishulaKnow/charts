@@ -6,24 +6,21 @@ import { CanvasModel } from "../../modelInstance/canvasModel/canvasModel";
 import { ModelInstance } from "../../modelInstance/modelInstance";
 import { DonutModel } from "./donut/donutModel";
 
-/** If donut block has width less than this const, legend change postion from "right" to "bottom" */
 export const MIN_DONUT_BLOCK_SIZE = 120;
 
 export class PolarModel {
     private static donutModel = new DonutModel();
 
-    public static getOptions(options: MdtChartsPolarOptions, data: MdtChartsDataSource, designerConfig: DesignerConfig, modelInstance: ModelInstance): PolarOptionsModel {
-        const dataRows = data[options.data.dataSource];
-
+    public static getOptions(options: MdtChartsPolarOptions, designerConfig: DesignerConfig, modelInstance: ModelInstance): PolarOptionsModel {
         return {
             type: options.type,
             selectable: !!options.selectable,
             title: options.title,
             data: { ...options.data },
-            charts: this.getChartsModel(options.chart, dataRows.length, designerConfig.chartStyle),
+            charts: this.getChartsModel(options.chart, modelInstance.dataModel.repository.getScopedRows().length, designerConfig.chartStyle),
             legend: modelInstance.canvasModel.legendCanvas.getModel(),
             tooltip: options.tooltip,
-            chartCanvas: this.getDonutSettings(designerConfig.canvas.chartOptions.donut, options.chart, dataRows)
+            chartCanvas: this.getDonutSettings(designerConfig.canvas.chartOptions.donut, options.chart, modelInstance.dataModel.repository.getRawRows())
         }
     }
 

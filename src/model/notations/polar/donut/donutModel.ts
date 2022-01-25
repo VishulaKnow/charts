@@ -8,11 +8,11 @@ export class DonutModel {
     private thicknessService = new DonutThicknessService();
     private aggregatorService = new DonutAggregatorService();
 
-    getSettings(settingsFromConfig: DonutOptionsCanvas, chartOptions: PolarChart, dataRows: MdtChartsDataRow[]): DonutChartSettings {
+    getSettings(settingsFromConfig: DonutOptionsCanvas, chartOptions: PolarChart, rawDataRows: MdtChartsDataRow[]): DonutChartSettings {
         return {
             padAngle: settingsFromConfig.padAngle,
             thickness: this.getThicknessOptions(settingsFromConfig.thickness),
-            aggregator: this.getAggregatorOptions(settingsFromConfig, chartOptions, dataRows)
+            aggregator: this.getAggregatorOptions(settingsFromConfig, chartOptions, rawDataRows)
         }
     }
 
@@ -25,11 +25,11 @@ export class DonutModel {
         }
     }
 
-    private getAggregatorOptions(settingsFromConfig: DonutOptionsCanvas, chartOptions: PolarChart, dataRows: MdtChartsDataRow[]): DonutAggregatorModel {
+    private getAggregatorOptions(settingsFromConfig: DonutOptionsCanvas, chartOptions: PolarChart, rawDataRows: MdtChartsDataRow[]): DonutAggregatorModel {
         return {
             margin: settingsFromConfig.aggregatorPad,
             content: this.aggregatorService.getContent(chartOptions.aggregator, {
-                rows: dataRows,
+                rows: rawDataRows,
                 valueFieldName: chartOptions.data.valueField.name
             })
         }

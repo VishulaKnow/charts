@@ -10,7 +10,7 @@ export interface AggregatorServiceDataOptions {
 
 export class DonutAggregatorService {
     getContent(aggregatorOptions: MdtChartsDonutAggregator, dataOptions: AggregatorServiceDataOptions): DonutAggregatorContent {
-        if (!aggregatorOptions?.content) return this.generateDefaultContent(dataOptions);
+        if (!aggregatorOptions?.content || !dataOptions.rows) return this.generateDefaultContent(dataOptions);
 
         const content = aggregatorOptions.content({ data: dataOptions.rows });
 
@@ -32,7 +32,7 @@ export class DonutAggregatorService {
     private generateDefaultContent(dataOptions: AggregatorServiceDataOptions): DonutAggregatorContent {
         return {
             title: AGGREGATOR_DEFAULT_TITLE,
-            value: dataOptions.rows.reduce((acc, row) => acc + row[dataOptions.valueFieldName], 0)
+            value: dataOptions.rows ? dataOptions.rows.reduce((acc, row) => acc + row[dataOptions.valueFieldName], 0) : 0
         }
     }
 }

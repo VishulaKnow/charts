@@ -42,7 +42,7 @@ function getOptions(config: MdtChartsConfig, designerConfig: DesignerConfig, mod
     if (config.options.type === '2d') {
         return TwoDimensionalModel.getOptions(config.options, designerConfig, data, modelInstance);
     } else if (config.options.type === 'polar') {
-        return PolarModel.getOptions(config.options, data, designerConfig, modelInstance);
+        return PolarModel.getOptions(config.options, designerConfig, modelInstance);
     } else if (config.options.type === 'interval') {
         return IntervalModel.getOptions(config, designerConfig, modelInstance.canvasModel.getMargin(), modelInstance.dataModel.getScope(), data, modelInstance)
     }

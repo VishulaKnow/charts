@@ -15,7 +15,7 @@ export class ModelInstance {
 
         modelInstance.dataModel.initMaxRecordsAmount(config.options.data.maxRecordsAmount);
 
-        modelInstance.dataModel.repository.initSourceName(config.options.data.keyField.name);
+        modelInstance.dataModel.repository.initSourceName(config.options.data.dataSource);
         modelInstance.dataModel.repository.initRawFullSource(data);
     }
 
