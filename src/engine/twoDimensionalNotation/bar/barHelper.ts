@@ -88,20 +88,20 @@ export class BarHelper {
 
     private static setGroupedBarAttrsByValue(attrs: BarAttrsHelper, keyAxisOrient: Orient, margin: BlockMargin, scaleValue: AxisScale<any>, valueFieldName: string, blockSize: Size): void {
         if (keyAxisOrient === 'top') {
-            attrs.y = d => margin.top;
-            attrs.height = d => Helper.getValueOrZero(scaleValue(d[valueFieldName]));
+            attrs.y = d => scaleValue(Math.min(d[valueFieldName], 0)) + margin.top;
+            attrs.height = d => Math.abs(scaleValue(d[valueFieldName]) - scaleValue(0));
         }
         if (keyAxisOrient === 'bottom') {
-            attrs.y = d => scaleValue(d[valueFieldName]) + margin.top;
-            attrs.height = d => Helper.getValueOrZero(blockSize.height - margin.top - margin.bottom - scaleValue(d[valueFieldName]));
+            attrs.y = d => scaleValue(Math.max(d[valueFieldName], 0)) + margin.top;
+            attrs.height = d => Math.abs(scaleValue(d[valueFieldName]) - scaleValue(0));
         }
         if (keyAxisOrient === 'left') {
-            attrs.x = d => margin.left + 1;
-            attrs.width = d => Helper.getValueOrZero(scaleValue(d[valueFieldName]));
+            attrs.x = d => scaleValue(Math.min(d[valueFieldName], 0)) + margin.left;
+            attrs.width = d => Math.abs(scaleValue(d[valueFieldName]) - scaleValue(0));
         }
         if (keyAxisOrient === 'right') {
-            attrs.x = d => scaleValue(d[valueFieldName]) + margin.left;
-            attrs.width = d => Helper.getValueOrZero(blockSize.width - margin.left - margin.right - scaleValue(d[valueFieldName]));
+            attrs.x = d => scaleValue(Math.max(d[valueFieldName], 0)) + margin.left;
+            attrs.width = d => Math.abs(scaleValue(d[valueFieldName]) - scaleValue(0));
         }
     }
 

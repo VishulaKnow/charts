@@ -283,16 +283,16 @@ export class Bar {
                 return;
             }
 
-            let barsHander: Selection<SVGRectElement, MdtChartsDataRow, BaseType, unknown> | Transition<SVGRectElement, MdtChartsDataRow, BaseType, unknown> = bars;
+            let barsHandler: Selection<SVGRectElement, MdtChartsDataRow, BaseType, unknown> | Transition<SVGRectElement, MdtChartsDataRow, BaseType, unknown> = bars;
             if (transitionDuration > 0) {
-                barsHander = barsHander
+                barsHandler = barsHandler
                     .interrupt()
                     .transition()
                     .duration(transitionDuration)
                     .on('end', () => resolve(''));
             }
 
-            barsHander.attr('x', d => barAttrs.x(d))
+            barsHandler.attr('x', d => barAttrs.x(d))
                 .attr('y', d => barAttrs.y(d))
                 .attr('height', d => barAttrs.height(d))
                 .attr('width', d => barAttrs.width(d));
