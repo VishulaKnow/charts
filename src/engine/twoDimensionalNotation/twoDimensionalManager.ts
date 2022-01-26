@@ -31,7 +31,7 @@ export class TwoDimensionalManager {
 
         Axis.render(engine.block, scales, options.scale, options.axis, model.blockCanvas.size);
 
-        GridLine.render(engine.block, options.additionalElements.gridLine.flag, options.axis, model.blockCanvas.size, model.chartBlock.margin, options.scale.key);
+        GridLine.render(engine.block, options.additionalElements.gridLine.flag, options.axis, model.blockCanvas.size, model.chartBlock.margin, scales);
 
         this.renderCharts(engine.block,
             options.charts,
@@ -91,7 +91,7 @@ export class TwoDimensionalManager {
             options.axis,
             model.blockCanvas.size,
             model.chartBlock.margin,
-            options.scale.key);
+            scales);
 
         const promises = this.updateCharts(block,
             options.charts,

@@ -8,45 +8,88 @@ const configCars: MdtChartsConfig = {
             height: 300
         }
     },
+    options: {
+        type: '2d',
+        title: 'Заголовок графика',
+        selectable: true,
+        axis: {
+            key: {
+                visibility: true,
+                position: 'end',
+                ticks: {
+                    flag: false
+                },
+                // labels: {
+                //     position: "straight"
+                // }
+            },
+            value: {
+                visibility: true,
+                domain: {
+                    start: -1,
+                    end: -1
+                },
+                position: 'start',
+                ticks: {
+                    flag: false
+                }
+            }
+        },
+        additionalElements: {
+            gridLine: {
+                flag: {
+                    value: true,
+                    key: true
+                }
+            }
+        },
+        legend: {
+            show: true
+        },
+        orientation: 'vertical',
+        data: {
+            dataSource: 'dataSet_negative',
+            keyField: {
+                name: 'brand',
+                format: 'string'
+            }
+        },
+        charts: [
+            {
+                isSegmented: false,
+                type: 'bar',
+                data: {
+                    valueFields: [
+                        {
+                            name: 'price',
+                            format: 'money',
+                            title: 'Стоимость за 2020 год',
+                            color: "red"
+                        },
+                        {
+                            name: 'count',
+                            format: 'money',
+                            title: 'Стоимость за 2020 год'
+                        }
+                    ]
+                },
+                tooltip: {
+                    show: true
+                },
+                embeddedLabels: 'none',
+                markers: {
+                    show: false
+                }
+            }
+        ]
+    }
     // options: {
-    //     type: '2d',
-    //     title: 'Заголовок графика',
+    //     type: 'polar',
     //     selectable: true,
-    //     axis: {
-    //         key: {
-    //             visibility: true,
-    //             position: 'end',
-    //             ticks: {
-    //                 flag: false
-    //             },
-    //             labels: {
-    //                 position: "straight"
-    //             }
-    //         },
-    //         value: {
-    //             visibility: true,
-    //             domain: {
-    //                 start: -1,
-    //                 end: -1
-    //             },
-    //             position: 'start',
-    //             ticks: {
-    //                 flag: false
-    //             }
-    //         }
-    //     },
-    //     additionalElements: {
-    //         gridLine: {
-    //             flag: {
-    //                 value: true,
-    //                 key: true
-    //             }
-    //         }
-    //     },
+    //     title: "Chart header",
     //     legend: {
     //         show: true
     //     },
-    //     orientation: 'vertical',
     //     data: {
     //         dataSource: 'dataSet',
     //         keyField: {
@@ -54,69 +97,26 @@ const configCars: MdtChartsConfig = {
     //             format: 'string'
     //         }
     //     },
-    //     charts: [
-    //         {
-    //             isSegmented: false,
-    //             type: 'bar',
-    //             data: {
-    //                 valueFields: [
-    //                     {
-    //                         name: 'price',
-    //                         format: 'money',
-    //                         title: 'Стоимость за 2020 год',
-    //                         color: "red"
-    //                     },
-    //                     {
-    //                         name: 'count',
-    //                         format: 'money',
-    //                         title: 'Стоимость за 2020 год'
-    //                     }
-    //                 ]
-    //             },
-    //             tooltip: {
-    //                 show: true
-    //             },
-    //             embeddedLabels: 'value',
-    //             markers: {
-    //                 show: false
+    //     chart: {
+    //         type: 'donut',
+    //         data: {
+    //             valueField: {
+    //                 name: 'price',
+    //                 format: 'money',
+    //                 title: 'Стоимость очень большой текст'
     //             }
+    //         },
+    //         tooltip: {
+    //             show: true
+    //         },
+    //         aggregator: {
+    //             content: (model) => ({
+    //                 title: "Big Text text word another one",
+    //                 value: model.data.reduce((acc, row) => acc + row.price, 0)
+    //             })
     //         }
-    //     ]
+    //     }
     // }
-    options: {
-        type: 'polar',
-        selectable: true,
-        title: "Chart header",
-        legend: {
-            show: true
-        },
-        data: {
-            dataSource: 'dataSet',
-            keyField: {
-                name: 'brand',
-                format: 'string'
-            }
-        },
-        chart: {
-            type: 'donut',
-            data: {
-                valueField: {
-                    name: 'price',
-                    format: 'money',
-                    title: 'Стоимость очень большой текст'
-                }
-            },
-            tooltip: {
-                show: true
-            },
-            aggregator: {
-                content: (model) => ({
-                    title: "Big Text text word another one",
-                    value: model.data.reduce((acc, row) => acc + row.price, 0)
-                })
-            }
-        }
-    }
 }
 
 export default configCars;
