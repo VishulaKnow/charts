@@ -1,4 +1,4 @@
-import { stack, Area as IArea } from 'd3-shape';
+import { Area as IArea } from 'd3-shape';
 import { BaseType, select, Selection } from 'd3-selection'
 import { BlockMargin, Field, Orient, TwoDimensionalChartModel } from "../../../model/model";
 import { Scales } from "../../features/scale/scale";
@@ -9,6 +9,7 @@ import { DomHelper } from '../../helpers/domHelper';
 import { Helper } from '../../helpers/helper';
 import { MdtChartsDataRow, Size } from '../../../config/config';
 import { Transition } from 'd3-transition';
+import { getStackedDataWithOwn } from '../bar/stackedData/dataStacker';
 
 export class Area {
     public static readonly areaChartClass = 'area';
@@ -58,7 +59,7 @@ export class Area {
     }
 
     private static renderSegmented(block: Block, scales: Scales, data: MdtChartsDataRow[], keyField: Field, margin: BlockMargin, keyAxisOrient: Orient, chart: TwoDimensionalChartModel): void {
-        const stackedData = stack().keys(chart.data.valueFields.map(field => field.name))(data);
+        const stackedData = getStackedDataWithOwn(data, chart.data.valueFields.map(field => field.name));
         const areaGenerator = AreaHelper.getSegmentedAreaGenerator(keyAxisOrient, scales, margin, keyField.name);
 
         const areas = block.getChartGroup(chart.index)
@@ -98,7 +99,7 @@ export class Area {
     }
 
     private static updateSegmented(block: Block, scales: Scales, newData: MdtChartsDataRow[], keyField: Field, margin: BlockMargin, chart: TwoDimensionalChartModel, keyAxisOrient: Orient): Promise<any>[] {
-        const stackedData = stack().keys(chart.data.valueFields.map(field => field.name))(newData);
+        const stackedData = getStackedDataWithOwn(newData, chart.data.valueFields.map(field => field.name));
         const areaGenerator = AreaHelper.getSegmentedAreaGenerator(keyAxisOrient, scales, margin, keyField.name);
         const areas = block.getChartGroup(chart.index)
             .selectAll<SVGRectElement, MdtChartsDataRow[]>(`path.${this.areaChartClass}${Helper.getCssClassesLine(chart.cssClasses)}`)
