@@ -1,5 +1,3 @@
-
-import { stack } from 'd3-shape';
 import { select, Selection, BaseType } from 'd3-selection';
 import { BarChartSettings, BlockMargin, Field, Orient, TwoDimensionalChartModel } from "../../../model/model";
 import { Scales } from "../../features/scale/scale";
@@ -12,6 +10,7 @@ import { Transition } from "d3-transition";
 import { DomHelper } from "../../helpers/domHelper";
 import { Helper } from "../../helpers/helper";
 import { MdtChartsDataRow, Size } from "../../../config/config";
+import { getStackedDataWithOwn } from './stackedData/dataStacker';
 
 export interface RectElemWithAttrs extends SVGElement {
     attrs?: {
@@ -112,7 +111,7 @@ export class Bar {
     }
 
     private static renderSegmented(block: Block, scales: Scales, data: MdtChartsDataRow[], keyField: Field, margin: BlockMargin, keyAxisOrient: Orient, chart: TwoDimensionalChartModel, barsAmounts: number[], blockSize: Size, firstBarIndex: number, barSettings: BarChartSettings): void {
-        const stackedData = stack().keys(chart.data.valueFields.map(field => field.name))(data);
+        const stackedData = getStackedDataWithOwn(data, chart.data.valueFields.map(field => field.name));
 
         let groups = block.getChartGroup(chart.index)
             .selectAll<SVGGElement, MdtChartsDataRow>(`g.${this.barSegmentGroupClass}${Helper.getCssClassesLine(chart.cssClasses)}`)
@@ -222,7 +221,7 @@ export class Bar {
     }
 
     private static updateSegmented(block: Block, newData: MdtChartsDataRow[], scales: Scales, margin: BlockMargin, keyAxisOrient: Orient, chart: TwoDimensionalChartModel, blockSize: Size, barsAmounts: number[], keyField: Field, firstBarIndex: number, barSettings: BarChartSettings): Promise<any>[] {
-        const stackedData = stack().keys(chart.data.valueFields.map(field => field.name))(newData);
+        const stackedData = getStackedDataWithOwn(newData, chart.data.valueFields.map(field => field.name));
 
         block.getChartGroup(chart.index)
             .selectAll<SVGRectElement, MdtChartsDataRow>(`.${this.barItemClass}${Helper.getCssClassesLine(chart.cssClasses)}`)
