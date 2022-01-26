@@ -132,10 +132,14 @@ export class AxisModel {
         let translateX;
 
         if (chartOrientation === "vertical") {
-            translateY = getZeroCoordinate() + canvasModel.getMarginSide("top");
+            translateY = getZeroCoordinate
+                ? getZeroCoordinate() + canvasModel.getMarginSide("top")
+                : AxisModel.getAxisTranslateY(AxisType.Key, chartOrientation, axisPosition, canvasModel);
             translateX = AxisModel.getAxisTranslateX(AxisType.Key, chartOrientation, axisPosition, canvasModel);
         } else {
-            translateX = getZeroCoordinate() + canvasModel.getMarginSide("left");
+            translateX = getZeroCoordinate
+                ? getZeroCoordinate() + canvasModel.getMarginSide("left")
+                : AxisModel.getAxisTranslateX(AxisType.Key, chartOrientation, axisPosition, canvasModel);
             translateY = AxisModel.getAxisTranslateY(AxisType.Key, chartOrientation, axisPosition, canvasModel);
         }
 
