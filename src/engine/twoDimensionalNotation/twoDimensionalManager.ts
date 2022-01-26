@@ -43,6 +43,8 @@ export class TwoDimensionalManager {
             options.chartSettings.bar,
             model.blockCanvas.size);
 
+        Axis.raiseKeyAxis(engine.block, options.axis.key);
+
         engine.block.filterEventManager.registerEventFor2D(scales.key, model.chartBlock.margin, model.blockCanvas.size, options);
         engine.block.filterEventManager.event2DUpdate(options);
 

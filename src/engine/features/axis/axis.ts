@@ -30,6 +30,16 @@ export class Axis {
             this.updateKeyAxis(block, scales.key, scalesOptions.key, axisModel.key, blockSize, keyDomainsEquality);
     }
 
+    public static raiseKeyAxis(block: Block, axisOptions: AxisModelOptions) {
+        const axisElement = this.findAxis(block, axisOptions.cssClass);
+        axisElement.raise();
+    }
+
+    private static findAxis(block: Block, axisCssClass: string) {
+        return block.getSvg()
+            .select<SVGGElement>(`g.${axisCssClass}`);
+    }
+
     private static renderAxis(block: Block, scale: AxisScale<any>, scaleOptions: ScaleKeyModel | ScaleValueModel, axisOptions: AxisModelOptions, blockSize: Size): void {
         const axisGenerator = AxisHelper.getBaseAxisGenerator(axisOptions, scale, scaleOptions);
 
