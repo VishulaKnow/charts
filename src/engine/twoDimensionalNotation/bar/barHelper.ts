@@ -107,20 +107,20 @@ export class BarHelper {
 
     private static setSegmentedBarAttrsByValue(attrs: BarAttrsHelper, keyAxisOrient: Orient, scaleValue: AxisScale<any>, margin: BlockMargin, blockSize: Size): void {
         if (keyAxisOrient === 'top') {
-            attrs.y = d => margin.top + scaleValue(d[0]);
-            attrs.height = d => Helper.getValueOrZero(scaleValue(d[1] - d[0]));
+            attrs.y = d => scaleValue(Math.min(d[1], d[0])) + margin.top;
+            attrs.height = d => Math.abs(scaleValue(d[1]) - scaleValue(d[0]));
         }
         if (keyAxisOrient === 'bottom') {
-            attrs.y = d => scaleValue(d[1]) + margin.top;
-            attrs.height = d => Helper.getValueOrZero(blockSize.height - margin.top - margin.bottom - scaleValue(d[1] - d[0]));
+            attrs.y = d => scaleValue(Math.max(d[1], d[0])) + margin.top;
+            attrs.height = d => Math.abs(scaleValue(d[1]) - scaleValue(d[0]));
         }
         if (keyAxisOrient === 'left') {
-            attrs.x = d => margin.left + scaleValue(d[0]) + 1;
-            attrs.width = d => Helper.getValueOrZero(scaleValue(d[1] - d[0]));
+            attrs.x = d => scaleValue(Math.min(d[1], d[0])) + margin.left;
+            attrs.width = d => Math.abs(scaleValue(d[1]) - scaleValue(d[0]));
         }
         if (keyAxisOrient === 'right') {
-            attrs.x = d => scaleValue(d[1]) + margin.left;
-            attrs.width = d => Helper.getValueOrZero(blockSize.width - margin.left - margin.right - scaleValue(d[1] - d[0]));
+            attrs.x = d => scaleValue(Math.max(d[1], d[0])) + margin.left;
+            attrs.width = d => Math.abs(scaleValue(d[1]) - scaleValue(d[0]));
         }
     }
 }
