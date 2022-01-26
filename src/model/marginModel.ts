@@ -9,6 +9,7 @@ import { TwoDimensionalModel } from "./notations/twoDimensionalModel";
 import { ModelInstance } from "./modelInstance/modelInstance";
 import { CanvasModel } from "./modelInstance/canvasModel/canvasModel";
 import { PolarModel } from "./notations/polar/polarModel";
+import { keyAxisLabelVerticalLog } from "./featuresModel/scaleModel/scaleAxisRecalcer";
 
 export const AXIS_HORIZONTAL_LABEL_PADDING = 15;
 export const AXIS_VERTICAL_LABEL_PADDING = 10;
@@ -67,7 +68,7 @@ export class MarginModel {
 
         if ((keyAxisOrient === 'bottom' || keyAxisOrient === 'top')) {
             if (axis.key.visibility)
-                canvasModel.increaseMarginSide(keyAxisOrient, labelSize.height + AXIS_HORIZONTAL_LABEL_PADDING);
+                canvasModel.increaseMarginSide(keyAxisOrient, labelSize.height + AXIS_HORIZONTAL_LABEL_PADDING, keyAxisLabelVerticalLog);
         } else if (axis.value.visibility)
             canvasModel.increaseMarginSide(valueAxisOrient, labelSize.height + AXIS_HORIZONTAL_LABEL_PADDING);
     }

@@ -128,8 +128,9 @@ export class AxisModel {
     }
 
     private static getKeyAxisTranslateModel(chartOrientation: ChartOrientation, axisPosition: AxisPosition, canvasModel: CanvasModel, getZeroCoordinate?: () => number) {
-        let translateY
-        let translateX
+        let translateY;
+        let translateX;
+
         if (chartOrientation === "vertical") {
             translateY = getZeroCoordinate() + canvasModel.getMarginSide("top");
             translateX = AxisModel.getAxisTranslateX(AxisType.Key, chartOrientation, axisPosition, canvasModel);
@@ -137,8 +138,6 @@ export class AxisModel {
             translateX = getZeroCoordinate() + canvasModel.getMarginSide("left");
             translateY = AxisModel.getAxisTranslateY(AxisType.Key, chartOrientation, axisPosition, canvasModel);
         }
-
-        console.log(translateX, translateY);
 
         return {
             translateX,

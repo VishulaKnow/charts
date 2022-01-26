@@ -1,11 +1,11 @@
 import { ChartOrientation, MdtChartsDataSource, MdtChartsTwoDimensionalChart, TwoDimensionalChartType, MdtChartsTwoDimensionalOptions } from "../../config/config";
 import { BarOptionsCanvas, ChartStyleConfig, DesignerConfig } from "../../designer/designerConfig";
-import { Scale } from "../../engine/features/scale/scale";
 import { ChartStyleModelService } from "../chartStyleModel/chartStyleModel";
 import { TwoDimensionalChartStyleModel } from "../chartStyleModel/TwoDimensionalChartStyleModel";
 import { AxisModel } from "../featuresModel/axisModel";
-import { ScaleModel } from "../featuresModel/scaleModel";
-import { DataScope, TwoDimensionalOptionsModel, TwoDimensionalChartModel, EmbeddedLabelTypeModel, AdditionalElementsOptions, TwoDimChartElementsSettings } from "../model";
+import { ScaleAxisRecalcer } from "../featuresModel/scaleModel/scaleAxisRecalcer";
+import { ScaleModel } from "../featuresModel/scaleModel/scaleModel";
+import { TwoDimensionalOptionsModel, TwoDimensionalChartModel, EmbeddedLabelTypeModel, AdditionalElementsOptions, TwoDimChartElementsSettings } from "../model";
 import { ModelInstance } from "../modelInstance/modelInstance";
 
 
@@ -13,12 +13,9 @@ export class TwoDimensionalModel {
     public static getOptions(options: MdtChartsTwoDimensionalOptions, designerConfig: DesignerConfig, data: MdtChartsDataSource, modelInstance: ModelInstance): TwoDimensionalOptionsModel {
         const canvasModel = modelInstance.canvasModel;
 
-        const scaleKey = ScaleModel.getScaleKey(modelInstance.dataModel.getAllowableKeys(), options.orientation, canvasModel, options.charts, this.getChartsByType(options.charts, 'bar'));
-        const scaleValue = ScaleModel.getScaleLinear(options, data, canvasModel);
-        const chartSettings = this.getChartsSettings(designerConfig.canvas.chartOptions.bar);
-
-        //TODO: rm import from engine
-        const scaleValueFn = Scale.getScaleValue(scaleValue);
+        const scaleMarginRecalcer = new ScaleAxisRecalcer(() => ScaleModel.getScaleLinear(options, data, canvasModel));
+        scaleMarginRecalcer.recalculateMargin(canvasModel, options.orientation, options.axis.key);
+        const scaleValueInfo = scaleMarginRecalcer.getScaleValue();
 
         return {
             legend: canvasModel.legendCanvas.getModel(),
@@ -26,11 +23,11 @@ export class TwoDimensionalModel {
             selectable: !!options.selectable,
             orient: options.orientation,
             scale: {
-                key: scaleKey,
-                value: scaleValue
+                key: ScaleModel.getScaleKey(modelInstance.dataModel.getAllowableKeys(), options.orientation, canvasModel, options.charts, this.getChartsByType(options.charts, 'bar')),
+                value: scaleValueInfo.scale
             },
             axis: {
-                key: AxisModel.getKeyAxis(options, data, designerConfig.canvas.axisLabel, canvasModel, designerConfig.elementsOptions.tooltip, () => scaleValueFn(0)),
+                key: AxisModel.getKeyAxis(options, data, designerConfig.canvas.axisLabel, canvasModel, designerConfig.elementsOptions.tooltip, () => scaleValueInfo.scaleFn(0)),
                 value: AxisModel.getValueAxis(options.orientation, options.axis.value, designerConfig.canvas.axisLabel, canvasModel)
             },
             type: options.type,
@@ -38,7 +35,7 @@ export class TwoDimensionalModel {
             charts: this.getChartsModel(options.charts, options.orientation, designerConfig.chartStyle),
             additionalElements: this.getAdditionalElements(options),
             tooltip: options.tooltip,
-            chartSettings
+            chartSettings: this.getChartsSettings(designerConfig.canvas.chartOptions.bar)
         }
     }
 

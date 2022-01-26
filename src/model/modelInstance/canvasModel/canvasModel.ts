@@ -1,13 +1,15 @@
 import { Size } from "../../../config/config";
 import { BlockMargin } from "../../model";
 import { LegendCanvasModelInstance } from "./legendCanvasModel";
+import { MarginModelService } from "./marginModelService";
 import { TitleCanvasModel } from "./titleCanvas";
 
-type MarginSide = keyof BlockMargin;
+export type MarginSide = keyof BlockMargin;
 
 export class CanvasModel {
     titleCanvas: TitleCanvasModel;
     legendCanvas: LegendCanvasModelInstance;
+    marginService: MarginModelService;
 
     private blockSize: Size;
     private margin: BlockMargin;
@@ -15,6 +17,7 @@ export class CanvasModel {
     constructor() {
         this.titleCanvas = new TitleCanvasModel();
         this.legendCanvas = new LegendCanvasModelInstance();
+        this.marginService = new MarginModelService();
     }
 
     initMargin(margin: BlockMargin) {
@@ -33,11 +36,13 @@ export class CanvasModel {
         this.margin[side] = size;
     }
 
-    increaseMarginSide(side: MarginSide, byValue: number) {
+    increaseMarginSide(side: MarginSide, byValue: number, key?: string) {
         this.margin[side] += byValue;
+
+        if (key) this.marginService.appendLog(key, side, byValue);
     }
 
-    descreaseMarginSide(side: MarginSide, byValue: number) {
+    decreaseMarginSide(side: MarginSide, byValue: number) {
         this.margin[side] -= byValue;
     }
 

@@ -1,5 +1,5 @@
 import { MdtChartsDataRow, MdtChartsDataSource, MdtChartsTwoDimensionalChart, MdtChartsTwoDimensionalOptions } from "../../config/config";
-import { ScaleModel } from "../../model/featuresModel/scaleModel";
+import { ScaleModel } from "../../model/featuresModel/scaleModel/scaleModel";
 import { CanvasModel } from "../../model/modelInstance/canvasModel/canvasModel";
 
 function getData(sourceName: "dataSet_poor" | "dataSet" | "dataSet_negative" = "dataSet"): MdtChartsDataRow[] {

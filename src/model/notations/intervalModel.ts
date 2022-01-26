@@ -6,7 +6,7 @@ import { DataManagerModel } from "../dataManagerModel/dataManagerModel";
 import { LegendModel } from "../featuresModel/legendModel/legendModel";
 import { AdditionalElementsOptions, BlockMargin, DataScope, IntervalChartModel, IntervalOptionsModel } from "../model";
 import { AxisType } from "../modelBuilder";
-import { ScaleModel, ScaleType } from "../featuresModel/scaleModel";
+import { ScaleModel, ScaleType } from "../featuresModel/scaleModel/scaleModel";
 import { TwoDimensionalModel } from "./twoDimensionalModel";
 import { ModelInstance } from "../modelInstance/modelInstance";
 
