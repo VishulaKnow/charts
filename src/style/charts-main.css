@@ -58,6 +58,7 @@
 .legend-item {
     cursor: default;
     transition: opacity 0.1s;
+    line-height: 1;
     /* will-change: opacity;      */
 }
 .legend-block-column .legend-item:not(:first-of-type) {
