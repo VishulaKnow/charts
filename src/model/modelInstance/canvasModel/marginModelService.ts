@@ -14,6 +14,12 @@ export class MarginModelService {
     private log: MarginIncreaseLog[] = [];
 
     appendLog(key: string, side: MarginSide, byValue: number) {
+        const log = this.findLogByKey(key);
+        if (log) {
+            log.data = { side, byValue }
+            return;
+        }
+
         this.log.push({
             key,
             data: {
@@ -24,6 +30,10 @@ export class MarginModelService {
     }
 
     getDataByKey(key: string) {
-        return this.log.find(l => l.key === key)?.data;
+        return this.findLogByKey(key)?.data;
+    }
+
+    private findLogByKey(key: string) {
+        return this.log.find(l => l.key === key);
     }
 }

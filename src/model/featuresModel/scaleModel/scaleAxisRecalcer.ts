@@ -5,6 +5,7 @@ import { ScaleValueModel } from "../../model";
 import { CanvasModel } from "../../modelInstance/canvasModel/canvasModel";
 
 export const keyAxisLabelVerticalLog = "keyAxisLabel_vertical_margin_log";
+export const keyAxisLabelHorizontalLog = "keyAxisLabel_horizontal_margin_log";
 
 interface ScaleInfo {
     scale: ScaleValueModel;
@@ -22,8 +23,13 @@ export class ScaleAxisRecalcer {
         //TODO: rm import from engine
         const scaleValueFn = Scale.getScaleValue(scaleValue);
 
-        const coordinateOnChartBlock = (keyAxis.position === "start" ? scaleValueFn(0) : chartOrientation === "vertical" ? canvasModel.getChartBlockHeight() : canvasModel.getChartBlockWidth() - scaleValueFn(0))
-        const logInfo = canvasModel.marginService.getDataByKey(keyAxisLabelVerticalLog);
+        const coordinateOnChartBlock = (keyAxis.position === "start"
+            ? scaleValueFn(0)
+            : (chartOrientation === "vertical"
+                ? canvasModel.getChartBlockHeight()
+                : canvasModel.getChartBlockWidth()) - scaleValueFn(0));
+        const key = chartOrientation === "vertical" ? keyAxisLabelVerticalLog : keyAxisLabelHorizontalLog;
+        const logInfo = canvasModel.marginService.getDataByKey(key);
 
         canvasModel.decreaseMarginSide(logInfo.side, logInfo.byValue - coordinateOnChartBlock < 0 ? logInfo.byValue : coordinateOnChartBlock);
     }

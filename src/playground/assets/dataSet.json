@@ -10,7 +10,7 @@
         {
             "$id": 2,
             "brand": "LADA",
-            "price": 50000,
+            "price": 0,
             "count": 1000,
             "color": "green"
         },
@@ -53,6 +53,71 @@
             "$id": 8,
             "brand": "HONDA",
             "price": 20000,
+            "count": 2000,
+            "color": "brown"
+        },
+        {
+            "$id": 9,
+            "brand": "TOYOTA",
+            "price": 40000,
+            "count": 15000,
+            "color": "pink"
+        }
+    ],
+    "dataSet_negative": [
+        {
+            "$id": 1,
+            "brand": "BMW BMW",
+            "price": 100000,
+            "count": 12000,
+            "color": "red"
+        },
+        {
+            "$id": 2,
+            "brand": "LADA",
+            "price": 0,
+            "count": 1000,
+            "color": "green"
+        },
+        {
+            "$id": 3,
+            "brand": "MERCEDES",
+            "price": 15000,
+            "count": 1200,
+            "color": "blue"
+        },
+        {
+            "$id": 4,
+            "brand": "AUDI",
+            "price": -20000,
+            "count": 500,
+            "color": "yellow"
+        },
+        {
+            "$id": 5,
+            "brand": "VOLKSWAGEN",
+            "price": 115000,
+            "count": 6000,
+            "color": "cyan"
+        },
+        {
+            "$id": 6,
+            "brand": "DODGE",
+            "price": -115000,
+            "count": 4000,
+            "color": "red"
+        },
+        {
+            "$id": 7,
+            "brand": "SAAB",
+            "price": -50000,
+            "count": 11000,
+            "color": "orange"
+        },
+        {
+            "$id": 8,
+            "brand": "HONDA",
+            "price": -20000,
             "count": 2000,
             "color": "brown"
         },

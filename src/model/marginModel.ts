@@ -3,13 +3,12 @@ import { DesignerConfig } from "../designer/designerConfig";
 import { AxisModel, LabelSize } from "./featuresModel/axisModel";
 import { DataManagerModel } from "./dataManagerModel/dataManagerModel";
 import { LegendModel } from "./featuresModel/legendModel/legendModel";
-import { DataScope, LegendBlockModel, Orient, OtherCommonComponents, PolarOptionsModel, TitleBlockModel } from "./model";
+import { DataScope, LegendBlockModel, Orient, OtherCommonComponents, TitleBlockModel } from "./model";
 import { AxisType } from "./modelBuilder";
 import { TwoDimensionalModel } from "./notations/twoDimensionalModel";
 import { ModelInstance } from "./modelInstance/modelInstance";
 import { CanvasModel } from "./modelInstance/canvasModel/canvasModel";
-import { PolarModel } from "./notations/polar/polarModel";
-import { keyAxisLabelVerticalLog } from "./featuresModel/scaleModel/scaleAxisRecalcer";
+import { keyAxisLabelHorizontalLog, keyAxisLabelVerticalLog } from "./featuresModel/scaleModel/scaleAxisRecalcer";
 
 export const AXIS_HORIZONTAL_LABEL_PADDING = 15;
 export const AXIS_VERTICAL_LABEL_PADDING = 10;
@@ -44,8 +43,10 @@ export class MarginModel {
 
             const marginOrient = config.options.axis.key.position === 'end' ? 'bottom' : 'top';
 
-            if (axisConfig === 'rotated')
-                modelInstance.canvasModel.setMarginSide(marginOrient, modelInstance.canvasModel.getMarginSide(marginOrient) + (axisLabelSize.width - axisLabelSize.height));
+            if (axisConfig === 'rotated') {
+                modelInstance.canvasModel.decreaseMarginSide(marginOrient, axisLabelSize.height);
+                modelInstance.canvasModel.increaseMarginSide(marginOrient, axisLabelSize.width, keyAxisLabelVerticalLog);
+            }
         }
     }
 
@@ -78,7 +79,7 @@ export class MarginModel {
         const valueAxisOrient = AxisModel.getAxisOrient(AxisType.Value, orientation, axis.value.position);
 
         if ((keyAxisOrient === 'left' || keyAxisOrient === 'right') && isShow && axis.key.visibility) {
-            canvasModel.increaseMarginSide(keyAxisOrient, labelSize.width + AXIS_VERTICAL_LABEL_PADDING);
+            canvasModel.increaseMarginSide(keyAxisOrient, labelSize.width + AXIS_VERTICAL_LABEL_PADDING, keyAxisLabelHorizontalLog);
         } else if ((valueAxisOrient === 'left' || valueAxisOrient === 'right') && axis.value.visibility) {
             canvasModel.increaseMarginSide(valueAxisOrient, labelSize.width + AXIS_VERTICAL_LABEL_PADDING);
         }
