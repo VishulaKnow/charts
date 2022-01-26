@@ -106,11 +106,10 @@ export class ScaleModel {
             dataRows.forEach(dataRow => {
                 let sumInRow = 0;
                 chart.data.valueFields.forEach(field => {
-                    if (chart.isSegmented)
+                    if (chart.isSegmented && dataRow[field.name] > 0)
                         sumInRow += dataRow[field.name];
-                    else
-                        if (dataRow[field.name] > sumInRow)
-                            sumInRow = dataRow[field.name];
+                    else if (dataRow[field.name] > sumInRow)
+                        sumInRow = dataRow[field.name];
                 });
                 if (max < sumInRow)
                     max = sumInRow;
@@ -127,7 +126,9 @@ export class ScaleModel {
             dataRows.forEach(dataRow => {
                 let sumInRow = 0;
                 chart.data.valueFields.forEach(field => {
-                    if (dataRow[field.name] < sumInRow)
+                    if (chart.isSegmented && dataRow[field.name] < 0) {
+                        sumInRow += dataRow[field.name];
+                    } else if (dataRow[field.name] < sumInRow)
                         sumInRow = dataRow[field.name];
                 });
                 if (min > sumInRow)

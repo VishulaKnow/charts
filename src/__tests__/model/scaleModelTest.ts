@@ -23,7 +23,8 @@ function getData(sourceName: "dataSet_poor" | "dataSet" | "dataSet_negative" = "
         dataSet_negative: [
             { brand: "BMW", price: -120, count: 12, simple: 300 },
             { brand: "LADA", price: -50, count: 10, simple: -30 },
-            { brand: "MERCEDES", price: 15, count: -12, simple: 500 }
+            { brand: "MERCEDES", price: 15, count: -12, simple: 500 },
+            { brand: "DODGE", price: -100, count: -52, simple: 500 }
         ]
     };
 
@@ -110,6 +111,16 @@ describe('getScaleMaxValue test', () => {
                 const result = ScaleModel.getScaleMaxValue(charts, getData("dataSet_poor"));
                 expect(result).toBe(527);
             });
+        });
+    });
+
+    describe('With Negative values', () => {
+        test('should return max sum of positive values if chart has negative values too', () => {
+            charts[0].data.valueFields.push({ name: "simple", format: null, title: null });
+            charts[0].isSegmented = true;
+
+            const result = ScaleModel.getScaleMaxValue(charts, getData("dataSet_negative"));
+            expect(result).toBe(515);
         });
     });
 
@@ -449,9 +460,15 @@ describe('getScaleMinValue', () => {
         expect(res).toBe(0);
     });
 
-    test('should return min negative value if chart is not segmented has negative values', () => {
+    test('should return min negative value if chart is not segmented and data has negative values', () => {
         const res = ScaleModel.getScaleMinValue(charts, getData("dataSet_negative"));
         expect(res).toBe(-120);
+    });
+
+    test('should return min sum of negative values if chart is segmented and data has negative values', () => {
+        charts[0].isSegmented = true;
+        const res = ScaleModel.getScaleMinValue(charts, getData("dataSet_negative"));
+        expect(res).toBe(-152);
     });
 });
 
