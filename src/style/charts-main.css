@@ -221,7 +221,7 @@
 /* Record overflow */
 .record-overflow-alert {
     background-color: #FFFFFF;;
-    padding: 5px 10px 5px;
+    padding: 2px 8px;
     border: 1px solid #0F6698;
     box-sizing: border-box;
     border-radius: 100px;
