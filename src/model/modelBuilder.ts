@@ -1,6 +1,6 @@
 import { MdtChartsConfig, MdtChartsDataSource, Size } from '../config/config';
 import { Model, BlockCanvas, ChartBlockModel, TwoDimensionalOptionsModel, PolarOptionsModel, DataSettings, DataFormat, DataScope, IntervalOptionsModel } from './model';
-import { MarginModel } from './marginModel';
+import { MarginModel } from './margin/marginModel';
 import { TwoDimensionalModel } from './notations/twoDimensionalModel';
 import { PolarModel } from './notations/polar/polarModel';
 import { DataManagerModel } from './dataManagerModel/dataManagerModel';
@@ -84,7 +84,7 @@ export function assembleModel(config: MdtChartsConfig, data: MdtChartsDataSource
     DataManagerModel.initDataScope(config, data, designerConfig, otherComponents.legendBlock, modelInstance);
 
     if (config.options.type === '2d' && config.options.axis.key.visibility)
-        MarginModel.recalcMarginByVerticalAxisLabel(modelInstance, config, designerConfig, modelInstance.dataModel.getScope());
+        MarginModel.recalcMarginByVerticalAxisLabel(modelInstance, config.options, designerConfig);
 
     const blockCanvas = getBlockCanvas(config, modelInstance);
     const chartBlock = getChartBlockModel(modelInstance);

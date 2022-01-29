@@ -3,10 +3,10 @@ import { AxisScale, Axis as IAxis } from 'd3-axis';
 import { ScaleBand } from 'd3-scale'
 import { AxisModelOptions, Orient, ScaleKeyModel, ScaleValueModel } from "../../../model/model";
 import { Block } from "../../block/block";
-import { AXIS_HORIZONTAL_LABEL_PADDING, AXIS_VERTICAL_LABEL_PADDING } from "../../../model/marginModel";
 import { DomHelper } from '../../helpers/domHelper';
 import { Helper } from '../../helpers/helper';
 import { Size } from '../../../config/config';
+import { AXIS_HORIZONTAL_LABEL_PADDING, AXIS_VERTICAL_LABEL_PADDING } from '../../../model/margin/twoDim/twoDimMarginModel';
 
 type TextAnchor = 'start' | 'end' | 'middle';
 

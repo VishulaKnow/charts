@@ -1,6 +1,6 @@
 import { LegendBlockCanvas } from "../../../designer/designerConfig";
 import { getPxPercentUnitByValue } from "../../helpers/unitsFromConfigReader";
-import { MarginModel } from "../../marginModel";
+import { MarginModel } from "../../margin/marginModel";
 import { LegendBlockModel } from "../../model";
 import { CanvasModel } from "../../modelInstance/canvasModel/canvasModel";
 

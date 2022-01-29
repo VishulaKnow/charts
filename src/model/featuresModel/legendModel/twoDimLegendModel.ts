@@ -1,4 +1,4 @@
-import { MarginModel } from "../../marginModel";
+import { MarginModel } from "../../margin/marginModel";
 import { ILegendModel, LegendBlockModel } from "../../model";
 import { ModelInstance } from "../../modelInstance/modelInstance";
 

@@ -2,7 +2,6 @@ import { AxisScale } from 'd3-axis';
 import { AxisModelOptions, IAxisModel, IScaleModel, ScaleKeyModel, ScaleValueModel } from "../../../model/model";
 import { Block } from "../../block/block";
 import { Scale, Scales } from "../scale/scale";
-import { AXIS_VERTICAL_LABEL_PADDING } from "../../../model/marginModel";
 import { NamesHelper } from '../../helpers/namesHelper';
 import { AxisHelper } from './axisHelper';
 import { AxisLabelHelper } from './axisLabelDomHelper';
@@ -10,6 +9,7 @@ import { AxisDomHelper } from './axisDomHelper';
 import { Size } from '../../../config/config';
 import { select } from 'd3-selection';
 import { AxisLabelsEventManager } from './axisLabelsEventManager';
+import { AXIS_VERTICAL_LABEL_PADDING } from '../../../model/margin/twoDim/twoDimMarginModel';
 
 const MINIMAL_STEP_SIZE_FOR_WRAPPING = 38;
 
