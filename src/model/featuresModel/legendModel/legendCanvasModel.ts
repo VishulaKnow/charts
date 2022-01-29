@@ -5,35 +5,6 @@ import { CLASSES } from "../../modelBuilder";
 export type LegendItemsDirection = 'row' | 'column'
 
 export class LegendCanvasModel {
-    public static getLegendHeight(texts: string[], chartBlockWidth: number, itemsDirection: LegendItemsDirection, legendPosition: LegendPosition): number {
-        const legendWrapper = this.getLegendWrapperEl(chartBlockWidth, itemsDirection);
-        texts.forEach(text => {
-            const itemWrapper = document.createElement('div');
-            const colorBlock = document.createElement('span');
-            const textBlock = document.createElement('span');
-
-            itemWrapper.classList.add("legend-item");
-
-            if (legendPosition === 'bottom') {
-                itemWrapper.classList.add('legend-item-inline');
-                textBlock.classList.add('legend-label-nowrap');
-            }
-            else {
-                itemWrapper.classList.add('legend-item-row');
-            }
-
-            colorBlock.classList.add(CLASSES.legendColor);
-            textBlock.classList.add(CLASSES.legendLabel);
-            textBlock.textContent = text;
-            itemWrapper.append(colorBlock, textBlock);
-            legendWrapper.append(itemWrapper);
-        });
-        document.body.append(legendWrapper);
-        const height = legendWrapper.offsetHeight;
-        legendWrapper.remove();
-        return height + 1;
-    }
-
     public static getLegendItemWidth(text: string): number {
         const itemWrapper = document.createElement('div');
         itemWrapper.style.opacity = '0';

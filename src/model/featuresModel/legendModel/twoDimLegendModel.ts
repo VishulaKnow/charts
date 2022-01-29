@@ -1,8 +1,6 @@
-import { MdtChartsTwoDimensionalOptions, Size } from "../../../config/config";
 import { MarginModel } from "../../marginModel";
-import { ILegendModel, LegendBlockModel, Orient } from "../../model";
+import { ILegendModel, LegendBlockModel } from "../../model";
 import { ModelInstance } from "../../modelInstance/modelInstance";
-import { LegendCanvasModel } from "./legendCanvasModel";
 
 export class TwoDimLegendModel {
     recalcMarginWith2DLegend(modelInstance: ModelInstance, legendBlockModel: LegendBlockModel): void {
