@@ -1,7 +1,6 @@
 import { DataLegendParams } from "../../dataManagerModel/dataManagerModel";
 import { LegendPosition } from "../../model";
 import { CLASSES } from "../../modelBuilder";
-import { LegendModel } from "./legendModel";
 
 export type LegendItemsDirection = 'row' | 'column'
 

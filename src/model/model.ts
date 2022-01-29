@@ -264,7 +264,6 @@ interface ComponentBlockModel {
 }
 export interface LegendBlockModel {
     coordinate: LegendCoordinate;
-    standartTooltip: boolean;
 }
 export interface LegendCoordinate {
     top: LegendCanvasCoordinate;
