@@ -11,9 +11,9 @@ import { TwoDimensionalModel } from "./twoDimensionalModel";
 import { ModelInstance } from "../modelInstance/modelInstance";
 
 export class IntervalModel {
-    public static getOptions(config: MdtChartsConfig, designerConfig: DesignerConfig, margin: BlockMargin, dataScope: DataScope, data: MdtChartsDataSource, modelInstance: ModelInstance): IntervalOptionsModel {
-        const options = <MdtChartsIntervalOptions>config.options;
+    public static getOptions(options: MdtChartsIntervalOptions, designerConfig: DesignerConfig, modelInstance: ModelInstance): IntervalOptionsModel {
         const canvasModel = modelInstance.canvasModel;
+        const dataModelRep = modelInstance.dataModel.repository;
 
         return {
             legend: canvasModel.legendCanvas.getModel(),
@@ -22,7 +22,7 @@ export class IntervalModel {
             orient: options.orientation,
             scale: {
                 key: {
-                    domain: dataScope.allowableKeys,
+                    domain: modelInstance.dataModel.getAllowableKeys(),
                     range: {
                         start: 0,
                         end: ScaleModel.getRangePeek(ScaleType.Key, options.orientation, canvasModel)
@@ -31,7 +31,7 @@ export class IntervalModel {
                     elementsAmount: 1
                 },
                 value: {
-                    domain: ScaleModel.getDateValueDomain(data, options.chart, options.axis.key.position, options.data.dataSource),
+                    domain: ScaleModel.getDateValueDomain(dataModelRep.getScopedFullSource(), options.chart, options.axis.key.position, options.data.dataSource),
                     range: {
                         start: 0,
                         end: ScaleModel.getRangePeek(ScaleType.Value, options.orientation, canvasModel)
@@ -50,8 +50,8 @@ export class IntervalModel {
                     cssClass: 'key-axis',
                     ticks: options.axis.key.ticks,
                     labels: {
-                        maxSize: AxisModel.getLabelSize(designerConfig.canvas.axisLabel.maxSize.main, data[options.data.dataSource].map(d => d[options.data.keyField.name])).width,
-                        position: AxisModel.getKeyAxisLabelPosition(canvasModel, DataManagerModel.getDataValuesByKeyField(data, options.data.dataSource, options.data.keyField.name).length),
+                        maxSize: AxisModel.getLabelSize(designerConfig.canvas.axisLabel.maxSize.main, dataModelRep.getScopedRows().map(d => d[options.data.keyField.name])).width,
+                        position: AxisModel.getKeyAxisLabelPosition(canvasModel, DataManagerModel.getDataValuesByKeyField(dataModelRep.getScopedFullSource(), options.data.dataSource, options.data.keyField.name).length),
                         visible: true,
                         defaultTooltip: designerConfig.elementsOptions.tooltip.position === 'fixed'
                     },

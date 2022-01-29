@@ -1,7 +1,11 @@
 import Engine from '../engine/engine';
-import { assembleModel, getPreparedData, getUpdatedModel } from '../model/modelBuilder';
+import { assembleModel, getPreparedData } from '../model/modelBuilder';
 import { MdtChartsConfig, MdtChartsDataRow, MdtChartsDataSource, MdtChartsIntervalOptions, MdtChartsPolarOptions, MdtChartsTwoDimensionalChart, MdtChartsTwoDimensionalOptions } from '../config/config'
 import { DesignerConfig, Transitions } from '../designer/designerConfig';
+
+export function getUpdatedModel(config: MdtChartsConfig, data: MdtChartsDataSource, designerConfig: DesignerConfig): Model {
+    return assembleModel(config, data, designerConfig);
+}
 
 class ListenersHelper {
     static randInt(min: number, max: number): number {
@@ -644,6 +648,7 @@ import '../style/develop.css';
 import config from './configsExamples/configExample';
 import designerConfig from './configsExamples/designerConfigExample';
 import { Chart } from '../main';
+import { Model } from '../model/model';
 
 const data = require('./assets/dataSet.json');
 

@@ -20,9 +20,9 @@ export class ScaleModel {
         }
     }
 
-    public static getScaleLinear(options: MdtChartsTwoDimensionalOptions, data: MdtChartsDataSource, canvasModel: CanvasModel): ScaleValueModel {
+    public static getScaleLinear(options: MdtChartsTwoDimensionalOptions, dataRows: MdtChartsDataRow[], canvasModel: CanvasModel): ScaleValueModel {
         return {
-            domain: ScaleModel.getLinearDomain(options.axis.value.domain, data, options),
+            domain: ScaleModel.getLinearDomain(options.axis.value.domain, dataRows, options),
             range: {
                 start: 0,
                 end: ScaleModel.getRangePeek(ScaleType.Value, options.orientation, canvasModel)
@@ -52,16 +52,16 @@ export class ScaleModel {
         return [domainPeekMax, domainPeekMin];
     }
 
-    public static getLinearDomain(configDomain: NumberDomain, data: MdtChartsDataSource, configOptions: MdtChartsTwoDimensionalOptions): [number, number] {
+    public static getLinearDomain(configDomain: NumberDomain, dataRows: MdtChartsDataRow[], configOptions: MdtChartsTwoDimensionalOptions): [number, number] {
         let domainPeekMin: number;
         let domainPeekMax: number;
         if (configDomain.start === -1)
-            domainPeekMin = this.getScaleMinValue(configOptions.charts, data[configOptions.data.dataSource])
+            domainPeekMin = this.getScaleMinValue(configOptions.charts, dataRows)
         else
             domainPeekMin = configDomain.start;
 
         if (configDomain.end === -1)
-            domainPeekMax = this.getScaleMaxValue(configOptions.charts, data[configOptions.data.dataSource]);
+            domainPeekMax = this.getScaleMaxValue(configOptions.charts, dataRows);
         else
             domainPeekMax = configDomain.end;
 

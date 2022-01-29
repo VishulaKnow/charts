@@ -37,14 +37,14 @@ function getChartBlockModel(modelInstance: ModelInstance): ChartBlockModel {
     }
 }
 
-function getOptions(config: MdtChartsConfig, designerConfig: DesignerConfig, modelInstance: ModelInstance, data: MdtChartsDataSource): TwoDimensionalOptionsModel | PolarOptionsModel | IntervalOptionsModel {
+function getOptions(config: MdtChartsConfig, designerConfig: DesignerConfig, modelInstance: ModelInstance): TwoDimensionalOptionsModel | PolarOptionsModel | IntervalOptionsModel {
     //TODO: migrate to polymorphism
     if (config.options.type === '2d') {
-        return TwoDimensionalModel.getOptions(config.options, designerConfig, data, modelInstance);
+        return TwoDimensionalModel.getOptions(config.options, designerConfig, modelInstance);
     } else if (config.options.type === 'polar') {
         return PolarModel.getOptions(config.options, designerConfig, modelInstance);
     } else if (config.options.type === 'interval') {
-        return IntervalModel.getOptions(config, designerConfig, modelInstance.canvasModel.getMargin(), modelInstance.dataModel.getScope(), data, modelInstance)
+        return IntervalModel.getOptions(config.options, designerConfig, modelInstance)
     }
 }
 
@@ -82,15 +82,13 @@ export function assembleModel(config: MdtChartsConfig, data: MdtChartsDataSource
     const otherComponents = OtherComponentsModel.getOtherComponentsModel({ elementsOptions: designerConfig.elementsOptions, title: config.options.title }, modelInstance);
     MarginModel.initMargin(designerConfig, config, otherComponents, data, modelInstance);
     DataManagerModel.initDataScope(config, data, designerConfig, otherComponents.legendBlock, modelInstance);
-    const preparedData = DataManagerModel.getPreparedData(data, modelInstance.dataModel.getAllowableKeys(), config);
-    modelInstance.dataModel.repository.initScopedFullSource(preparedData);
 
     if (config.options.type === '2d' && config.options.axis.key.visibility)
         MarginModel.recalcMarginByVerticalAxisLabel(modelInstance, config, designerConfig, modelInstance.dataModel.getScope());
 
     const blockCanvas = getBlockCanvas(config, modelInstance);
     const chartBlock = getChartBlockModel(modelInstance);
-    const options = getOptions(config, designerConfig, modelInstance, preparedData);
+    const options = getOptions(config, designerConfig, modelInstance);
     const dataSettings = getDataSettings(modelInstance.dataModel.getScope(), designerConfig);
     const transitions = getTransitions(designerConfig);
 
@@ -129,8 +127,4 @@ export function getPreparedData(model: Model, data: MdtChartsDataSource, config:
 
     const preparedData = DataManagerModel.getPreparedData(data, model.dataSettings.scope.allowableKeys, config);
     return preparedData;
-}
-
-export function getUpdatedModel(config: MdtChartsConfig, data: MdtChartsDataSource, designerConfig: DesignerConfig): Model {
-    return assembleModel(config, data, designerConfig);
 }

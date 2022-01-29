@@ -613,7 +613,7 @@ describe('get scales tests', () => {
         canvasModel.initMargin({ bottom: 20, left: 20, right: 20, top: 20 });
         canvasModel.initBlockSize({ height: 500, width: 1000 });
 
-        const result = ScaleModel.getScaleLinear(options, data, canvasModel);
+        const result = ScaleModel.getScaleLinear(options, data[dataSource], canvasModel);
         expect(result).toEqual({
             domain: [0, 120],
             range: {

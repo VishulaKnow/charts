@@ -36,12 +36,17 @@ export class DataManagerModel {
         } else if (config.options.type === 'polar') {
             this.initDataScopeForPolar(config.options, modelInstance, data, legendBlock, designerConfig.canvas.legendBlock);
         }
+        this.initScopedData(data, modelInstance, config);
+    }
+
+    private static initScopedData(data: MdtChartsDataSource, modelInstance: ModelInstance, config: MdtChartsConfig) {
+        const preparedData = DataManagerModel.getPreparedData(data, modelInstance.dataModel.getAllowableKeys(), config);
+        modelInstance.dataModel.repository.initScopedFullSource(preparedData);
     }
 
     public static getDataValuesByKeyField(data: MdtChartsDataSource, dataSourceName: string, keyFieldName: string): string[] {
         return data[dataSourceName].map(dataRow => dataRow[keyFieldName]);
     }
-
 
     private static initDataScopeFor2D(configOptions: MdtChartsTwoDimensionalOptions | MdtChartsIntervalOptions, modelInstance: ModelInstance, data: MdtChartsDataSource, designerConfig: DesignerConfig): void {
         // Для interval всегда один элемент, так как там может быть только один столбик

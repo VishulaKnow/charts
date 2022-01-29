@@ -10,10 +10,11 @@ import { ModelInstance } from "../modelInstance/modelInstance";
 
 
 export class TwoDimensionalModel {
-    public static getOptions(options: MdtChartsTwoDimensionalOptions, designerConfig: DesignerConfig, data: MdtChartsDataSource, modelInstance: ModelInstance): TwoDimensionalOptionsModel {
+    public static getOptions(options: MdtChartsTwoDimensionalOptions, designerConfig: DesignerConfig, modelInstance: ModelInstance): TwoDimensionalOptionsModel {
         const canvasModel = modelInstance.canvasModel;
+        const dataModelRep = modelInstance.dataModel.repository;
 
-        const scaleMarginRecalcer = new ScaleAxisRecalcer(() => ScaleModel.getScaleLinear(options, data, canvasModel));
+        const scaleMarginRecalcer = new ScaleAxisRecalcer(() => ScaleModel.getScaleLinear(options, dataModelRep.getScopedRows(), canvasModel));
         scaleMarginRecalcer.recalculateMargin(canvasModel, options.orientation, options.axis.key);
         const scaleValueInfo = scaleMarginRecalcer.getScaleValue();
 
@@ -27,7 +28,7 @@ export class TwoDimensionalModel {
                 value: scaleValueInfo.scale
             },
             axis: {
-                key: AxisModel.getKeyAxis(options, data, designerConfig.canvas.axisLabel, canvasModel, designerConfig.elementsOptions.tooltip, () => scaleValueInfo.scaleFn(0)),
+                key: AxisModel.getKeyAxis(options, dataModelRep.getScopedFullSource(), designerConfig.canvas.axisLabel, canvasModel, designerConfig.elementsOptions.tooltip, () => scaleValueInfo.scaleFn(0)),
                 value: AxisModel.getValueAxis(options.orientation, options.axis.value, designerConfig.canvas.axisLabel, canvasModel)
             },
             type: options.type,
