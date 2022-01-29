@@ -52,6 +52,14 @@ export class MarginModel {
         }
     }
 
+    public static appendToGlobalMarginValuesLegendMargin(canvasModel: CanvasModel, position: Orient, legendBlockModel: LegendBlockModel): void {
+        const legendCoordinate = legendBlockModel.coordinate;
+        if (position === 'left' || position === 'right')
+            canvasModel.increaseMarginSide(position, legendCoordinate[position].margin.left + legendCoordinate[position].margin.right);
+        else
+            canvasModel.increaseMarginSide(position, legendCoordinate[position].margin.top + legendCoordinate[position].margin.bottom)
+    }
+
     private static getHorizontalMarginByAxisLabels(labelsMaxWidth: number, axis: TwoDimensionalAxis | IntervalAxis, data: MdtChartsDataSource, options: MdtChartsTwoDimensionalOptions | MdtChartsIntervalOptions): LabelSize {
         const keyAxisOrient = AxisModel.getAxisOrient(AxisType.Key, options.orientation, axis.key.position);
         let labelsTexts: string[];
@@ -85,14 +93,6 @@ export class MarginModel {
         } else if ((valueAxisOrient === 'left' || valueAxisOrient === 'right') && axis.value.visibility) {
             canvasModel.increaseMarginSide(valueAxisOrient, labelSize.width + AXIS_VERTICAL_LABEL_PADDING);
         }
-    }
-
-    public static appendToGlobalMarginValuesLegendMargin(canvasModel: CanvasModel, position: Orient, legendBlockModel: LegendBlockModel): void {
-        const legendCoordinate = legendBlockModel.coordinate;
-        if (position === 'left' || position === 'right')
-            canvasModel.increaseMarginSide(position, legendCoordinate[position].margin.left + legendCoordinate[position].margin.right);
-        else
-            canvasModel.increaseMarginSide(position, legendCoordinate[position].margin.top + legendCoordinate[position].margin.bottom)
     }
 
     private static recalcMarginByTitle(canvasModel: CanvasModel, titleBlockModel: TitleBlockModel): void {

@@ -1,4 +1,4 @@
-import { ModelHelper } from "../../modelHelper";
+import { ModelHelper } from "../../helpers/modelHelper";
 import { ScaleKeyModel, ScaleKeyType, ScaleValueModel, ScaleValueType } from "../../model";
 import { AxisPosition, NumberDomain, IntervalChart, MdtChartsTwoDimensionalChart, MdtChartsTwoDimensionalOptions, ChartOrientation, MdtChartsDataSource, MdtChartsDataRow } from "../../../config/config";
 import { CanvasModel } from "../../modelInstance/canvasModel/canvasModel";

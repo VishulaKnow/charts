@@ -20,6 +20,7 @@ export type EmbeddedLabelTypeModel = "none" | "key" | "value";
 export type DataOptions = {
     [option: string]: any;
 };
+export type UnitsFromConfig = "%" | "px";
 
 export interface Model<O = TwoDimensionalOptionsModel | PolarOptionsModel | IntervalOptionsModel> {
     blockCanvas: BlockCanvas;
@@ -175,7 +176,7 @@ export interface DonutAggregatorContent {
     title: string;
 }
 
-export type DonutThicknessUnit = "px" | "%";
+export type DonutThicknessUnit = UnitsFromConfig;
 export interface DonutThicknessOptions {
     min: number;
     max: number;

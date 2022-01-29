@@ -4,7 +4,7 @@ import { AxisModel } from "../featuresModel/axisModel";
 import { LegendCanvasModel } from "../featuresModel/legendModel/legendCanvasModel";
 import { LegendPolarMarginCalculator } from "../featuresModel/legendModel/polarMarginCalculator";
 import { DataScope, Field, LegendBlockModel } from "../model";
-import { ModelHelper } from "../modelHelper";
+import { ModelHelper } from "../helpers/modelHelper";
 import { CanvasModel } from "../modelInstance/canvasModel/canvasModel";
 import { DataModelInstance } from "../modelInstance/dataModel/dataModel";
 import { ModelInstance } from "../modelInstance/modelInstance";
@@ -104,7 +104,7 @@ export class DataManagerModel {
     //TODO: position type
     private static getLegendDataParams(position: "bottom" | "right", keys: string[], legendCanvas: LegendBlockCanvas, canvasModel: CanvasModel, legendBlock: LegendBlockModel) {
         if (position === 'right') {
-            return LegendCanvasModel.findElementsAmountByLegendSize(keys, position, legendCanvas.maxWidth, canvasModel.getChartBlockHeight() - legendBlock.coordinate.bottom.margin.bottom);
+            return LegendCanvasModel.findElementsAmountByLegendSize(keys, position, canvasModel.getBlockSize().width * 0.3, canvasModel.getChartBlockHeight() - legendBlock.coordinate.bottom.margin.bottom);
         } else {
             return LegendCanvasModel.findElementsAmountByLegendSize(
                 keys,

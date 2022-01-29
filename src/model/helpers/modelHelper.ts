@@ -1,4 +1,4 @@
-import { MdtChartsDataSource, IntervalChart } from "../config/config";
+import { MdtChartsDataSource, IntervalChart } from "../../config/config";
 
 
 export class ModelHelper {

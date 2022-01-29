@@ -1,6 +1,6 @@
 import { AxisPosition, ChartOrientation, MdtChartsDataSource, NumberAxisOptions, AxisLabelPosition, MdtChartsTwoDimensionalOptions, DiscreteAxisOptions } from "../../config/config";
 import { AxisModelOptions, Orient, TranslateModel } from "../model";
-import { ModelHelper } from "../modelHelper";
+import { ModelHelper } from "../helpers/modelHelper";
 import { AxisType, CLASSES } from "../modelBuilder";
 import { DataManagerModel } from "../dataManagerModel/dataManagerModel";
 import { TwoDimensionalModel } from "../notations/twoDimensionalModel";
