@@ -80,6 +80,8 @@
 }
 .legend-item-row > span {
     display: block;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .legend-label {

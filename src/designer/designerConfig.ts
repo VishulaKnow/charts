@@ -38,7 +38,7 @@ interface BlockMargin {
 }
 
 export interface LegendBlockCanvas {
-    maxWidth: number;
+    maxWidth: number | string;
 }
 
 interface ChartOptionsCanvas {

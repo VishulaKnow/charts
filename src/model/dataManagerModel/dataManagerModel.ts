@@ -2,7 +2,6 @@ import { MdtChartsConfig, MdtChartsTwoDimensionalChart, MdtChartsIntervalOptions
 import { BarOptionsCanvas, DesignerConfig, LegendBlockCanvas } from "../../designer/designerConfig";
 import { AxisModel } from "../featuresModel/axisModel";
 import { LegendCanvasModel } from "../featuresModel/legendModel/legendCanvasModel";
-import { LegendPolarMarginCalculator } from "../featuresModel/legendModel/polarMarginCalculator";
 import { DataScope, Field, LegendBlockModel } from "../model";
 import { ModelHelper } from "../helpers/modelHelper";
 import { CanvasModel } from "../modelInstance/canvasModel/canvasModel";
@@ -10,6 +9,7 @@ import { DataModelInstance } from "../modelInstance/dataModel/dataModel";
 import { ModelInstance } from "../modelInstance/modelInstance";
 import { MIN_DONUT_BLOCK_SIZE, PolarModel } from "../notations/polar/polarModel";
 import { DataManagerModelService } from "./dataManagerModelService";
+import { LegendPolarMarginCalculator } from "../featuresModel/legendModel/polarMarginCalculator";
 
 export interface DataLegendParams {
     amount: number;
@@ -21,6 +21,7 @@ export interface DataLegendParams {
 
 export class DataManagerModel {
     private static service = new DataManagerModelService();
+    private static polarMarginCalculator = new LegendPolarMarginCalculator();
 
     public static getPreparedData(data: MdtChartsDataSource, allowableKeys: string[], config: MdtChartsConfig): MdtChartsDataSource {
         const scopedData = this.getScopedData(data, allowableKeys, config);
@@ -95,8 +96,7 @@ export class DataManagerModel {
         const allowableKeys = keys.slice(0, maxItemsNumber);
         const hidedRecordsAmount = keys.length - maxItemsNumber;
 
-        const marginCalculator = new LegendPolarMarginCalculator();
-        marginCalculator.updateMargin(position, canvasModel, legendBlock, position === "bottom" ? size.height : size.width);
+        this.polarMarginCalculator.updateMargin(position, canvasModel, legendBlock, position === "bottom" ? size.height : size.width);
 
         modelInstance.dataModel.initScope(this.limitAllowableKeys(allowableKeys, hidedRecordsAmount, modelInstance.dataModel));
     }
@@ -104,7 +104,7 @@ export class DataManagerModel {
     //TODO: position type
     private static getLegendDataParams(position: "bottom" | "right", keys: string[], legendCanvas: LegendBlockCanvas, canvasModel: CanvasModel, legendBlock: LegendBlockModel) {
         if (position === 'right') {
-            return LegendCanvasModel.findElementsAmountByLegendSize(keys, position, canvasModel.getBlockSize().width * 0.3, canvasModel.getChartBlockHeight() - legendBlock.coordinate.bottom.margin.bottom);
+            return LegendCanvasModel.findElementsAmountByLegendSize(keys, position, this.polarMarginCalculator.getMaxLegendWidth(legendCanvas, canvasModel.getBlockSize().width), canvasModel.getChartBlockHeight() - legendBlock.coordinate.bottom.margin.bottom);
         } else {
             return LegendCanvasModel.findElementsAmountByLegendSize(
                 keys,
