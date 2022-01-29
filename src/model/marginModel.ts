@@ -23,7 +23,7 @@ export class MarginModel {
         this.recalcMarginByTitle(canvasModel, otherComponents.titleBlock);
 
         if (config.options.type === '2d') {
-            this.twoDimLegendModel.recalcMarginWith2DLegend(modelInstance, config.options, otherComponents.legendBlock);
+            this.twoDimLegendModel.recalcMarginWith2DLegend(modelInstance, otherComponents.legendBlock);
             const labelSize = this.getHorizontalMarginByAxisLabels(designerConfig.canvas.axisLabel.maxSize.main, config.options.axis, data, config.options);
             this.recalcVerticalMarginByAxisLabelHeight(labelSize, canvasModel, config.options.orientation, config.options.axis);
 
