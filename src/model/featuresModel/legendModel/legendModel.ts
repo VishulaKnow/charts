@@ -15,12 +15,12 @@ export class LegendModel {
                 },
                 bottom: {
                     size: 0,
-                    margin: { top: 0, bottom: 20, left: 0, right: 0 },
+                    margin: { top: 5, bottom: 20, left: 0, right: 0 },
                     pad: 0
                 },
                 right: {
                     size: 0,
-                    margin: { top: canvasModel.titleCanvas.getAllNeededSpace(), bottom: mb, left: 5, right: 0 },
+                    margin: { top: canvasModel.titleCanvas.getAllNeededSpace(), bottom: mb, left: 10, right: 0 },
                     pad: 0
                 },
                 top: {
