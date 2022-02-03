@@ -18,6 +18,7 @@
         "node_modules",
         "**/__tests__/*",
         "src/playground/*",
-        "**/*Example.ts"
+        "**/*Example.ts",
+        "**/*.test.ts"
     ]
 }
