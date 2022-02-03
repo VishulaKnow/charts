@@ -14,7 +14,14 @@ export class DonutAggregatorService {
 
         const content = aggregatorOptions.content({ data: dataOptions.rows });
 
-        if (this.doesValueExist(content.value) && content.title) return content;
+        if (!content || (!this.doesValueExist(content.value) && !content.title)) return this.generateDefaultContent(dataOptions);
+
+        if (this.doesValueExist(content.value) && content.title) {
+            return {
+                title: content.title,
+                value: content.value
+            }
+        }
 
         if (!content.title && this.doesValueExist(content.value))
             return {
@@ -22,7 +29,12 @@ export class DonutAggregatorService {
                 title: AGGREGATOR_DEFAULT_TITLE
             }
 
-        return this.generateDefaultContent(dataOptions);
+        if (!this.doesValueExist(content.value) && content.title) {
+            return {
+                value: this.getDefaultValue(dataOptions),
+                title: content.title
+            }
+        }
     }
 
     private doesValueExist(content: number | string) {
@@ -32,7 +44,12 @@ export class DonutAggregatorService {
     private generateDefaultContent(dataOptions: AggregatorServiceDataOptions): DonutAggregatorContent {
         return {
             title: AGGREGATOR_DEFAULT_TITLE,
-            value: dataOptions.rows ? dataOptions.rows.reduce((acc, row) => acc + row[dataOptions.valueFieldName], 0) : 0
+            value: dataOptions.rows ? this.getDefaultValue(dataOptions) : 0
         }
+    }
+
+    private getDefaultValue(dataOptions: AggregatorServiceDataOptions) {
+        const totalSumOfValues = dataOptions.rows.reduce((acc, row) => acc + row[dataOptions.valueFieldName], 0);
+        return totalSumOfValues;
     }
 }

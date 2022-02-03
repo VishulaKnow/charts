@@ -211,8 +211,8 @@ export interface MdtChartsAggregatorModel {
 }
 
 export interface MdtChartsAggregatorContent {
-    value: string | number;
-    title: string;
+    value?: string | number;
+    title?: string;
 }
 
 

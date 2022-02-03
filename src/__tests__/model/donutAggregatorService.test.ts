@@ -37,7 +37,6 @@ describe('DonutAggregatorService', () => {
             const options: MdtChartsDonutAggregator = {
                 content: (model) => {
                     return {
-                        title: undefined,
                         value: model.data.reduce((acc, row) => acc + row.value, 0)
                     }
                 }
@@ -77,6 +76,35 @@ describe('DonutAggregatorService', () => {
 
             options = { content: null };
             res = service.getContent(options, getDataOptions());
+            expect(res).toEqual<DonutAggregatorContent>({
+                title: AGGREGATOR_DEFAULT_TITLE,
+                value: 42
+            });
+        });
+
+        test('should return sum of values and custom title if result does not have value but has title', () => {
+            const options: MdtChartsDonutAggregator = {
+                content: (model) => {
+                    return {
+                        title: "Custom title",
+                        value: undefined
+                    }
+                }
+            }
+
+            const res = service.getContent(options, getDataOptions());
+            expect(res).toEqual<DonutAggregatorContent>({
+                title: "Custom title",
+                value: 42
+            });
+        });
+
+        test('should return default content if fn return falsy value', () => {
+            const options: MdtChartsDonutAggregator = {
+                content: (model) => null
+            }
+
+            const res = service.getContent(options, getDataOptions());
             expect(res).toEqual<DonutAggregatorContent>({
                 title: AGGREGATOR_DEFAULT_TITLE,
                 value: 42

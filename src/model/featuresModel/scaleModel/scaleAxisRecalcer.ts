@@ -30,8 +30,9 @@ export class ScaleAxisRecalcer {
                 : canvasModel.getChartBlockWidth()) - scaleValueFn(0));
         const key = chartOrientation === "vertical" ? keyAxisLabelVerticalLog : keyAxisLabelHorizontalLog;
         const logInfo = canvasModel.marginService.getDataByKey(key);
-
-        canvasModel.decreaseMarginSide(logInfo.side, logInfo.byValue - coordinateOnChartBlock < 0 ? logInfo.byValue : coordinateOnChartBlock);
+        if (logInfo) {
+            canvasModel.decreaseMarginSide(logInfo.side, logInfo.byValue - coordinateOnChartBlock < 0 ? logInfo.byValue : coordinateOnChartBlock);
+        }
     }
 
     getScaleValue(): ScaleInfo {
