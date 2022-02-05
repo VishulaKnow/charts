@@ -1,4 +1,4 @@
-import { MdtChartsDataSource, PolarChart, MdtChartsPolarOptions, MdtChartsDataRow } from "../../../config/config";
+import { PolarChart, MdtChartsPolarOptions, MdtChartsDataRow } from "../../../config/config";
 import { ChartStyleConfig, DesignerConfig, DonutOptionsCanvas } from "../../../designer/designerConfig";
 import { ChartStyleModelService } from "../../chartStyleModel/chartStyleModel";
 import { PolarOptionsModel, PolarChartModel, DonutChartSettings, LegendCoordinate } from "../../model";

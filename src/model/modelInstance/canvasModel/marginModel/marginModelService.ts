@@ -1,4 +1,5 @@
-import { MarginSide } from "./canvasModel";
+import { MarginSide } from "./canvasMarginModel";
+
 
 interface MarginIncreaseLog {
     key: string;

@@ -1,12 +1,11 @@
 import { Size } from "../../../config/config";
 import { BlockMargin } from "../../model";
 import { LegendCanvasModelInstance } from "./legendCanvasModel";
-import { MarginModelService } from "./marginModelService";
+import { CanvasMarginModel, MarginSide } from "./marginModel/canvasMarginModel";
+import { MarginModelService } from "./marginModel/marginModelService";
 import { TitleCanvasModel } from "./titleCanvas";
 
-export type MarginSide = keyof BlockMargin;
-
-export class CanvasModel {
+export class CanvasModel implements CanvasMarginModel {
     titleCanvas: TitleCanvasModel;
     legendCanvas: LegendCanvasModelInstance;
     marginService: MarginModelService;
