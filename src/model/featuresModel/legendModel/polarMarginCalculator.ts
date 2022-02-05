@@ -6,7 +6,6 @@ import { CanvasModel } from "../../modelInstance/canvasModel/canvasModel";
 
 export class LegendPolarMarginCalculator {
     updateMargin(legendPosition: "right" | "bottom", canvasModel: CanvasModel, legendBlockModel: LegendBlockModel, size: number) {
-        canvasModel.legendCanvas.setPosition(legendPosition);
         this.updateMarginObj(legendBlockModel, legendPosition, size, canvasModel);
     }
 

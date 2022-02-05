@@ -79,6 +79,7 @@ export class DataManagerModel {
         const keys = data[configOptions.data.dataSource].map<string>(dataRow => dataRow[keyFieldName]);
 
         if (!configOptions.legend.show) {
+            canvasModel.legendCanvas.setPosition("off");
             modelInstance.dataModel.initScope(this.getMaximumPossibleScope(keys, modelInstance.dataModel));
             return;
         }
@@ -101,6 +102,7 @@ export class DataManagerModel {
         const allowableKeys = keys.slice(0, maxItemsNumber);
         const hidedRecordsAmount = keys.length - maxItemsNumber;
 
+        canvasModel.legendCanvas.setPosition(position);
         this.polarMarginCalculator.updateMargin(position, canvasModel, legendBlock, position === "bottom" ? size.height : size.width);
 
         modelInstance.dataModel.initScope(this.limitAllowableKeys(allowableKeys, hidedRecordsAmount, modelInstance.dataModel));
