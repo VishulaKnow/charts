@@ -13,8 +13,9 @@ export class TwoDimensionalModel {
     public static getOptions(options: MdtChartsTwoDimensionalOptions, designerConfig: DesignerConfig, modelInstance: ModelInstance): TwoDimensionalOptionsModel {
         const canvasModel = modelInstance.canvasModel;
         const dataModelRep = modelInstance.dataModel.repository;
+        const scaleModel = new ScaleModel();
 
-        const scaleMarginRecalcer = new ScaleAxisRecalcer(() => ScaleModel.getScaleLinear(options, dataModelRep.getScopedRows(), canvasModel));
+        const scaleMarginRecalcer = new ScaleAxisRecalcer(() => scaleModel.getScaleLinear(options, dataModelRep.getScopedRows(), canvasModel));
         scaleMarginRecalcer.recalculateMargin(canvasModel, options.orientation, options.axis.key);
         const scaleValueInfo = scaleMarginRecalcer.getScaleValue();
 
@@ -24,7 +25,7 @@ export class TwoDimensionalModel {
             selectable: !!options.selectable,
             orient: options.orientation,
             scale: {
-                key: ScaleModel.getScaleKey(modelInstance.dataModel.getAllowableKeys(), options.orientation, canvasModel, options.charts, this.getChartsByType(options.charts, 'bar')),
+                key: scaleModel.getScaleKey(modelInstance.dataModel.getAllowableKeys(), options.orientation, canvasModel, options.charts, this.getChartsByType(options.charts, 'bar')),
                 value: scaleValueInfo.scale
             },
             axis: {

@@ -1,12 +1,10 @@
-import { MdtChartsConfig, MdtChartsDataSource, IntervalChart, MdtChartsIntervalOptions } from "../../config/config";
+import { IntervalChart, MdtChartsIntervalOptions } from "../../config/config";
 import { ChartStyleConfig, DesignerConfig } from "../../designer/designerConfig";
 import { AxisModel } from "../featuresModel/axisModel";
 import { ChartStyleModelService } from "../chartStyleModel/chartStyleModel";
 import { DataManagerModel } from "../dataManagerModel/dataManagerModel";
-import { LegendModel } from "../featuresModel/legendModel/legendModel";
-import { AdditionalElementsOptions, BlockMargin, DataScope, IntervalChartModel, IntervalOptionsModel } from "../model";
+import { AdditionalElementsOptions, IntervalChartModel, IntervalOptionsModel } from "../model";
 import { AxisType } from "../modelBuilder";
-import { ScaleModel, ScaleType } from "../featuresModel/scaleModel/scaleModel";
 import { TwoDimensionalModel } from "./twoDimensionalModel";
 import { ModelInstance } from "../modelInstance/modelInstance";
 
@@ -25,16 +23,16 @@ export class IntervalModel {
                     domain: modelInstance.dataModel.getAllowableKeys(),
                     range: {
                         start: 0,
-                        end: ScaleModel.getRangePeek(ScaleType.Key, options.orientation, canvasModel)
+                        end: 0
                     },
                     type: 'band',
                     elementsAmount: 1
                 },
                 value: {
-                    domain: ScaleModel.getDateValueDomain(dataModelRep.getScopedFullSource(), options.chart, options.axis.key.position, options.data.dataSource),
+                    domain: [],
                     range: {
                         start: 0,
-                        end: ScaleModel.getRangePeek(ScaleType.Value, options.orientation, canvasModel)
+                        end: 0
                     },
                     type: 'datetime'
                 }

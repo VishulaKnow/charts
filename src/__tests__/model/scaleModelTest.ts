@@ -1,6 +1,9 @@
 import { MdtChartsDataRow, MdtChartsDataSource, MdtChartsTwoDimensionalChart, MdtChartsTwoDimensionalOptions } from "../../config/config";
+import { ScaleDomainCalculator } from "../../model/featuresModel/scaleModel/scaleDomainService";
 import { ScaleModel } from "../../model/featuresModel/scaleModel/scaleModel";
+import { getScaleKeyRangePeek, getScaleValueRangePeek } from "../../model/featuresModel/scaleModel/scaleModelServices";
 import { CanvasModel } from "../../model/modelInstance/canvasModel/canvasModel";
+import { CanvasSizesModel } from "../../model/modelInstance/canvasModel/canvasSizesModel/canvasSizeModel";
 
 function getData(sourceName: "dataSet_poor" | "dataSet" | "dataSet_negative" = "dataSet"): MdtChartsDataRow[] {
     const data = {
@@ -33,6 +36,7 @@ function getData(sourceName: "dataSet_poor" | "dataSet" | "dataSet_negative" = "
 
 describe('getScaleMaxValue test', () => {
     let charts: MdtChartsTwoDimensionalChart[];
+    const calculator = new ScaleDomainCalculator();
 
     beforeEach(() => {
         charts = [
@@ -71,13 +75,13 @@ describe('getScaleMaxValue test', () => {
             });
 
             test('should return 120 (max of all dataSet) for not-segmnted charts', () => {
-                const result = ScaleModel.getScaleMaxValue(charts, getData());
+                const result = calculator.getScaleMaxValue(charts, getData());
                 expect(result).toBe(120);
             });
 
             test('should return 20 (max of count) for not-segmnted charts', () => {
                 charts[0].data.valueFields = charts[0].data.valueFields.slice(1, 2);
-                const result = ScaleModel.getScaleMaxValue(charts, getData());
+                const result = calculator.getScaleMaxValue(charts, getData());
                 expect(result).toBe(20);
             });
 
@@ -87,7 +91,7 @@ describe('getScaleMaxValue test', () => {
                     name: 'simple',
                     title: ''
                 });
-                const result = ScaleModel.getScaleMaxValue(charts, getData("dataSet_poor"));
+                const result = calculator.getScaleMaxValue(charts, getData("dataSet_poor"));
                 expect(result).toBe(500);
             });
         });
@@ -98,7 +102,7 @@ describe('getScaleMaxValue test', () => {
             });
 
             test('should return 140 (max of all sums) for segmented chart', () => {
-                const result = ScaleModel.getScaleMaxValue(charts, getData());
+                const result = calculator.getScaleMaxValue(charts, getData());
                 expect(result).toBe(140);
             });
 
@@ -108,7 +112,7 @@ describe('getScaleMaxValue test', () => {
                     name: 'simple',
                     title: ''
                 });
-                const result = ScaleModel.getScaleMaxValue(charts, getData("dataSet_poor"));
+                const result = calculator.getScaleMaxValue(charts, getData("dataSet_poor"));
                 expect(result).toBe(527);
             });
         });
@@ -119,7 +123,7 @@ describe('getScaleMaxValue test', () => {
             charts[0].data.valueFields.push({ name: "simple", format: null, title: null });
             charts[0].isSegmented = true;
 
-            const result = ScaleModel.getScaleMaxValue(charts, getData("dataSet_negative"));
+            const result = calculator.getScaleMaxValue(charts, getData("dataSet_negative"));
             expect(result).toBe(515);
         });
     });
@@ -174,7 +178,7 @@ describe('getScaleMaxValue test', () => {
                         embeddedLabels: 'key'
                     }
                 ]
-                const result = ScaleModel.getScaleMaxValue(charts, getData("dataSet_poor"));
+                const result = calculator.getScaleMaxValue(charts, getData("dataSet_poor"));
                 expect(result).toBe(500);
             });
 
@@ -226,7 +230,7 @@ describe('getScaleMaxValue test', () => {
                         embeddedLabels: 'key'
                     }
                 ]
-                const result = ScaleModel.getScaleMaxValue(charts, getData("dataSet_poor"));
+                const result = calculator.getScaleMaxValue(charts, getData("dataSet_poor"));
                 expect(result).toBe(500);
             });
         });
@@ -280,7 +284,7 @@ describe('getScaleMaxValue test', () => {
                         embeddedLabels: 'key'
                     }
                 ]
-                const result = ScaleModel.getScaleMaxValue(charts, getData("dataSet_poor"));
+                const result = calculator.getScaleMaxValue(charts, getData("dataSet_poor"));
                 expect(result).toBe(500);
             });
 
@@ -337,7 +341,7 @@ describe('getScaleMaxValue test', () => {
                         embeddedLabels: 'key'
                     }
                 ]
-                const result = ScaleModel.getScaleMaxValue(charts, getData("dataSet_poor"));
+                const result = calculator.getScaleMaxValue(charts, getData("dataSet_poor"));
                 expect(result).toBe(512);
             });
 
@@ -419,7 +423,7 @@ describe('getScaleMaxValue test', () => {
                         embeddedLabels: 'key'
                     }
                 ]
-                const result = ScaleModel.getScaleMaxValue(charts, getData("dataSet_poor"));
+                const result = calculator.getScaleMaxValue(charts, getData("dataSet_poor"));
                 expect(result).toBe(500);
             });
         });
@@ -428,6 +432,7 @@ describe('getScaleMaxValue test', () => {
 
 describe('getScaleMinValue', () => {
     let charts: MdtChartsTwoDimensionalChart[];
+    const calculator = new ScaleDomainCalculator();
 
     beforeEach(() => {
         charts = [
@@ -456,18 +461,18 @@ describe('getScaleMinValue', () => {
     });
 
     test('should return `0` if min value is more than 0', () => {
-        const res = ScaleModel.getScaleMinValue(charts, getData());
+        const res = calculator.getScaleMinValue(charts, getData());
         expect(res).toBe(0);
     });
 
     test('should return min negative value if chart is not segmented and data has negative values', () => {
-        const res = ScaleModel.getScaleMinValue(charts, getData("dataSet_negative"));
+        const res = calculator.getScaleMinValue(charts, getData("dataSet_negative"));
         expect(res).toBe(-120);
     });
 
     test('should return min sum of negative values if chart is segmented and data has negative values', () => {
         charts[0].isSegmented = true;
-        const res = ScaleModel.getScaleMinValue(charts, getData("dataSet_negative"));
+        const res = calculator.getScaleMinValue(charts, getData("dataSet_negative"));
         expect(res).toBe(-152);
     });
 });
@@ -477,6 +482,7 @@ describe('get scales tests', () => {
     let data: MdtChartsDataSource;
     let dataSource: string;
     let options: MdtChartsTwoDimensionalOptions;
+    const scaleModel = new ScaleModel();
 
     beforeEach(() => {
         charts = [
@@ -578,7 +584,7 @@ describe('get scales tests', () => {
         canvasModel.initMargin({ bottom: 20, left: 20, right: 20, top: 20 });
         canvasModel.initBlockSize({ height: 500, width: 1000 });
 
-        const result = ScaleModel.getScaleKey(['BMW', 'LADA', 'MECEDES'], 'vertical', canvasModel, charts, charts.filter(chart => chart.type === 'bar'));
+        const result = scaleModel.getScaleKey(['BMW', 'LADA', 'MECEDES'], 'vertical', canvasModel, charts, charts.filter(chart => chart.type === 'bar'));
         expect(result).toEqual({
             domain: ['BMW', 'LADA', 'MECEDES'],
             range: {
@@ -596,7 +602,7 @@ describe('get scales tests', () => {
         canvasModel.initBlockSize({ height: 500, width: 1000 });
 
         charts[1].type = 'line'
-        const result = ScaleModel.getScaleKey(['BMW', 'LADA', 'MECEDES'], 'vertical', canvasModel, charts, charts.filter(chart => chart.type === 'bar'));
+        const result = scaleModel.getScaleKey(['BMW', 'LADA', 'MECEDES'], 'vertical', canvasModel, charts, charts.filter(chart => chart.type === 'bar'));
         expect(result).toEqual({
             domain: ['BMW', 'LADA', 'MECEDES'],
             range: {
@@ -613,7 +619,7 @@ describe('get scales tests', () => {
         canvasModel.initMargin({ bottom: 20, left: 20, right: 20, top: 20 });
         canvasModel.initBlockSize({ height: 500, width: 1000 });
 
-        const result = ScaleModel.getScaleLinear(options, data[dataSource], canvasModel);
+        const result = scaleModel.getScaleLinear(options, data[dataSource], canvasModel);
         expect(result).toEqual({
             domain: [0, 120],
             range: {
@@ -621,5 +627,51 @@ describe('get scales tests', () => {
             },
             type: 'linear'
         })
+    });
+});
+
+describe('Model Services', () => {
+    let sizesModel: CanvasSizesModel;
+
+    beforeEach(() => {
+        jest.clearAllMocks();
+        jest.resetAllMocks();
+
+        sizesModel = {
+            getChartBlockHeight: jest.fn(),
+            getChartBlockWidth: jest.fn()
+        }
+    })
+
+    describe('getScaleKeyRangePeek', () => {
+        test('should call chart block width if orientation is vertical', () => {
+            (sizesModel.getChartBlockWidth as jest.Mock).mockReturnValueOnce(42);
+            const res = getScaleKeyRangePeek("vertical", sizesModel);
+            expect(sizesModel.getChartBlockWidth).toHaveBeenCalled();
+            expect(res).toBe(42);
+        });
+
+        test('should call chart block height if orientation is horizontal', () => {
+            (sizesModel.getChartBlockHeight as jest.Mock).mockReturnValueOnce(42);
+            const res = getScaleKeyRangePeek("horizontal", sizesModel);
+            expect(sizesModel.getChartBlockHeight).toHaveBeenCalled();
+            expect(res).toBe(42);
+        });
+    });
+
+    describe('getScaleValueRangePeek', () => {
+        test('should call chart block width if orientation is horizontal', () => {
+            (sizesModel.getChartBlockHeight as jest.Mock).mockReturnValueOnce(42);
+            const res = getScaleValueRangePeek("vertical", sizesModel);
+            expect(sizesModel.getChartBlockHeight).toHaveBeenCalled();
+            expect(res).toBe(42);
+        });
+
+        test('should call chart block height if orientation is vertical', () => {
+            (sizesModel.getChartBlockWidth as jest.Mock).mockReturnValueOnce(42);
+            const res = getScaleValueRangePeek("horizontal", sizesModel);
+            expect(sizesModel.getChartBlockWidth).toHaveBeenCalled();
+            expect(res).toBe(42);
+        });
     });
 });
