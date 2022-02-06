@@ -1,4 +1,4 @@
-import { LegendBlockModel } from "../../model";
+import { LegendBlockModel, Orient } from "../../model";
 import { CanvasModel } from "../../modelInstance/canvasModel/canvasModel";
 import { LegendItemsDirection } from "./legendCanvasModel";
 
@@ -34,5 +34,14 @@ export class LegendModel {
 
     public static getLegendItemClass(itemsPosition: LegendItemsDirection): string {
         return itemsPosition === 'column' ? 'legend-item-row' : 'legend-item-inline';
+    }
+
+    public static appendToGlobalMarginValuesLegendMargin(canvasModel: CanvasModel, position: Orient, legendBlockModel: LegendBlockModel): void {
+        const legendCoordinate = legendBlockModel.coordinate;
+
+        if (position === 'left' || position === 'right')
+            canvasModel.increaseMarginSide(position, legendCoordinate[position].margin.left + legendCoordinate[position].margin.right);
+        else
+            canvasModel.increaseMarginSide(position, legendCoordinate[position].margin.top + legendCoordinate[position].margin.bottom)
     }
 }

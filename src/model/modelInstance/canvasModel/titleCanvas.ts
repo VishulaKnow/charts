@@ -14,6 +14,6 @@ export class TitleCanvasModel {
     }
 
     getAllNeededSpace() {
-        return this.model.pad + this.model.size + this.model.margin.top;
+        return this.model.pad + this.model.size + this.model.margin.top + this.model.margin.bottom;
     }
 }

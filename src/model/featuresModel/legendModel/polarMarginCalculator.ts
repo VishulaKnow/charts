@@ -1,8 +1,8 @@
 import { LegendBlockCanvas } from "../../../designer/designerConfig";
 import { getPxPercentUnitByValue } from "../../helpers/unitsFromConfigReader";
-import { MarginModel } from "../../margin/marginModel";
 import { LegendBlockModel } from "../../model";
 import { CanvasModel } from "../../modelInstance/canvasModel/canvasModel";
+import { LegendModel } from "./legendModel";
 
 export class LegendPolarMarginCalculator {
     updateMargin(legendPosition: "right" | "bottom", canvasModel: CanvasModel, legendBlockModel: LegendBlockModel, size: number) {
@@ -23,7 +23,7 @@ export class LegendPolarMarginCalculator {
     private updateMarginObj(legendBlockModel: LegendBlockModel, legendPosition: "right" | "bottom", legendSize: number, canvasModel: CanvasModel) {
         if (legendSize !== 0) {
             canvasModel.increaseMarginSide(legendPosition, legendSize);
-            MarginModel.appendToGlobalMarginValuesLegendMargin(canvasModel, legendPosition, legendBlockModel);
+            LegendModel.appendToGlobalMarginValuesLegendMargin(canvasModel, legendPosition, legendBlockModel);
         }
 
         legendBlockModel.coordinate[legendPosition].size = legendSize;
