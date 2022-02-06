@@ -1,6 +1,6 @@
 import { Block } from './block/block';
 import { ValueFormatter } from './valueFormatter';
-import { ContentManager } from './contentManager';
+import { ContentManager } from './contentManager/contentManager';
 import { IntervalOptionsModel, Model, PolarOptionsModel, TwoDimensionalOptionsModel } from '../model/model';
 import { FilterCallback, FilterEventManager } from './filterManager/filterEventManager';
 import { Helper } from './helpers/helper';
@@ -25,7 +25,7 @@ export default class Engine {
 
         if (model.options) {
             ValueFormatter.setFormatFunction(model.dataSettings.format.formatters);
-            this.renderCharts(model, this.data);
+            this.renderCharts(model);
         }
     }
 
@@ -59,8 +59,8 @@ export default class Engine {
         ContentManager.updateColors(this, model);
     }
 
-    private renderCharts(model: Model, data: MdtChartsDataSource): void {
-        ContentManager.render(model, data, this);
+    private renderCharts(model: Model): void {
+        ContentManager.render(model, this);
     }
 
     private setFilterEventManager(options: PolarOptionsModel | TwoDimensionalOptionsModel | IntervalOptionsModel): void {

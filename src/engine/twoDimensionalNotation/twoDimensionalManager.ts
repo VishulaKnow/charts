@@ -1,6 +1,7 @@
 import { MdtChartsDataSource, Size } from "../../config/config";
 import { BarChartSettings, BlockMargin, Model, OptionsModelData, Orient, TwoDimensionalChartModel, TwoDimensionalOptionsModel } from "../../model/model";
 import { Block } from "../block/block";
+import { ChartContentManager } from "../contentManager/contentManagerFactory";
 import { ElementHighlighter } from "../elementHighlighter/elementHighlighter";
 import Engine from "../engine";
 import { Axis } from "../features/axis/axis";
@@ -18,8 +19,8 @@ import { BarHelper } from "./bar/barHelper";
 import { TwoDimRecordOverflowAlert } from "./extenders/twoDimRecordOverflowAlert";
 import { Line } from "./line/line";
 
-export class TwoDimensionalManager {
-    public static render(engine: Engine, model: Model): void {
+export class TwoDimensionalManager implements ChartContentManager {
+    public render(engine: Engine, model: Model): void {
         const options = <TwoDimensionalOptionsModel>model.options;
 
         const scales = Scale.getScales(options.scale.key,
@@ -70,7 +71,7 @@ export class TwoDimensionalManager {
             });
     }
 
-    public static updateData(block: Block, model: Model, data: MdtChartsDataSource) {
+    public updateData(block: Block, model: Model, data: MdtChartsDataSource) {
         block.transitionManager.interruptTransitions();
         block.filterEventManager.updateData(data[model.options.data.dataSource]);
         TipBox.clearEvents(block);
@@ -118,7 +119,7 @@ export class TwoDimensionalManager {
         });
     }
 
-    public static updateColors(block: Block, model: Model): void {
+    public updateColors(block: Block, model: Model): void {
         Legend.updateColors(block, model.options);
         (<TwoDimensionalOptionsModel>model.options).charts.forEach(chart => {
             if (chart.type === 'bar')
@@ -130,7 +131,7 @@ export class TwoDimensionalManager {
         });
     }
 
-    private static renderCharts(block: Block, charts: TwoDimensionalChartModel[], scales: Scales, data: MdtChartsDataSource, dataOptions: OptionsModelData, margin: BlockMargin, keyAxisOrient: Orient, barSettings: BarChartSettings, blockSize: Size) {
+    private renderCharts(block: Block, charts: TwoDimensionalChartModel[], scales: Scales, data: MdtChartsDataSource, dataOptions: OptionsModelData, margin: BlockMargin, keyAxisOrient: Orient, barSettings: BarChartSettings, blockSize: Size) {
         block.renderChartClipPath(margin, blockSize);
         block.renderChartsBlock();
         charts.forEach((chart: TwoDimensionalChartModel) => {
@@ -168,7 +169,7 @@ export class TwoDimensionalManager {
         EmbeddedLabels.raiseGroups(block);
     }
 
-    private static updateCharts(block: Block, charts: TwoDimensionalChartModel[], scales: Scales, data: MdtChartsDataSource, dataOptions: OptionsModelData, margin: BlockMargin, keyAxisOrient: Orient, blockSize: Size, barSettings: BarChartSettings): Promise<any>[] {
+    private updateCharts(block: Block, charts: TwoDimensionalChartModel[], scales: Scales, data: MdtChartsDataSource, dataOptions: OptionsModelData, margin: BlockMargin, keyAxisOrient: Orient, blockSize: Size, barSettings: BarChartSettings): Promise<any>[] {
         block.updateChartClipPath(margin, blockSize);
         let promises: Promise<any>[] = [];
         charts.forEach((chart: TwoDimensionalChartModel) => {

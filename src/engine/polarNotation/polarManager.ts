@@ -9,9 +9,10 @@ import { Aggregator } from "../features/aggregator/aggregator";
 import { Donut } from "./donut/donut";
 import { MdtChartsDataSource, Size } from "../../config/config";
 import { PolarRecordOverflowAlert } from "./extenders/polarRecordOverflowAlert";
+import { ChartContentManager } from "../contentManager/contentManagerFactory";
 
-export class PolarManager {
-    public static render(engine: Engine, model: Model) {
+export class PolarManager implements ChartContentManager {
+    public render(engine: Engine, model: Model) {
         const options = <PolarOptionsModel>model.options;
 
         engine.block.renderSvg(model.blockCanvas.size);
@@ -47,7 +48,7 @@ export class PolarManager {
             });
     }
 
-    public static update(block: Block, model: Model, data: MdtChartsDataSource): void {
+    public updateData(block: Block, model: Model, data: MdtChartsDataSource): void {
         block.transitionManager.interruptTransitions();
         block.removeMouseEvents();
         block.filterEventManager.updateData(data[model.options.data.dataSource]);
@@ -75,12 +76,12 @@ export class PolarManager {
         });
     }
 
-    public static updateColors(block: Block, model: Model): void {
+    public updateColors(block: Block, model: Model): void {
         Legend.updateColors(block, model.options);
         Donut.updateColors(block, (<PolarOptionsModel>model.options).charts[0]);
     }
 
-    private static renderCharts(block: Block, charts: PolarChartModel[], data: MdtChartsDataSource, dataSource: string, margin: BlockMargin, blockSize: Size, donutSettings: DonutChartSettings) {
+    private renderCharts(block: Block, charts: PolarChartModel[], data: MdtChartsDataSource, dataSource: string, margin: BlockMargin, blockSize: Size, donutSettings: DonutChartSettings) {
         charts.forEach((chart: PolarChartModel) => {
             if (chart.type === 'donut')
                 Donut.render(block,
