@@ -56,10 +56,10 @@ interface LineTooltipIntervalParams extends LineTooltipParams {
 
 export class Tooltip {
     public static readonly tooltipBlockClass = NewTooltip.tooltipBlockClass;
-    public static readonly tooltipLineClass = 'tooltip-line';
-    public static readonly tooltipWrapperClass = 'tooltip-wrapper';
-    public static readonly tooltipContentClass = 'tooltip-content';
-    public static readonly tooltipArrowClass = 'tooltip-arrow';
+    public static readonly tooltipLineClass = 'mdt-charts-tooltip-line';
+    public static readonly tooltipWrapperClass = 'mdt-charts-tooltip-wrapper';
+    public static readonly tooltipContentClass = 'mdt-charts-tooltip-content';
+    public static readonly tooltipArrowClass = 'mdt-charts-tooltip-arrow';
 
     public static render(block: Block, model: Model, data: MdtChartsDataSource, tooltipOptions: TooltipSettings, scales?: Scales): void {
         TooltipComponentsManager.renderTooltipWrapper(block);

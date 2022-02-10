@@ -8,7 +8,7 @@ export interface TooltipCoordinate {
 }
 
 export class NewTooltip {
-    static tooltipBlockClass = 'tooltip-block';
+    static tooltipBlockClass = 'mdt-charts-tooltip-block';
 
     private elSelection: Selection<HTMLElement, unknown, HTMLElement, any>;
 
