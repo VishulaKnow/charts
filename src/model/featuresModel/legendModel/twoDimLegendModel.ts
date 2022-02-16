@@ -1,12 +1,13 @@
-import { ILegendModel, LegendBlockModel } from "../../model";
+import { Legend } from "../../../config/config";
+import { ILegendModel, LegendBlockModel, LegendPosition } from "../../model";
 import { ModelInstance } from "../../modelInstance/modelInstance";
 import { LegendModel } from "./legendModel";
 
 export class TwoDimLegendModel {
-    recalcMarginWith2DLegend(modelInstance: ModelInstance, legendBlockModel: LegendBlockModel): void {
+    recalcMarginWith2DLegend(modelInstance: ModelInstance, legendBlockModel: LegendBlockModel, legendOptions: Legend): void {
         const canvasModel = modelInstance.canvasModel;
 
-        const legendPosition = this.getLegendModel().position;
+        const legendPosition = this.getLegendModel(legendOptions).position;
         modelInstance.canvasModel.legendCanvas.setPosition(legendPosition);
 
         if (legendPosition !== 'off') {
@@ -25,9 +26,10 @@ export class TwoDimLegendModel {
         return heightOfLegendItemWithoutWordWrapping;
     }
 
-    private getLegendModel(): ILegendModel {
+    private getLegendModel(legendOptions: Legend): ILegendModel {
+        const position: LegendPosition = legendOptions.show ? "top" : "off";
         return {
-            position: "top"
+            position
         }
     }
 }

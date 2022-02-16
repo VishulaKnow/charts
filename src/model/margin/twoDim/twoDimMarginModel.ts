@@ -19,7 +19,7 @@ export class TwoDimMarginModel {
     recalcMargin(designerConfig: DesignerConfig, options: MdtChartsTwoDimensionalOptions, otherComponents: OtherCommonComponents, data: MdtChartsDataSource, modelInstance: ModelInstance) {
         const canvasModel = modelInstance.canvasModel;
 
-        this.twoDimLegendModel.recalcMarginWith2DLegend(modelInstance, otherComponents.legendBlock);
+        this.twoDimLegendModel.recalcMarginWith2DLegend(modelInstance, otherComponents.legendBlock, options.legend);
         const labelSize = this.getHorizontalMarginByAxisLabels(designerConfig.canvas.axisLabel.maxSize.main, options.axis, data, options);
         this.recalcVerticalMarginByAxisLabelHeight(labelSize, canvasModel, options.orientation, options.axis);
 
