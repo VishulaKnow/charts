@@ -20,8 +20,8 @@ import { TwoDimRecordOverflowAlert } from "./extenders/twoDimRecordOverflowAlert
 import { Line } from "./line/line";
 
 export class TwoDimensionalManager implements ChartContentManager {
-    public render(engine: Engine, model: Model): void {
-        const options = <TwoDimensionalOptionsModel>model.options;
+    public render(engine: Engine, model: Model<TwoDimensionalOptionsModel>): void {
+        const options = model.options;
 
         const scales = Scale.getScales(options.scale.key,
             options.scale.value,
@@ -71,7 +71,7 @@ export class TwoDimensionalManager implements ChartContentManager {
             });
     }
 
-    public updateData(block: Block, model: Model, data: MdtChartsDataSource) {
+    public updateData(block: Block, model: Model<TwoDimensionalOptionsModel>, data: MdtChartsDataSource) {
         block.transitionManager.interruptTransitions();
         block.filterEventManager.updateData(data[model.options.data.dataSource]);
         TipBox.clearEvents(block);
@@ -119,7 +119,7 @@ export class TwoDimensionalManager implements ChartContentManager {
         });
     }
 
-    public updateColors(block: Block, model: Model): void {
+    public updateColors(block: Block, model: Model<TwoDimensionalOptionsModel>): void {
         Legend.updateColors(block, model.options);
         (<TwoDimensionalOptionsModel>model.options).charts.forEach(chart => {
             if (chart.type === 'bar')

@@ -7,6 +7,9 @@ import {
     TooltipOptions,
     TwoDimensionalChartType,
     AxisLabelPosition,
+    MdtChartsIconElement,
+    MdtChartsCardValue,
+    MdtChartsColorName,
 } from "../config/config";
 import { DataType, DonutOptionsCanvas, Formatter, TooltipSettings, Transitions } from "../designer/designerConfig";
 
@@ -22,7 +25,9 @@ export type DataOptions = {
 };
 export type UnitsFromConfig = "%" | "px";
 
-export interface Model<O = TwoDimensionalOptionsModel | PolarOptionsModel | IntervalOptionsModel> {
+export type OptionsModel = TwoDimensionalOptionsModel | PolarOptionsModel | IntervalOptionsModel | CardOptionsModel;
+
+export interface Model<O = OptionsModel> {
     blockCanvas: BlockCanvas;
     chartBlock: ChartBlockModel;
     options: O;
@@ -48,14 +53,16 @@ export interface BlockMargin {
 }
 
 //====================================================== Options
-interface OptionsModel {
-    legend: ILegendModel;
+interface BasicOptionsModel {
     data: OptionsModelData;
-    title: string;
-    selectable: boolean;
     tooltip: TooltipOptions;
 }
-export interface TwoDimensionalOptionsModel extends OptionsModel {
+interface GraphicNotationOptionsModel extends BasicOptionsModel {
+    legend: ILegendModel;
+    title: string;
+    selectable: boolean;
+}
+export interface TwoDimensionalOptionsModel extends GraphicNotationOptionsModel {
     type: "2d";
     scale: IScaleModel;
     axis: IAxisModel;
@@ -64,12 +71,12 @@ export interface TwoDimensionalOptionsModel extends OptionsModel {
     orient: ChartOrientation;
     chartSettings: TwoDimChartElementsSettings;
 }
-export interface PolarOptionsModel extends OptionsModel {
+export interface PolarOptionsModel extends GraphicNotationOptionsModel {
     type: "polar";
     charts: PolarChartModel[];
     chartCanvas: DonutChartSettings;
 }
-export interface IntervalOptionsModel extends OptionsModel {
+export interface IntervalOptionsModel extends GraphicNotationOptionsModel {
     type: "interval";
     scale: IScaleModel;
     axis: IAxisModel;
@@ -77,6 +84,15 @@ export interface IntervalOptionsModel extends OptionsModel {
     additionalElements: AdditionalElementsOptions;
     orient: ChartOrientation;
     chartSettings: TwoDimChartElementsSettings;
+}
+
+export interface CardOptionsModel extends BasicOptionsModel {
+    type: "card";
+    title: string;
+    description?: string;
+    icon?: MdtChartsIconElement;
+    value: MdtChartsCardValue;
+    change?: CardChangeModel;
 }
 
 //====================================================== Options Model Common
@@ -182,6 +198,14 @@ export interface DonutThicknessOptions {
     max: number;
     value: number;
     unit: DonutThicknessUnit;
+}
+
+//====================================================== CardsOptionsModel
+interface CardChangeModel {
+    value: MdtChartsCardValue;
+    description?: string;
+    color: MdtChartsColorName;
+    icon?: MdtChartsIconElement;
 }
 
 //====================================================== Charts

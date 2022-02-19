@@ -1,8 +1,10 @@
 type DataType = string;
+export type MdtChartsColorName = string;
+export type MdtChartsIconElement = () => HTMLElement;
 
 export type AxisPosition = 'start' | 'end';
 export type ChartOrientation = 'vertical' | 'horizontal';
-export type ChartNotation = '2d' | 'polar' | 'interval';
+export type ChartNotation = '2d' | 'polar' | 'interval' | 'card';
 export type ChartType = 'bar' | 'line' | 'area' | 'donut' | 'gantt';
 export type TwoDimensionalChartType = 'line' | 'bar' | 'area';
 export type PolarChartType = 'donut';
@@ -17,9 +19,10 @@ export interface MdtChartsDataSource {
 }
 export type AxisLabelPosition = "straight" | "rotated";
 
+export type MdtChartsConfigOptions = MdtChartsPolarOptions | MdtChartsTwoDimensionalOptions | MdtChartsIntervalOptions | MdtChartsCardsOptions;
 export interface MdtChartsConfig {
     canvas: ChartBlockCanvas;
-    options: MdtChartsPolarOptions | MdtChartsTwoDimensionalOptions | MdtChartsIntervalOptions;
+    options: MdtChartsConfigOptions;
 }
 
 
@@ -39,15 +42,18 @@ export interface NewSize {
 
 
 //====================================================== Options
-interface Options {
-    legend: Legend;
+interface BasicOptions {
     data: DataOptions;
-    title?: string;
-    selectable: boolean;
     tooltip?: TooltipOptions;
 }
 
-export interface MdtChartsTwoDimensionalOptions extends Options {
+interface GraphicNotationOptions extends BasicOptions {
+    legend: Legend;
+    title?: string;
+    selectable: boolean;
+}
+
+export interface MdtChartsTwoDimensionalOptions extends GraphicNotationOptions {
     type: '2d';
     axis: TwoDimensionalAxis;
     additionalElements: AdditionalElements;
@@ -55,17 +61,26 @@ export interface MdtChartsTwoDimensionalOptions extends Options {
     orientation: ChartOrientation;
 }
 
-export interface MdtChartsPolarOptions extends Options {
+export interface MdtChartsPolarOptions extends GraphicNotationOptions {
     type: 'polar';
     chart: PolarChart;
 }
 
-export interface MdtChartsIntervalOptions extends Options {
+export interface MdtChartsIntervalOptions extends GraphicNotationOptions {
     type: 'interval';
     axis: IntervalAxis;
     chart: IntervalChart;
     additionalElements: AdditionalElements;
     orientation: ChartOrientation;
+}
+
+export interface MdtChartsCardsOptions extends BasicOptions {
+    type: 'card';
+    title: string;
+    description?: string;
+    icon?: MdtChartsIconElement;
+    value: MdtChartsCardValue;
+    change?: CardChange;
 }
 
 
@@ -154,6 +169,30 @@ export interface IntervalAxis {
 }
 
 interface DateAxisOptions extends AxisOptions { }
+
+
+//====================================================== CardsOptions
+export interface MdtChartsCardValue {
+    field: string;
+    dataType?: DataType;
+}
+
+interface CardChange {
+    value: MdtChartsCardValue;
+    color?: CardChangeColor;
+    description?: string;
+    icon?: CardChangeIcon;
+}
+
+interface CardOptionByValue<T> {
+    belowZero?: T;
+    equalZero?: T;
+    aboveZero?: T;
+}
+
+interface CardChangeColor extends CardOptionByValue<MdtChartsColorName> { }
+
+interface CardChangeIcon extends CardOptionByValue<MdtChartsIconElement> { }
 
 
 //====================================================== Charts

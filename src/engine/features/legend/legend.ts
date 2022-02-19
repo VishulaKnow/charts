@@ -33,7 +33,7 @@ export class Legend {
     }
 
     public static update(block: Block, data: MdtChartsDataSource, model: Model): void {
-        if (model.options.legend.position !== 'off') {
+        if (model.options.type != "card" && model.options.legend.position !== 'off') {
             const legendObject = this.getObject(block);
             const legendCoordinate = LegendHelper.getLegendCoordinateByPosition(model.options.legend.position, model.otherComponents.legendBlock, model.blockCanvas.size);
             this.fillCoordinate(legendObject, legendCoordinate);

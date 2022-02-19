@@ -12,8 +12,8 @@ import { PolarRecordOverflowAlert } from "./extenders/polarRecordOverflowAlert";
 import { ChartContentManager } from "../contentManager/contentManagerFactory";
 
 export class PolarManager implements ChartContentManager {
-    public render(engine: Engine, model: Model) {
-        const options = <PolarOptionsModel>model.options;
+    public render(engine: Engine, model: Model<PolarOptionsModel>) {
+        const options = model.options;
 
         engine.block.renderSvg(model.blockCanvas.size);
 
@@ -48,7 +48,7 @@ export class PolarManager implements ChartContentManager {
             });
     }
 
-    public updateData(block: Block, model: Model, data: MdtChartsDataSource): void {
+    public updateData(block: Block, model: Model<PolarOptionsModel>, data: MdtChartsDataSource): void {
         block.transitionManager.interruptTransitions();
         block.removeMouseEvents();
         block.filterEventManager.updateData(data[model.options.data.dataSource]);
@@ -76,7 +76,7 @@ export class PolarManager implements ChartContentManager {
         });
     }
 
-    public updateColors(block: Block, model: Model): void {
+    public updateColors(block: Block, model: Model<PolarOptionsModel>): void {
         Legend.updateColors(block, model.options);
         Donut.updateColors(block, (<PolarOptionsModel>model.options).charts[0]);
     }

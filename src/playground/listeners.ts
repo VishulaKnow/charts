@@ -1,6 +1,6 @@
 import Engine from '../engine/engine';
 import { assembleModel, getPreparedData } from '../model/modelBuilder';
-import { MdtChartsConfig, MdtChartsDataRow, MdtChartsDataSource, MdtChartsIntervalOptions, MdtChartsPolarOptions, MdtChartsTwoDimensionalChart, MdtChartsTwoDimensionalOptions } from '../config/config'
+import { ChartNotation, MdtChartsConfig, MdtChartsDataRow, MdtChartsDataSource, MdtChartsIntervalOptions, MdtChartsPolarOptions, MdtChartsTwoDimensionalChart, MdtChartsTwoDimensionalOptions } from '../config/config'
 import { DesignerConfig, Transitions } from '../designer/designerConfig';
 
 export function getUpdatedModel(config: MdtChartsConfig, data: MdtChartsDataSource, designerConfig: DesignerConfig): Model {
@@ -44,7 +44,7 @@ class ListenersHelper {
     }
 }
 
-export default class Listeners {
+class Listeners {
     private engine: Engine;
     private config: MdtChartsConfig;
     private designerConfig: DesignerConfig;
@@ -78,7 +78,7 @@ export default class Listeners {
         }
     }
 
-    private showControlsForNotation(notationType: '2d' | 'polar' | 'interval'): void {
+    private showControlsForNotation(notationType: ChartNotation): void {
         if (notationType === '2d') {
             (document.querySelector('.block-polar') as HTMLElement).style.display = 'none';
             (document.querySelector('.block-2d') as HTMLElement).style.display = 'block';
@@ -92,6 +92,10 @@ export default class Listeners {
             (document.querySelector('.block-polar') as HTMLElement).style.display = 'none';
             (document.querySelector('.block-2d') as HTMLElement).style.display = 'none';
             (document.querySelector('.block-axis') as HTMLElement).style.display = 'block';
+        } else if (notationType === "card") {
+            (document.querySelector('.block-polar') as HTMLElement).style.display = 'none';
+            (document.querySelector('.block-2d') as HTMLElement).style.display = 'none';
+            (document.querySelector('.block-axis') as HTMLElement).style.display = 'none';
         }
     }
 
@@ -156,6 +160,7 @@ export default class Listeners {
     }
 
     private changeConfigOptions(notationType: '2d' | 'polar' | 'interval'): void {
+        if (this.config.options.type === "card") return;
         if (notationType === '2d') {
             const options: MdtChartsTwoDimensionalOptions = {
                 title: this.config.options.title,
@@ -434,6 +439,7 @@ export default class Listeners {
             }
         });
         document.querySelector('#legend').addEventListener('change', function () {
+            if (config.options.type === "card") return;
             config.options.legend.show = this.checked;
             thisClass.updateFull();
         });
@@ -603,7 +609,7 @@ export default class Listeners {
         ListenersHelper.setInputValue('#block-height', config.canvas.size.height);
         ListenersHelper.setCheckboxValue('#wrapper-border', config.canvas.class.includes('outline'));
 
-        ListenersHelper.setCheckboxValue('#legend', config.options.legend.show);
+        ListenersHelper.setCheckboxValue('#legend', (<any>config.options).legend?.show);
         ListenersHelper.setInputValue('#data-size', config.options.data.dataSource.includes('large') ? 'large' : 'normal');
         ListenersHelper.setInputValue('#axis-label-width', designerConfig.canvas.axisLabel.maxSize.main);
         ListenersHelper.setInputValue('#chart-block-margin-top', designerConfig.canvas.chartBlockMargin.top);

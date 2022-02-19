@@ -6,7 +6,6 @@ import { GridLine } from "../features/gridLine/gridLine";
 import { Legend } from "../features/legend/legend";
 import { Scale, Scales } from "../features/scale/scale";
 import { Title } from "../features/title/title";
-import { Tooltip } from "../features/tolltip/tooltip";
 import { Gantt } from "./gantt";
 
 export class IntervalManager {
@@ -38,8 +37,6 @@ export class IntervalManager {
             model.blockCanvas.size);
 
         Legend.render(block, data, options, model);
-
-        Tooltip.render(block, model, data, model.otherComponents.tooltipBlock, scales);
     }
 
     private static renderCharts(block: Block, charts: IntervalChartModel[], scales: Scales, data: MdtChartsDataSource, dataOptions: OptionsModelData, margin: BlockMargin, keyAxisOrient: Orient, chartSettings: TwoDimChartElementsSettings): void {

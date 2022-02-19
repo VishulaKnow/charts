@@ -1,7 +1,7 @@
 import { Block } from './block/block';
 import { ValueFormatter } from './valueFormatter';
 import { ContentManager } from './contentManager/contentManager';
-import { IntervalOptionsModel, Model, PolarOptionsModel, TwoDimensionalOptionsModel } from '../model/model';
+import { IntervalOptionsModel, Model, OptionsModel, PolarOptionsModel, TwoDimensionalOptionsModel } from '../model/model';
 import { FilterCallback, FilterEventManager } from './filterManager/filterEventManager';
 import { Helper } from './helpers/helper';
 import { MdtChartsDataSource } from '../config/config';
@@ -63,7 +63,9 @@ export default class Engine {
         ContentManager.render(model, this);
     }
 
-    private setFilterEventManager(options: PolarOptionsModel | TwoDimensionalOptionsModel | IntervalOptionsModel): void {
+    private setFilterEventManager(options: OptionsModel): void {
+        if (options.type === "card") return;
+
         let highlightIds: number[] = [];
         if (this.initializeSelected instanceof Array && this.initializeSelected.length > 0)
             highlightIds = [...this.initializeSelected];

@@ -11,8 +11,14 @@ export interface ChartContentManager {
     updateColors(block: Block, model: Model): void;
 }
 
+interface Managers {
+    [type: string]: {
+        new(): ChartContentManager
+    }
+}
+
 export class ContentManagerFactory {
-    private managers = {
+    private managers: Managers = {
         "2d": TwoDimensionalManager,
         "polar": PolarManager
     };

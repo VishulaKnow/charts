@@ -61,7 +61,7 @@ export class Tooltip {
     public static readonly tooltipContentClass = 'mdt-charts-tooltip-content';
     public static readonly tooltipArrowClass = 'mdt-charts-tooltip-arrow';
 
-    public static render(block: Block, model: Model, data: MdtChartsDataSource, tooltipOptions: TooltipSettings, scales?: Scales): void {
+    public static render(block: Block, model: Model<TwoDimensionalOptionsModel | PolarOptionsModel>, data: MdtChartsDataSource, tooltipOptions: TooltipSettings, scales?: Scales): void {
         TooltipComponentsManager.renderTooltipWrapper(block);
         const withTooltipIndex = model.options.charts.findIndex((chart: TwoDimensionalChartModel | PolarChartModel | IntervalChartModel) => chart.tooltip.show);
         if (withTooltipIndex !== -1) {
@@ -75,8 +75,6 @@ export class Tooltip {
                     model.chartBlock.margin,
                     DonutHelper.getThickness(model.options.chartCanvas, model.blockCanvas.size, model.chartBlock.margin),
                     model.otherComponents.tooltipBlock);
-            } else if (model.options.type === 'interval') {
-                this.renderTooltipForIntervalCharts(block, data, model.blockCanvas.size, model.chartBlock.margin, scales, model.options, tooltipOptions);
             }
         }
     }
