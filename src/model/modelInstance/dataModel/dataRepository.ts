@@ -18,6 +18,10 @@ export class DataRepositoryModel {
         return this.rawFullSource[this.sourceName];
     }
 
+    getFirstRow() {
+        return this.rawFullSource[this.sourceName][0];
+    }
+
     initScopedFullSource(scopedSource: MdtChartsDataSource) {
         this.scopedFullSource = scopedSource;
     }

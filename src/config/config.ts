@@ -80,7 +80,7 @@ export interface MdtChartsCardsOptions extends BasicOptions {
     description?: string;
     icon?: MdtChartsIconElement;
     value: MdtChartsCardValue;
-    change?: CardChange;
+    change?: MdtChartsCardsChange;
 }
 
 
@@ -177,22 +177,22 @@ export interface MdtChartsCardValue {
     dataType?: DataType;
 }
 
-interface CardChange {
+export interface MdtChartsCardsChange {
     value: MdtChartsCardValue;
-    color?: CardChangeColor;
+    color?: MdtChartsCardsChangeColor;
     description?: string;
-    icon?: CardChangeIcon;
+    icon?: MdtChartsCardsChangeIcon;
 }
 
-interface CardOptionByValue<T> {
+export interface MdtChartsCardOptionByValue<T> {
     belowZero?: T;
     equalZero?: T;
     aboveZero?: T;
 }
 
-interface CardChangeColor extends CardOptionByValue<MdtChartsColorName> { }
+export interface MdtChartsCardsChangeColor extends MdtChartsCardOptionByValue<MdtChartsColorName> { }
 
-interface CardChangeIcon extends CardOptionByValue<MdtChartsIconElement> { }
+export interface MdtChartsCardsChangeIcon extends MdtChartsCardOptionByValue<MdtChartsIconElement> { }
 
 
 //====================================================== Charts

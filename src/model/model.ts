@@ -25,7 +25,7 @@ export type DataOptions = {
 };
 export type UnitsFromConfig = "%" | "px";
 
-export type OptionsModel = TwoDimensionalOptionsModel | PolarOptionsModel | IntervalOptionsModel | CardOptionsModel;
+export type OptionsModel = TwoDimensionalOptionsModel | PolarOptionsModel | IntervalOptionsModel | CardsOptionsModel;
 
 export interface Model<O = OptionsModel> {
     blockCanvas: BlockCanvas;
@@ -86,13 +86,13 @@ export interface IntervalOptionsModel extends GraphicNotationOptionsModel {
     chartSettings: TwoDimChartElementsSettings;
 }
 
-export interface CardOptionsModel extends BasicOptionsModel {
+export interface CardsOptionsModel extends BasicOptionsModel {
     type: "card";
     title: string;
     description?: string;
     icon?: MdtChartsIconElement;
     value: MdtChartsCardValue;
-    change?: CardChangeModel;
+    change?: CardsChangeModel;
 }
 
 //====================================================== Options Model Common
@@ -201,7 +201,7 @@ export interface DonutThicknessOptions {
 }
 
 //====================================================== CardsOptionsModel
-interface CardChangeModel {
+export interface CardsChangeModel {
     value: MdtChartsCardValue;
     description?: string;
     color: MdtChartsColorName;

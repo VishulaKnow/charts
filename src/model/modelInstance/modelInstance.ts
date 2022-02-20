@@ -1,4 +1,3 @@
-
 import { MdtChartsConfig, MdtChartsDataSource } from "../../config/config";
 import { CanvasModel } from "./canvasModel/canvasModel";
 import { DataModelInstance } from "./dataModel/dataModel";

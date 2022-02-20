@@ -1,5 +1,5 @@
 import { MdtChartsConfig, MdtChartsDataSource, Size } from '../config/config';
-import { Model, BlockCanvas, ChartBlockModel, TwoDimensionalOptionsModel, PolarOptionsModel, DataSettings, DataFormat, DataScope, IntervalOptionsModel } from './model';
+import { Model, BlockCanvas, ChartBlockModel, TwoDimensionalOptionsModel, PolarOptionsModel, DataSettings, DataFormat, DataScope, IntervalOptionsModel, OptionsModel } from './model';
 import { MarginModel } from './margin/marginModel';
 import { TwoDimensionalModel } from './notations/twoDimensionalModel';
 import { PolarModel } from './notations/polar/polarModel';
@@ -37,7 +37,7 @@ function getChartBlockModel(modelInstance: ModelInstance): ChartBlockModel {
     }
 }
 
-function getOptions(config: MdtChartsConfig, designerConfig: DesignerConfig, modelInstance: ModelInstance): TwoDimensionalOptionsModel | PolarOptionsModel | IntervalOptionsModel {
+function getOptions(config: MdtChartsConfig, designerConfig: DesignerConfig, modelInstance: ModelInstance): OptionsModel {
     //TODO: migrate to polymorphism
     if (config.options.type === '2d') {
         return TwoDimensionalModel.getOptions(config.options, designerConfig, modelInstance);
