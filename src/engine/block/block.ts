@@ -9,6 +9,7 @@ import { TransitionManager } from "../transitionManager";
 import { BlockHelper } from "./blockHelper";
 import { Size } from "../../config/config";
 import { BlockSvg } from "./blockSvg";
+import { BlockHtml } from "./blockHtml";
 
 export class Block {
     public parentElement: HTMLElement;
@@ -16,16 +17,18 @@ export class Block {
     public scales: Scales;
     public filterEventManager: FilterEventManager;
     public svg: BlockSvg;
+    public html: BlockHtml;
 
     private wrapperCssClasses: string[];
     private parentElementSelection: Selection<BaseType, any, HTMLElement, any>;
-    private wrapper: Selection<BaseType, any, HTMLElement, any>;
+    private wrapper: Selection<HTMLDivElement, any, HTMLElement, any>;
 
     constructor(cssClass: string, parentElement: HTMLElement, blockId: number, filterEventManager: FilterEventManager, transitions: Transitions = null) {
         this.svg = new BlockSvg({
-            svgCssClasses: Helper.getCssClassesArray(cssClass),
+            svgCssClasses: cssClass,
             parentBlockId: blockId
         });
+        this.html = new BlockHtml({ blockCssClass: cssClass });
 
         this.wrapperCssClasses = Helper.getCssClassesArray(cssClass);
         this.wrapperCssClasses = BlockHelper.getFormattedCssClassesForWrapper(this.wrapperCssClasses);
@@ -45,6 +48,7 @@ export class Block {
             .style('position', 'relative');
 
         this.svg.initParent(this.wrapper);
+        this.html.initParent(this.wrapper);
     }
 
     public destroy(): void {

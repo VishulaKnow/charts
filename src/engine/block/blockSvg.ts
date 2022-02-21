@@ -4,17 +4,15 @@ import { BlockMargin } from "../../model/model";
 import { NamesHelper } from "../helpers/namesHelper";
 import { BlockHelper } from "./blockHelper";
 
-type SvgBlockParent = Selection<BaseType, unknown, HTMLElement, any>;
-
 interface BlockSvgOptions {
     parentBlockId: number;
-    svgCssClasses: string[]
+    svgCssClasses: string;
 }
 
 export class BlockSvg {
     private parentBlockId: number;
-    private parent: SvgBlockParent;
-    private svgCssClasses: string[];
+    private parent: Selection<BaseType, unknown, HTMLElement, any>;
+    private svgCssClasses: string;
 
     private readonly chartBlockClass = 'chart-block';
     private readonly chartGroupClass = 'chart-group';
@@ -24,7 +22,7 @@ export class BlockSvg {
         this.parentBlockId = options.parentBlockId;
     }
 
-    initParent(parent: SvgBlockParent) {
+    initParent(parent: Selection<BaseType, unknown, HTMLElement, any>) {
         this.parent = parent;
     }
 
@@ -33,7 +31,7 @@ export class BlockSvg {
             .append('svg')
             .attr('width', blockSize.width)
             .attr('height', blockSize.height)
-            .attr('class', this.svgCssClasses.join(' ') + ' ' + NamesHelper.getClassName('svg-chart'));
+            .attr('class', this.svgCssClasses + ' ' + NamesHelper.getClassName('svg-chart'));
     }
 
     getBlock(): Selection<SVGElement, unknown, HTMLElement, any> {
