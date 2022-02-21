@@ -1,5 +1,5 @@
 export class NamesHelper {
-    private static prefix = 'charts-';
+    private static prefix = 'mdt-charts-';
 
     public static getClassName(classOfElem: string): string {
         return this.prefix + classOfElem;
