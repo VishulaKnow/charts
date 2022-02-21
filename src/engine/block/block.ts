@@ -19,22 +19,20 @@ export class Block {
     public filterEventManager: FilterEventManager;
     public svg: BlockSvg;
 
-    private id: number;
-
     private wrapperCssClasses: string[];
     private parentElementSelection: Selection<BaseType, any, HTMLElement, any>;
     private wrapper: Selection<BaseType, any, HTMLElement, any>;
 
     constructor(cssClass: string, parentElement: HTMLElement, blockId: number, filterEventManager: FilterEventManager, transitions: Transitions = null) {
         this.svg = new BlockSvg({
-            svgCssClasses: Helper.getCssClassesArray(cssClass)
+            svgCssClasses: Helper.getCssClassesArray(cssClass),
+            parentBlockId: blockId
         });
 
         this.wrapperCssClasses = Helper.getCssClassesArray(cssClass);
         this.wrapperCssClasses = BlockHelper.getFormattedCssClassesForWrapper(this.wrapperCssClasses);
         this.parentElement = parentElement;
         this.parentElementSelection = select(parentElement);
-        this.id = blockId;
 
         this.transitionManager = new TransitionManager(this, transitions);
         this.filterEventManager = filterEventManager;
@@ -63,42 +61,6 @@ export class Block {
 
     public getWrapper(): Selection<BaseType, unknown, HTMLElement, any> {
         return this.wrapper;
-    }
-
-    public renderChartClipPath(margin: BlockMargin, blockSize: Size): void {
-        const attributes = BlockHelper.getClipPathAttributes(blockSize, margin);
-        this.renderDefs()
-            .append('clipPath')
-            .attr('id', this.getClipPathId())
-            .append('rect')
-            .attr('x', attributes.x)
-            .attr('y', attributes.y)
-            .attr('width', attributes.width)
-            .attr('height', attributes.height);
-    }
-
-    public updateChartClipPath(margin: BlockMargin, blockSize: Size): void {
-        const attributes = BlockHelper.getClipPathAttributes(blockSize, margin);
-        this.renderDefs()
-            .select('clipPath')
-            .select('rect')
-            .attr('x', attributes.x)
-            .attr('y', attributes.y)
-            .attr('width', attributes.width)
-            .attr('height', attributes.height);
-    }
-
-    public renderDefs(): Selection<SVGDefsElement, unknown, HTMLElement, unknown> {
-        let defs = this.getSvg()
-            .select<SVGDefsElement>('defs');
-        if (defs.empty())
-            defs = this.getSvg().append<SVGDefsElement>('defs');
-
-        return defs;
-    }
-
-    public getClipPathId(): string {
-        return NamesHelper.getId('clip-path', this.id);
     }
 
     public removeMouseEvents(): void {

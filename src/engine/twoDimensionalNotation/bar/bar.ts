@@ -86,7 +86,7 @@ export class Bar {
                 .enter()
                 .append('rect')
                 .attr('class', this.barItemClass)
-                .style('clip-path', `url(#${block.getClipPathId()})`);
+                .style('clip-path', `url(#${block.svg.getClipPathId()})`);
 
             const barAttrs = BarHelper.getGroupedBarAttrs(keyAxisOrient,
                 scales,
@@ -130,7 +130,7 @@ export class Bar {
             .enter()
             .append('rect')
             .attr('class', this.barItemClass)
-            .style('clip-path', `url(#${block.getClipPathId()})`);
+            .style('clip-path', `url(#${block.svg.getClipPathId()})`);
 
         const barAttrs = BarHelper.getStackedBarAttr(keyAxisOrient,
             scales,
@@ -184,7 +184,7 @@ export class Bar {
                 .enter()
                 .append('rect')
                 .attr('class', this.barItemClass)
-                .style('clip-path', `url(#${block.getClipPathId()})`);
+                .style('clip-path', `url(#${block.svg.getClipPathId()})`);
 
             const barAttrs = BarHelper.getGroupedBarAttrs(keyAxisOrient,
                 scales,
@@ -244,7 +244,7 @@ export class Bar {
         const newBars = bars.enter()
             .append('rect')
             .attr('class', this.barItemClass)
-            .style('clip-path', `url(#${block.getClipPathId()})`);
+            .style('clip-path', `url(#${block.svg.getClipPathId()})`);
 
         const barAttrs = BarHelper.getStackedBarAttr(keyAxisOrient,
             scales,

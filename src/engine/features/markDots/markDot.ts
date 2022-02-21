@@ -86,6 +86,6 @@ export class MarkDot {
             .attr('r', this.dotRadius)
             .style('stroke-width', '3px')
             .style('fill', 'white')
-            .style('clip-path', `url(#${block.getClipPathId()})`);
+            .style('clip-path', `url(#${block.svg.getClipPathId()})`);
     }
 }

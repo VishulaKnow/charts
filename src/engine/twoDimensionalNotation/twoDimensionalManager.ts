@@ -132,7 +132,7 @@ export class TwoDimensionalManager implements ChartContentManager {
     }
 
     private renderCharts(block: Block, charts: TwoDimensionalChartModel[], scales: Scales, data: MdtChartsDataSource, dataOptions: OptionsModelData, margin: BlockMargin, keyAxisOrient: Orient, barSettings: BarChartSettings, blockSize: Size) {
-        block.renderChartClipPath(margin, blockSize);
+        block.svg.renderChartClipPath(margin, blockSize);
         block.svg.renderChartsBlock();
         charts.forEach((chart: TwoDimensionalChartModel) => {
             if (chart.type === 'bar')
@@ -170,7 +170,7 @@ export class TwoDimensionalManager implements ChartContentManager {
     }
 
     private updateCharts(block: Block, charts: TwoDimensionalChartModel[], scales: Scales, data: MdtChartsDataSource, dataOptions: OptionsModelData, margin: BlockMargin, keyAxisOrient: Orient, blockSize: Size, barSettings: BarChartSettings): Promise<any>[] {
-        block.updateChartClipPath(margin, blockSize);
+        block.svg.updateChartClipPath(margin, blockSize);
         let promises: Promise<any>[] = [];
         charts.forEach((chart: TwoDimensionalChartModel) => {
             let proms: Promise<any>[];

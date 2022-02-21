@@ -48,7 +48,7 @@ export class Area {
                 .append('path')
                 .attr('d', area(data))
                 .attr('class', this.areaChartClass)
-                .style('clip-path', `url(#${block.getClipPathId()})`)
+                .style('clip-path', `url(#${block.svg.getClipPathId()})`)
                 .style('pointer-events', 'none');
 
             DomHelper.setCssClasses(path, Helper.getCssClassesWithElementIndex(chart.cssClasses, valueIndex));
@@ -69,7 +69,7 @@ export class Area {
             .append('path')
             .attr('d', d => areaGenerator(d))
             .attr('class', this.areaChartClass)
-            .style('clip-path', `url(#${block.getClipPathId()})`)
+            .style('clip-path', `url(#${block.svg.getClipPathId()})`)
             .style('pointer-events', 'none');
 
         areas.each(function (d, i) {
