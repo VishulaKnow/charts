@@ -1,10 +1,8 @@
 import { select, Selection, BaseType } from "d3-selection";
 import { Transitions } from "../../designer/designerConfig";
-import { BlockMargin } from "../../model/model";
 import { Scales } from "../features/scale/scale";
 import { TipBox } from "../features/tipBox/tipBox";
 import { Helper } from "../helpers/helper";
-import { NamesHelper } from "../helpers/namesHelper";
 import { FilterEventManager } from "../filterManager/filterEventManager";
 import { Donut } from "../polarNotation/donut/donut";
 import { TransitionManager } from "../transitionManager";
@@ -56,6 +54,7 @@ export class Block {
     }
 
     public getSvg(): Selection<SVGElement, unknown, HTMLElement, any> {
+        //TODO: move this method in blockSvg
         return this.svg.getBlock();
     }
 
@@ -64,6 +63,7 @@ export class Block {
     }
 
     public removeMouseEvents(): void {
+        //TODO: move this method in blockSvg
         const tipBoxes = this.getSvg().selectAll(`.${TipBox.tipBoxClass}`)
         tipBoxes.on('mousemove', null);
         tipBoxes.on('mouseover', null);
