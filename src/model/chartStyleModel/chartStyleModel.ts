@@ -4,7 +4,7 @@ import { ChartStyle } from "../model";
 
 
 export class ChartStyleModelService {
-    private static standartColors = ["#209DE3", "#FF3131", "#FFBA00", "#20B078"];
+    private static standardColors = ["#209DE3", "#FF3131", "#FFBA00", "#20B078"];
 
     static getCssClasses(chartIndex: number): string[] {
         const cssClasses = [`chart-${chartIndex}`];
@@ -28,7 +28,7 @@ export class ChartStyleModelService {
 
     static checkAndGet(baseColors: string[]): string[] {
         if (baseColors.length === 0 || baseColors.filter(color => color === 'rgba(0, 0, 0, 0)' || !color).length > 0) {
-            return this.standartColors;
+            return this.standardColors;
         }
         return baseColors;
     }

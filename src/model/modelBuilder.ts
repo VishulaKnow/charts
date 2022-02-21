@@ -9,6 +9,7 @@ import { IntervalModel } from './notations/intervalModel';
 import { OtherComponentsModel } from './featuresModel/otherComponents';
 import { ConfigValidator } from './configsValidator/configValidator';
 import { ModelInstance } from './modelInstance/modelInstance';
+import { CardsModelInstance } from './notations/cards/cardsModel';
 
 
 export enum AxisType {
@@ -45,6 +46,8 @@ function getOptions(config: MdtChartsConfig, designerConfig: DesignerConfig, mod
         return PolarModel.getOptions(config.options, designerConfig, modelInstance);
     } else if (config.options.type === 'interval') {
         return IntervalModel.getOptions(config.options, designerConfig, modelInstance)
+    } else if (config.options.type === "card") {
+        return CardsModelInstance.getOptions(config.options, modelInstance);
     }
 }
 

@@ -21,3 +21,5 @@ export class CardsModel {
         }
     }
 }
+
+export const CardsModelInstance = new CardsModel();
