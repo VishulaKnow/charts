@@ -1,4 +1,4 @@
-import { MdtChartsCardsOptions } from "../../../main";
+import { MdtChartsCardsOptions } from "../../../config/config";
 import { CardsOptionsModel } from "../../model";
 import { ModelInstance } from "../../modelInstance/modelInstance";
 import { CardsModelService } from "./cardsModelService";

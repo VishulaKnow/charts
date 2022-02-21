@@ -1,4 +1,4 @@
-import { Size } from "../../main";
+import { Size } from "../../config/config";
 
 export class SizeValidator {
     validate(size: Partial<Size>) {

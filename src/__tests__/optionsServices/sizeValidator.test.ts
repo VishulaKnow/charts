@@ -1,4 +1,4 @@
-import { Size } from "../../main";
+import { Size } from "../../config/config";
 import { SizeValidator } from "../../optionsServices/validators/sizeValidator";
 
 describe('SizeValidator', () => {
