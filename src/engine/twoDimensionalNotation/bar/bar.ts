@@ -68,7 +68,7 @@ export class Bar {
 
     public static updateColors(block: Block, chart: TwoDimensionalChartModel): void {
         chart.data.valueFields.forEach((_vf, index) => {
-            const bars = block.getChartGroup(chart.index)
+            const bars = block.svg.getChartGroup(chart.index)
                 .selectAll(`.${this.barItemClass}${Helper.getCssClassesLine(chart.cssClasses)}${Helper.getCssClassesLine(Helper.getCssClassesWithElementIndex(chart.cssClasses, index))}`);
             DomHelper.setChartStyle(bars, chart.style, index, 'fill');
         });
@@ -80,7 +80,7 @@ export class Bar {
 
     private static renderGrouped(block: Block, scales: Scales, data: MdtChartsDataRow[], keyField: Field, margin: BlockMargin, keyAxisOrient: Orient, chart: TwoDimensionalChartModel, barsAmounts: number[], blockSize: Size, firstBarIndex: number, barSettings: BarChartSettings): void {
         chart.data.valueFields.forEach((field, index) => {
-            const bars = block.getChartGroup(chart.index)
+            const bars = block.svg.getChartGroup(chart.index)
                 .selectAll(`.${this.barItemClass}${Helper.getCssClassesLine(chart.cssClasses)}${Helper.getCssClassesLine(Helper.getCssClassesWithElementIndex(chart.cssClasses, index))}`)
                 .data(data)
                 .enter()
@@ -113,7 +113,7 @@ export class Bar {
     private static renderSegmented(block: Block, scales: Scales, data: MdtChartsDataRow[], keyField: Field, margin: BlockMargin, keyAxisOrient: Orient, chart: TwoDimensionalChartModel, barsAmounts: number[], blockSize: Size, firstBarIndex: number, barSettings: BarChartSettings): void {
         const stackedData = getStackedDataWithOwn(data, chart.data.valueFields.map(field => field.name));
 
-        let groups = block.getChartGroup(chart.index)
+        let groups = block.svg.getChartGroup(chart.index)
             .selectAll<SVGGElement, MdtChartsDataRow>(`g.${this.barSegmentGroupClass}${Helper.getCssClassesLine(chart.cssClasses)}`)
             .data(stackedData);
 
@@ -160,7 +160,7 @@ export class Bar {
         chart.data.valueFields.forEach((valueField, index) => {
             const indexesOfRemoved: number[] = [];
 
-            block.getChartGroup(chart.index)
+            block.svg.getChartGroup(chart.index)
                 .selectAll<SVGRectElement, MdtChartsDataRow>(`.${this.barItemClass}${Helper.getCssClassesLine(chart.cssClasses)}.chart-element-${index}`)
                 .filter((d, i) => {
                     if (newData.findIndex(row => row[keyField.name] === d[keyField.name]) === -1) {
@@ -174,7 +174,7 @@ export class Bar {
                 .style('opacity', 0)
                 .remove();
 
-            const bars = block.getChartGroup(chart.index)
+            const bars = block.svg.getChartGroup(chart.index)
                 .selectAll<SVGRectElement, MdtChartsDataRow>(`.${this.barItemClass}${Helper.getCssClassesLine(chart.cssClasses)}.chart-element-${index}`)
                 .filter(d => newData.findIndex(row => row[keyField.name] === d[keyField.name]) !== -1)
                 .style('opacity', 1)
@@ -223,7 +223,7 @@ export class Bar {
     private static updateSegmented(block: Block, newData: MdtChartsDataRow[], scales: Scales, margin: BlockMargin, keyAxisOrient: Orient, chart: TwoDimensionalChartModel, blockSize: Size, barsAmounts: number[], keyField: Field, firstBarIndex: number, barSettings: BarChartSettings): Promise<any>[] {
         const stackedData = getStackedDataWithOwn(newData, chart.data.valueFields.map(field => field.name));
 
-        block.getChartGroup(chart.index)
+        block.svg.getChartGroup(chart.index)
             .selectAll<SVGRectElement, MdtChartsDataRow>(`.${this.barItemClass}${Helper.getCssClassesLine(chart.cssClasses)}`)
             .filter(d => newData.findIndex(row => row[keyField.name] === d.data[keyField.name]) === -1)
             .transition()
@@ -231,7 +231,7 @@ export class Bar {
             .style('opacity', 0)
             .remove();
 
-        const groups = block.getChartGroup(chart.index)
+        const groups = block.svg.getChartGroup(chart.index)
             .selectAll(`g.${this.barSegmentGroupClass}${Helper.getCssClassesLine(chart.cssClasses)}`)
             .data(stackedData);
 

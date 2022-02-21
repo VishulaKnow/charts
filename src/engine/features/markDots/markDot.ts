@@ -23,7 +23,7 @@ export class MarkDot {
     private static dotRadius = 4;
 
     public static render(block: Block, data: MdtChartsDataRow[], keyAxisOrient: Orient, scales: Scales, margin: BlockMargin, keyFieldName: string, vfIndex: number, valueFieldName: string, chart: TwoDimensionalChartModel): void {
-        const dotsWrapper = block.getChartGroup(chart.index)
+        const dotsWrapper = block.svg.getChartGroup(chart.index)
             .selectAll(`.${this.markerDotClass}${Helper.getCssClassesLine(chart.cssClasses)}.chart-index-${vfIndex}`)
             .data(data)
             .enter();
@@ -38,7 +38,7 @@ export class MarkDot {
     }
 
     public static update(block: Block, newData: MdtChartsDataRow[], keyAxisOrient: Orient, scales: Scales, margin: BlockMargin, keyField: string, vfIndex: number, valueFieldName: string, chart: TwoDimensionalChartModel): void {
-        const dots = block.getChartGroup(chart.index)
+        const dots = block.svg.getChartGroup(chart.index)
             .selectAll(`.${this.markerDotClass}${Helper.getCssClassesLine(chart.cssClasses)}.chart-element-${vfIndex}`)
             .data(newData);
         dots.exit().remove();
@@ -63,7 +63,7 @@ export class MarkDot {
     }
 
     public static updateColors(block: Block, chart: TwoDimensionalChartModel, valueFieldIndex: number): void {
-        const dots = block.getChartGroup(chart.index)
+        const dots = block.svg.getChartGroup(chart.index)
             .selectAll(`.${this.markerDotClass}${Helper.getCssClassesLine(chart.cssClasses)}.chart-element-${valueFieldIndex}`);
         DomHelper.setChartElementColor(dots, chart.style.elementColors, valueFieldIndex, 'stroke');
     }

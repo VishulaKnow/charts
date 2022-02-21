@@ -11,7 +11,9 @@ interface BlockSvgOptions {
 export class BlockSvg {
     private parent: SvgBlockParent;
     private svgCssClasses: string[];
+
     private readonly chartBlockClass = 'chart-block';
+    private readonly chartGroupClass = 'chart-group';
 
     constructor(options: BlockSvgOptions) {
         this.svgCssClasses = options.svgCssClasses;
@@ -39,7 +41,18 @@ export class BlockSvg {
             .attr('class', this.chartBlockClass);
     }
 
-    getChartBlock() {
+    getChartBlock(): Selection<SVGGElement, unknown, HTMLElement, any> {
         return this.getBlock().select(`.${this.chartBlockClass}`);
+    }
+
+    getChartGroup(chartIndex: number): Selection<SVGGElement, any, BaseType, any> {
+        let group: Selection<SVGGElement, any, BaseType, any> = this.getChartBlock().select(`.${this.chartGroupClass}-${chartIndex}`);
+        if (group.empty()) {
+            group = this.getChartBlock()
+                .append('g')
+                .attr('class', `${this.chartGroupClass}-${chartIndex}`);
+        }
+
+        return group;
     }
 }

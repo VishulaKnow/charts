@@ -14,17 +14,16 @@ import { BlockSvg } from "./blockSvg";
 
 export class Block {
     public parentElement: HTMLElement;
-    public id: number;
     public transitionManager: TransitionManager;
     public scales: Scales;
     public filterEventManager: FilterEventManager;
     public svg: BlockSvg;
 
+    private id: number;
+
     private wrapperCssClasses: string[];
     private parentElementSelection: Selection<BaseType, any, HTMLElement, any>;
     private wrapper: Selection<BaseType, any, HTMLElement, any>;
-    private readonly chartBlockClass = 'chart-block';
-    private readonly chartGroupClass = 'chart-group';
 
     constructor(cssClass: string, parentElement: HTMLElement, blockId: number, filterEventManager: FilterEventManager, transitions: Transitions = null) {
         this.svg = new BlockSvg({
@@ -66,17 +65,6 @@ export class Block {
         return this.wrapper;
     }
 
-    public getChartGroup(chartIndex: number): Selection<SVGGElement, any, BaseType, any> {
-        let group: Selection<SVGGElement, any, BaseType, any> = this.svg.getChartBlock().select(`.${this.chartGroupClass}-${chartIndex}`);
-        if (group.empty()) {
-            group = this.svg.getChartBlock()
-                .append('g')
-                .attr('class', `${this.chartGroupClass}-${chartIndex}`);
-        }
-
-        return group;
-    }
-
     public renderChartClipPath(margin: BlockMargin, blockSize: Size): void {
         const attributes = BlockHelper.getClipPathAttributes(blockSize, margin);
         this.renderDefs()
@@ -100,10 +88,6 @@ export class Block {
             .attr('height', attributes.height);
     }
 
-    public getClipPathId(): string {
-        return NamesHelper.getId('clip-path', this.id);
-    }
-
     public renderDefs(): Selection<SVGDefsElement, unknown, HTMLElement, unknown> {
         let defs = this.getSvg()
             .select<SVGDefsElement>('defs');
@@ -111,6 +95,10 @@ export class Block {
             defs = this.getSvg().append<SVGDefsElement>('defs');
 
         return defs;
+    }
+
+    public getClipPathId(): string {
+        return NamesHelper.getId('clip-path', this.id);
     }
 
     public removeMouseEvents(): void {

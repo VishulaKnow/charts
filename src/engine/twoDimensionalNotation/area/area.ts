@@ -33,7 +33,7 @@ export class Area {
 
     public static updateColors(block: Block, chart: TwoDimensionalChartModel): void {
         chart.data.valueFields.forEach((_vf, valueIndex) => {
-            const path = block.getChartGroup(chart.index)
+            const path = block.svg.getChartGroup(chart.index)
                 .select(`.${this.areaChartClass}${Helper.getCssClassesLine(chart.cssClasses)}.chart-element-${valueIndex}`);
             DomHelper.setChartStyle(path, chart.style, valueIndex, 'fill');
             MarkDot.updateColors(block, chart, valueIndex);
@@ -44,7 +44,7 @@ export class Area {
         chart.data.valueFields.forEach((field, valueIndex) => {
             const area = AreaHelper.getGroupedAreaGenerator(keyAxisOrient, scales, margin, keyField.name, field.name, blockSize);
 
-            const path = block.getChartGroup(chart.index)
+            const path = block.svg.getChartGroup(chart.index)
                 .append('path')
                 .attr('d', area(data))
                 .attr('class', this.areaChartClass)
@@ -62,7 +62,7 @@ export class Area {
         const stackedData = getStackedDataWithOwn(data, chart.data.valueFields.map(field => field.name));
         const areaGenerator = AreaHelper.getSegmentedAreaGenerator(keyAxisOrient, scales, margin, keyField.name);
 
-        const areas = block.getChartGroup(chart.index)
+        const areas = block.svg.getChartGroup(chart.index)
             .selectAll(`.${this.areaChartClass}${Helper.getCssClassesLine(chart.cssClasses)}`)
             .data(stackedData)
             .enter()
@@ -87,7 +87,7 @@ export class Area {
         const promises: Promise<any>[] = [];
         chart.data.valueFields.forEach((field, valueIndex) => {
             const areaGenerator = AreaHelper.getGroupedAreaGenerator(keyAxisOrient, scales, margin, keyField.name, field.name, blockSize);
-            const areaObject = block.getChartGroup(chart.index)
+            const areaObject = block.svg.getChartGroup(chart.index)
                 .select(`.${this.areaChartClass}${Helper.getCssClassesLine(chart.cssClasses)}.chart-element-${valueIndex}`)
 
             const prom = this.updateGroupedPath(block, areaObject, areaGenerator, newData);
@@ -101,7 +101,7 @@ export class Area {
     private static updateSegmented(block: Block, scales: Scales, newData: MdtChartsDataRow[], keyField: Field, margin: BlockMargin, chart: TwoDimensionalChartModel, keyAxisOrient: Orient): Promise<any>[] {
         const stackedData = getStackedDataWithOwn(newData, chart.data.valueFields.map(field => field.name));
         const areaGenerator = AreaHelper.getSegmentedAreaGenerator(keyAxisOrient, scales, margin, keyField.name);
-        const areas = block.getChartGroup(chart.index)
+        const areas = block.svg.getChartGroup(chart.index)
             .selectAll<SVGRectElement, MdtChartsDataRow[]>(`path.${this.areaChartClass}${Helper.getCssClassesLine(chart.cssClasses)}`)
             .data(stackedData);
 

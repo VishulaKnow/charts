@@ -23,7 +23,7 @@ export class Line {
     public static update(block: Block, scales: Scales, newData: MdtChartsDataRow[], keyField: Field, margin: BlockMargin, keyAxisOrient: Orient, chart: TwoDimensionalChartModel): Promise<any>[] {
         let promises: Promise<any>[];
         if (chart.isSegmented) {
-            promises = this.updateSegmeneted(block, scales, newData, keyField, margin, keyAxisOrient, chart);
+            promises = this.updateSegmented(block, scales, newData, keyField, margin, keyAxisOrient, chart);
         } else {
             promises = this.updateGrouped(block, scales, newData, keyField, margin, keyAxisOrient, chart);
         }
@@ -32,7 +32,7 @@ export class Line {
 
     public static updateColors(block: Block, chart: TwoDimensionalChartModel): void {
         chart.data.valueFields.forEach((_vf, valueIndex) => {
-            const path = block.getChartGroup(chart.index)
+            const path = block.svg.getChartGroup(chart.index)
                 .select(`.${this.lineChartClass}${Helper.getCssClassesLine(chart.cssClasses)}.chart-element-${valueIndex}`);
             DomHelper.setChartStyle(path, chart.style, valueIndex, 'stroke');
             MarkDot.updateColors(block, chart, valueIndex);
@@ -43,7 +43,7 @@ export class Line {
         chart.data.valueFields.forEach((valueField, valueIndex) => {
             const lineGenerator = LineHelper.getLineGenerator(keyAxisOrient, scales, keyField.name, valueField.name, margin);
 
-            const path = block.getChartGroup(chart.index)
+            const path = block.svg.getChartGroup(chart.index)
                 .append('path')
                 .attr('d', lineGenerator(data))
                 .attr('class', this.lineChartClass)
@@ -62,7 +62,7 @@ export class Line {
         const stackedData = stack().keys(chart.data.valueFields.map(field => field.name))(data);
         const lineGenerator = LineHelper.getSegmentedLineGenerator(keyAxisOrient, scales, keyField.name, margin);
 
-        const lines = block.getChartGroup(chart.index)
+        const lines = block.svg.getChartGroup(chart.index)
             .selectAll(`.${this.lineChartClass}${Helper.getCssClassesLine(chart.cssClasses)}`)
             .data(stackedData)
             .enter()
@@ -89,7 +89,7 @@ export class Line {
         chart.data.valueFields.forEach((valueField, valueFieldIndex) => {
             const lineGenerator = LineHelper.getLineGenerator(keyAxisOrient, scales, keyField.name, valueField.name, margin);
 
-            const lineObject = block.getChartGroup(chart.index)
+            const lineObject = block.svg.getChartGroup(chart.index)
                 .select(`.${this.lineChartClass}${Helper.getCssClassesLine(chart.cssClasses)}.chart-element-${valueFieldIndex}`);
 
             const prom = this.updateGroupedPath(block, lineObject, lineGenerator, newData);
@@ -100,10 +100,10 @@ export class Line {
         return promises;
     }
 
-    private static updateSegmeneted(block: Block, scales: Scales, newData: MdtChartsDataRow[], keyField: Field, margin: BlockMargin, keyAxisOrient: Orient, chart: TwoDimensionalChartModel): Promise<any>[] {
+    private static updateSegmented(block: Block, scales: Scales, newData: MdtChartsDataRow[], keyField: Field, margin: BlockMargin, keyAxisOrient: Orient, chart: TwoDimensionalChartModel): Promise<any>[] {
         const stackedData = stack().keys(chart.data.valueFields.map(field => field.name))(newData);
         const lineGenerator = LineHelper.getSegmentedLineGenerator(keyAxisOrient, scales, keyField.name, margin);
-        const lines = block.getChartGroup(chart.index)
+        const lines = block.svg.getChartGroup(chart.index)
             .selectAll<SVGPathElement, MdtChartsDataRow[]>(`path.${this.lineChartClass}${Helper.getCssClassesLine(chart.cssClasses)}`)
             .data(stackedData);
 
