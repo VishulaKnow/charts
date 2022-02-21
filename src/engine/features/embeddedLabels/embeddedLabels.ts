@@ -28,7 +28,7 @@ export class EmbeddedLabels {
 
     public static restoreRemoved(block: Block, bars: Selection<SVGRectElement, MdtChartsDataRow, SVGGElement, any>, barAttrsHelper: BarAttrsHelper, field: Field, type: EmbeddedLabelTypeModel, keyAxisOrient: Orient, blockSize: Size, margin: BlockMargin, index: number, cssClasses: string[], keyFieldName: string): void {
         const untaggedBars = bars.filter(d => {
-            return block.getChartBlock()
+            return block.svg.getChartBlock()
                 .selectAll<SVGGElement, unknown>(`.${EmbeddedLabels.embeddedLabelsGroupClass}${Helper.getCssClassesLine(cssClasses)}.chart-element-${index}`)
                 .selectAll<SVGTextElement, MdtChartsDataRow>(`.${this.embeddedLabelClass}`)
                 .filter(row => row[keyFieldName] === d[keyFieldName])
@@ -41,7 +41,7 @@ export class EmbeddedLabels {
     }
 
     public static removeUnused(block: Block, chartCssClasses: string[], fieldIndex: number, indexes: number[]): void {
-        block.getChartBlock()
+        block.svg.getChartBlock()
             .selectAll<SVGGElement, unknown>(`.${EmbeddedLabels.embeddedLabelsGroupClass}${Helper.getCssClassesLine(chartCssClasses)}.chart-element-${fieldIndex}`)
             .selectAll<SVGTextElement, MdtChartsDataRow>(`.${this.embeddedLabelClass}`)
             .filter((d, i) => indexes.findIndex(ind => ind === i) !== -1)
@@ -49,7 +49,7 @@ export class EmbeddedLabels {
     }
 
     public static update(block: Block, bars: Selection<SVGRectElement, MdtChartsDataRow, SVGGElement, unknown>, keyAxisOrient: Orient, barAttrsHelper: BarAttrsHelper, margin: BlockMargin, valueField: Field, type: EmbeddedLabelTypeModel, blockSize: Size, newData: MdtChartsDataRow[], index: number, cssClasses: string[]) {
-        const labelsGroup = block.getChartBlock()
+        const labelsGroup = block.svg.getChartBlock()
             .selectAll<SVGGElement, unknown>(`.${EmbeddedLabels.embeddedLabelsGroupClass}${Helper.getCssClassesLine(cssClasses)}.chart-element-${index}`);
 
         labelsGroup.selectAll<SVGRectElement, MdtChartsDataRow>(`.${this.embeddedLabelBgClass}`)
@@ -67,7 +67,7 @@ export class EmbeddedLabels {
     }
 
     public static raiseGroups(block: Block): void {
-        block.getChartBlock().selectAll(`.${this.embeddedLabelsGroupClass}`).raise();
+        block.svg.getChartBlock().selectAll(`.${this.embeddedLabelsGroupClass}`).raise();
     }
 
     private static renderLabel(labelsGroup: Selection<SVGGElement, unknown, HTMLElement, unknown>, barAttrsHelper: BarAttrsHelper, dataRow: MdtChartsDataRow, field: Field, type: EmbeddedLabelTypeModel, keyAxisOrient: Orient, blockSize: Size, margin: BlockMargin): void {
@@ -147,12 +147,12 @@ export class EmbeddedLabels {
 
 
     private static renderGroup(block: Block, cssClasses: string[]): Selection<SVGGElement, unknown, HTMLElement, unknown> {
-        let group: Selection<SVGGElement, unknown, HTMLElement, unknown> = block.getChartBlock()
+        let group: Selection<SVGGElement, unknown, HTMLElement, unknown> = block.svg.getChartBlock()
             .select<SVGGElement>(`.${this.embeddedLabelsGroupClass}${Helper.getCssClassesLine(cssClasses)}`)
             .raise();
 
         if (group.empty())
-            group = block.getChartBlock()
+            group = block.svg.getChartBlock()
                 .append('g')
                 .attr('class', this.embeddedLabelsGroupClass)
                 .raise();

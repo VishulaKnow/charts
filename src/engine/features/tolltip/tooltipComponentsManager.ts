@@ -57,11 +57,11 @@ export class TooltipComponentsManager {
     }
 
     public static renderTooltipLine(block: Block): Selection<SVGLineElement, unknown, HTMLElement, any> {
-        let tooltipLine = block.getChartBlock()
+        let tooltipLine = block.svg.getChartBlock()
             .select<SVGLineElement>(`.${Tooltip.tooltipLineClass}`)
 
         if (tooltipLine.empty())
-            tooltipLine = block.getChartBlock()
+            tooltipLine = block.svg.getChartBlock()
                 .append('line')
                 .attr('class', Tooltip.tooltipLineClass)
                 .lower();

@@ -10,6 +10,7 @@ import { Donut } from "../polarNotation/donut/donut";
 import { TransitionManager } from "../transitionManager";
 import { BlockHelper } from "./blockHelper";
 import { Size } from "../../config/config";
+import { BlockSvg } from "./blockSvg";
 
 export class Block {
     public parentElement: HTMLElement;
@@ -17,8 +18,8 @@ export class Block {
     public transitionManager: TransitionManager;
     public scales: Scales;
     public filterEventManager: FilterEventManager;
+    public svg: BlockSvg;
 
-    private svgCssClasses: string[];
     private wrapperCssClasses: string[];
     private parentElementSelection: Selection<BaseType, any, HTMLElement, any>;
     private wrapper: Selection<BaseType, any, HTMLElement, any>;
@@ -26,8 +27,11 @@ export class Block {
     private readonly chartGroupClass = 'chart-group';
 
     constructor(cssClass: string, parentElement: HTMLElement, blockId: number, filterEventManager: FilterEventManager, transitions: Transitions = null) {
+        this.svg = new BlockSvg({
+            svgCssClasses: Helper.getCssClassesArray(cssClass)
+        });
+
         this.wrapperCssClasses = Helper.getCssClassesArray(cssClass);
-        this.svgCssClasses = Helper.getCssClassesArray(cssClass);
         this.wrapperCssClasses = BlockHelper.getFormattedCssClassesForWrapper(this.wrapperCssClasses);
         this.parentElement = parentElement;
         this.parentElementSelection = select(parentElement);
@@ -37,14 +41,6 @@ export class Block {
         this.filterEventManager = filterEventManager;
     }
 
-    public renderSvg(blockSize: Size): void {
-        this.getWrapper()
-            .append('svg')
-            .attr('width', blockSize.width)
-            .attr('height', blockSize.height)
-            .attr('class', this.svgCssClasses.join(' ') + ' ' + NamesHelper.getClassName('svg-chart'));
-    }
-
     public renderWrapper(blockSize: Size): void {
         this.wrapper = this.parentElementSelection
             .append('div')
@@ -52,6 +48,8 @@ export class Block {
             .style('width', blockSize.width + 'px')
             .style('height', blockSize.height + 'px')
             .style('position', 'relative');
+
+        this.svg.initParent(this.wrapper);
     }
 
     public destroy(): void {
@@ -61,27 +59,17 @@ export class Block {
     }
 
     public getSvg(): Selection<SVGElement, unknown, HTMLElement, any> {
-        return this.getWrapper().select(`svg.${NamesHelper.getClassName('svg-chart')}`);
+        return this.svg.getBlock();
     }
 
     public getWrapper(): Selection<BaseType, unknown, HTMLElement, any> {
         return this.wrapper;
     }
 
-    public renderChartsBlock(): void {
-        this.getSvg()
-            .append('g')
-            .attr('class', this.chartBlockClass);
-    }
-
-    public getChartBlock(): Selection<SVGGElement, unknown, HTMLElement, any> {
-        return this.getSvg().select(`.${this.chartBlockClass}`);
-    }
-
     public getChartGroup(chartIndex: number): Selection<SVGGElement, any, BaseType, any> {
-        let group: Selection<SVGGElement, any, BaseType, any> = this.getChartBlock().select(`.${this.chartGroupClass}-${chartIndex}`);
+        let group: Selection<SVGGElement, any, BaseType, any> = this.svg.getChartBlock().select(`.${this.chartGroupClass}-${chartIndex}`);
         if (group.empty()) {
-            group = this.getChartBlock()
+            group = this.svg.getChartBlock()
                 .append('g')
                 .attr('class', `${this.chartGroupClass}-${chartIndex}`);
         }

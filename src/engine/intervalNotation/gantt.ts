@@ -16,7 +16,7 @@ export class Gantt {
     private static readonly ganttItemClass = 'gantt-item';
 
     public static render(block: Block, data: MdtChartsDataRow[], dataOptions: OptionsModelData, scales: Scales, margin: BlockMargin, keyAxisOrient: Orient, chart: IntervalChartModel, barSettings: BarChartSettings): void {
-        const ganttItems = block.getChartBlock()
+        const ganttItems = block.svg.getChartBlock()
             .selectAll(`.${this.ganttItemClass}`)
             .data(data)
             .enter()

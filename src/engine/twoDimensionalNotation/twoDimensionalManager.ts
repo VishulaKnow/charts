@@ -28,7 +28,7 @@ export class TwoDimensionalManager implements ChartContentManager {
             options.chartSettings.bar);
         engine.block.scales = scales;
 
-        engine.block.renderSvg(model.blockCanvas.size);
+        engine.block.svg.render(model.blockCanvas.size);
 
         Axis.render(engine.block, scales, options.scale, options.axis, model.blockCanvas.size);
 
@@ -133,7 +133,7 @@ export class TwoDimensionalManager implements ChartContentManager {
 
     private renderCharts(block: Block, charts: TwoDimensionalChartModel[], scales: Scales, data: MdtChartsDataSource, dataOptions: OptionsModelData, margin: BlockMargin, keyAxisOrient: Orient, barSettings: BarChartSettings, blockSize: Size) {
         block.renderChartClipPath(margin, blockSize);
-        block.renderChartsBlock();
+        block.svg.renderChartsBlock();
         charts.forEach((chart: TwoDimensionalChartModel) => {
             if (chart.type === 'bar')
                 Bar.render(block,

@@ -12,7 +12,7 @@ export class IntervalManager {
     public static render(block: Block, model: Model, data: MdtChartsDataSource): void {
         const options = <IntervalOptionsModel>model.options;
 
-        block.renderSvg(model.blockCanvas.size);
+        block.svg.render(model.blockCanvas.size);
 
         const scales = Scale.getScales(options.scale.key,
             options.scale.value,
@@ -40,7 +40,7 @@ export class IntervalManager {
     }
 
     private static renderCharts(block: Block, charts: IntervalChartModel[], scales: Scales, data: MdtChartsDataSource, dataOptions: OptionsModelData, margin: BlockMargin, keyAxisOrient: Orient, chartSettings: TwoDimChartElementsSettings): void {
-        block.renderChartsBlock();
+        block.svg.renderChartsBlock();
         charts.forEach(chart => {
             if (chart.type === 'gantt')
                 Gantt.render(block,

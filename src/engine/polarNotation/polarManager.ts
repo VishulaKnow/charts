@@ -15,7 +15,7 @@ export class PolarManager implements ChartContentManager {
     public render(engine: Engine, model: Model<PolarOptionsModel>) {
         const options = model.options;
 
-        engine.block.renderSvg(model.blockCanvas.size);
+        engine.block.svg.render(model.blockCanvas.size);
 
         this.renderCharts(engine.block,
             options.charts,
