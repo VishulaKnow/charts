@@ -20,7 +20,7 @@ export default class Engine {
         this.data = data;
         this.setFilterEventManager(model?.options);
         this.block = new Block(model.blockCanvas.cssClass, parentElement, this.chartId, this.filterEventManager, model.transitions);
-        this.filterEventManager.setBlock(this.block);
+        this.filterEventManager?.setBlock(this.block);
         this.block.renderWrapper(model.blockCanvas.size);
 
         if (model.options) {

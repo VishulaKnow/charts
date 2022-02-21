@@ -87,55 +87,55 @@ const configCars: MdtChartsConfig = {
     //         }
     //     ]
     // }
-    // options: {
-    //     type: 'polar',
-    //     selectable: true,
-    //     title: "Chart header",
-    //     legend: {
-    //         show: true
-    //     },
-    //     data: {
-    //         dataSource: 'dataSet',
-    //         keyField: {
-    //             name: 'brand',
-    //             format: 'string'
-    //         }
-    //     },
-    //     chart: {
-    //         type: 'donut',
-    //         data: {
-    //             valueField: {
-    //                 name: 'price',
-    //                 format: 'money',
-    //                 title: 'Стоимость очень большой текст'
-    //             }
-    //         },
-    //         tooltip: {
-    //             show: true
-    //         },
-    //         aggregator: {
-    //             content: (model) => ({
-    //                 title: "Big Text text word another one",
-    //                 value: model.data.reduce((acc, row) => acc + row.price, 0)
-    //             })
-    //         }
-    //     }
-    // },
     options: {
-        type: "card",
-        title: "Card",
+        type: 'polar',
+        selectable: true,
+        title: "Chart header",
+        legend: {
+            show: true
+        },
         data: {
-            dataSource: "dataSet",
+            dataSource: 'dataSet',
             keyField: {
-                name: "brand",
-                format: "string"
+                name: 'brand',
+                format: 'string'
             }
         },
-        value: {
-            field: "price",
-            dataType: "money"
+        chart: {
+            type: 'donut',
+            data: {
+                valueField: {
+                    name: 'price',
+                    format: 'money',
+                    title: 'Стоимость очень большой текст'
+                }
+            },
+            tooltip: {
+                show: true
+            },
+            aggregator: {
+                content: (model) => ({
+                    title: "Big Text text word another one",
+                    value: model.data.reduce((acc, row) => acc + row.price, 0)
+                })
+            }
         }
-    }
+    },
+    // options: {
+    //     type: "card",
+    //     title: "Card",
+    //     data: {
+    //         dataSource: "dataSet",
+    //         keyField: {
+    //             name: "brand",
+    //             format: "string"
+    //         }
+    //     },
+    //     value: {
+    //         field: "price",
+    //         dataType: "money"
+    //     }
+    // }
 }
 
 export default configCars;

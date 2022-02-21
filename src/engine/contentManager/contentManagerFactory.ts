@@ -1,6 +1,7 @@
 import { ChartNotation, MdtChartsDataSource } from "../../config/config";
 import { Model } from "../../model/model";
 import { Block } from "../block/block";
+import { CardsManager } from "../cardsNotation/cardsManager";
 import Engine from "../engine";
 import { PolarManager } from "../polarNotation/polarManager";
 import { TwoDimensionalManager } from "../twoDimensionalNotation/twoDimensionalManager";
@@ -20,7 +21,8 @@ interface Managers {
 export class ContentManagerFactory {
     private managers: Managers = {
         "2d": TwoDimensionalManager,
-        "polar": PolarManager
+        "polar": PolarManager,
+        "card": CardsManager
     };
 
     getManager(type: ChartNotation): ChartContentManager {
