@@ -4,8 +4,8 @@ const configCars: MdtChartsConfig = {
     canvas: {
         class: 'outline',
         size: {
-            width: 600,
-            height: 400
+            width: 300,
+            height: 200
         }
     },
     // options: {
@@ -48,7 +48,7 @@ const configCars: MdtChartsConfig = {
     //     },
     //     orientation: 'vertical',
     //     data: {
-    //         dataSource: 'dataSet-negative-stack',
+    //         dataSource: 'dataSet',
     //         keyField: {
     //             name: 'brand',
     //             format: 'string'
@@ -56,7 +56,7 @@ const configCars: MdtChartsConfig = {
     //     },
     //     charts: [
     //         {
-    //             isSegmented: true,
+    //             isSegmented: false,
     //             type: 'bar',
     //             data: {
     //                 valueFields: [
@@ -70,11 +70,11 @@ const configCars: MdtChartsConfig = {
     //                         format: 'money',
     //                         title: 'Стоимость за 2020 год'
     //                     },
-    //                     {
-    //                         name: 'price2',
-    //                         format: 'money',
-    //                         title: 'Стоимость за 2020 год'
-    //                     }
+    //                     // {
+    //                     //     name: 'price2',
+    //                     //     format: 'money',
+    //                     //     title: 'Стоимость за 2020 год'
+    //                     // }
     //                 ]
     //             },
     //             tooltip: {
@@ -87,55 +87,80 @@ const configCars: MdtChartsConfig = {
     //         }
     //     ]
     // }
-    options: {
-        type: 'polar',
-        selectable: true,
-        title: "Chart header",
-        legend: {
-            show: true
-        },
-        data: {
-            dataSource: 'dataSet',
-            keyField: {
-                name: 'brand',
-                format: 'string'
-            }
-        },
-        chart: {
-            type: 'donut',
-            data: {
-                valueField: {
-                    name: 'price',
-                    format: 'money',
-                    title: 'Стоимость очень большой текст'
-                }
-            },
-            tooltip: {
-                show: true
-            },
-            aggregator: {
-                content: (model) => ({
-                    title: "Big Text text word another one",
-                    value: model.data.reduce((acc, row) => acc + row.price, 0)
-                })
-            }
-        }
-    },
     // options: {
-    //     type: "card",
-    //     title: "Card",
+    //     type: 'polar',
+    //     selectable: true,
+    //     title: "Chart header",
+    //     legend: {
+    //         show: true
+    //     },
     //     data: {
-    //         dataSource: "dataSet",
+    //         dataSource: 'dataSet',
     //         keyField: {
-    //             name: "brand",
-    //             format: "string"
+    //             name: 'brand',
+    //             format: 'string'
     //         }
     //     },
-    //     value: {
-    //         field: "price",
-    //         dataType: "money"
+    //     chart: {
+    //         type: 'donut',
+    //         data: {
+    //             valueField: {
+    //                 name: 'price',
+    //                 format: 'money',
+    //                 title: 'Стоимость очень большой текст'
+    //             }
+    //         },
+    //         tooltip: {
+    //             show: true
+    //         },
+    //         aggregator: {
+    //             content: (model) => ({
+    //                 title: "Big Text text word another one",
+    //                 value: model.data.reduce((acc, row) => acc + row.price, 0)
+    //             })
+    //         }
     //     }
-    // }
+    // },
+    options: {
+        type: "card",
+        title: "Some long text",
+        icon: () => createIcon("fa-info-circle"),
+        data: {
+            dataSource: "dataSet",
+            keyField: {
+                name: "brand",
+                format: "string"
+            }
+        },
+        value: {
+            field: "price",
+            dataType: "money"
+        },
+        description: "Lorem ipsum dolor sit amet consectetur.",
+        change: {
+            value: {
+                dataType: "number",
+                field: "count"
+            },
+            color: {
+                aboveZero: "green",
+                belowZero: "red",
+                equalZero: "blue"
+            },
+            icon: {
+                aboveZero: () => createIcon("fa-arrow-up"),
+                belowZero: () => createIcon("fa-arrow-down"),
+                equalZero: () => createIcon("fa-arrows-h")
+            },
+            description: "Since last year"
+        }
+    }
+}
+
+function createIcon(iconName: string) {
+    const element = document.createElement("i");
+    element.classList.add("fa", iconName);
+    return element;
 }
 
 export default configCars;

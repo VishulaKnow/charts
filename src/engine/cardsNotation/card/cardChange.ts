@@ -76,7 +76,7 @@ export class CardChange {
     private renderValue(parentBlock: CardChildElement, value: CardValueContent) {
         this.valueContentBlock = parentBlock.append("div")
             .classed(NamesHelper.getClassName("card-change-value"), true)
-            .append("span")
+            .append("span");
 
         this.setValueContent(value);
     }
