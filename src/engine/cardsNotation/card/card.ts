@@ -1,5 +1,5 @@
-import { BaseType, select, Selection } from "d3-selection";
-import { MdtChartsCardValue, MdtChartsDataSource, MdtChartsIconElement } from "../../../config/config";
+import { BaseType, Selection } from "d3-selection";
+import { MdtChartsDataSource, MdtChartsIconElement, Size } from "../../../config/config";
 import { DataType } from "../../../designer/designerConfig";
 import { CardsOptionsModel } from "../../../model/model";
 import { Block } from "../../block/block";
@@ -19,13 +19,18 @@ export interface CardValueOptions {
     valueType: DataType;
 }
 
+interface CanvasOptions {
+    cardSize: Size;
+}
+
 export class CardChart {
-    render(block: Block, options: CardsOptionsModel, data: MdtChartsDataSource) {
+    render(block: Block, options: CardsOptionsModel, data: MdtChartsDataSource, canvasOptions: CanvasOptions) {
         const parent = block.html.getBlock();
         const dataRow = data[options.data.dataSource][0]
 
         const wrapper = this.renderCardWrapper(parent);
         const contentBlock = this.renderContentBlock(wrapper);
+        this.setContentFontSize(contentBlock, canvasOptions);
 
         this.renderHeaderBlock(contentBlock, {
             title: options.title,
@@ -53,6 +58,12 @@ export class CardChart {
     private renderContentBlock(wrapper: CardChildElement) {
         return wrapper.append("div")
             .classed(NamesHelper.getClassName("card-content"), true);
+    }
+
+    private setContentFontSize(contentBlock: CardChildElement, canvasOptions: CanvasOptions) {
+        const fontSize = Math.floor(Math.min(canvasOptions.cardSize.height, canvasOptions.cardSize.width) / 11);
+
+        contentBlock.style("font-size", `${fontSize}px`);
     }
 
     private renderHeaderBlock(contentBlock: CardChildElement, options: CardHeaderOptions) {
@@ -92,7 +103,9 @@ export class CardChart {
         const wrapper = contentBlock.append("div")
             .classed(NamesHelper.getClassName("card-value-wrapper"), true);
 
-        wrapper.append("span")
+        wrapper.append("div")
+            .classed(NamesHelper.getClassName("card-value-block"), true)
+            .append("span")
             .classed(NamesHelper.getClassName("card-value"), true)
             .text(ValueFormatter.formatField(options.valueType, options.value));
     }
