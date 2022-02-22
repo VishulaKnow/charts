@@ -24,9 +24,12 @@ interface CanvasOptions {
 }
 
 export class CardChart {
+    private cardValueCssClass = NamesHelper.getClassName("card-value");
+    private cardContentBlockCssClass = NamesHelper.getClassName("card-content");
+
     render(block: Block, options: CardsOptionsModel, data: MdtChartsDataSource, canvasOptions: CanvasOptions) {
         const parent = block.html.getBlock();
-        const dataRow = data[options.data.dataSource][0]
+        const dataRow = data[options.data.dataSource][0];
 
         const wrapper = this.renderCardWrapper(parent);
         const contentBlock = this.renderContentBlock(wrapper);
@@ -50,9 +53,20 @@ export class CardChart {
         }
     }
 
+    updateData(block: Block, options: CardsOptionsModel, data: MdtChartsDataSource) {
+        const dataRow = data[options.data.dataSource][0];
+
+        const contentBlock = block.html.getBlock().select<HTMLElement>(`.${this.cardContentBlockCssClass}`);
+
+        this.updateValueBlockContent(contentBlock, {
+            value: dataRow[options.value.field],
+            valueType: options.value.dataType
+        })
+    }
+
     private renderCardWrapper(parent: Selection<HTMLElement, unknown, BaseType, unknown>) {
         return parent.append("div")
-            .classed(NamesHelper.getClassName("card-wrapper"), true);
+            .classed(this.cardContentBlockCssClass, true);
     }
 
     private renderContentBlock(wrapper: CardChildElement) {
@@ -61,8 +75,7 @@ export class CardChart {
     }
 
     private setContentFontSize(contentBlock: CardChildElement, canvasOptions: CanvasOptions) {
-        const fontSize = Math.floor(Math.min(canvasOptions.cardSize.height, canvasOptions.cardSize.width) / 11);
-
+        const fontSize = Math.floor(Math.min(canvasOptions.cardSize.height, canvasOptions.cardSize.width) / 10);
         contentBlock.style("font-size", `${fontSize}px`);
     }
 
@@ -106,7 +119,12 @@ export class CardChart {
         wrapper.append("div")
             .classed(NamesHelper.getClassName("card-value-block"), true)
             .append("span")
-            .classed(NamesHelper.getClassName("card-value"), true)
+            .classed(this.cardValueCssClass, true)
+            .text(ValueFormatter.formatField(options.valueType, options.value));
+    }
+
+    private updateValueBlockContent(contentBlock: CardChildElement, options: CardValueOptions) {
+        contentBlock.select(`.${this.cardValueCssClass}`)
             .text(ValueFormatter.formatField(options.valueType, options.value));
     }
 }
