@@ -2,21 +2,24 @@ import { Model } from "../../model/model";
 import { Engine } from "../engine";
 import { Block } from "../block/block";
 import { MdtChartsDataSource } from "../../config/config";
-import { getChartContentManager } from "./contentManagerFactory";
+import { ChartContentManager, getChartContentManager } from "./contentManagerFactory";
 
 export class ContentManager {
-    public static render(model: Model, engine: Engine): void {
-        const manager = getChartContentManager(model);
-        manager.render(engine, model);
+    private manager: ChartContentManager;
+
+    constructor(model: Model) {
+        this.manager = getChartContentManager(model);
     }
 
-    public static updateData(block: Block, model: Model, newData: MdtChartsDataSource): void {
-        const manager = getChartContentManager(model);
-        manager.updateData(block, model, newData);
+    public render(model: Model, engine: Engine): void {
+        this.manager.render(engine, model);
     }
 
-    public static updateColors(engine: Engine, model: Model): void {
-        const manager = getChartContentManager(model);
-        manager.updateColors(engine.block, model);
+    public updateData(block: Block, model: Model, newData: MdtChartsDataSource): void {
+        this.manager.updateData(block, model, newData);
+    }
+
+    public updateColors(engine: Engine, model: Model): void {
+        this.manager.updateColors(engine.block, model);
     }
 }

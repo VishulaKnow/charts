@@ -1,11 +1,10 @@
 import { BaseType, Selection } from "d3-selection";
 import { MdtChartsDataSource, MdtChartsIconElement, Size } from "../../../config/config";
-import { DataType } from "../../../designer/designerConfig";
 import { CardsOptionsModel } from "../../../model/model";
 import { Block } from "../../block/block";
 import { NamesHelper } from "../../helpers/namesHelper";
-import { ValueFormatter } from "../../valueFormatter";
 import { CardChange } from "./cardChange";
+import { CardService } from "./cardService";
 
 export type CardChildElement<T extends Element = HTMLElement> = Selection<T, unknown, BaseType, unknown>;
 
@@ -14,18 +13,18 @@ interface CardHeaderOptions {
     icon?: MdtChartsIconElement;
 }
 
-export interface CardValueOptions {
-    value: number;
-    valueType: DataType;
-}
-
 interface CanvasOptions {
     cardSize: Size;
 }
 
+export type CardValueContent = string | number;
+
 export class CardChart {
-    private cardValueCssClass = NamesHelper.getClassName("card-value");
-    private cardContentBlockCssClass = NamesHelper.getClassName("card-content");
+    private readonly cardValueCssClass = NamesHelper.getClassName("card-value");
+    private readonly cardContentBlockCssClass = NamesHelper.getClassName("card-content");
+
+    private valueContentElement: CardChildElement;
+    private changeBlock: CardChange;
 
     render(block: Block, options: CardsOptionsModel, data: MdtChartsDataSource, canvasOptions: CanvasOptions) {
         const parent = block.html.getBlock();
@@ -42,26 +41,18 @@ export class CardChart {
 
         if (options.description) this.renderDescriptionBlock(contentBlock, options.description);
 
-        this.renderValueBlock(contentBlock, {
-            value: dataRow[options.value.field],
-            valueType: options.value.dataType
-        });
+        this.renderValueBlock(contentBlock, CardService.getValueContentFromDataSource({ ...options.value, dataSetName: options.data.dataSource }, data));
 
         if (options.change) {
-            const cardChange = new CardChange();
-            cardChange.render(contentBlock, options.change, dataRow);
+            this.changeBlock = new CardChange();
+            this.changeBlock.render(contentBlock, options.change, dataRow);
         }
     }
 
-    updateData(block: Block, options: CardsOptionsModel, data: MdtChartsDataSource) {
+    updateData(options: CardsOptionsModel, data: MdtChartsDataSource) {
         const dataRow = data[options.data.dataSource][0];
-
-        const contentBlock = block.html.getBlock().select<HTMLElement>(`.${this.cardContentBlockCssClass}`);
-
-        this.updateValueBlockContent(contentBlock, {
-            value: dataRow[options.value.field],
-            valueType: options.value.dataType
-        })
+        this.setValueContent(CardService.getValueContentFromDataSource({ ...options.value, dataSetName: options.data.dataSource }, data));
+        this.changeBlock?.update(options.change, dataRow);
     }
 
     private renderCardWrapper(parent: Selection<HTMLElement, unknown, BaseType, unknown>) {
@@ -112,19 +103,19 @@ export class CardChart {
             .text(textContent);
     }
 
-    private renderValueBlock(contentBlock: CardChildElement, options: CardValueOptions) {
+    private renderValueBlock(contentBlock: CardChildElement, value: CardValueContent) {
         const wrapper = contentBlock.append("div")
             .classed(NamesHelper.getClassName("card-value-wrapper"), true);
 
-        wrapper.append("div")
+        this.valueContentElement = wrapper.append("div")
             .classed(NamesHelper.getClassName("card-value-block"), true)
             .append("span")
-            .classed(this.cardValueCssClass, true)
-            .text(ValueFormatter.formatField(options.valueType, options.value));
+            .classed(this.cardValueCssClass, true);
+
+        this.setValueContent(value);
     }
 
-    private updateValueBlockContent(contentBlock: CardChildElement, options: CardValueOptions) {
-        contentBlock.select(`.${this.cardValueCssClass}`)
-            .text(ValueFormatter.formatField(options.valueType, options.value));
+    private setValueContent(value: CardValueContent) {
+        this.valueContentElement.text(value);
     }
 }

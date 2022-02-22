@@ -1,16 +1,35 @@
 import { MdtChartsDataRow, MdtChartsIconElement } from "../../../config/config";
 import { CardsChangeModel } from "../../../model/model";
 import { NamesHelper } from "../../helpers/namesHelper";
-import { ValueFormatter } from "../../valueFormatter";
-import { CardChildElement, CardValueOptions } from "./card";
+import { CardChildElement, CardValueContent } from "./card";
+import { CardService } from "./cardService";
 
 export class CardChange {
-    render(contentBlock: CardChildElement, options: CardsChangeModel, dataRow: MdtChartsDataRow) {
-        const wrapper = this.renderWrapper(contentBlock);
-        this.setColor(wrapper, options);
+    private wrapper: CardChildElement;
+    private iconBlock: CardChildElement;
+    private valueContentBlock: CardChildElement;
+    private contentBlock: CardChildElement;
 
-        const changeContent = this.renderContentBlock(wrapper);
-        this.renderContentItems(changeContent, options, dataRow);
+    render(contentBlock: CardChildElement, options: CardsChangeModel, dataRow: MdtChartsDataRow) {
+        this.wrapper = this.renderWrapper(contentBlock);
+        this.setColor(this.wrapper, options);
+
+        this.renderContentBlock(this.wrapper);
+        this.renderContentItems(this.contentBlock, options, dataRow);
+    }
+
+    update(options: CardsChangeModel, dataRow: MdtChartsDataRow) {
+        this.setColor(this.wrapper, options);
+        this.setValueContent(CardService.getValueContentFromRow(options.value, dataRow));
+
+        if (options.icon) {
+            if (this.iconBlock) {
+                this.iconBlock.html("");
+                this.renderIconEl(options.icon);
+            } else {
+                this.renderIcon(this.contentBlock, options.icon);
+            }
+        }
     }
 
     private renderWrapper(contentBlock: CardChildElement) {
@@ -23,17 +42,14 @@ export class CardChange {
     }
 
     private renderContentBlock(wrapper: CardChildElement) {
-        return wrapper.append("div")
+        this.contentBlock = wrapper.append("div")
             .classed(NamesHelper.getClassName("card-change-content"), true);
     }
 
     private renderContentItems(contentBlock: CardChildElement, options: CardsChangeModel, dataRow: MdtChartsDataRow) {
         if (options.icon) this.renderIcon(this.renderContentItem(contentBlock), options.icon);
 
-        this.renderValue(this.renderContentItem(contentBlock), {
-            value: dataRow[options.value.field],
-            valueType: options.value.dataType
-        });
+        this.renderValue(this.renderContentItem(contentBlock), CardService.getValueContentFromRow(options.value, dataRow));
 
         if (options.description) this.renderDescription(this.renderContentItem(contentBlock), options.description);
     }
@@ -44,26 +60,36 @@ export class CardChange {
     }
 
     private renderIcon(parentBlock: CardChildElement, icon: MdtChartsIconElement) {
+        this.iconBlock = parentBlock.append("div")
+            .classed(NamesHelper.getClassName("card-change-icon"), true);
+        this.renderIconEl(icon);
+    }
+
+    private renderIconEl(icon: MdtChartsIconElement) {
         const iconEl = icon();
 
-        parentBlock.append("div")
-            .classed(NamesHelper.getClassName("card-change-icon"), true)
+        this.iconBlock
             .node()
             .appendChild(iconEl);
     }
 
-    private renderValue(parentBlock: CardChildElement, options: CardValueOptions) {
-        return parentBlock.append("div")
+    private renderValue(parentBlock: CardChildElement, value: CardValueContent) {
+        this.valueContentBlock = parentBlock.append("div")
             .classed(NamesHelper.getClassName("card-change-value"), true)
             .append("span")
-            .text(ValueFormatter.formatField(options.valueType, options.value));
+
+        this.setValueContent(value);
     }
 
-    private renderDescription(parentBlock: CardChildElement, textContent: string) {
+    private renderDescription(parentBlock: CardChildElement, textContent: CardValueContent) {
         return parentBlock.append("div")
             .classed(NamesHelper.getClassName("card-change-description-wrapper"), true)
             .append("span")
             .classed(NamesHelper.getClassName("card-change-description"), true)
             .text(textContent);
+    }
+
+    private setValueContent(textContent: CardValueContent) {
+        this.valueContentBlock.text(textContent);
     }
 }

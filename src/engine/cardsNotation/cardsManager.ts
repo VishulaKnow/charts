@@ -6,16 +6,17 @@ import { Engine } from "../engine";
 import { CardChart } from "./card/card";
 
 export class CardsManager implements ChartContentManager {
+    private chart: CardChart;
+
     render(engine: Engine, model: Model<CardsOptionsModel>): void {
         engine.block.html.render();
+        this.chart = new CardChart();
 
-        const cardChart = new CardChart();
-        cardChart.render(engine.block, model.options, engine.data, { cardSize: model.blockCanvas.size });
+        this.chart.render(engine.block, model.options, engine.data, { cardSize: model.blockCanvas.size });
     }
 
     updateData(block: Block, model: Model<CardsOptionsModel>, newData: MdtChartsDataSource): void {
-        const cardChart = new CardChart();
-        cardChart.updateData(block, model.options, newData);
+        this.chart.updateData(model.options, newData);
     }
 
     updateColors(block: Block, model: Model<CardsOptionsModel>): void {

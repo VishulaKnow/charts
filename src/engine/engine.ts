@@ -1,16 +1,18 @@
 import { Block } from './block/block';
 import { ValueFormatter } from './valueFormatter';
 import { ContentManager } from './contentManager/contentManager';
-import { IntervalOptionsModel, Model, OptionsModel, PolarOptionsModel, TwoDimensionalOptionsModel } from '../model/model';
+import { Model, OptionsModel } from '../model/model';
 import { FilterCallback, FilterEventManager } from './filterManager/filterEventManager';
 import { Helper } from './helpers/helper';
 import { MdtChartsDataSource } from '../config/config';
 
 export class Engine {
     public block: Block;
-    public filterEventManager: FilterEventManager;
     public data: MdtChartsDataSource;
+
+    private filterEventManager: FilterEventManager;
     private chartId: number;
+    private contentManager: ContentManager;
 
     constructor(id: number, private filterCallback: FilterCallback, private initializeSelected: number[]) {
         this.chartId = id;
@@ -22,6 +24,7 @@ export class Engine {
         this.block = new Block(model.blockCanvas.cssClass, parentElement, this.chartId, this.filterEventManager, model.transitions);
         this.filterEventManager?.setBlock(this.block);
         this.block.renderWrapper(model.blockCanvas.size);
+        this.contentManager = new ContentManager(model);
 
         if (model.options) {
             ValueFormatter.setFormatFunction(model.dataSettings.format.formatters);
@@ -50,17 +53,17 @@ export class Engine {
                 for (let source in newData) {
                     this.data[source] = newData[source];
                 }
-                ContentManager.updateData(this.block, model, newData);
+                this.contentManager.updateData(this.block, model, newData);
             }
         }
     }
 
     public updateColors(model: Model): void {
-        ContentManager.updateColors(this, model);
+        this.contentManager.updateColors(this, model);
     }
 
     private renderCharts(model: Model): void {
-        ContentManager.render(model, this);
+        this.contentManager.render(model, this);
     }
 
     private setFilterEventManager(options: OptionsModel): void {
