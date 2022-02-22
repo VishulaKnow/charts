@@ -3,7 +3,7 @@ import { BarChartSettings, BlockMargin, Model, OptionsModelData, Orient, TwoDime
 import { Block } from "../block/block";
 import { ChartContentManager } from "../contentManager/contentManagerFactory";
 import { ElementHighlighter } from "../elementHighlighter/elementHighlighter";
-import Engine from "../engine";
+import { Engine } from "../engine";
 import { Axis } from "../features/axis/axis";
 import { EmbeddedLabels } from "../features/embeddedLabels/embeddedLabels";
 import { GridLine } from "../features/gridLine/gridLine";

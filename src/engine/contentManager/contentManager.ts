@@ -1,5 +1,5 @@
 import { Model } from "../../model/model";
-import Engine from "../engine";
+import { Engine } from "../engine";
 import { Block } from "../block/block";
 import { MdtChartsDataSource } from "../../config/config";
 import { getChartContentManager } from "./contentManagerFactory";

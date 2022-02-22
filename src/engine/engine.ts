@@ -6,7 +6,7 @@ import { FilterCallback, FilterEventManager } from './filterManager/filterEventM
 import { Helper } from './helpers/helper';
 import { MdtChartsDataSource } from '../config/config';
 
-export default class Engine {
+export class Engine {
     public block: Block;
     public filterEventManager: FilterEventManager;
     public data: MdtChartsDataSource;

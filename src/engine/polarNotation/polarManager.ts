@@ -1,6 +1,6 @@
 import { BlockMargin, DonutChartSettings, Model, PolarChartModel, PolarOptionsModel } from "../../model/model";
 import { Block } from "../block/block";
-import Engine from "../engine";
+import { Engine } from "../engine";
 import { Legend } from "../features/legend/legend";
 import { Title } from "../features/title/title";
 import { ElementHighlighter } from "../elementHighlighter/elementHighlighter";

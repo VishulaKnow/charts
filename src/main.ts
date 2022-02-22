@@ -1,6 +1,6 @@
 import { MdtChartsConfig, MdtChartsDataSource, NewSize, Size } from "./config/config";
 import { DesignerConfig } from "./designer/designerConfig";
-import Engine from "./engine/engine";
+import { Engine } from "./engine/engine";
 import { FilterCallback } from "./engine/filterManager/filterEventManager";
 import { Model } from "./model/model";
 import { assembleModel, getPreparedData } from "./model/modelBuilder";

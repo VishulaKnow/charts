@@ -1,4 +1,4 @@
-import Engine from '../engine/engine';
+import { Engine } from '../engine/engine';
 import { assembleModel, getPreparedData } from '../model/modelBuilder';
 import { ChartNotation, MdtChartsConfig, MdtChartsDataRow, MdtChartsDataSource, MdtChartsIntervalOptions, MdtChartsPolarOptions, MdtChartsTwoDimensionalChart, MdtChartsTwoDimensionalOptions } from '../config/config'
 import { DesignerConfig, Transitions } from '../designer/designerConfig';
