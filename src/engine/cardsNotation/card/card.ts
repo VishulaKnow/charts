@@ -2,8 +2,10 @@ import { BaseType, Selection } from "d3-selection";
 import { MdtChartsDataSource, MdtChartsIconElement, Size } from "../../../config/config";
 import { CardsOptionsModel } from "../../../model/model";
 import { Block } from "../../block/block";
+import { FontResizer } from "../../helpers/fontResizer/fontResizer";
 import { NamesHelper } from "../../helpers/namesHelper";
 import { CardChange } from "./cardChange";
+import { CardElementsStyler } from "./cardElementsStyler";
 import { CardService } from "./cardService";
 
 export type CardChildElement<T extends Element = HTMLElement> = Selection<T, unknown, BaseType, unknown>;
@@ -24,28 +26,31 @@ export class CardChart {
     private readonly cardContentBlockCssClass = NamesHelper.getClassName("card-content");
 
     private valueContentElement: CardChildElement;
+    private cardContentElement: CardChildElement;
+
     private changeBlock: CardChange;
+    private styler = new CardElementsStyler();
 
     render(block: Block, options: CardsOptionsModel, data: MdtChartsDataSource, canvasOptions: CanvasOptions) {
         const parent = block.html.getBlock();
         const dataRow = data[options.data.dataSource][0];
 
         const wrapper = this.renderCardWrapper(parent);
-        const contentBlock = this.renderContentBlock(wrapper);
-        this.setContentFontSize(contentBlock, canvasOptions);
+        this.renderContentBlock(wrapper);
+        this.setContentFontSize(this.cardContentElement, canvasOptions);
 
-        this.renderHeaderBlock(contentBlock, {
+        this.renderHeaderBlock(this.cardContentElement, {
             title: options.title,
             icon: options.icon
         });
 
-        if (options.description) this.renderDescriptionBlock(contentBlock, options.description);
+        if (options.description) this.renderDescriptionBlock(this.cardContentElement, options.description);
 
-        this.renderValueBlock(contentBlock, CardService.getValueContentFromDataSource({ ...options.value, dataSetName: options.data.dataSource }, data));
+        this.renderValueBlock(this.cardContentElement, CardService.getValueContentFromDataSource({ ...options.value, dataSetName: options.data.dataSource }, data));
 
         if (options.change) {
             this.changeBlock = new CardChange();
-            this.changeBlock.render(contentBlock, options.change, dataRow);
+            this.changeBlock.render(this.cardContentElement, options.change, dataRow);
         }
     }
 
@@ -61,7 +66,7 @@ export class CardChart {
     }
 
     private renderContentBlock(wrapper: CardChildElement) {
-        return wrapper.append("div")
+        this.cardContentElement = wrapper.append("div")
             .classed(NamesHelper.getClassName("card-content"), true);
     }
 
@@ -113,6 +118,15 @@ export class CardChart {
             .classed(this.cardValueCssClass, true);
 
         this.setValueContent(value);
+
+        this.styler.setValueBlockFontSize(this.valueContentElement);
+
+        FontResizer.setSize(this.valueContentElement.node(), {
+            elWrapper: this.cardContentElement.node(),
+            unit: "em",
+            smallestFontSize: 1,
+            step: 0.1
+        });
     }
 
     private setValueContent(value: CardValueContent) {
