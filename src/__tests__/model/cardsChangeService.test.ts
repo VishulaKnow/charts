@@ -1,5 +1,5 @@
 import { MdtChartsCardsChange, MdtChartsDataRow } from "../../config/config";
-import { CardsChangeService, DEFAULT_CARD_FONT_COLOR } from "../../model/notations/cards/cardsChangeService";
+import { CardsChangeService, DEFAULT_CARD_CHANGE_COLORS, DEFAULT_CARD_FONT_COLOR } from "../../model/notations/cards/cardsChangeService";
 
 describe('CardsChangeService', () => {
     const getData = (changeValue: number): MdtChartsDataRow => ({
@@ -39,7 +39,7 @@ describe('CardsChangeService', () => {
             const options = getOptions();
 
             const res = service.getChangeModel(data, options);
-            expect(res.color).toBe(DEFAULT_CARD_FONT_COLOR);
+            expect(res.color).toBe(DEFAULT_CARD_CHANGE_COLORS.aboveZero);
         });
 
         test('should return color by value if color options are set', () => {
@@ -65,16 +65,16 @@ describe('CardsChangeService', () => {
         });
 
         test('should return default color if color is fill but color for current value is not set', () => {
-            const data = getData(42);
+            const data = getData(-42);
             const options = getOptions({
                 color: {
-                    belowZero: "red",
+                    aboveZero: "red",
                     equalZero: "blue"
                 }
             });
 
             const res = service.getChangeModel(data, options);
-            expect(res.color).toBe(DEFAULT_CARD_FONT_COLOR);
+            expect(res.color).toBe(DEFAULT_CARD_CHANGE_COLORS.belowZero);
         });
 
         test('should return empty icon if icon options is not set', () => {

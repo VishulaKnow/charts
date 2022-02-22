@@ -1,7 +1,12 @@
-import { MdtChartsCardOptionByValue, MdtChartsCardsChange, MdtChartsCardsChangeColor, MdtChartsCardsChangeIcon, MdtChartsColorName, MdtChartsDataRow, MdtChartsIconElement } from "../../../config/config";
+import { MdtChartsCardOptionByValue, MdtChartsCardsChange, MdtChartsCardsChangeColor, MdtChartsCardsChangeIcon, MdtChartsColorName, MdtChartsDataRow } from "../../../config/config";
 import { CardsChangeModel } from "../../model";
 
 export const DEFAULT_CARD_FONT_COLOR: MdtChartsColorName = "#000";
+export const DEFAULT_CARD_CHANGE_COLORS: MdtChartsCardOptionByValue<MdtChartsColorName> = {
+    aboveZero: "#20b078",
+    belowZero: "#ff3131",
+    equalZero: DEFAULT_CARD_FONT_COLOR
+}
 
 export class CardsChangeService {
     getChangeModel(dataRow: MdtChartsDataRow, changeOptions: MdtChartsCardsChange): CardsChangeModel {
@@ -20,9 +25,11 @@ export class CardsChangeService {
     }
 
     private getColor(changeValue: number, colorOptions: MdtChartsCardsChangeColor): MdtChartsColorName {
-        if (!colorOptions) return DEFAULT_CARD_FONT_COLOR;
-        const colorByValue = this.getOptionsByValue(changeValue, colorOptions);
-        return colorByValue || DEFAULT_CARD_FONT_COLOR;
+        const colorByValue = this.getOptionsByValue(changeValue, {
+            ...DEFAULT_CARD_CHANGE_COLORS,
+            ...colorOptions
+        });
+        return colorByValue;
     }
 
     private getIcon(changeValue: number, iconOptions: MdtChartsCardsChangeIcon) {
