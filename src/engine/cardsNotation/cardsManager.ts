@@ -10,7 +10,7 @@ export class CardsManager implements ChartContentManager {
         engine.block.html.render();
 
         const cardChart = new CardChart();
-        cardChart.render(engine.block, model.options);
+        cardChart.render(engine.block, model.options, engine.data);
     }
 
     updateData(block: Block, model: Model<CardsOptionsModel>, newData: MdtChartsDataSource): void {

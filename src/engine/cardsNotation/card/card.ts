@@ -1,48 +1,67 @@
-import { BaseType, Selection } from "d3-selection";
-import { MdtChartsIconElement } from "../../../main";
+import { BaseType, select, Selection } from "d3-selection";
+import { MdtChartsCardValue, MdtChartsDataSource, MdtChartsIconElement } from "../../../config/config";
+import { DataType } from "../../../designer/designerConfig";
 import { CardsOptionsModel } from "../../../model/model";
 import { Block } from "../../block/block";
 import { NamesHelper } from "../../helpers/namesHelper";
+import { ValueFormatter } from "../../valueFormatter";
+import { CardChange } from "./cardChange";
 
-type CardChildElement<T extends Element = HTMLElement> = Selection<T, unknown, BaseType, unknown>;
+export type CardChildElement<T extends Element = HTMLElement> = Selection<T, unknown, BaseType, unknown>;
 
 interface CardHeaderOptions {
     title: string;
     icon?: MdtChartsIconElement;
 }
 
+export interface CardValueOptions {
+    value: number;
+    valueType: DataType;
+}
+
 export class CardChart {
-    render(block: Block, options: CardsOptionsModel) {
+    render(block: Block, options: CardsOptionsModel, data: MdtChartsDataSource) {
         const parent = block.html.getBlock();
+        const dataRow = data[options.data.dataSource][0]
 
-        const wrapper = this.appendCardWrapper(parent);
-        const contentBlock = this.appendContentBlock(wrapper);
+        const wrapper = this.renderCardWrapper(parent);
+        const contentBlock = this.renderContentBlock(wrapper);
 
-        this.appendHeaderBlock(contentBlock, {
+        this.renderHeaderBlock(contentBlock, {
             title: options.title,
             icon: options.icon
         });
 
-        if (options.description) this.appendDescriptionBlock(contentBlock, options.description);
+        if (options.description) this.renderDescriptionBlock(contentBlock, options.description);
 
+        this.renderValueBlock(contentBlock, {
+            value: dataRow[options.value.field],
+            valueType: options.value.dataType
+        });
 
+        if (options.change) {
+            const cardChange = new CardChange();
+            cardChange.render(contentBlock, options.change, dataRow);
+        }
     }
 
-    private appendCardWrapper(parent: Selection<HTMLElement, unknown, BaseType, unknown>) {
+    private renderCardWrapper(parent: Selection<HTMLElement, unknown, BaseType, unknown>) {
         return parent.append("div")
             .classed(NamesHelper.getClassName("card-wrapper"), true);
     }
 
-    private appendContentBlock(wrapper: CardChildElement) {
+    private renderContentBlock(wrapper: CardChildElement) {
         return wrapper.append("div")
             .classed(NamesHelper.getClassName("card-content"), true);
     }
 
-    private appendHeaderBlock(contentBlock: CardChildElement, options: CardHeaderOptions) {
+    private renderHeaderBlock(contentBlock: CardChildElement, options: CardHeaderOptions) {
         const header = contentBlock.append("div")
             .classed(NamesHelper.getClassName("card-header"), true);
 
         this.appendTitle(header, options.title);
+
+        if (options.icon) this.appendIcon(header, options.icon);
     }
 
     private appendTitle(headerBlock: CardChildElement, textContent: string) {
@@ -51,9 +70,30 @@ export class CardChart {
             .text(textContent)
     }
 
-    private appendDescriptionBlock(contentBlock: CardChildElement, textContent: string) {
-        contentBlock.append("p")
+    private appendIcon(headerBlock: CardChildElement, icon: MdtChartsIconElement) {
+        const iconEl = icon();
+
+        headerBlock.append("div")
+            .classed(NamesHelper.getClassName("card-icon"), true)
+            .node()
+            .appendChild(iconEl);
+    }
+
+    private renderDescriptionBlock(contentBlock: CardChildElement, textContent: string) {
+        const wrapper = contentBlock.append("div")
+            .classed(NamesHelper.getClassName("card-description-wrapper"), true);
+
+        wrapper.append("p")
             .classed(NamesHelper.getClassName("card-description"), true)
             .text(textContent);
+    }
+
+    private renderValueBlock(contentBlock: CardChildElement, options: CardValueOptions) {
+        const wrapper = contentBlock.append("div")
+            .classed(NamesHelper.getClassName("card-value-wrapper"), true);
+
+        wrapper.append("span")
+            .classed(NamesHelper.getClassName("card-value"), true)
+            .text(ValueFormatter.formatField(options.valueType, options.value));
     }
 }
