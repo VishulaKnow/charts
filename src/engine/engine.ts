@@ -24,9 +24,9 @@ export class Engine {
         this.block = new Block(model.blockCanvas.cssClass, parentElement, this.chartId, this.filterEventManager, model.transitions);
         this.filterEventManager?.setBlock(this.block);
         this.block.renderWrapper(model.blockCanvas.size);
-        this.contentManager = new ContentManager(model);
 
         if (model.options) {
+            this.contentManager = new ContentManager(model);
             ValueFormatter.setFormatFunction(model.dataSettings.format.formatters);
             this.renderCharts(model);
         }
