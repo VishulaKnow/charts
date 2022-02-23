@@ -49,11 +49,12 @@ export interface NewSize {
 
 //====================================================== Options
 interface BasicOptions {
-    data: DataOptions;
     tooltip?: TooltipOptions;
+    data: MdtChartsBasicDataOptions;
 }
 
 interface GraphicNotationOptions extends BasicOptions {
+    data: DataOptions;
     legend: Legend;
     title?: string;
     selectable: boolean;
@@ -93,6 +94,10 @@ export interface MdtChartsCardsOptions extends BasicOptions {
 //====================================================== Options
 export interface Legend {
     show: boolean;
+}
+
+export interface MdtChartsBasicDataOptions {
+    dataSource: string;
 }
 
 export interface DataOptions {

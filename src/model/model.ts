@@ -54,11 +54,11 @@ export interface BlockMargin {
 
 //====================================================== Options
 interface BasicOptionsModel {
-    data: OptionsModelData;
     tooltip: TooltipOptions;
 }
 interface GraphicNotationOptionsModel extends BasicOptionsModel {
     legend: ILegendModel;
+    data: OptionsModelData;
     title: string;
     selectable: boolean;
 }
@@ -88,6 +88,7 @@ export interface IntervalOptionsModel extends GraphicNotationOptionsModel {
 
 export interface CardsOptionsModel extends BasicOptionsModel {
     type: "card";
+    data: BasicOptionsModelData;
     title: string;
     description?: string;
     icon?: MdtChartsIconElement;
@@ -99,8 +100,10 @@ export interface CardsOptionsModel extends BasicOptionsModel {
 export interface ILegendModel {
     position: LegendPosition;
 }
-export interface OptionsModelData {
+export interface BasicOptionsModelData {
     dataSource: string;
+}
+export interface OptionsModelData extends BasicOptionsModelData {
     keyField: Field;
 }
 export interface Field {

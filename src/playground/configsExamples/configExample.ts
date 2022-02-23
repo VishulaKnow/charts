@@ -95,11 +95,12 @@ const configCars: MdtChartsConfig = {
     //         show: true
     //     },
     //     data: {
-    //         dataSource: 'dataSet',
+    //         dataSource: 'dataSet-72',
     //         keyField: {
     //             name: 'brand',
     //             format: 'string'
-    //         }
+    //         },
+    //         maxRecordsAmount: 10
     //     },
     //     chart: {
     //         type: 'donut',
@@ -126,11 +127,7 @@ const configCars: MdtChartsConfig = {
         title: "Some long text",
         icon: () => createIcon("fa-info-circle"),
         data: {
-            dataSource: "dataSet",
-            keyField: {
-                name: "brand",
-                format: "string"
-            }
+            dataSource: "dataSet"
         },
         value: {
             field: "price",
