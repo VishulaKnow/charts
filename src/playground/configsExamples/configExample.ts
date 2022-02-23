@@ -142,11 +142,19 @@ const configCars: MdtChartsConfig = {
                 dataType: "number",
                 field: "count"
             },
-            color: {
-                aboveZero: "green",
-                belowZero: "red",
-                equalZero: "blue"
-            },
+            color: [
+                {
+                    color: "red"
+                },
+                {
+                    color: "blue",
+                    value: 0
+                },
+                {
+                    color: "green",
+                    value: 0
+                }
+            ],
             icon: {
                 aboveZero: () => createIcon("fa-arrow-up"),
                 belowZero: () => createIcon("fa-arrow-down"),

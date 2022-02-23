@@ -1,12 +1,25 @@
-import { MdtChartsCardOptionByValue, MdtChartsCardsChange, MdtChartsCardsChangeColor, MdtChartsCardsChangeIcon, MdtChartsColorName, MdtChartsDataRow } from "../../../config/config";
+import { MdtChartsCardOptionByValue, MdtChartsCardsChange, MdtChartsCardsChangeIcon, MdtChartsColorName, MdtChartsColorRangeItem, MdtChartsDataRow } from "../../../config/config";
+import { ColorRangeManager } from "../../chartStyleModel/colorRange";
 import { CardsChangeModel } from "../../model";
 
-export const DEFAULT_CARD_FONT_COLOR: MdtChartsColorName = "#000";
-export const DEFAULT_CARD_CHANGE_COLORS: MdtChartsCardOptionByValue<MdtChartsColorName> = {
+export const DEFAULT_CARD_CHANGE_COLOR: MdtChartsCardOptionByValue<MdtChartsColorName> = {
     aboveZero: "#20b078",
-    belowZero: "#ff3131",
-    equalZero: DEFAULT_CARD_FONT_COLOR
-}
+    equalZero: "#000",
+    belowZero: "#ff3131"
+};
+export const DEFAULT_CARD_CHANGE_RANGE: MdtChartsColorRangeItem[] = [
+    {
+        color: DEFAULT_CARD_CHANGE_COLOR.belowZero
+    },
+    {
+        color: DEFAULT_CARD_CHANGE_COLOR.equalZero,
+        value: 0
+    },
+    {
+        color: DEFAULT_CARD_CHANGE_COLOR.aboveZero,
+        value: 0
+    }
+];
 
 export class CardsChangeService {
     getChangeModel(dataRow: MdtChartsDataRow, changeOptions: MdtChartsCardsChange): CardsChangeModel {
@@ -24,12 +37,10 @@ export class CardsChangeService {
         }
     }
 
-    private getColor(changeValue: number, colorOptions: MdtChartsCardsChangeColor): MdtChartsColorName {
-        const colorByValue = this.getOptionsByValue(changeValue, {
-            ...DEFAULT_CARD_CHANGE_COLORS,
-            ...colorOptions
-        });
-        return colorByValue;
+    private getColor(changeValue: number, colorOptions: MdtChartsColorRangeItem[]): MdtChartsColorName {
+        const range = colorOptions?.length ? colorOptions : DEFAULT_CARD_CHANGE_RANGE;
+        const rangeManager = new ColorRangeManager(range);
+        return rangeManager.getColorByValue(changeValue);
     }
 
     private getIcon(changeValue: number, iconOptions: MdtChartsCardsChangeIcon) {

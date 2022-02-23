@@ -124,7 +124,7 @@ export class CardChart {
         FontResizer.setSize(this.valueContentElement.node(), {
             elWrapper: this.cardContentElement.node(),
             unit: "em",
-            smallestFontSize: 1,
+            smallestFontSize: 0.5,
             step: 0.1
         });
     }

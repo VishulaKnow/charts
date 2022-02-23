@@ -1,5 +1,5 @@
 import { MdtChartsCardsChange, MdtChartsDataRow } from "../../config/config";
-import { CardsChangeService, DEFAULT_CARD_CHANGE_COLORS, DEFAULT_CARD_FONT_COLOR } from "../../model/notations/cards/cardsChangeService";
+import { CardsChangeService, DEFAULT_CARD_CHANGE_COLOR } from "../../model/notations/cards/cardsChangeService";
 
 describe('CardsChangeService', () => {
     const getData = (changeValue: number): MdtChartsDataRow => ({
@@ -39,17 +39,25 @@ describe('CardsChangeService', () => {
             const options = getOptions();
 
             const res = service.getChangeModel(data, options);
-            expect(res.color).toBe(DEFAULT_CARD_CHANGE_COLORS.aboveZero);
+            expect(res.color).toBe(DEFAULT_CARD_CHANGE_COLOR.aboveZero);
         });
 
         test('should return color by value if color options are set', () => {
             let data = getData(42);
             const options = getOptions({
-                color: {
-                    aboveZero: "green",
-                    belowZero: "red",
-                    equalZero: "blue"
-                }
+                color: [
+                    {
+                        color: "red"
+                    },
+                    {
+                        value: 0,
+                        color: "blue"
+                    },
+                    {
+                        value: 0,
+                        color: "green"
+                    }
+                ]
             });
 
             let res = service.getChangeModel(data, options);
@@ -64,17 +72,23 @@ describe('CardsChangeService', () => {
             expect(res.color).toBe("blue");
         });
 
-        test('should return default color if color is fill but color for current value is not set', () => {
+        test('should take last color from range if all ranges is not including value', () => {
             const data = getData(-42);
             const options = getOptions({
-                color: {
-                    aboveZero: "red",
-                    equalZero: "blue"
-                }
+                color: [
+                    {
+                        value: 0,
+                        color: "blue"
+                    },
+                    {
+                        value: 0,
+                        color: "red"
+                    }
+                ]
             });
 
             const res = service.getChangeModel(data, options);
-            expect(res.color).toBe(DEFAULT_CARD_CHANGE_COLORS.belowZero);
+            expect(res.color).toBe("red");
         });
 
         test('should return empty icon if icon options is not set', () => {

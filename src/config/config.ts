@@ -1,5 +1,4 @@
 type DataType = string;
-export type MdtChartsColorName = string;
 export type MdtChartsIconElement = () => HTMLElement;
 
 export type AxisPosition = 'start' | 'end';
@@ -14,6 +13,13 @@ export type TooltipHtml = (dataRow: MdtChartsDataRow) => string;
 export type MdtChartsDataRow = {
     [field: string]: any
 }
+
+export type MdtChartsColorName = string;
+export interface MdtChartsColorRangeItem {
+    color: MdtChartsColorName;
+    value?: number;
+}
+
 export interface MdtChartsDataSource {
     [source: string]: MdtChartsDataRow[];
 }
@@ -179,7 +185,7 @@ export interface MdtChartsCardValue {
 
 export interface MdtChartsCardsChange {
     value: MdtChartsCardValue;
-    color?: MdtChartsCardsChangeColor;
+    color?: MdtChartsColorRangeItem[];
     description?: string;
     icon?: MdtChartsCardsChangeIcon;
 }
@@ -189,8 +195,6 @@ export interface MdtChartsCardOptionByValue<T> {
     equalZero?: T;
     aboveZero?: T;
 }
-
-export interface MdtChartsCardsChangeColor extends MdtChartsCardOptionByValue<MdtChartsColorName> { }
 
 export interface MdtChartsCardsChangeIcon extends MdtChartsCardOptionByValue<MdtChartsIconElement> { }
 
