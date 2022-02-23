@@ -67,7 +67,7 @@ export class Engine {
     }
 
     private setFilterEventManager(options: OptionsModel): void {
-        if (options.type === "card") return;
+        if (options?.type === "card") return;
 
         let highlightIds: number[] = [];
         if (this.initializeSelected instanceof Array && this.initializeSelected.length > 0)
