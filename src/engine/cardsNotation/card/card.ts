@@ -57,6 +57,7 @@ export class CardChart {
     updateData(options: CardsOptionsModel, data: MdtChartsDataSource) {
         const dataRow = data[options.data.dataSource][0];
         this.setValueContent(CardService.getValueContentFromDataSource({ ...options.value, dataSetName: options.data.dataSource }, data));
+        this.updateValueBlockStyle();
         this.changeBlock?.update(options.change, dataRow);
     }
 
@@ -119,6 +120,10 @@ export class CardChart {
 
         this.setValueContent(value);
 
+        this.updateValueBlockStyle();
+    }
+
+    private updateValueBlockStyle() {
         this.styler.setValueBlockFontSize(this.valueContentElement);
 
         FontResizer.setSize(this.valueContentElement.node(), {
