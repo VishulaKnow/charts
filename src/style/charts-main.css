@@ -264,3 +264,73 @@
 .mdt-charts-dot-hidden {
     display: none;
 }
+
+/* Card */
+.mdt-charts-html-chart {
+    width: 100%;
+    height: 100%;
+}
+
+.mdt-charts-card-wrapper {
+    width: 100%;
+    height: 100%;
+}
+
+.mdt-charts-card-wrapper * {
+    box-sizing: border-box;
+}
+
+.mdt-charts-card-content {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.mdt-charts-card-header {
+    display: flex;
+    justify-content: space-between;
+    flex: 1;
+    font-size: 1.3em;
+}
+
+.mdt-charts-card-title {
+    margin: 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.mdt-charts-card-description-wrapper {
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.mdt-charts-card-description {
+    margin: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    opacity: 0.6;
+}
+
+.mdt-charts-card-value-wrapper {
+    flex: 2;
+    display: flex;
+    align-items: center;
+}
+
+.mdt-charts-card-change-content {
+    display: flex;
+    font-size: 0.9em;
+}
+
+.mdt-charts-card-change-content-item:not(:last-of-type) {
+    margin-right: 0.5em;
+}
+
+.mdt-charts-card-change-description-wrapper {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
