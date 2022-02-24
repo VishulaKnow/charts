@@ -1,4 +1,4 @@
-import { MdtChartsColorRangeItem, MdtChartsColorName } from "../../config/config";
+import { MdtChartsColorRangeItem } from "../../config/config";
 
 export class ColorRangeManager {
     private sortedRange: MdtChartsColorRangeItem[];

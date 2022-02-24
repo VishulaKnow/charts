@@ -14,6 +14,7 @@ export class CardsModel {
             data: options.data,
             tooltip: options.tooltip,
             icon: options.icon,
+            color: this.service.getCardColor(options, modelInstance),
             value: {
                 ...options.value
             },

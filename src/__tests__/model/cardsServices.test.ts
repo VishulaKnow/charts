@@ -1,5 +1,6 @@
 import { MdtChartsCardsChange, MdtChartsDataRow } from "../../config/config";
-import { CardsChangeService, DEFAULT_CARD_CHANGE_COLOR } from "../../model/notations/cards/cardsChangeService";
+import { CardsChangeService } from "../../model/notations/cards/cardsChangeService";
+import { DEFAULT_CARD_CHANGE_COLOR, DEFAULT_CARD_COLOR, getCardColor } from "../../model/notations/cards/cardsModelService";
 
 describe('CardsChangeService', () => {
     const getData = (changeValue: number): MdtChartsDataRow => ({
@@ -120,5 +121,20 @@ describe('CardsChangeService', () => {
             res = service.getChangeModel(data, options);
             expect(res.icon()).toBe("equal");
         });
+    });
+});
+
+describe('getCardColor', () => {
+    test('should return default color if value is string', () => {
+        const res = getCardColor("value", [{ value: 12, color: "red" }]);
+        expect(res).toBe(DEFAULT_CARD_COLOR);
+    });
+
+    test('should return default color if range is empty', () => {
+        let res = getCardColor("value", void 0);
+        expect(res).toBe(DEFAULT_CARD_COLOR);
+
+        res = getCardColor("value", []);
+        expect(res).toBe(DEFAULT_CARD_COLOR);
     });
 });

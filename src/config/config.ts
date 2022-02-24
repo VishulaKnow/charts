@@ -86,6 +86,7 @@ export interface MdtChartsCardsOptions extends BasicOptions {
     title: string;
     description?: string;
     icon?: MdtChartsIconElement;
+    color?: MdtChartsColorRangeItem[];
     value: MdtChartsCardValue;
     change?: MdtChartsCardsChange;
 }

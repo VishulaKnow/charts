@@ -1,5 +1,5 @@
 import { BaseType, Selection } from "d3-selection";
-import { MdtChartsDataSource, MdtChartsIconElement, Size } from "../../../config/config";
+import { MdtChartsColorName, MdtChartsDataSource, MdtChartsIconElement, Size } from "../../../config/config";
 import { CardsOptionsModel } from "../../../model/model";
 import { Block } from "../../block/block";
 import { FontResizer } from "../../helpers/fontResizer/fontResizer";
@@ -36,7 +36,7 @@ export class CardChart {
         const dataRow = data[options.data.dataSource][0];
 
         const wrapper = this.renderCardWrapper(parent);
-        this.renderContentBlock(wrapper);
+        this.renderContentBlock(wrapper, options.color);
         this.setContentFontSize(this.cardContentElement, canvasOptions);
 
         this.renderHeaderBlock(this.cardContentElement, {
@@ -58,6 +58,7 @@ export class CardChart {
         const dataRow = data[options.data.dataSource][0];
         this.setValueContent(CardService.getValueContentFromDataSource({ ...options.value, dataSetName: options.data.dataSource }, data));
         this.updateValueBlockStyle();
+        this.setContentColor(options.color);
         this.changeBlock?.update(options.change, dataRow);
     }
 
@@ -66,9 +67,15 @@ export class CardChart {
             .classed(this.cardContentBlockCssClass, true);
     }
 
-    private renderContentBlock(wrapper: CardChildElement) {
+    private renderContentBlock(wrapper: CardChildElement, color: MdtChartsColorName) {
         this.cardContentElement = wrapper.append("div")
             .classed(NamesHelper.getClassName("card-content"), true);
+
+        this.setContentColor(color);
+    }
+
+    private setContentColor(color: MdtChartsColorName) {
+        this.cardContentElement.style("color", color);
     }
 
     private setContentFontSize(contentBlock: CardChildElement, canvasOptions: CanvasOptions) {

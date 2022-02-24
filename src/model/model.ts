@@ -93,6 +93,7 @@ export interface CardsOptionsModel extends BasicOptionsModel {
     description?: string;
     icon?: MdtChartsIconElement;
     value: MdtChartsCardValue;
+    color: MdtChartsColorName;
     change?: CardsChangeModel;
 }
 
