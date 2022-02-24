@@ -4,7 +4,7 @@
             "$id": 1,
             "brand": "BMW BMW",
             "price": 100000,
-            "count": 1000,
+            "count": 10000,
             "color": "red"
         },
         {

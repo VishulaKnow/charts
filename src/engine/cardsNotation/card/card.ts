@@ -96,6 +96,7 @@ export class CardChart {
         headerBlock.append("h3")
             .classed(NamesHelper.getClassName("card-title"), true)
             .text(textContent)
+            .attr("title", textContent);
     }
 
     private appendIcon(headerBlock: CardChildElement, icon: MdtChartsIconElement) {
@@ -113,7 +114,8 @@ export class CardChart {
 
         wrapper.append("p")
             .classed(NamesHelper.getClassName("card-description"), true)
-            .text(textContent);
+            .text(textContent)
+            .attr("title", textContent);
     }
 
     private renderValueBlock(contentBlock: CardChildElement, value: CardValueContent) {
