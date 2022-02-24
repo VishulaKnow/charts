@@ -290,9 +290,12 @@
 
 .mdt-charts-card-header {
     display: flex;
-    justify-content: space-between;
     flex: 1;
     font-size: 1.3em;
+}
+
+.mdt-charts-card-icon {
+    margin-right: 0.3em;
 }
 
 .mdt-charts-card-title {
@@ -331,6 +334,16 @@
 
 .mdt-charts-card-change-description-wrapper {
     white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.mdt-charts-card-change-description-item {
+    overflow: hidden;
+}
+
+.mdt-charts-card-change-description {
+    display: block;
     overflow: hidden;
     text-overflow: ellipsis;
 }
