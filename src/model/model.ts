@@ -207,6 +207,7 @@ export interface DonutThicknessOptions {
 //====================================================== CardsOptionsModel
 export interface CardsChangeModel {
     value: MdtChartsCardValue;
+    valuePrefix: string;
     description?: string;
     color: MdtChartsColorName;
     icon?: MdtChartsIconElement;

@@ -13,9 +13,19 @@ export class CardsChangeService {
             value: {
                 ...changeOptions.value
             },
+            valuePrefix: this.getValuePrefix(value),
             color: this.getColor(value, changeOptions.color),
             icon: this.getIcon(value, changeOptions.icon)
         }
+    }
+
+    private getValuePrefix(value: number) {
+        const prefixes: MdtChartsCardOptionByValue<string> = {
+            aboveZero: "+",
+            belowZero: "",
+            equalZero: ""
+        }
+        return this.getOptionsByValue(value, prefixes);
     }
 
     private getColor(changeValue: number, colorOptions: MdtChartsColorRangeItem[]): MdtChartsColorName {

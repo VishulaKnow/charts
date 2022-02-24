@@ -20,7 +20,7 @@ export class CardChange {
 
     update(options: CardsChangeModel, dataRow: MdtChartsDataRow) {
         this.setColor(this.wrapper, options);
-        this.setValueContent(CardService.getValueContentFromRow(options.value, dataRow));
+        this.setValueContent(CardService.getValueContentFromRow(options.value, dataRow), options.valuePrefix);
 
         if (options.icon) {
             if (this.iconBlock) {
@@ -49,7 +49,7 @@ export class CardChange {
     private renderContentItems(contentBlock: CardChildElement, options: CardsChangeModel, dataRow: MdtChartsDataRow) {
         if (options.icon) this.renderIcon(this.renderContentItem(contentBlock), options.icon);
 
-        this.renderValue(this.renderContentItem(contentBlock), CardService.getValueContentFromRow(options.value, dataRow));
+        this.renderValue(this.renderContentItem(contentBlock), CardService.getValueContentFromRow(options.value, dataRow), options.valuePrefix);
 
         if (options.description) this.renderDescription(this.renderContentItem(contentBlock, NamesHelper.getClassName("card-change-description-item")), options.description);
     }
@@ -77,12 +77,12 @@ export class CardChange {
             .appendChild(iconEl);
     }
 
-    private renderValue(parentBlock: CardChildElement, value: CardValueContent) {
+    private renderValue(parentBlock: CardChildElement, value: CardValueContent, prefix: string) {
         this.valueContentBlock = parentBlock.append("div")
             .classed(NamesHelper.getClassName("card-change-value"), true)
             .append("span");
 
-        this.setValueContent(value);
+        this.setValueContent(value, prefix);
     }
 
     private renderDescription(parentBlock: CardChildElement, textContent: CardValueContent) {
@@ -94,7 +94,7 @@ export class CardChange {
             .attr("title", textContent);
     }
 
-    private setValueContent(textContent: CardValueContent) {
-        this.valueContentBlock.text(textContent);
+    private setValueContent(textContent: CardValueContent, prefix: string) {
+        this.valueContentBlock.text(prefix + textContent);
     }
 }
