@@ -80,9 +80,9 @@ export class CardChart {
         const header = contentBlock.append("div")
             .classed(NamesHelper.getClassName("card-header"), true);
 
-        this.appendTitle(header, options.title);
-
         if (options.icon) this.appendIcon(header, options.icon);
+
+        this.appendTitle(header, options.title);
     }
 
     private appendTitle(headerBlock: CardChildElement, textContent: string) {

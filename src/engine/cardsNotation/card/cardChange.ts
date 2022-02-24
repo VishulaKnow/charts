@@ -51,12 +51,16 @@ export class CardChange {
 
         this.renderValue(this.renderContentItem(contentBlock), CardService.getValueContentFromRow(options.value, dataRow));
 
-        if (options.description) this.renderDescription(this.renderContentItem(contentBlock), options.description);
+        if (options.description) this.renderDescription(this.renderContentItem(contentBlock, NamesHelper.getClassName("card-change-description-item")), options.description);
     }
 
-    private renderContentItem(contentBlock: CardChildElement) {
-        return contentBlock.append("div")
-            .classed(NamesHelper.getClassName("card-change-content-item"), true);
+    private renderContentItem(contentBlock: CardChildElement, cssClass?: string) {
+        const item = contentBlock.append("div")
+            .classed(NamesHelper.getClassName("card-change-content-item"), true)
+
+        if (cssClass) item.classed(cssClass, true);
+
+        return item;
     }
 
     private renderIcon(parentBlock: CardChildElement, icon: MdtChartsIconElement) {
@@ -86,7 +90,8 @@ export class CardChange {
             .classed(NamesHelper.getClassName("card-change-description-wrapper"), true)
             .append("span")
             .classed(NamesHelper.getClassName("card-change-description"), true)
-            .text(textContent);
+            .text(textContent)
+            .attr("title", textContent);
     }
 
     private setValueContent(textContent: CardValueContent) {
