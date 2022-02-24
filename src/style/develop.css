@@ -291,6 +291,12 @@
 .mdt-charts-card-header {
     display: flex;
     flex: 1;
+    align-items: baseline;
+}
+
+.mdt-charts-card-title,
+.mdt-charts-card-icon
+{
     font-size: 1.3em;
 }
 
