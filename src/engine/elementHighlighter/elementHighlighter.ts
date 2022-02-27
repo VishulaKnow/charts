@@ -12,9 +12,10 @@ import { MarkDot } from '../features/markDots/markDot';
 import { RectElemWithAttrs } from '../twoDimensionalNotation/bar/bar';
 import { Helper } from '../helpers/helper';
 import * as chroma from 'chroma-js';
+import { NamesHelper } from '../helpers/namesHelper';
 
 export class ElementHighlighter {
-    private static inactiveElemClass = 'charts-opacity-inactive';
+    private static inactiveElemClass = NamesHelper.getClassName("opacity-inactive");
 
     public static toggleActivityStyle(elementSelection: Selection<BaseType, unknown, BaseType, unknown>, isActive: boolean): void {
         elementSelection.classed(this.inactiveElemClass, !isActive);
