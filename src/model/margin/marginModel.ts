@@ -6,20 +6,23 @@ import { CanvasModel } from "../modelInstance/canvasModel/canvasModel";
 import { TwoDimMarginModel } from "./twoDim/twoDimMarginModel";
 
 export class MarginModel {
-    private twoDimModel = new TwoDimMarginModel();
+    //TODO: ensure
+    private twoDimModel = new TwoDimMarginModel(this.designerConfig, this.config.options as MdtChartsTwoDimensionalOptions);
 
-    public initMargin(designerConfig: DesignerConfig, config: MdtChartsConfig, otherComponents: OtherCommonComponents, data: MdtChartsDataSource, modelInstance: ModelInstance): void {
+    constructor(private designerConfig: DesignerConfig, private config: MdtChartsConfig) { }
+
+    public initMargin(otherComponents: OtherCommonComponents, modelInstance: ModelInstance): void {
         const canvasModel = modelInstance.canvasModel;
-        canvasModel.initMargin({ ...designerConfig.canvas.chartBlockMargin });
+        canvasModel.initMargin({ ...this.designerConfig.canvas.chartBlockMargin });
         this.recalcMarginByTitle(canvasModel);
 
-        if (config.options.type === '2d') {
-            this.twoDimModel.recalcMargin(designerConfig, config.options, otherComponents, data, modelInstance);
+        if (this.config.options.type === '2d') {
+            this.twoDimModel.recalcMargin(otherComponents, modelInstance);
         }
     }
 
-    public recalcMarginByVerticalAxisLabel(modelInstance: ModelInstance, options: MdtChartsTwoDimensionalOptions, designerConfig: DesignerConfig): void {
-        this.twoDimModel.recalcMarginByVerticalAxisLabel(modelInstance, options, designerConfig)
+    public recalcMarginByVerticalAxisLabel(modelInstance: ModelInstance): void {
+        this.twoDimModel.recalcMarginByVerticalAxisLabel(modelInstance);
     }
 
     private recalcMarginByTitle(canvasModel: CanvasModel): void {

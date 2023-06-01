@@ -1,3 +1,4 @@
+import { DataOptions } from "../../../config/config";
 import { DataScope } from "../../model";
 import { DataRepositoryModel } from "./dataRepository";
 
@@ -6,13 +7,17 @@ export const DEFAULT_MAX_RECORDS_AMOUNT = 50;
 export class DataModelInstance {
     repository: DataRepositoryModel;
 
+    private options: DataOptions;
+    private maxRecordsAmount = DEFAULT_MAX_RECORDS_AMOUNT;
+    private scope: DataScope;
+
     constructor() {
         this.repository = new DataRepositoryModel();
     }
 
-    //TODO: create dataScopeModel. 
-    private maxRecordsAmount = DEFAULT_MAX_RECORDS_AMOUNT;
-    private scope: DataScope;
+    initOptions(options: DataOptions) {
+        this.options = options;
+    }
 
     initMaxRecordsAmount(amount: number) {
         if (typeof amount === "number" && amount > 0) {
@@ -34,5 +39,9 @@ export class DataModelInstance {
 
     getAllowableKeys() {
         return this.getScope().allowableKeys;
+    }
+
+    getAllKeys(): string[] {
+        return this.repository.getRawRows().map(row => row[this.options.keyField.name]);
     }
 }

@@ -12,6 +12,7 @@ export class ModelInstance {
     private static initInitialParams(modelInstance: ModelInstance, config: MdtChartsConfig, data: MdtChartsDataSource) {
         modelInstance.canvasModel.initBlockSize(config.canvas.size);
 
+        modelInstance.dataModel.initOptions(config.options.data as DataOptions);
         modelInstance.dataModel.repository.initOptions(config.options.data as DataOptions);
         modelInstance.dataModel.repository.initRawFullSource(data);
     }

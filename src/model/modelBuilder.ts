@@ -83,12 +83,12 @@ export function assembleModel(config: MdtChartsConfig, data: MdtChartsDataSource
     resetFalsyValues(data);
 
     const otherComponents = OtherComponentsModel.getOtherComponentsModel({ elementsOptions: designerConfig.elementsOptions, title: config.options.title }, modelInstance);
-    const marginModel = new MarginModel();
-    marginModel.initMargin(designerConfig, config, otherComponents, data, modelInstance);
+    const marginModel = new MarginModel(designerConfig, config);
+    marginModel.initMargin(otherComponents, modelInstance);
     DataManagerModel.initDataScope(config, data, designerConfig, otherComponents.legendBlock, modelInstance);
 
     if (config.options.type === '2d' && config.options.axis.key.visibility)
-        marginModel.recalcMarginByVerticalAxisLabel(modelInstance, config.options, designerConfig);
+        marginModel.recalcMarginByVerticalAxisLabel(modelInstance);
 
     const blockCanvas = getBlockCanvas(config, modelInstance);
     const chartBlock = getChartBlockModel(modelInstance);

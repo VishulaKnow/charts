@@ -1,6 +1,5 @@
-import { ChartOrientation, MdtChartsDataSource, MdtChartsTwoDimensionalOptions, TwoDimensionalAxis } from "../../../config/config";
+import { MdtChartsDataSource, MdtChartsTwoDimensionalOptions } from "../../../config/config";
 import { DesignerConfig } from "../../../designer/designerConfig";
-import { DataManagerModel } from "../../dataManagerModel/dataManagerModel";
 import { AxisModel, LabelSize } from "../../featuresModel/axisModel";
 import { TwoDimLegendModel } from "../../featuresModel/legendModel/twoDimLegendModel";
 import { keyAxisLabelHorizontalLog, keyAxisLabelVerticalLog } from "../../featuresModel/scaleModel/scaleAxisRecalcer";
@@ -16,31 +15,33 @@ export const AXIS_VERTICAL_LABEL_PADDING = 10;
 export class TwoDimMarginModel {
     private twoDimLegendModel = new TwoDimLegendModel();
 
-    recalcMargin(designerConfig: DesignerConfig, options: MdtChartsTwoDimensionalOptions, otherComponents: OtherCommonComponents, data: MdtChartsDataSource, modelInstance: ModelInstance) {
+    constructor(private designerConfig: DesignerConfig, private options: MdtChartsTwoDimensionalOptions) { }
+
+    recalcMargin(otherComponents: OtherCommonComponents, modelInstance: ModelInstance) {
         const canvasModel = modelInstance.canvasModel;
 
-        this.twoDimLegendModel.recalcMarginWith2DLegend(modelInstance, otherComponents.legendBlock, options.legend);
-        const labelSize = this.getHorizontalMarginByAxisLabels(designerConfig.canvas.axisLabel.maxSize.main, options.axis, data, options);
-        this.recalcVerticalMarginByAxisLabelHeight(labelSize, canvasModel, options.orientation, options.axis);
+        this.twoDimLegendModel.recalcMarginWith2DLegend(modelInstance, otherComponents.legendBlock, this.options.legend);
+        const labelSize = this.getHorizontalMarginByAxisLabels(modelInstance);
+        this.recalcVerticalMarginByAxisLabelHeight(labelSize, canvasModel);
 
         // Если встроенный лейбл показывает ключи, то лейблы оси ключей не показываются
         // При этом все графики должны иметь: embeddedLabels = 'key'
         // И все графики должны быть типа bar. 
-        const showingFlag = options.type === '2d'
-            ? !TwoDimensionalModel.getChartsEmbeddedLabelsFlag(options.charts, options.orientation)
+        const showingFlag = this.options.type === '2d'
+            ? !TwoDimensionalModel.getChartsEmbeddedLabelsFlag(this.options.charts, this.options.orientation)
             : true;
 
-        this.recalcHorizontalMarginByAxisLabelWidth(labelSize, canvasModel, options.orientation, options.axis, showingFlag);
+        this.recalcHorizontalMarginByAxisLabelWidth(labelSize, canvasModel, showingFlag);
     }
 
-    public recalcMarginByVerticalAxisLabel(modelInstance: ModelInstance, options: MdtChartsTwoDimensionalOptions, designerConfig: DesignerConfig): void {
-        if (options.orientation === 'vertical') {
+    public recalcMarginByVerticalAxisLabel(modelInstance: ModelInstance): void {
+        if (this.options.orientation === 'vertical') {
             const dataModel = modelInstance.dataModel;
 
-            const axisLabelSize = AxisModel.getLabelSize(designerConfig.canvas.axisLabel.maxSize.main, dataModel.getAllowableKeys());
-            const axisConfig = AxisModel.getKeyAxisLabelPosition(modelInstance.canvasModel, dataModel.getAllowableKeys().length, options.axis.key);
+            const axisLabelSize = AxisModel.getLabelSize(this.designerConfig.canvas.axisLabel.maxSize.main, dataModel.getAllowableKeys());
+            const axisConfig = AxisModel.getKeyAxisLabelPosition(modelInstance.canvasModel, dataModel.getAllowableKeys().length, this.options.axis.key);
 
-            const marginOrient = options.axis.key.position === 'end' ? 'bottom' : 'top';
+            const marginOrient = this.options.axis.key.position === 'end' ? 'bottom' : 'top';
 
             if (axisConfig === 'rotated') {
                 modelInstance.canvasModel.decreaseMarginSide(marginOrient, axisLabelSize.height);
@@ -49,37 +50,37 @@ export class TwoDimMarginModel {
         }
     }
 
-    private getHorizontalMarginByAxisLabels(labelsMaxWidth: number, axis: TwoDimensionalAxis, data: MdtChartsDataSource, options: MdtChartsTwoDimensionalOptions): LabelSize {
-        const keyAxisOrient = AxisModel.getAxisOrient(AxisType.Key, options.orientation, axis.key.position);
+    private getHorizontalMarginByAxisLabels(modelInstance: ModelInstance): LabelSize {
+        const keyAxisOrient = AxisModel.getAxisOrient(AxisType.Key, this.options.orientation, this.options.axis.key.position);
         let labelsTexts: string[];
 
         if (keyAxisOrient === 'left' || keyAxisOrient === 'right') {
-            labelsTexts = DataManagerModel.getDataValuesByKeyField(data, options.data.dataSource, options.data.keyField.name);
+            labelsTexts = modelInstance.dataModel.getAllKeys();
         } else {
             labelsTexts = ['0000'];
         }
 
-        return AxisModel.getLabelSize(labelsMaxWidth, labelsTexts);
+        return AxisModel.getLabelSize(this.designerConfig.canvas.axisLabel.maxSize.main, labelsTexts);
     }
 
-    private recalcVerticalMarginByAxisLabelHeight(labelSize: LabelSize, canvasModel: CanvasModel, orientation: ChartOrientation, axis: TwoDimensionalAxis): void {
-        const keyAxisOrient = AxisModel.getAxisOrient(AxisType.Key, orientation, axis.key.position);
-        const valueAxisOrient = AxisModel.getAxisOrient(AxisType.Value, orientation, axis.value.position);
+    private recalcVerticalMarginByAxisLabelHeight(labelSize: LabelSize, canvasModel: CanvasModel): void {
+        const keyAxisOrient = AxisModel.getAxisOrient(AxisType.Key, this.options.orientation, this.options.axis.key.position);
+        const valueAxisOrient = AxisModel.getAxisOrient(AxisType.Value, this.options.orientation, this.options.axis.value.position);
 
         if ((keyAxisOrient === 'bottom' || keyAxisOrient === 'top')) {
-            if (axis.key.visibility)
+            if (this.options.axis.key.visibility)
                 canvasModel.increaseMarginSide(keyAxisOrient, labelSize.height + AXIS_HORIZONTAL_LABEL_PADDING, keyAxisLabelVerticalLog);
-        } else if (axis.value.visibility)
+        } else if (this.options.axis.value.visibility)
             canvasModel.increaseMarginSide(valueAxisOrient, labelSize.height + AXIS_HORIZONTAL_LABEL_PADDING);
     }
 
-    private recalcHorizontalMarginByAxisLabelWidth(labelSize: LabelSize, canvasModel: CanvasModel, orientation: ChartOrientation, axis: TwoDimensionalAxis, isShow: boolean): void {
-        const keyAxisOrient = AxisModel.getAxisOrient(AxisType.Key, orientation, axis.key.position);
-        const valueAxisOrient = AxisModel.getAxisOrient(AxisType.Value, orientation, axis.value.position);
+    private recalcHorizontalMarginByAxisLabelWidth(labelSize: LabelSize, canvasModel: CanvasModel, isShow: boolean): void {
+        const keyAxisOrient = AxisModel.getAxisOrient(AxisType.Key, this.options.orientation, this.options.axis.key.position);
+        const valueAxisOrient = AxisModel.getAxisOrient(AxisType.Value, this.options.orientation, this.options.axis.value.position);
 
-        if ((keyAxisOrient === 'left' || keyAxisOrient === 'right') && isShow && axis.key.visibility) {
+        if ((keyAxisOrient === 'left' || keyAxisOrient === 'right') && isShow && this.options.axis.key.visibility) {
             canvasModel.increaseMarginSide(keyAxisOrient, labelSize.width + AXIS_VERTICAL_LABEL_PADDING, keyAxisLabelHorizontalLog);
-        } else if ((valueAxisOrient === 'left' || valueAxisOrient === 'right') && axis.value.visibility) {
+        } else if ((valueAxisOrient === 'left' || valueAxisOrient === 'right') && this.options.axis.value.visibility) {
             canvasModel.increaseMarginSide(valueAxisOrient, labelSize.width + AXIS_VERTICAL_LABEL_PADDING);
         }
     }
