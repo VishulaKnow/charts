@@ -743,8 +743,8 @@ class DataUpdater {
         // newData[this.dataSetName][0]['price'] = ListenersHelper.randInt(-100, 100);
         // newData[this.dataSetName][0]['count'] = ListenersHelper.randInt(-100, 100);
 
-        newData[this.dataSetName][ListenersHelper.randInt(0, newData[this.dataSetName].length - 1)]['price'] = ListenersHelper.randInt(0, 100);
-        newData[this.dataSetName][ListenersHelper.randInt(0, newData[this.dataSetName].length - 1)]['count'] = ListenersHelper.randInt(0, 100);
+        newData[this.dataSetName][ListenersHelper.randInt(0, newData[this.dataSetName].length - 1)]['price'] = ListenersHelper.randInt(0, 100000);
+        newData[this.dataSetName][ListenersHelper.randInt(0, newData[this.dataSetName].length - 1)]['count'] = ListenersHelper.randInt(0, 1000);
     }
 
     private static makeHASH(length: number): string {

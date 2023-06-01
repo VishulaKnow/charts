@@ -3,6 +3,7 @@ import { Size } from "../../config/config";
 import { BlockMargin } from "../../model/model";
 import { NamesHelper } from "../helpers/namesHelper";
 import { BlockHelper } from "./blockHelper";
+import { HatchPatternDef } from "./defs";
 
 interface BlockSvgOptions {
     parentBlockId: number;
@@ -13,6 +14,7 @@ export class BlockSvg {
     private parentBlockId: number;
     private parent: Selection<BaseType, unknown, HTMLElement, any>;
     private svgCssClasses: string;
+    private hatchPatternDef = new HatchPatternDef();
 
     private readonly chartBlockClass = 'chart-block';
     private readonly chartGroupClass = 'chart-group';
@@ -64,7 +66,7 @@ export class BlockSvg {
 
     renderChartClipPath(margin: BlockMargin, blockSize: Size): void {
         const attributes = BlockHelper.getClipPathAttributes(blockSize, margin);
-        this.renderDefs()
+        this.ensureDefsRendered()
             .append('clipPath')
             .attr('id', this.getClipPathId())
             .append('rect')
@@ -76,7 +78,7 @@ export class BlockSvg {
 
     updateChartClipPath(margin: BlockMargin, blockSize: Size): void {
         const attributes = BlockHelper.getClipPathAttributes(blockSize, margin);
-        this.renderDefs()
+        this.ensureDefsRendered()
             .select('clipPath')
             .select('rect')
             .attr('x', attributes.x)
@@ -85,7 +87,11 @@ export class BlockSvg {
             .attr('height', attributes.height);
     }
 
-    private renderDefs(): Selection<SVGDefsElement, unknown, HTMLElement, unknown> {
+    renderBarHatchPattern() {
+        this.hatchPatternDef.appendToDefsBlock(this.ensureDefsRendered());
+    }
+
+    private ensureDefsRendered(): Selection<SVGDefsElement, unknown, HTMLElement, unknown> {
         let defs = this.getBlock().select<SVGDefsElement>('defs');
         if (defs.empty())
             defs = this.getBlock().append<SVGDefsElement>('defs');

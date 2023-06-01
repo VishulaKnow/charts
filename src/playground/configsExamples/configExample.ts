@@ -57,7 +57,7 @@ const configCars: MdtChartsConfig = {
         charts: [
             {
                 isSegmented: false,
-                type: 'line',
+                type: 'bar',
                 data: {
                     valueFields: [
                         {
@@ -84,11 +84,16 @@ const configCars: MdtChartsConfig = {
                 markers: {
                     show: false
                 },
-                styles: {
+                lineStyles: {
                     dash: {
                         on: true,
                         dashSize: 20,
                         gapSize: 10
+                    }
+                },
+                barStyles: {
+                    hatch: {
+                        on: true
                     }
                 }
             }

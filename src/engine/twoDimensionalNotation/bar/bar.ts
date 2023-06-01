@@ -4,13 +4,14 @@ import { Scales } from "../../features/scale/scale";
 import { Block } from "../../block/block";
 import { EmbeddedLabels } from "../../features/embeddedLabels/embeddedLabels";
 import { EmbeddedLabelsHelper } from "../../features/embeddedLabels/embeddedLabelsHelper";
-import { BarAttrsHelper, BarHelper } from "./barHelper";
+import { BarAttrsHelper, BarHelper, onBarChartInit } from "./barHelper";
 import { sum } from "d3-array";
 import { Transition } from "d3-transition";
 import { DomHelper } from "../../helpers/domHelper";
 import { Helper } from "../../helpers/helper";
 import { MdtChartsDataRow, Size } from "../../../config/config";
 import { getStackedDataWithOwn } from './stackedData/dataStacker';
+import { Pipeline } from '../../helpers/pipeline/Pipeline';
 
 export interface RectElemWithAttrs extends SVGElement {
     attrs?: {
@@ -25,18 +26,28 @@ export interface RectElemWithAttrs extends SVGElement {
 
 export class Bar {
     public static readonly barItemClass = 'bar-item';
-    public static readonly barItemCloneClass = 'bar-item-clone';
 
-    private static readonly barSegmentGroupClass = 'bar-segment-group';
+    static get() {
+        return new Bar();
+    }
 
-    public static render(block: Block, scales: Scales, data: MdtChartsDataRow[], keyField: Field, margin: BlockMargin, keyAxisOrient: Orient, chart: TwoDimensionalChartModel, blockSize: Size, barSettings: BarChartSettings, barsAmounts: number[], isSegmented: boolean, firstBarIndex: number): void {
+    private readonly barItemClass = Bar.barItemClass;
+    private readonly barSegmentGroupClass = 'bar-segment-group';
+
+    private createBarPipeline = new Pipeline<Selection<SVGRectElement, any, BaseType, any>, TwoDimensionalChartModel>();
+
+    constructor() {
+        onBarChartInit(this.createBarPipeline);
+    }
+
+    public render(block: Block, scales: Scales, data: MdtChartsDataRow[], keyField: Field, margin: BlockMargin, keyAxisOrient: Orient, chart: TwoDimensionalChartModel, blockSize: Size, barSettings: BarChartSettings, barsAmounts: number[], isSegmented: boolean, firstBarIndex: number): void {
         if (isSegmented)
             this.renderSegmented(block, scales, data, keyField, margin, keyAxisOrient, chart, barsAmounts, blockSize, firstBarIndex, barSettings);
         else
             this.renderGrouped(block, scales, data, keyField, margin, keyAxisOrient, chart, barsAmounts, blockSize, firstBarIndex, barSettings);
     }
 
-    public static update(block: Block, newData: MdtChartsDataRow[], scales: Scales, margin: BlockMargin, keyAxisOrient: Orient, chart: TwoDimensionalChartModel, blockSize: Size, barsAmounts: number[], keyField: Field, firstBarIndex: number, barSettings: BarChartSettings, isSegmented: boolean): Promise<any>[] {
+    public update(block: Block, newData: MdtChartsDataRow[], scales: Scales, margin: BlockMargin, keyAxisOrient: Orient, chart: TwoDimensionalChartModel, blockSize: Size, barsAmounts: number[], keyField: Field, firstBarIndex: number, barSettings: BarChartSettings, isSegmented: boolean): Promise<any>[] {
         let promises: Promise<any>[];
         if (isSegmented) {
             promises = this.updateSegmented(block,
@@ -66,7 +77,7 @@ export class Bar {
         return promises;
     }
 
-    public static updateColors(block: Block, chart: TwoDimensionalChartModel): void {
+    public updateColors(block: Block, chart: TwoDimensionalChartModel): void {
         chart.data.valueFields.forEach((_vf, index) => {
             const bars = block.svg.getChartGroup(chart.index)
                 .selectAll(`.${this.barItemClass}${Helper.getCssClassesLine(chart.cssClasses)}${Helper.getCssClassesLine(Helper.getCssClassesWithElementIndex(chart.cssClasses, index))}`);
@@ -74,19 +85,21 @@ export class Bar {
         });
     }
 
-    public static getAllBarsForChart(block: Block, chartCssClasses: string[]): Selection<BaseType, MdtChartsDataRow, BaseType, unknown> {
+    public getAllBarsForChart(block: Block, chartCssClasses: string[]): Selection<BaseType, MdtChartsDataRow, BaseType, unknown> {
         return block.getSvg().selectAll(`rect.${this.barItemClass}${Helper.getCssClassesLine(chartCssClasses)}`);
     }
 
-    private static renderGrouped(block: Block, scales: Scales, data: MdtChartsDataRow[], keyField: Field, margin: BlockMargin, keyAxisOrient: Orient, chart: TwoDimensionalChartModel, barsAmounts: number[], blockSize: Size, firstBarIndex: number, barSettings: BarChartSettings): void {
+    private renderGrouped(block: Block, scales: Scales, data: MdtChartsDataRow[], keyField: Field, margin: BlockMargin, keyAxisOrient: Orient, chart: TwoDimensionalChartModel, barsAmounts: number[], blockSize: Size, firstBarIndex: number, barSettings: BarChartSettings): void {
         chart.data.valueFields.forEach((field, index) => {
-            const bars = block.svg.getChartGroup(chart.index)
+            let bars = block.svg.getChartGroup(chart.index)
                 .selectAll(`.${this.barItemClass}${Helper.getCssClassesLine(chart.cssClasses)}${Helper.getCssClassesLine(Helper.getCssClassesWithElementIndex(chart.cssClasses, index))}`)
                 .data(data)
                 .enter()
                 .append('rect')
                 .attr('class', this.barItemClass)
                 .style('clip-path', `url(#${block.svg.getClipPathId()})`);
+
+            bars = this.createBarPipeline.execute(bars, chart);
 
             const barAttrs = BarHelper.getGroupedBarAttrs(keyAxisOrient,
                 scales,
@@ -110,7 +123,7 @@ export class Bar {
         });
     }
 
-    private static renderSegmented(block: Block, scales: Scales, data: MdtChartsDataRow[], keyField: Field, margin: BlockMargin, keyAxisOrient: Orient, chart: TwoDimensionalChartModel, barsAmounts: number[], blockSize: Size, firstBarIndex: number, barSettings: BarChartSettings): void {
+    private renderSegmented(block: Block, scales: Scales, data: MdtChartsDataRow[], keyField: Field, margin: BlockMargin, keyAxisOrient: Orient, chart: TwoDimensionalChartModel, barsAmounts: number[], blockSize: Size, firstBarIndex: number, barSettings: BarChartSettings): void {
         const stackedData = getStackedDataWithOwn(data, chart.data.valueFields.map(field => field.name));
 
         let groups = block.svg.getChartGroup(chart.index)
@@ -124,13 +137,15 @@ export class Bar {
                 .append<SVGGElement>('g')
                 .attr('class', this.barSegmentGroupClass);
 
-        const bars = groups
+        let bars = groups
             .selectAll(`rect${Helper.getCssClassesLine(chart.cssClasses)}`)
             .data(d => d)
             .enter()
             .append('rect')
             .attr('class', this.barItemClass)
             .style('clip-path', `url(#${block.svg.getClipPathId()})`);
+
+        bars = this.createBarPipeline.execute(bars, chart);
 
         const barAttrs = BarHelper.getStackedBarAttr(keyAxisOrient,
             scales,
@@ -155,7 +170,7 @@ export class Bar {
         });
     }
 
-    private static updateGrouped(block: Block, newData: MdtChartsDataRow[], scales: Scales, margin: BlockMargin, keyAxisOrient: Orient, chart: TwoDimensionalChartModel, blockSize: Size, barsAmounts: number[], keyField: Field, firstBarIndex: number, barSettings: BarChartSettings): Promise<any>[] {
+    private updateGrouped(block: Block, newData: MdtChartsDataRow[], scales: Scales, margin: BlockMargin, keyAxisOrient: Orient, chart: TwoDimensionalChartModel, blockSize: Size, barsAmounts: number[], keyField: Field, firstBarIndex: number, barSettings: BarChartSettings): Promise<any>[] {
         const promises: Promise<any>[] = [];
         chart.data.valueFields.forEach((valueField, index) => {
             const indexesOfRemoved: number[] = [];
@@ -180,11 +195,13 @@ export class Bar {
                 .style('opacity', 1)
                 .data(newData);
 
-            const newBars = bars
+            let newBars = bars
                 .enter()
                 .append('rect')
                 .attr('class', this.barItemClass)
                 .style('clip-path', `url(#${block.svg.getClipPathId()})`);
+
+            newBars = this.createBarPipeline.execute(newBars, chart);
 
             const barAttrs = BarHelper.getGroupedBarAttrs(keyAxisOrient,
                 scales,
@@ -220,7 +237,7 @@ export class Bar {
         return promises;
     }
 
-    private static updateSegmented(block: Block, newData: MdtChartsDataRow[], scales: Scales, margin: BlockMargin, keyAxisOrient: Orient, chart: TwoDimensionalChartModel, blockSize: Size, barsAmounts: number[], keyField: Field, firstBarIndex: number, barSettings: BarChartSettings): Promise<any>[] {
+    private updateSegmented(block: Block, newData: MdtChartsDataRow[], scales: Scales, margin: BlockMargin, keyAxisOrient: Orient, chart: TwoDimensionalChartModel, blockSize: Size, barsAmounts: number[], keyField: Field, firstBarIndex: number, barSettings: BarChartSettings): Promise<any>[] {
         const stackedData = getStackedDataWithOwn(newData, chart.data.valueFields.map(field => field.name));
 
         block.svg.getChartGroup(chart.index)
@@ -241,10 +258,12 @@ export class Bar {
             .style('opacity', 1)
             .data(d => d);
 
-        const newBars = bars.enter()
+        let newBars = bars.enter()
             .append('rect')
             .attr('class', this.barItemClass)
             .style('clip-path', `url(#${block.svg.getClipPathId()})`);
+
+        newBars = this.createBarPipeline.execute(newBars, chart);
 
         const barAttrs = BarHelper.getStackedBarAttr(keyAxisOrient,
             scales,
@@ -275,7 +294,7 @@ export class Bar {
         return [prom];
     }
 
-    private static fillBarAttrs(bars: Selection<SVGRectElement, MdtChartsDataRow, BaseType, unknown>, barAttrs: BarAttrsHelper, transitionDuration: number = 0): Promise<any> {
+    private fillBarAttrs(bars: Selection<SVGRectElement, MdtChartsDataRow, BaseType, unknown>, barAttrs: BarAttrsHelper, transitionDuration: number = 0): Promise<any> {
         return new Promise((resolve) => {
             if (bars.size() === 0) {
                 resolve('');
@@ -300,14 +319,14 @@ export class Bar {
         });
     }
 
-    private static setSegmentColor(segments: Selection<SVGGElement, any, BaseType, unknown>, colorPalette: string[], segmentedIndex: number): void {
+    private setSegmentColor(segments: Selection<SVGGElement, any, BaseType, unknown>, colorPalette: string[], segmentedIndex: number): void {
         segments.style('fill', colorPalette[segmentedIndex % colorPalette.length]);
     }
 
     /**
      * Устнановка координат для удобного обновления.
      */
-    private static setInitialAttrsInfo(bars: Selection<SVGRectElement, any, BaseType, any>, keyAxisOrient: Orient, barSettings: BarChartSettings): void {
+    private setInitialAttrsInfo(bars: Selection<SVGRectElement, any, BaseType, any>, keyAxisOrient: Orient, barSettings: BarChartSettings): void {
         bars.each(function () {
             const width = DomHelper.getSelectionNumericAttr(select(this), 'width');
             const height = DomHelper.getSelectionNumericAttr(select(this), 'height');

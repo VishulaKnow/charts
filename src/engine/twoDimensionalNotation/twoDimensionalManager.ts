@@ -123,7 +123,7 @@ export class TwoDimensionalManager implements ChartContentManager {
         Legend.updateColors(block, model.options);
         (<TwoDimensionalOptionsModel>model.options).charts.forEach(chart => {
             if (chart.type === 'bar')
-                Bar.updateColors(block, chart);
+                Bar.get().updateColors(block, chart);
             else if (chart.type === 'line')
                 Line.get({ staticSettings: model.options.chartSettings.lineLike }).updateColors(block, chart);
             else if (chart.type === 'area')
@@ -133,10 +133,11 @@ export class TwoDimensionalManager implements ChartContentManager {
 
     private renderCharts(block: Block, charts: TwoDimensionalChartModel[], scales: Scales, data: MdtChartsDataSource, dataOptions: OptionsModelData, margin: BlockMargin, keyAxisOrient: Orient, chartSettings: TwoDimChartElementsSettings, blockSize: Size) {
         block.svg.renderChartClipPath(margin, blockSize);
+        block.svg.renderBarHatchPattern();
         block.svg.renderChartsBlock();
         charts.forEach((chart: TwoDimensionalChartModel) => {
             if (chart.type === 'bar')
-                Bar.render(block,
+                Bar.get().render(block,
                     scales,
                     data[dataOptions.dataSource],
                     dataOptions.keyField,
@@ -175,7 +176,7 @@ export class TwoDimensionalManager implements ChartContentManager {
         charts.forEach((chart: TwoDimensionalChartModel) => {
             let proms: Promise<any>[];
             if (chart.type === 'bar') {
-                proms = Bar.update(block,
+                proms = Bar.get().update(block,
                     data[dataOptions.dataSource],
                     scales,
                     margin,

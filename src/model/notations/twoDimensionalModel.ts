@@ -81,7 +81,8 @@ export class TwoDimensionalModel {
                 style: styleModel.getChartStyle(chart, index),
                 embeddedLabels: this.getEmbeddedLabelType(chart, chartOrientation),
                 markersOptions: chart.markers,
-                viewOptions: { dashedStyles: parseDashStyles(chart.styles?.dash) },
+                lineViewOptions: { dashedStyles: parseDashStyles(chart.lineStyles?.dash) },
+                barViewOptions: { hatch: { on: chart.barStyles?.hatch?.on ?? false } },
                 index
             });
         });

@@ -3,6 +3,9 @@ import { BarChartSettings, BlockMargin, Orient, TwoDimensionalChartModel } from 
 import { Scale, Scales } from "../../features/scale/scale";
 import { Helper } from "../../helpers/helper";
 import { MdtChartsDataRow, Size } from "../../../config/config";
+import { Pipeline } from "../../helpers/pipeline/Pipeline";
+import { BaseType, Selection } from "d3-selection";
+import { HatchPatternDef } from "../../block/defs";
 
 export interface BarAttrsHelper {
     x: (dataRow: MdtChartsDataRow) => number;
@@ -123,4 +126,13 @@ export class BarHelper {
             attrs.width = d => Math.abs(scaleValue(d[1]) - scaleValue(d[0]));
         }
     }
+}
+
+export function onBarChartInit(createBarPipeline: Pipeline<Selection<SVGRectElement, any, BaseType, any>, TwoDimensionalChartModel>) {
+    createBarPipeline.push(hatchBar);
+}
+
+function hatchBar(bars: Selection<SVGRectElement, any, BaseType, any>, chart: TwoDimensionalChartModel) {
+    if (chart.barViewOptions.hatch.on) bars.style("mask", HatchPatternDef.getMaskValue());
+    return bars;
 }

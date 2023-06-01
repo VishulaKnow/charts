@@ -60,8 +60,8 @@ export class LineGeneratorFactory {
 
 export function onLineChartInit(creatingPipeline: Pipeline<Selection<SVGPathElement, any, BaseType, any>, TwoDimensionalChartModel>) {
     creatingPipeline.push((path, chart) => {
-        if (chart.viewOptions.dashedStyles.on) {
-            return path.style("stroke-dasharray", `${chart.viewOptions.dashedStyles.dashSize} ${chart.viewOptions.dashedStyles.gapSize}`);
+        if (chart.lineViewOptions.dashedStyles.on) {
+            return path.style("stroke-dasharray", `${chart.lineViewOptions.dashedStyles.dashSize} ${chart.lineViewOptions.dashedStyles.gapSize}`);
         }
         return path;
     });

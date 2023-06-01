@@ -22,7 +22,7 @@ export class DomHelper {
         if (chart.type === 'line' || chart.type === 'area')
             return MarkDot.getMarkDotForChart(block, chart.cssClasses);
         else
-            return Bar.getAllBarsForChart(block, chart.cssClasses);
+            return Bar.get().getAllBarsForChart(block, chart.cssClasses);
     }
 
     public static getCssPropertyValue(node: Element, propertyName: string): string {

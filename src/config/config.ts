@@ -216,20 +216,32 @@ interface Tooltip {
 
 interface MdtChartsLineLikeChart {
     markers: MarkersOptions;
-    styles?: MdtChartsLineLikeChartStyles;
+    lineStyles?: MdtChartsLineLikeChartStyles;
 }
 
 export interface MdtChartsLineLikeChartStyles {
-    dash?: MdtChartsLineLikeChartDashedStylesOptions;
+    dash?: MdtChartsLineLikeChartDashedStyles;
 }
 
-export interface MdtChartsLineLikeChartDashedStylesOptions {
+export interface MdtChartsLineLikeChartDashedStyles {
     on: boolean;
     dashSize?: number;
     gapSize?: number;
 }
 
-export interface MdtChartsTwoDimensionalChart extends ChartSettings, MdtChartsLineLikeChart {
+interface MdtChartsBarLikeChart {
+    barStyles?: MdtChartsBarLikeChartStyles;
+}
+
+interface MdtChartsBarLikeChartStyles {
+    hatch?: MdtChartsBarLikeChartHatchedStyles;
+}
+
+interface MdtChartsBarLikeChartHatchedStyles {
+    on: boolean;
+}
+
+export interface MdtChartsTwoDimensionalChart extends ChartSettings, MdtChartsLineLikeChart, MdtChartsBarLikeChart {
     type: TwoDimensionalChartType;
     data: TwoDimensionalChartData;
     embeddedLabels: EmbeddedLabelType;

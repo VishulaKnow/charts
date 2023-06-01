@@ -207,6 +207,10 @@ interface LineLikeChartCurveOptions {
     type: LineCurveType;
 }
 
+interface BarLikeChartHatchOptions {
+    on: boolean;
+}
+
 //====================================================== PolarOptionsModel
 export interface DonutChartSettings extends Omit<DonutOptionsCanvas, "aggregatorPad" | "thickness"> {
     aggregator: DonutAggregatorModel;
@@ -253,15 +257,23 @@ export interface ChartStyle {
 }
 
 interface TwoDimensionalLineLikeChartModel {
-    viewOptions: TwoDimensionalChartViewModel;
+    lineViewOptions: TwoDimensionalLineLikeChartViewModel;
     markersOptions: MarkersOptions;
 }
 
-interface TwoDimensionalChartViewModel {
+interface TwoDimensionalLineLikeChartViewModel {
     dashedStyles: LineLikeChartDashOptions;
 }
 
-export interface TwoDimensionalChartModel extends ChartModel, TwoDimensionalLineLikeChartModel {
+interface TwoDimensionalBarLikeChartModel {
+    barViewOptions: TwoDimensionalBarLikeChartViewModel;
+}
+
+interface TwoDimensionalBarLikeChartViewModel {
+    hatch: BarLikeChartHatchOptions;
+}
+
+export interface TwoDimensionalChartModel extends ChartModel, TwoDimensionalLineLikeChartModel, TwoDimensionalBarLikeChartModel {
     type: TwoDimensionalChartType;
     data: TwoDimensionalChartDataModel;
     index: number;
