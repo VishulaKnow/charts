@@ -214,12 +214,15 @@ interface Tooltip {
     show: boolean;
 }
 
-export interface MdtChartsTwoDimensionalChart extends ChartSettings {
+interface MdtChartsLineLikeChart {
+    markers: MarkersOptions;
+}
+
+export interface MdtChartsTwoDimensionalChart extends ChartSettings, MdtChartsLineLikeChart {
     type: TwoDimensionalChartType;
     data: TwoDimensionalChartData;
     embeddedLabels: EmbeddedLabelType;
     isSegmented: boolean;
-    markers: MarkersOptions;
 }
 
 export interface PolarChart extends ChartSettings {
@@ -242,7 +245,6 @@ export interface TwoDimensionalChartData {
 interface MarkersOptions {
     show: boolean;
 }
-
 
 //====================================================== PolarChart
 export type MdtChartsColorField = string;

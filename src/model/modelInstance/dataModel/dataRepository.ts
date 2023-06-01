@@ -1,13 +1,19 @@
-import { MdtChartsDataSource } from "../../../config/config";
+import { DataOptions, MdtChartsDataSource, MdtChartsField } from "../../../config/config";
 
 export class DataRepositoryModel {
     private rawFullSource: MdtChartsDataSource;
     private scopedFullSource: MdtChartsDataSource;
 
     private sourceName: string;
+    private keyField: MdtChartsField;
 
-    initSourceName(sourceName: string) {
-        this.sourceName = sourceName;
+    initOptions(options: DataOptions) {
+        this.sourceName = options.dataSource;
+        this.keyField = options.keyField;
+    }
+
+    getValuesByKeyField() {
+        return this.getRawRows().map(dataRow => dataRow[this.keyField.name]);
     }
 
     initRawFullSource(rawSource: MdtChartsDataSource) {

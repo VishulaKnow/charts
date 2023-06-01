@@ -32,6 +32,13 @@ const designerConfig: DesignerConfig = {
                     value: "25%"
                 },
                 aggregatorPad: 10
+            },
+            line: {
+                shape: {
+                    curve: {
+                        type: "monotone"
+                    }
+                }
             }
         }
     },

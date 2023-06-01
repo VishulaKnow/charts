@@ -78,7 +78,7 @@ export class IntervalModel {
             charts: this.getChartsModel(options.chart, designerConfig.chartStyle),
             additionalElements: this.getAdditionalElements(options),
             tooltip: options.tooltip,
-            chartSettings: TwoDimensionalModel.getChartsSettings(designerConfig.canvas.chartOptions.bar)
+            chartSettings: TwoDimensionalModel.getChartsSettings(designerConfig.canvas.chartOptions, options.orientation)
         }
     }
 

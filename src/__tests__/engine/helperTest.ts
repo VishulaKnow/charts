@@ -1,7 +1,5 @@
 import { MdtChartsDataRow, MdtChartsDataSource } from "../../config/config";
 import { Helper } from "../../engine/helpers/helper";
-import { TwoDimensionalOptionsModel } from "../../model/model";
-import { assembleModel } from "../../model/modelBuilder";
 
 describe('getTranslateNumbers', () => {
     test('getTranslateNumbers should return tuple of two numbers which equal transaleX and translateY', () => {

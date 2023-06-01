@@ -1,5 +1,5 @@
-import { ChartOrientation, MdtChartsDataSource, MdtChartsTwoDimensionalChart, TwoDimensionalChartType, MdtChartsTwoDimensionalOptions } from "../../config/config";
-import { BarOptionsCanvas, ChartStyleConfig, DesignerConfig } from "../../designer/designerConfig";
+import { ChartOrientation, MdtChartsTwoDimensionalChart, TwoDimensionalChartType, MdtChartsTwoDimensionalOptions } from "../../config/config";
+import { BarOptionsCanvas, ChartOptionsCanvas, ChartStyleConfig, DesignerConfig } from "../../designer/designerConfig";
 import { ChartStyleModelService } from "../chartStyleModel/chartStyleModel";
 import { TwoDimensionalChartStyleModel } from "../chartStyleModel/TwoDimensionalChartStyleModel";
 import { AxisModel } from "../featuresModel/axisModel";
@@ -7,6 +7,7 @@ import { ScaleAxisRecalcer } from "../featuresModel/scaleModel/scaleAxisRecalcer
 import { ScaleModel } from "../featuresModel/scaleModel/scaleModel";
 import { TwoDimensionalOptionsModel, TwoDimensionalChartModel, EmbeddedLabelTypeModel, AdditionalElementsOptions, TwoDimChartElementsSettings } from "../model";
 import { ModelInstance } from "../modelInstance/modelInstance";
+import { parseShape } from "./twoDimensional/shape";
 
 
 export class TwoDimensionalModel {
@@ -37,7 +38,7 @@ export class TwoDimensionalModel {
             charts: this.getChartsModel(options.charts, options.orientation, designerConfig.chartStyle),
             additionalElements: this.getAdditionalElements(options),
             tooltip: options.tooltip,
-            chartSettings: this.getChartsSettings(designerConfig.canvas.chartOptions.bar)
+            chartSettings: this.getChartsSettings(designerConfig.canvas.chartOptions, options.orientation)
         }
     }
 
@@ -58,9 +59,10 @@ export class TwoDimensionalModel {
         charts.sort((chart1, chart2) => chartOrder.indexOf(chart1.type) - chartOrder.indexOf(chart2.type));
     }
 
-    public static getChartsSettings(barSettings: BarOptionsCanvas): TwoDimChartElementsSettings {
+    public static getChartsSettings(chartOptions: ChartOptionsCanvas, chartOrientation: ChartOrientation): TwoDimChartElementsSettings {
         return {
-            bar: { ...barSettings }
+            bar: { ...chartOptions.bar },
+            lineLike: { shape: parseShape(chartOrientation, chartOptions.line?.shape) }
         }
     }
 

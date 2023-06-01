@@ -41,9 +41,10 @@ export interface LegendBlockCanvas {
     maxWidth: number | string;
 }
 
-interface ChartOptionsCanvas {
+export interface ChartOptionsCanvas {
     bar: BarOptionsCanvas;
     donut: DonutOptionsCanvas;
+    line?: LineOptionsCanvas;
 }
 
 export interface BarOptionsCanvas {
@@ -64,6 +65,16 @@ export interface MdtChartsDonutThicknessOptions {
     min: number | string;
     max: number | string;
     value?: number | string;
+}
+
+interface LineOptionsCanvas {
+    shape?: MdtChartsLineLikeChartShape;
+}
+
+export type MdtChartsLineLikeChartCurveType = "monotone" | "none";
+
+export interface MdtChartsLineLikeChartShape {
+    curve?: { type?: MdtChartsLineLikeChartCurveType; }
 }
 
 

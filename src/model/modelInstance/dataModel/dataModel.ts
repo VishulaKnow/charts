@@ -10,7 +10,6 @@ export class DataModelInstance {
         this.repository = new DataRepositoryModel();
     }
 
-
     //TODO: create dataScopeModel. 
     private maxRecordsAmount = DEFAULT_MAX_RECORDS_AMOUNT;
     private scope: DataScope;

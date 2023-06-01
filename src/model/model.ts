@@ -173,6 +173,7 @@ export interface GridLineFlag {
 
 export interface TwoDimChartElementsSettings {
     bar: BarChartSettings;
+    lineLike: LineLikeChartSettings;
 }
 export interface BarChartSettings {
     groupMaxDistance: number;
@@ -180,6 +181,24 @@ export interface BarChartSettings {
     barDistance: number;
     maxBarWidth: number;
     minBarWidth: number;
+}
+export interface LineLikeChartSettings {
+    shape: LineLikeChartShapeOptions
+}
+
+export interface LineLikeChartShapeOptions {
+    curve: LineLikeChartCurveOptions;
+}
+
+export enum LineCurveType {
+    monotoneX,
+    monotoneY,
+    basis,
+    none
+}
+
+interface LineLikeChartCurveOptions {
+    type: LineCurveType;
 }
 
 //====================================================== PolarOptionsModel

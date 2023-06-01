@@ -4,89 +4,89 @@ const configCars: MdtChartsConfig = {
     canvas: {
         class: 'outline',
         size: {
-            width: 300,
-            height: 200
+            width: 800,
+            height: 400
         }
     },
-    // options: {
-    //     type: '2d',
-    //     title: 'Заголовок графика',
-    //     selectable: true,
-    //     axis: {
-    //         key: {
-    //             visibility: true,
-    //             position: 'end',
-    //             ticks: {
-    //                 flag: false
-    //             },
-    //             // labels: {
-    //             //     position: "straight"
-    //             // }
-    //         },
-    //         value: {
-    //             visibility: true,
-    //             domain: {
-    //                 start: -1,
-    //                 end: -1
-    //             },
-    //             position: 'start',
-    //             ticks: {
-    //                 flag: false
-    //             }
-    //         }
-    //     },
-    //     additionalElements: {
-    //         gridLine: {
-    //             flag: {
-    //                 value: true,
-    //                 key: false
-    //             }
-    //         }
-    //     },
-    //     legend: {
-    //         show: true
-    //     },
-    //     orientation: 'vertical',
-    //     data: {
-    //         dataSource: 'dataSet',
-    //         keyField: {
-    //             name: 'brand',
-    //             format: 'string'
-    //         }
-    //     },
-    //     charts: [
-    //         {
-    //             isSegmented: false,
-    //             type: 'bar',
-    //             data: {
-    //                 valueFields: [
-    //                     {
-    //                         name: 'price',
-    //                         format: 'money',
-    //                         title: 'Стоимость за 2020 год'
-    //                     },
-    //                     {
-    //                         name: 'count',
-    //                         format: 'money',
-    //                         title: 'Стоимость за 2020 год'
-    //                     },
-    //                     // {
-    //                     //     name: 'price2',
-    //                     //     format: 'money',
-    //                     //     title: 'Стоимость за 2020 год'
-    //                     // }
-    //                 ]
-    //             },
-    //             tooltip: {
-    //                 show: true
-    //             },
-    //             embeddedLabels: 'none',
-    //             markers: {
-    //                 show: false
-    //             }
-    //         }
-    //     ]
-    // }
+    options: {
+        type: '2d',
+        title: 'Заголовок графика',
+        selectable: true,
+        axis: {
+            key: {
+                visibility: true,
+                position: 'end',
+                ticks: {
+                    flag: false
+                },
+                // labels: {
+                //     position: "straight"
+                // }
+            },
+            value: {
+                visibility: true,
+                domain: {
+                    start: -1,
+                    end: -1
+                },
+                position: 'start',
+                ticks: {
+                    flag: false
+                }
+            }
+        },
+        additionalElements: {
+            gridLine: {
+                flag: {
+                    value: true,
+                    key: false
+                }
+            }
+        },
+        legend: {
+            show: true
+        },
+        orientation: 'vertical',
+        data: {
+            dataSource: 'dataSet',
+            keyField: {
+                name: 'brand',
+                format: 'string'
+            }
+        },
+        charts: [
+            {
+                isSegmented: false,
+                type: 'line',
+                data: {
+                    valueFields: [
+                        {
+                            name: 'price',
+                            format: 'money',
+                            title: 'Стоимость за 2020 год'
+                        },
+                        {
+                            name: 'count',
+                            format: 'money',
+                            title: 'Стоимость за 2020 год'
+                        },
+                        // {
+                        //     name: 'price2',
+                        //     format: 'money',
+                        //     title: 'Стоимость за 2020 год'
+                        // }
+                    ]
+                },
+                tooltip: {
+                    show: true
+                },
+                embeddedLabels: 'none',
+                markers: {
+                    show: false
+                }
+            }
+        ]
+    }
     // options: {
     //     type: 'polar',
     //     selectable: true,
@@ -122,44 +122,44 @@ const configCars: MdtChartsConfig = {
     //         }
     //     }
     // },
-    options: {
-        type: "card",
-        title: "Some long text",
-        icon: () => createIcon("fa-info-circle"),
-        data: {
-            dataSource: "dataSet"
-        },
-        value: {
-            field: "price",
-            dataType: "money"
-        },
-        description: "Lorem ipsum dolor sit amet consectetur.",
-        change: {
-            value: {
-                dataType: "number",
-                field: "count"
-            },
-            color: [
-                {
-                    color: "red"
-                },
-                {
-                    color: "blue",
-                    value: 0
-                },
-                {
-                    color: "green",
-                    value: 0
-                }
-            ],
-            icon: {
-                aboveZero: () => createIcon("fa-arrow-up"),
-                belowZero: () => createIcon("fa-arrow-down"),
-                equalZero: () => createIcon("fa-arrows-h")
-            },
-            description: "Since last year"
-        }
-    }
+    // options: {
+    //     type: "card",
+    //     title: "Some long text",
+    //     icon: () => createIcon("fa-info-circle"),
+    //     data: {
+    //         dataSource: "dataSet"
+    //     },
+    //     value: {
+    //         field: "price",
+    //         dataType: "money"
+    //     },
+    //     description: "Lorem ipsum dolor sit amet consectetur.",
+    //     change: {
+    //         value: {
+    //             dataType: "number",
+    //             field: "count"
+    //         },
+    //         color: [
+    //             {
+    //                 color: "red"
+    //             },
+    //             {
+    //                 color: "blue",
+    //                 value: 0
+    //             },
+    //             {
+    //                 color: "green",
+    //                 value: 0
+    //             }
+    //         ],
+    //         icon: {
+    //             aboveZero: () => createIcon("fa-arrow-up"),
+    //             belowZero: () => createIcon("fa-arrow-down"),
+    //             equalZero: () => createIcon("fa-arrows-h")
+    //         },
+    //         description: "Since last year"
+    //     }
+    // }
 }
 
 function createIcon(iconName: string) {

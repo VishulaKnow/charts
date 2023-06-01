@@ -1,4 +1,4 @@
-import { MdtChartsConfig, MdtChartsDataSource } from "../../config/config";
+import { DataOptions, MdtChartsConfig, MdtChartsDataSource } from "../../config/config";
 import { CanvasModel } from "./canvasModel/canvasModel";
 import { DataModelInstance } from "./dataModel/dataModel";
 
@@ -12,7 +12,7 @@ export class ModelInstance {
     private static initInitialParams(modelInstance: ModelInstance, config: MdtChartsConfig, data: MdtChartsDataSource) {
         modelInstance.canvasModel.initBlockSize(config.canvas.size);
 
-        modelInstance.dataModel.repository.initSourceName(config.options.data.dataSource);
+        modelInstance.dataModel.repository.initOptions(config.options.data as DataOptions);
         modelInstance.dataModel.repository.initRawFullSource(data);
     }
 

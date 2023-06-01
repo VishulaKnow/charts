@@ -1,26 +1,37 @@
 import { stack, Line as ILine } from 'd3-shape';
 import { BaseType, select, Selection } from 'd3-selection';
-import { BlockMargin, Field, Orient, TwoDimensionalChartModel } from "../../../model/model";
+import { BlockMargin, Field, LineLikeChartSettings, Orient, TwoDimensionalChartModel } from "../../../model/model";
 import { Scales } from "../../features/scale/scale";
 import { Block } from "../../block/block";
 import { MarkDot } from "../../features/markDots/markDot";
-import { LineHelper } from './lineHelper';
+import { LineGeneratorFactory } from './lineHelper';
 import { DomHelper } from '../../helpers/domHelper';
 import { Helper } from '../../helpers/helper';
 import { MdtChartsDataRow } from '../../../config/config';
 import { Transition } from 'd3-transition';
 
+interface LineChartOptions {
+    staticSettings: LineLikeChartSettings;
+}
+
 export class Line {
     public static readonly lineChartClass = 'line';
+    private readonly lineChartClass = Line.lineChartClass; //TODO: remove after refactor
 
-    public static render(block: Block, scales: Scales, data: MdtChartsDataRow[], keyField: Field, margin: BlockMargin, keyAxisOrient: Orient, chart: TwoDimensionalChartModel): void {
+    public static get(options: LineChartOptions) {
+        return new Line(options);
+    }
+
+    constructor(private options: LineChartOptions) { }
+
+    public render(block: Block, scales: Scales, data: MdtChartsDataRow[], keyField: Field, margin: BlockMargin, keyAxisOrient: Orient, chart: TwoDimensionalChartModel): void {
         if (chart.isSegmented)
             this.renderSegmented(block, scales, data, keyField, margin, keyAxisOrient, chart);
         else
             this.renderGrouped(block, scales, data, keyField, margin, keyAxisOrient, chart);
     }
 
-    public static update(block: Block, scales: Scales, newData: MdtChartsDataRow[], keyField: Field, margin: BlockMargin, keyAxisOrient: Orient, chart: TwoDimensionalChartModel): Promise<any>[] {
+    public update(block: Block, scales: Scales, newData: MdtChartsDataRow[], keyField: Field, margin: BlockMargin, keyAxisOrient: Orient, chart: TwoDimensionalChartModel): Promise<any>[] {
         let promises: Promise<any>[];
         if (chart.isSegmented) {
             promises = this.updateSegmented(block, scales, newData, keyField, margin, keyAxisOrient, chart);
@@ -30,7 +41,7 @@ export class Line {
         return promises;
     }
 
-    public static updateColors(block: Block, chart: TwoDimensionalChartModel): void {
+    public updateColors(block: Block, chart: TwoDimensionalChartModel): void {
         chart.data.valueFields.forEach((_vf, valueIndex) => {
             const path = block.svg.getChartGroup(chart.index)
                 .select(`.${this.lineChartClass}${Helper.getCssClassesLine(chart.cssClasses)}.chart-element-${valueIndex}`);
@@ -39,9 +50,11 @@ export class Line {
         });
     }
 
-    private static renderGrouped(block: Block, scales: Scales, data: MdtChartsDataRow[], keyField: Field, margin: BlockMargin, keyAxisOrient: Orient, chart: TwoDimensionalChartModel): void {
+    private renderGrouped(block: Block, scales: Scales, data: MdtChartsDataRow[], keyField: Field, margin: BlockMargin, keyAxisOrient: Orient, chart: TwoDimensionalChartModel): void {
+        const generatorFactory = new LineGeneratorFactory({ keyAxisOrient, scales, keyFieldName: keyField.name, margin, curve: this.options.staticSettings.shape.curve.type });
+
         chart.data.valueFields.forEach((valueField, valueIndex) => {
-            const lineGenerator = LineHelper.getLineGenerator(keyAxisOrient, scales, keyField.name, valueField.name, margin);
+            const lineGenerator = generatorFactory.getLineGenerator(valueField.name);
 
             const path = block.svg.getChartGroup(chart.index)
                 .append('path')
@@ -58,9 +71,10 @@ export class Line {
         });
     }
 
-    private static renderSegmented(block: Block, scales: Scales, data: MdtChartsDataRow[], keyField: Field, margin: BlockMargin, keyAxisOrient: Orient, chart: TwoDimensionalChartModel): void {
+    private renderSegmented(block: Block, scales: Scales, data: MdtChartsDataRow[], keyField: Field, margin: BlockMargin, keyAxisOrient: Orient, chart: TwoDimensionalChartModel): void {
         const stackedData = stack().keys(chart.data.valueFields.map(field => field.name))(data);
-        const lineGenerator = LineHelper.getSegmentedLineGenerator(keyAxisOrient, scales, keyField.name, margin);
+        const generatorFactory = new LineGeneratorFactory({ keyAxisOrient, scales, keyFieldName: keyField.name, margin, curve: this.options.staticSettings.shape.curve.type });
+        const lineGenerator = generatorFactory.getSegmentedLineGenerator();
 
         const lines = block.svg.getChartGroup(chart.index)
             .selectAll(`.${this.lineChartClass}${Helper.getCssClassesLine(chart.cssClasses)}`)
@@ -84,10 +98,11 @@ export class Line {
         });
     }
 
-    private static updateGrouped(block: Block, scales: Scales, newData: MdtChartsDataRow[], keyField: Field, margin: BlockMargin, keyAxisOrient: Orient, chart: TwoDimensionalChartModel): Promise<any>[] {
+    private updateGrouped(block: Block, scales: Scales, newData: MdtChartsDataRow[], keyField: Field, margin: BlockMargin, keyAxisOrient: Orient, chart: TwoDimensionalChartModel): Promise<any>[] {
         const promises: Promise<any>[] = [];
+        const generatorFactory = new LineGeneratorFactory({ keyAxisOrient, scales, keyFieldName: keyField.name, margin, curve: this.options.staticSettings.shape.curve.type });
         chart.data.valueFields.forEach((valueField, valueFieldIndex) => {
-            const lineGenerator = LineHelper.getLineGenerator(keyAxisOrient, scales, keyField.name, valueField.name, margin);
+            const lineGenerator = generatorFactory.getLineGenerator(valueField.name);
 
             const lineObject = block.svg.getChartGroup(chart.index)
                 .select(`.${this.lineChartClass}${Helper.getCssClassesLine(chart.cssClasses)}.chart-element-${valueFieldIndex}`);
@@ -100,9 +115,10 @@ export class Line {
         return promises;
     }
 
-    private static updateSegmented(block: Block, scales: Scales, newData: MdtChartsDataRow[], keyField: Field, margin: BlockMargin, keyAxisOrient: Orient, chart: TwoDimensionalChartModel): Promise<any>[] {
+    private updateSegmented(block: Block, scales: Scales, newData: MdtChartsDataRow[], keyField: Field, margin: BlockMargin, keyAxisOrient: Orient, chart: TwoDimensionalChartModel): Promise<any>[] {
         const stackedData = stack().keys(chart.data.valueFields.map(field => field.name))(newData);
-        const lineGenerator = LineHelper.getSegmentedLineGenerator(keyAxisOrient, scales, keyField.name, margin);
+        const generatorFactory = new LineGeneratorFactory({ keyAxisOrient, scales, keyFieldName: keyField.name, margin, curve: this.options.staticSettings.shape.curve.type });
+        const lineGenerator = generatorFactory.getSegmentedLineGenerator();
         const lines = block.svg.getChartGroup(chart.index)
             .selectAll<SVGPathElement, MdtChartsDataRow[]>(`path.${this.lineChartClass}${Helper.getCssClassesLine(chart.cssClasses)}`)
             .data(stackedData);
@@ -115,7 +131,7 @@ export class Line {
         return [prom];
     }
 
-    private static updateGroupedPath(block: Block, lineObject: Selection<BaseType, any, BaseType, any>, lineGenerator: ILine<MdtChartsDataRow>, newData: MdtChartsDataRow[]): Promise<any> {
+    private updateGroupedPath(block: Block, lineObject: Selection<BaseType, any, BaseType, any>, lineGenerator: ILine<MdtChartsDataRow>, newData: MdtChartsDataRow[]): Promise<any> {
         return new Promise(resolve => {
             if (lineObject.size() === 0) {
                 resolve('');
@@ -137,7 +153,7 @@ export class Line {
         });
     }
 
-    private static updateSegmentedPath(block: Block, linesObjects: Selection<BaseType, any, BaseType, any>, lineGenerator: ILine<MdtChartsDataRow>): Promise<any> {
+    private updateSegmentedPath(block: Block, linesObjects: Selection<BaseType, any, BaseType, any>, lineGenerator: ILine<MdtChartsDataRow>): Promise<any> {
         return new Promise(resolve => {
             if (linesObjects.size() === 0) {
                 resolve('');
@@ -159,7 +175,7 @@ export class Line {
         });
     }
 
-    private static setSegmentColor(segments: Selection<SVGGElement, unknown, SVGGElement, unknown>, colorPalette: string[]): void {
+    private setSegmentColor(segments: Selection<SVGGElement, unknown, SVGGElement, unknown>, colorPalette: string[]): void {
         segments.style('stroke', (d, i) => colorPalette[i % colorPalette.length]);
     }
 }

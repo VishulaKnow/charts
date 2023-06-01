@@ -1,5 +1,5 @@
 import { MdtChartsDataSource, Size } from "../../config/config";
-import { BarChartSettings, BlockMargin, Model, OptionsModelData, Orient, TwoDimensionalChartModel, TwoDimensionalOptionsModel } from "../../model/model";
+import { BarChartSettings, BlockMargin, Model, OptionsModelData, Orient, TwoDimChartElementsSettings, TwoDimensionalChartModel, TwoDimensionalOptionsModel } from "../../model/model";
 import { Block } from "../block/block";
 import { ChartContentManager } from "../contentManager/contentManagerFactory";
 import { ElementHighlighter } from "../elementHighlighter/elementHighlighter";
@@ -41,7 +41,7 @@ export class TwoDimensionalManager implements ChartContentManager {
             options.data,
             model.chartBlock.margin,
             options.axis.key.orient,
-            options.chartSettings.bar,
+            options.chartSettings,
             model.blockCanvas.size);
 
         Axis.raiseKeyAxis(engine.block, options.axis.key);
@@ -104,7 +104,7 @@ export class TwoDimensionalManager implements ChartContentManager {
             model.chartBlock.margin,
             options.axis.key.orient,
             model.blockCanvas.size,
-            options.chartSettings.bar);
+            options.chartSettings);
 
         Promise.all(promises)
             .then(() => {
@@ -125,13 +125,13 @@ export class TwoDimensionalManager implements ChartContentManager {
             if (chart.type === 'bar')
                 Bar.updateColors(block, chart);
             else if (chart.type === 'line')
-                Line.updateColors(block, chart);
+                Line.get({ staticSettings: model.options.chartSettings.lineLike }).updateColors(block, chart);
             else if (chart.type === 'area')
                 Area.updateColors(block, chart);
         });
     }
 
-    private renderCharts(block: Block, charts: TwoDimensionalChartModel[], scales: Scales, data: MdtChartsDataSource, dataOptions: OptionsModelData, margin: BlockMargin, keyAxisOrient: Orient, barSettings: BarChartSettings, blockSize: Size) {
+    private renderCharts(block: Block, charts: TwoDimensionalChartModel[], scales: Scales, data: MdtChartsDataSource, dataOptions: OptionsModelData, margin: BlockMargin, keyAxisOrient: Orient, chartSettings: TwoDimChartElementsSettings, blockSize: Size) {
         block.svg.renderChartClipPath(margin, blockSize);
         block.svg.renderChartsBlock();
         charts.forEach((chart: TwoDimensionalChartModel) => {
@@ -144,12 +144,12 @@ export class TwoDimensionalManager implements ChartContentManager {
                     keyAxisOrient,
                     chart,
                     blockSize,
-                    barSettings,
+                    chartSettings.bar,
                     BarHelper.getBarsInGroupAmount(charts),
                     chart.isSegmented,
                     charts.findIndex(ch => ch.type === 'bar'));
             else if (chart.type === 'line')
-                Line.render(block,
+                Line.get({ staticSettings: chartSettings.lineLike }).render(block,
                     scales,
                     data[dataOptions.dataSource],
                     dataOptions.keyField,
@@ -169,7 +169,7 @@ export class TwoDimensionalManager implements ChartContentManager {
         EmbeddedLabels.raiseGroups(block);
     }
 
-    private updateCharts(block: Block, charts: TwoDimensionalChartModel[], scales: Scales, data: MdtChartsDataSource, dataOptions: OptionsModelData, margin: BlockMargin, keyAxisOrient: Orient, blockSize: Size, barSettings: BarChartSettings): Promise<any>[] {
+    private updateCharts(block: Block, charts: TwoDimensionalChartModel[], scales: Scales, data: MdtChartsDataSource, dataOptions: OptionsModelData, margin: BlockMargin, keyAxisOrient: Orient, blockSize: Size, chartSettings: TwoDimChartElementsSettings): Promise<any>[] {
         block.svg.updateChartClipPath(margin, blockSize);
         let promises: Promise<any>[] = [];
         charts.forEach((chart: TwoDimensionalChartModel) => {
@@ -185,10 +185,10 @@ export class TwoDimensionalManager implements ChartContentManager {
                     BarHelper.getBarsInGroupAmount(charts),
                     dataOptions.keyField,
                     charts.findIndex(ch => ch.type === 'bar'),
-                    barSettings,
+                    chartSettings.bar,
                     chart.isSegmented);
             } else if (chart.type === 'line') {
-                proms = Line.update(block,
+                proms = Line.get({ staticSettings: chartSettings.lineLike }).update(block,
                     scales,
                     data[dataOptions.dataSource],
                     dataOptions.keyField,
