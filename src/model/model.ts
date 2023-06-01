@@ -183,11 +183,17 @@ export interface BarChartSettings {
     minBarWidth: number;
 }
 export interface LineLikeChartSettings {
-    shape: LineLikeChartShapeOptions
+    shape: LineLikeChartShapeOptions;
 }
 
 export interface LineLikeChartShapeOptions {
     curve: LineLikeChartCurveOptions;
+}
+
+export interface LineLikeChartDashOptions {
+    on: boolean;
+    dashSize: number;
+    gapSize: number;
 }
 
 export enum LineCurveType {
@@ -246,13 +252,21 @@ export interface ChartStyle {
     opacity: number;
 }
 
-export interface TwoDimensionalChartModel extends ChartModel {
+interface TwoDimensionalLineLikeChartModel {
+    viewOptions: TwoDimensionalChartViewModel;
+    markersOptions: MarkersOptions;
+}
+
+interface TwoDimensionalChartViewModel {
+    dashedStyles: LineLikeChartDashOptions;
+}
+
+export interface TwoDimensionalChartModel extends ChartModel, TwoDimensionalLineLikeChartModel {
     type: TwoDimensionalChartType;
     data: TwoDimensionalChartDataModel;
     index: number;
     embeddedLabels: EmbeddedLabelTypeModel;
     isSegmented: boolean;
-    markersOptions: MarkersOptions;
 }
 export interface IntervalChartModel extends ChartModel {
     type: IntervalChartType;

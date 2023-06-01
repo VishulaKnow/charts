@@ -83,6 +83,13 @@ const configCars: MdtChartsConfig = {
                 embeddedLabels: 'none',
                 markers: {
                     show: false
+                },
+                styles: {
+                    dash: {
+                        on: true,
+                        dashSize: 20,
+                        gapSize: 10
+                    }
                 }
             }
         ]

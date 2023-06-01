@@ -1,14 +1,15 @@
-import { stack, Line as ILine } from 'd3-shape';
+import { stack, Line as ILine, line } from 'd3-shape';
 import { BaseType, select, Selection } from 'd3-selection';
 import { BlockMargin, Field, LineLikeChartSettings, Orient, TwoDimensionalChartModel } from "../../../model/model";
 import { Scales } from "../../features/scale/scale";
 import { Block } from "../../block/block";
 import { MarkDot } from "../../features/markDots/markDot";
-import { LineGeneratorFactory } from './lineHelper';
+import { LineGeneratorFactory, onLineChartInit } from './lineHelper';
 import { DomHelper } from '../../helpers/domHelper';
 import { Helper } from '../../helpers/helper';
 import { MdtChartsDataRow } from '../../../config/config';
 import { Transition } from 'd3-transition';
+import { Pipeline } from '../../helpers/pipeline/Pipeline';
 
 interface LineChartOptions {
     staticSettings: LineLikeChartSettings;
@@ -16,13 +17,18 @@ interface LineChartOptions {
 
 export class Line {
     public static readonly lineChartClass = 'line';
+
+    readonly creatingPipeline = new Pipeline<Selection<SVGPathElement, any, BaseType, any>, TwoDimensionalChartModel>();
+
     private readonly lineChartClass = Line.lineChartClass; //TODO: remove after refactor
 
     public static get(options: LineChartOptions) {
         return new Line(options);
     }
 
-    constructor(private options: LineChartOptions) { }
+    constructor(private options: LineChartOptions) {
+        onLineChartInit(this.creatingPipeline);
+    }
 
     public render(block: Block, scales: Scales, data: MdtChartsDataRow[], keyField: Field, margin: BlockMargin, keyAxisOrient: Orient, chart: TwoDimensionalChartModel): void {
         if (chart.isSegmented)
@@ -56,13 +62,15 @@ export class Line {
         chart.data.valueFields.forEach((valueField, valueIndex) => {
             const lineGenerator = generatorFactory.getLineGenerator(valueField.name);
 
-            const path = block.svg.getChartGroup(chart.index)
+            let path = block.svg.getChartGroup(chart.index)
                 .append('path')
                 .attr('d', lineGenerator(data))
                 .attr('class', this.lineChartClass)
                 .style('fill', 'none')
                 .style('clip-path', `url(#${block.svg.getClipPathId()})`)
                 .style('pointer-events', 'none');
+
+            path = this.creatingPipeline.execute(path, chart);
 
             DomHelper.setCssClasses(path, Helper.getCssClassesWithElementIndex(chart.cssClasses, valueIndex));
             DomHelper.setChartStyle(path, chart.style, valueIndex, 'stroke');
@@ -76,7 +84,7 @@ export class Line {
         const generatorFactory = new LineGeneratorFactory({ keyAxisOrient, scales, keyFieldName: keyField.name, margin, curve: this.options.staticSettings.shape.curve.type });
         const lineGenerator = generatorFactory.getSegmentedLineGenerator();
 
-        const lines = block.svg.getChartGroup(chart.index)
+        let lines = block.svg.getChartGroup(chart.index)
             .selectAll(`.${this.lineChartClass}${Helper.getCssClassesLine(chart.cssClasses)}`)
             .data(stackedData)
             .enter()
@@ -86,6 +94,8 @@ export class Line {
             .style('fill', 'none')
             .style('clip-path', `url(#${block.svg.getClipPathId()})`)
             .style('pointer-events', 'none');
+
+        lines = this.creatingPipeline.execute(lines, chart);
 
         lines.each(function (d, i) {
             DomHelper.setCssClasses(select(this), Helper.getCssClassesWithElementIndex(chart.cssClasses, i));

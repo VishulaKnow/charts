@@ -1,8 +1,10 @@
-import { line, Line as ILine } from 'd3-shape';
+import { Line as ILine } from 'd3-shape';
 import { MdtChartsDataRow } from '../../../config/config';
-import { Orient, BlockMargin, LineCurveType } from "../../../model/model";
+import { Orient, BlockMargin, LineCurveType, TwoDimensionalChartModel } from "../../../model/model";
 import { Scales, Scale } from "../../features/scale/scale";
 import { LineGenerator } from './lineGenerator';
+import { Pipeline } from '../../helpers/pipeline/Pipeline';
+import { BaseType, Selection } from 'd3-selection';
 
 interface LineGeneratorFactoryOptions {
     keyAxisOrient: Orient;
@@ -54,4 +56,13 @@ export class LineGeneratorFactory {
             );
         }
     }
+}
+
+export function onLineChartInit(creatingPipeline: Pipeline<Selection<SVGPathElement, any, BaseType, any>, TwoDimensionalChartModel>) {
+    creatingPipeline.push((path, chart) => {
+        if (chart.viewOptions.dashedStyles.on) {
+            return path.style("stroke-dasharray", `${chart.viewOptions.dashedStyles.dashSize} ${chart.viewOptions.dashedStyles.gapSize}`);
+        }
+        return path;
+    });
 }

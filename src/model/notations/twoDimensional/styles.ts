@@ -1,5 +1,5 @@
-import { LineCurveType, LineLikeChartShapeOptions } from "../../model";
-import { ChartOrientation } from "../../../config/config";
+import { LineCurveType, LineLikeChartDashOptions, LineLikeChartShapeOptions } from "../../model";
+import { ChartOrientation, MdtChartsLineLikeChartDashedStylesOptions } from "../../../config/config";
 import { MdtChartsLineLikeChartCurveType, MdtChartsLineLikeChartShape } from "../../../designer/designerConfig";
 
 export function parseShape(chartOrientation: ChartOrientation, configOptions?: MdtChartsLineLikeChartShape): LineLikeChartShapeOptions {
@@ -18,4 +18,15 @@ function parseCurveType(chartOrientation: ChartOrientation, curveType: MdtCharts
         return LineCurveType.monotoneX;
     }
     return LineCurveType.none;
+}
+
+export function parseDashStyles(configOptions?: MdtChartsLineLikeChartDashedStylesOptions): LineLikeChartDashOptions {
+    const DEFAULT_DASH_SIZE_PX = 10;
+    const DEFAULT_GAP_SIZE_PX = 3;
+
+    return {
+        on: configOptions?.on ?? false,
+        dashSize: configOptions?.dashSize ?? DEFAULT_DASH_SIZE_PX,
+        gapSize: configOptions?.gapSize ?? DEFAULT_GAP_SIZE_PX
+    }
 }

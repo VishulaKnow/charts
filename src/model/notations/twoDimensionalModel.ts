@@ -7,7 +7,7 @@ import { ScaleAxisRecalcer } from "../featuresModel/scaleModel/scaleAxisRecalcer
 import { ScaleModel } from "../featuresModel/scaleModel/scaleModel";
 import { TwoDimensionalOptionsModel, TwoDimensionalChartModel, EmbeddedLabelTypeModel, AdditionalElementsOptions, TwoDimChartElementsSettings } from "../model";
 import { ModelInstance } from "../modelInstance/modelInstance";
-import { parseShape } from "./twoDimensional/shape";
+import { parseDashStyles, parseShape } from "./twoDimensional/styles";
 
 
 export class TwoDimensionalModel {
@@ -81,6 +81,7 @@ export class TwoDimensionalModel {
                 style: styleModel.getChartStyle(chart, index),
                 embeddedLabels: this.getEmbeddedLabelType(chart, chartOrientation),
                 markersOptions: chart.markers,
+                viewOptions: { dashedStyles: parseDashStyles(chart.styles?.dash) },
                 index
             });
         });
