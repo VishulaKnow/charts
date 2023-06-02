@@ -127,6 +127,7 @@ export interface ScaleValueModel {
     domain: any[];
     range: RangeModel;
     type: ScaleValueType;
+    formatter: ((v: number) => string) | null;
 }
 export interface RangeModel {
     start: number;

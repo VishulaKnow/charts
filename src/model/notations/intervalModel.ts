@@ -34,7 +34,8 @@ export class IntervalModel {
                         start: 0,
                         end: 0
                     },
-                    type: 'datetime'
+                    type: 'datetime',
+                    formatter: null
                 }
             },
             axis: {
@@ -48,7 +49,7 @@ export class IntervalModel {
                     cssClass: 'key-axis',
                     ticks: options.axis.key.ticks,
                     labels: {
-                        maxSize: AxisModel.getLabelSize(designerConfig.canvas.axisLabel.maxSize.main, dataModelRep.getScopedRows().map(d => d[options.data.keyField.name])).width,
+                        maxSize: AxisModel.getLabelSizeLegacy(designerConfig.canvas.axisLabel.maxSize.main, dataModelRep.getScopedRows().map(d => d[options.data.keyField.name])).width,
                         position: AxisModel.getKeyAxisLabelPosition(canvasModel, DataManagerModel.getDataValuesByKeyField(dataModelRep.getScopedFullSource(), options.data.dataSource, options.data.keyField.name).length),
                         visible: true,
                         defaultTooltip: designerConfig.elementsOptions.tooltip.position === 'fixed'

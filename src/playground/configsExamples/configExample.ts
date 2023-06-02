@@ -32,6 +32,9 @@ const configCars: MdtChartsConfig = {
                 position: 'start',
                 ticks: {
                     flag: false
+                },
+                labels: {
+                    format: v => Math.floor(v / 1_000_000_000) + " млрд"
                 }
             }
         },
@@ -96,6 +99,38 @@ const configCars: MdtChartsConfig = {
                         on: true
                     }
                 }
+            },
+            {
+                isSegmented: false,
+                type: 'line',
+                data: {
+                    valueFields: [
+                        {
+                            name: 'price',
+                            format: 'money',
+                            title: 'Стоимость за 2020 год'
+                        }
+                    ]
+                },
+                tooltip: {
+                    show: true
+                },
+                embeddedLabels: 'none',
+                markers: {
+                    show: false
+                },
+                lineStyles: {
+                    dash: {
+                        on: true,
+                        dashSize: 20,
+                        gapSize: 10
+                    }
+                },
+                barStyles: {
+                    hatch: {
+                        on: false
+                    }
+                }
             }
         ]
     }
@@ -132,44 +167,6 @@ const configCars: MdtChartsConfig = {
     //                 value: model.data.reduce((acc, row) => acc + row.price, 0)
     //             })
     //         }
-    //     }
-    // },
-    // options: {
-    //     type: "card",
-    //     title: "Some long text",
-    //     icon: () => createIcon("fa-info-circle"),
-    //     data: {
-    //         dataSource: "dataSet"
-    //     },
-    //     value: {
-    //         field: "price",
-    //         dataType: "money"
-    //     },
-    //     description: "Lorem ipsum dolor sit amet consectetur.",
-    //     change: {
-    //         value: {
-    //             dataType: "number",
-    //             field: "count"
-    //         },
-    //         color: [
-    //             {
-    //                 color: "red"
-    //             },
-    //             {
-    //                 color: "blue",
-    //                 value: 0
-    //             },
-    //             {
-    //                 color: "green",
-    //                 value: 0
-    //             }
-    //         ],
-    //         icon: {
-    //             aboveZero: () => createIcon("fa-arrow-up"),
-    //             belowZero: () => createIcon("fa-arrow-down"),
-    //             equalZero: () => createIcon("fa-arrows-h")
-    //         },
-    //         description: "Since last year"
     //     }
     // }
 }

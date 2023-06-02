@@ -8,7 +8,8 @@ describe('CardsChangeService', () => {
     });
     const getOptions = (extend?: Partial<MdtChartsCardsChange>): MdtChartsCardsChange => ({
         value: {
-            field: "change"
+            name: "change",
+            format: "number"
         },
         description: "description",
         ...extend
@@ -30,7 +31,7 @@ describe('CardsChangeService', () => {
             expect(res).toBeUndefined();
 
             options = getOptions();
-            options.value = { field: void 0 }
+            options.value = { name: void 0, format: "number" }
             res = service.getChangeModel(data, emptyOptions);
             expect(res).toBeUndefined();
         });

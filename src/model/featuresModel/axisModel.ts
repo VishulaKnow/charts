@@ -29,7 +29,7 @@ export class AxisModel {
             cssClass: 'key-axis',
             ticks: axisConfig.ticks,
             labels: {
-                maxSize: AxisModel.getLabelSize(labelConfig.maxSize.main, data[dataOptions.dataSource].map(d => d[dataOptions.keyField.name])).width,
+                maxSize: AxisModel.getLabelSizeLegacy(labelConfig.maxSize.main, data[dataOptions.dataSource].map(d => d[dataOptions.keyField.name])).width,
                 position: AxisModel.getKeyAxisLabelPosition(canvasModel, DataManagerModel.getDataValuesByKeyField(data, dataOptions.dataSource, dataOptions.keyField.name).length, axisConfig),
                 visible: !TwoDimensionalModel.getChartsEmbeddedLabelsFlag(charts, orientation),
                 defaultTooltip: tooltipSettings.position === 'fixed'
@@ -99,7 +99,18 @@ export class AxisModel {
         return this.service.getKeyAxisLabelPosition(canvasModel.getChartBlockWidth(), scopedDataLength, axisConfig?.labels?.position);
     }
 
-    public static getLabelSize(labelMaxWidth: number, labelTexts: any[]): LabelSize {
+    public static getLabelSize(labelMaxWidth: number, labelTexts: string[]): LabelSize {
+        const LABEL_ELEMENT_HEIGHT_PX = 17;
+        const ONE_UPPER_SYMBOL_WIDTH_PX = 8.6;
+        const longestLabelLength = Math.max(...labelTexts.map(t => ModelHelper.getStringScore(t)));
+        const longestLabelWidth = ONE_UPPER_SYMBOL_WIDTH_PX * longestLabelLength;
+        return {
+            height: LABEL_ELEMENT_HEIGHT_PX,
+            width: longestLabelWidth > labelMaxWidth ? labelMaxWidth : longestLabelWidth
+        }
+    }
+
+    public static getLabelSizeLegacy(labelMaxWidth: number, labelTexts: string[]): LabelSize {
         const labelSize = {
             width: 0,
             height: 0

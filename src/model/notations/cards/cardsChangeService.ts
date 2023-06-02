@@ -4,9 +4,9 @@ import { CardsChangeModel } from "../../model";
 import { DEFAULT_CARD_CHANGE_RANGE } from "./cardsModelService";
 export class CardsChangeService {
     getChangeModel(dataRow: MdtChartsDataRow, changeOptions: MdtChartsCardsChange): CardsChangeModel {
-        if (!changeOptions || !changeOptions.value?.field) return void 0;
+        if (!changeOptions || !changeOptions.value?.name) return void 0;
 
-        const value = dataRow[changeOptions.value.field];
+        const value = dataRow[changeOptions.value.name];
 
         return {
             description: changeOptions.description,

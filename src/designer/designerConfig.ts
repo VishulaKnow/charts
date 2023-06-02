@@ -3,7 +3,7 @@ export type DataTypeOptions = {
     [option: string]: any
 }
 
-export type Formatter = (value: any, options?: any) => string;
+export type Formatter = (value: any, options?: { type?: string; title?: string; empty?: string; }) => string;
 export type TooltipPosition = 'followCursor' | 'fixed';
 
 export interface DesignerConfig {

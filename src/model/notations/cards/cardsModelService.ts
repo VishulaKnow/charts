@@ -28,7 +28,7 @@ export class CardsModelService {
 
     getCardColor(options: MdtChartsCardsOptions, modelInstance: ModelInstance): MdtChartsColorName {
         const data = modelInstance.dataModel.repository.getFirstRow();
-        const value = data[options.value.field];
+        const value = data[options.value.name];
         return getCardColor(value, options.color);
     }
 

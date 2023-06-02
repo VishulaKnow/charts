@@ -31,7 +31,7 @@
         {
             "$id": 5,
             "brand": "VOLKSWAGEN",
-            "price": 115000,
+            "price": 11500000000,
             "count": 6000,
             "color": "cyan"
         },

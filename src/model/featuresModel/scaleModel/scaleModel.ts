@@ -1,8 +1,10 @@
 import { ScaleKeyModel, ScaleKeyType, ScaleValueModel } from "../../model";
 import { MdtChartsTwoDimensionalChart, MdtChartsTwoDimensionalOptions, ChartOrientation, MdtChartsDataRow } from "../../../config/config";
+import { Formatter } from "../../../designer/designerConfig";
 import { CanvasModel } from "../../modelInstance/canvasModel/canvasModel";
 import { getElementsAmountForScale, getScaleKeyRangePeek, getScaleValueRangePeek } from "./scaleModelServices";
 import { getScaleLinearDomain } from "./scaleDomainService";
+import { TwoDimConfigReader } from "../../modelInstance/configReader";
 
 export enum ScaleType {
     Key, Value
@@ -21,14 +23,15 @@ export class ScaleModel {
         }
     }
 
-    getScaleLinear(options: MdtChartsTwoDimensionalOptions, dataRows: MdtChartsDataRow[], canvasModel: CanvasModel): ScaleValueModel {
+    getScaleLinear(options: MdtChartsTwoDimensionalOptions, dataRows: MdtChartsDataRow[], canvasModel: CanvasModel, configReader?: TwoDimConfigReader): ScaleValueModel {
         return {
             domain: getScaleLinearDomain(options.axis.value.domain, dataRows, options),
             range: {
                 start: 0,
                 end: getScaleValueRangePeek(options.orientation, canvasModel)
             },
-            type: "linear"
+            type: "linear",
+            formatter: configReader?.getAxisLabelFormatter() ?? null
         }
     }
 

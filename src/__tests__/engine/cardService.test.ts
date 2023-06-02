@@ -12,8 +12,8 @@ describe('CardService', () => {
             formatFieldMock.mockReturnValueOnce("100,00");
 
             const res = service.getValueContentFromDataSource({
-                field: "valueField",
-                dataType: "money",
+                name: "valueField",
+                format: "money",
                 dataSetName: "dataSet"
             },
                 { dataSet: [{ valueField: 100 }] });

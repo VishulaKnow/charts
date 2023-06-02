@@ -41,7 +41,7 @@ export class Axis {
     }
 
     private static renderAxis(block: Block, scale: AxisScale<any>, scaleOptions: ScaleKeyModel | ScaleValueModel, axisOptions: AxisModelOptions, blockSize: Size): void {
-        const axisGenerator = AxisHelper.getBaseAxisGenerator(axisOptions, scale, scaleOptions);
+        const axisGenerator = AxisHelper.getBaseAxisGenerator(axisOptions, scale);
 
         if (axisOptions.type === 'value' && (scaleOptions.type === 'linear' || scaleOptions.type === 'datetime'))
             AxisHelper.setLabelsSettings(axisGenerator, scale.range(), scaleOptions);
@@ -68,12 +68,15 @@ export class Axis {
             AxisLabelHelper.alignLabelsInKeyAxis(axisOptions, axisElement);
             AxisLabelsEventManager.setHoverEvents(block, axisElement);
         }
+        if (axisOptions.type === "value") {
+            AxisLabelHelper.cropLabels(block, scale, scaleOptions, axisOptions, blockSize)
+        }
         if (axisOptions.labels.defaultTooltip)
             AxisLabelHelper.setTitles(axisElement);
     }
 
     private static updateValueAxis(block: Block, scaleValue: AxisScale<any>, scaleOptions: ScaleValueModel, axisOptions: AxisModelOptions): void {
-        const axisGenerator = AxisHelper.getBaseAxisGenerator(axisOptions, scaleValue, scaleOptions);
+        const axisGenerator = AxisHelper.getBaseAxisGenerator(axisOptions, scaleValue);
         AxisHelper.setLabelsSettings(axisGenerator, scaleValue.range(), scaleOptions);
         const axisElement = block.getSvg().select<SVGGElement>(`g.${axisOptions.cssClass}`);
         AxisDomHelper.updateAxisElement(axisGenerator, axisElement, axisOptions.translate, block.transitionManager.durations.chartUpdate)
@@ -84,7 +87,7 @@ export class Axis {
     }
 
     private static updateKeyAxis(block: Block, scaleKey: AxisScale<any>, scaleOptions: ScaleKeyModel, axisOptions: AxisModelOptions, blockSize: Size, domainNotUpdated: boolean): void {
-        const axisGenerator = AxisHelper.getBaseAxisGenerator(axisOptions, scaleKey, scaleOptions);
+        const axisGenerator = AxisHelper.getBaseAxisGenerator(axisOptions, scaleKey);
 
         if (axisOptions.labels.position === 'rotated') { // Задание координат для перевернутых лейблов (если до этого они не были перевернуты)
             if (axisOptions.orient === 'bottom')

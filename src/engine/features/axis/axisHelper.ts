@@ -4,7 +4,7 @@ import { max, min } from 'd3-array';
 import { format } from 'd3-format';
 import { AxisLabelHelper } from './axisLabelDomHelper';
 
-const MINIMAL_STEP_SIZE = 40;
+const MINIMAL_STEP_SIZE = 60;
 export class AxisHelper {
     public static getAxisByOrient(orient: Orient, scale: AxisScale<any>): IAxis<any> {
         if (orient === 'top')
@@ -32,22 +32,15 @@ export class AxisHelper {
             }
         }
         if (scaleOptions.type === 'linear') {
-            (axisGenerator.scale() as any).ticks(ticksAmount).forEach((value: number) => {
-                if (format('~s')(value).indexOf('.') !== -1) {
-                    this.setNumTickFormat(axisGenerator, '.2s');
-                }
-            });
+            this.setNumTickFormat(axisGenerator, scaleOptions.formatter);
         }
     }
 
-    public static getBaseAxisGenerator(axisOptions: AxisModelOptions, scale: AxisScale<any>, scaleOptions: ScaleKeyModel | ScaleValueModel): IAxis<any> {
+    public static getBaseAxisGenerator(axisOptions: AxisModelOptions, scale: AxisScale<any>): IAxis<any> {
         const axisGenerator = AxisHelper.getAxisByOrient(axisOptions.orient, scale);
         if (!axisOptions.ticks.flag)
             this.removeTicks(axisGenerator);
         AxisLabelHelper.setAxisLabelPaddingByOrient(axisGenerator, axisOptions);
-        if (scaleOptions.type === 'linear')
-            this.setNumTickFormat(axisGenerator);
-
         return axisGenerator;
     }
 
@@ -55,7 +48,8 @@ export class AxisHelper {
         axis.tickSize(0);
     }
 
-    private static setNumTickFormat(axis: IAxis<any>, formatName: '~s' | '.2s' = '~s'): void {
-        axis.tickFormat(format(formatName));
+    private static setNumTickFormat(axis: IAxis<any>, formatter?: (v: number) => string): void {
+        const defaultFormatter = format('~s');
+        axis.tickFormat(formatter ?? defaultFormatter);
     }
 }

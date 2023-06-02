@@ -13,8 +13,8 @@ export class CardServiceClass {
     }
 
     getValueContentFromRow(valueOptions: MdtChartsCardValue, dataRow: MdtChartsDataRow) {
-        const value = dataRow[valueOptions.field];
-        return ValueFormatter.formatField(valueOptions.dataType, value);
+        const value = dataRow[valueOptions.name];
+        return ValueFormatter.formatField(valueOptions.format, value);
     }
 }
 

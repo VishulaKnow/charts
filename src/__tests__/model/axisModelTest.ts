@@ -94,7 +94,7 @@ describe('get axes', () => {
             }
         ];
         discreteAxisOptions = { ticks: { flag: false }, position: 'end', visibility: true }
-        numberAxisOptions = { ...discreteAxisOptions, domain: { start: 0, end: 120 } }
+        numberAxisOptions = { ...discreteAxisOptions, domain: { start: 0, end: 120 }, labels: null }
         data = getData();
         dataOptions = { dataSource: "dataSet_poor", keyField: { name: 'brand', format: null } };
         margin = { top: 20, bottom: 20, left: 20, right: 20 };

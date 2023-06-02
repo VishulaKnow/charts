@@ -6,14 +6,25 @@ export class DataRepositoryModel {
 
     private sourceName: string;
     private keyField: MdtChartsField;
+    private valueFields: MdtChartsField[];
 
-    initOptions(options: DataOptions) {
+    initOptions(options: DataOptions, valueFields: MdtChartsField[]) {
         this.sourceName = options.dataSource;
         this.keyField = options.keyField;
+        this.valueFields = valueFields;
     }
 
     getValuesByKeyField() {
         return this.getRawRows().map(dataRow => dataRow[this.keyField.name]);
+    }
+
+    getBiggestValueAndDecremented() {
+        const values: number[] = [];
+        this.getRawRows().forEach(row => {
+            this.valueFields.forEach(vf => values.push(row[vf.name]));
+        });
+        const biggest = Math.max(...values);
+        return [biggest, biggest - 1];
     }
 
     initRawFullSource(rawSource: MdtChartsDataSource) {

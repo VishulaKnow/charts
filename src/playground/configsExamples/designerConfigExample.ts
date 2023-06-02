@@ -4,7 +4,7 @@ const designerConfig: DesignerConfig = {
     canvas: {
         axisLabel: {
             maxSize: {
-                main: 60
+                main: 80
             }
         },
         chartBlockMargin: {

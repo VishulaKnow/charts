@@ -6,17 +6,19 @@ import { AxisModel } from "../featuresModel/axisModel";
 import { ScaleAxisRecalcer } from "../featuresModel/scaleModel/scaleAxisRecalcer";
 import { ScaleModel } from "../featuresModel/scaleModel/scaleModel";
 import { TwoDimensionalOptionsModel, TwoDimensionalChartModel, EmbeddedLabelTypeModel, AdditionalElementsOptions, TwoDimChartElementsSettings } from "../model";
+import { TwoDimConfigReader } from "../modelInstance/configReader";
 import { ModelInstance } from "../modelInstance/modelInstance";
 import { parseDashStyles, parseShape } from "./twoDimensional/styles";
 
 
 export class TwoDimensionalModel {
-    public static getOptions(options: MdtChartsTwoDimensionalOptions, designerConfig: DesignerConfig, modelInstance: ModelInstance): TwoDimensionalOptionsModel {
+    public static getOptions(configReader: TwoDimConfigReader, designerConfig: DesignerConfig, modelInstance: ModelInstance): TwoDimensionalOptionsModel {
+        const options = configReader.options;
         const canvasModel = modelInstance.canvasModel;
         const dataModelRep = modelInstance.dataModel.repository;
         const scaleModel = new ScaleModel();
 
-        const scaleMarginRecalcer = new ScaleAxisRecalcer(() => scaleModel.getScaleLinear(options, dataModelRep.getScopedRows(), canvasModel));
+        const scaleMarginRecalcer = new ScaleAxisRecalcer(() => scaleModel.getScaleLinear(options, dataModelRep.getScopedRows(), canvasModel, configReader));
         scaleMarginRecalcer.recalculateMargin(canvasModel, options.orientation, options.axis.key);
         const scaleValueInfo = scaleMarginRecalcer.getScaleValue();
 

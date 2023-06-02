@@ -10,6 +10,7 @@ import { OtherComponentsModel } from './featuresModel/otherComponents';
 import { ConfigValidator } from './configsValidator/configValidator';
 import { ModelInstance } from './modelInstance/modelInstance';
 import { CardsModelInstance } from './notations/cards/cardsModel';
+import { TwoDimConfigReader } from './modelInstance/configReader';
 
 
 export enum AxisType {
@@ -41,7 +42,7 @@ function getChartBlockModel(modelInstance: ModelInstance): ChartBlockModel {
 function getOptions(config: MdtChartsConfig, designerConfig: DesignerConfig, modelInstance: ModelInstance): OptionsModel {
     //TODO: migrate to polymorphism
     if (config.options.type === '2d') {
-        return TwoDimensionalModel.getOptions(config.options, designerConfig, modelInstance);
+        return TwoDimensionalModel.getOptions(new TwoDimConfigReader(config, designerConfig), designerConfig, modelInstance);
     } else if (config.options.type === 'polar') {
         return PolarModel.getOptions(config.options, designerConfig, modelInstance);
     } else if (config.options.type === 'interval') {
@@ -69,7 +70,7 @@ function getTransitions(designerConfig: DesignerConfig): Transitions {
 }
 
 export function assembleModel(config: MdtChartsConfig, data: MdtChartsDataSource, designerConfig: DesignerConfig): Model {
-    const modelInstance = ModelInstance.create(config, data);
+    const modelInstance = ModelInstance.create(config, data, designerConfig);
 
     if (!data || Object.keys(data).length === 0)
         return {
@@ -82,7 +83,13 @@ export function assembleModel(config: MdtChartsConfig, data: MdtChartsDataSource
 
     resetFalsyValues(data);
 
-    const otherComponents = OtherComponentsModel.getOtherComponentsModel({ elementsOptions: designerConfig.elementsOptions, title: config.options.title }, modelInstance);
+    const otherComponents = OtherComponentsModel.getOtherComponentsModel(
+        {
+            elementsOptions: designerConfig.elementsOptions,
+            title: config.options.title
+        },
+        modelInstance
+    );
     const marginModel = new MarginModel(designerConfig, config);
     marginModel.initMargin(otherComponents, modelInstance);
     DataManagerModel.initDataScope(config, data, designerConfig, otherComponents.legendBlock, modelInstance);

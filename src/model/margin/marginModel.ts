@@ -4,10 +4,11 @@ import { OtherCommonComponents } from "../model";
 import { ModelInstance } from "../modelInstance/modelInstance";
 import { CanvasModel } from "../modelInstance/canvasModel/canvasModel";
 import { TwoDimMarginModel } from "./twoDim/twoDimMarginModel";
+import { TwoDimConfigReader } from "../modelInstance/configReader";
 
 export class MarginModel {
     //TODO: ensure
-    private twoDimModel = new TwoDimMarginModel(this.designerConfig, this.config.options as MdtChartsTwoDimensionalOptions);
+    private twoDimModel = new TwoDimMarginModel(this.designerConfig, new TwoDimConfigReader(this.config, this.designerConfig));
 
     constructor(private designerConfig: DesignerConfig, private config: MdtChartsConfig) { }
 

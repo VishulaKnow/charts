@@ -50,18 +50,16 @@ export class AxisLabelHelper {
     }
 
     public static cropLabels(block: Block, scale: AxisScale<any>, scaleOptions: ScaleKeyModel | ScaleValueModel, axisOptions: AxisModelOptions, blockSize: Size): void {
-        if (scaleOptions.type === 'point' || scaleOptions.type === 'band') {
-            const axisTextBlocks = block.getSvg().select(`.${axisOptions.cssClass}`).selectAll<SVGGraphicsElement, unknown>('text');
-            let maxLabelSize: number;
-            if ((axisOptions.orient === 'left' || axisOptions.orient === 'right') || (axisOptions.type === 'key' && axisOptions.labels.position === 'rotated'))
-                maxLabelSize = axisOptions.labels.maxSize;
-            else
-                maxLabelSize = (scale as ScaleBand<string>).step() - 4;
+        const axisTextBlocks = block.getSvg().select(`.${axisOptions.cssClass}`).selectAll<SVGGraphicsElement, unknown>('text');
+        let maxLabelSize: number;
+        if ((axisOptions.orient === 'left' || axisOptions.orient === 'right') || (axisOptions.type === 'key' && axisOptions.labels.position === 'rotated'))
+            maxLabelSize = axisOptions.labels.maxSize;
+        else
+            maxLabelSize = (scale as ScaleBand<string>).step() - 4;
 
-            DomHelper.cropSvgLabels(axisTextBlocks, maxLabelSize);
-            if (scaleOptions.type === 'point' && axisOptions.labels.position === 'straight' && (axisOptions.orient === 'top' || axisOptions.orient === 'bottom')) {
-                this.cropAndAlignExtremeLabels(block, maxLabelSize, axisOptions, blockSize);
-            }
+        DomHelper.cropSvgLabels(axisTextBlocks, maxLabelSize);
+        if (scaleOptions.type === 'point' && axisOptions.labels.position === 'straight' && (axisOptions.orient === 'top' || axisOptions.orient === 'bottom')) {
+            this.cropAndAlignExtremeLabels(block, maxLabelSize, axisOptions, blockSize);
         }
     }
 

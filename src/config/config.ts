@@ -158,12 +158,19 @@ interface AxisTicks {
 
 export interface NumberAxisOptions extends AxisOptions {
     domain: NumberDomain;
+    labels?: NumberAxisLabel;
 }
 
 export interface NumberDomain {
     start: number;
     end: number;
 }
+
+export interface NumberAxisLabel {
+    format: (v: number) => string;
+}
+
+export type AxisLabelFormatter = (v: number) => string;
 
 export interface DiscreteAxisOptions extends AxisOptions {
     labels?: MdtChartsDiscreteAxisLabel;
@@ -184,10 +191,7 @@ interface DateAxisOptions extends AxisOptions { }
 
 
 //====================================================== CardsOptions
-export interface MdtChartsCardValue {
-    field: string;
-    dataType?: DataType;
-}
+export type MdtChartsCardValue = MdtChartsField;
 
 export interface MdtChartsCardsChange {
     value: MdtChartsCardValue;
