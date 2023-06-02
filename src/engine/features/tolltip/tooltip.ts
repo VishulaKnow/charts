@@ -151,9 +151,7 @@ export class Tooltip {
             if (!currentKey || currentKey !== keyValue) {
                 TooltipComponentsManager.showComponent(tooltipBlock.getEl());
                 if (args.type === '2d')
-                    TooltipDomHelper.fillForMulty2DCharts(tooltipContent, args.charts.filter(ch => ch.tooltip.show), data, args.dataOptions, keyValue, args.tooltipOptions?.html);
-                else
-                    TooltipDomHelper.fillForIntervalChart(tooltipContent, args.charts.filter(ch => ch.tooltip.show), data, args.dataOptions, keyValue, args.tooltipOptions?.html);
+                    TooltipDomHelper.fillForMulti2DCharts(tooltipContent, args.charts.filter(ch => ch.tooltip.show), data, args.dataOptions, keyValue, args.tooltipOptions?.html);
 
                 if (args.tooltipSettings.position === 'fixed') {
                     const tooltipCoordinate = TooltipHelper.getTooltipFixedCoordinate(args.scales.key, args.margin, keyValue, block.getSvg().node().getBoundingClientRect(), tooltipContent.node().getBoundingClientRect(), args.keyAxisOrient, window.innerWidth, window.innerHeight);
@@ -164,7 +162,6 @@ export class Tooltip {
                 TooltipComponentsManager.setTooltipLineAttributes(tooltipLine, tooltipLineAttributes, block.transitionManager.durations.tooltipSlide);
                 TooltipComponentsManager.showComponent(tooltipLine);
 
-                //TODO: append highlight for interval / Extract this highlighting in method 
                 if (args.type === '2d') {
                     args.charts.forEach(chart => {
                         const elements = DomHelper.get2DChartElements(block, chart);

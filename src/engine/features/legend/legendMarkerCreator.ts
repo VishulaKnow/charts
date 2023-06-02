@@ -1,50 +1,56 @@
 import { BaseType, Selection } from "d3-selection";
-import { ChartLegendEngineModel } from "./legendHelper";
-import { TwoDimensionalChartLegendBarModel, TwoDimensionalChartLegendLineModel } from "../../../model/model";
-import { LegendItemSelection } from "./legendDomHelper";
+import { ChartLegendModel, TwoDimensionalChartLegendBarModel, TwoDimensionalChartLegendLineModel } from "../../../model/model";
 import { Legend } from "./legend";
 import { HatchPatternDef } from "../../block/defs";
 import { applyLineDash } from "../../twoDimensionalNotation/line/lineHelper";
 
-interface MarkerCreationOptions extends ChartLegendEngineModel {
+interface MarkerCreationOptions extends ChartLegendModel {
     color: string;
 }
 
+type MarkerParentSelection = Selection<BaseType, any, BaseType, any>;
+
 export class LegendMarkerCreator {
-    create(selection: LegendItemSelection, options: MarkerCreationOptions) {
+    create(selection: MarkerParentSelection, options: MarkerCreationOptions) {
         const creator = getMarkerCreator(options);
         return creator.renderMarker(selection, options.color);
     }
 
-    updateColorForItem(selection: LegendItemSelection, options: MarkerCreationOptions) {
+    updateColorForItem(selection: MarkerParentSelection, options: MarkerCreationOptions) {
         const creator = getMarkerCreator(options);
-        creator.updateColors(selection, options.color)
+        creator.updateColors(selection, options.color);
     }
 }
 
-interface MarkerCreator {
-    renderMarker(selection: LegendItemSelection, color: string): Selection<BaseType, ChartLegendEngineModel, BaseType, unknown>;
-    updateColors(selection: LegendItemSelection, color: string): void;
+export interface MarkerCreator {
+    renderMarker(selection: MarkerParentSelection, color: string): Selection<BaseType, ChartLegendModel, BaseType, unknown>;
+    updateColors(selection: MarkerParentSelection, color: string): void;
 }
 
-function getMarkerCreator(options: ChartLegendEngineModel) {
+interface MakerCreatorCustomOptions {
+    default?: { cssClass: string; }
+}
+
+export function getMarkerCreator(options: ChartLegendModel, customOptions?: MakerCreatorCustomOptions): MarkerCreator {
     if (options.markerShape === "bar") return new BarMarkerCreator(options.barViewOptions);
     if (options.markerShape === "line") return new LineMarkerCreator(options.lineViewOptions);
-    return new DefaultMarkerCreator();
+    return new DefaultMarkerCreator(customOptions?.default?.cssClass);
 }
 
 class DefaultMarkerCreator implements MarkerCreator {
-    renderMarker(selection: LegendItemSelection, color: string) {
-        return selection.append('span').style('background-color', color).classed(Legend.markerCircle, true);
+    constructor(private cssClass = Legend.markerCircle) { }
+
+    renderMarker(selection: MarkerParentSelection, color: string) {
+        return selection.append('span').style('background-color', color).classed(this.cssClass, true);
     }
 
-    updateColors(selection: LegendItemSelection, color: string): void {
-        selection.select(`.${Legend.markerClass}`).style('background-color', color);
+    updateColors(selection: MarkerParentSelection, color: string): void {
+        selection.select(`.${this.cssClass}`).style('background-color', color);
     }
 }
 
 abstract class SvgMarkerCreator {
-    protected renderSvg(selection: LegendItemSelection) {
+    protected renderSvg(selection: MarkerParentSelection) {
         return selection.append('svg')
             .style("display", "inline-block")
             .style("height", '10px')
@@ -57,7 +63,7 @@ class BarMarkerCreator extends SvgMarkerCreator implements MarkerCreator {
         super();
     }
 
-    renderMarker(selection: LegendItemSelection, color: string) {
+    renderMarker(selection: MarkerParentSelection, color: string) {
         const svg = this.renderSvg(selection).style("width", this.options.width);
         const bars = svg
             .append('rect')
@@ -74,7 +80,7 @@ class BarMarkerCreator extends SvgMarkerCreator implements MarkerCreator {
         return bars;
     }
 
-    updateColors(selection: LegendItemSelection, color: string): void {
+    updateColors(selection: MarkerParentSelection, color: string): void {
         selection.select('svg rect').style('fill', color);
     }
 }
@@ -84,7 +90,7 @@ class LineMarkerCreator extends SvgMarkerCreator implements MarkerCreator {
         super();
     }
 
-    renderMarker(selection: LegendItemSelection, color: string) {
+    renderMarker(selection: MarkerParentSelection, color: string) {
         const svg = this.renderSvg(selection).style("width", this.options.width);
         const line = svg
             .append('line')
@@ -103,7 +109,7 @@ class LineMarkerCreator extends SvgMarkerCreator implements MarkerCreator {
         return line;
     }
 
-    updateColors(selection: LegendItemSelection, color: string): void {
+    updateColors(selection: MarkerParentSelection, color: string): void {
         selection.select('svg line').style('stroke', color);
     }
 }

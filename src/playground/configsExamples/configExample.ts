@@ -142,7 +142,7 @@ const configCars: MdtChartsConfig = {
     //             name: 'brand',
     //             format: 'string'
     //         },
-    //         maxRecordsAmount: 10
+    //         // maxRecordsAmount: 10
     //     },
     //     chart: {
     //         type: 'donut',

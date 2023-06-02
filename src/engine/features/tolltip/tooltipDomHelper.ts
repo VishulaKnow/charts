@@ -1,10 +1,11 @@
 import { Selection, BaseType } from 'd3-selection'
 import { MdtChartsDataSource, TooltipHtml, MdtChartsValueField } from "../../../config/config";
-import { IntervalChartModel, OptionsModelData, PolarChartModel, TwoDimensionalChartModel } from "../../../model/model";
+import { ChartLegendModel, OptionsModelData, PolarChartModel, TwoDimensionalChartModel } from "../../../model/model";
 import { ValueFormatter, } from "../../valueFormatter";
 import { TooltipHelper } from './tooltipHelper';
 import { Size } from "../../../config/config";
 import { Helper } from '../../helpers/helper';
+import { MarkerCreator, getMarkerCreator } from '../legend/legendMarkerCreator';
 
 export interface TooltipLineAttributes {
     x1: number;
@@ -22,9 +23,9 @@ export class TooltipDomHelper {
     private static readonly groupClass = 'tooltip-group';
     private static readonly headClass = 'tooltip-head';
     private static readonly textItemClass = 'tooltip-text-item';
-    private static readonly maxContentWidth = 500;
+    private static readonly tooltipLegendDefaultMarker = 'tooltip-circle';
 
-    public static fillForMulty2DCharts(contentBlock: Selection<HTMLElement, unknown, BaseType, unknown>, charts: TwoDimensionalChartModel[], data: MdtChartsDataSource, dataOptions: OptionsModelData, keyValue: string, htmlHandler?: TooltipHtml): void {
+    public static fillForMulti2DCharts(contentBlock: Selection<HTMLElement, unknown, BaseType, unknown>, charts: TwoDimensionalChartModel[], data: MdtChartsDataSource, dataOptions: OptionsModelData, keyValue: string, htmlHandler?: TooltipHtml): void {
         contentBlock.html('');
 
         if (!htmlHandler) {
@@ -32,7 +33,12 @@ export class TooltipDomHelper {
             charts.forEach(chart => {
                 chart.data.valueFields.forEach((field, index) => {
                     const html = this.getTooltipItemHtml(data, dataOptions, keyValue, field);
-                    this.fillValuesContent(contentBlock, chart.style.elementColors[index % chart.style.elementColors.length], html);
+                    this.fillValuesContent(
+                        contentBlock,
+                        chart.style.elementColors[index % chart.style.elementColors.length],
+                        html,
+                        this.getMarkerCreator(chart.legend)
+                    );
                 });
             });
         } else {
@@ -46,24 +52,12 @@ export class TooltipDomHelper {
         if (!htmlHandler) {
             this.renderHead(contentBlock, keyValue);
             const html = this.getTooltipItemHtml(data, dataOptions, keyValue, chart.data.valueField);
-            this.fillValuesContent(contentBlock, markColor, html);
-        } else {
-            this.fillContentByFunction(contentBlock, data, dataOptions, keyValue, htmlHandler);
-        }
-    }
-
-    public static fillForIntervalChart(contentBlock: Selection<HTMLElement, unknown, BaseType, unknown>, charts: IntervalChartModel[], data: MdtChartsDataSource, dataOptions: OptionsModelData, keyValue: string, htmlHandler?: TooltipHtml): void {
-        contentBlock.html('');
-
-        if (!htmlHandler) {
-            this.renderHead(contentBlock, keyValue);
-            charts.forEach(chart => {
-                let html = this.getTooltipItemHtml(data, dataOptions, keyValue, chart.data.valueField1);
-                this.fillValuesContent(contentBlock, chart.style.elementColors[0 % chart.style.elementColors.length], html);
-
-                html = this.getTooltipItemHtml(data, dataOptions, keyValue, chart.data.valueField2);
-                this.fillValuesContent(contentBlock, chart.style.elementColors[0 % chart.style.elementColors.length], html);
-            });
+            this.fillValuesContent(
+                contentBlock,
+                markColor,
+                html,
+                this.getMarkerCreator(chart.legend)
+            );
         } else {
             this.fillContentByFunction(contentBlock, data, dataOptions, keyValue, htmlHandler);
         }
@@ -86,16 +80,14 @@ export class TooltipDomHelper {
             .text(keyValue);
     }
 
-    private static fillValuesContent(contentBlock: Selection<BaseType, unknown, BaseType, unknown>, markColor: string, tooltipHtml: string): void {
+    private static fillValuesContent(contentBlock: Selection<BaseType, unknown, BaseType, unknown>, markColor: string, tooltipHtml: string, markerCreator?: MarkerCreator): void {
         const group = contentBlock.append('div')
             .attr('class', this.groupClass);
 
-        if (markColor)
-            group.append('div')
-                .attr('class', 'tooltip-color')
-                .append('span')
-                .attr('class', 'tooltip-circle')
-                .style('background-color', markColor);
+        if (markColor) {
+            const colorBlock = group.append('div').attr('class', 'tooltip-color')
+            markerCreator?.renderMarker(colorBlock, markColor);
+        }
 
         group.append('div')
             .attr('class', 'tooltip-texts')
@@ -128,5 +120,9 @@ export class TooltipDomHelper {
 
     private static setWhiteSpaceForTextBlocks(contentBlock: Selection<HTMLElement, unknown, BaseType, unknown>): void {
         contentBlock.selectAll(`.${this.textItemClass}`).style('white-space', 'pre-wrap');
+    }
+
+    private static getMarkerCreator(options: ChartLegendModel): MarkerCreator {
+        return getMarkerCreator(options, { default: { cssClass: TooltipDomHelper.tooltipLegendDefaultMarker } })
     }
 }
