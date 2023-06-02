@@ -1,7 +1,6 @@
 import { ChartNotation, MdtChartsDataRow, MdtChartsDataSource, Size } from "../../../config/config";
 import { LegendItemsDirection } from "../../../model/featuresModel/legendModel/legendCanvasModel";
-
-import { IntervalOptionsModel, LegendBlockModel, LegendPosition, Orient, PolarOptionsModel, TwoDimensionalOptionsModel } from "../../../model/model";
+import { ChartLegendModel, IntervalOptionsModel, LegendBlockModel, LegendPosition, Orient, PolarOptionsModel, TwoDimensionalOptionsModel } from "../../../model/model";
 import { Helper } from '../../helpers/helper';
 import { Legend, LegendContentRenderingOptions } from "./legend";
 import { LegendHelperService } from "./legendHelperService";
@@ -12,20 +11,30 @@ export interface LegendCoordinate {
     height: number;
     width: number;
 }
+
+export interface ChartLegendEngineModel extends ChartLegendModel {
+    textContent: string;
+}
+
 export class LegendHelper {
     static service = new LegendHelperService();
 
-    public static getLegendItemsContent(options: TwoDimensionalOptionsModel | PolarOptionsModel | IntervalOptionsModel, data: MdtChartsDataSource): string[] {
+    public static getLegendItemsContent(options: TwoDimensionalOptionsModel | PolarOptionsModel, data: MdtChartsDataSource): ChartLegendEngineModel[] {
         if (options.type === '2d') {
-            let texts: string[] = [];
+            let texts: ChartLegendEngineModel[] = [];
             options.charts.forEach(chart => {
-                texts = texts.concat(chart.data.valueFields.map(field => field.title));
+                texts = texts.concat(chart.data.valueFields.map(field => ({
+                    ...chart.legend,
+                    textContent: field.title
+                })));
             });
             return texts;
-        } else if (options.type === 'polar') {
-            return data[options.data.dataSource].map((record: MdtChartsDataRow) => record[options.data.keyField.name]);
-        } else if (options.type === 'interval') {
-            return options.charts.map(chart => chart.data.valueField1.name);
+        }
+        if (options.type === "polar") {
+            return data[options.data.dataSource].map((record: MdtChartsDataRow) => ({
+                ...options.charts[0].legend,
+                textContent: record[options.data.keyField.name],
+            }));
         }
     }
 

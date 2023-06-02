@@ -257,6 +257,22 @@ export interface ChartStyle {
     opacity: number;
 }
 
+export interface ChartLegendModel {
+    markerShape: LegendMarkerShape;
+    barViewOptions: TwoDimensionalChartLegendBarModel;
+    lineViewOptions: TwoDimensionalChartLegendLineModel;
+}
+
+export type LegendMarkerShape = "default" | "bar" | "line";
+
+export interface TwoDimensionalChartLegendBarModel extends TwoDimensionalBarLikeChartViewModel {
+    width: number;
+}
+
+export interface TwoDimensionalChartLegendLineModel extends TwoDimensionalLineLikeChartViewModel {
+    width: number;
+}
+
 interface TwoDimensionalLineLikeChartModel {
     lineViewOptions: TwoDimensionalLineLikeChartViewModel;
     markersOptions: MarkersOptions;
@@ -280,14 +296,16 @@ export interface TwoDimensionalChartModel extends ChartModel, TwoDimensionalLine
     index: number;
     embeddedLabels: EmbeddedLabelTypeModel;
     isSegmented: boolean;
+    legend: ChartLegendModel;
 }
-export interface IntervalChartModel extends ChartModel {
+export interface IntervalChartModel extends Omit<ChartModel, "legend"> { //TODO: remove
     type: IntervalChartType;
     data: IntervalChartDataModel;
 }
 export interface PolarChartModel extends ChartModel {
     type: PolarChartType;
     data: PolarChartDataModel;
+    legend: ChartLegendModel;
 }
 
 //====================================================== TwoDimensionalChartModel

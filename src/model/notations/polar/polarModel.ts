@@ -60,7 +60,12 @@ export class PolarModel {
             data: { ...chart.data },
             tooltip: chart.tooltip,
             cssClasses: ChartStyleModelService.getCssClasses(0),
-            style: ChartStyleModelService.getChartStyle(dataLength, chartStyleConfig)
+            style: ChartStyleModelService.getChartStyle(dataLength, chartStyleConfig),
+            legend: {
+                markerShape: "default",
+                barViewOptions: { hatch: { on: false }, width: 0 },
+                lineViewOptions: { dashedStyles: { on: false, dashSize: 0, gapSize: 0 }, width: 0 }
+            }
         });
         return chartsModel;
     }

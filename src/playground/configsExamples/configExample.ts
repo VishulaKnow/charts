@@ -34,7 +34,7 @@ const configCars: MdtChartsConfig = {
                     flag: false
                 },
                 labels: {
-                    format: v => Math.floor(v / 1_000_000_000) + " млрд"
+                    format: v => v === 0 ? "0" : Math.floor(v / 100) + " млн"
                 }
             }
         },
@@ -72,12 +72,7 @@ const configCars: MdtChartsConfig = {
                             name: 'count',
                             format: 'money',
                             title: 'Стоимость за 2020 год'
-                        },
-                        // {
-                        //     name: 'price2',
-                        //     format: 'money',
-                        //     title: 'Стоимость за 2020 год'
-                        // }
+                        }
                     ]
                 },
                 tooltip: {
@@ -90,8 +85,8 @@ const configCars: MdtChartsConfig = {
                 lineStyles: {
                     dash: {
                         on: true,
-                        dashSize: 20,
-                        gapSize: 10
+                        dashSize: 3,
+                        gapSize: 3
                     }
                 },
                 barStyles: {
@@ -122,8 +117,8 @@ const configCars: MdtChartsConfig = {
                 lineStyles: {
                     dash: {
                         on: true,
-                        dashSize: 20,
-                        gapSize: 10
+                        dashSize: 15,
+                        gapSize: 3
                     }
                 },
                 barStyles: {

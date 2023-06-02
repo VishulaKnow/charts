@@ -1,5 +1,5 @@
 import { ChartOrientation, MdtChartsTwoDimensionalChart, TwoDimensionalChartType, MdtChartsTwoDimensionalOptions } from "../../config/config";
-import { BarOptionsCanvas, ChartOptionsCanvas, ChartStyleConfig, DesignerConfig } from "../../designer/designerConfig";
+import { ChartOptionsCanvas, ChartStyleConfig, DesignerConfig } from "../../designer/designerConfig";
 import { ChartStyleModelService } from "../chartStyleModel/chartStyleModel";
 import { TwoDimensionalChartStyleModel } from "../chartStyleModel/TwoDimensionalChartStyleModel";
 import { AxisModel } from "../featuresModel/axisModel";
@@ -8,7 +8,7 @@ import { ScaleModel } from "../featuresModel/scaleModel/scaleModel";
 import { TwoDimensionalOptionsModel, TwoDimensionalChartModel, EmbeddedLabelTypeModel, AdditionalElementsOptions, TwoDimChartElementsSettings } from "../model";
 import { TwoDimConfigReader } from "../modelInstance/configReader";
 import { ModelInstance } from "../modelInstance/modelInstance";
-import { parseDashStyles, parseShape } from "./twoDimensional/styles";
+import { getLegendMarkerOptions, parseDashStyles, parseShape } from "./twoDimensional/styles";
 
 
 export class TwoDimensionalModel {
@@ -85,6 +85,7 @@ export class TwoDimensionalModel {
                 markersOptions: chart.markers,
                 lineViewOptions: { dashedStyles: parseDashStyles(chart.lineStyles?.dash) },
                 barViewOptions: { hatch: { on: chart.barStyles?.hatch?.on ?? false } },
+                legend: getLegendMarkerOptions(chart),
                 index
             });
         });
@@ -117,9 +118,5 @@ export class TwoDimensionalModel {
 
     private static getChartsByType(charts: MdtChartsTwoDimensionalChart[], type: TwoDimensionalChartType): MdtChartsTwoDimensionalChart[] {
         return charts.filter(chart => chart.type === type);
-    }
-
-    public static getChartsValueFieldsAmount(charts: MdtChartsTwoDimensionalChart[]): number[] {
-        return charts.map(chart => chart.data.valueFields.length);
     }
 }

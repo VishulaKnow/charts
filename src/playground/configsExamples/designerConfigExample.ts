@@ -20,8 +20,8 @@ const designerConfig: DesignerConfig = {
             bar: {
                 minBarWidth: 3,
                 maxBarWidth: 30,
-                groupMinDistance: 16,
-                barDistance: 8,
+                groupMinDistance: 6,
+                barDistance: 2,
                 groupMaxDistance: 35
             },
             donut: {

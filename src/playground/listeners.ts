@@ -668,6 +668,12 @@ const model = assembleModel(config, data, designerConfig);
 engine.render(model, getPreparedData(model, data, config), document.querySelector('.main-wrapper'));
 new Listeners(engine, config, designerConfig, data);
 
+// setTimeout(() => {
+//     console.log("timeout");
+//     const model = assembleModel(config, data, { ...designerConfig, chartStyle: { baseColors: ["red", "green", "blue"] } });
+//     engine.updateColors(model);
+// }, 5000);
+
 const config3 = require('./configsExamples/configTest2D.json');
 const model3 = assembleModel(config3, data, designerConfig);
 const engine3 = new Engine(3, void 0, undefined);

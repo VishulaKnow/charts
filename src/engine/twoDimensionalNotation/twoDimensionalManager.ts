@@ -54,7 +54,7 @@ export class TwoDimensionalManager implements ChartContentManager {
             model.otherComponents.titleBlock,
             model.blockCanvas.size);
 
-        Legend.render(engine.block, engine.data, options, model);
+        Legend.get().render(engine.block, engine.data, options, model);
 
         Tooltip.render(engine.block, model, engine.data, model.otherComponents.tooltipBlock, scales);
 
@@ -120,8 +120,8 @@ export class TwoDimensionalManager implements ChartContentManager {
     }
 
     public updateColors(block: Block, model: Model<TwoDimensionalOptionsModel>): void {
-        Legend.updateColors(block, model.options);
-        (<TwoDimensionalOptionsModel>model.options).charts.forEach(chart => {
+        Legend.get().updateColors(block, model.options);
+        model.options.charts.forEach(chart => {
             if (chart.type === 'bar')
                 Bar.get().updateColors(block, chart);
             else if (chart.type === 'line')

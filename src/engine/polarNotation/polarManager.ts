@@ -30,7 +30,7 @@ export class PolarManager implements ChartContentManager {
             model.otherComponents.titleBlock,
             model.blockCanvas.size);
 
-        Legend.render(engine.block, engine.data, options, model);
+        Legend.get().render(engine.block, engine.data, options, model);
         Tooltip.render(engine.block, model, engine.data, model.otherComponents.tooltipBlock);
 
         engine.block.filterEventManager.setListenerPolar(model.chartBlock.margin, model.blockCanvas.size, options);
@@ -68,7 +68,7 @@ export class PolarManager implements ChartContentManager {
 
         Aggregator.update(block, options.charts[0].data.valueField, options.chartCanvas.aggregator);
 
-        Legend.update(block, data, model);
+        Legend.get().update(block, data, model);
 
         PolarRecordOverflowAlert.update(block, {
             hidedRecordsAmount: model.dataSettings.scope.hidedRecordsAmount,
@@ -77,7 +77,7 @@ export class PolarManager implements ChartContentManager {
     }
 
     public updateColors(block: Block, model: Model<PolarOptionsModel>): void {
-        Legend.updateColors(block, model.options);
+        Legend.get().updateColors(block, model.options);
         Donut.updateColors(block, (<PolarOptionsModel>model.options).charts[0]);
     }
 

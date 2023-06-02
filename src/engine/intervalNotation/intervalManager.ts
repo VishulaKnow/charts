@@ -3,7 +3,6 @@ import { Model, IntervalOptionsModel, IntervalChartModel, OptionsModelData, Bloc
 import { Block } from "../block/block";
 import { Axis } from "../features/axis/axis";
 import { GridLine } from "../features/gridLine/gridLine";
-import { Legend } from "../features/legend/legend";
 import { Scale, Scales } from "../features/scale/scale";
 import { Title } from "../features/title/title";
 import { Gantt } from "./gantt";
@@ -35,8 +34,6 @@ export class IntervalManager {
             options.title,
             model.otherComponents.titleBlock,
             model.blockCanvas.size);
-
-        Legend.render(block, data, options, model);
     }
 
     private static renderCharts(block: Block, charts: IntervalChartModel[], scales: Scales, data: MdtChartsDataSource, dataOptions: OptionsModelData, margin: BlockMargin, keyAxisOrient: Orient, chartSettings: TwoDimChartElementsSettings): void {

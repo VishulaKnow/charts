@@ -2,7 +2,7 @@
     "dataSet": [
         {
             "$id": 1,
-            "brand": "BMW BMW",
+            "brand": "BMW",
             "price": 100000,
             "count": 10000,
             "color": "red"
@@ -31,7 +31,7 @@
         {
             "$id": 5,
             "brand": "VOLKSWAGEN",
-            "price": 11500000000,
+            "price": 115000,
             "count": 6000,
             "color": "cyan"
         },
@@ -59,6 +59,13 @@
         {
             "$id": 9,
             "brand": "TOYOTA",
+            "price": 40000,
+            "count": 15000,
+            "color": "pink"
+        },
+        {
+            "$id": 9,
+            "brand": "LEXUS",
             "price": 40000,
             "count": 15000,
             "color": "pink"

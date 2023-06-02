@@ -1,4 +1,4 @@
-import { Line as ILine } from 'd3-shape';
+import { Line as ILine, line } from 'd3-shape';
 import { MdtChartsDataRow } from '../../../config/config';
 import { Orient, BlockMargin, LineCurveType, TwoDimensionalChartModel } from "../../../model/model";
 import { Scales, Scale } from "../../features/scale/scale";
@@ -58,11 +58,15 @@ export class LineGeneratorFactory {
     }
 }
 
-export function onLineChartInit(creatingPipeline: Pipeline<Selection<SVGPathElement, any, BaseType, any>, TwoDimensionalChartModel>) {
+export function onLineChartInit(creatingPipeline: Pipeline<Selection<SVGElement, any, BaseType, any>, TwoDimensionalChartModel>) {
     creatingPipeline.push((path, chart) => {
         if (chart.lineViewOptions.dashedStyles.on) {
-            return path.style("stroke-dasharray", `${chart.lineViewOptions.dashedStyles.dashSize} ${chart.lineViewOptions.dashedStyles.gapSize}`);
+            return applyLineDash(path, chart.lineViewOptions.dashedStyles.dashSize, chart.lineViewOptions.dashedStyles.gapSize);
         }
         return path;
     });
+}
+
+export function applyLineDash(lineSelection: Selection<SVGElement, any, BaseType, any>, dashSize: number, gapSize: number) {
+    return lineSelection.style('stroke-dasharray', `${dashSize} ${gapSize}`);
 }

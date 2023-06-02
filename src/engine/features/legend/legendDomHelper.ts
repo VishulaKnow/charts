@@ -2,19 +2,16 @@ import { BaseType, Selection } from "d3-selection";
 import { DomHelper } from "../../helpers/domHelper";
 import { Helper } from "../../helpers/helper";
 import { Legend } from "./legend";
-import { LegendHelper } from "./legendHelper";
+import { ChartLegendEngineModel, LegendHelper } from "./legendHelper";
+
+export type LegendItemSelection = Selection<HTMLDivElement, ChartLegendEngineModel, BaseType, unknown>;
 
 export class LegendDomHelper {
-    public static setItemsTitles(items: Selection<HTMLDivElement, string, BaseType, unknown>): void {
-        items.attr('title', d => d);
+    public static setItemsTitles(items: LegendItemSelection): void {
+        items.attr('title', d => d.textContent);
     }
 
-    public static setItemsColors(items: Selection<HTMLDivElement, string, BaseType, unknown>, colorPalette: string[]): void {
-        items.select(`.${Legend.markerClass}`)
-            .style('background-color', (d, i) => colorPalette[i % colorPalette.length]);
-    }
-
-    public static cropRowLabels(legendBlock: Selection<SVGForeignObjectElement, unknown, HTMLElement, any>, items: Selection<HTMLDivElement, string, BaseType, unknown>): void {
+    public static cropRowLabels(legendBlock: Selection<SVGForeignObjectElement, unknown, HTMLElement, any>, items: LegendItemSelection): void {
         const maxWidth = legendBlock.node().getBoundingClientRect().width;
         let itemsLeftMargins = this.getItemsLeftMargins(items);
         let itemsWidth = this.getItemsWidth(items)
@@ -47,11 +44,11 @@ export class LegendDomHelper {
         }
     }
 
-    private static getItemsLeftMargins(items: Selection<HTMLDivElement, string, BaseType, unknown>): number[] {
+    private static getItemsLeftMargins(items: LegendItemSelection): number[] {
         return items.nodes().map(node => Helper.getPXValueFromString(DomHelper.getCssPropertyValue(node, 'margin-left')))
     }
 
-    private static getItemsWidth(items: Selection<HTMLDivElement, string, BaseType, unknown>): number[] {
+    private static getItemsWidth(items: LegendItemSelection): number[] {
         return items.nodes().map(node => node.getBoundingClientRect().width);
     }
 }
