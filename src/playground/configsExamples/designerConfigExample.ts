@@ -14,7 +14,10 @@ const designerConfig: DesignerConfig = {
             right: 5
         },
         legendBlock: {
-            maxWidth: 200
+            maxWidth: 200,
+            static: {
+                maxLinesAmount: 2
+            }
         },
         chartOptions: {
             bar: {

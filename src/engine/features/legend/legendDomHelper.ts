@@ -3,6 +3,8 @@ import { DomHelper } from "../../helpers/domHelper";
 import { Helper } from "../../helpers/helper";
 import { Legend } from "./legend";
 import { ChartLegendEngineModel, LegendHelper } from "./legendHelper";
+import { LegendItemConfig, getNewLegendItemWidths } from "./legendWidthCalculator";
+import { StaticLegendBlockCanvas } from "../../../designer/designerConfig";
 
 export type LegendItemSelection = Selection<HTMLDivElement, ChartLegendEngineModel, BaseType, unknown>;
 
@@ -11,9 +13,25 @@ export class LegendDomHelper {
         items.attr('title', d => d.textContent);
     }
 
+    public static decreaseRowLabels(legendBlock: Selection<SVGForeignObjectElement, unknown, HTMLElement, any>, items: LegendItemSelection, staticLegend: StaticLegendBlockCanvas) {
+        let itemsRightMargins = this.getItemsRightMargins(items);
+        const itemConfig: LegendItemConfig[] = [];
+        items.nodes().forEach((node, i) => {
+            itemConfig.push({ width: node.getBoundingClientRect().width, marginLeft: 0, marginRight: itemsRightMargins[i] });
+        });
+        const newWidths = getNewLegendItemWidths({
+            items: itemConfig,
+            wrapper: { maxRowsAmount: staticLegend.maxLinesAmount, width: legendBlock.node().getBoundingClientRect().width }
+        });
+        items.nodes().forEach((node, i) => {
+            node.style.width = `${newWidths[i]}px`;
+        });
+    }
+
+    /** @deprecated */
     public static cropRowLabels(legendBlock: Selection<SVGForeignObjectElement, unknown, HTMLElement, any>, items: LegendItemSelection): void {
         const maxWidth = legendBlock.node().getBoundingClientRect().width;
-        let itemsLeftMargins = this.getItemsLeftMargins(items);
+        let itemsLeftMargins = this.getItemsRightMargins(items);
         let itemsWidth = this.getItemsWidth(items)
         let sumOfItemsWidth = LegendHelper.getSumOfItemsWidths(itemsWidth, itemsLeftMargins);
         const maxItemWidth = LegendHelper.getMaxItemWidth(legendBlock.attr('width'), itemsLeftMargins, 'row');
@@ -30,7 +48,7 @@ export class LegendDomHelper {
 
                     labelText = labelText.substr(0, labelText.length - 1);
                     textBlock.textContent = labelText + '...';
-                    itemsLeftMargins = this.getItemsLeftMargins(items);
+                    itemsLeftMargins = this.getItemsRightMargins(items);
                     itemsWidth = this.getItemsWidth(items)
                     sumOfItemsWidth = LegendHelper.getSumOfItemsWidths(itemsWidth, itemsLeftMargins);
 
@@ -44,8 +62,8 @@ export class LegendDomHelper {
         }
     }
 
-    private static getItemsLeftMargins(items: LegendItemSelection): number[] {
-        return items.nodes().map(node => Helper.getPXValueFromString(DomHelper.getCssPropertyValue(node, 'margin-left')))
+    private static getItemsRightMargins(items: LegendItemSelection): number[] {
+        return items.nodes().map(node => Helper.getPXValueFromString(DomHelper.getCssPropertyValue(node, 'margin-right')))
     }
 
     private static getItemsWidth(items: LegendItemSelection): number[] {

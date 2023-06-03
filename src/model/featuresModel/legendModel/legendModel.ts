@@ -1,9 +1,10 @@
+import { LegendBlockCanvas } from "../../../main";
 import { LegendBlockModel, Orient } from "../../model";
 import { CanvasModel } from "../../modelInstance/canvasModel/canvasModel";
 import { LegendItemsDirection } from "./legendCanvasModel";
 
 export class LegendModel {
-    public static getBaseLegendBlockModel(canvasModel: CanvasModel): LegendBlockModel {
+    public static getBaseLegendBlockModel(canvasModel: CanvasModel, legendConfig: LegendBlockCanvas): LegendBlockModel {
         const mt = 20, mb = 20, ml = 20, mr = 20;
 
         return {
@@ -28,6 +29,9 @@ export class LegendModel {
                     margin: { top: 5, bottom: 10, left: 0, right: 0 },
                     pad: canvasModel.titleCanvas.getAllNeededSpace()
                 }
+            },
+            static: {
+                maxLinesAmount: legendConfig.static?.maxLinesAmount ?? 3
             }
         }
     }

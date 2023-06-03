@@ -39,6 +39,11 @@ interface BlockMargin {
 
 export interface LegendBlockCanvas {
     maxWidth: number | string;
+    static?: StaticLegendBlockCanvas;
+}
+
+export interface StaticLegendBlockCanvas {
+    maxLinesAmount: number;
 }
 
 export interface ChartOptionsCanvas {

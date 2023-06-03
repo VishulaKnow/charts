@@ -11,7 +11,7 @@ import {
     MdtChartsCardValue,
     MdtChartsColorName,
 } from "../config/config";
-import { DataType, DonutOptionsCanvas, Formatter, TooltipSettings, Transitions } from "../designer/designerConfig";
+import { DataType, DonutOptionsCanvas, Formatter, StaticLegendBlockCanvas, TooltipSettings, Transitions } from "../designer/designerConfig";
 
 type AxisType = "key" | "value";
 
@@ -358,6 +358,7 @@ interface ComponentBlockModel {
 }
 export interface LegendBlockModel {
     coordinate: LegendCoordinate;
+    static: StaticLegendBlockCanvas;
 }
 export interface LegendCoordinate {
     top: LegendCanvasCoordinate;

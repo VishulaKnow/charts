@@ -86,6 +86,7 @@ export function assembleModel(config: MdtChartsConfig, data: MdtChartsDataSource
     const otherComponents = OtherComponentsModel.getOtherComponentsModel(
         {
             elementsOptions: designerConfig.elementsOptions,
+            legendConfig: designerConfig.canvas.legendBlock,
             title: config.options.title
         },
         modelInstance

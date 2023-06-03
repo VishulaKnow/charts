@@ -12,6 +12,7 @@ import { LegendMarkerCreator } from "./legendMarkerCreator";
 export interface LegendContentRenderingOptions {
     wrapperClasses: string[];
     shouldCropLabels: boolean;
+    blockModel: LegendBlockModel;
     itemsOptions: {
         wrapperClasses: string[];
         markerClass: string;
@@ -36,7 +37,7 @@ export class Legend {
     public render(block: Block, data: MdtChartsDataSource, options: TwoDimensionalOptionsModel | PolarOptionsModel, model: Model): void {
         if (options.legend.position !== 'off') {
             const legendObject = this.renderObject(block, options.legend.position, model.otherComponents.legendBlock, model.blockCanvas.size);
-            this.setContent(block, data, options, legendObject);
+            this.setContent(block, data, options, legendObject, model.otherComponents.legendBlock);
         }
     }
 
@@ -46,7 +47,7 @@ export class Legend {
             const legendCoordinate = LegendHelper.getLegendCoordinateByPosition(model.options.legend.position, model.otherComponents.legendBlock, model.blockCanvas.size);
             this.fillCoordinate(legendObject, legendCoordinate);
             this.removeContent(legendObject);
-            this.setContent(block, data, model.options, legendObject);
+            this.setContent(block, data, model.options, legendObject, model.otherComponents.legendBlock);
         }
     }
 
@@ -75,10 +76,10 @@ export class Legend {
             });
     }
 
-    private setContent(block: Block, data: MdtChartsDataSource, options: TwoDimensionalOptionsModel | PolarOptionsModel, legendObject: Selection<SVGForeignObjectElement, unknown, HTMLElement, any>): void {
+    private setContent(block: Block, data: MdtChartsDataSource, options: TwoDimensionalOptionsModel | PolarOptionsModel, legendObject: Selection<SVGForeignObjectElement, unknown, HTMLElement, any>, legendBlockModel: LegendBlockModel): void {
         const items = LegendHelper.getLegendItemsContent(options, data);
         const colors = LegendHelper.getMarksColor(options, data[options.data.dataSource]);
-        const renderingOptions = LegendHelper.getContentRenderingOptions(options.type, options.legend.position);
+        const renderingOptions = LegendHelper.getContentRenderingOptions(options.type, options.legend.position, legendBlockModel);
 
         const itemBlocks = this.renderContent(legendObject, items, colors, renderingOptions);
         if (options.type === 'polar') {

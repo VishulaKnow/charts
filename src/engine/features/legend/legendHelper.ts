@@ -103,7 +103,7 @@ export class LegendHelper {
         return coordinate;
     }
 
-    public static getContentRenderingOptions(chartNotation: ChartNotation, legendPosition: LegendPosition): LegendContentRenderingOptions {
+    public static getContentRenderingOptions(chartNotation: ChartNotation, legendPosition: LegendPosition, legendBlockModel: LegendBlockModel): LegendContentRenderingOptions {
         const itemsDirection: LegendItemsDirection = this.service.getLegendItemsDirection(legendPosition);
 
         return {
@@ -114,6 +114,7 @@ export class LegendHelper {
                 this.service.getWrapperClassByWrappingItems(legendPosition, chartNotation)
             ],
             shouldCropLabels: chartNotation === "2d",
+            blockModel: legendBlockModel,
             itemsOptions: {
                 markerClass: Legend.markerClass,
                 labelClass: this.service.getLegendLabelClassByPosition(legendPosition, chartNotation, Legend.labelClass),
