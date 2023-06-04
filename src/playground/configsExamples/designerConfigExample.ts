@@ -43,6 +43,10 @@ const designerConfig: DesignerConfig = {
                     }
                 }
             }
+        },
+        markers: {
+            highlighted: { radius: 3 },
+            normal: { radius: 3, borderSize: 2 }
         }
     },
     chartStyle: {

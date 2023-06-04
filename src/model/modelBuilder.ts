@@ -5,7 +5,6 @@ import { TwoDimensionalModel } from './notations/twoDimensionalModel';
 import { PolarModel } from './notations/polar/polarModel';
 import { DataManagerModel } from './dataManagerModel/dataManagerModel';
 import { DesignerConfig, Transitions } from '../designer/designerConfig';
-import { IntervalModel } from './notations/intervalModel';
 import { OtherComponentsModel } from './featuresModel/otherComponents';
 import { ConfigValidator } from './configsValidator/configValidator';
 import { ModelInstance } from './modelInstance/modelInstance';
@@ -58,8 +57,6 @@ function getOptions(config: MdtChartsConfig, designerConfig: DesignerConfig, mod
         return TwoDimensionalModel.getOptions(new TwoDimConfigReader(config, designerConfig), designerConfig, modelInstance);
     } else if (config.options.type === 'polar') {
         return PolarModel.getOptions(config.options, designerConfig, modelInstance);
-    } else if (config.options.type === 'interval') {
-        return IntervalModel.getOptions(config.options, designerConfig, modelInstance)
     } else if (config.options.type === "card") {
         return CardsModelInstance.getOptions(config.options, modelInstance);
     }

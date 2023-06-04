@@ -1,6 +1,6 @@
 import { Selection, BaseType, select } from 'd3-selection';
 import { PieArcDatum } from 'd3-shape'
-import { BlockMargin, TwoDimensionalChartModel } from "../../model/model";
+import { BlockMargin, MarkersStyleOptions, TwoDimensionalChartModel } from "../../model/model";
 import { Block } from "../block/block";
 import { easeLinear } from 'd3-ease';
 import { interrupt, Transition } from 'd3-transition';
@@ -115,7 +115,7 @@ export class ElementHighlighter {
 
             if (chart.type !== 'bar' && !chart.markersOptions.show)
                 elems.classed(MarkDot.hiddenDotClass, true);
-            this.toggle2DElements(elems, false, chart.type, transitionDuration);
+            this.toggle2DElements(elems, false, chart, transitionDuration);
             this.toggleActivityStyle(elems, true);
         });
     }
@@ -127,15 +127,15 @@ export class ElementHighlighter {
 
             if (chart.type !== 'bar' && !chart.markersOptions.show)
                 selectedElems.classed(MarkDot.hiddenDotClass, true);
-            this.toggle2DElements(selectedElems, false, chart.type, transitionDuration);
+            this.toggle2DElements(selectedElems, false, chart, transitionDuration);
             if (block.filterEventManager.getSelectedKeys().length > 0)
                 this.toggleActivityStyle(selectedElems, false);
         });
     }
 
-    public static toggle2DElements(elemSelection: Selection<BaseType, any, BaseType, any>, isHighlight: boolean, chartType: TwoDimensionalChartType, transitionDuration: number): void {
-        if (chartType === 'area' || chartType === 'line') {
-            elemSelection.call(this.toggleDot, isHighlight, transitionDuration);
+    public static toggle2DElements(elemSelection: Selection<BaseType, any, BaseType, any>, isHighlight: boolean, chart: TwoDimensionalChartModel, transitionDuration: number): void {
+        if (chart.type === 'area' || chart.type === 'line') {
+            elemSelection.call(this.toggleDot, isHighlight, chart.markersOptions.styles, transitionDuration);
         } else {
             this.toggleBar(elemSelection, isHighlight);
             if (isHighlight) {
@@ -202,7 +202,7 @@ export class ElementHighlighter {
         }
     }
 
-    private static toggleDot(elementSelection: Selection<BaseType, MdtChartsDataRow, BaseType, unknown>, isScaled: boolean, transitionDuration: number = 0): void {
+    private static toggleDot(elementSelection: Selection<BaseType, MdtChartsDataRow, BaseType, unknown>, isScaled: boolean, styles: MarkersStyleOptions, transitionDuration: number = 0): void {
         const animationName = 'size-scale';
         elementSelection.nodes().forEach(node => {
             interrupt(node, animationName);
@@ -218,8 +218,8 @@ export class ElementHighlighter {
         }
 
         (elementsHandler
-            .attr('r', isScaled ? 5 : 4)
-            .style('stroke-width', (isScaled ? 3.5 : 3) + 'px') as Selection<BaseType, MdtChartsDataRow, BaseType, unknown> | Transition<BaseType, MdtChartsDataRow, BaseType, unknown>)
+            .attr('r', isScaled ? styles.highlighted.size.radius : styles.normal.size.radius)
+            .style('stroke-width', isScaled ? styles.highlighted.size.borderSize : styles.normal.size.borderSize) as Selection<BaseType, MdtChartsDataRow, BaseType, unknown> | Transition<BaseType, MdtChartsDataRow, BaseType, unknown>)
             .each(function () {
                 select(this).style('fill', isScaled ? select(this).style('stroke') : 'white');
             });

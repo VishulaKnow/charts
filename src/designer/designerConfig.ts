@@ -21,6 +21,7 @@ interface Canvas {
     chartBlockMargin: BlockMargin;
     legendBlock: LegendBlockCanvas;
     chartOptions: ChartOptionsCanvas;
+    markers?: MarkerCanvas;
 }
 
 export interface AxisLabelCanvas {
@@ -35,6 +36,11 @@ interface BlockMargin {
     bottom: number;
     left: number;
     right: number;
+}
+
+interface MarkerCanvas {
+    highlighted?: { radius?: number; };
+    normal?: { radius?: number; borderSize?: number; };
 }
 
 export interface LegendBlockCanvas {

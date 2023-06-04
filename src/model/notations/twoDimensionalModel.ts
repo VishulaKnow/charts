@@ -1,5 +1,5 @@
 import { ChartOrientation, MdtChartsTwoDimensionalChart, TwoDimensionalChartType, MdtChartsTwoDimensionalOptions } from "../../config/config";
-import { ChartOptionsCanvas, ChartStyleConfig, DesignerConfig } from "../../designer/designerConfig";
+import { ChartOptionsCanvas, DesignerConfig } from "../../designer/designerConfig";
 import { ChartStyleModelService } from "../chartStyleModel/chartStyleModel";
 import { TwoDimensionalChartStyleModel } from "../chartStyleModel/TwoDimensionalChartStyleModel";
 import { AxisModel } from "../featuresModel/axisModel";
@@ -9,7 +9,6 @@ import { TwoDimensionalOptionsModel, TwoDimensionalChartModel, EmbeddedLabelType
 import { TwoDimConfigReader } from "../modelInstance/configReader";
 import { ModelInstance } from "../modelInstance/modelInstance";
 import { getLegendMarkerOptions, parseDashStyles, parseShape } from "./twoDimensional/styles";
-
 
 export class TwoDimensionalModel {
     public static getOptions(configReader: TwoDimConfigReader, designerConfig: DesignerConfig, modelInstance: ModelInstance): TwoDimensionalOptionsModel {
@@ -37,7 +36,7 @@ export class TwoDimensionalModel {
             },
             type: options.type,
             data: { ...options.data },
-            charts: this.getChartsModel(options.charts, options.orientation, designerConfig.chartStyle),
+            charts: this.getChartsModel(options.charts, options.orientation, designerConfig),
             additionalElements: this.getAdditionalElements(options),
             tooltip: options.tooltip,
             chartSettings: this.getChartsSettings(designerConfig.canvas.chartOptions, options.orientation)
@@ -68,8 +67,8 @@ export class TwoDimensionalModel {
         }
     }
 
-    private static getChartsModel(charts: MdtChartsTwoDimensionalChart[], chartOrientation: ChartOrientation, chartStyleConfig: ChartStyleConfig): TwoDimensionalChartModel[] {
-        const styleModel = new TwoDimensionalChartStyleModel(charts, chartStyleConfig);
+    private static getChartsModel(charts: MdtChartsTwoDimensionalChart[], chartOrientation: ChartOrientation, designerConfig: DesignerConfig): TwoDimensionalChartModel[] {
+        const styleModel = new TwoDimensionalChartStyleModel(charts, designerConfig.chartStyle);
         this.sortCharts(charts);
         const chartsModel: TwoDimensionalChartModel[] = [];
 
@@ -82,7 +81,20 @@ export class TwoDimensionalModel {
                 cssClasses: ChartStyleModelService.getCssClasses(index),
                 style: styleModel.getChartStyle(chart, index),
                 embeddedLabels: this.getEmbeddedLabelType(chart, chartOrientation),
-                markersOptions: chart.markers,
+                markersOptions: {
+                    show: chart.markers.show,
+                    styles: {
+                        highlighted: {
+                            size: { radius: designerConfig.canvas.markers?.highlighted?.radius ?? 4, borderSize: '3.5px' }
+                        },
+                        normal: {
+                            size: {
+                                radius: designerConfig.canvas.markers?.normal?.radius ?? 3,
+                                borderSize: `${designerConfig.canvas.markers?.normal?.borderSize ?? 2}px`
+                            }
+                        }
+                    }
+                },
                 lineViewOptions: { dashedStyles: parseDashStyles(chart.lineStyles?.dash) },
                 barViewOptions: { hatch: { on: chart.barStyles?.hatch?.on ?? false } },
                 legend: getLegendMarkerOptions(chart),

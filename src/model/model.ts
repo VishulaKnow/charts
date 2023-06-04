@@ -318,6 +318,21 @@ export interface ValueField extends Field {
 
 export interface MarkersOptions {
     show: boolean;
+    styles: MarkersStyleOptions;
+}
+
+export interface MarkersStyleOptions {
+    highlighted: MarkerStyle;
+    normal: MarkerStyle;
+}
+
+interface MarkerStyle {
+    size: MarkersBaseSizeOptions;
+}
+
+interface MarkersBaseSizeOptions {
+    radius: number;
+    borderSize: string;
 }
 
 //====================================================== IntervalChartModel

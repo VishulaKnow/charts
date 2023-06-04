@@ -1,7 +1,7 @@
 import { select, Selection, BaseType } from 'd3-selection';
 import { transition } from 'd3-transition';
 import { MdtChartsDataRow } from '../../../config/config';
-import { BlockMargin, Orient, TwoDimensionalChartModel } from "../../../model/model";
+import { BlockMargin, MarkersStyleOptions, Orient, TwoDimensionalChartModel } from "../../../model/model";
 import { Block } from "../../block/block";
 import { DomHelper } from '../../helpers/domHelper';
 import { Helper } from '../../helpers/helper';
@@ -20,8 +20,6 @@ export class MarkDot {
     public static readonly markerDotClass = NamesHelper.getClassName('dot');
     public static readonly hiddenDotClass = NamesHelper.getClassName('dot-hidden');
 
-    private static dotRadius = 4;
-
     public static render(block: Block, data: MdtChartsDataRow[], keyAxisOrient: Orient, scales: Scales, margin: BlockMargin, keyFieldName: string, vfIndex: number, valueFieldName: string, chart: TwoDimensionalChartModel): void {
         const dotsWrapper = block.svg.getChartGroup(chart.index)
             .selectAll(`.${this.markerDotClass}${Helper.getCssClassesLine(chart.cssClasses)}.chart-index-${vfIndex}`)
@@ -30,7 +28,7 @@ export class MarkDot {
 
         const attrs = MarkDotHelper.getDotAttrs(keyAxisOrient, scales, margin, keyFieldName, valueFieldName, chart.isSegmented);
         const dots = dotsWrapper.append('circle');
-        this.setAttrs(block, dots, attrs);
+        this.setAttrs(block, dots, attrs, chart.markersOptions.styles);
 
         this.setClassesAndStyle(dots, chart.cssClasses, vfIndex, chart.style.elementColors);
         if (!chart.markersOptions.show)
@@ -47,7 +45,7 @@ export class MarkDot {
         const newDots = dots
             .enter()
             .append('circle');
-        this.setAttrs(block, newDots, attrs);
+        this.setAttrs(block, newDots, attrs, chart.markersOptions.styles);
 
         this.setClassesAndStyle(newDots, chart.cssClasses, vfIndex, chart.style.elementColors);
         if (!chart.markersOptions.show)
@@ -78,13 +76,13 @@ export class MarkDot {
         DomHelper.setChartElementColor(dots, elementColors, vfIndex, 'stroke');
     }
 
-    private static setAttrs(block: Block, dots: Selection<SVGCircleElement, MdtChartsDataRow, BaseType, any>, attrs: DotAttrs): void {
+    private static setAttrs(block: Block, dots: Selection<SVGCircleElement, MdtChartsDataRow, BaseType, any>, attrs: DotAttrs, styles: MarkersStyleOptions): void {
         dots
             .attr('class', this.markerDotClass)
             .attr('cx', d => attrs.cx(d))
             .attr('cy', d => attrs.cy(d))
-            .attr('r', this.dotRadius)
-            .style('stroke-width', '3px')
+            .attr('r', styles.normal.size.radius)
+            .style('stroke-width', styles.normal.size.borderSize)
             .style('fill', 'white')
             .style('clip-path', `url(#${block.svg.getClipPathId()})`);
     }

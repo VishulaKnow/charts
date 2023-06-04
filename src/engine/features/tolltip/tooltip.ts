@@ -169,7 +169,7 @@ export class Tooltip {
                             const oldElements = DomHelper.getChartElementsByKeys(elements, chart.isSegmented, args.dataOptions.keyField.name, [currentKey]);
                             if (chart.type !== 'bar' && !chart.markersOptions.show)
                                 ElementHighlighter.toggleMarkDotVisible(oldElements, false);
-                            ElementHighlighter.toggle2DElements(oldElements, false, chart.type, block.transitionManager.durations.markerHover);
+                            ElementHighlighter.toggle2DElements(oldElements, false, chart, block.transitionManager.durations.markerHover);
                             if (block.filterEventManager.getSelectedKeys().length > 0) {
                                 ElementHighlighter.toggleActivityStyle(oldElements, false);
                             }
@@ -180,7 +180,7 @@ export class Tooltip {
                             ElementHighlighter.toggleMarkDotVisible(selectedElements, true);
                         ElementHighlighter.toggleActivityStyle(selectedElements, true);
                         if (block.filterEventManager.getSelectedKeys().length === 0 || block.filterEventManager.isSelected(keyValue)) {
-                            ElementHighlighter.toggle2DElements(selectedElements, true, chart.type, block.transitionManager.durations.markerHover);
+                            ElementHighlighter.toggle2DElements(selectedElements, true, chart, block.transitionManager.durations.markerHover);
                         }
                     });
                 }
