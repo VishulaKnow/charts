@@ -69,8 +69,8 @@
     overflow: hidden;
     text-overflow: ellipsis;
 }
-.legend-wrapper-without-wrap .legend-item-inline:not(:first-of-type) {
-    margin-left: 20px;
+.legend-wrapper-without-wrap .legend-item-inline:not(:last-of-type) {
+    margin-right: 12px
 }
 .legend-wrapper-with-wrap .legend-item-inline {
     margin: 2px;
@@ -98,7 +98,7 @@
     text-overflow: ellipsis;
 }
 .legend-marker {
-    margin-right: 8px;
+    margin-right: 6px;
 }
 .legend-circle {
     position: relative;
@@ -107,7 +107,7 @@
     width: 11px;
     height: 11px;
     border-radius: 50%;
-    margin-right: 8px;
+    margin-right: 6px;
 }
 
 
