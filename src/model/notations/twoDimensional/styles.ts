@@ -1,6 +1,7 @@
 import { ChartLegendModel, LegendMarkerShape, LineCurveType, LineLikeChartDashOptions, LineLikeChartShapeOptions } from "../../model";
 import { ChartOrientation, MdtChartsLineLikeChartDashedStyles, MdtChartsTwoDimensionalChart, TwoDimensionalChartType } from "../../../config/config";
 import { MdtChartsLineLikeChartCurveType, MdtChartsLineLikeChartShape } from "../../../designer/designerConfig";
+import { styledElementValues } from "../../modelBuilder";
 
 export function parseShape(chartOrientation: ChartOrientation, configOptions?: MdtChartsLineLikeChartShape): LineLikeChartShapeOptions {
     const curveType = configOptions?.curve?.type;
@@ -38,7 +39,13 @@ export function getLegendMarkerOptions(chart: MdtChartsTwoDimensionalChart): Cha
     }
     return {
         markerShape: shapeByType[chart.type],
-        barViewOptions: { hatch: { on: chart.barStyles?.hatch?.on ?? false }, width: 10 },
-        lineViewOptions: { dashedStyles: parseDashStyles(chart.lineStyles?.dash), width: 30 }
+        barViewOptions: { hatch: { on: chart.barStyles?.hatch?.on ?? false }, width: getWidthOfLegendMarkerByType("bar") },
+        lineViewOptions: { dashedStyles: parseDashStyles(chart.lineStyles?.dash), width: getWidthOfLegendMarkerByType("line") }
     }
+}
+
+export function getWidthOfLegendMarkerByType(chartType: TwoDimensionalChartType): number {
+    if (chartType === "bar") return 10;
+    if (chartType === "line") return 30;
+    if (chartType === "area") return styledElementValues.defaultLegendMarkerSizes.widthPx
 }

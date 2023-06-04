@@ -1,8 +1,14 @@
 import { DataLegendParams } from "../../dataManagerModel/dataManagerModel";
 import { LegendPosition } from "../../model";
-import { CLASSES } from "../../modelBuilder";
+import { CLASSES, styledElementValues } from "../../modelBuilder";
 
 export type LegendItemsDirection = 'row' | 'column'
+
+export interface LegendItemContentOptions {
+    text: string;
+    markerSize: { widthPx: number; heightPx: number; marginRightPx: number; }
+    wrapperSize: { marginRightPx: number; }
+}
 
 export class LegendCanvasModel {
     public static getLegendItemWidth(text: string): number {
@@ -29,19 +35,20 @@ export class LegendCanvasModel {
         return sumWidth;
     }
 
-    public static findElementsAmountByLegendSize(texts: string[], position: LegendPosition, legendBlockWidth: number, legendBlockHeight: number): DataLegendParams {
+    //TODO: find better solution
+    public static findElementsAmountByLegendSize(items: LegendItemContentOptions[], position: LegendPosition, legendBlockWidth: number, legendBlockHeight: number): DataLegendParams {
         const legendWrapper = this.getLegendWrapperEl(legendBlockWidth, position === "right" ? "column" : "row");
         document.body.append(legendWrapper);
         let amount = 0;
 
-        for (let i = 0; i < texts.length; i++) {
+        for (let i = 0; i < items.length; i++) {
             const itemWrapper = document.createElement('div');
             const colorBlock = document.createElement('span');
             const textBlock = document.createElement('span');
 
             itemWrapper.classList.add("legend-item");
 
-            if (position === 'bottom') {
+            if (position === 'bottom' || position === 'top') {
                 itemWrapper.classList.add('legend-item-inline');
                 textBlock.classList.add('legend-label-nowrap');
             }
@@ -49,9 +56,15 @@ export class LegendCanvasModel {
                 itemWrapper.classList.add('legend-item-row');
             }
 
-            colorBlock.classList.add(CLASSES.legendColor);
+            // colorBlock.classList.add(CLASSES.legendColor);
+            colorBlock.style.display = "inline-block";
+            colorBlock.style.width = `${items[i].markerSize.widthPx}px`;
+            colorBlock.style.height = `${items[i].markerSize.heightPx}px`;
+            colorBlock.style.marginRight = `${items[i].markerSize.marginRightPx}px`;
+
             textBlock.classList.add(CLASSES.legendLabel);
-            textBlock.textContent = texts[i];
+            textBlock.textContent = items[i].text;
+            itemWrapper.style.marginRight = `${items[i].wrapperSize.marginRightPx}px`
             itemWrapper.append(colorBlock, textBlock);
             legendWrapper.append(itemWrapper);
 
@@ -59,7 +72,7 @@ export class LegendCanvasModel {
 
             if (legendWrapper.offsetHeight > legendBlockHeight) {
                 itemWrapper.remove();
-                if (legendBlockHeight - legendWrapper.offsetHeight >= 15 && position !== 'bottom')
+                if (legendBlockHeight - legendWrapper.offsetHeight >= 15 && position !== 'bottom' && position !== 'top')
                     amount = amount; //TODO: remove
                 else
                     amount -= 1;

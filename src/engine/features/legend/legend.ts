@@ -125,7 +125,7 @@ export class Legend {
             .text(d => d.textContent);
 
         if (options.shouldCropLabels)
-            LegendDomHelper.cropRowLabels(foreignObject, itemWrappers);
+            LegendDomHelper.decreaseRowLabels(foreignObject, itemWrappers, options.blockModel.static);
 
         return itemWrappers;
     }

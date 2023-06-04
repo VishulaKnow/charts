@@ -24,6 +24,19 @@ export const CLASSES = {
     legendItem: 'legend-item',
 }
 
+export const styledElementValues = {
+    defaultLegendMarkerSizes: {
+        widthPx: 11,
+        heightPx: 11,
+        marginRightPx: 6
+    },
+    legend: {
+        inlineLegendOneLineHeightPx: 21,
+        inlineItemWrapperMarginRightPx: 12,
+        inlineDynamicItemWrapperMarginRightPx: 2
+    }
+}
+
 function getBlockCanvas(config: MdtChartsConfig, modelInstance: ModelInstance): BlockCanvas {
     const emptyBlockParams: Size = { width: 0, height: 0 };
     const size: Size = ConfigValidator.validateCanvasSize(modelInstance.canvasModel.getBlockSize()) ? { ...modelInstance.canvasModel.getBlockSize() } : emptyBlockParams

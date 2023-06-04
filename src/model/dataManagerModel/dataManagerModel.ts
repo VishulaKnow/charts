@@ -1,7 +1,7 @@
 import { MdtChartsConfig, MdtChartsTwoDimensionalChart, MdtChartsIntervalOptions, MdtChartsTwoDimensionalOptions, MdtChartsPolarOptions, MdtChartsDataSource, MdtChartsDataRow, DataOptions } from "../../config/config";
 import { BarOptionsCanvas, DesignerConfig, LegendBlockCanvas } from "../../designer/designerConfig";
 import { AxisModel } from "../featuresModel/axisModel";
-import { LegendCanvasModel } from "../featuresModel/legendModel/legendCanvasModel";
+import { LegendCanvasModel, LegendItemContentOptions } from "../featuresModel/legendModel/legendCanvasModel";
 import { DataScope, Field, LegendBlockModel } from "../model";
 import { ModelHelper } from "../helpers/modelHelper";
 import { CanvasModel } from "../modelInstance/canvasModel/canvasModel";
@@ -11,6 +11,7 @@ import { MIN_DONUT_BLOCK_SIZE, PolarModel } from "../notations/polar/polarModel"
 import { DataManagerModelService } from "./dataManagerModelService";
 import { LegendPolarMarginCalculator } from "../featuresModel/legendModel/polarMarginCalculator";
 import { CardsDataManagerModel } from "./notations/cardsDataManagerModel";
+import { styledElementValues } from "../modelBuilder";
 
 export interface DataLegendParams {
     amount: number;
@@ -115,11 +116,16 @@ export class DataManagerModel {
 
     //TODO: position type
     private static getLegendDataParams(position: "bottom" | "right", keys: string[], legendCanvas: LegendBlockCanvas, canvasModel: CanvasModel, legendBlock: LegendBlockModel) {
+        const legendItemContentOptions: LegendItemContentOptions[] = keys.map(k => ({
+            text: k,
+            markerSize: styledElementValues.defaultLegendMarkerSizes,
+            wrapperSize: { marginRightPx: styledElementValues.legend.inlineDynamicItemWrapperMarginRightPx }
+        }))
         if (position === 'right') {
-            return LegendCanvasModel.findElementsAmountByLegendSize(keys, position, this.polarMarginCalculator.getMaxLegendWidth(legendCanvas, canvasModel.getBlockSize().width), canvasModel.getChartBlockHeight() - legendBlock.coordinate.bottom.margin.bottom);
+            return LegendCanvasModel.findElementsAmountByLegendSize(legendItemContentOptions, position, this.polarMarginCalculator.getMaxLegendWidth(legendCanvas, canvasModel.getBlockSize().width), canvasModel.getChartBlockHeight() - legendBlock.coordinate.bottom.margin.bottom);
         } else {
             return LegendCanvasModel.findElementsAmountByLegendSize(
-                keys,
+                legendItemContentOptions,
                 position,
                 canvasModel.getChartBlockWidth() - legendBlock.coordinate.bottom.margin.left - legendBlock.coordinate.bottom.margin.right,
                 canvasModel.getChartBlockHeight() - legendBlock.coordinate.bottom.margin.bottom - legendBlock.coordinate.bottom.margin.top - MIN_DONUT_BLOCK_SIZE

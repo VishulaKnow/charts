@@ -1,4 +1,4 @@
-import { AxisLabelFormatter, MdtChartsConfig, MdtChartsField, MdtChartsPolarOptions, MdtChartsTwoDimensionalOptions } from "../../config/config";
+import { AxisLabelFormatter, MdtChartsConfig, MdtChartsField, MdtChartsPolarOptions, MdtChartsTwoDimensionalOptions, TwoDimensionalChartType } from "../../config/config";
 import { DesignerConfig } from "../../designer/designerConfig";
 
 interface BaseConfigReader {
@@ -30,6 +30,16 @@ export class TwoDimConfigReader implements BaseConfigReader {
         if (this.options.axis.value.labels?.format) return this.options.axis.value.labels?.format;
         const valueFieldFormat = this.options.charts[0].data.valueFields[0].format;
         return (v) => this.designerConfig.dataFormat.formatters(v, { type: valueFieldFormat });
+    }
+
+    getLegendItemInfo() {
+        const info: { text: string; chartType: TwoDimensionalChartType }[] = [];
+        this.options.charts.forEach(c => {
+            c.data.valueFields.forEach(vf => {
+                info.push({ text: vf.title ?? vf.name, chartType: c.type });
+            });
+        });
+        return info;
     }
 }
 

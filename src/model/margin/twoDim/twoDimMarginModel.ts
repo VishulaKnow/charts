@@ -13,7 +13,7 @@ export const AXIS_HORIZONTAL_LABEL_PADDING = 15;
 export const AXIS_VERTICAL_LABEL_PADDING = 10;
 
 export class TwoDimMarginModel {
-    private twoDimLegendModel = new TwoDimLegendModel();
+    private twoDimLegendModel = new TwoDimLegendModel(this.configReader);
 
     constructor(private designerConfig: DesignerConfig, private configReader: TwoDimConfigReader) { }
 

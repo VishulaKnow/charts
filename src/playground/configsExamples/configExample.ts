@@ -97,6 +97,43 @@ const configCars: MdtChartsConfig = {
             },
             {
                 isSegmented: false,
+                type: 'bar',
+                data: {
+                    valueFields: [
+                        {
+                            name: 'price',
+                            format: 'money',
+                            title: 'Стоимость за 2020 год'
+                        },
+                        {
+                            name: 'count',
+                            format: 'money',
+                            title: 'Стоимость за 2020 год'
+                        }
+                    ]
+                },
+                tooltip: {
+                    show: true
+                },
+                embeddedLabels: 'none',
+                markers: {
+                    show: false
+                },
+                lineStyles: {
+                    dash: {
+                        on: true,
+                        dashSize: 3,
+                        gapSize: 3
+                    }
+                },
+                barStyles: {
+                    hatch: {
+                        on: false
+                    }
+                }
+            },
+            {
+                isSegmented: false,
                 type: 'line',
                 data: {
                     valueFields: [
@@ -117,7 +154,39 @@ const configCars: MdtChartsConfig = {
                 lineStyles: {
                     dash: {
                         on: true,
-                        dashSize: 15,
+                        dashSize: 6,
+                        gapSize: 3
+                    }
+                },
+                barStyles: {
+                    hatch: {
+                        on: false
+                    }
+                }
+            },
+            {
+                isSegmented: false,
+                type: 'line',
+                data: {
+                    valueFields: [
+                        {
+                            name: 'count',
+                            format: 'money',
+                            title: 'Стоимость за 2020 год'
+                        }
+                    ]
+                },
+                tooltip: {
+                    show: true
+                },
+                embeddedLabels: 'none',
+                markers: {
+                    show: false
+                },
+                lineStyles: {
+                    dash: {
+                        on: false,
+                        dashSize: 6,
                         gapSize: 3
                     }
                 },
