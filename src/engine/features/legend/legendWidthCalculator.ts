@@ -24,7 +24,9 @@ function getNewWidths(collection: LegendItemCollection, wrapper: LegendWrapper) 
     let avgExtra = extra / biggerThanAvg.length;
     biggerThanAvg.forEach((item, index) => {
         const avgDiff = item.getCurrentWidth() - avgWidth;
-        const decreaseBy = avgDiff < avgExtra ? avgDiff : avgExtra;
+        const decreaseBy = index === biggerThanAvg.length - 1
+            ? extra
+            : (avgDiff < avgExtra ? avgDiff : avgExtra);
         item.decreaseBy(decreaseBy);
         extra -= decreaseBy;
         avgExtra = extra / (biggerThanAvg.length - index - 1);
@@ -38,7 +40,7 @@ function fixWidthsByLinePos(collection: LegendItemCollection, wrapper: LegendWra
     let currentRow: LegendItem[] = [];
     collection.items.forEach((item, i) => {
         const currentRowSum = currentRow.reduce((acc, i) => acc + i.getCurrentTotalWidth(), 0);
-        if (currentRowSum + item.getWidthWithoutRightMargin() <= wrapper.getWidthOfOneLine()) {
+        if (currentRowSum + item.getCurrentTotalWidth() <= wrapper.getWidthOfOneLine()) {
             currentRow.push(item);
         } else {
             byRows.push(new LegendItemCollection(currentRow));
@@ -57,11 +59,12 @@ function fixWidthsByLinePos(collection: LegendItemCollection, wrapper: LegendWra
 
         const topFreeSpace = wrapper.getWidthOfOneLine() - top.getTotalWidth();
         const firstOfBottom = bottom.getFirstItem();
-        if (topFreeSpace / firstOfBottom.getCurrentTotalWidth() > 0.51 || i === byRows.length - 2) {
+        if (i === byRows.length - 2) top.pushMany(bottom.shiftAll());
+        else if (topFreeSpace / firstOfBottom.getCurrentTotalWidth() > 0.5) {
             const fromBottom = bottom.shift();
             top.push(fromBottom);
-            result.push(...getNewWidths(top, new LegendWrapper({ maxRowsAmount: 1, width: wrapper.getWidthOfOneLine() })));
         }
+        result.push(...getNewWidths(top, new LegendWrapper({ maxRowsAmount: 1, width: wrapper.getWidthOfOneLine() })));
     }
     return result;
 }
@@ -113,11 +116,15 @@ class LegendItem {
     }
 
     getCurrentWidth() {
-        return this.width;
+        return Math.round(this.width * 100) / 100;
     }
 
     getTotalMarginSize() {
         return this.config.marginLeft + this.config.marginRight;
+    }
+
+    resetWidthToOriginal() {
+        this.width = this.config.width;
     }
 }
 
@@ -154,7 +161,20 @@ class LegendItemCollection {
         return this.items.shift();
     }
 
+    shiftAll() {
+        return this.items.splice(0, this.items.length);
+    }
+
     push(item: LegendItem) {
         this.items.push(item);
+    }
+
+    pushMany(items: LegendItem[]) {
+        this.items.push(...items);
+    }
+
+    resetItemsToOriginalWidth() {
+        this.items.forEach(item => item.resetWidthToOriginal());
+        return this;
     }
 }

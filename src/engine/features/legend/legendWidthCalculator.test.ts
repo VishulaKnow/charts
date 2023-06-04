@@ -17,10 +17,10 @@ describe('getNewWidths', () => {
         const res = getNewLegendItemWidths({
             wrapper: { width: 100, maxRowsAmount: 1 },
             items: [
-                { marginRight: 0, marginLeft: 0, width: 20 },
                 { marginRight: 20, marginLeft: 0, width: 20 },
                 { marginRight: 20, marginLeft: 0, width: 20 },
-                { marginRight: 20, marginLeft: 0, width: 20 }
+                { marginRight: 20, marginLeft: 0, width: 20 },
+                { marginRight: 0, marginLeft: 0, width: 20 }
             ]
         });
         expect(res).toEqual([10, 10, 10, 10]);
@@ -30,23 +30,23 @@ describe('getNewWidths', () => {
         const res = getNewLegendItemWidths({
             wrapper: { width: 50, maxRowsAmount: 2 },
             items: [
-                { marginRight: 0, marginLeft: 0, width: 20 },
                 { marginRight: 20, marginLeft: 0, width: 20 },
                 { marginRight: 20, marginLeft: 0, width: 20 },
-                { marginRight: 20, marginLeft: 0, width: 20 }
+                { marginRight: 20, marginLeft: 0, width: 20 },
+                { marginRight: 0, marginLeft: 0, width: 20 }
             ]
         });
-        expect(res).toEqual([10, 10, 10, 10]);
+        expect(res).toEqual([5, 5, 10, 10]);
     });
 
     it('should return same values if values have not same widths bu there are fits in 1 row', () => {
         const res = getNewLegendItemWidths({
             wrapper: { width: 100, maxRowsAmount: 1 },
             items: [
-                { marginRight: 0, marginLeft: 0, width: 10 },
+                { marginRight: 10, marginLeft: 0, width: 10 },
                 { marginRight: 10, marginLeft: 0, width: 20 },
                 { marginRight: 10, marginLeft: 0, width: 20 },
-                { marginRight: 10, marginLeft: 0, width: 20 }
+                { marginRight: 0, marginLeft: 0, width: 20 }
             ]
         });
         expect(res).toEqual([10, 20, 20, 20]);
@@ -56,11 +56,11 @@ describe('getNewWidths', () => {
         const res = getNewLegendItemWidths({
             wrapper: { width: 100, maxRowsAmount: 1 },
             items: [
-                { marginRight: 0, marginLeft: 0, width: 10 },
+                { marginRight: 10, marginLeft: 0, width: 10 },
                 { marginRight: 10, marginLeft: 0, width: 20 },
                 { marginRight: 10, marginLeft: 0, width: 20 },
                 { marginRight: 10, marginLeft: 0, width: 20 },
-                { marginRight: 10, marginLeft: 0, width: 20 }
+                { marginRight: 0, marginLeft: 0, width: 20 }
             ]
         });
         expect(res).toEqual([10, 12.5, 12.5, 12.5, 12.5]);
@@ -70,8 +70,8 @@ describe('getNewWidths', () => {
         const res = getNewLegendItemWidths({
             wrapper: { width: 100, maxRowsAmount: 1 },
             items: [
-                { marginRight: 0, marginLeft: 0, width: 10 },
-                { marginRight: 10, marginLeft: 0, width: 90 }
+                { marginRight: 10, marginLeft: 0, width: 10 },
+                { marginRight: 0, marginLeft: 0, width: 90 }
             ]
         });
         expect(res).toEqual([10, 80]);
@@ -81,41 +81,41 @@ describe('getNewWidths', () => {
         const res = getNewLegendItemWidths({
             wrapper: { width: 100, maxRowsAmount: 1 },
             items: [
-                { marginRight: 0, marginLeft: 0, width: 10 },
+                { marginRight: 10, marginLeft: 0, width: 10 },
                 { marginRight: 10, marginLeft: 0, width: 90 },
                 { marginRight: 0, marginLeft: 0, width: 40 },
             ]
         });
-        expect(res).toEqual([10, 50, 30]);
+        expect(res).toEqual([10, 43.33, 26.67]);
     });
 
-    it('????', () => {
+    it('should replace items in lines if there is better placing', () => {
         const res = getNewLegendItemWidths({
             wrapper: { width: 730, maxRowsAmount: 2 },
             items: [
-                { marginRight: 0, marginLeft: 0, width: 143 },
+                { marginRight: 12, marginLeft: 0, width: 143 },
                 { marginRight: 12, marginLeft: 0, width: 271 },
                 { marginRight: 12, marginLeft: 0, width: 143 },
                 { marginRight: 12, marginLeft: 0, width: 143 },
                 { marginRight: 12, marginLeft: 0, width: 163 },
-                { marginRight: 12, marginLeft: 0, width: 421 }
+                { marginRight: 0, marginLeft: 0, width: 421 }
             ]
         });
-        expect(res).toEqual([143, 265, 143, 143, 163, 421]);
+        expect(res).toEqual([143, 253, 143, 143, 163, 421]);
     });
 
-    // it('????', () => {
-    //     const res = getNewLegendItemWidths({
-    //         wrapper: { width: 730, maxRowsAmount: 2 },
-    //         items: [
-    //             { marginRight: 0, marginLeft: 0, width: 243 },
-    //             { marginRight: 12, marginLeft: 0, width: 371 },
-    //             { marginRight: 12, marginLeft: 0, width: 243 },
-    //             { marginRight: 12, marginLeft: 0, width: 243 },
-    //             { marginRight: 12, marginLeft: 0, width: 263 },
-    //             { marginRight: 12, marginLeft: 0, width: 521 }
-    //         ]
-    //     });
-    //     expect(res).toEqual([143, 265, 143, 143, 163, 421]);
-    // });
+    it('should replace items in lines if there is better placing and items before replacing were cropped', () => {
+        const res = getNewLegendItemWidths({
+            wrapper: { width: 460, maxRowsAmount: 2 },
+            items: [
+                { marginRight: 12, marginLeft: 0, width: 143 },
+                { marginRight: 12, marginLeft: 0, width: 271 },
+                { marginRight: 12, marginLeft: 0, width: 143 },
+                { marginRight: 12, marginLeft: 0, width: 143 },
+                { marginRight: 12, marginLeft: 0, width: 163 },
+                { marginRight: 0, marginLeft: 0, width: 421 }
+            ]
+        });
+        expect(res).toEqual([141.33, 141.33, 141.33, 143, 143.33, 144.33]);
+    });
 });
