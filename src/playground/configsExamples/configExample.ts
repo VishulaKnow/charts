@@ -181,7 +181,7 @@ const configCars: MdtChartsConfig = {
                 },
                 embeddedLabels: 'none',
                 markers: {
-                    show: true
+                    show: false
                 },
                 lineStyles: {
                     dash: {
