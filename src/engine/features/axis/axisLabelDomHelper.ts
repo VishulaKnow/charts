@@ -1,6 +1,6 @@
 import { Selection, BaseType, select } from 'd3-selection';
 import { AxisScale, Axis as IAxis } from 'd3-axis';
-import { ScaleBand } from 'd3-scale'
+import { ScaleBand, ScaleLinear } from 'd3-scale'
 import { AxisModelOptions, Orient, ScaleKeyModel, ScaleValueModel } from "../../../model/model";
 import { Block } from "../../block/block";
 import { DomHelper } from '../../helpers/domHelper';
@@ -55,7 +55,7 @@ export class AxisLabelHelper {
         if ((axisOptions.orient === 'left' || axisOptions.orient === 'right') || (axisOptions.type === 'key' && axisOptions.labels.position === 'rotated'))
             maxLabelSize = axisOptions.labels.maxSize;
         else
-            maxLabelSize = (scale as ScaleBand<string>).step() - 4;
+            maxLabelSize = ((scale as ScaleBand<string>).step?.() ?? Infinity) - 4;
 
         DomHelper.cropSvgLabels(axisTextBlocks, maxLabelSize);
         if (scaleOptions.type === 'point' && axisOptions.labels.position === 'straight' && (axisOptions.orient === 'top' || axisOptions.orient === 'bottom')) {

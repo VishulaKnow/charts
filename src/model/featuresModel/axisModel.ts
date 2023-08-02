@@ -101,7 +101,7 @@ export class AxisModel {
 
     public static getLabelSize(labelMaxWidth: number, labelTexts: string[]): LabelSize {
         const LABEL_ELEMENT_HEIGHT_PX = 17;
-        const ONE_UPPER_SYMBOL_WIDTH_PX = 8.6;
+        const ONE_UPPER_SYMBOL_WIDTH_PX = 8;
         const longestLabelLength = Math.max(...labelTexts.map(t => ModelHelper.getStringScore(t)));
         const longestLabelWidth = ONE_UPPER_SYMBOL_WIDTH_PX * longestLabelLength;
         return {

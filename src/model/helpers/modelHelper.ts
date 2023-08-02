@@ -40,9 +40,10 @@ export class ModelHelper {
 
         let score = 0;
         const upperLetterScore = 1;
-        const lowerLetterScore = 0.74;
+        const lowerLetterScore = 0.67;
+        const specialSmallSymbols = [",", ".", " "]
         for (let i = 0; i < word.length; i++) {
-            if (word[i].toUpperCase() === word[i] && parseFloat(word[i]).toString() !== word[i])
+            if (word[i].toUpperCase() === word[i] && parseFloat(word[i]).toString() !== word[i] && !specialSmallSymbols.includes(word[i]) && word[i].trim().length > 0)
                 score += upperLetterScore;
             else
                 score += lowerLetterScore;
