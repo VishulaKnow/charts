@@ -1,4 +1,4 @@
-import { AxisLabelFormatter, MdtChartsConfig, MdtChartsField, MdtChartsPolarOptions, MdtChartsTwoDimensionalOptions, TwoDimensionalChartType } from "../../config/config";
+import { AxisLabelFormatter, MdtChartsConfig, MdtChartsField, MdtChartsFieldName, MdtChartsPolarOptions, MdtChartsTwoDimensionalOptions, TwoDimensionalChartType } from "../../config/config";
 import { DesignerConfig } from "../../designer/designerConfig";
 
 interface BaseConfigReader {
@@ -24,6 +24,15 @@ export class TwoDimConfigReader implements BaseConfigReader {
             fields.push(...chart.data.valueFields);
         });
         return fields;
+    }
+
+    getFieldsBySegments(): MdtChartsFieldName[][] {
+        const segments: MdtChartsFieldName[][] = [];
+        this.options.charts.forEach(chart => {
+            if (!chart.isSegmented) segments.push(...chart.data.valueFields.map(vf => [vf.name]));
+            else segments.push(...[chart.data.valueFields.map(vf => vf.name)])
+        });
+        return segments;
     }
 
     getAxisLabelFormatter(): AxisLabelFormatter {

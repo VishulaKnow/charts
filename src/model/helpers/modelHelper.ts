@@ -40,13 +40,14 @@ export class ModelHelper {
 
         let score = 0;
         const upperLetterScore = 1;
-        const lowerLetterScore = 0.67;
+        const lowerLetterScore = 0.8;
+        const digitAndSymbolScore = 0.67;
         const specialSmallSymbols = [",", ".", " "]
         for (let i = 0; i < word.length; i++) {
-            if (word[i].toUpperCase() === word[i] && parseFloat(word[i]).toString() !== word[i] && !specialSmallSymbols.includes(word[i]) && word[i].trim().length > 0)
-                score += upperLetterScore;
-            else
-                score += lowerLetterScore;
+            if (parseFloat(word[i]).toString() !== word[i] && !specialSmallSymbols.includes(word[i]) && word[i].trim().length > 0) {
+                if (word[i].toUpperCase() === word[i]) score += upperLetterScore;
+                else score += lowerLetterScore;
+            } else score += digitAndSymbolScore;
         }
 
         return score;

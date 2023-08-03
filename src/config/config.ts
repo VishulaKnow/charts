@@ -107,8 +107,10 @@ export interface DataOptions {
     maxRecordsAmount?: number;
 }
 
+export type MdtChartsFieldName = string;
+
 export interface MdtChartsField {
-    name: string;
+    name: MdtChartsFieldName;
     format: DataType;
 }
 

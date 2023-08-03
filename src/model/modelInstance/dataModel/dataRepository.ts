@@ -1,4 +1,4 @@
-import { DataOptions, MdtChartsDataSource, MdtChartsField } from "../../../config/config";
+import { DataOptions, MdtChartsDataSource, MdtChartsField, MdtChartsFieldName } from "../../../config/config";
 
 export class DataRepositoryModel {
     private rawFullSource: MdtChartsDataSource;
@@ -18,10 +18,17 @@ export class DataRepositoryModel {
         return this.getRawRows().map(dataRow => dataRow[this.keyField.name]);
     }
 
-    getBiggestValueAndDecremented() {
+    getBiggestValueAndDecremented(segmentedFields?: MdtChartsFieldName[][]): [number, number] {
         const values: number[] = [];
         this.getRawRows().forEach(row => {
-            this.valueFields.forEach(vf => values.push(row[vf.name]));
+            if (!segmentedFields) {
+                this.valueFields.forEach(vf => values.push(row[vf.name]));
+                return;
+            }
+            segmentedFields.forEach(fields => {
+                const valuesBySegment = fields.reduce<number>((acc, f) => acc + row[f], 0);
+                values.push(valuesBySegment);
+            })
         });
         const biggest = Math.max(...values);
         return [biggest, biggest - 1];
