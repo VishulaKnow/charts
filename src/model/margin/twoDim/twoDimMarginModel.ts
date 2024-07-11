@@ -58,7 +58,7 @@ export class TwoDimMarginModel {
             labelsTexts = modelInstance.dataModel.repository.getValuesByKeyField();
         } else {
             labelsTexts = modelInstance.dataModel.repository.getBiggestValueAndDecremented(this.configReader.getFieldsBySegments())
-                .map(v => this.configReader.getAxisLabelFormatter()(v));
+                .map(v => this.configReader.getAxisLabelFormatter()(v).toString());
         }
 
         return AxisModel.getLabelSize(this.designerConfig.canvas.axisLabel.maxSize.main, labelsTexts);
