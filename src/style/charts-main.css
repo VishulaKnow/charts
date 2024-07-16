@@ -1,3 +1,5 @@
+@import './css-vars.css';
+
 .wrapper {
     margin: 0 auto;
     position: relative;
@@ -18,8 +20,8 @@
 .data-label {
     font-family: "Roboto";
     font-style: normal;
-    font-weight: 300;
-    font-size: 12px;
+    font-weight: 400;
+    font-size: var(--chart-base-font-size);
     line-height: 140.62%;
     color: #444444;
     cursor: default;
@@ -85,9 +87,9 @@
 }
 
 .legend-label {
-    font-size: 12px;
+    font-size: var(--chart-base-font-size);
     font-family: "Roboto", sans-serif;
-    font-weight: 300;
+    font-weight: 400;
     color: #444444;
     width: calc(100% - 19px);
     overflow: hidden;

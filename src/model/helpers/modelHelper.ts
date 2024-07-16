@@ -1,7 +1,15 @@
 import { MdtChartsDataSource, IntervalChart } from "../../config/config";
+import { DomHelper } from "../../engine/helpers/domHelper";
 
 
 export class ModelHelper {
+    private static baseFontSize: number
+
+    private static getBaseFontSize() {
+        if (!this.baseFontSize) this.baseFontSize = parseInt(DomHelper.getCssPropertyValue(document.documentElement, '--chart-base-font-size'))
+        return this.baseFontSize
+    }
+
     public static getSum(items: number[]): number {
         return items.reduce((acc, item) => acc + item, 0);
     }
@@ -38,11 +46,12 @@ export class ModelHelper {
         // lower case letter width ~ 0.8 from upper case width.
         // Number width == lower case letter width
 
+        const fontSize = this.getBaseFontSize()
         let score = 0;
-        const upperLetterScore = 1;
-        const lowerLetterScore = 0.8;
-        const digitScore = 0.75;
-        const otherSymbolScore = 0.52;
+        const upperLetterScore = fontSize / 13;
+        const lowerLetterScore = fontSize / 15;
+        const digitScore = fontSize / 15;
+        const otherSymbolScore = fontSize / 23;
         const specialSmallSymbols = [",", ".", " "]
         for (let i = 0; i < word.length; i++) {
             if (parseFloat(word[i]).toString() !== word[i] && !specialSmallSymbols.includes(word[i]) && word[i].trim().length > 0) {
