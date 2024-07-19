@@ -650,7 +650,7 @@ class Listeners {
 }
 
 import '../style/fonts.css';
-import '../style/chart-main.css';
+import '../style/charts-main.css';
 import config from './configsExamples/configExample';
 import designerConfig from './configsExamples/designerConfigExample';
 import { Model } from '../model/model';
