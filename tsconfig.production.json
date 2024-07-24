@@ -9,7 +9,8 @@
         "types": [
             "jest"
         ],
-        "declaration": true
+        "declaration": true,
+        "moduleResolution": "Node"
     },
     "include": [
         "src"
