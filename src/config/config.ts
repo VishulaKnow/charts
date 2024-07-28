@@ -3,7 +3,7 @@ export type MdtChartsIconElement = () => HTMLElement;
 
 export type AxisPosition = 'start' | 'end';
 export type ChartOrientation = 'vertical' | 'horizontal';
-export type ChartNotation = '2d' | 'polar' | 'interval' | 'card';
+export type ChartNotation = '2d' | 'polar' | 'interval';
 export type ChartType = 'bar' | 'line' | 'area' | 'donut' | 'gantt';
 export type TwoDimensionalChartType = 'line' | 'bar' | 'area';
 export type PolarChartType = 'donut';
@@ -25,7 +25,7 @@ export interface MdtChartsDataSource {
 }
 export type AxisLabelPosition = "straight" | "rotated";
 
-export type MdtChartsConfigOptions = MdtChartsPolarOptions | MdtChartsTwoDimensionalOptions | MdtChartsIntervalOptions | MdtChartsCardsOptions;
+export type MdtChartsConfigOptions = MdtChartsPolarOptions | MdtChartsTwoDimensionalOptions | MdtChartsIntervalOptions;
 export interface MdtChartsConfig {
     canvas: ChartBlockCanvas;
     options: MdtChartsConfigOptions;
@@ -79,16 +79,6 @@ export interface MdtChartsIntervalOptions extends GraphicNotationOptions {
     chart: IntervalChart;
     additionalElements: AdditionalElements;
     orientation: ChartOrientation;
-}
-
-export interface MdtChartsCardsOptions extends BasicOptions {
-    type: 'card';
-    title: string;
-    description?: string;
-    icon?: MdtChartsIconElement;
-    color?: MdtChartsColorRangeItem[];
-    value: MdtChartsCardValue;
-    change?: MdtChartsCardsChange;
 }
 
 
@@ -190,26 +180,6 @@ export interface IntervalAxis {
 }
 
 interface DateAxisOptions extends AxisOptions { }
-
-
-//====================================================== CardsOptions
-export type MdtChartsCardValue = MdtChartsField;
-
-export interface MdtChartsCardsChange {
-    value: MdtChartsCardValue;
-    color?: MdtChartsColorRangeItem[];
-    description?: string;
-    icon?: MdtChartsCardsChangeIcon;
-}
-
-export interface MdtChartsCardOptionByValue<T> {
-    belowZero?: T;
-    equalZero?: T;
-    aboveZero?: T;
-}
-
-export interface MdtChartsCardsChangeIcon extends MdtChartsCardOptionByValue<MdtChartsIconElement> { }
-
 
 //====================================================== Charts
 interface ChartSettings {

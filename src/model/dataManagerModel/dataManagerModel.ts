@@ -10,7 +10,6 @@ import { ModelInstance } from "../modelInstance/modelInstance";
 import { MIN_DONUT_BLOCK_SIZE, PolarModel } from "../notations/polar/polarModel";
 import { DataManagerModelService } from "./dataManagerModelService";
 import { LegendPolarMarginCalculator } from "../featuresModel/legendModel/polarMarginCalculator";
-import { CardsDataManagerModel } from "./notations/cardsDataManagerModel";
 import { styledElementValues } from "../modelBuilder";
 
 export interface DataLegendParams {
@@ -26,7 +25,7 @@ export class DataManagerModel {
     private static polarMarginCalculator = new LegendPolarMarginCalculator();
 
     public static getPreparedData(data: MdtChartsDataSource, allowableKeys: string[], config: MdtChartsConfig): MdtChartsDataSource {
-        const scopedData = config.options.type !== "card" ? this.getScopedData(data, allowableKeys, config.options.data) : data;
+        const scopedData = this.getScopedData(data, allowableKeys, config.options.data);
         this.setDataType(scopedData, config);
 
         return scopedData;
@@ -37,9 +36,6 @@ export class DataManagerModel {
             this.initDataScopeFor2D(config.options, modelInstance, data, designerConfig);
         } else if (config.options.type === 'polar') {
             this.initDataScopeForPolar(config.options, modelInstance, data, legendBlock, designerConfig.canvas.legendBlock);
-        } else if (config.options.type === "card") {
-            const manager = new CardsDataManagerModel();
-            manager.initDataScope(modelInstance);
         }
         this.initScopedData(data, modelInstance, config);
     }
