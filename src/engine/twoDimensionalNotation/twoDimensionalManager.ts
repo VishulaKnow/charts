@@ -74,6 +74,7 @@ export class TwoDimensionalManager implements ChartContentManager {
     public updateData(block: Block, model: Model<TwoDimensionalOptionsModel>, data: MdtChartsDataSource) {
         block.transitionManager.interruptTransitions();
         block.filterEventManager.updateData(data[model.options.data.dataSource]);
+        Title.updateData(model.options.title);
         TipBox.clearEvents(block);
         Tooltip.hide(block);
 

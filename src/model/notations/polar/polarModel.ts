@@ -5,6 +5,7 @@ import { PolarOptionsModel, PolarChartModel, DonutChartSettings, LegendCoordinat
 import { CanvasModel } from "../../modelInstance/canvasModel/canvasModel";
 import { ModelInstance } from "../../modelInstance/modelInstance";
 import { DonutModel } from "./donut/donutModel";
+import { getResolvedTitle } from "../../../model/featuresModel/titleModel";
 
 export const MIN_DONUT_BLOCK_SIZE = 120;
 
@@ -12,10 +13,13 @@ export class PolarModel {
     private static donutModel = new DonutModel();
 
     public static getOptions(options: MdtChartsPolarOptions, designerConfig: DesignerConfig, modelInstance: ModelInstance): PolarOptionsModel {
+        const dataRows = modelInstance.dataModel.repository.getRawRows()
+        const resolvedTitle = getResolvedTitle(options.title, dataRows)
+
         return {
             type: options.type,
             selectable: !!options.selectable,
-            title: options.title,
+            title: resolvedTitle,
             data: { ...options.data },
             charts: this.getChartsModel(options.chart, modelInstance.dataModel.repository.getScopedRows().length, designerConfig.chartStyle),
             legend: modelInstance.canvasModel.legendCanvas.getModel(),
