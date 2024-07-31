@@ -10,7 +10,8 @@ const configCars: MdtChartsConfig = {
     },
     options: {
         type: '2d',
-        title: 'Заголовок графика',
+        title: (params) => params.data.reduce((acc, row) =>  {
+            return acc + row.count},0).toString(),
         selectable: true,
         axis: {
             key: {

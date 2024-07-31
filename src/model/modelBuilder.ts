@@ -1,5 +1,5 @@
 import { MdtChartsConfig, MdtChartsDataSource, Size } from '../config/config';
-import { Model, BlockCanvas, ChartBlockModel, TwoDimensionalOptionsModel, PolarOptionsModel, DataSettings, DataFormat, DataScope, IntervalOptionsModel, OptionsModel } from './model';
+import { Model, BlockCanvas, ChartBlockModel, DataSettings, DataFormat, DataScope, OptionsModel } from './model';
 import { MarginModel } from './margin/marginModel';
 import { TwoDimensionalModel } from './notations/twoDimensionalModel';
 import { PolarModel } from './notations/polar/polarModel';
@@ -9,6 +9,7 @@ import { OtherComponentsModel } from './featuresModel/otherComponents';
 import { ConfigValidator } from './configsValidator/configValidator';
 import { ModelInstance } from './modelInstance/modelInstance';
 import { TwoDimConfigReader } from './modelInstance/configReader';
+import { getResolvedTitle } from "../model/featuresModel/titleModel";
 
 
 export enum AxisType {
@@ -78,6 +79,8 @@ function getTransitions(designerConfig: DesignerConfig): Transitions {
 
 export function assembleModel(config: MdtChartsConfig, data: MdtChartsDataSource, designerConfig: DesignerConfig): Model {
     const modelInstance = ModelInstance.create(config, data, designerConfig);
+    const dataRows = modelInstance.dataModel.repository.getRawRows()
+    const resolvedTitle = getResolvedTitle(config.options.title, dataRows)
 
     if (!data || Object.keys(data).length === 0)
         return {
@@ -94,7 +97,7 @@ export function assembleModel(config: MdtChartsConfig, data: MdtChartsDataSource
         {
             elementsOptions: designerConfig.elementsOptions,
             legendConfig: designerConfig.canvas.legendBlock,
-            title: config.options.title
+            title: resolvedTitle
         },
         modelInstance
     );

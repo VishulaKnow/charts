@@ -9,12 +9,16 @@ import { TwoDimensionalOptionsModel, TwoDimensionalChartModel, EmbeddedLabelType
 import { TwoDimConfigReader } from "../modelInstance/configReader";
 import { ModelInstance } from "../modelInstance/modelInstance";
 import { getLegendMarkerOptions, parseDashStyles, parseShape } from "./twoDimensional/styles";
+import { getResolvedTitle } from "../../model/featuresModel/titleModel";
+
 
 export class TwoDimensionalModel {
     public static getOptions(configReader: TwoDimConfigReader, designerConfig: DesignerConfig, modelInstance: ModelInstance): TwoDimensionalOptionsModel {
         const options = configReader.options;
         const canvasModel = modelInstance.canvasModel;
         const dataModelRep = modelInstance.dataModel.repository;
+        const dataRows = dataModelRep.getRawRows()
+        const resolvedTitle = getResolvedTitle(options.title, dataRows)
         const scaleModel = new ScaleModel();
 
         const scaleMarginRecalcer = new ScaleAxisRecalcer(() => scaleModel.getScaleLinear(options, dataModelRep.getScopedRows(), canvasModel, configReader));
@@ -23,7 +27,7 @@ export class TwoDimensionalModel {
 
         return {
             legend: canvasModel.legendCanvas.getModel(),
-            title: options.title,
+            title: resolvedTitle,
             selectable: !!options.selectable,
             orient: options.orientation,
             scale: {

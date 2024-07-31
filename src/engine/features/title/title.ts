@@ -1,4 +1,4 @@
-import { Selection } from 'd3-selection'
+import {select, Selection} from 'd3-selection'
 import { Size } from '../../../config/config';
 import { TitleBlockModel } from "../../../model/model";
 import { Block } from "../../block/block";
@@ -12,17 +12,23 @@ interface TitleAttributes {
 }
 
 export class Title {
+    private static readonly titleCssClass = 'chart-title'
+
     public static render(block: Block, text: string, titleBlockModel: TitleBlockModel, blockSize: Size): void {
         if (!text) return;
 
         const titleBlock = block.getSvg()
             .append('text')
-            .attr('class', 'chart-title');
+            .attr('class', this.titleCssClass);
 
         const titleCoordinate = this.getTitleAttributes(blockSize, titleBlockModel);
 
         this.fillTitleBlockAttributes(titleBlock, titleCoordinate, text);
         this.setTitleTooltip(titleBlock, text);
+    }
+
+    public static updateData(text: string): void {
+        select(`.${this.titleCssClass}`).text(text);
     }
 
     private static fillTitleBlockAttributes(titleBlock: Selection<SVGTextElement, unknown, HTMLElement, any>, attributes: TitleAttributes, text: string) {
