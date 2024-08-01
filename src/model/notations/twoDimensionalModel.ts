@@ -10,18 +10,17 @@ import { TwoDimConfigReader } from "../modelInstance/configReader";
 import { ModelInstance } from "../modelInstance/modelInstance";
 import { getLegendMarkerOptions, parseDashStyles, parseShape } from "./twoDimensional/styles";
 import { getResolvedTitle } from "../../model/featuresModel/titleModel";
+import { DataRepositoryModel } from "../modelInstance/dataModel/dataRepository";
 
 
 export class TwoDimensionalModel {
     public static getOptions(configReader: TwoDimConfigReader, designerConfig: DesignerConfig, modelInstance: ModelInstance): TwoDimensionalOptionsModel {
         const options = configReader.options;
         const canvasModel = modelInstance.canvasModel;
-        const dataModelRep = modelInstance.dataModel.repository;
-        const dataRows = dataModelRep.getRawRows()
-        const resolvedTitle = getResolvedTitle(options.title, dataRows)
+        const resolvedTitle = getResolvedTitle(options.title, modelInstance.dataModel.repository.getRawRows())
         const scaleModel = new ScaleModel();
 
-        const scaleMarginRecalcer = new ScaleAxisRecalcer(() => scaleModel.getScaleLinear(options, dataModelRep.getScopedRows(), canvasModel, configReader));
+        const scaleMarginRecalcer = new ScaleAxisRecalcer(() => scaleModel.getScaleLinear(options, modelInstance.dataModel.repository.getScopedRows(), canvasModel, configReader));
         scaleMarginRecalcer.recalculateMargin(canvasModel, options.orientation, options.axis.key);
         const scaleValueInfo = scaleMarginRecalcer.getScaleValue();
 
@@ -35,12 +34,12 @@ export class TwoDimensionalModel {
                 value: scaleValueInfo.scale
             },
             axis: {
-                key: AxisModel.getKeyAxis(options, dataModelRep.getScopedFullSource(), designerConfig.canvas.axisLabel, canvasModel, designerConfig.elementsOptions.tooltip, () => scaleValueInfo.scaleFn(0)),
+                key: AxisModel.getKeyAxis(options, modelInstance.dataModel.repository.getScopedFullSource(), designerConfig.canvas.axisLabel, canvasModel, designerConfig.elementsOptions.tooltip, () => scaleValueInfo.scaleFn(0)),
                 value: AxisModel.getValueAxis(options.orientation, options.axis.value, designerConfig.canvas.axisLabel, canvasModel)
             },
             type: options.type,
             data: { ...options.data },
-            charts: this.getChartsModel(options.charts, options.orientation, designerConfig),
+            charts: this.getChartsModel(options.charts, options.orientation, designerConfig, modelInstance.dataModel.repository),
             additionalElements: this.getAdditionalElements(options),
             tooltip: options.tooltip,
             chartSettings: this.getChartsSettings(designerConfig.canvas.chartOptions, options.orientation)
@@ -71,7 +70,7 @@ export class TwoDimensionalModel {
         }
     }
 
-    private static getChartsModel(charts: MdtChartsTwoDimensionalChart[], chartOrientation: ChartOrientation, designerConfig: DesignerConfig): TwoDimensionalChartModel[] {
+    private static getChartsModel(charts: MdtChartsTwoDimensionalChart[], chartOrientation: ChartOrientation, designerConfig: DesignerConfig, dataModelRep: DataRepositoryModel): TwoDimensionalChartModel[] {
         const styleModel = new TwoDimensionalChartStyleModel(charts, designerConfig.chartStyle);
         this.sortCharts(charts);
         const chartsModel: TwoDimensionalChartModel[] = [];
@@ -86,7 +85,7 @@ export class TwoDimensionalModel {
                 style: styleModel.getChartStyle(chart, index),
                 embeddedLabels: this.getEmbeddedLabelType(chart, chartOrientation),
                 markersOptions: {
-                    show: chart.markers.show,
+                    show: dataModelRep.getScopedRows().length === 1 ? true : chart.markers.show,
                     styles: {
                         highlighted: {
                             size: { radius: designerConfig.canvas.markers?.highlighted?.radius ?? 4, borderSize: '3.5px' }
