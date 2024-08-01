@@ -56,7 +56,7 @@ interface BasicOptions {
 interface GraphicNotationOptions extends BasicOptions {
     data: DataOptions;
     legend: Legend;
-    title?: string;
+    title?: Title;
     selectable: boolean;
 }
 
@@ -86,6 +86,15 @@ export interface MdtChartsIntervalOptions extends GraphicNotationOptions {
 export interface Legend {
     show: boolean;
 }
+export interface TitleFunctionParams {
+    data: MdtChartsDataRow[]
+}
+
+export interface TitleFunction {
+    (params: TitleFunctionParams): string;
+}
+
+export type Title = string | TitleFunction;
 
 export interface MdtChartsBasicDataOptions {
     dataSource: string;

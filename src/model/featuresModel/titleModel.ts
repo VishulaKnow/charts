@@ -1,4 +1,13 @@
 import { TitleBlockModel } from "../model";
+import { MdtChartsDataRow } from "src/config/config";
+import { Title } from "src/engine/features/title/title";
+
+
+export const getResolvedTitle = (title: Title, dataRows: MdtChartsDataRow[]) => {
+    return typeof title === 'function'
+      ? title({ data: dataRows })
+      : title
+}
 
 export class TitleModel {
     public static getTitleModel(titleText: string): TitleBlockModel {

@@ -52,6 +52,7 @@ export class PolarManager implements ChartContentManager {
         block.transitionManager.interruptTransitions();
         block.removeMouseEvents();
         block.filterEventManager.updateData(data[model.options.data.dataSource]);
+        Title.updateData(model.options.title);
         ElementHighlighter.removeDonutArcClones(block);
 
         ElementHighlighter.removeFilter(Donut.getAllArcGroups(block));
