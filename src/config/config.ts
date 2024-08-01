@@ -169,6 +169,7 @@ export interface NumberDomain {
 
 export interface NumberAxisLabel {
     format: (v: number) => string;
+    stepSize?: number;
 }
 
 export type AxisLabelFormatter = (v: number) => string;

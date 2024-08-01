@@ -13,6 +13,9 @@ export interface LabelSize {
     height: number
 }
 
+export const MINIMAL_VERTICAL_STEP_SIZE = 60;
+export const MINIMAL_HORIZONTAL_STEP_SIZE = 100;
+
 export class AxisModel {
     private static service = new AxisModelService();
 
@@ -34,7 +37,8 @@ export class AxisModel {
                 position: AxisModel.getKeyAxisLabelPosition(canvasModel, DataManagerModel.getDataValuesByKeyField(data, dataOptions.dataSource, dataOptions.keyField.name).length, axisConfig),
                 visible: !TwoDimensionalModel.getChartsEmbeddedLabelsFlag(charts, orientation),
                 defaultTooltip: tooltipSettings.position === 'fixed',
-                showTick: tickCalculator.createFunctionCalculator(this.getAxisLength(orientation, canvasModel))
+                showTick: tickCalculator.createFunctionCalculator(this.getAxisLength(orientation, canvasModel)),
+                linearTickStep: MINIMAL_HORIZONTAL_STEP_SIZE
             },
             visibility: axisConfig.visibility
         }
@@ -55,7 +59,9 @@ export class AxisModel {
                 position: 'straight',
                 visible: true,
                 defaultTooltip: true,
-                showTick: showAllTicks
+                showTick: showAllTicks,
+                linearTickStep: axisConfig.labels?.stepSize
+                    ?? (orient === "horizontal" ? MINIMAL_HORIZONTAL_STEP_SIZE : MINIMAL_VERTICAL_STEP_SIZE)
             },
             visibility: axisConfig.visibility
         }

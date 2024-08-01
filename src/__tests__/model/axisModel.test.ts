@@ -1,6 +1,6 @@
 import { DataOptions, MdtChartsDataSource, DiscreteAxisOptions, NumberAxisOptions, Size, MdtChartsTwoDimensionalChart, MdtChartsTwoDimensionalOptions, AxisLabelPosition, ShowTickFn } from "../../config/config";
 import { TooltipSettings } from "../../designer/designerConfig";
-import { AxisModel } from "../../model/featuresModel/axisModel";
+import { AxisModel, MINIMAL_HORIZONTAL_STEP_SIZE, MINIMAL_VERTICAL_STEP_SIZE } from "../../model/featuresModel/axisModel";
 import { AxisModelService, showAllTicks } from "../../model/featuresModel/axisModelService";
 import { AxisModelOptions, BlockMargin } from "../../model/model";
 import { CanvasModel } from "../../model/modelInstance/canvasModel/canvasModel";
@@ -119,7 +119,8 @@ describe('get axes', () => {
                 position: 'straight',
                 visible: true,
                 defaultTooltip: true,
-                showTick: showAllTicks
+                showTick: showAllTicks,
+                linearTickStep: MINIMAL_HORIZONTAL_STEP_SIZE
             },
             orient: "bottom",
             ticks: {
@@ -151,7 +152,8 @@ describe('get axes', () => {
                 position: 'straight',
                 visible: true,
                 defaultTooltip: false,
-                showTick: showAllTicks
+                showTick: showAllTicks,
+                linearTickStep: MINIMAL_HORIZONTAL_STEP_SIZE
             },
             orient: "left",
             ticks: {
@@ -181,7 +183,8 @@ describe('get axes', () => {
                 position: 'straight',
                 visible: true,
                 defaultTooltip: true,
-                showTick: (d, i) => i % 2 === 0 ? d : undefined
+                showTick: (d, i) => i % 2 === 0 ? d : undefined,
+                linearTickStep: MINIMAL_HORIZONTAL_STEP_SIZE
             },
             orient: "bottom",
             ticks: {
@@ -218,7 +221,8 @@ describe('get axes', () => {
                 position: 'straight',
                 visible: true,
                 defaultTooltip: true,
-                showTick: (d, i) => i % 3 === 0 ? d : undefined
+                showTick: (d, i) => i % 3 === 0 ? d : undefined,
+                linearTickStep: MINIMAL_HORIZONTAL_STEP_SIZE
             },
             orient: "bottom",
             ticks: {
@@ -256,7 +260,8 @@ describe('get axes', () => {
                 position: 'straight',
                 visible: true,
                 defaultTooltip: true,
-                showTick: showRule
+                showTick: showRule,
+                linearTickStep: MINIMAL_HORIZONTAL_STEP_SIZE
             },
             orient: "bottom",
             ticks: {
@@ -290,7 +295,8 @@ describe('get axes', () => {
                 position: 'straight',
                 visible: true,
                 defaultTooltip: true,
-                showTick: showAllTicks
+                showTick: showAllTicks,
+                linearTickStep: MINIMAL_VERTICAL_STEP_SIZE
             },
             orient: "left",
             ticks: {
@@ -319,7 +325,8 @@ describe('get axes', () => {
                 position: 'straight',
                 visible: true,
                 defaultTooltip: true,
-                showTick: showAllTicks
+                showTick: showAllTicks,
+                linearTickStep: MINIMAL_VERTICAL_STEP_SIZE
             },
             orient: "right",
             ticks: {

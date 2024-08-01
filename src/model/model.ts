@@ -147,6 +147,7 @@ export interface AxisLabelModel {
     visible: boolean;
     defaultTooltip: boolean;
     showTick: ShowTickFn;
+    linearTickStep: number;
 }
 
 export interface AdditionalElementsOptions {

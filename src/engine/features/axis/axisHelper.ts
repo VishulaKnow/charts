@@ -1,10 +1,8 @@
 import { axisTop, axisBottom, axisLeft, axisRight, AxisScale, Axis as IAxis } from 'd3-axis';
-import { AxisModelOptions, Orient, ScaleKeyModel, ScaleValueModel } from "../../../model/model";
-import { max, min } from 'd3-array';
+import { AxisLabelModel, AxisModelOptions, Orient, ScaleKeyModel, ScaleValueModel } from "../../../model/model";
 import { format } from 'd3-format';
 import { AxisLabelHelper } from './axisLabelDomHelper';
 
-const MINIMAL_STEP_SIZE = 60;
 export class AxisHelper {
     public static getAxisByOrient(orient: Orient, scale: AxisScale<any>): IAxis<any> {
         if (orient === 'top')
@@ -18,18 +16,16 @@ export class AxisHelper {
     }
 
 
-    public static setValueAxisLabelsSettings(axisGenerator: IAxis<any>, range: number[], scaleOptions: ScaleValueModel): void {
+    public static setValueAxisLabelsSettings(axisGenerator: IAxis<any>, range: number[], scaleOptions: ScaleValueModel, labelsOptions: AxisLabelModel): void {
         const axisLength = range[1] - range[0];
-        let ticksAmount: number;
-        if (axisLength / 10 < MINIMAL_STEP_SIZE) {
-            if (Math.floor(axisLength / MINIMAL_STEP_SIZE) > 2) {
-                ticksAmount = Math.floor(axisLength / MINIMAL_STEP_SIZE);
-                axisGenerator.ticks(Math.floor(axisLength / MINIMAL_STEP_SIZE));
-            }
-            else {
-                ticksAmount = 2;
-                axisGenerator.tickValues([min(scaleOptions.domain), max(scaleOptions.domain)]);
-            }
+
+        const minimalStepSize = labelsOptions.linearTickStep;
+
+        if (Math.floor(axisLength / minimalStepSize) > 2) {
+            axisGenerator.ticks(Math.floor(axisLength / minimalStepSize));
+        }
+        else {
+            axisGenerator.ticks(1);
         }
         if (scaleOptions.type === 'linear') {
             this.setNumTickFormat(axisGenerator, scaleOptions.formatter);
