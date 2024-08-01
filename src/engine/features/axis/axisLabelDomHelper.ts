@@ -58,7 +58,7 @@ export class AxisLabelHelper {
             maxLabelSize = ((scale as ScaleBand<string>).step?.() ?? Infinity) - 4;
 
         DomHelper.cropSvgLabels(axisTextBlocks, maxLabelSize);
-        if (scaleOptions.type === 'point' && axisOptions.labels.position === 'straight' && (axisOptions.orient === 'top' || axisOptions.orient === 'bottom')) {
+        if (axisOptions.labels.position === 'straight' && (axisOptions.orient === 'top' || axisOptions.orient === 'bottom')) {
             this.cropAndAlignExtremeLabels(block, maxLabelSize, axisOptions, blockSize);
         }
     }
@@ -88,7 +88,7 @@ export class AxisLabelHelper {
         }
     }
 
-    private static cropAndAlignExtremeLabels(block: Block, maxLabelSize: number, axisOptions: AxisModelOptions, blockSize: Size): void {
+    public static alignHorizontalAxisLastLabel(block: Block, maxLabelSize: number, axisOptions: AxisModelOptions, blockSize: Size, crop: boolean) {
         const lastTick = block.getSvg().select(`.${axisOptions.cssClass}`).select<SVGGraphicsElement>('.tick:last-of-type');
         const lastLabel = lastTick.select<SVGGraphicsElement>('text');
         if (lastTick.size() === 0 || lastLabel.size() === 0)
@@ -100,8 +100,12 @@ export class AxisLabelHelper {
         if (tickTranslateX + lastLabel.node().getBBox().width + axisOptions.translate.translateX > blockSize.width) {
             lastLabel.attr('text-anchor', 'start');
             lastLabel.attr('transform', `translate(${this.getTranslateNumber(maxLabelSize, lastLabel, marginRight)}, 0)`);
-            DomHelper.cropSvgLabels(lastLabel, maxLabelSize / 2 + marginRight);
+            if (crop) DomHelper.cropSvgLabels(lastLabel, maxLabelSize / 2 + marginRight);
         }
+    }
+
+    private static cropAndAlignExtremeLabels(block: Block, maxLabelSize: number, axisOptions: AxisModelOptions, blockSize: Size): void {
+        this.alignHorizontalAxisLastLabel(block, maxLabelSize, axisOptions, blockSize, true);
 
         const firstLabel = block.getSvg()
             .select(`.${axisOptions.cssClass}`)
