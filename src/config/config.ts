@@ -170,6 +170,14 @@ export interface DiscreteAxisOptions extends AxisOptions {
 
 export interface MdtChartsDiscreteAxisLabel {
     position?: AxisLabelPosition;
+    showRule?: MdtChartsShowAxisLabelRule;
+}
+
+export type ShowTickFn = (dataKey: string, index: number) => string | undefined;
+
+export interface MdtChartsShowAxisLabelRule {
+    spaceForOneLabel?: number;
+    showTickFn?: ShowTickFn;
 }
 
 

@@ -6,7 +6,7 @@ import { DataManagerModel } from "../dataManagerModel/dataManagerModel";
 import { TwoDimensionalModel } from "../notations/twoDimensionalModel";
 import { AxisLabelCanvas, TooltipSettings } from "../../designer/designerConfig";
 import { CanvasModel } from "../modelInstance/canvasModel/canvasModel";
-import { AxisModelService } from "./axisModelService";
+import { AxisModelService, AxisModelTickCalculator, showAllTicks } from "./axisModelService";
 
 export interface LabelSize {
     width: number;
@@ -21,6 +21,7 @@ export class AxisModel {
         const axisConfig = options.axis.key;
 
         const translate: TranslateModel = this.getKeyAxisTranslateModel(orientation, axisConfig.position, canvasModel, getZeroCoordinate);
+        const tickCalculator = new AxisModelTickCalculator(data[dataOptions.dataSource], options.axis.key.labels?.showRule);
 
         return {
             type: 'key',
@@ -32,7 +33,8 @@ export class AxisModel {
                 maxSize: AxisModel.getLabelSizeLegacy(labelConfig.maxSize.main, data[dataOptions.dataSource].map(d => d[dataOptions.keyField.name])).width,
                 position: AxisModel.getKeyAxisLabelPosition(canvasModel, DataManagerModel.getDataValuesByKeyField(data, dataOptions.dataSource, dataOptions.keyField.name).length, axisConfig),
                 visible: !TwoDimensionalModel.getChartsEmbeddedLabelsFlag(charts, orientation),
-                defaultTooltip: tooltipSettings.position === 'fixed'
+                defaultTooltip: tooltipSettings.position === 'fixed',
+                showTick: tickCalculator.createFunctionCalculator(this.getAxisLength(orientation, canvasModel))
             },
             visibility: axisConfig.visibility
         }
@@ -52,7 +54,8 @@ export class AxisModel {
                 maxSize: labelConfig.maxSize.main,
                 position: 'straight',
                 visible: true,
-                defaultTooltip: true
+                defaultTooltip: true,
+                showTick: showAllTicks
             },
             visibility: axisConfig.visibility
         }

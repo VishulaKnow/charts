@@ -1,7 +1,7 @@
 import { ChartOrientation, MdtChartsTwoDimensionalChart, TwoDimensionalChartType, MdtChartsTwoDimensionalOptions } from "../../config/config";
 import { ChartOptionsCanvas, DesignerConfig } from "../../designer/designerConfig";
 import { ChartStyleModelService } from "../chartStyleModel/chartStyleModel";
-import { TwoDimensionalChartStyleModel } from "../chartStyleModel/TwoDimensionalChartStyleModel";
+import { TwoDimensionalChartStyleModel } from "../chartStyleModel/twoDimensionalChartStyleModel";
 import { AxisModel } from "../featuresModel/axisModel";
 import { ScaleAxisRecalcer } from "../featuresModel/scaleModel/scaleAxisRecalcer";
 import { ScaleModel } from "../featuresModel/scaleModel/scaleModel";
