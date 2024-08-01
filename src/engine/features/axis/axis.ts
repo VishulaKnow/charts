@@ -97,6 +97,7 @@ export class Axis {
             else if (axisOptions.orient === 'top')
                 axisGenerator.tickPadding(-6);
         }
+        axisGenerator.tickFormat(axisOptions.labels.showTick);
 
         const axisElement = block.getSvg()
             .select<SVGGElement>(`g.${axisOptions.cssClass}`);
