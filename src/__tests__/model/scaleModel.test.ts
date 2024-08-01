@@ -625,6 +625,7 @@ describe('get scales tests', () => {
             range: {
                 start: 0, end: 460
             },
+            formatter: null,
             type: 'linear'
         })
     });

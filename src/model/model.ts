@@ -7,6 +7,7 @@ import {
     TooltipOptions,
     TwoDimensionalChartType,
     AxisLabelPosition,
+    ShowTickFn,
 } from "../config/config";
 import { DataType, DonutOptionsCanvas, Formatter, StaticLegendBlockCanvas, TooltipSettings, Transitions } from "../designer/designerConfig";
 
@@ -145,6 +146,7 @@ export interface AxisLabelModel {
     position: AxisLabelPosition;
     visible: boolean;
     defaultTooltip: boolean;
+    showTick: ShowTickFn;
 }
 
 export interface AdditionalElementsOptions {
