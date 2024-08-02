@@ -171,13 +171,9 @@ export interface AxisDomainFunctionParams {
     data: MdtChartsDataRow[]
 }
 
-export interface AxisDomainFunction {
-    (params: AxisDomainFunctionParams): NumberDomain
-}
+export type AxisDomainFunction = (params: AxisDomainFunctionParams) => NumberDomain;
 
 export type AxisNumberDomain = NumberDomain | AxisDomainFunction
-
-
 
 export interface NumberAxisLabel {
     format: (v: number) => string;
