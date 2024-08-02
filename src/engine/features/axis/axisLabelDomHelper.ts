@@ -91,7 +91,7 @@ export class AxisLabelHelper {
     public static alignHorizontalAxisLastLabel(block: Block, maxLabelSize: number, axisOptions: AxisModelOptions, blockSize: Size, crop: boolean) {
         const lastTick = block.getSvg().select(`.${axisOptions.cssClass}`).select<SVGGraphicsElement>('.tick:last-of-type');
         const lastLabel = lastTick.select<SVGGraphicsElement>('text');
-        if (lastTick.size() === 0 || lastLabel.size() === 0)
+        if (lastTick.empty() || lastTick.size() === 0 || lastLabel.size() === 0)
             return;
 
         const tickTranslateX = Helper.getTranslateNumbers(lastTick.attr('transform'))[0];
@@ -111,6 +111,7 @@ export class AxisLabelHelper {
             .select(`.${axisOptions.cssClass}`)
             .select('.tick:first-of-type')
             .select<SVGGraphicsElement>('text');
+        if (firstLabel.empty()) return;
         const axisElementTranslate = Helper.getTranslateNumbers(block.getSvg().select(`.${axisOptions.cssClass}`).attr('transform'))[0];
         if (axisOptions.translate.translateX - firstLabel.node().getBBox().width / 2 < 0) {
             firstLabel.attr('text-anchor', 'start');
