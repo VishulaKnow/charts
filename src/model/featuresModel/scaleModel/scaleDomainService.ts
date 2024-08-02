@@ -1,19 +1,33 @@
-import { MdtChartsDataRow, MdtChartsTwoDimensionalChart, MdtChartsTwoDimensionalOptions, NumberDomain } from "../../../config/config";
+import {
+    AxisNumberDomain,
+    MdtChartsDataRow,
+    MdtChartsTwoDimensionalChart,
+    MdtChartsTwoDimensionalOptions
+} from "../../../config/config";
 
-export function getScaleLinearDomain(configDomain: NumberDomain, dataRows: MdtChartsDataRow[], configOptions: MdtChartsTwoDimensionalOptions) {
+export function getResolvedDomain(domain: AxisNumberDomain, dataRows: MdtChartsDataRow[] )  {
+    return typeof domain === 'function'
+      ? domain({ data: dataRows })
+      : domain
+}
+
+export function getScaleLinearDomain(configDomain: AxisNumberDomain, dataRows: MdtChartsDataRow[], configOptions: MdtChartsTwoDimensionalOptions) {
     const calculator = new ScaleDomainCalculator();
 
     let domainPeekMin: number;
     let domainPeekMax: number;
-    if (configDomain.start === -1)
+
+    const resolvedConfigDomain = getResolvedDomain(configDomain, dataRows)
+
+    if (resolvedConfigDomain.start === -1)
         domainPeekMin = calculator.getScaleMinValue(configOptions.charts, dataRows)
     else
-        domainPeekMin = configDomain.start;
+        domainPeekMin = resolvedConfigDomain.start;
 
-    if (configDomain.end === -1)
+    if (resolvedConfigDomain.end === -1)
         domainPeekMax = calculator.getScaleMaxValue(configOptions.charts, dataRows);
     else
-        domainPeekMax = configDomain.end;
+        domainPeekMax = resolvedConfigDomain.end;
 
     if (configOptions.axis.key.position === 'start')
         return [domainPeekMin, domainPeekMax];
@@ -37,7 +51,6 @@ export class ScaleDomainCalculator {
                     min = sumInRow;
             });
         });
-
         return min;
     }
 
@@ -57,7 +70,6 @@ export class ScaleDomainCalculator {
                     max = sumInRow;
             });
         });
-
         return max;
     }
 }

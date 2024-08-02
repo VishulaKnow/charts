@@ -1,6 +1,16 @@
 import { Engine } from '../engine/engine';
 import { assembleModel, getPreparedData } from '../model/modelBuilder';
-import { ChartNotation, MdtChartsConfig, MdtChartsDataRow, MdtChartsDataSource, MdtChartsIntervalOptions, MdtChartsPolarOptions, MdtChartsTwoDimensionalChart, MdtChartsTwoDimensionalOptions } from '../config/config'
+import {
+    ChartNotation,
+    MdtChartsConfig,
+    MdtChartsDataRow,
+    MdtChartsDataSource,
+    MdtChartsIntervalOptions,
+    MdtChartsPolarOptions,
+    MdtChartsTwoDimensionalChart,
+    MdtChartsTwoDimensionalOptions,
+    NumberDomain
+} from '../config/config'
 import { DesignerConfig, Transitions } from '../designer/designerConfig';
 
 export function getUpdatedModel(config: MdtChartsConfig, data: MdtChartsDataSource, designerConfig: DesignerConfig): Model {
@@ -72,9 +82,10 @@ class Listeners {
         this.engine.updateFullBlock(model, preparedData);
     }
     private dropAxisDomain(config: MdtChartsConfig) {
+
         if (config.options.type === '2d') {
-            config.options.axis.value.domain.end = -1;
-            config.options.axis.value.domain.start = -1;
+            (config.options.axis.value.domain as NumberDomain).end = -1;
+            (config.options.axis.value.domain as NumberDomain).start = -1;
         }
     }
 
@@ -451,9 +462,8 @@ class Listeners {
                 const max = parseInt(ListenersHelper.getInputValue('#max-random-value')) || 120;
                 const dataCopy = ListenersHelper.getCopy(thisClass.data);
                 const newData = thisClass.getDataWithRandomValues(dataCopy, max);
-
-                if (config.options.type === '2d' && config.options.axis.value.domain.end < max)
-                    config.options.axis.value.domain.end = -1;
+                if (config.options.type === '2d' && (config.options.axis.value.domain as NumberDomain).end < max)
+                    (config.options.axis.value.domain as NumberDomain).end = -1;
 
                 const model = getUpdatedModel(thisClass.config, newData, thisClass.designerConfig);
                 const preparedData = getPreparedData(model, newData, config);
@@ -490,6 +500,7 @@ class Listeners {
             if (config.options.type === '2d') {
                 const start = ListenersHelper.getInputValue('#domain-start');
                 const end = ListenersHelper.getInputValue('#domain-end');
+                config.options.axis.value.domain = { start: -1, end: -1}
                 config.options.axis.value.domain.start = parseInt(start) || -1;
                 config.options.axis.value.domain.end = parseInt(end) || -1;
                 thisClass.engine.updateData(getUpdatedModel(thisClass.config, thisClass.data, thisClass.designerConfig), thisClass.data);
@@ -500,6 +511,7 @@ class Listeners {
                 if (config.options.type === '2d') {
                     const start = ListenersHelper.getInputValue('#domain-start');
                     const end = ListenersHelper.getInputValue('#domain-end');
+                    config.options.axis.value.domain = { start: -1, end: -1}
                     config.options.axis.value.domain.start = parseInt(start) || -1;
                     config.options.axis.value.domain.end = parseInt(end) || -1;
                     thisClass.engine.updateData(getUpdatedModel(thisClass.config, thisClass.data, thisClass.designerConfig), thisClass.data);
@@ -511,6 +523,7 @@ class Listeners {
                 if (config.options.type === '2d') {
                     const start = ListenersHelper.getInputValue('#domain-start');
                     const end = ListenersHelper.getInputValue('#domain-end');
+                    config.options.axis.value.domain = { start: -1, end: -1}
                     config.options.axis.value.domain.start = parseInt(start) || -1;
                     config.options.axis.value.domain.end = parseInt(end) || -1;
                     thisClass.engine.updateData(getUpdatedModel(thisClass.config, thisClass.data, thisClass.designerConfig), thisClass.data);
