@@ -138,7 +138,7 @@ export class AxisModel {
                 biggestScore = ModelHelper.getStringScore(text);
             }
         });
-        textBlock.textContent = maxLabel === '0000' ? maxLabel : maxLabel + 'D';
+        textBlock.textContent = maxLabel === '0000' ? maxLabel : maxLabel;
         document.body.append(textBlock);
         maxWidth = Math.ceil(textBlock.getBoundingClientRect().width);
         labelSize.height = textBlock.getBoundingClientRect().height;
