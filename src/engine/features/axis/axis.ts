@@ -69,6 +69,14 @@ export class Axis {
 
             AxisLabelHelper.alignLabelsInKeyAxis(axisOptions, axisElement);
             AxisLabelsEventManager.setHoverEvents(block, axisElement);
+            block.filterEventManager.eventEmitter.subscribe('change', (selectedKeys) => {
+                const labels = axisElement.selectAll<SVGTextElement, string>('.tick text');
+
+                labels.each(function (this: SVGTextElement, data: string) {
+                    const isActive = selectedKeys.includes(data);
+                    select(this).classed('mdt-charts-opacity-inactive', !isActive);
+                });
+            })
         }
         if (axisOptions.type === "value") {
             AxisLabelHelper.cropLabels(block, scale, scaleOptions, axisOptions, blockSize)
