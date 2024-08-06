@@ -92,10 +92,6 @@ class Listeners {
             (document.querySelector('.block-polar') as HTMLElement).style.display = 'none';
             (document.querySelector('.block-2d') as HTMLElement).style.display = 'none';
             (document.querySelector('.block-axis') as HTMLElement).style.display = 'block';
-        } else if (notationType === "card") {
-            (document.querySelector('.block-polar') as HTMLElement).style.display = 'none';
-            (document.querySelector('.block-2d') as HTMLElement).style.display = 'none';
-            (document.querySelector('.block-axis') as HTMLElement).style.display = 'none';
         }
     }
 
@@ -160,7 +156,6 @@ class Listeners {
     }
 
     private changeConfigOptions(notationType: '2d' | 'polar' | 'interval'): void {
-        if (this.config.options.type === "card") return;
         if (notationType === '2d') {
             const options: MdtChartsTwoDimensionalOptions = {
                 title: this.config.options.title,
@@ -439,7 +434,6 @@ class Listeners {
             }
         });
         document.querySelector('#legend').addEventListener('change', function () {
-            if (config.options.type === "card") return;
             config.options.legend.show = this.checked;
             thisClass.updateFull();
         });

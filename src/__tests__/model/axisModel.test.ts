@@ -1,7 +1,7 @@
-import { DataOptions, MdtChartsDataSource, DiscreteAxisOptions, NumberAxisOptions, Size, MdtChartsTwoDimensionalChart, MdtChartsTwoDimensionalOptions, AxisLabelPosition } from "../../config/config";
+import { DataOptions, MdtChartsDataSource, DiscreteAxisOptions, NumberAxisOptions, Size, MdtChartsTwoDimensionalChart, MdtChartsTwoDimensionalOptions, AxisLabelPosition, ShowTickFn } from "../../config/config";
 import { TooltipSettings } from "../../designer/designerConfig";
-import { AxisModel } from "../../model/featuresModel/axisModel";
-import { AxisModelService } from "../../model/featuresModel/axisModelService";
+import { AxisModel, MINIMAL_HORIZONTAL_STEP_SIZE, MINIMAL_VERTICAL_STEP_SIZE } from "../../model/featuresModel/axisModel";
+import { AxisModelService, showAllTicks } from "../../model/featuresModel/axisModelService";
 import { AxisModelOptions, BlockMargin } from "../../model/model";
 import { CanvasModel } from "../../model/modelInstance/canvasModel/canvasModel";
 
@@ -109,7 +109,6 @@ describe('get axes', () => {
         canvasModel.initMargin(margin);
         canvasModel.initBlockSize(blockSize);
 
-        // const result = AxisModel.getKeyAxis(charts, data, dataOptions, 'vertical', discreteAxisOptions, { maxSize: { main: 60 } }, canvasModel, tooltipSettings);
         const result = AxisModel.getKeyAxis({ charts, orientation: "vertical", data: dataOptions, axis: { key: discreteAxisOptions } } as any, data, { maxSize: { main: 60 } }, canvasModel, tooltipSettings);
         const expected: AxisModelOptions = {
             visibility: true,
@@ -119,7 +118,9 @@ describe('get axes', () => {
                 maxSize: 0,
                 position: 'straight',
                 visible: true,
-                defaultTooltip: true
+                defaultTooltip: true,
+                showTick: showAllTicks,
+                linearTickStep: MINIMAL_HORIZONTAL_STEP_SIZE
             },
             orient: "bottom",
             ticks: {
@@ -130,6 +131,7 @@ describe('get axes', () => {
                 translateY: 480
             }
         }
+
         expect(result).toEqual(expected);
     });
 
@@ -149,7 +151,9 @@ describe('get axes', () => {
                 maxSize: 0,
                 position: 'straight',
                 visible: true,
-                defaultTooltip: false
+                defaultTooltip: false,
+                showTick: showAllTicks,
+                linearTickStep: MINIMAL_HORIZONTAL_STEP_SIZE
             },
             orient: "left",
             ticks: {
@@ -161,6 +165,118 @@ describe('get axes', () => {
             }
         }
         expect(result).toEqual(expected);
+    });
+
+    test('getKeyAxis should return rule to show tick', () => {
+        const canvasModel = new CanvasModel();
+        canvasModel.initMargin(margin);
+        canvasModel.initBlockSize({ height: 400, width: 140 });
+        dataOptions.dataSource = "dataSet";
+
+        const result = AxisModel.getKeyAxis({ charts, orientation: "vertical", data: dataOptions, axis: { key: discreteAxisOptions } } as any, data, { maxSize: { main: 60 } }, canvasModel, tooltipSettings);
+        const expected: AxisModelOptions = {
+            visibility: true,
+            type: "key",
+            cssClass: "key-axis",
+            labels: {
+                maxSize: 0,
+                position: 'straight',
+                visible: true,
+                defaultTooltip: true,
+                showTick: (d, i) => i % 2 === 0 ? d : undefined,
+                linearTickStep: MINIMAL_HORIZONTAL_STEP_SIZE
+            },
+            orient: "bottom",
+            ticks: {
+                flag: false
+            },
+            translate: {
+                translateX: 20,
+                translateY: 480
+            }
+        }
+
+        const showTickExpected = expected.labels.showTick;
+        const showTickResult = result.labels.showTick;
+
+        for (let i = 0; i < data[dataOptions.dataSource].length; i++) {
+            expect(showTickExpected("key", i)).toBe(showTickResult("key", i));
+        }
+    });
+
+    test('getKeyAxis should use tick space from rule from config if it is set', () => {
+        const canvasModel = new CanvasModel();
+        canvasModel.initMargin(margin);
+        canvasModel.initBlockSize({ height: 400, width: 140 });
+        dataOptions.dataSource = "dataSet";
+        discreteAxisOptions.labels = { showRule: { spaceForOneLabel: 25 } }
+
+        const result = AxisModel.getKeyAxis({ charts, orientation: "vertical", data: dataOptions, axis: { key: discreteAxisOptions } } as any, data, { maxSize: { main: 60 } }, canvasModel, tooltipSettings);
+        const expected: AxisModelOptions = {
+            visibility: true,
+            type: "key",
+            cssClass: "key-axis",
+            labels: {
+                maxSize: 0,
+                position: 'straight',
+                visible: true,
+                defaultTooltip: true,
+                showTick: (d, i) => i % 3 === 0 ? d : undefined,
+                linearTickStep: MINIMAL_HORIZONTAL_STEP_SIZE
+            },
+            orient: "bottom",
+            ticks: {
+                flag: false
+            },
+            translate: {
+                translateX: 20,
+                translateY: 480
+            }
+        }
+
+        const showTickExpected = expected.labels.showTick;
+        const showTickResult = result.labels.showTick;
+
+        for (let i = 0; i < data[dataOptions.dataSource].length; i++) {
+            expect(showTickExpected("key", i)).toBe(showTickResult("key", i));
+        }
+    });
+
+    test('getKeyAxis should return rule from config if it set', () => {
+        const canvasModel = new CanvasModel();
+        canvasModel.initMargin(margin);
+        canvasModel.initBlockSize({ height: 400, width: 140 });
+        dataOptions.dataSource = "dataSet";
+        const showRule: ShowTickFn = (d, i) => i % 10 ? d : undefined;
+        discreteAxisOptions.labels = { showRule: { showTickFn: showRule } }
+
+        const result = AxisModel.getKeyAxis({ charts, orientation: "vertical", data: dataOptions, axis: { key: discreteAxisOptions } } as any, data, { maxSize: { main: 60 } }, canvasModel, tooltipSettings);
+        const expected: AxisModelOptions = {
+            visibility: true,
+            type: "key",
+            cssClass: "key-axis",
+            labels: {
+                maxSize: 0,
+                position: 'straight',
+                visible: true,
+                defaultTooltip: true,
+                showTick: showRule,
+                linearTickStep: MINIMAL_HORIZONTAL_STEP_SIZE
+            },
+            orient: "bottom",
+            ticks: {
+                flag: false
+            },
+            translate: {
+                translateX: 20,
+                translateY: 480
+            }
+        }
+
+        const showTickExpected = expected.labels.showTick;
+        const showTickResult = result.labels.showTick;
+
+        expect(showTickExpected).toBe(showTickResult);
     });
 
     test('getValueAxis should return left axis', () => {
@@ -178,7 +294,9 @@ describe('get axes', () => {
                 maxSize: 60,
                 position: 'straight',
                 visible: true,
-                defaultTooltip: true
+                defaultTooltip: true,
+                showTick: showAllTicks,
+                linearTickStep: MINIMAL_VERTICAL_STEP_SIZE
             },
             orient: "left",
             ticks: {
@@ -206,7 +324,9 @@ describe('get axes', () => {
                 maxSize: 60,
                 position: 'straight',
                 visible: true,
-                defaultTooltip: true
+                defaultTooltip: true,
+                showTick: showAllTicks,
+                linearTickStep: MINIMAL_VERTICAL_STEP_SIZE
             },
             orient: "right",
             ticks: {

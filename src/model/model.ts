@@ -7,9 +7,7 @@ import {
     TooltipOptions,
     TwoDimensionalChartType,
     AxisLabelPosition,
-    MdtChartsIconElement,
-    MdtChartsCardValue,
-    MdtChartsColorName,
+    ShowTickFn,
 } from "../config/config";
 import { DataType, DonutOptionsCanvas, Formatter, StaticLegendBlockCanvas, TooltipSettings, Transitions } from "../designer/designerConfig";
 
@@ -25,7 +23,7 @@ export type DataOptions = {
 };
 export type UnitsFromConfig = "%" | "px";
 
-export type OptionsModel = TwoDimensionalOptionsModel | PolarOptionsModel | IntervalOptionsModel | CardsOptionsModel;
+export type OptionsModel = TwoDimensionalOptionsModel | PolarOptionsModel | IntervalOptionsModel;
 
 export interface Model<O = OptionsModel> {
     blockCanvas: BlockCanvas;
@@ -84,17 +82,6 @@ export interface IntervalOptionsModel extends GraphicNotationOptionsModel {
     additionalElements: AdditionalElementsOptions;
     orient: ChartOrientation;
     chartSettings: TwoDimChartElementsSettings;
-}
-
-export interface CardsOptionsModel extends BasicOptionsModel {
-    type: "card";
-    data: BasicOptionsModelData;
-    title: string;
-    description?: string;
-    icon?: MdtChartsIconElement;
-    value: MdtChartsCardValue;
-    color: MdtChartsColorName;
-    change?: CardsChangeModel;
 }
 
 //====================================================== Options Model Common
@@ -159,6 +146,8 @@ export interface AxisLabelModel {
     position: AxisLabelPosition;
     visible: boolean;
     defaultTooltip: boolean;
+    showTick: ShowTickFn;
+    linearTickStep: number;
 }
 
 export interface AdditionalElementsOptions {
@@ -232,15 +221,6 @@ export interface DonutThicknessOptions {
     max: number;
     value: number;
     unit: DonutThicknessUnit;
-}
-
-//====================================================== CardsOptionsModel
-export interface CardsChangeModel {
-    value: MdtChartsCardValue;
-    valuePrefix: string;
-    description?: string;
-    color: MdtChartsColorName;
-    icon?: MdtChartsIconElement;
 }
 
 //====================================================== Charts

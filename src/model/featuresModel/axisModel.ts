@@ -6,12 +6,15 @@ import { DataManagerModel } from "../dataManagerModel/dataManagerModel";
 import { TwoDimensionalModel } from "../notations/twoDimensionalModel";
 import { AxisLabelCanvas, TooltipSettings } from "../../designer/designerConfig";
 import { CanvasModel } from "../modelInstance/canvasModel/canvasModel";
-import { AxisModelService } from "./axisModelService";
+import { AxisModelService, AxisModelTickCalculator, showAllTicks } from "./axisModelService";
 
 export interface LabelSize {
     width: number;
     height: number
 }
+
+export const MINIMAL_VERTICAL_STEP_SIZE = 60;
+export const MINIMAL_HORIZONTAL_STEP_SIZE = 100;
 
 export class AxisModel {
     private static service = new AxisModelService();
@@ -21,6 +24,7 @@ export class AxisModel {
         const axisConfig = options.axis.key;
 
         const translate: TranslateModel = this.getKeyAxisTranslateModel(orientation, axisConfig.position, canvasModel, getZeroCoordinate);
+        const tickCalculator = new AxisModelTickCalculator(data[dataOptions.dataSource], options.axis.key.labels?.showRule);
 
         return {
             type: 'key',
@@ -32,7 +36,9 @@ export class AxisModel {
                 maxSize: AxisModel.getLabelSizeLegacy(labelConfig.maxSize.main, data[dataOptions.dataSource].map(d => d[dataOptions.keyField.name])).width,
                 position: AxisModel.getKeyAxisLabelPosition(canvasModel, DataManagerModel.getDataValuesByKeyField(data, dataOptions.dataSource, dataOptions.keyField.name).length, axisConfig),
                 visible: !TwoDimensionalModel.getChartsEmbeddedLabelsFlag(charts, orientation),
-                defaultTooltip: tooltipSettings.position === 'fixed'
+                defaultTooltip: tooltipSettings.position === 'fixed',
+                showTick: tickCalculator.createFunctionCalculator(this.getAxisLength(orientation, canvasModel)),
+                linearTickStep: MINIMAL_HORIZONTAL_STEP_SIZE
             },
             visibility: axisConfig.visibility
         }
@@ -52,7 +58,10 @@ export class AxisModel {
                 maxSize: labelConfig.maxSize.main,
                 position: 'straight',
                 visible: true,
-                defaultTooltip: true
+                defaultTooltip: true,
+                showTick: showAllTicks,
+                linearTickStep: axisConfig.labels?.stepSize
+                    ?? (orient === "horizontal" ? MINIMAL_HORIZONTAL_STEP_SIZE : MINIMAL_VERTICAL_STEP_SIZE)
             },
             visibility: axisConfig.visibility
         }
@@ -129,7 +138,7 @@ export class AxisModel {
                 biggestScore = ModelHelper.getStringScore(text);
             }
         });
-        textBlock.textContent = maxLabel === '0000' ? maxLabel : maxLabel + 'D';
+        textBlock.textContent = maxLabel === '0000' ? maxLabel : maxLabel;
         document.body.append(textBlock);
         maxWidth = Math.ceil(textBlock.getBoundingClientRect().width);
         labelSize.height = textBlock.getBoundingClientRect().height;

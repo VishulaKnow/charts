@@ -25,7 +25,7 @@ export class Axis {
 
     public static update(block: Block, scales: Scales, scalesOptions: IScaleModel, axisModel: IAxisModel, blockSize: Size, keyDomainsEquality: boolean): void {
         if (axisModel.value.visibility)
-            this.updateValueAxis(block, scales.value, scalesOptions.value, axisModel.value);
+            this.updateValueAxis(block, scales.value, scalesOptions.value, axisModel.value, blockSize);
         if (axisModel.key.visibility)
             this.updateKeyAxis(block, scales.key, scalesOptions.key, axisModel.key, blockSize, keyDomainsEquality);
     }
@@ -44,7 +44,9 @@ export class Axis {
         const axisGenerator = AxisHelper.getBaseAxisGenerator(axisOptions, scale);
 
         if (axisOptions.type === 'value' && (scaleOptions.type === 'linear' || scaleOptions.type === 'datetime'))
-            AxisHelper.setLabelsSettings(axisGenerator, scale.range(), scaleOptions);
+            AxisHelper.setValueAxisLabelsSettings(axisGenerator, scale.range(), scaleOptions, axisOptions.labels);
+        else
+            axisGenerator.tickFormat(axisOptions.labels.showTick);
 
         const axisElement = block.getSvg()
             .append('g')
@@ -75,14 +77,17 @@ export class Axis {
             AxisLabelHelper.setTitles(axisElement);
     }
 
-    private static updateValueAxis(block: Block, scaleValue: AxisScale<any>, scaleOptions: ScaleValueModel, axisOptions: AxisModelOptions): void {
+    private static updateValueAxis(block: Block, scaleValue: AxisScale<any>, scaleOptions: ScaleValueModel, axisOptions: AxisModelOptions, blockSize: Size): void {
         const axisGenerator = AxisHelper.getBaseAxisGenerator(axisOptions, scaleValue);
-        AxisHelper.setLabelsSettings(axisGenerator, scaleValue.range(), scaleOptions);
+        AxisHelper.setValueAxisLabelsSettings(axisGenerator, scaleValue.range(), scaleOptions, axisOptions.labels);
         const axisElement = block.getSvg().select<SVGGElement>(`g.${axisOptions.cssClass}`);
         AxisDomHelper.updateAxisElement(axisGenerator, axisElement, axisOptions.translate, block.transitionManager.durations.chartUpdate)
             .then(() => {
                 if (axisOptions.labels.defaultTooltip)
                     AxisLabelHelper.setTitles(axisElement);
+                if (axisOptions.orient === 'bottom' || axisOptions.orient === 'top') {
+                    AxisLabelHelper.cropLabels(block, scaleValue, scaleOptions, axisOptions, blockSize);
+                }
             });
     }
 
@@ -95,6 +100,7 @@ export class Axis {
             else if (axisOptions.orient === 'top')
                 axisGenerator.tickPadding(-6);
         }
+        axisGenerator.tickFormat(axisOptions.labels.showTick);
 
         const axisElement = block.getSvg()
             .select<SVGGElement>(`g.${axisOptions.cssClass}`);

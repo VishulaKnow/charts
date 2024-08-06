@@ -1,5 +1,5 @@
 import { MdtChartsConfig, MdtChartsDataSource, Size } from '../config/config';
-import { Model, BlockCanvas, ChartBlockModel, TwoDimensionalOptionsModel, PolarOptionsModel, DataSettings, DataFormat, DataScope, IntervalOptionsModel, OptionsModel } from './model';
+import { Model, BlockCanvas, ChartBlockModel, DataSettings, DataFormat, DataScope, OptionsModel } from './model';
 import { MarginModel } from './margin/marginModel';
 import { TwoDimensionalModel } from './notations/twoDimensionalModel';
 import { PolarModel } from './notations/polar/polarModel';
@@ -8,8 +8,8 @@ import { DesignerConfig, Transitions } from '../designer/designerConfig';
 import { OtherComponentsModel } from './featuresModel/otherComponents';
 import { ConfigValidator } from './configsValidator/configValidator';
 import { ModelInstance } from './modelInstance/modelInstance';
-import { CardsModelInstance } from './notations/cards/cardsModel';
 import { TwoDimConfigReader } from './modelInstance/configReader';
+import { getResolvedTitle } from "../model/featuresModel/titleModel";
 
 
 export enum AxisType {
@@ -57,8 +57,6 @@ function getOptions(config: MdtChartsConfig, designerConfig: DesignerConfig, mod
         return TwoDimensionalModel.getOptions(new TwoDimConfigReader(config, designerConfig), designerConfig, modelInstance);
     } else if (config.options.type === 'polar') {
         return PolarModel.getOptions(config.options, designerConfig, modelInstance);
-    } else if (config.options.type === "card") {
-        return CardsModelInstance.getOptions(config.options, modelInstance);
     }
 }
 
@@ -93,11 +91,13 @@ export function assembleModel(config: MdtChartsConfig, data: MdtChartsDataSource
 
     resetFalsyValues(data);
 
+    const dataRows = modelInstance.dataModel.repository.getRawRows();
+    const resolvedTitle = getResolvedTitle(config.options.title, dataRows);
     const otherComponents = OtherComponentsModel.getOtherComponentsModel(
         {
             elementsOptions: designerConfig.elementsOptions,
             legendConfig: designerConfig.canvas.legendBlock,
-            title: config.options.title
+            title: resolvedTitle
         },
         modelInstance
     );

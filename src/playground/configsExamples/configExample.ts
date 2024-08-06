@@ -10,7 +10,8 @@ const configCars: MdtChartsConfig = {
     },
     options: {
         type: '2d',
-        title: 'Заголовок графика',
+        title: (params) => params.data.reduce((acc, row) =>  {
+            return acc + row.count},0).toString(),
         selectable: true,
         axis: {
             key: {
@@ -60,53 +61,11 @@ const configCars: MdtChartsConfig = {
         charts: [
             {
                 isSegmented: false,
-                type: 'bar',
+                type: 'line',
                 data: {
                     valueFields: [
                         {
                             name: 'price',
-                            format: 'money',
-                            title: 'Стоимость за 2020 год'
-                        },
-                        {
-                            name: 'count',
-                            format: 'money',
-                            title: 'Стоимость за 2020 год'
-                        }
-                    ]
-                },
-                tooltip: {
-                    show: true
-                },
-                embeddedLabels: 'none',
-                markers: {
-                    show: false
-                },
-                lineStyles: {
-                    dash: {
-                        on: true,
-                        dashSize: 3,
-                        gapSize: 3
-                    }
-                },
-                barStyles: {
-                    hatch: {
-                        on: true
-                    }
-                }
-            },
-            {
-                isSegmented: false,
-                type: 'bar',
-                data: {
-                    valueFields: [
-                        {
-                            name: 'price',
-                            format: 'money',
-                            title: 'Стоимость за 2020 год'
-                        },
-                        {
-                            name: 'count',
                             format: 'money',
                             title: 'Стоимость за 2020 год'
                         }
@@ -134,39 +93,7 @@ const configCars: MdtChartsConfig = {
             },
             {
                 isSegmented: false,
-                type: 'line',
-                data: {
-                    valueFields: [
-                        {
-                            name: 'price',
-                            format: 'money',
-                            title: 'Стоимость за 2020 год'
-                        }
-                    ]
-                },
-                tooltip: {
-                    show: true
-                },
-                embeddedLabels: 'none',
-                markers: {
-                    show: true
-                },
-                lineStyles: {
-                    dash: {
-                        on: true,
-                        dashSize: 6,
-                        gapSize: 3
-                    }
-                },
-                barStyles: {
-                    hatch: {
-                        on: false
-                    }
-                }
-            },
-            {
-                isSegmented: false,
-                type: 'line',
+                type: 'bar',
                 data: {
                     valueFields: [
                         {
@@ -185,8 +112,8 @@ const configCars: MdtChartsConfig = {
                 },
                 lineStyles: {
                     dash: {
-                        on: false,
-                        dashSize: 6,
+                        on: true,
+                        dashSize: 3,
                         gapSize: 3
                     }
                 },

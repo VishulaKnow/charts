@@ -36,8 +36,8 @@ class TwoDimRecordOverflowAlertClass {
 
     private getPositionAttrs(): AlertBlockPositionAttrs {
         return {
-            right: '17px',
-            top: '1rem'
+            right: '0px',
+            top: '0px'
         }
     }
 }

@@ -18,6 +18,9 @@ export class DataModelInstance {
         if (typeof amount === "number" && amount > 0) {
             this.maxRecordsAmount = amount;
         }
+        if (typeof amount === "number" && amount === -1) {
+            this.maxRecordsAmount = Infinity;
+        }
     }
 
     getMaxRecordsAmount() {
