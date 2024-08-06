@@ -50,7 +50,7 @@ export class FilterEventManager {
         this.selectedKeys = [];
         if (this.callback)
             this.callback([]);
-        this.eventEmitter.emit('change', this.selectedKeys);
+        this.eventEmitter.emit('change', options.scale.key.domain);
         SelectHighlighter.clear2D(this.block, options);
     }
 
@@ -58,7 +58,7 @@ export class FilterEventManager {
         this.selectedKeys = [];
         if (this.callback)
             this.callback([]);
-        this.eventEmitter.emit('change', this.selectedKeys);
+        this.eventEmitter.emit('change', null);
         SelectHighlighter.clearPolar(margin, blockSize, this.block, options, Donut.getAllArcGroups(this.block), options.chartCanvas);
     }
 
