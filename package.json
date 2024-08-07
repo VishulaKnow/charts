@@ -1,6 +1,6 @@
 {
   "name": "mdt-charts",
-  "version": "1.18.1",
+  "version": "1.18.3",
   "description": "",
   "main": "lib/main.js",
   "scripts": {
@@ -8,7 +8,7 @@
     "build": "npx webpack --mode production",
     "watch": "npx webpack --mode development --watch",
     "test": "jest",
-    "build-lib": "npm run build-ts && npm run build-style",
+    "build-lib": "shx rm -rf lib && npm run build-ts && npm run build-style",
     "build-ts": "npx tsc -p tsconfig.production.json",
     "build-style": "shx mkdir lib/style && shx cp src/style/charts-main.css lib/style && shx cp src/style/charts-main.less lib/style"
   },

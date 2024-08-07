@@ -25,7 +25,7 @@ export class Axis {
 
     public static update(block: Block, scales: Scales, scalesOptions: IScaleModel, axisModel: IAxisModel, blockSize: Size, keyDomainsEquality: boolean): void {
         if (axisModel.value.visibility)
-            this.updateValueAxis(block, scales.value, scalesOptions.value, axisModel.value);
+            this.updateValueAxis(block, scales.value, scalesOptions.value, axisModel.value, blockSize);
         if (axisModel.key.visibility)
             this.updateKeyAxis(block, scales.key, scalesOptions.key, axisModel.key, blockSize, keyDomainsEquality);
     }
@@ -85,7 +85,7 @@ export class Axis {
             AxisLabelHelper.setTitles(axisElement);
     }
 
-    private static updateValueAxis(block: Block, scaleValue: AxisScale<any>, scaleOptions: ScaleValueModel, axisOptions: AxisModelOptions): void {
+    private static updateValueAxis(block: Block, scaleValue: AxisScale<any>, scaleOptions: ScaleValueModel, axisOptions: AxisModelOptions, blockSize: Size): void {
         const axisGenerator = AxisHelper.getBaseAxisGenerator(axisOptions, scaleValue);
         AxisHelper.setValueAxisLabelsSettings(axisGenerator, scaleValue.range(), scaleOptions, axisOptions.labels);
         const axisElement = block.getSvg().select<SVGGElement>(`g.${axisOptions.cssClass}`);
@@ -93,6 +93,9 @@ export class Axis {
             .then(() => {
                 if (axisOptions.labels.defaultTooltip)
                     AxisLabelHelper.setTitles(axisElement);
+                if (axisOptions.orient === 'bottom' || axisOptions.orient === 'top') {
+                    AxisLabelHelper.cropLabels(block, scaleValue, scaleOptions, axisOptions, blockSize);
+                }
             });
     }
 

@@ -1,5 +1,7 @@
 import { AxisLabelFormatter, MdtChartsConfig, MdtChartsField, MdtChartsFieldName, MdtChartsPolarOptions, MdtChartsTwoDimensionalOptions, TwoDimensionalChartType } from "../../config/config";
 import { DesignerConfig } from "../../designer/designerConfig";
+import { DataRepositoryModel } from "../../model/modelInstance/dataModel/dataRepository";
+import { getResolvedDomain } from "../../model/featuresModel/scaleModel/scaleDomainService";
 
 interface BaseConfigReader {
     getValueFields(): MdtChartsField[];
@@ -24,6 +26,17 @@ export class TwoDimConfigReader implements BaseConfigReader {
             fields.push(...chart.data.valueFields);
         });
         return fields;
+    }
+
+    calculateBiggestValueAndDecremented(repository: DataRepositoryModel) {
+        const domain = this.options.axis.value.domain;
+        const resolvedDomain = getResolvedDomain(domain, repository.getRawRows())
+
+        if (resolvedDomain && resolvedDomain.end !== -1) {
+            return [resolvedDomain.end, resolvedDomain.end - 1];
+        }
+
+        return repository.getBiggestValueAndDecremented(this.getFieldsBySegments());
     }
 
     getFieldsBySegments(): MdtChartsFieldName[][] {
