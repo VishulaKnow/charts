@@ -1,4 +1,4 @@
-import {select, Selection} from 'd3-selection'
+import { select, Selection } from 'd3-selection'
 import { Size } from '../../../config/config';
 import { TitleBlockModel } from "../../../model/model";
 import { Block } from "../../block/block";
@@ -27,8 +27,8 @@ export class Title {
         this.setTitleTooltip(titleBlock, text);
     }
 
-    public static updateData(text: string): void {
-        select(`.${this.titleCssClass}`).text(text);
+    public static updateData(block: Block, text: string): void {
+        block.getSvg().select(`.${this.titleCssClass}`).text(text);
     }
 
     private static fillTitleBlockAttributes(titleBlock: Selection<SVGTextElement, unknown, HTMLElement, any>, attributes: TitleAttributes, text: string) {

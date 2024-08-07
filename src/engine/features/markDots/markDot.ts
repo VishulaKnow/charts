@@ -41,6 +41,9 @@ export class MarkDot {
             .data(newData);
         dots.exit().remove();
 
+        if (chart.markersOptions.show)
+            dots.classed(this.hiddenDotClass, false);
+
         const attrs = MarkDotHelper.getDotAttrs(keyAxisOrient, scales, margin, keyField, valueFieldName, chart.isSegmented);
         const newDots = dots
             .enter()

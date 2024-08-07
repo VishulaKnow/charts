@@ -79,8 +79,6 @@ function getTransitions(designerConfig: DesignerConfig): Transitions {
 
 export function assembleModel(config: MdtChartsConfig, data: MdtChartsDataSource, designerConfig: DesignerConfig): Model {
     const modelInstance = ModelInstance.create(config, data, designerConfig);
-    const dataRows = modelInstance.dataModel.repository.getRawRows()
-    const resolvedTitle = getResolvedTitle(config.options.title, dataRows)
 
     if (!data || Object.keys(data).length === 0)
         return {
@@ -93,6 +91,8 @@ export function assembleModel(config: MdtChartsConfig, data: MdtChartsDataSource
 
     resetFalsyValues(data);
 
+    const dataRows = modelInstance.dataModel.repository.getRawRows();
+    const resolvedTitle = getResolvedTitle(config.options.title, dataRows);
     const otherComponents = OtherComponentsModel.getOtherComponentsModel(
         {
             elementsOptions: designerConfig.elementsOptions,
