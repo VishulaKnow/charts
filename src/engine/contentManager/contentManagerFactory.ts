@@ -24,8 +24,6 @@ export class ContentManagerFactory {
     };
 
     getManager(type: ChartNotation): ChartContentManager {
-        if (type === "interval") return;
-
         const managerClass = this.managers[type];
         return new managerClass();
     }

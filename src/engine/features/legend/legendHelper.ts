@@ -1,6 +1,6 @@
 import { ChartNotation, MdtChartsDataRow, MdtChartsDataSource, Size } from "../../../config/config";
 import { LegendItemsDirection } from "../../../model/featuresModel/legendModel/legendCanvasModel";
-import { ChartLegendModel, IntervalOptionsModel, LegendBlockModel, LegendPosition, Orient, PolarOptionsModel, TwoDimensionalOptionsModel } from "../../../model/model";
+import { ChartLegendModel, LegendBlockModel, LegendPosition, Orient, PolarOptionsModel, TwoDimensionalOptionsModel } from "../../../model/model";
 import { Helper } from '../../helpers/helper';
 import { Legend, LegendContentRenderingOptions } from "./legend";
 import { LegendHelperService } from "./legendHelperService";
@@ -38,7 +38,7 @@ export class LegendHelper {
         }
     }
 
-    public static getMarksColor(options: TwoDimensionalOptionsModel | PolarOptionsModel | IntervalOptionsModel, dataRows?: MdtChartsDataRow[]): string[] {
+    public static getMarksColor(options: TwoDimensionalOptionsModel | PolarOptionsModel, dataRows?: MdtChartsDataRow[]): string[] {
         if (options.type === '2d') {
             let colors: string[] = [];
             options.charts.forEach(chart => {
@@ -49,8 +49,6 @@ export class LegendHelper {
             if (!options.charts[0].data.colorField)
                 return options.charts.map(chart => chart.style.elementColors)[0];
             return dataRows.map(row => row[options.charts[0].data.colorField])
-        } else if (options.type === 'interval') {
-            return options.charts.map(chart => chart.style.elementColors[0]);
         }
     }
 

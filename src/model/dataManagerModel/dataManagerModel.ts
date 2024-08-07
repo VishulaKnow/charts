@@ -1,4 +1,4 @@
-import { MdtChartsConfig, MdtChartsTwoDimensionalChart, MdtChartsIntervalOptions, MdtChartsTwoDimensionalOptions, MdtChartsPolarOptions, MdtChartsDataSource, MdtChartsDataRow, DataOptions } from "../../config/config";
+import { MdtChartsConfig, MdtChartsTwoDimensionalChart, MdtChartsTwoDimensionalOptions, MdtChartsPolarOptions, MdtChartsDataSource, MdtChartsDataRow, DataOptions } from "../../config/config";
 import { BarOptionsCanvas, DesignerConfig, LegendBlockCanvas } from "../../designer/designerConfig";
 import { AxisModel } from "../featuresModel/axisModel";
 import { LegendCanvasModel, LegendItemContentOptions } from "../featuresModel/legendModel/legendCanvasModel";
@@ -26,7 +26,6 @@ export class DataManagerModel {
 
     public static getPreparedData(data: MdtChartsDataSource, allowableKeys: string[], config: MdtChartsConfig): MdtChartsDataSource {
         const scopedData = this.getScopedData(data, allowableKeys, config.options.data);
-        this.setDataType(scopedData, config);
 
         return scopedData;
     }
@@ -50,7 +49,6 @@ export class DataManagerModel {
     }
 
     private static initDataScopeFor2D(configOptions: MdtChartsTwoDimensionalOptions, modelInstance: ModelInstance, data: MdtChartsDataSource, designerConfig: DesignerConfig): void {
-        // Для interval всегда один элемент, так как там может быть только один столбик
         modelInstance.dataModel.initMaxRecordsAmount(configOptions.data.maxRecordsAmount);
         let itemsLength: number = 1;
         itemsLength = (configOptions.charts)
@@ -142,7 +140,7 @@ export class DataManagerModel {
      * @param configOptions 
      * @param chartsLength 
      */
-    private static getElementsInGroupAmount(configOptions: MdtChartsTwoDimensionalOptions | MdtChartsIntervalOptions, chartsLength: number): number {
+    private static getElementsInGroupAmount(configOptions: MdtChartsTwoDimensionalOptions, chartsLength: number): number {
         if (configOptions.type === '2d')
             return this.getBarChartsInGroupAmount(configOptions.charts);
 
@@ -169,18 +167,6 @@ export class DataManagerModel {
 
     private static getScopedChartData(data: MdtChartsDataRow[], allowableKeys: string[], keyFieldName: string): MdtChartsDataRow[] {
         return data.filter(d => allowableKeys.findIndex(key => key === d[keyFieldName]) !== -1);
-    }
-
-    private static setDataType(data: MdtChartsDataSource, config: MdtChartsConfig): void {
-        if (config.options.type === 'interval') {
-            const chart = config.options.chart;
-            if (chart.data.valueField1.format === 'date') {
-                data[config.options.data.dataSource] = this.getTypedData(data[config.options.data.dataSource], chart.data.valueField1);
-            }
-            if (chart.data.valueField2.format === 'date') {
-                data[config.options.data.dataSource] = this.getTypedData(data[config.options.data.dataSource], chart.data.valueField2);
-            }
-        }
     }
 
     private static getTypedData(data: MdtChartsDataRow[], field: Field): MdtChartsDataRow[] {
