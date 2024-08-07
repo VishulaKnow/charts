@@ -500,7 +500,7 @@ class Listeners {
             if (config.options.type === '2d') {
                 const start = ListenersHelper.getInputValue('#domain-start');
                 const end = ListenersHelper.getInputValue('#domain-end');
-                config.options.axis.value.domain = { start: -1, end: -1}
+                config.options.axis.value.domain = { start: -1, end: -1 }
                 config.options.axis.value.domain.start = parseInt(start) || -1;
                 config.options.axis.value.domain.end = parseInt(end) || -1;
                 thisClass.engine.updateData(getUpdatedModel(thisClass.config, thisClass.data, thisClass.designerConfig), thisClass.data);
@@ -511,7 +511,7 @@ class Listeners {
                 if (config.options.type === '2d') {
                     const start = ListenersHelper.getInputValue('#domain-start');
                     const end = ListenersHelper.getInputValue('#domain-end');
-                    config.options.axis.value.domain = { start: -1, end: -1}
+                    config.options.axis.value.domain = { start: -1, end: -1 }
                     config.options.axis.value.domain.start = parseInt(start) || -1;
                     config.options.axis.value.domain.end = parseInt(end) || -1;
                     thisClass.engine.updateData(getUpdatedModel(thisClass.config, thisClass.data, thisClass.designerConfig), thisClass.data);
@@ -523,7 +523,7 @@ class Listeners {
                 if (config.options.type === '2d') {
                     const start = ListenersHelper.getInputValue('#domain-start');
                     const end = ListenersHelper.getInputValue('#domain-end');
-                    config.options.axis.value.domain = { start: -1, end: -1}
+                    config.options.axis.value.domain = { start: -1, end: -1 }
                     config.options.axis.value.domain.start = parseInt(start) || -1;
                     config.options.axis.value.domain.end = parseInt(end) || -1;
                     thisClass.engine.updateData(getUpdatedModel(thisClass.config, thisClass.data, thisClass.designerConfig), thisClass.data);

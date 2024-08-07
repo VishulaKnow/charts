@@ -10,8 +10,9 @@ const configCars: MdtChartsConfig = {
     },
     options: {
         type: '2d',
-        title: (params) => params.data.reduce((acc, row) =>  {
-            return acc + row.count},0).toString(),
+        title: (params) => params.data.reduce((acc, row) => {
+            return acc + row.count
+        }, 0).toString(),
         selectable: true,
         axis: {
             key: {
@@ -30,7 +31,7 @@ const configCars: MdtChartsConfig = {
                     let maxNumber = 0;
                     maxNumber = params.data.reduce((max, row) => row.price > max ? row.price : max, params.data[0].price)
 
-                    return {start: -1, end: maxNumber + 100000}
+                    return { start: -1, end: maxNumber + 100000 }
                 },
                 position: 'start',
                 ticks: {
