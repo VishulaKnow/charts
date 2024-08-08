@@ -50,8 +50,8 @@ export class FilterEventManager {
         this.selectedKeys = [];
         if (this.callback)
             this.callback([]);
-        this.eventEmitter.emit('change', options.scale.key.domain);
         SelectHighlighter.clear2D(this.block, options);
+        this.eventEmitter.emit('change', options.scale.key.domain);
     }
 
     public clearKeysForPolar(margin: BlockMargin, blockSize: Size, options: PolarOptionsModel): void {
@@ -59,7 +59,6 @@ export class FilterEventManager {
         if (this.callback)
             this.callback([]);
         this.eventEmitter.emit('change', null);
-        SelectHighlighter.clearPolar(margin, blockSize, this.block, options, Donut.getAllArcGroups(this.block), options.chartCanvas);
     }
 
     private setKey(key: string): void {
@@ -86,6 +85,7 @@ export class FilterEventManager {
         } else {
             if (this.getSelectedKeys()[0] === keyValue && this.getSelectedKeys().length === 1) {
                 this.removeId(keyValue);
+
                 return false;
             } else {
                 this.setKey(keyValue);
@@ -126,12 +126,13 @@ export class FilterEventManager {
                 const multySelect = thisClass.getMultySelectParam(e);
                 const keyValue = e.detail.keyValue || TipBoxHelper.getKeyValueByPointer(pointer(e, this), options.orient, margin, blockSize, scaleKey, options.scale.key.type);
                 const appended = thisClass.processKey(multySelect, keyValue);
+                const emittedValue = appended ? thisClass.selectedKeys : options.scale.key.domain;
                 SelectHighlighter.click2DHandler(multySelect, appended, keyValue, thisClass.selectedKeys, thisClass.block, options);
 
                 if (thisClass.callback) {
                     thisClass.callback(Helper.getRowsByKeys(thisClass.selectedKeys, options.data.keyField.name, thisClass.fullDataset));
                 }
-                thisClass.eventEmitter.emit('change', thisClass.selectedKeys);
+                thisClass.eventEmitter.emit("change", emittedValue);
             });
         }
     }
@@ -144,12 +145,13 @@ export class FilterEventManager {
             const multySelect = thisClass.getMultySelectParam(e);
             const keyValue = dataRow.data[options.data.keyField.name];
             const appended = thisClass.processKey(multySelect, keyValue);
+            const emittedValue = appended ? thisClass.selectedKeys : null;
             SelectHighlighter.clickPolarHandler(multySelect, appended, select(this), thisClass.getSelectedKeys(), margin, blockSize, thisClass.block, options, arcItems, donutSettings);
 
             if (thisClass.callback) {
                 thisClass.callback(Helper.getRowsByKeys(thisClass.selectedKeys, options.data.keyField.name, thisClass.fullDataset));
             }
-            thisClass.eventEmitter.emit('change', thisClass.selectedKeys);
+            thisClass.eventEmitter.emit("change", emittedValue);
         });
     }
 
