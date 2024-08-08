@@ -3,6 +3,7 @@ import { AxisLabelModel, AxisModelOptions, Orient, ScaleKeyModel, ScaleValueMode
 import { format } from 'd3-format';
 import { AxisLabelHelper } from './axisLabelDomHelper';
 import { max, min } from 'd3-array';
+import { AxisModel } from "../../../model/featuresModel/axisModel";
 
 export class AxisHelper {
     public static getAxisByOrient(orient: Orient, scale: AxisScale<any>): IAxis<any> {
@@ -26,7 +27,8 @@ export class AxisHelper {
             axisGenerator.ticks(Math.floor(axisLength / minimalStepSize));
         }
         else {
-            axisGenerator.tickValues([min(scaleOptions.domain), max(scaleOptions.domain)]);
+            const roundedMaxValue = AxisModel.getRoundValue(max(scaleOptions.domain))
+            axisGenerator.tickValues([min(scaleOptions.domain), roundedMaxValue]);
         }
         if (scaleOptions.type === 'linear') {
             this.setNumTickFormat(axisGenerator, scaleOptions.formatter);

@@ -375,3 +375,43 @@ describe('AXisModelService', () => {
         });
     });
 });
+
+describe('get rounded value', () => {
+    test('getRoundValue should return correct seven-digit number', () => {
+        const inputNumber1 = 1204357;
+        const inputNumber2 = 1604357;
+
+        const expectedNumber1 = AxisModel.getRoundValue(inputNumber1)
+        const expectedNumber2 = AxisModel.getRoundValue(inputNumber2)
+
+        expect(expectedNumber1).toEqual(1000000)
+        expect(expectedNumber2).toEqual(1500000)
+    });
+
+    test('getRoundValue should return correct two-digit number', () => {
+        const inputNumber = 34;
+
+        const expectedNumber = AxisModel.getRoundValue(inputNumber)
+
+        expect(expectedNumber).toEqual(30)
+    });
+
+    test('getRoundValue should return correct one-digit number', () => {
+        const inputNumber1 = 5;
+        const inputNumber2 = 9;
+
+        const expectedNumber1 = AxisModel.getRoundValue(inputNumber1)
+        const expectedNumber2 = AxisModel.getRoundValue(inputNumber2)
+
+        expect(expectedNumber1).toEqual(5)
+        expect(expectedNumber2).toEqual(9)
+    });
+
+    test('getRoundValue should return correct a negative number', () => {
+        const inputNumber = -16755;
+
+        const expectedNumber = AxisModel.getRoundValue(inputNumber)
+
+        expect(expectedNumber).toEqual(-15000)
+    });
+})
