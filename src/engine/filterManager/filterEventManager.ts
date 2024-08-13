@@ -18,7 +18,7 @@ export interface SelectDetails {
 }
 
 interface FilterEventMap {
-    change: string[] | null;
+    change: string[];
 }
 
 export class FilterEventManager {
@@ -54,15 +54,15 @@ export class FilterEventManager {
         this.selectedKeys = [];
         if (this.callback)
             this.callback([]);
+        this.eventEmitter.emit('change', this.selectedKeys);
         SelectHighlighter.clear2D(this.block, options);
-        this.eventEmitter.emit('change', options.scale.key.domain);
     }
 
     public clearKeysForPolar(margin: BlockMargin, blockSize: Size, options: PolarOptionsModel): void {
         this.selectedKeys = [];
         if (this.callback)
             this.callback([]);
-        this.eventEmitter.emit('change', null);
+        this.eventEmitter.emit('change', this.selectedKeys);
         SelectHighlighter.clearPolar(margin, blockSize, this.block, options, Donut.getAllArcGroups(this.block), options.chartCanvas);
     }
 
