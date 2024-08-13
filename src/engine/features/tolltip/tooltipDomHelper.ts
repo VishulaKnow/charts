@@ -20,9 +20,9 @@ export interface TooltipLineAttributes {
 }
 
 interface TooltipItem {
-    markColor: string | undefined;
+    markColor?: string;
     tooltipHtml: string;
-    markerCreator?: MarkerCreator | undefined;
+    markerCreator?: MarkerCreator;
 }
 
 export const ARROW_SIZE = 20;
@@ -39,23 +39,23 @@ export class TooltipDomHelper {
     public static fillForMulti2DCharts(contentBlock: Selection<HTMLElement, unknown, BaseType, unknown>, charts: TwoDimensionalChartModel[], data: MdtChartsDataSource, dataOptions: OptionsModelData, keyValue: string, tooltipOptions?: TooltipOptions): void {
         contentBlock.html('');
 
+        if (!tooltipOptions) return
         if (!tooltipOptions?.html) {
-            const tooltipItems : TooltipItem[] = []
+            const tooltipItems : TooltipItem[] = [];
 
             this.renderHead(contentBlock, keyValue);
             charts.forEach(chart => {
                 chart.data.valueFields.forEach((field, index) => {
                     const html = this.getTooltipItemHtml(data, dataOptions, keyValue, field);
-                    tooltipItems.push(
-                      {
-                          markColor: chart.style.elementColors[index % chart.style.elementColors.length],
-                          tooltipHtml: html,
-                          markerCreator: this.getMarkerCreator(chart.legend)
-                    })
+                    tooltipItems.push({
+                        markColor: chart.style.elementColors[index % chart.style.elementColors.length],
+                        tooltipHtml: html,
+                        markerCreator: this.getMarkerCreator(chart.legend)
+                    });
                 });
             });
-            this.addAggregatorTooltipItem(tooltipOptions, data, tooltipItems)
-            tooltipItems.forEach(item => {this.fillValuesContent(contentBlock, item)})
+            this.addAggregatorTooltipItem(tooltipOptions, data, tooltipItems);
+            tooltipItems.forEach(item => {this.fillValuesContent(contentBlock, item)});
         } else {
             this.fillContentByFunction(contentBlock, data, dataOptions, keyValue, tooltipOptions.html);
         }
@@ -63,20 +63,19 @@ export class TooltipDomHelper {
 
     public static fillForPolarChart(contentBlock: Selection<HTMLElement, unknown, BaseType, unknown>, chart: PolarChartModel, data: MdtChartsDataSource, dataOptions: OptionsModelData, keyValue: string, markColor: string, tooltipOptions?: TooltipOptions): void {
         contentBlock.html('');
-
+        if (!tooltipOptions) return
         if (!tooltipOptions.html) {
-            const tooltipItems : TooltipItem[] = []
+            const tooltipItems : TooltipItem[] = [];
 
             this.renderHead(contentBlock, keyValue);
             const html = this.getTooltipItemHtml(data, dataOptions, keyValue, chart.data.valueField);
-            tooltipItems.push(
-              {
-                  markColor,
-                  tooltipHtml: html,
-                  markerCreator: this.getMarkerCreator(chart.legend)
-              })
-            this.addAggregatorTooltipItem(tooltipOptions, data, tooltipItems)
-            tooltipItems.forEach(item => {this.fillValuesContent(contentBlock, item)})
+            tooltipItems.push({
+                markColor,
+                tooltipHtml: html,
+                markerCreator: this.getMarkerCreator(chart.legend)
+            });
+            this.addAggregatorTooltipItem(tooltipOptions, data, tooltipItems);
+            tooltipItems.forEach(item => {this.fillValuesContent(contentBlock, item)});
         } else {
             this.fillContentByFunction(contentBlock, data, dataOptions, keyValue, tooltipOptions.html);
         }
@@ -151,8 +150,8 @@ export class TooltipDomHelper {
 
     public static addAggregatorTooltipItem (tooltipOptions: TooltipOptions, data: MdtChartsDataSource, tooltipItems: TooltipItem[]): void {
         if (tooltipOptions.aggregator) {
-            const aggregatorContent = tooltipOptions?.aggregator.content({ row: data })
-            const aggregatorHtml = aggregatorContent?.type === 'plainText'
+            const aggregatorContent = tooltipOptions.aggregator.content({ row: data })
+            const aggregatorHtml = aggregatorContent.type === 'plainText'
               ? aggregatorContent.textContent
               : this.getTooltipContentItemHtml(aggregatorContent.caption, aggregatorContent.value)
             const tooltipAggregatorItem: TooltipItem = { markColor: undefined, tooltipHtml: aggregatorHtml, markerCreator: undefined }
