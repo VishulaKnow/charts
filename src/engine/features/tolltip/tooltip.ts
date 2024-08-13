@@ -1,6 +1,6 @@
 import { select, Selection, pointer, BaseType, } from 'd3-selection';
 import { PieArcDatum } from 'd3-shape'
-import { BlockMargin, IntervalChartModel, IntervalOptionsModel, Model, OptionsModelData, Orient, PolarChartModel, PolarOptionsModel, ScaleKeyModel, TwoDimensionalChartModel, TwoDimensionalOptionsModel } from "../../../model/model";
+import { BlockMargin, Model, OptionsModelData, Orient, PolarChartModel, PolarOptionsModel, ScaleKeyModel, TwoDimensionalChartModel, TwoDimensionalOptionsModel } from "../../../model/model";
 import { Block } from "../../block/block";
 import { TooltipDomHelper } from "./tooltipDomHelper";
 import { Donut } from "../../polarNotation/donut/donut";
@@ -49,11 +49,6 @@ interface LineTooltip2DParams extends LineTooltipParams {
     charts: TwoDimensionalChartModel[];
 }
 
-interface LineTooltipIntervalParams extends LineTooltipParams {
-    type: 'interval';
-    charts: IntervalChartModel[];
-}
-
 export class Tooltip {
     public static readonly tooltipBlockClass = NewTooltip.tooltipBlockClass;
     public static readonly tooltipLineClass = 'mdt-charts-tooltip-line';
@@ -63,7 +58,7 @@ export class Tooltip {
 
     public static render(block: Block, model: Model<TwoDimensionalOptionsModel | PolarOptionsModel>, data: MdtChartsDataSource, tooltipOptions: TooltipSettings, scales?: Scales): void {
         TooltipComponentsManager.renderTooltipWrapper(block);
-        const withTooltipIndex = model.options.charts.findIndex((chart: TwoDimensionalChartModel | PolarChartModel | IntervalChartModel) => chart.tooltip.show);
+        const withTooltipIndex = model.options.charts.findIndex((chart: TwoDimensionalChartModel | PolarChartModel) => chart.tooltip.show);
         if (withTooltipIndex !== -1) {
             if (model.options.type === '2d') {
                 this.renderTooltipFor2DCharts(block, data, model.blockCanvas.size, model.chartBlock.margin, scales, model.options, tooltipOptions);
@@ -105,27 +100,6 @@ export class Tooltip {
         this.renderLineTooltip(block, data, tooltipParams);
     }
 
-    private static renderTooltipForIntervalCharts(block: Block, data: MdtChartsDataSource, blockSize: Size, margin: BlockMargin, scales: Scales, options: IntervalOptionsModel, tooltipOptions: TooltipSettings): void {
-        if (scales.key.domain().length === 0)
-            return;
-
-        const tooltipParams: LineTooltipIntervalParams = {
-            type: 'interval',
-            scales,
-            margin,
-            blockSize,
-            charts: options.charts,
-            chartOrientation: options.orient,
-            keyAxisOrient: options.axis.key.orient,
-            dataOptions: options.data,
-            scaleKeyModel: options.scale.key,
-            tooltipSettings: tooltipOptions,
-            tooltipOptions: options.tooltip
-        }
-
-        this.renderLineTooltip(block, data, tooltipParams);
-    }
-
     private static renderTooltipForPolar(block: Block, options: PolarOptionsModel, data: MdtChartsDataSource, blockSize: Size, margin: BlockMargin, chartThickness: number, tooltipOptions: TooltipSettings): void {
         const attrTransform = block.getSvg().select(`.${Donut.donutBlockClass}`).attr('transform');
         const translateNums = Helper.getTranslateNumbers(attrTransform);
@@ -133,7 +107,7 @@ export class Tooltip {
         this.renderTooltipForDonut(block, arcItems, data, options.data, options.charts[0], blockSize, margin, chartThickness, tooltipOptions, options.tooltip, { x: translateNums[0], y: translateNums[1] });
     }
 
-    private static renderLineTooltip(block: Block, data: MdtChartsDataSource, args: LineTooltip2DParams | LineTooltipIntervalParams): void {
+    private static renderLineTooltip(block: Block, data: MdtChartsDataSource, args: LineTooltip2DParams): void {
         const tooltipBlock = TooltipComponentsManager.renderTooltipBlock(block);
         const tooltipContent = TooltipComponentsManager.renderTooltipContentBlock(tooltipBlock);
         const tooltipLine = TooltipComponentsManager.renderTooltipLine(block);

@@ -1,6 +1,6 @@
 import { BaseType, Selection, select } from "d3-selection";
 import { MdtChartsDataSource, Size } from "../../../config/config";
-import { IntervalOptionsModel, LegendBlockModel, Model, Orient, PolarOptionsModel, TwoDimensionalOptionsModel } from "../../../model/model";
+import { LegendBlockModel, Model, Orient, PolarOptionsModel, TwoDimensionalOptionsModel } from "../../../model/model";
 import { Block } from "../../block/block";
 import { ColorReader } from "../../colorReader/colorReader";
 import { SelectionCondition } from "../../helpers/domHelper";
@@ -51,7 +51,7 @@ export class Legend {
         }
     }
 
-    public updateColors(block: Block, options: TwoDimensionalOptionsModel | PolarOptionsModel | IntervalOptionsModel): void {
+    public updateColors(block: Block, options: TwoDimensionalOptionsModel | PolarOptionsModel): void {
         if (options.type === "polar" && ColorReader.isNeedReadFromData(options.charts[0])) return;
 
         const legendObject = this.getObject(block);

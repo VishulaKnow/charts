@@ -57,8 +57,8 @@ export class TwoDimMarginModel {
         if (keyAxisOrient === 'left' || keyAxisOrient === 'right') {
             labelsTexts = modelInstance.dataModel.repository.getValuesByKeyField();
         } else {
-            labelsTexts = modelInstance.dataModel.repository.getBiggestValueAndDecremented(this.configReader.getFieldsBySegments())
-                .map(v => this.configReader.getAxisLabelFormatter()(v).toString());
+            labelsTexts = this.configReader.calculateBiggestValueAndDecremented(modelInstance.dataModel.repository)
+              .map(v => this.configReader.getAxisLabelFormatter()(v).toString());
         }
 
         return AxisModel.getLabelSize(this.designerConfig.canvas.axisLabel.maxSize.main, labelsTexts);
