@@ -28,7 +28,7 @@ describe('Donut ColorReader', () => {
                 legend: {
                     markerShape: "default",
                     barViewOptions: { hatch: { on: false }, width: 42 },
-                    lineViewOptions: { dashedStyles: { dashSize: 0, gapSize: 0, on: false }, width: 42, renderForKey: () => null }
+                    lineViewOptions: { dashedStyles: { dashSize: 0, gapSize: 0, on: false }, width: 42 }
                 }
             }
         }

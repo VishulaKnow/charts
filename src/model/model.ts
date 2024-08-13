@@ -250,7 +250,7 @@ export interface TwoDimensionalChartLegendBarModel extends TwoDimensionalBarLike
     width: number;
 }
 
-export interface TwoDimensionalChartLegendLineModel extends TwoDimensionalLineLikeChartViewModel {
+export interface TwoDimensionalChartLegendLineModel extends Omit<TwoDimensionalLineLikeChartViewModel, 'renderForKey'> {
     width: number;
 }
 

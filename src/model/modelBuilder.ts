@@ -124,18 +124,6 @@ export function assembleModel(config: MdtChartsConfig, data: MdtChartsDataSource
     }
 }
 
-function resetFalsyValues(data: MdtChartsDataSource): void {
-    for (let setName in data) {
-        data[setName].forEach(dataRow => {
-            for (let fieldName in dataRow) {
-                if (dataRow[fieldName] == null) {
-                    dataRow[fieldName] = 0;
-                }
-            }
-        });
-    }
-}
-
 export function getPreparedData(model: Model, data: MdtChartsDataSource, config: MdtChartsConfig): MdtChartsDataSource {
     const isModelOrDataEmpty = !model || Object.keys(model).length === 0 || !data || Object.keys(data).length === 0;
     if (isModelOrDataEmpty)
