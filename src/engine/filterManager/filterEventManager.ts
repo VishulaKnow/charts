@@ -17,17 +17,21 @@ export interface SelectDetails {
     keyValue?: string;
 }
 
+interface FilterEventMap {
+    change: string[] | null;
+}
+
 export class FilterEventManager {
     private filterable: boolean;
     private block: Block;
     private selectedKeys: string[];
 
-    public eventEmitter: EventEmitter;
+    public eventEmitter: EventEmitter<FilterEventMap>;
 
     constructor(private callback: FilterCallback, private fullDataset: MdtChartsDataRow[], filtrable: boolean, keyFieldName: string, selectedIds: number[] = []) {
         this.selectedKeys = Helper.getKeysByIds(selectedIds, keyFieldName, fullDataset);
         this.filterable = filtrable;
-        this.eventEmitter = new EventEmitter();
+        this.eventEmitter = new EventEmitter<FilterEventMap>();
     }
 
     public setBlock(block: Block): void {
@@ -59,6 +63,7 @@ export class FilterEventManager {
         if (this.callback)
             this.callback([]);
         this.eventEmitter.emit('change', null);
+        SelectHighlighter.clearPolar(margin, blockSize, this.block, options, Donut.getAllArcGroups(this.block), options.chartCanvas);
     }
 
     private setKey(key: string): void {
@@ -126,13 +131,12 @@ export class FilterEventManager {
                 const multySelect = thisClass.getMultySelectParam(e);
                 const keyValue = e.detail.keyValue || TipBoxHelper.getKeyValueByPointer(pointer(e, this), options.orient, margin, blockSize, scaleKey, options.scale.key.type);
                 const appended = thisClass.processKey(multySelect, keyValue);
-                const emittedValue = appended ? thisClass.selectedKeys : options.scale.key.domain;
                 SelectHighlighter.click2DHandler(multySelect, appended, keyValue, thisClass.selectedKeys, thisClass.block, options);
 
                 if (thisClass.callback) {
                     thisClass.callback(Helper.getRowsByKeys(thisClass.selectedKeys, options.data.keyField.name, thisClass.fullDataset));
                 }
-                thisClass.eventEmitter.emit("change", emittedValue);
+                thisClass.eventEmitter.emit("change", thisClass.selectedKeys);
             });
         }
     }
@@ -145,13 +149,12 @@ export class FilterEventManager {
             const multySelect = thisClass.getMultySelectParam(e);
             const keyValue = dataRow.data[options.data.keyField.name];
             const appended = thisClass.processKey(multySelect, keyValue);
-            const emittedValue = appended ? thisClass.selectedKeys : null;
             SelectHighlighter.clickPolarHandler(multySelect, appended, select(this), thisClass.getSelectedKeys(), margin, blockSize, thisClass.block, options, arcItems, donutSettings);
 
             if (thisClass.callback) {
                 thisClass.callback(Helper.getRowsByKeys(thisClass.selectedKeys, options.data.keyField.name, thisClass.fullDataset));
             }
-            thisClass.eventEmitter.emit("change", emittedValue);
+            thisClass.eventEmitter.emit("change", thisClass.selectedKeys);
         });
     }
 

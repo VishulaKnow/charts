@@ -71,10 +71,11 @@ export class Axis {
             AxisLabelsEventManager.setHoverEvents(block, axisElement);
             block.filterEventManager.eventEmitter.subscribe('change', (selectedKeys) => {
                 const labels = axisElement.selectAll<SVGTextElement, string>('.tick text');
+                const isSelectedKeysEmpty = selectedKeys.length === 0;
 
                 labels.each(function (this: SVGTextElement, data: string) {
                     const isActive = selectedKeys.includes(data);
-                    select(this).classed('mdt-charts-opacity-inactive', !isActive);
+                    select(this).classed('mdt-charts-opacity-inactive', isSelectedKeysEmpty ? isActive : !isActive);
                 });
             })
         }

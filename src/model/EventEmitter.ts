@@ -1,5 +1,3 @@
-
-
 export class EventEmitter<E = Record<string, Record<string, any>>> {
   private events: {
     [key in keyof E]?: ((args: E[keyof E]) => void | Promise<void>)[];
