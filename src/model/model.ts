@@ -8,6 +8,7 @@ import {
     TwoDimensionalChartType,
     AxisLabelPosition,
     ShowTickFn,
+    MdtChartsDataRow,
 } from "../config/config";
 import { DataType, DonutOptionsCanvas, Formatter, StaticLegendBlockCanvas, TooltipSettings, Transitions } from "../designer/designerConfig";
 
@@ -260,7 +261,10 @@ interface TwoDimensionalLineLikeChartModel {
 
 interface TwoDimensionalLineLikeChartViewModel {
     dashedStyles: LineLikeChartDashOptions;
+    renderForKey: LineLikeChartRenderOptions
 }
+
+export type LineLikeChartRenderOptions = (dataRow: MdtChartsDataRow, valueFieldName: string) => boolean
 
 interface TwoDimensionalBarLikeChartModel {
     barViewOptions: TwoDimensionalBarLikeChartViewModel;

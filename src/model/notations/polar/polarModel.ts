@@ -68,7 +68,7 @@ export class PolarModel {
             legend: {
                 markerShape: "default",
                 barViewOptions: { hatch: { on: false }, width: 0 },
-                lineViewOptions: { dashedStyles: { on: false, dashSize: 0, gapSize: 0 }, width: 0 }
+                lineViewOptions: { dashedStyles: { on: false, dashSize: 0, gapSize: 0 }, width: 0, renderForKey: () => null }
             }
         });
         return chartsModel;

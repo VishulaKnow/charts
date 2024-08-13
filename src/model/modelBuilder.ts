@@ -89,8 +89,6 @@ export function assembleModel(config: MdtChartsConfig, data: MdtChartsDataSource
             dataSettings: null
         }
 
-    resetFalsyValues(data);
-
     const dataRows = modelInstance.dataModel.repository.getRawRows();
     const resolvedTitle = getResolvedTitle(config.options.title, dataRows);
     const otherComponents = OtherComponentsModel.getOtherComponentsModel(
@@ -139,8 +137,6 @@ function resetFalsyValues(data: MdtChartsDataSource): void {
 }
 
 export function getPreparedData(model: Model, data: MdtChartsDataSource, config: MdtChartsConfig): MdtChartsDataSource {
-    resetFalsyValues(data);
-
     const isModelOrDataEmpty = !model || Object.keys(model).length === 0 || !data || Object.keys(data).length === 0;
     if (isModelOrDataEmpty)
         return null;
