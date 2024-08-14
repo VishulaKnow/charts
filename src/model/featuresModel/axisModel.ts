@@ -111,7 +111,7 @@ export class AxisModel {
     public static getLabelSize(labelMaxWidth: number, labelTexts: string[]): LabelSize {
         const LABEL_ELEMENT_HEIGHT_PX = 17;
         const ONE_UPPER_SYMBOL_WIDTH_PX = 8;
-        const longestLabelLength = Math.max(...labelTexts.map(t => ModelHelper.getStringScore(t)));
+        const longestLabelLength = labelTexts.length ? Math.max(...labelTexts.map(t => ModelHelper.getStringScore(t))) : 0;
         const longestLabelWidth = ONE_UPPER_SYMBOL_WIDTH_PX * longestLabelLength;
         return {
             height: LABEL_ELEMENT_HEIGHT_PX,
@@ -138,7 +138,7 @@ export class AxisModel {
                 biggestScore = ModelHelper.getStringScore(text);
             }
         });
-        textBlock.textContent = maxLabel === '0000' ? maxLabel : maxLabel + 'D';
+        textBlock.textContent = maxLabel === '0000' ? maxLabel : maxLabel;
         document.body.append(textBlock);
         maxWidth = Math.ceil(textBlock.getBoundingClientRect().width);
         labelSize.height = textBlock.getBoundingClientRect().height;

@@ -11,7 +11,7 @@ const designerConfig: DesignerConfig = {
             top: 5,
             bottom: 5,
             left: 5,
-            right: 5
+            right: 6
         },
         legendBlock: {
             maxWidth: 200,
