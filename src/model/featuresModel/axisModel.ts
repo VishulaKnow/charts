@@ -147,6 +147,21 @@ export class AxisModel {
         return labelSize;
     }
 
+    public static getRoundValue(value: number): number {
+        const absValue = Math.abs(value);
+        const sign = Math.sign(value);
+
+        if (absValue < 10) return value;
+
+        const valueStr = absValue.toString();
+        const firstTwoDigits = Math.floor(absValue / Math.pow(10, valueStr.length - 2));
+        const roundedFirstTwoDigits = firstTwoDigits < 10 ? firstTwoDigits : Math.floor(firstTwoDigits / 5) * 5;
+
+        const roundedNumber = roundedFirstTwoDigits * Math.pow(10, valueStr.length - 2);
+
+        return sign * roundedNumber;
+    }
+
     private static getKeyAxisTranslateModel(chartOrientation: ChartOrientation, axisPosition: AxisPosition, canvasModel: CanvasModel, getZeroCoordinate?: () => number) {
         let translateY;
         let translateX;
