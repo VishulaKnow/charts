@@ -125,7 +125,7 @@ export type TooltipAggregatorContent =
   | { type: "plainText", textContent: string; }
   | { type: "captionValue", caption: string; value: any; };
 
-interface TooltipAggregator {
+export interface TooltipAggregator {
     content: (options: { row: MdtChartsDataRow }) => TooltipAggregatorContent;
     position?: "underKey" | "underValues";
 }
