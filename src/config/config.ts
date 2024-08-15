@@ -121,8 +121,18 @@ export interface TwoDimValueField extends MdtChartsValueField {
     color?: string;
 }
 
+export type TooltipAggregatorContent =
+  | { type: "plainText", textContent: string; }
+  | { type: "captionValue", caption: string; value: any; };
+
+export interface TooltipAggregator {
+    content: (options: { row: MdtChartsDataRow }) => TooltipAggregatorContent;
+    position?: "underKey" | "underValues";
+}
+
 export interface TooltipOptions {
-    html: TooltipHtml;
+    html?: TooltipHtml;
+    aggregator?: TooltipAggregator
 }
 
 

@@ -126,7 +126,13 @@ const configCars: MdtChartsConfig = {
                     }
                 }
             }
-        ]
+        ],
+        tooltip: {
+            aggregator: {
+                content: () => ({ type: "plainText", textContent: 'Сумма общая' }),
+                position: 'underKey'
+            }
+        }
     }
     // options: {
     //     type: 'polar',
