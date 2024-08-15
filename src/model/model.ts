@@ -8,6 +8,7 @@ import {
     TwoDimensionalChartType,
     AxisLabelPosition,
     ShowTickFn,
+    MdtChartsDataRow,
 } from "../config/config";
 import { DataType, DonutOptionsCanvas, Formatter, StaticLegendBlockCanvas, TooltipSettings, Transitions } from "../designer/designerConfig";
 
@@ -249,7 +250,7 @@ export interface TwoDimensionalChartLegendBarModel extends TwoDimensionalBarLike
     width: number;
 }
 
-export interface TwoDimensionalChartLegendLineModel extends TwoDimensionalLineLikeChartViewModel {
+export interface TwoDimensionalChartLegendLineModel extends Omit<TwoDimensionalLineLikeChartViewModel, 'renderForKey'> {
     width: number;
 }
 
@@ -260,7 +261,10 @@ interface TwoDimensionalLineLikeChartModel {
 
 interface TwoDimensionalLineLikeChartViewModel {
     dashedStyles: LineLikeChartDashOptions;
+    renderForKey: LineLikeChartRenderOptions
 }
+
+export type LineLikeChartRenderOptions = (dataRow: MdtChartsDataRow, valueFieldName: string) => boolean
 
 interface TwoDimensionalBarLikeChartModel {
     barViewOptions: TwoDimensionalBarLikeChartViewModel;
