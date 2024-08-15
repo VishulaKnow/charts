@@ -97,9 +97,18 @@ export class TooltipDomHelper {
             .html(tooltipHtml)
     }
 
-    private static getTooltipItemHtml(data: MdtChartsDataSource, dataOptions: OptionsModelData, keyValue: string, valueField: MdtChartsValueField): string {
+    private static getTooltipItemHtml(data: MdtChartsDataSource, dataOptions: OptionsModelData, keyValue: string, valueField: MdtChartsValueField, tooltipOptions: TooltipOptions): string {
         const row = data[dataOptions.dataSource].find(d => d[dataOptions.keyField.name] === keyValue);
-        const text = this.getTooltipContentItemHtml(valueField.title, ValueFormatter.formatField(valueField.format, row[valueField.name]))
+        let valueFieldName = row[valueField.name];
+
+        if (tooltipOptions.formatValue) {
+            valueFieldName = tooltipOptions.formatValue({
+                rawValue: row[valueField.name],
+                autoFormattedValue: ValueFormatter.formatField(valueField.format, row[valueField.name])
+            })
+        };
+
+        const text = this.getTooltipContentItemHtml(valueField.title, valueFieldName)
 
         return text;
     }
@@ -154,7 +163,7 @@ export class TooltipDomHelper {
 
             this.renderHead(contentBlock, keyValue);
             chartFields.forEach((item) => {
-                const html = this.getTooltipItemHtml(data, dataOptions, keyValue, item.field);
+                const html = this.getTooltipItemHtml(data, dataOptions, keyValue, item.field, tooltipOptions);
                 tooltipItems.push({
                     markColor: item.markColor,
                     tooltipHtml: html,

@@ -131,6 +131,9 @@ const configCars: MdtChartsConfig = {
             aggregator: {
                 content: () => ({ type: "plainText", textContent: 'Сумма общая' }),
                 position: 'underKey'
+            },
+            formatValue: ({ rawValue, autoFormattedValue }) => {
+                return rawValue === null ? '(пусто)' : autoFormattedValue;
             }
         }
     }
