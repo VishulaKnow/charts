@@ -66,7 +66,7 @@
         {
             "$id": 9,
             "brand": "LEXUS",
-            "price": 40000,
+            "price": null,
             "count": 15000,
             "color": "pink"
         }
