@@ -8,6 +8,7 @@ import { TipBox } from "../features/tipBox/tipBox";
 import { TipBoxHelper } from "../features/tipBox/tipBoxHelper";
 import { Helper } from "../helpers/helper";
 import { Donut } from "../polarNotation/donut/donut";
+import { EventEmitter } from "../../model/EventEmitter";
 
 export type FilterCallback = (rows: MdtChartsDataRow[]) => void;
 
@@ -16,14 +17,21 @@ export interface SelectDetails {
     keyValue?: string;
 }
 
+interface FilterEventMap {
+    change: string[];
+}
+
 export class FilterEventManager {
     private filterable: boolean;
     private block: Block;
     private selectedKeys: string[];
 
+    public eventEmitter: EventEmitter<FilterEventMap>;
+
     constructor(private callback: FilterCallback, private fullDataset: MdtChartsDataRow[], filtrable: boolean, keyFieldName: string, selectedIds: number[] = []) {
         this.selectedKeys = Helper.getKeysByIds(selectedIds, keyFieldName, fullDataset);
         this.filterable = filtrable;
+        this.eventEmitter = new EventEmitter<FilterEventMap>();
     }
 
     public setBlock(block: Block): void {
@@ -46,6 +54,7 @@ export class FilterEventManager {
         this.selectedKeys = [];
         if (this.callback)
             this.callback([]);
+        this.eventEmitter.emit('change', this.selectedKeys);
         SelectHighlighter.clear2D(this.block, options);
     }
 
@@ -53,6 +62,7 @@ export class FilterEventManager {
         this.selectedKeys = [];
         if (this.callback)
             this.callback([]);
+        this.eventEmitter.emit('change', this.selectedKeys);
         SelectHighlighter.clearPolar(margin, blockSize, this.block, options, Donut.getAllArcGroups(this.block), options.chartCanvas);
     }
 
@@ -80,6 +90,7 @@ export class FilterEventManager {
         } else {
             if (this.getSelectedKeys()[0] === keyValue && this.getSelectedKeys().length === 1) {
                 this.removeId(keyValue);
+
                 return false;
             } else {
                 this.setKey(keyValue);
@@ -125,6 +136,7 @@ export class FilterEventManager {
                 if (thisClass.callback) {
                     thisClass.callback(Helper.getRowsByKeys(thisClass.selectedKeys, options.data.keyField.name, thisClass.fullDataset));
                 }
+                thisClass.eventEmitter.emit("change", thisClass.selectedKeys);
             });
         }
     }
@@ -142,6 +154,7 @@ export class FilterEventManager {
             if (thisClass.callback) {
                 thisClass.callback(Helper.getRowsByKeys(thisClass.selectedKeys, options.data.keyField.name, thisClass.fullDataset));
             }
+            thisClass.eventEmitter.emit("change", thisClass.selectedKeys);
         });
     }
 
