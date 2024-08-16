@@ -19,13 +19,13 @@ export interface TooltipLineAttributes {
     y2: number;
 }
 
-interface ChartDataRaw {
+interface ChartDataRow {
     field: ValueField;
     markColor?: string;
     markerCreator?: MarkerCreator;
 }
 
-interface TooltipItem extends Omit<ChartDataRaw, 'field'> {
+interface TooltipItem extends Omit<ChartDataRow, 'field'> {
     tooltipHtml: string;
 }
 
@@ -41,7 +41,7 @@ export class TooltipDomHelper {
     private static readonly tooltipLegendDefaultMarker = 'tooltip-circle';
 
     public static fillForMulti2DCharts(contentBlock: Selection<HTMLElement, unknown, BaseType, unknown>, charts: TwoDimensionalChartModel[], data: MdtChartsDataSource, dataOptions: OptionsModelData, keyValue: string, tooltipOptions?: TooltipOptions): void {
-        const chartDataRaws: ChartDataRaw[] = [];
+        const chartDataRaws: ChartDataRow[] = [];
 
         charts.forEach(chart => {
             chart.data.valueFields.forEach((field, index) => {
@@ -56,7 +56,7 @@ export class TooltipDomHelper {
     }
 
     public static fillForPolarChart(contentBlock: Selection<HTMLElement, unknown, BaseType, unknown>, chart: PolarChartModel, data: MdtChartsDataSource, dataOptions: OptionsModelData, keyValue: string, markColor: string, tooltipOptions?: TooltipOptions): void {
-        const chartDataRaws: ChartDataRaw[] = [{
+        const chartDataRaws: ChartDataRow[] = [{
             field: chart.data.valueField,
             markColor,
             markerCreator: this.getMarkerCreator(chart.legend)
@@ -135,8 +135,8 @@ export class TooltipDomHelper {
         if (tooltipOptions?.aggregator) {
             const aggregatorContent = tooltipOptions.aggregator.content({ row: data })
             const aggregatorHtml = aggregatorContent.type === 'plainText'
-              ? aggregatorContent.textContent
-              : this.getTooltipContentItemHtml(aggregatorContent.caption, aggregatorContent.value)
+                ? aggregatorContent.textContent
+                : this.getTooltipContentItemHtml(aggregatorContent.caption, aggregatorContent.value)
             const tooltipAggregatorItem: TooltipItem = { markColor: undefined, tooltipHtml: aggregatorHtml, markerCreator: undefined }
 
             if (tooltipOptions.aggregator.position === 'underValues')
@@ -146,7 +146,7 @@ export class TooltipDomHelper {
         }
     }
 
-    private static fillCharts(contentBlock: Selection<HTMLElement, unknown, BaseType, unknown>, chartDataRaw: ChartDataRaw[], data: MdtChartsDataSource, dataOptions: OptionsModelData, keyValue: string, tooltipOptions?: TooltipOptions): void {
+    private static fillCharts(contentBlock: Selection<HTMLElement, unknown, BaseType, unknown>, chartDataRaw: ChartDataRow[], data: MdtChartsDataSource, dataOptions: OptionsModelData, keyValue: string, tooltipOptions?: TooltipOptions): void {
         contentBlock.html('');
 
         if (!tooltipOptions?.html) {

@@ -31,7 +31,7 @@ const configCars: MdtChartsConfig = {
                     let maxNumber = 0;
                     maxNumber = params.data.reduce((max, row) => row.price > max ? row.price : max, params.data[0].price)
 
-                    return { start: -1, end: maxNumber + 100000 }
+                    return { start: -1, end: -1 }
                 },
                 position: 'start',
                 ticks: {
@@ -129,8 +129,10 @@ const configCars: MdtChartsConfig = {
         ],
         tooltip: {
             aggregator: {
-                content: () => ({ type: "plainText", textContent: 'Сумма общая' }),
-                position: 'underKey'
+                content: ({ row }) => {
+                    return { type: "captionValue", caption: "Общая сумма", value: row.price + row.count };
+                },
+                position: 'underValues'
             }
         }
     }
