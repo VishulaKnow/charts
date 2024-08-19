@@ -71,11 +71,17 @@ export class Axis {
             AxisLabelsEventManager.setHoverEvents(block, axisElement);
             block.filterEventManager.eventEmitter.subscribe('change', (selectedKeys) => {
                 const labels = axisElement.selectAll<SVGTextElement, string>('.tick text');
-                const isSelectedKeysEmpty = selectedKeys.length === 0;
 
+                if (selectedKeys.length === 0) {
+                    labels.each(function (this: SVGTextElement) {
+                        select(this).classed('mdt-charts-opacity-inactive', false);
+                    });
+
+                    return
+                }
                 labels.each(function (this: SVGTextElement, data: string) {
                     const isActive = selectedKeys.includes(data);
-                    select(this).classed('mdt-charts-opacity-inactive', isSelectedKeysEmpty ? isActive : !isActive);
+                    select(this).classed('mdt-charts-opacity-inactive', !isActive);
                 });
             })
         }
@@ -97,6 +103,7 @@ export class Axis {
                 if (axisOptions.orient === 'bottom' || axisOptions.orient === 'top') {
                     AxisLabelHelper.cropLabels(block, scaleValue, scaleOptions, axisOptions, blockSize);
                 }
+                block.filterEventManager.eventEmitter.emit('change', block.filterEventManager.getSelectedKeys())
             });
     }
 
