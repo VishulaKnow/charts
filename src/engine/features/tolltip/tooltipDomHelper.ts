@@ -132,7 +132,6 @@ export class TooltipDomHelper {
 
     private static addAggregatorTooltipItem(tooltipOptions: TooltipOptions, data: MdtChartsDataRow, tooltipItems: TooltipItem[]): void {
         if (tooltipOptions?.aggregator) {
-            debugger
             const aggregatorContent = tooltipOptions.aggregator.content({ row: data })
             const aggregatorHtml = aggregatorContent.type === 'plainText'
                 ? aggregatorContent.textContent
