@@ -100,10 +100,10 @@ export class TooltipDomHelper {
     private static getTooltipItemHtml(row: MdtChartsDataRow, valueField: MdtChartsValueField, tooltipOptions: TooltipOptions): string {
       let valueFieldName = row[valueField.name];
 
-      if (tooltipOptions.formatValue) {
+      if (tooltipOptions?.formatValue) {
           valueFieldName = tooltipOptions.formatValue({
-            rawValue: row[valueField.name],
-            autoFormattedValue: ValueFormatter.formatField(valueField.format, row[valueField.name])
+              rawValue: valueFieldName,
+              autoFormattedValue: ValueFormatter.formatField(valueField.format, valueFieldName)
           })
       };
 
