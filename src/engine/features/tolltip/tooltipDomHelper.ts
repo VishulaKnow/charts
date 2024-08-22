@@ -98,18 +98,16 @@ export class TooltipDomHelper {
     }
 
     private static getTooltipItemHtml(row: MdtChartsDataRow, valueField: MdtChartsValueField, tooltipOptions: TooltipOptions): string {
-      let valueFieldName = row[valueField.name];
+        const formattedValue = tooltipOptions?.formatValue
+            ? tooltipOptions.formatValue({
+                rawValue: row[valueField.name],
+                autoFormattedValue: ValueFormatter.formatField(valueField.format, row[valueField.name])
+            })
+            : ValueFormatter.formatField(valueField.format, row[valueField.name]);
 
-      if (tooltipOptions?.formatValue) {
-          valueFieldName = tooltipOptions.formatValue({
-              rawValue: valueFieldName,
-              autoFormattedValue: ValueFormatter.formatField(valueField.format, valueFieldName)
-          })
-      };
+        const text = this.getTooltipContentItemHtml(valueField.title, formattedValue);
 
-      const text = this.getTooltipContentItemHtml(valueField.title, valueFieldName);
-
-      return text;
+        return text;
     }
 
     private static getTooltipContentItemHtml(fieldTitle: string, fieldValue: string): string {
