@@ -11,6 +11,7 @@ import { ModelInstance } from "../modelInstance/modelInstance";
 import { getLegendMarkerOptions, parseDashStyles, parseShape } from "./twoDimensional/styles";
 import { getResolvedTitle } from "../../model/featuresModel/titleModel";
 import { DataRepositoryModel } from "../modelInstance/dataModel/dataRepository";
+import {TwoDimensionalModelHelper} from "../helpers/twoDimensionalModelHelper";
 
 
 export class TwoDimensionalModel {
@@ -74,7 +75,6 @@ export class TwoDimensionalModel {
         const styleModel = new TwoDimensionalChartStyleModel(charts, designerConfig.chartStyle);
         this.sortCharts(charts);
         const chartsModel: TwoDimensionalChartModel[] = [];
-
         charts.forEach((chart, index) => {
             chartsModel.push({
                 type: chart.type,
@@ -85,7 +85,7 @@ export class TwoDimensionalModel {
                 style: styleModel.getChartStyle(chart, index),
                 embeddedLabels: this.getEmbeddedLabelType(chart, chartOrientation),
                 markersOptions: {
-                    show: dataModelRep.getScopedRows().length === 1 ? true : chart.markers.show,
+                    show: TwoDimensionalModelHelper.shouldMarkerShow(chart, dataModelRep.getRawRows(), 'price'),
                     styles: {
                         highlighted: {
                             size: { radius: designerConfig.canvas.markers?.highlighted?.radius ?? 4, borderSize: '3.5px' }

@@ -16,6 +16,7 @@ import { TooltipHelper } from './tooltipHelper';
 import { TooltipSettings } from '../../../designer/designerConfig';
 import { DomHelper } from '../../helpers/domHelper';
 import { NewTooltip } from './newTooltip/newTooltip';
+import { MarkDot } from "../../../engine/features/markDots/markDot";
 
 interface DonutOverDetails {
     pointer: [number, number];
@@ -141,8 +142,8 @@ export class Tooltip {
                         const elements = DomHelper.get2DChartElements(block, chart);
                         if (!block.filterEventManager.isSelected(currentKey)) {
                             const oldElements = DomHelper.getChartElementsByKeys(elements, chart.isSegmented, args.dataOptions.keyField.name, [currentKey]);
-                            if (chart.type !== 'bar' && !chart.markersOptions.show)
-                                ElementHighlighter.toggleMarkDotVisible(oldElements, false);
+                            if (chart.type !== 'bar')
+                                MarkDot.shouldMarkDotVisible(oldElements, chart, args.dataOptions.keyField.name, false);
                             ElementHighlighter.toggle2DElements(oldElements, false, chart, block.transitionManager.durations.markerHover);
                             if (block.filterEventManager.getSelectedKeys().length > 0) {
                                 ElementHighlighter.toggleActivityStyle(oldElements, false);
@@ -150,8 +151,8 @@ export class Tooltip {
                         }
 
                         const selectedElements = DomHelper.getChartElementsByKeys(elements, chart.isSegmented, args.dataOptions.keyField.name, [keyValue]);
-                        if (chart.type !== 'bar' && !chart.markersOptions.show)
-                            ElementHighlighter.toggleMarkDotVisible(selectedElements, true);
+                        if (chart.type !== 'bar')
+                            MarkDot.shouldMarkDotVisible(selectedElements, chart, args.dataOptions.keyField.name);
                         ElementHighlighter.toggleActivityStyle(selectedElements, true);
                         if (block.filterEventManager.getSelectedKeys().length === 0 || block.filterEventManager.isSelected(keyValue)) {
                             ElementHighlighter.toggle2DElements(selectedElements, true, chart, block.transitionManager.durations.markerHover);

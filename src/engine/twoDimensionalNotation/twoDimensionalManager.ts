@@ -80,7 +80,7 @@ export class TwoDimensionalManager implements ChartContentManager {
 
         const options = <TwoDimensionalOptionsModel>model.options;
 
-        ElementHighlighter.remove2DChartsFullHighlighting(block, options.charts);
+        ElementHighlighter.remove2DChartsFullHighlighting(block, options.data.keyField.name, options.charts);
 
         const scales = Scale.getScales(options.scale.key,
             options.scale.value,

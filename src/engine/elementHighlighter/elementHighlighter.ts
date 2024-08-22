@@ -109,12 +109,12 @@ export class ElementHighlighter {
         markDots.classed(MarkDot.hiddenDotClass, !isHighlight);
     }
 
-    public static remove2DChartsFullHighlighting(block: Block, charts: TwoDimensionalChartModel[], transitionDuration: number = 0): void {
+    public static remove2DChartsFullHighlighting(block: Block, keyFieldName: string, charts: TwoDimensionalChartModel[], transitionDuration: number = 0): void {
         charts.forEach(chart => {
             const elems = DomHelper.get2DChartElements(block, chart);
 
-            if (chart.type !== 'bar' && !chart.markersOptions.show)
-                elems.classed(MarkDot.hiddenDotClass, true);
+            if (chart.type !== 'bar')
+                MarkDot.shouldMarkDotVisible(elems, chart, keyFieldName);
             this.toggle2DElements(elems, false, chart, transitionDuration);
             this.toggleActivityStyle(elems, true);
         });
@@ -125,8 +125,8 @@ export class ElementHighlighter {
             const elems = DomHelper.get2DChartElements(block, chart);
             const selectedElems = DomHelper.getChartElementsByKeys(elems, chart.isSegmented, keyFieldName, block.filterEventManager.getSelectedKeys(), SelectionCondition.Exclude);
 
-            if (chart.type !== 'bar' && !chart.markersOptions.show)
-                selectedElems.classed(MarkDot.hiddenDotClass, true);
+            if (chart.type !== 'bar')
+                MarkDot.shouldMarkDotVisible(selectedElems, chart, keyFieldName, false);
             this.toggle2DElements(selectedElems, false, chart, transitionDuration);
             if (block.filterEventManager.getSelectedKeys().length > 0)
                 this.toggleActivityStyle(selectedElems, false);
