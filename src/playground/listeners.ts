@@ -675,8 +675,11 @@ engine.render(model, getPreparedData(model, data, config), document.querySelecto
 new Listeners(engine, config, designerConfig, data);
 
 // setTimeout(() => {
-//     console.log("timeout");
-//     const model = assembleModel(config, data, { ...designerConfig, chartStyle: { baseColors: ["red", "green", "blue"] } });
+//     const newData = { dataSet: data.dataSet.map((r: any) => ({ ...r })) };
+//     newData.dataSet[4].price = 10_000;
+//     newData.dataSet[8].count = 1000;
+//     const model = assembleModel(config, newData, { ...designerConfig, chartStyle: { baseColors: ["red", "green", "blue"] } });
+//     engine.updateData(model, newData);
 //     engine.updateColors(model);
 // }, 5000);
 

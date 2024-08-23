@@ -98,7 +98,10 @@ export class TwoDimensionalModel {
                         }
                     }
                 },
-                lineViewOptions: { dashedStyles: parseDashStyles(chart.lineStyles?.dash) },
+                lineViewOptions: {
+                    dashedStyles: parseDashStyles(chart.lineStyles?.dash),
+                    renderForKey: (dataRow, valueFieldName) => dataRow[valueFieldName] !== null && dataRow[valueFieldName] !== undefined
+                },
                 barViewOptions: { hatch: { on: chart.barStyles?.hatch?.on ?? false } },
                 legend: getLegendMarkerOptions(chart),
                 index
