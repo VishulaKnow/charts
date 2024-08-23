@@ -7,7 +7,7 @@ import { AxisHelper } from './axisHelper';
 import { AxisLabelHelper } from './axisLabelDomHelper';
 import { AxisDomHelper } from './axisDomHelper';
 import { Size } from '../../../config/config';
-import { select } from 'd3-selection';
+import {BaseType, select, Selection} from 'd3-selection';
 import { AxisLabelsEventManager } from './axisLabelsEventManager';
 import { AXIS_VERTICAL_LABEL_PADDING } from '../../../model/margin/twoDim/twoDimMarginModel';
 
@@ -70,19 +70,7 @@ export class Axis {
             AxisLabelHelper.alignLabelsInKeyAxis(axisOptions, axisElement);
             AxisLabelsEventManager.setHoverEvents(block, axisElement);
             block.filterEventManager.eventEmitter.subscribe('change', (selectedKeys) => {
-                const labels = axisElement.selectAll<SVGTextElement, string>('.tick text');
-
-                if (selectedKeys.length === 0) {
-                    labels.each(function (this: SVGTextElement) {
-                        select(this).classed('mdt-charts-opacity-inactive', false);
-                    });
-
-                    return
-                }
-                labels.each(function (this: SVGTextElement, data: string) {
-                    const isActive = selectedKeys.includes(data);
-                    select(this).classed('mdt-charts-opacity-inactive', !isActive);
-                });
+                this.updateKeys(axisElement, selectedKeys)
             })
         }
         if (axisOptions.type === "value") {
@@ -103,7 +91,6 @@ export class Axis {
                 if (axisOptions.orient === 'bottom' || axisOptions.orient === 'top') {
                     AxisLabelHelper.cropLabels(block, scaleValue, scaleOptions, axisOptions, blockSize);
                 }
-                block.filterEventManager.eventEmitter.emit('change', block.filterEventManager.getSelectedKeys())
             });
     }
 
@@ -138,6 +125,7 @@ export class Axis {
                 AxisLabelsEventManager.setHoverEvents(block, axisElement);
                 if (axisOptions.labels.defaultTooltip)
                     AxisLabelHelper.setTitles(axisElement);
+                this.updateKeys(axisElement, block.filterEventManager.getSelectedKeys())
             });
 
         // Ведется отсчет нескольких кадров, чтобы получить уже 100%-отрендеренные лейблы оси.
@@ -174,5 +162,21 @@ export class Axis {
             }
         }
         requestAnimationFrame(labelHandler);
+    }
+
+    private static updateKeys(axisElement: Selection<SVGGElement, any, BaseType, any>, selectedKeys: string[]): void {
+        const labels = axisElement.selectAll<SVGTextElement, string>('.tick text');
+
+        if (selectedKeys.length === 0) {
+            labels.each(function (this: SVGTextElement) {
+                select(this).classed('mdt-charts-opacity-inactive', false);
+            });
+
+            return
+        }
+        labels.each(function (this: SVGTextElement, data: string) {
+            const isActive = selectedKeys.includes(data);
+            select(this).classed('mdt-charts-opacity-inactive', !isActive);
+        });
     }
 }
