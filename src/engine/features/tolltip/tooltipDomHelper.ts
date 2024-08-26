@@ -98,12 +98,14 @@ export class TooltipDomHelper {
     }
 
     private static getTooltipItemHtml(row: MdtChartsDataRow, valueField: MdtChartsValueField, tooltipOptions: TooltipOptions): string {
+        const formattedValueByDefault = ValueFormatter.formatField(valueField.format, row[valueField.name]);
+
         const formattedValue = tooltipOptions?.formatValue
             ? tooltipOptions.formatValue({
                 rawValue: row[valueField.name],
-                autoFormattedValue: ValueFormatter.formatField(valueField.format, row[valueField.name])
+                autoFormattedValue: formattedValueByDefault
             })
-            : ValueFormatter.formatField(valueField.format, row[valueField.name]);
+            : formattedValueByDefault;
 
         const text = this.getTooltipContentItemHtml(valueField.title, formattedValue);
 
