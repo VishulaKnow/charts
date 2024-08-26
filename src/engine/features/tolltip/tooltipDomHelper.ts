@@ -97,8 +97,17 @@ export class TooltipDomHelper {
             .html(tooltipHtml)
     }
 
-    private static getTooltipItemHtml(row: MdtChartsDataRow, valueField: MdtChartsValueField): string {
-        const text = this.getTooltipContentItemHtml(valueField.title, ValueFormatter.formatField(valueField.format, row[valueField.name]))
+    private static getTooltipItemHtml(row: MdtChartsDataRow, valueField: MdtChartsValueField, tooltipOptions: TooltipOptions): string {
+        const formattedValueByDefault = ValueFormatter.formatField(valueField.format, row[valueField.name]);
+
+        const formattedValue = tooltipOptions?.formatValue
+            ? tooltipOptions.formatValue({
+                rawValue: row[valueField.name],
+                autoFormattedValue: formattedValueByDefault
+            })
+            : formattedValueByDefault;
+
+        const text = this.getTooltipContentItemHtml(valueField.title, formattedValue);
 
         return text;
     }
@@ -154,7 +163,7 @@ export class TooltipDomHelper {
 
             this.renderHead(contentBlock, keyValue);
             chartDataRows.forEach((dataRow) => {
-                const html = this.getTooltipItemHtml(row, dataRow.field);
+                const html = this.getTooltipItemHtml(row, dataRow.field, tooltipOptions);
                 tooltipItems.push({
                     markColor: dataRow.markColor,
                     tooltipHtml: html,
