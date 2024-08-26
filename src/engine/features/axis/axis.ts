@@ -7,7 +7,7 @@ import { AxisHelper } from './axisHelper';
 import { AxisLabelHelper } from './axisLabelDomHelper';
 import { AxisDomHelper } from './axisDomHelper';
 import { Size } from '../../../config/config';
-import {BaseType, select, Selection} from 'd3-selection';
+import { BaseType, select, Selection } from 'd3-selection';
 import { AxisLabelsEventManager } from './axisLabelsEventManager';
 import { AXIS_VERTICAL_LABEL_PADDING } from '../../../model/margin/twoDim/twoDimMarginModel';
 
@@ -167,16 +167,11 @@ export class Axis {
     private static updateKeys(axisElement: Selection<SVGGElement, any, BaseType, any>, selectedKeys: string[]): void {
         const labels = axisElement.selectAll<SVGTextElement, string>('.tick text');
 
-        if (selectedKeys.length === 0) {
-            labels.each(function (this: SVGTextElement) {
-                select(this).classed('mdt-charts-opacity-inactive', false);
+        if (selectedKeys.length === 0) labels.classed('mdt-charts-opacity-inactive', false)
+        else
+            labels.each(function (this: SVGTextElement, data: string) {
+                const isActive = selectedKeys.includes(data);
+                select(this).classed('mdt-charts-opacity-inactive', !isActive);
             });
-
-            return
-        }
-        labels.each(function (this: SVGTextElement, data: string) {
-            const isActive = selectedKeys.includes(data);
-            select(this).classed('mdt-charts-opacity-inactive', !isActive);
-        });
     }
 }
