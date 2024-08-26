@@ -9,7 +9,6 @@ export type TwoDimensionalChartType = 'line' | 'bar' | 'area';
 export type PolarChartType = 'donut';
 export type IntervalChartType = 'gantt';
 export type EmbeddedLabelType = 'none' | 'key' | 'value';
-export type TooltipHtml = (dataRow: MdtChartsDataRow) => string;
 export type MdtChartsDataRow = {
     [field: string]: any
 }
@@ -121,19 +120,24 @@ export interface TwoDimValueField extends MdtChartsValueField {
     color?: string;
 }
 
-export type TooltipAggregatorContent =
-  | { type: "plainText", textContent: string; }
-  | { type: "captionValue", caption: string; value: any; };
+export interface TooltipOptions {
+    html?: TooltipHtml;
+    aggregator?: TooltipAggregator
+    formatValue?: TooltipFormatValue
+}
+
+export type TooltipHtml = (dataRow: MdtChartsDataRow) => string;
 
 export interface TooltipAggregator {
     content: (options: { row: MdtChartsDataRow }) => TooltipAggregatorContent;
     position?: "underKey" | "underValues";
 }
 
-export interface TooltipOptions {
-    html?: TooltipHtml;
-    aggregator?: TooltipAggregator
-}
+export type TooltipAggregatorContent =
+  | { type: "plainText", textContent: string; }
+  | { type: "captionValue", caption: string; value: any; };
+
+export type TooltipFormatValue = (params: { rawValue: number | null | undefined; autoFormattedValue: string }) => string
 
 
 //====================================================== TwoDimensionalOptions & IntervalOptions
