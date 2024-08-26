@@ -7,7 +7,7 @@ import { AxisHelper } from './axisHelper';
 import { AxisLabelHelper } from './axisLabelDomHelper';
 import { AxisDomHelper } from './axisDomHelper';
 import { Size } from '../../../config/config';
-import { select } from 'd3-selection';
+import { BaseType, select, Selection } from 'd3-selection';
 import { AxisLabelsEventManager } from './axisLabelsEventManager';
 import { AXIS_VERTICAL_LABEL_PADDING } from '../../../model/margin/twoDim/twoDimMarginModel';
 
@@ -70,13 +70,7 @@ export class Axis {
             AxisLabelHelper.alignLabelsInKeyAxis(axisOptions, axisElement);
             AxisLabelsEventManager.setHoverEvents(block, axisElement);
             block.filterEventManager.eventEmitter.subscribe('change', (selectedKeys) => {
-                const labels = axisElement.selectAll<SVGTextElement, string>('.tick text');
-                const isSelectedKeysEmpty = selectedKeys.length === 0;
-
-                labels.each(function (this: SVGTextElement, data: string) {
-                    const isActive = selectedKeys.includes(data);
-                    select(this).classed('mdt-charts-opacity-inactive', isSelectedKeysEmpty ? isActive : !isActive);
-                });
+                this.handleLabelsHighlight(axisElement, selectedKeys)
             })
         }
         if (axisOptions.type === "value") {
@@ -131,6 +125,7 @@ export class Axis {
                 AxisLabelsEventManager.setHoverEvents(block, axisElement);
                 if (axisOptions.labels.defaultTooltip)
                     AxisLabelHelper.setTitles(axisElement);
+                this.handleLabelsHighlight(axisElement, block.filterEventManager.getSelectedKeys())
             });
 
         // Ведется отсчет нескольких кадров, чтобы получить уже 100%-отрендеренные лейблы оси.
@@ -167,5 +162,16 @@ export class Axis {
             }
         }
         requestAnimationFrame(labelHandler);
+    }
+
+    private static handleLabelsHighlight(axisElement: Selection<SVGGElement, any, BaseType, any>, selectedKeys: string[]): void {
+        const labels = axisElement.selectAll<SVGTextElement, string>('.tick text');
+
+        if (selectedKeys.length === 0) labels.classed('mdt-charts-opacity-inactive', false)
+        else
+            labels.each(function (this: SVGTextElement, data: string) {
+                const isActive = selectedKeys.includes(data);
+                select(this).classed('mdt-charts-opacity-inactive', !isActive);
+            });
     }
 }

@@ -116,6 +116,7 @@ export class FilterEventManager {
                     removedKeys.push(key);
             });
             removedKeys.forEach(rKey => this.selectedKeys.splice(this.selectedKeys.findIndex(sKey => sKey === rKey), 1));
+            if (removedKeys.length > 0) this.eventEmitter.emit("change", this.selectedKeys);
             this.selectedKeys.forEach(key => {
                 SelectHighlighter.click2DHandler(true, true, key, this.selectedKeys, this.block, options);
             });
