@@ -94,43 +94,43 @@ const configCars: MdtChartsConfig = {
                     }
                 }
             },
-            {
-                isSegmented: false,
-                type: 'bar',
-                data: {
-                    valueFields: [
-                        {
-                            name: 'count',
-                            format: 'money',
-                            title: 'Стоимость за 2020 год'
-                        }
-                    ]
-                },
-                tooltip: {
-                    show: true
-                },
-                embeddedLabels: 'none',
-                markers: {
-                    show: false
-                },
-                lineStyles: {
-                    dash: {
-                        on: true,
-                        dashSize: 3,
-                        gapSize: 3
-                    }
-                },
-                barStyles: {
-                    hatch: {
-                        on: false
-                    }
-                }
-            }
+            // {
+            //     isSegmented: false,
+            //     type: 'bar',
+            //     data: {
+            //         valueFields: [
+            //             {
+            //                 name: 'count',
+            //                 format: 'money',
+            //                 title: 'Стоимость за 2020 год'
+            //             }
+            //         ]
+            //     },
+            //     tooltip: {
+            //         show: true
+            //     },
+            //     embeddedLabels: 'none',
+            //     markers: {
+            //         show: false
+            //     },
+            //     lineStyles: {
+            //         dash: {
+            //             on: true,
+            //             dashSize: 3,
+            //             gapSize: 3
+            //         }
+            //     },
+            //     barStyles: {
+            //         hatch: {
+            //             on: false
+            //         }
+            //     }
+            // }
         ],
         tooltip: {
             aggregator: {
                 content: ({ row }) => {
-                    return { type: "captionValue", caption: "Общая сумма", value: row.price + row.count };
+                    return { type: "captionValue", caption: "Общая сумма", value: (row.price ?? 0) + (row.count ?? 0) };
                 },
                 position: 'underValues'
             }
