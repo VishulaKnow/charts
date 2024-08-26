@@ -21,7 +21,7 @@ export class TwoDimMarginModel {
         const canvasModel = modelInstance.canvasModel;
 
         this.twoDimLegendModel.recalcMarginWith2DLegend(modelInstance, otherComponents.legendBlock, this.configReader.options.legend);
-        const labelSize = this.getHorizontalMarginByAxisLabels(modelInstance);
+        const labelSize = this.getMaxLabelSize(modelInstance);
         this.recalcVerticalMarginByAxisLabelHeight(labelSize, canvasModel);
 
         // Если встроенный лейбл показывает ключи, то лейблы оси ключей не показываются
@@ -50,7 +50,7 @@ export class TwoDimMarginModel {
         }
     }
 
-    private getHorizontalMarginByAxisLabels(modelInstance: ModelInstance): LabelSize {
+    private getMaxLabelSize(modelInstance: ModelInstance): LabelSize {
         const keyAxisOrient = AxisModel.getAxisOrient(AxisType.Key, this.configReader.options.orientation, this.configReader.options.axis.key.position);
         let labelsTexts: string[];
 
@@ -58,7 +58,7 @@ export class TwoDimMarginModel {
             labelsTexts = modelInstance.dataModel.repository.getValuesByKeyField();
         } else {
             labelsTexts = this.configReader.calculateBiggestValueAndDecremented(modelInstance.dataModel.repository)
-              .map(v => this.configReader.getAxisLabelFormatter()(v).toString());
+                .map(v => this.configReader.getAxisLabelFormatter()(v).toString());
         }
 
         return AxisModel.getLabelSize(this.designerConfig.canvas.axisLabel.maxSize.main, labelsTexts);
