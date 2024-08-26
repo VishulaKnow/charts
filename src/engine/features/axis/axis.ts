@@ -70,7 +70,7 @@ export class Axis {
             AxisLabelHelper.alignLabelsInKeyAxis(axisOptions, axisElement);
             AxisLabelsEventManager.setHoverEvents(block, axisElement);
             block.filterEventManager.eventEmitter.subscribe('change', (selectedKeys) => {
-                this.updateKeys(axisElement, selectedKeys)
+                this.handleLabelsHighlight(axisElement, selectedKeys)
             })
         }
         if (axisOptions.type === "value") {
@@ -125,7 +125,7 @@ export class Axis {
                 AxisLabelsEventManager.setHoverEvents(block, axisElement);
                 if (axisOptions.labels.defaultTooltip)
                     AxisLabelHelper.setTitles(axisElement);
-                this.updateKeys(axisElement, block.filterEventManager.getSelectedKeys())
+                this.handleLabelsHighlight(axisElement, block.filterEventManager.getSelectedKeys())
             });
 
         // Ведется отсчет нескольких кадров, чтобы получить уже 100%-отрендеренные лейблы оси.
@@ -164,7 +164,7 @@ export class Axis {
         requestAnimationFrame(labelHandler);
     }
 
-    private static updateKeys(axisElement: Selection<SVGGElement, any, BaseType, any>, selectedKeys: string[]): void {
+    private static handleLabelsHighlight(axisElement: Selection<SVGGElement, any, BaseType, any>, selectedKeys: string[]): void {
         const labels = axisElement.selectAll<SVGTextElement, string>('.tick text');
 
         if (selectedKeys.length === 0) labels.classed('mdt-charts-opacity-inactive', false)
