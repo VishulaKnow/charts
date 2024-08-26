@@ -143,7 +143,7 @@ export class Tooltip {
                         if (!block.filterEventManager.isSelected(currentKey)) {
                             const oldElements = DomHelper.getChartElementsByKeys(elements, chart.isSegmented, args.dataOptions.keyField.name, [currentKey]);
                             if (chart.type !== 'bar')
-                                MarkDot.shouldMarkDotVisible(oldElements, chart, args.dataOptions.keyField.name, false);
+                                MarkDot.shouldMarkDotVisible(oldElements, chart, false);
                             ElementHighlighter.toggle2DElements(oldElements, false, chart, block.transitionManager.durations.markerHover);
                             if (block.filterEventManager.getSelectedKeys().length > 0) {
                                 ElementHighlighter.toggleActivityStyle(oldElements, false);
@@ -152,7 +152,7 @@ export class Tooltip {
 
                         const selectedElements = DomHelper.getChartElementsByKeys(elements, chart.isSegmented, args.dataOptions.keyField.name, [keyValue]);
                         if (chart.type !== 'bar')
-                            MarkDot.shouldMarkDotVisible(selectedElements, chart, args.dataOptions.keyField.name);
+                            MarkDot.shouldMarkDotVisible(selectedElements, chart);
                         ElementHighlighter.toggleActivityStyle(selectedElements, true);
                         if (block.filterEventManager.getSelectedKeys().length === 0 || block.filterEventManager.isSelected(keyValue)) {
                             ElementHighlighter.toggle2DElements(selectedElements, true, chart, block.transitionManager.durations.markerHover);

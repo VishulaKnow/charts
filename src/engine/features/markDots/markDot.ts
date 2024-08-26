@@ -17,6 +17,10 @@ export interface DotAttrs {
 
 select.prototype.transition = transition;
 
+interface MarkDotDataItem extends MdtChartsDataRow {
+    $mdtChartsMetadata: { valueFieldName: string };
+}
+
 export class MarkDot {
     public static readonly markerDotClass = NamesHelper.getClassName('dot');
     public static readonly hiddenDotClass = NamesHelper.getClassName('dot-hidden');
@@ -24,7 +28,7 @@ export class MarkDot {
     public static render(block: Block, data: MdtChartsDataRow[], keyAxisOrient: Orient, scales: Scales, margin: BlockMargin, keyFieldName: string, vfIndex: number, valueFieldName: string, chart: TwoDimensionalChartModel): void {
         const dotsWrapper = block.svg.getChartGroup(chart.index)
             .selectAll(`.${this.markerDotClass}${Helper.getCssClassesLine(chart.cssClasses)}.chart-index-${vfIndex}`)
-            .data(data)
+            .data(data.map<MarkDotDataItem>(row => ({ ...row, $mdtChartsMetadata: { valueFieldName } })))
             .enter();
 
         const attrs = MarkDotHelper.getDotAttrs(keyAxisOrient, scales, margin, keyFieldName, valueFieldName, chart.isSegmented);
@@ -33,17 +37,17 @@ export class MarkDot {
 
         this.setClassesAndStyle(dots, chart.cssClasses, vfIndex, chart.style.elementColors);
         if (chart.type !== 'bar')
-            MarkDot.shouldMarkDotVisible(dots, chart, keyFieldName, false);
+            MarkDot.shouldMarkDotVisible(dots, chart, false);
     }
 
     public static update(block: Block, newData: MdtChartsDataRow[], keyAxisOrient: Orient, scales: Scales, margin: BlockMargin, keyFieldName: string, vfIndex: number, valueFieldName: string, chart: TwoDimensionalChartModel): void {
         const dots = block.svg.getChartGroup(chart.index)
             .selectAll(`.${this.markerDotClass}${Helper.getCssClassesLine(chart.cssClasses)}.chart-element-${vfIndex}`)
-            .data(newData);
+            .data(newData.map<MarkDotDataItem>(row => ({ ...row, $mdtChartsMetadata: { valueFieldName } })));
         dots.exit().remove();
 
         dots.each(function (datum) {
-            if (chart.markersOptions.show({ key: datum[keyFieldName] })) {
+            if (chart.markersOptions.show({ row: datum, valueFieldName })) {
                 ElementHighlighter.toggleMarkDotVisible(select(this), false);
             }
         });
@@ -55,7 +59,7 @@ export class MarkDot {
         this.setAttrs(block, newDots, attrs, chart.markersOptions.styles);
 
         this.setClassesAndStyle(newDots, chart.cssClasses, vfIndex, chart.style.elementColors);
-        MarkDot.shouldMarkDotVisible(dots, chart, keyFieldName);
+        MarkDot.shouldMarkDotVisible(dots, chart);
 
         const animationName = 'data-updating';
         dots
@@ -72,24 +76,24 @@ export class MarkDot {
         DomHelper.setChartElementColor(dots, chart.style.elementColors, valueFieldIndex, 'stroke');
     }
 
-    public static getMarkDotForChart(block: Block, chartCssClasses: string[]): Selection<BaseType, MdtChartsDataRow, BaseType, unknown> {
+    public static getMarkDotForChart(block: Block, chartCssClasses: string[]): Selection<BaseType, MarkDotDataItem, BaseType, unknown> {
         return block.getSvg()
             .selectAll(`.${MarkDot.markerDotClass}${Helper.getCssClassesLine(chartCssClasses)}`);
     }
 
-    public static shouldMarkDotVisible(elems: Selection<BaseType, MdtChartsDataRow, BaseType, unknown>, chart: TwoDimensionalChartModel, keyFieldName: string, isVisible: boolean = true): void {
+    public static shouldMarkDotVisible(elems: Selection<BaseType, MdtChartsDataRow, BaseType, unknown>, chart: TwoDimensionalChartModel, isVisible: boolean = true): void {
         elems.each(function (datum) {
-            if (!chart.markersOptions.show({ key: datum[keyFieldName] }))
+            if (!chart.markersOptions.show({ row: datum, valueFieldName: (datum as MarkDotDataItem).$mdtChartsMetadata?.valueFieldName }))
                 ElementHighlighter.toggleMarkDotVisible(select(this), isVisible);
         });
     }
 
-    private static setClassesAndStyle(dots: Selection<SVGCircleElement, MdtChartsDataRow, BaseType, any>, cssClasses: string[], vfIndex: number, elementColors: string[]): void {
+    private static setClassesAndStyle(dots: Selection<SVGCircleElement, MarkDotDataItem, BaseType, any>, cssClasses: string[], vfIndex: number, elementColors: string[]): void {
         DomHelper.setCssClasses(dots, Helper.getCssClassesWithElementIndex(cssClasses, vfIndex));
         DomHelper.setChartElementColor(dots, elementColors, vfIndex, 'stroke');
     }
 
-    private static setAttrs(block: Block, dots: Selection<SVGCircleElement, MdtChartsDataRow, BaseType, any>, attrs: DotAttrs, styles: MarkersStyleOptions): void {
+    private static setAttrs(block: Block, dots: Selection<SVGCircleElement, MarkDotDataItem, BaseType, any>, attrs: DotAttrs, styles: MarkersStyleOptions): void {
         dots
             .attr('class', this.markerDotClass)
             .attr('cx', d => attrs.cx(d))

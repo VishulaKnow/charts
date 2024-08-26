@@ -114,7 +114,7 @@ export class ElementHighlighter {
             const elems = DomHelper.get2DChartElements(block, chart);
 
             if (chart.type !== 'bar')
-                MarkDot.shouldMarkDotVisible(elems, chart, keyFieldName);
+                MarkDot.shouldMarkDotVisible(elems, chart);
             this.toggle2DElements(elems, false, chart, transitionDuration);
             this.toggleActivityStyle(elems, true);
         });
@@ -126,7 +126,7 @@ export class ElementHighlighter {
             const selectedElems = DomHelper.getChartElementsByKeys(elems, chart.isSegmented, keyFieldName, block.filterEventManager.getSelectedKeys(), SelectionCondition.Exclude);
 
             if (chart.type !== 'bar')
-                MarkDot.shouldMarkDotVisible(selectedElems, chart, keyFieldName, false);
+                MarkDot.shouldMarkDotVisible(selectedElems, chart, false);
             this.toggle2DElements(selectedElems, false, chart, transitionDuration);
             if (block.filterEventManager.getSelectedKeys().length > 0)
                 this.toggleActivityStyle(selectedElems, false);

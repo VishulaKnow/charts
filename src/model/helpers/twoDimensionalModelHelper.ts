@@ -1,25 +1,23 @@
 import { MdtChartsDataRow, MdtChartsTwoDimensionalChart } from "../../config/config";
-import { MarkersOptionsShow } from "../model";
+import { MarkDotDatumItem, MarkersOptionsShow } from "../model";
 
 export class TwoDimensionalModelHelper {
-    public static shouldMarkerShow(chart: MdtChartsTwoDimensionalChart, dataRows: MdtChartsDataRow[], fieldName: string): MarkersOptionsShow {
-        return ({ key }) => {
-            if (chart.markers.show || dataRows.length === 1) return true
+    public static shouldMarkerShow(chart: MdtChartsTwoDimensionalChart, dataRows: MdtChartsDataRow[], valueFieldName: string, currentRow: MarkDotDatumItem, keyFieldName: string): boolean {
+        if (chart.markers.show || dataRows.length === 1) return true
 
-            const rowIndex = dataRows.findIndex(row => row.brand === key);
+        const rowIndex = dataRows.findIndex(row => row[keyFieldName] === (currentRow as any)[keyFieldName]);
 
-            if (rowIndex === -1) return false
+        if (rowIndex === -1) return false
 
-            const isFirst = rowIndex === 0;
-            const isLast = rowIndex === dataRows.length - 1;
+        const isFirst = rowIndex === 0;
+        const isLast = rowIndex === dataRows.length - 1;
 
-            const previousRow = dataRows[rowIndex - 1];
-            const nextRow = dataRows[rowIndex + 1];
+        const previousRow = dataRows[rowIndex - 1];
+        const nextRow = dataRows[rowIndex + 1];
 
-            const hasNullNeighborsRows = !isFirst && !isLast &&
-                previousRow?.[fieldName] === null && nextRow?.[fieldName] === null
+        const hasNullNeighborsRows = !isFirst && !isLast &&
+            previousRow?.[valueFieldName] === null && nextRow?.[valueFieldName] === null
 
-            return (isFirst && nextRow?.[fieldName] === null) || (isLast && previousRow?.[fieldName] === null) || hasNullNeighborsRows;
-        }
+        return (isFirst && nextRow?.[valueFieldName] === null) || (isLast && previousRow?.[valueFieldName] === null) || hasNullNeighborsRows;
     }
 }
