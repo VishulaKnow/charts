@@ -279,7 +279,10 @@ export interface IntervalChart extends ChartSettings {
 //====================================================== TwoDimensionalChart
 export interface TwoDimensionalChartData {
     valueFields: TwoDimValueField[];
+    valueGroup?: TwoDimensionalValueGroup;
 }
+
+export type TwoDimensionalValueGroup = 'main' | 'secondary'
 
 interface MarkersOptions {
     show: boolean;
