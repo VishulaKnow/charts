@@ -81,10 +81,10 @@ export class MarkDot {
             .selectAll(`.${MarkDot.markerDotClass}${Helper.getCssClassesLine(chartCssClasses)}`);
     }
 
-    public static shouldMarkDotVisible(elems: Selection<BaseType, MdtChartsDataRow, BaseType, unknown>, chart: TwoDimensionalChartModel, isVisible: boolean = true): void {
+    public static shouldMarkDotVisible(elems: Selection<BaseType, MdtChartsDataRow, BaseType, unknown>, chart: TwoDimensionalChartModel, isTurnOffHiddenClass: boolean = true): void {
         elems.each(function (datum) {
             if (!chart.markersOptions.show({ row: datum, valueFieldName: (datum as MarkDotDataItem).$mdtChartsMetadata?.valueFieldName }))
-                ElementHighlighter.toggleMarkDotVisible(select(this), isVisible);
+                ElementHighlighter.toggleMarkDotVisible(select(this), isTurnOffHiddenClass);
         });
     }
 
