@@ -48,7 +48,7 @@ export class MarkDot {
 
         dots.each(function (datum) {
             if (chart.markersOptions.show({ row: datum, valueFieldName })) {
-                ElementHighlighter.toggleMarkDotVisible(select(this), false);
+                ElementHighlighter.toggleMarkDotVisible(select(this), true);
             }
         });
 
@@ -59,7 +59,7 @@ export class MarkDot {
         this.setAttrs(block, newDots, attrs, chart.markersOptions.styles);
 
         this.setClassesAndStyle(newDots, chart.cssClasses, vfIndex, chart.style.elementColors);
-        MarkDot.shouldMarkDotVisible(dots, chart);
+        MarkDot.shouldMarkDotVisible(newDots, chart, false);
 
         const animationName = 'data-updating';
         dots

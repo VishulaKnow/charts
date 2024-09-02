@@ -1,5 +1,5 @@
 import { MdtChartsDataRow, MdtChartsTwoDimensionalChart } from "../../config/config";
-import { MarkDotDatumItem, MarkersOptionsShow } from "../model";
+import { MarkDotDatumItem } from "../model";
 
 export class TwoDimensionalModelHelper {
     public static shouldMarkerShow(chart: MdtChartsTwoDimensionalChart, dataRows: MdtChartsDataRow[], valueFieldName: string, currentRow: MarkDotDatumItem, keyFieldName: string): boolean {
