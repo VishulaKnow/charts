@@ -1,4 +1,4 @@
-import { AxisLabelFormatter, MdtChartsConfig, MdtChartsField, MdtChartsFieldName, MdtChartsPolarOptions, MdtChartsTwoDimensionalOptions, TwoDimensionalChartType } from "../../config/config";
+import { AxisLabelFormatter, MdtChartsConfig, MdtChartsField, MdtChartsFieldName, MdtChartsPolarOptions, MdtChartsTwoDimensionalChart, MdtChartsTwoDimensionalOptions, TwoDimensionalChartType } from "../../config/config";
 import { DesignerConfig } from "../../designer/designerConfig";
 import { DataRepositoryModel } from "../../model/modelInstance/dataModel/dataRepository";
 import { getResolvedDomain } from "../../model/featuresModel/scaleModel/scaleDomainService";
@@ -41,10 +41,13 @@ export class TwoDimConfigReader implements BaseConfigReader {
 
     getFieldsBySegments(): MdtChartsFieldName[][] {
         const segments: MdtChartsFieldName[][] = [];
-        this.options.charts.forEach(chart => {
+        const mainCharts: MdtChartsTwoDimensionalChart[] = this.options.charts.filter(chart => chart.data.valueGroup !== 'secondary');
+
+        mainCharts.forEach(chart => {
             if (!chart.isSegmented) segments.push(...chart.data.valueFields.map(vf => [vf.name]));
             else segments.push(...[chart.data.valueFields.map(vf => vf.name)])
         });
+
         return segments;
     }
 

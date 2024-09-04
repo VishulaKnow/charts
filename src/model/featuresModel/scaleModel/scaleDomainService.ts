@@ -18,6 +18,7 @@ export function getScaleLinearDomain(configDomain: AxisNumberDomain, dataRows: M
     let domainPeekMax: number;
 
     const resolvedConfigDomain = getResolvedDomain(configDomain, dataRows)
+    const mainCharts = configOptions.charts.filter(chart => chart.data.valueGroup !== 'secondary');
 
     if (resolvedConfigDomain.start === -1)
         domainPeekMin = calculator.getScaleMinValue(configOptions.charts, dataRows)
@@ -25,7 +26,7 @@ export function getScaleLinearDomain(configDomain: AxisNumberDomain, dataRows: M
         domainPeekMin = resolvedConfigDomain.start;
 
     if (resolvedConfigDomain.end === -1)
-        domainPeekMax = calculator.getScaleMaxValue(configOptions.charts, dataRows);
+        domainPeekMax = calculator.getScaleMaxValue(mainCharts, dataRows);
     else
         domainPeekMax = resolvedConfigDomain.end;
 

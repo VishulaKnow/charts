@@ -1,5 +1,5 @@
 import { MdtChartsDataRow, MdtChartsDataSource, MdtChartsTwoDimensionalChart, MdtChartsTwoDimensionalOptions } from "../../config/config";
-import { ScaleDomainCalculator } from "../../model/featuresModel/scaleModel/scaleDomainService";
+import { getScaleLinearDomain, ScaleDomainCalculator } from "../../model/featuresModel/scaleModel/scaleDomainService";
 import { ScaleModel } from "../../model/featuresModel/scaleModel/scaleModel";
 import { getScaleKeyRangePeek, getScaleValueRangePeek } from "../../model/featuresModel/scaleModel/scaleModelServices";
 import { CanvasModel } from "../../model/modelInstance/canvasModel/canvasModel";
@@ -674,5 +674,166 @@ describe('Model Services', () => {
             expect(sizesModel.getChartBlockWidth).toHaveBeenCalled();
             expect(res).toBe(42);
         });
+    });
+});
+
+describe('getScaleLinearDomain', () => {
+    let config: MdtChartsTwoDimensionalOptions;
+    let dataRow: MdtChartsDataRow[];
+
+    beforeEach(() => {
+        config = {
+            type: '2d',
+            title: '',
+            selectable: true,
+            axis: {
+                key: {
+                    visibility: true,
+                    position: 'end',
+                    ticks: {
+                        flag: false
+                    }
+                },
+                value: {
+                    visibility: true,
+                    domain: { start: -1, end: -1 },
+                    position: 'start',
+                    ticks: {
+                        flag: false
+                    },
+                    labels: {
+                        format: v => v === 0 ? "0" : Math.floor(v / 100) + " млн"
+                    }
+                }
+            },
+            additionalElements: {
+                gridLine: {
+                    flag: {
+                        value: true,
+                        key: false
+                    }
+                }
+            },
+            legend: {
+                show: true
+            },
+            orientation: 'vertical',
+            data: {
+                dataSource: 'dataSet',
+                keyField: {
+                    name: 'brand',
+                    format: 'string'
+                }
+            },
+            charts: [
+                {
+                    isSegmented: false,
+                    type: 'line',
+                    data: {
+                        valueFields: [
+                            {
+                                name: 'price',
+                                format: 'money',
+                                title: 'Стоимость за 2020 год'
+                            }
+                        ],
+                        valueGroup: "secondary",
+                    },
+                    tooltip: {
+                        show: true
+                    },
+                    embeddedLabels: 'none',
+                    markers: {
+                        show: false
+                    },
+                    lineStyles: {
+                        dash: {
+                            on: true,
+                            dashSize: 3,
+                            gapSize: 3
+                        }
+                    },
+                    barStyles: {
+                        hatch: {
+                            on: false
+                        }
+                    }
+                },
+                {
+                    isSegmented: false,
+                    type: 'bar',
+                    data: {
+                        valueFields: [
+                            {
+                                name: 'count',
+                                format: 'money',
+                                title: 'Стоимость за 2020 год'
+                            }
+                        ],
+                        valueGroup: "main",
+                    },
+                    tooltip: {
+                        show: true
+                    },
+                    embeddedLabels: 'none',
+                    markers: {
+                        show: false
+                    },
+                    lineStyles: {
+                        dash: {
+                            on: true,
+                            dashSize: 3,
+                            gapSize: 3
+                        }
+                    },
+                    barStyles: {
+                        hatch: {
+                            on: false
+                        }
+                    }
+                }
+            ],
+            tooltip: {
+                aggregator: {
+                    content: ({ row }) => {
+                        return { type: "captionValue", caption: "Общая сумма", value: row.price + row.count };
+                    },
+                    position: 'underValues'
+                }
+            }
+        }
+
+        dataRow = [
+            { brand: "BMW", price: 10, count: 12 },
+            { brand: "LADA", price: 50, count: 10 },
+            { brand: "MERCEDES", price: 15, count: 12 },
+            { brand: "AUDI", price: 20, count: 5 },
+            { brand: "VOLKSWAGEN", price: 115, count: 6 },
+            { brand: "DODGE", price: 115, count: 4 },
+            { brand: "SAAB", price: 50, count: 11 },
+            { brand: "HONDA", price: 20, count: 2 },
+            { brand: "TOYOTA", price: 120, count: 20 }
+        ]
+    });
+
+    test('should return maxValue equals 20 if valueGroup of first chart equals "secondary"', () => {
+        const res = getScaleLinearDomain(config.axis.value.domain, dataRow, config);
+        expect(res[0]).toEqual(20);
+    });
+
+    test('should return maxValue equals 120 if valueGroup does not exist in charts', () => {
+        config.charts.forEach(chart => {
+            delete chart.data.valueGroup;
+        });
+        const res = getScaleLinearDomain(config.axis.value.domain, dataRow, config);
+        expect(res[0]).toEqual(120);
+    });
+
+    test('should return maxValue equals 120 if valueGroup of every chart equals "main"', () => {
+        config.charts.forEach(chart => {
+            chart.data.valueGroup = 'main';
+        });
+        const res = getScaleLinearDomain(config.axis.value.domain, dataRow, config);
+        expect(res[0]).toEqual(120);
     });
 });
