@@ -36,9 +36,6 @@ const configCars: MdtChartsConfig = {
                 position: 'start',
                 ticks: {
                     flag: false
-                },
-                labels: {
-                    format: v => v === 0 ? "0" : Math.floor(v / 100) + " млн"
                 }
             }
         },
@@ -72,7 +69,8 @@ const configCars: MdtChartsConfig = {
                             format: 'money',
                             title: 'Стоимость за 2020 год'
                         }
-                    ]
+                    ],
+                    valueGroup: "secondary"
                 },
                 tooltip: {
                     show: true
