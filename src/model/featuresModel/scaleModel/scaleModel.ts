@@ -35,6 +35,18 @@ export class ScaleModel {
         }
     }
 
+    getScaleSecondaryLinear(options: MdtChartsTwoDimensionalOptions, dataRows: MdtChartsDataRow[], canvasModel: CanvasModel, configReader?: TwoDimConfigReader): ScaleValueModel {
+        return {
+            domain: getScaleLinearDomain(options.axis.value.domain, dataRows, options, 'secondary'),
+            range: {
+                start: 0,
+                end: getScaleValueRangePeek(options.orientation, canvasModel)
+            },
+            type: "linear",
+            formatter: configReader?.getAxisLabelFormatter() ?? null
+        }
+    }
+
     private getScaleKeyType(charts: MdtChartsTwoDimensionalChart[]): ScaleKeyType {
         if (charts.findIndex((chart: MdtChartsTwoDimensionalChart) => chart.type === 'bar') === -1)
             return 'point';

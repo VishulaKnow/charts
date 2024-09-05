@@ -816,24 +816,47 @@ describe('getScaleLinearDomain', () => {
         ]
     });
 
-    test('should return maxValue equals 20 if valueGroup of first chart equals "secondary"', () => {
-        const res = getScaleLinearDomain(config.axis.value.domain, dataRow, config);
-        expect(res[0]).toEqual(20);
+    test('should return array equals [120, 0] because valueGroup of first chart equals "secondary"', () => {
+        const res = getScaleLinearDomain(config.axis.value.domain, dataRow, config, 'secondary');
+        expect(res).toEqual([120, 0]);
     });
 
-    test('should return maxValue equals 120 if valueGroup does not exist in charts', () => {
+    test('should return array equals [20, 0] because valueGroup of first chart equals "main"', () => {
+        const res = getScaleLinearDomain(config.axis.value.domain, dataRow, config);
+        expect(res).toEqual([20, 0]);
+    });
+
+    test('should return array equals [120, 0] because valueGroup does not exist in charts', () => {
         config.charts.forEach(chart => {
             delete chart.data.valueGroup;
         });
+
         const res = getScaleLinearDomain(config.axis.value.domain, dataRow, config);
-        expect(res[0]).toEqual(120);
+        expect(res).toEqual([120, 0]);
     });
 
-    test('should return maxValue equals 120 if valueGroup of every chart equals "main"', () => {
+    test('should return array equals [0, 0] because valueGroup does not exist in charts', () => {
+        config.charts.forEach(chart => {
+            delete chart.data.valueGroup;
+        });
+
+        const res = getScaleLinearDomain(config.axis.value.domain, dataRow, config, 'secondary');
+        expect(res).toEqual([0, 0]);
+    });
+
+    test('should return array equals [120, 0] because valueGroup of every chart equals "main"', () => {
         config.charts.forEach(chart => {
             chart.data.valueGroup = 'main';
         });
+
         const res = getScaleLinearDomain(config.axis.value.domain, dataRow, config);
-        expect(res[0]).toEqual(120);
+        expect(res).toEqual([120, 0]);
+    });
+
+    test('should return array equals [0, 20] because position of axisKey equals "start"', () => {
+        config.axis.key.position = 'start';
+
+        const res = getScaleLinearDomain(config.axis.value.domain, dataRow, config);
+        expect(res).toEqual([0, 20]);
     });
 });
