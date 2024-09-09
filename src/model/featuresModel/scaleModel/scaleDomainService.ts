@@ -2,7 +2,8 @@ import {
     AxisNumberDomain,
     MdtChartsDataRow,
     MdtChartsTwoDimensionalChart,
-    MdtChartsTwoDimensionalOptions
+    MdtChartsTwoDimensionalOptions,
+    TwoDimensionalValueGroup
 } from "../../../config/config";
 
 export function getResolvedDomain(domain: AxisNumberDomain, dataRows: MdtChartsDataRow[] )  {
@@ -11,14 +12,18 @@ export function getResolvedDomain(domain: AxisNumberDomain, dataRows: MdtChartsD
       : domain
 }
 
-export function getScaleLinearDomain(configDomain: AxisNumberDomain, dataRows: MdtChartsDataRow[], configOptions: MdtChartsTwoDimensionalOptions) {
+export function getScaleLinearDomain(configDomain: AxisNumberDomain, dataRows: MdtChartsDataRow[], configOptions: MdtChartsTwoDimensionalOptions, valueGroup: TwoDimensionalValueGroup = 'main') {
     const calculator = new ScaleDomainCalculator();
 
     let domainPeekMin: number;
     let domainPeekMax: number;
 
     const resolvedConfigDomain = getResolvedDomain(configDomain, dataRows)
-    const mainCharts = configOptions.charts.filter(chart => chart.data.valueGroup !== 'secondary');
+
+    const charts = configOptions.charts.filter(chart => {
+        if (valueGroup === 'main') return chart.data.valueGroup !== 'secondary'
+        else if (valueGroup === 'secondary') return chart.data.valueGroup === 'secondary'
+    });
 
     if (resolvedConfigDomain.start === -1)
         domainPeekMin = calculator.getScaleMinValue(configOptions.charts, dataRows)
@@ -26,7 +31,7 @@ export function getScaleLinearDomain(configDomain: AxisNumberDomain, dataRows: M
         domainPeekMin = resolvedConfigDomain.start;
 
     if (resolvedConfigDomain.end === -1)
-        domainPeekMax = calculator.getScaleMaxValue(mainCharts, dataRows);
+        domainPeekMax = calculator.getScaleMaxValue(charts, dataRows);
     else
         domainPeekMax = resolvedConfigDomain.end;
 

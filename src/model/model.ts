@@ -8,7 +8,7 @@ import {
     TwoDimensionalChartType,
     AxisLabelPosition,
     ShowTickFn,
-    MdtChartsDataRow,
+    MdtChartsDataRow, TwoDimensionalValueGroup,
 } from "../config/config";
 import { DataType, DonutOptionsCanvas, Formatter, StaticLegendBlockCanvas, TooltipSettings, Transitions } from "../designer/designerConfig";
 
@@ -104,6 +104,7 @@ export interface Field {
 export interface IScaleModel {
     key: ScaleKeyModel;
     value: ScaleValueModel;
+    valueSecondary?: ScaleValueModel;
 }
 export interface ScaleKeyModel {
     domain: any[];
@@ -295,6 +296,7 @@ export interface PolarChartModel extends ChartModel {
 //====================================================== TwoDimensionalChartModel
 export interface TwoDimensionalChartDataModel {
     valueFields: ValueField[];
+    valueGroup?: TwoDimensionalValueGroup;
 }
 export interface ValueField extends Field {
     title: string;

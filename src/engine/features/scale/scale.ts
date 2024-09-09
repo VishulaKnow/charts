@@ -7,6 +7,10 @@ export interface Scales {
     value: AxisScale<any>;
 }
 
+export interface ScalesWithSecondary extends Scales {
+    valueSecondary: AxisScale<any>;
+}
+
 export class Scale {
     public static getScales(scaleKey: ScaleKeyModel, scaleValue: ScaleValueModel, bandSettings: BarChartSettings): Scales {
         const scales: Scales = {
@@ -22,6 +26,15 @@ export class Scale {
         scales.value = this.getScaleValue(scaleValue);
 
         return scales;
+    }
+
+    public static getScalesWithSecondary(scaleKey: ScaleKeyModel, scaleValue: ScaleValueModel, scaleValueSecondary: ScaleValueModel, bandSettings: BarChartSettings): ScalesWithSecondary {
+        const scales = this.getScales(scaleKey, scaleValue, bandSettings);
+
+        return {
+            ...scales,
+            valueSecondary: this.getScaleValue(scaleValueSecondary)
+        }
     }
 
     public static getScaleValue(scaleValue: ScaleValueModel) {

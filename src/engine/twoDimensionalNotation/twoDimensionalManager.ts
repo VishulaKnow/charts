@@ -8,7 +8,7 @@ import { Axis } from "../features/axis/axis";
 import { EmbeddedLabels } from "../features/embeddedLabels/embeddedLabels";
 import { GridLine } from "../features/gridLine/gridLine";
 import { Legend } from "../features/legend/legend";
-import { Scale, Scales } from "../features/scale/scale";
+import { Scale, Scales, ScalesWithSecondary } from "../features/scale/scale";
 import { TipBox } from "../features/tipBox/tipBox";
 import { Title } from "../features/title/title";
 import { Tooltip } from "../features/tolltip/tooltip";
@@ -23,8 +23,9 @@ export class TwoDimensionalManager implements ChartContentManager {
     public render(engine: Engine, model: Model<TwoDimensionalOptionsModel>): void {
         const options = model.options;
 
-        const scales = Scale.getScales(options.scale.key,
+        const scales = Scale.getScalesWithSecondary(options.scale.key,
             options.scale.value,
+            options.scale.valueSecondary,
             options.chartSettings.bar);
         engine.block.scales = scales;
 
@@ -132,11 +133,15 @@ export class TwoDimensionalManager implements ChartContentManager {
         });
     }
 
-    private renderCharts(block: Block, charts: TwoDimensionalChartModel[], scales: Scales, data: MdtChartsDataSource, dataOptions: OptionsModelData, margin: BlockMargin, keyAxisOrient: Orient, chartSettings: TwoDimChartElementsSettings, blockSize: Size) {
+    private renderCharts(block: Block, charts: TwoDimensionalChartModel[], scales: ScalesWithSecondary, data: MdtChartsDataSource, dataOptions: OptionsModelData, margin: BlockMargin, keyAxisOrient: Orient, chartSettings: TwoDimChartElementsSettings, blockSize: Size) {
         block.svg.renderChartClipPath(margin, blockSize);
         block.svg.renderBarHatchPattern();
         block.svg.renderChartsBlock();
         charts.forEach((chart: TwoDimensionalChartModel) => {
+
+            if (chart.data.valueGroup === "secondary")
+                scales.value = scales.valueSecondary
+
             if (chart.type === 'bar')
                 Bar.get().render(block,
                     scales,
