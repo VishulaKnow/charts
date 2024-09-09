@@ -36,9 +36,6 @@ const configCars: MdtChartsConfig = {
                 position: 'start',
                 ticks: {
                     flag: false
-                },
-                labels: {
-                    format: v => v === 0 ? "0" : Math.floor(v / 100) + " млн"
                 }
             }
         },
