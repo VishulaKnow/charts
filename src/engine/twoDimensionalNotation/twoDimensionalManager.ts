@@ -8,7 +8,7 @@ import { Axis } from "../features/axis/axis";
 import { EmbeddedLabels } from "../features/embeddedLabels/embeddedLabels";
 import { GridLine } from "../features/gridLine/gridLine";
 import { Legend } from "../features/legend/legend";
-import { Scale, Scales } from "../features/scale/scale";
+import { Scale, Scales, ScalesWithSecondary } from "../features/scale/scale";
 import { TipBox } from "../features/tipBox/tipBox";
 import { Title } from "../features/title/title";
 import { Tooltip } from "../features/tolltip/tooltip";
@@ -23,8 +23,9 @@ export class TwoDimensionalManager implements ChartContentManager {
     public render(engine: Engine, model: Model<TwoDimensionalOptionsModel>): void {
         const options = model.options;
 
-        const scales = Scale.getScales(options.scale.key,
+        const scales = Scale.getScalesWithSecondary(options.scale.key,
             options.scale.value,
+            options.scale.valueSecondary,
             options.chartSettings.bar);
         engine.block.scales = scales;
 
@@ -82,8 +83,9 @@ export class TwoDimensionalManager implements ChartContentManager {
 
         ElementHighlighter.remove2DChartsFullHighlighting(block, options.charts);
 
-        const scales = Scale.getScales(options.scale.key,
+        const scales = Scale.getScalesWithSecondary(options.scale.key,
             options.scale.value,
+            options.scale.valueSecondary,
             options.chartSettings.bar);
 
         const keyDomainEquality = Helper.checkDomainsEquality(block.scales.key.domain(), scales.key.domain());
@@ -132,14 +134,16 @@ export class TwoDimensionalManager implements ChartContentManager {
         });
     }
 
-    private renderCharts(block: Block, charts: TwoDimensionalChartModel[], scales: Scales, data: MdtChartsDataSource, dataOptions: OptionsModelData, margin: BlockMargin, keyAxisOrient: Orient, chartSettings: TwoDimChartElementsSettings, blockSize: Size) {
+    private renderCharts(block: Block, charts: TwoDimensionalChartModel[], scales: ScalesWithSecondary, data: MdtChartsDataSource, dataOptions: OptionsModelData, margin: BlockMargin, keyAxisOrient: Orient, chartSettings: TwoDimChartElementsSettings, blockSize: Size) {
         block.svg.renderChartClipPath(margin, blockSize);
         block.svg.renderBarHatchPattern();
         block.svg.renderChartsBlock();
         charts.forEach((chart: TwoDimensionalChartModel) => {
+            const chartScales: Scales = { key: scales.key, value: chart.data.valueGroup === "secondary" ? scales.valueSecondary : scales.value };
+
             if (chart.type === 'bar')
                 Bar.get().render(block,
-                    scales,
+                    chartScales,
                     data[dataOptions.dataSource],
                     dataOptions.keyField,
                     margin,
@@ -152,7 +156,7 @@ export class TwoDimensionalManager implements ChartContentManager {
                     charts.findIndex(ch => ch.type === 'bar'));
             else if (chart.type === 'line')
                 Line.get({ staticSettings: chartSettings.lineLike }).render(block,
-                    scales,
+                    chartScales,
                     data[dataOptions.dataSource],
                     dataOptions.keyField,
                     margin,
@@ -160,7 +164,7 @@ export class TwoDimensionalManager implements ChartContentManager {
                     chart);
             else if (chart.type === 'area')
                 Area.render(block,
-                    scales,
+                    chartScales,
                     data[dataOptions.dataSource],
                     dataOptions.keyField,
                     margin,
@@ -171,15 +175,17 @@ export class TwoDimensionalManager implements ChartContentManager {
         EmbeddedLabels.raiseGroups(block);
     }
 
-    private updateCharts(block: Block, charts: TwoDimensionalChartModel[], scales: Scales, data: MdtChartsDataSource, dataOptions: OptionsModelData, margin: BlockMargin, keyAxisOrient: Orient, blockSize: Size, chartSettings: TwoDimChartElementsSettings): Promise<any>[] {
+    private updateCharts(block: Block, charts: TwoDimensionalChartModel[], scales: ScalesWithSecondary, data: MdtChartsDataSource, dataOptions: OptionsModelData, margin: BlockMargin, keyAxisOrient: Orient, blockSize: Size, chartSettings: TwoDimChartElementsSettings): Promise<any>[] {
         block.svg.updateChartClipPath(margin, blockSize);
         let promises: Promise<any>[] = [];
         charts.forEach((chart: TwoDimensionalChartModel) => {
+            const chartScales: Scales = { key: scales.key, value: chart.data.valueGroup === "secondary" ? scales.valueSecondary : scales.value };
+
             let proms: Promise<any>[];
             if (chart.type === 'bar') {
                 proms = Bar.get().update(block,
                     data[dataOptions.dataSource],
-                    scales,
+                    chartScales,
                     margin,
                     keyAxisOrient,
                     chart,
@@ -191,7 +197,7 @@ export class TwoDimensionalManager implements ChartContentManager {
                     chart.isSegmented);
             } else if (chart.type === 'line') {
                 proms = Line.get({ staticSettings: chartSettings.lineLike }).update(block,
-                    scales,
+                    chartScales,
                     data[dataOptions.dataSource],
                     dataOptions.keyField,
                     margin,
@@ -200,7 +206,7 @@ export class TwoDimensionalManager implements ChartContentManager {
             }
             else if (chart.type === 'area') {
                 proms = Area.update(block,
-                    scales,
+                    chartScales,
                     data[dataOptions.dataSource],
                     dataOptions.keyField,
                     margin,

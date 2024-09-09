@@ -24,6 +24,10 @@ export class TwoDimensionalModel {
         scaleMarginRecalcer.recalculateMargin(canvasModel, options.orientation, options.axis.key);
         const scaleValueInfo = scaleMarginRecalcer.getScaleValue();
 
+        const secondaryScaleMarginRecalcer = new ScaleAxisRecalcer(() => scaleModel.getScaleSecondaryLinear(options, modelInstance.dataModel.repository.getScopedRows(), canvasModel, configReader));
+        secondaryScaleMarginRecalcer.recalculateMargin(canvasModel, options.orientation, options.axis.key);
+        const secondaryScaleValueInfo = secondaryScaleMarginRecalcer.getScaleValue();
+
         return {
             legend: canvasModel.legendCanvas.getModel(),
             title: resolvedTitle,
@@ -31,7 +35,8 @@ export class TwoDimensionalModel {
             orient: options.orientation,
             scale: {
                 key: scaleModel.getScaleKey(modelInstance.dataModel.getAllowableKeys(), options.orientation, canvasModel, options.charts, this.getChartsByType(options.charts, 'bar')),
-                value: scaleValueInfo.scale
+                value: scaleValueInfo.scale,
+                valueSecondary: secondaryScaleValueInfo.scale,
             },
             axis: {
                 key: AxisModel.getKeyAxis(options, modelInstance.dataModel.repository.getScopedFullSource(), designerConfig.canvas.axisLabel, canvasModel, designerConfig.elementsOptions.tooltip, () => scaleValueInfo.scaleFn(0)),

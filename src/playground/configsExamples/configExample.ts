@@ -68,7 +68,7 @@ const configCars: MdtChartsConfig = {
                             name: 'price',
                             format: 'money',
                             title: 'Стоимость за 2020 год'
-                        }
+                        },
                     ],
                     valueGroup: "secondary"
                 },
@@ -101,8 +101,14 @@ const configCars: MdtChartsConfig = {
                             name: 'count',
                             format: 'money',
                             title: 'Стоимость за 2020 год'
+                        },
+                        {
+                            name: 'price',
+                            format: 'money',
+                            title: 'Стоимость за 2020 год'
                         }
-                    ]
+                    ],
+                    valueGroup: "main"
                 },
                 tooltip: {
                     show: true
