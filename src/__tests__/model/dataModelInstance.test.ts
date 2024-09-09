@@ -15,18 +15,24 @@ describe('DataModelInstance', () => {
                 expect(res).toBe(20);
             });
 
-            test('should NOT reset default value if incoming value is NOT a number or it is less or equal 0', () => {
+            test('should NOT reset default value if incoming value is NOT a number or it is less or equal 0 but not -1', () => {
                 modelInstance.initMaxRecordsAmount(null);
                 let res = modelInstance.getMaxRecordsAmount();
                 expect(res).toBe(DEFAULT_MAX_RECORDS_AMOUNT);
 
-                modelInstance.initMaxRecordsAmount(-1);
+                modelInstance.initMaxRecordsAmount(-2);
                 res = modelInstance.getMaxRecordsAmount();
                 expect(res).toBe(DEFAULT_MAX_RECORDS_AMOUNT);
 
                 modelInstance.initMaxRecordsAmount(0);
                 res = modelInstance.getMaxRecordsAmount();
                 expect(res).toBe(DEFAULT_MAX_RECORDS_AMOUNT);
+            });
+
+            test("should set infinity if incoming value is -1", () => {
+                modelInstance.initMaxRecordsAmount(-1);
+                const res = modelInstance.getMaxRecordsAmount();
+                expect(res).toBe(Infinity);
             });
         });
     });
