@@ -23,7 +23,7 @@ class ListenersHelper {
     }
     static getCopy(obj: any) {
         const newObj: any = {};
-        if (typeof obj === 'object') {
+        if (obj && typeof obj === 'object') {
             for (let key in obj) {
                 if (Array.isArray(obj[key])) {
                     newObj[key] = this.getCopyOfArr(obj[key]);
@@ -747,7 +747,7 @@ class DataUpdater {
                     $id: ListenersHelper.randInt(100, 5000000)
                 }
                 row[this.keyFieldName] = this.makeHASH(ListenersHelper.randInt(4, 10)).toUpperCase();
-                this.valueFieldNames.forEach(vField => row[vField] = ListenersHelper.randInt(0, 150));
+                this.valueFieldNames.forEach(vField => row[vField] = ListenersHelper.randInt(0, 130_000));
                 row[this.colorFieldName] = this.getRandomColor();
                 newData[this.dataSetName].push(row);
             }
