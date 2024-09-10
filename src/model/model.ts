@@ -8,7 +8,8 @@ import {
     TwoDimensionalChartType,
     AxisLabelPosition,
     ShowTickFn,
-    MdtChartsDataRow, TwoDimensionalValueGroup,
+    MdtChartsDataRow,
+    TwoDimensionalValueGroup,
 } from "../config/config";
 import { DataType, DonutOptionsCanvas, Formatter, StaticLegendBlockCanvas, TooltipSettings, Transitions } from "../designer/designerConfig";
 

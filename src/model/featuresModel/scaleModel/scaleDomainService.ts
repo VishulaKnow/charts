@@ -6,10 +6,10 @@ import {
     TwoDimensionalValueGroup
 } from "../../../config/config";
 
-export function getResolvedDomain(domain: AxisNumberDomain, dataRows: MdtChartsDataRow[] )  {
+export function getResolvedDomain(domain: AxisNumberDomain, dataRows: MdtChartsDataRow[]) {
     return typeof domain === 'function'
-      ? domain({ data: dataRows })
-      : domain
+        ? domain({ data: dataRows })
+        : domain
 }
 
 export function getScaleLinearDomain(configDomain: AxisNumberDomain, dataRows: MdtChartsDataRow[], configOptions: MdtChartsTwoDimensionalOptions, valueGroup: TwoDimensionalValueGroup = 'main') {
@@ -21,8 +21,7 @@ export function getScaleLinearDomain(configDomain: AxisNumberDomain, dataRows: M
     const resolvedConfigDomain = getResolvedDomain(configDomain, dataRows)
 
     const charts = configOptions.charts.filter(chart => {
-        if (valueGroup === 'main') return chart.data.valueGroup !== 'secondary'
-        else if (valueGroup === 'secondary') return chart.data.valueGroup === 'secondary'
+        return (chart.data.valueGroup ?? "main") === valueGroup;
     });
 
     if (resolvedConfigDomain.start === -1)
