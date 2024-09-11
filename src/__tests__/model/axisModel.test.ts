@@ -1,4 +1,4 @@
-import { DataOptions, MdtChartsDataSource, DiscreteAxisOptions, NumberAxisOptions, Size, MdtChartsTwoDimensionalChart, MdtChartsTwoDimensionalOptions, AxisLabelPosition, ShowTickFn } from "../../config/config";
+import { DataOptions, MdtChartsDataSource, DiscreteAxisOptions, NumberAxisOptions, Size, MdtChartsTwoDimensionalChart, AxisLabelPosition, ShowTickFn } from "../../config/config";
 import { TooltipSettings } from "../../designer/designerConfig";
 import { AxisModel, MINIMAL_HORIZONTAL_STEP_SIZE, MINIMAL_VERTICAL_STEP_SIZE } from "../../model/featuresModel/axisModel";
 import { AxisModelService, showAllTicks } from "../../model/featuresModel/axisModelService";
@@ -285,7 +285,7 @@ describe('get axes', () => {
         canvasModel.initBlockSize(blockSize);
 
         numberAxisOptions.position = 'start';
-        const result = AxisModel.getValueAxis('vertical', numberAxisOptions, { maxSize: { main: 60 } }, canvasModel);
+        const result = AxisModel.getValueAxis('vertical', numberAxisOptions.position, "value-axis",numberAxisOptions, { maxSize: { main: 60 } }, canvasModel);
         const expected: AxisModelOptions = {
             visibility: true,
             type: "value",
@@ -315,7 +315,7 @@ describe('get axes', () => {
         canvasModel.initMargin(margin);
         canvasModel.initBlockSize(blockSize);
 
-        const result = AxisModel.getValueAxis('vertical', numberAxisOptions, { maxSize: { main: 60 } }, canvasModel);
+        const result = AxisModel.getValueAxis('vertical', 'start', 'value-axis', numberAxisOptions, { maxSize: { main: 60 } }, canvasModel);
         const expected: AxisModelOptions = {
             visibility: true,
             type: "value",

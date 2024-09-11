@@ -2,12 +2,13 @@ import { DesignerConfig } from "../../../designer/designerConfig";
 import { AxisModel, LabelSize } from "../../featuresModel/axisModel";
 import { TwoDimLegendModel } from "../../featuresModel/legendModel/twoDimLegendModel";
 import { keyAxisLabelHorizontalLog, keyAxisLabelVerticalLog } from "../../featuresModel/scaleModel/scaleAxisRecalcer";
-import { OtherCommonComponents } from "../../model";
+import { Orient, OtherCommonComponents} from "../../model";
 import { AxisType } from "../../modelBuilder";
 import { CanvasModel } from "../../modelInstance/canvasModel/canvasModel";
 import { TwoDimConfigReader } from "../../modelInstance/configReader";
 import { ModelInstance } from "../../modelInstance/modelInstance";
 import { TwoDimensionalModel } from "../../notations/twoDimensionalModel";
+import { ChartOrientation } from "../../../config/config";
 
 export const AXIS_HORIZONTAL_LABEL_PADDING = 15;
 export const AXIS_VERTICAL_LABEL_PADDING = 10;
@@ -19,6 +20,7 @@ export class TwoDimMarginModel {
 
     recalcMargin(otherComponents: OtherCommonComponents, modelInstance: ModelInstance) {
         const canvasModel = modelInstance.canvasModel;
+        const isAxisSecondary = this.configReader.containsSecondaryAxis();
 
         this.twoDimLegendModel.recalcMarginWith2DLegend(modelInstance, otherComponents.legendBlock, this.configReader.options.legend);
         const labelSize = this.getMaxLabelSize(modelInstance);
@@ -32,6 +34,12 @@ export class TwoDimMarginModel {
             : true;
 
         this.recalcHorizontalMarginByAxisLabelWidth(labelSize, canvasModel, showingFlag);
+
+        if (isAxisSecondary) {
+            const secondaryLabelSize = this.getMaxLabelSizeSecondary(modelInstance);
+            this.recalcMarginBySecondaryAxisLabelSize(secondaryLabelSize, canvasModel)
+        }
+
     }
 
     public recalcMarginByVerticalAxisLabel(modelInstance: ModelInstance): void {
@@ -57,8 +65,22 @@ export class TwoDimMarginModel {
         if (keyAxisOrient === 'left' || keyAxisOrient === 'right') {
             labelsTexts = modelInstance.dataModel.repository.getValuesByKeyField();
         } else {
-            labelsTexts = this.configReader.calculateBiggestValueAndDecremented(modelInstance.dataModel.repository)
+            labelsTexts = this.configReader.getBiggestValueAndDecremented(modelInstance.dataModel.repository)
                 .map(v => this.configReader.getAxisLabelFormatter()(v).toString());
+        }
+
+        return AxisModel.getLabelSize(this.designerConfig.canvas.axisLabel.maxSize.main, labelsTexts);
+    }
+
+    private getMaxLabelSizeSecondary(modelInstance: ModelInstance): LabelSize {
+        const keyAxisOrient = AxisModel.getAxisOrient(AxisType.Key, this.configReader.options.orientation, this.configReader.options.axis.key.position);
+        let labelsTexts: string[];
+
+        if (keyAxisOrient === 'left' || keyAxisOrient === 'right') {
+            labelsTexts = modelInstance.dataModel.repository.getValuesByKeyField();
+        } else {
+            labelsTexts = this.configReader.getBiggestValueAndDecrementedSecondary(modelInstance.dataModel.repository)
+                .map(v => this.configReader.getSecondaryAxisLabelFormatter()(v).toString());
         }
 
         return AxisModel.getLabelSize(this.designerConfig.canvas.axisLabel.maxSize.main, labelsTexts);
@@ -83,6 +105,26 @@ export class TwoDimMarginModel {
             canvasModel.increaseMarginSide(keyAxisOrient, labelSize.width + AXIS_VERTICAL_LABEL_PADDING, keyAxisLabelHorizontalLog);
         } else if ((valueAxisOrient === 'left' || valueAxisOrient === 'right') && this.configReader.options.axis.value.visibility) {
             canvasModel.increaseMarginSide(valueAxisOrient, labelSize.width + AXIS_VERTICAL_LABEL_PADDING);
+        }
+    }
+
+    private recalcMarginBySecondaryAxisLabelSize(labelSize: LabelSize, canvasModel: CanvasModel) {
+        const valueAxisOrient = AxisModel.getAxisOrient(AxisType.Value, this.configReader.options.orientation, this.configReader.options.axis.value.position);
+        const map: Record<Orient, Orient> = {
+            bottom: "top",
+            left: "right",
+            right: "left",
+            top: "bottom"
+        }
+        const secondaryOrient = map[valueAxisOrient];
+
+        const sizeMap: Record<ChartOrientation, number> = {
+            vertical: labelSize.width + AXIS_VERTICAL_LABEL_PADDING,
+            horizontal: labelSize.height + AXIS_HORIZONTAL_LABEL_PADDING
+        }
+
+        if (this.configReader.options.axis.valueSecondary.visibility) {
+            canvasModel.increaseMarginSide(secondaryOrient, sizeMap[this.configReader.options.orientation]);
         }
     }
 }

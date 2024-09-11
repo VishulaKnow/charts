@@ -33,7 +33,7 @@ export class Scale {
 
         return {
             ...scales,
-            valueSecondary: this.getScaleValue(scaleValueSecondary)
+            ...(scaleValueSecondary && { valueSecondary: this.getScaleValue(scaleValueSecondary) })
         }
     }
 

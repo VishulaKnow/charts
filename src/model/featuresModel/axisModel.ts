@@ -1,4 +1,4 @@
-import { AxisPosition, ChartOrientation, MdtChartsDataSource, NumberAxisOptions, AxisLabelPosition, MdtChartsTwoDimensionalOptions, DiscreteAxisOptions } from "../../config/config";
+import { AxisPosition, ChartOrientation, MdtChartsDataSource, NumberAxisOptions, AxisLabelPosition, MdtChartsTwoDimensionalOptions, DiscreteAxisOptions, NumberSecondaryAxisOptions } from "../../config/config";
 import { AxisModelOptions, Orient, TranslateModel } from "../model";
 import { ModelHelper } from "../helpers/modelHelper";
 import { AxisType, CLASSES } from "../modelBuilder";
@@ -44,15 +44,15 @@ export class AxisModel {
         }
     }
 
-    public static getValueAxis(orient: ChartOrientation, axisConfig: NumberAxisOptions, labelConfig: AxisLabelCanvas, canvasModel: CanvasModel): AxisModelOptions {
+    public static getValueAxis(orient: ChartOrientation, position: AxisPosition, cssClass: string, axisConfig: NumberAxisOptions | NumberSecondaryAxisOptions, labelConfig: AxisLabelCanvas, canvasModel: CanvasModel): AxisModelOptions {
         return {
             type: 'value',
-            orient: AxisModel.getAxisOrient(AxisType.Value, orient, axisConfig.position),
+            orient: AxisModel.getAxisOrient(AxisType.Value, orient, position),
             translate: {
-                translateX: AxisModel.getAxisTranslateX(AxisType.Value, orient, axisConfig.position, canvasModel),
-                translateY: AxisModel.getAxisTranslateY(AxisType.Value, orient, axisConfig.position, canvasModel)
+                translateX: AxisModel.getAxisTranslateX(AxisType.Value, orient, position, canvasModel),
+                translateY: AxisModel.getAxisTranslateY(AxisType.Value, orient, position, canvasModel)
             },
-            cssClass: 'value-axis',
+            cssClass,
             ticks: axisConfig.ticks,
             labels: {
                 maxSize: labelConfig.maxSize.main,

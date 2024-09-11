@@ -159,7 +159,10 @@ interface GridLineFlag {
 export interface TwoDimensionalAxis {
     key: DiscreteAxisOptions;
     value: NumberAxisOptions;
+    valueSecondary?: NumberSecondaryAxisOptions;
 }
+
+export type NumberSecondaryAxisOptions = Omit<NumberAxisOptions, 'position'>;
 
 export interface AxisOptions {
     visibility: boolean;
