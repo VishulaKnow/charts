@@ -109,13 +109,13 @@ export class TwoDimMarginModel {
 
     private recalcMarginBySecondaryAxisLabelSize(labelSize: LabelSize, canvasModel: CanvasModel) {
         const valueAxisOrient = AxisModel.getAxisOrient(AxisType.Value, this.configReader.options.orientation, this.configReader.options.axis.value.position);
-        const map: Record<Orient, Orient> = {
+        const secondaryOrientByMain: Record<Orient, Orient> = {
             bottom: "top",
             left: "right",
             right: "left",
             top: "bottom"
         }
-        const secondaryOrient = map[valueAxisOrient];
+        const secondaryOrient = secondaryOrientByMain[valueAxisOrient];
 
         const sizeMap: Record<ChartOrientation, number> = {
             vertical: labelSize.width + AXIS_VERTICAL_LABEL_PADDING,
