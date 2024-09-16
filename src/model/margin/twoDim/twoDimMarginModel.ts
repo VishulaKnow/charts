@@ -2,7 +2,7 @@ import { DesignerConfig } from "../../../designer/designerConfig";
 import { AxisModel, LabelSize } from "../../featuresModel/axisModel";
 import { TwoDimLegendModel } from "../../featuresModel/legendModel/twoDimLegendModel";
 import { keyAxisLabelHorizontalLog, keyAxisLabelVerticalLog } from "../../featuresModel/scaleModel/scaleAxisRecalcer";
-import { Orient, OtherCommonComponents} from "../../model";
+import { Orient, OtherCommonComponents } from "../../model";
 import { AxisType } from "../../modelBuilder";
 import { CanvasModel } from "../../modelInstance/canvasModel/canvasModel";
 import { TwoDimConfigReader } from "../../modelInstance/configReader";
@@ -20,7 +20,6 @@ export class TwoDimMarginModel {
 
     recalcMargin(otherComponents: OtherCommonComponents, modelInstance: ModelInstance) {
         const canvasModel = modelInstance.canvasModel;
-        const isAxisSecondary = this.configReader.containsSecondaryAxis();
 
         this.twoDimLegendModel.recalcMarginWith2DLegend(modelInstance, otherComponents.legendBlock, this.configReader.options.legend);
         const labelSize = this.getMaxLabelSize(modelInstance);
@@ -35,7 +34,7 @@ export class TwoDimMarginModel {
 
         this.recalcHorizontalMarginByAxisLabelWidth(labelSize, canvasModel, showingFlag);
 
-        if (isAxisSecondary) {
+        if (this.configReader.containsSecondaryAxis()) {
             const secondaryLabelSize = this.getMaxLabelSizeSecondary(modelInstance);
             this.recalcMarginBySecondaryAxisLabelSize(secondaryLabelSize, canvasModel)
         }

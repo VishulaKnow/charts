@@ -50,9 +50,9 @@ export class TwoDimConfigReader implements BaseConfigReader {
 
     getFieldsBySegments(valueGroup: TwoDimensionalValueGroup): MdtChartsFieldName[][] {
         const segments: MdtChartsFieldName[][] = [];
-        const mainCharts: MdtChartsTwoDimensionalChart[] = this.options.charts.filter(chart => (chart.data.valueGroup ?? "main") === valueGroup);
+        const valueGroupCharts: MdtChartsTwoDimensionalChart[] = this.options.charts.filter(chart => (chart.data.valueGroup ?? "main") === valueGroup);
 
-        mainCharts.forEach(chart => {
+        valueGroupCharts.forEach(chart => {
             if (!chart.isSegmented) segments.push(...chart.data.valueFields.map(vf => [vf.name]));
             else segments.push(...[chart.data.valueFields.map(vf => vf.name)])
         });
