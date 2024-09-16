@@ -15,6 +15,7 @@ import { DataRepositoryModel } from "../modelInstance/dataModel/dataRepository";
 
 export class TwoDimensionalModel {
     public static getOptions(configReader: TwoDimConfigReader, designerConfig: DesignerConfig, modelInstance: ModelInstance): TwoDimensionalOptionsModel {
+        let secondaryScaleValueInfo;
         const options = configReader.options;
         const canvasModel = modelInstance.canvasModel;
         const resolvedTitle = getResolvedTitle(options.title, modelInstance.dataModel.repository.getRawRows())
@@ -24,9 +25,12 @@ export class TwoDimensionalModel {
         scaleMarginRecalcer.recalculateMargin(canvasModel, options.orientation, options.axis.key);
         const scaleValueInfo = scaleMarginRecalcer.getScaleValue();
 
-        const secondaryScaleMarginRecalcer = new ScaleAxisRecalcer(() => scaleModel.getScaleSecondaryLinear(options, modelInstance.dataModel.repository.getScopedRows(), canvasModel, configReader));
-        secondaryScaleMarginRecalcer.recalculateMargin(canvasModel, options.orientation, options.axis.key);
-        const secondaryScaleValueInfo = secondaryScaleMarginRecalcer.getScaleValue();
+
+        if (configReader.containsSecondaryAxis()) {
+            const secondaryScaleMarginRecalcer = new ScaleAxisRecalcer(() => scaleModel.getScaleSecondaryLinear(options, modelInstance.dataModel.repository.getScopedRows(), canvasModel, configReader));
+            secondaryScaleMarginRecalcer.recalculateMargin(canvasModel, options.orientation, options.axis.key);
+            secondaryScaleValueInfo = secondaryScaleMarginRecalcer.getScaleValue();
+        }
 
         return {
             legend: canvasModel.legendCanvas.getModel(),
@@ -36,11 +40,12 @@ export class TwoDimensionalModel {
             scale: {
                 key: scaleModel.getScaleKey(modelInstance.dataModel.getAllowableKeys(), options.orientation, canvasModel, options.charts, this.getChartsByType(options.charts, 'bar')),
                 value: scaleValueInfo.scale,
-                valueSecondary: secondaryScaleValueInfo.scale,
+                ...(configReader.containsSecondaryAxis() && { valueSecondary: secondaryScaleValueInfo.scale }),
             },
             axis: {
                 key: AxisModel.getKeyAxis(options, modelInstance.dataModel.repository.getScopedFullSource(), designerConfig.canvas.axisLabel, canvasModel, designerConfig.elementsOptions.tooltip, () => scaleValueInfo.scaleFn(0)),
-                value: AxisModel.getValueAxis(options.orientation, options.axis.value, designerConfig.canvas.axisLabel, canvasModel)
+                value: AxisModel.getMainValueAxis(options.orientation, options.axis.value.position, options.axis.value, designerConfig.canvas.axisLabel, canvasModel),
+                ...(configReader.containsSecondaryAxis() && { valueSecondary: AxisModel.getSecondaryValueAxis(options.orientation, options.axis.value.position, options.axis.valueSecondary, designerConfig.canvas.axisLabel, canvasModel) }),
             },
             type: options.type,
             data: { ...options.data },

@@ -1,7 +1,7 @@
 import { AxisScale } from 'd3-axis';
 import { AxisModelOptions, IAxisModel, IScaleModel, ScaleKeyModel, ScaleValueModel } from "../../../model/model";
 import { Block } from "../../block/block";
-import { Scale, Scales } from "../scale/scale";
+import { Scale, ScalesWithSecondary } from "../scale/scale";
 import { NamesHelper } from '../../helpers/namesHelper';
 import { AxisHelper } from './axisHelper';
 import { AxisLabelHelper } from './axisLabelDomHelper';
@@ -16,16 +16,20 @@ const MINIMAL_STEP_SIZE_FOR_WRAPPING = 38;
 export class Axis {
     public static axesClass = NamesHelper.getClassName('axis');
 
-    public static render(block: Block, scales: Scales, scaleModel: IScaleModel, axisModel: IAxisModel, blockSize: Size): void {
+    public static render(block: Block, scales: ScalesWithSecondary, scaleModel: IScaleModel, axisModel: IAxisModel, blockSize: Size): void {
         if (axisModel.value.visibility)
             this.renderAxis(block, scales.value, scaleModel.value, axisModel.value, blockSize);
+        if (axisModel.valueSecondary?.visibility)
+            this.renderAxis(block, scales.valueSecondary, scaleModel.valueSecondary, axisModel.valueSecondary, blockSize);
         if (axisModel.key.visibility)
             this.renderAxis(block, scales.key, scaleModel.key, axisModel.key, blockSize);
     }
 
-    public static update(block: Block, scales: Scales, scalesOptions: IScaleModel, axisModel: IAxisModel, blockSize: Size, keyDomainsEquality: boolean): void {
+    public static update(block: Block, scales: ScalesWithSecondary, scalesOptions: IScaleModel, axisModel: IAxisModel, blockSize: Size, keyDomainsEquality: boolean): void {
         if (axisModel.value.visibility)
             this.updateValueAxis(block, scales.value, scalesOptions.value, axisModel.value, blockSize);
+        if (axisModel.valueSecondary?.visibility)
+            this.updateValueAxis(block, scales.valueSecondary, scalesOptions.valueSecondary, axisModel.valueSecondary, blockSize);
         if (axisModel.key.visibility)
             this.updateKeyAxis(block, scales.key, scalesOptions.key, axisModel.key, blockSize, keyDomainsEquality);
     }

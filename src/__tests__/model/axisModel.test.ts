@@ -1,4 +1,4 @@
-import { DataOptions, MdtChartsDataSource, DiscreteAxisOptions, NumberAxisOptions, Size, MdtChartsTwoDimensionalChart, MdtChartsTwoDimensionalOptions, AxisLabelPosition, ShowTickFn } from "../../config/config";
+import { DataOptions, MdtChartsDataSource, DiscreteAxisOptions, NumberAxisOptions, Size, MdtChartsTwoDimensionalChart, AxisLabelPosition, ShowTickFn } from "../../config/config";
 import { TooltipSettings } from "../../designer/designerConfig";
 import { AxisModel, MINIMAL_HORIZONTAL_STEP_SIZE, MINIMAL_VERTICAL_STEP_SIZE } from "../../model/featuresModel/axisModel";
 import { AxisModelService, showAllTicks } from "../../model/featuresModel/axisModelService";
@@ -285,7 +285,7 @@ describe('get axes', () => {
         canvasModel.initBlockSize(blockSize);
 
         numberAxisOptions.position = 'start';
-        const result = AxisModel.getValueAxis('vertical', numberAxisOptions, { maxSize: { main: 60 } }, canvasModel);
+        const result = AxisModel.getMainValueAxis('vertical', numberAxisOptions.position, numberAxisOptions, { maxSize: { main: 60 } }, canvasModel);
         const expected: AxisModelOptions = {
             visibility: true,
             type: "value",
@@ -315,11 +315,41 @@ describe('get axes', () => {
         canvasModel.initMargin(margin);
         canvasModel.initBlockSize(blockSize);
 
-        const result = AxisModel.getValueAxis('vertical', numberAxisOptions, { maxSize: { main: 60 } }, canvasModel);
+        const result = AxisModel.getMainValueAxis('vertical', 'start', numberAxisOptions, { maxSize: { main: 60 } }, canvasModel);
         const expected: AxisModelOptions = {
             visibility: true,
             type: "value",
             cssClass: "value-axis",
+            labels: {
+                maxSize: 60,
+                position: 'straight',
+                visible: true,
+                defaultTooltip: true,
+                showTick: showAllTicks,
+                linearTickStep: MINIMAL_VERTICAL_STEP_SIZE
+            },
+            orient: "left",
+            ticks: {
+                flag: false
+            },
+            translate: {
+                translateX: 20,
+                translateY: 20
+            }
+        }
+        expect(result).toEqual(expected);
+    });
+
+    test('getSecondaryValueAxis should return opposite axis', () => {
+        const canvasModel = new CanvasModel();
+        canvasModel.initMargin(margin);
+        canvasModel.initBlockSize(blockSize);
+
+        const result = AxisModel.getSecondaryValueAxis('vertical', 'start', numberAxisOptions, { maxSize: { main: 60 } }, canvasModel);
+        const expected: AxisModelOptions = {
+            visibility: true,
+            type: "value",
+            cssClass: "value-secondary-axis",
             labels: {
                 maxSize: 60,
                 position: 'straight',

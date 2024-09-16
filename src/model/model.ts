@@ -127,6 +127,7 @@ export interface RangeModel {
 export interface IAxisModel {
     key: AxisModelOptions;
     value: AxisModelOptions;
+    valueSecondary?: AxisModelOptions;
 }
 export interface AxisModelOptions {
     visibility: boolean;

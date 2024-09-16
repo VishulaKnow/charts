@@ -43,7 +43,7 @@ export class ScaleModel {
                 end: getScaleValueRangePeek(options.orientation, canvasModel)
             },
             type: "linear",
-            formatter: configReader?.getAxisLabelFormatter() ?? null
+            formatter: configReader?.getSecondaryAxisLabelFormatter() ?? null
         }
     }
 

@@ -36,7 +36,18 @@ const configCars: MdtChartsConfig = {
                 position: 'start',
                 ticks: {
                     flag: false
-                }
+                },
+            },
+            valueSecondary: {
+                domain: {
+                    end: -1,
+                    start: -1
+                },
+                ticks: {
+                    flag: false
+                },
+                visibility: true,
+
             }
         },
         additionalElements: {
@@ -99,11 +110,6 @@ const configCars: MdtChartsConfig = {
                     valueFields: [
                         {
                             name: 'count',
-                            format: 'money',
-                            title: 'Стоимость за 2020 год'
-                        },
-                        {
-                            name: 'price',
                             format: 'money',
                             title: 'Стоимость за 2020 год'
                         }
