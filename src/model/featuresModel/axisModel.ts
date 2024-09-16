@@ -44,7 +44,15 @@ export class AxisModel {
         }
     }
 
-    public static getValueAxis(orient: ChartOrientation, position: AxisPosition, cssClass: string, axisConfig: NumberAxisOptions | NumberSecondaryAxisOptions, labelConfig: AxisLabelCanvas, canvasModel: CanvasModel): AxisModelOptions {
+    public static getMainValueAxis(orient: ChartOrientation, position: AxisPosition, axisConfig: NumberAxisOptions, labelConfig: AxisLabelCanvas, canvasModel: CanvasModel): AxisModelOptions {
+        return this.getValueAxis(orient, position, 'value-axis', axisConfig, labelConfig, canvasModel)
+    }
+
+    public static getSecondaryValueAxis(orient: ChartOrientation, mainAxisPosition: AxisPosition, axisConfig: NumberSecondaryAxisOptions, labelConfig: AxisLabelCanvas, canvasModel: CanvasModel): AxisModelOptions {
+        return this.getValueAxis(orient, mainAxisPosition === "start" ? "end" : "start", 'value-secondary-axis', axisConfig, labelConfig, canvasModel)
+    }
+
+    private static getValueAxis(orient: ChartOrientation, position: AxisPosition, cssClass: string, axisConfig: NumberAxisOptions | NumberSecondaryAxisOptions, labelConfig: AxisLabelCanvas, canvasModel: CanvasModel): AxisModelOptions {
         return {
             type: 'value',
             orient: AxisModel.getAxisOrient(AxisType.Value, orient, position),

@@ -20,14 +20,13 @@ export class TwoDimensionalModel {
         const canvasModel = modelInstance.canvasModel;
         const resolvedTitle = getResolvedTitle(options.title, modelInstance.dataModel.repository.getRawRows())
         const scaleModel = new ScaleModel();
-        const isAxisSecondary = configReader.containsSecondaryAxis();
-        const axisSecondaryPosition = options.axis.value.position === 'start' ? 'end' : 'start';
 
         const scaleMarginRecalcer = new ScaleAxisRecalcer(() => scaleModel.getScaleLinear(options, modelInstance.dataModel.repository.getScopedRows(), canvasModel, configReader));
         scaleMarginRecalcer.recalculateMargin(canvasModel, options.orientation, options.axis.key);
         const scaleValueInfo = scaleMarginRecalcer.getScaleValue();
 
-        if (isAxisSecondary) {
+
+        if (configReader.containsSecondaryAxis()) {
             const secondaryScaleMarginRecalcer = new ScaleAxisRecalcer(() => scaleModel.getScaleSecondaryLinear(options, modelInstance.dataModel.repository.getScopedRows(), canvasModel, configReader));
             secondaryScaleMarginRecalcer.recalculateMargin(canvasModel, options.orientation, options.axis.key);
             secondaryScaleValueInfo = secondaryScaleMarginRecalcer.getScaleValue();
@@ -41,12 +40,12 @@ export class TwoDimensionalModel {
             scale: {
                 key: scaleModel.getScaleKey(modelInstance.dataModel.getAllowableKeys(), options.orientation, canvasModel, options.charts, this.getChartsByType(options.charts, 'bar')),
                 value: scaleValueInfo.scale,
-                ...(isAxisSecondary && { valueSecondary: secondaryScaleValueInfo.scale }),
+                ...(configReader.containsSecondaryAxis() && { valueSecondary: secondaryScaleValueInfo.scale }),
             },
             axis: {
                 key: AxisModel.getKeyAxis(options, modelInstance.dataModel.repository.getScopedFullSource(), designerConfig.canvas.axisLabel, canvasModel, designerConfig.elementsOptions.tooltip, () => scaleValueInfo.scaleFn(0)),
-                value: AxisModel.getValueAxis(options.orientation, options.axis.value.position, 'value-axis', options.axis.value, designerConfig.canvas.axisLabel, canvasModel),
-                ...(isAxisSecondary && { valueSecondary: AxisModel.getValueAxis(options.orientation, axisSecondaryPosition, 'value-secondary-axis', options.axis.valueSecondary, designerConfig.canvas.axisLabel, canvasModel) }),
+                value: AxisModel.getMainValueAxis(options.orientation, options.axis.value.position, options.axis.value, designerConfig.canvas.axisLabel, canvasModel),
+                ...(configReader.containsSecondaryAxis() && { valueSecondary: AxisModel.getSecondaryValueAxis(options.orientation, options.axis.value.position, options.axis.valueSecondary, designerConfig.canvas.axisLabel, canvasModel) }),
             },
             type: options.type,
             data: { ...options.data },
