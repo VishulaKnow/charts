@@ -265,6 +265,7 @@ export interface MdtChartsTwoDimensionalChart extends ChartSettings, MdtChartsLi
     data: TwoDimensionalChartData;
     embeddedLabels: EmbeddedLabelType;
     isSegmented: boolean;
+    valueLabels?: TwoDimensionalChartValueLabels;
 }
 
 export interface PolarChart extends ChartSettings {
@@ -284,6 +285,8 @@ export interface TwoDimensionalChartData {
     valueFields: TwoDimValueField[];
     valueGroup?: TwoDimensionalValueGroup;
 }
+
+export type TwoDimensionalChartValueLabels = { enabled: boolean }
 
 export type TwoDimensionalValueGroup = 'main' | 'secondary'
 
