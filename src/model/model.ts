@@ -24,6 +24,8 @@ export type DataOptions = {
     [option: string]: any;
 };
 export type UnitsFromConfig = "%" | "px";
+export type ValueLabelAnchor = "start" | "middle" | "end"
+export type ValueLabelDominantBaseline = "hanging" | "middle" | "auto"
 
 export type OptionsModel = TwoDimensionalOptionsModel | PolarOptionsModel | IntervalOptionsModel;
 
@@ -284,11 +286,14 @@ export interface TwoDimensionalChartModel extends ChartModel, TwoDimensionalLine
     embeddedLabels: EmbeddedLabelTypeModel;
     isSegmented: boolean;
     legend: ChartLegendModel;
+    valueLabels?: TwoDimChartValueLabelsOptions;
 }
+
 export interface IntervalChartModel extends Omit<ChartModel, "legend"> { //TODO: remove
     type: IntervalChartType;
     data: IntervalChartDataModel;
 }
+
 export interface PolarChartModel extends ChartModel {
     type: PolarChartType;
     data: PolarChartDataModel;
@@ -300,6 +305,15 @@ export interface TwoDimensionalChartDataModel {
     valueFields: ValueField[];
     valueGroup?: TwoDimensionalValueGroup;
 }
+
+export interface TwoDimChartValueLabelsOptions {
+    show: boolean;
+    handleX: (scaledValue: number) => number
+    handleY: (scaledValue: number) => number;
+    textAnchor: ValueLabelAnchor;
+    dominantBaseline: ValueLabelDominantBaseline;
+}
+
 export interface ValueField extends Field {
     title: string;
 }
