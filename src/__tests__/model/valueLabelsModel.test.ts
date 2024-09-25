@@ -16,7 +16,8 @@ describe('getValueLabelX', () => {
             top: 15,
             bottom: 20,
             left: 25,
-            right: 30 }
+            right: 30
+        }
     });
 
     test('should return valueLabel equal to 115, because orient is right', () => {
@@ -40,7 +41,6 @@ describe('getValueLabelX', () => {
 
 describe('getValueLabelY', () => {
     let scaledValue: number;
-    let keyAxisOrient: Orient;
     let margin: BlockMargin
 
     beforeEach(() => {
@@ -49,7 +49,8 @@ describe('getValueLabelY', () => {
             top: 15,
             bottom: 20,
             left: 25,
-            right: 30 }
+            right: 30
+        }
     });
 
     test('should return valueLabel equal to 125, because orient is top', () => {

@@ -21,6 +21,7 @@ import {
     calculateValueLabelAlignment,
     getValueLabelX, getValueLabelY
 } from "../../model/featuresModel/valueLabelsModel/valueLabelsModel";
+import { CanvasModel } from "../modelInstance/canvasModel/canvasModel";
 
 
 export class TwoDimensionalModel {
@@ -34,7 +35,6 @@ export class TwoDimensionalModel {
         const scaleMarginRecalcer = new ScaleAxisRecalcer(() => scaleModel.getScaleLinear(options, modelInstance.dataModel.repository.getScopedRows(), canvasModel, configReader));
         scaleMarginRecalcer.recalculateMargin(canvasModel, options.orientation, options.axis.key);
         const scaleValueInfo = scaleMarginRecalcer.getScaleValue();
-
 
         if (configReader.containsSecondaryAxis()) {
             const secondaryScaleMarginRecalcer = new ScaleAxisRecalcer(() => scaleModel.getScaleSecondaryLinear(options, modelInstance.dataModel.repository.getScopedRows(), canvasModel, configReader));
@@ -90,7 +90,7 @@ export class TwoDimensionalModel {
         }
     }
 
-    private static getChartsModel(charts: MdtChartsTwoDimensionalChart[], chartOrientation: ChartOrientation, designerConfig: DesignerConfig, dataModelRep: DataRepositoryModel, keyAxisOrient: Orient): TwoDimensionalChartModel[] {
+    private static getChartsModel(charts: MdtChartsTwoDimensionalChart[], chartOrientation: ChartOrientation, designerConfig: DesignerConfig, dataModelRep: DataRepositoryModel, keyAxisOrient: Orient, canvasModel: CanvasModel): TwoDimensionalChartModel[] {
         const styleModel = new TwoDimensionalChartStyleModel(charts, designerConfig.chartStyle);
         this.sortCharts(charts);
         const chartsModel: TwoDimensionalChartModel[] = [];
@@ -125,13 +125,15 @@ export class TwoDimensionalModel {
                 barViewOptions: { hatch: { on: chart.barStyles?.hatch?.on ?? false } },
                 legend: getLegendMarkerOptions(chart),
                 index,
-                ...(chart.valueLabels?.enabled && { valueLabels: {
+                ...(chart.valueLabels?.enabled && {
+                    valueLabels: {
                         show: false,
-                        handleX: (scaledValue) => getValueLabelX(scaledValue, keyAxisOrient, designerConfig.canvas.chartBlockMargin),
-                        handleY: (scaledValue) => getValueLabelY(scaledValue, keyAxisOrient, designerConfig.canvas.chartBlockMargin),
+                        handleX: (scaledValue) => getValueLabelX(scaledValue, keyAxisOrient, canvasModel.getMargin()),
+                        handleY: (scaledValue) => getValueLabelY(scaledValue, keyAxisOrient, canvasModel.getMargin()),
                         textAnchor: calculateValueLabelAlignment(keyAxisOrient).textAnchor,
                         dominantBaseline: calculateValueLabelAlignment(keyAxisOrient).dominantBaseline,
-                    }})
+                    }
+                })
             });
         });
 
