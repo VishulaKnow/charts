@@ -1,4 +1,9 @@
-import { BlockMargin, Orient } from "../../model";
+import {BlockMargin, Orient, ValueLabelAnchor, ValueLabelDominantBaseline} from "../../model";
+
+interface ValueLabelAlignment {
+    dominantBaseline: ValueLabelDominantBaseline
+    textAnchor: ValueLabelAnchor
+}
 
 const OFFSET_SIZE_PX = 10;
 
@@ -24,7 +29,7 @@ export function getValueLabelX(scaledValue: number, keyAxisOrient: Orient, margi
     }
 }
 
-export function calculateValueLabelAlignment(keyAxisOrient: Orient)  {
+export function calculateValueLabelAlignment(keyAxisOrient: Orient): ValueLabelAlignment  {
     switch (keyAxisOrient) {
         case 'top':
             return { dominantBaseline: "hanging", textAnchor: "middle" }
