@@ -59,7 +59,7 @@ export class TwoDimensionalModel {
             },
             type: options.type,
             data: { ...options.data },
-            charts: this.getChartsModel(options.charts, options.orientation, designerConfig, modelInstance.dataModel.repository, keyAxis.orient),
+            charts: this.getChartsModel(options.charts, options.orientation, designerConfig, modelInstance.dataModel.repository, keyAxis.orient, canvasModel),
             additionalElements: this.getAdditionalElements(options),
             tooltip: options.tooltip,
             chartSettings: this.getChartsSettings(designerConfig.canvas.chartOptions, options.orientation)
