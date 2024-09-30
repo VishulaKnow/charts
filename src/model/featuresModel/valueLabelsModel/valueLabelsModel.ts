@@ -1,4 +1,4 @@
-import {BlockMargin, Orient, ValueLabelAnchor, ValueLabelDominantBaseline} from "../../model";
+import { BlockMargin, Orient, ValueLabelAnchor, ValueLabelDominantBaseline } from "../../model";
 
 interface ValueLabelAlignment {
     dominantBaseline: ValueLabelDominantBaseline

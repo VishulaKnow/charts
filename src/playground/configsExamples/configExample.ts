@@ -81,7 +81,7 @@ const configCars: MdtChartsConfig = {
                             title: 'Стоимость за 2020 год'
                         },
                     ],
-                    valueGroup: "secondary"
+                    valueGroup: "main"
                 },
                 tooltip: {
                     show: true
@@ -101,7 +101,8 @@ const configCars: MdtChartsConfig = {
                     hatch: {
                         on: false
                     }
-                }
+                },
+                valueLabels: { enabled: true }
             },
             {
                 isSegmented: false,
