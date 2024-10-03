@@ -10,7 +10,7 @@ import { MdtChartsDataRow, MdtChartsDataSource } from "../../../config/config";
 import { Scales, ScalesWithSecondary} from "../../../engine/features/scale/scale";
 import { ValueLabelsHelper } from "../../../engine/features/valueLabels/valueLabelsHelper";
 import { Helper } from "../../../engine/helpers/helper";
-import { BaseType, Selection } from "d3-selection";
+import {BaseType, selection, Selection} from "d3-selection";
 import { DomHelper } from "../../../engine/helpers/domHelper";
 import { CLASSES } from "../../../model/modelBuilder";
 
@@ -41,15 +41,15 @@ export class ChartValueLabels {
     constructor(private readonly globalOptions: ValueLabelsOptions, private readonly chart: TwoDimensionalChartModel) { }
 
     render(scales: Scales, data: MdtChartsDataRow[]) {
-        const textLabels = this.getAllValueLabels()
+        const valueLabels = this.getAllValueLabels()
             .data(data)
             .enter()
             .append('text');
 
         const attrs = ValueLabelsHelper.getValueLabelsAttrs(this.globalOptions, this.chart, scales)
 
-        this.setAttrs(textLabels, attrs);
-        this.setClasses(textLabels, this.chart.cssClasses, this.chart.index)
+        this.setAttrs(valueLabels, attrs);
+        this.setClasses(valueLabels, this.chart.cssClasses, this.chart.index)
     }
 
     update(scales: Scales, newData: MdtChartsDataRow[]) {
@@ -65,8 +65,10 @@ export class ChartValueLabels {
 
         const mergedValueLabels = newValueLabels.merge(valueLabels as Selection<SVGTextElement, MdtChartsDataRow, SVGGElement, unknown>);
 
-        this.setAttrs(mergedValueLabels, attrs);
+        this.setAttrs(newValueLabels, attrs);
         this.setClasses(mergedValueLabels, this.chart.cssClasses, this.chart.index);
+
+        this.setAttrs(valueLabels, attrs, true)
     }
 
     public remove() {
@@ -79,14 +81,27 @@ export class ChartValueLabels {
             .selectAll(`.${this.valueLabelClass}.${CLASSES.dataLabel}${Helper.getCssClassesLine(this.chart.cssClasses)}`)
     }
 
-    private setAttrs(textLabels: Selection<SVGTextElement, MdtChartsDataRow, BaseType, any>, attrs: ValueLabelAttrs) {
+    private setAttrs(valueLabels: Selection<SVGTextElement | BaseType, MdtChartsDataRow, BaseType, any>, attrs: ValueLabelAttrs, animate: boolean = false) {
         const valueFieldName = this.chart.data.valueFields[0].name
-        textLabels
+        const animationName = 'labels-updating';
+
+        valueLabels
             .text(d => d[valueFieldName])
-            .attr('x', d => attrs.x(d))
-            .attr('y', d => attrs.y(d))
             .attr('dominant-baseline', attrs.dominantBaseline)
-            .attr('text-anchor', attrs.textAnchor)
+            .attr('text-anchor', attrs.textAnchor);
+
+        if (animate) {
+            valueLabels
+                .interrupt(animationName)
+                .transition(animationName)
+                .duration(this.globalOptions.elementAccessors.getBlock().transitionManager.durations.chartUpdate)
+                .attr('x', d => attrs.x(d))
+                .attr('y', d => attrs.y(d));
+        } else {
+            valueLabels
+                .attr('x', d => attrs.x(d))
+                .attr('y', d => attrs.y(d));
+        }
     }
 
     private setClasses(textLabels: Selection<SVGTextElement, MdtChartsDataRow, BaseType, any>, cssClasses: string[], vfIndex: number): void {
