@@ -1,5 +1,5 @@
 import { MdtChartsDataSource, Size } from "../../config/config";
-import { BarChartSettings, BlockMargin, Model, OptionsModelData, Orient, TwoDimChartElementsSettings, TwoDimensionalChartModel, TwoDimensionalOptionsModel } from "../../model/model";
+import { BlockMargin, Model, OptionsModelData, Orient, TwoDimChartElementsSettings, TwoDimensionalChartModel, TwoDimensionalOptionsModel } from "../../model/model";
 import { Block } from "../block/block";
 import { ChartContentManager } from "../contentManager/contentManagerFactory";
 import { ElementHighlighter } from "../elementHighlighter/elementHighlighter";
@@ -138,6 +138,9 @@ export class TwoDimensionalManager implements ChartContentManager {
             hidedRecordsAmount: model.dataSettings.scope.hidedRecordsAmount,
             chartOrientation: options.orient
         });
+
+        if (this.canvasValueLabels)
+            this.canvasValueLabels.update(scales, options.charts, data, model.options.data);
     }
 
     public updateColors(block: Block, model: Model<TwoDimensionalOptionsModel>): void {
