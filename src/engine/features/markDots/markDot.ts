@@ -1,7 +1,7 @@
 import { select, Selection, BaseType } from 'd3-selection';
 import { transition } from 'd3-transition';
 import { MdtChartsDataRow } from '../../../config/config';
-import { BlockMargin, MarkersStyleOptions, Orient, TwoDimensionalChartModel } from "../../../model/model";
+import { BlockMargin, MarkersOptions, MarkersStyleOptions, Orient, TwoDimensionalChartModel } from "../../../model/model";
 import { Block } from "../../block/block";
 import { DomHelper } from '../../helpers/domHelper';
 import { Helper } from '../../helpers/helper';
@@ -36,8 +36,7 @@ export class MarkDot {
         this.setAttrs(block, dots, attrs, chart.markersOptions.styles);
 
         this.setClassesAndStyle(dots, chart.cssClasses, vfIndex, chart.style.elementColors);
-        if (chart.type !== 'bar')
-            MarkDot.shouldMarkDotVisible(dots, chart, false);
+        MarkDot.toggleMarkDotHideMode(dots, chart.markersOptions, false);
     }
 
     public static update(block: Block, newData: MdtChartsDataRow[], keyAxisOrient: Orient, scales: Scales, margin: BlockMargin, keyFieldName: string, vfIndex: number, valueFieldName: string, chart: TwoDimensionalChartModel): void {
@@ -48,7 +47,7 @@ export class MarkDot {
 
         dots.each(function (datum) {
             if (chart.markersOptions.show({ row: datum, valueFieldName })) {
-                ElementHighlighter.toggleMarkDotVisible(select(this), true);
+                MarkDot.toggleMarkDotVisible(select(this), true);
             }
         });
 
@@ -59,7 +58,7 @@ export class MarkDot {
         this.setAttrs(block, newDots, attrs, chart.markersOptions.styles);
 
         this.setClassesAndStyle(newDots, chart.cssClasses, vfIndex, chart.style.elementColors);
-        MarkDot.shouldMarkDotVisible(newDots, chart, false);
+        MarkDot.toggleMarkDotHideMode(newDots, chart.markersOptions, false);
 
         const animationName = 'data-updating';
         dots
@@ -81,11 +80,15 @@ export class MarkDot {
             .selectAll(`.${MarkDot.markerDotClass}${Helper.getCssClassesLine(chartCssClasses)}`);
     }
 
-    public static shouldMarkDotVisible(elems: Selection<BaseType, MdtChartsDataRow, BaseType, unknown>, chart: TwoDimensionalChartModel, isTurnOffHiddenClass: boolean = true): void {
+    public static toggleMarkDotHideMode(elems: Selection<BaseType, MdtChartsDataRow, BaseType, unknown>, markersOptions: MarkersOptions, turnOffIfCan: boolean): void {
         elems.each(function (datum) {
-            if (!chart.markersOptions.show({ row: datum, valueFieldName: (datum as MarkDotDataItem).$mdtChartsMetadata?.valueFieldName }))
-                ElementHighlighter.toggleMarkDotVisible(select(this), isTurnOffHiddenClass);
+            if (!markersOptions.show({ row: datum, valueFieldName: (datum as MarkDotDataItem).$mdtChartsMetadata?.valueFieldName }))
+                MarkDot.toggleMarkDotVisible(select(this), turnOffIfCan);
         });
+    }
+
+    private static toggleMarkDotVisible(markDots: Selection<BaseType, any, BaseType, any>, isHighlight: boolean) {
+        markDots.classed(MarkDot.hiddenDotClass, !isHighlight);
     }
 
     private static setClassesAndStyle(dots: Selection<SVGCircleElement, MarkDotDataItem, BaseType, any>, cssClasses: string[], vfIndex: number, elementColors: string[]): void {

@@ -81,39 +81,6 @@ const configCars: MdtChartsConfig = {
                             title: 'Стоимость за 2020 год'
                         },
                     ],
-                    valueGroup: "secondary"
-                },
-                tooltip: {
-                    show: true
-                },
-                embeddedLabels: 'none',
-                markers: {
-                    show: false
-                },
-                lineStyles: {
-                    dash: {
-                        on: true,
-                        dashSize: 3,
-                        gapSize: 3
-                    }
-                },
-                barStyles: {
-                    hatch: {
-                        on: false
-                    }
-                }
-            },
-            {
-                isSegmented: false,
-                type: 'bar',
-                data: {
-                    valueFields: [
-                        {
-                            name: 'count',
-                            format: 'money',
-                            title: 'Стоимость за 2020 год'
-                        }
-                    ],
                     valueGroup: "main"
                 },
                 tooltip: {
@@ -135,16 +102,41 @@ const configCars: MdtChartsConfig = {
                         on: false
                     }
                 }
-            }
+            },
+            // {
+            //     isSegmented: false,
+            //     type: 'bar',
+            //     data: {
+            //         valueFields: [
+            //             {
+            //                 name: 'count',
+            //                 format: 'money',
+            //                 title: 'Стоимость за 2020 год'
+            //             }
+            //         ],
+            //         valueGroup: "main"
+            //     },
+            //     tooltip: {
+            //         show: true
+            //     },
+            //     embeddedLabels: 'none',
+            //     markers: {
+            //         show: false
+            //     },
+            //     lineStyles: {
+            //         dash: {
+            //             on: true,
+            //             dashSize: 3,
+            //             gapSize: 3
+            //         }
+            //     },
+            //     barStyles: {
+            //         hatch: {
+            //             on: false
+            //         }
+            //     }
+            // }
         ],
-        tooltip: {
-            aggregator: {
-                content: ({ row }) => {
-                    return { type: "captionValue", caption: "Общая сумма", value: (row.price ?? 0) + (row.count ?? 0) };
-                },
-                position: 'underValues'
-            }
-        }
     }
     // options: {
     //     type: 'polar',

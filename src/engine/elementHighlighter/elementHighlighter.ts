@@ -105,16 +105,12 @@ export class ElementHighlighter {
         });
     }
 
-    public static toggleMarkDotVisible(markDots: Selection<BaseType, any, BaseType, any>, isHighlight: boolean) {
-        markDots.classed(MarkDot.hiddenDotClass, !isHighlight);
-    }
-
     public static remove2DChartsFullHighlighting(block: Block, charts: TwoDimensionalChartModel[], transitionDuration: number = 0): void {
         charts.forEach(chart => {
             const elems = DomHelper.get2DChartElements(block, chart);
 
             if (chart.type !== 'bar')
-                MarkDot.shouldMarkDotVisible(elems, chart, false);
+                MarkDot.toggleMarkDotHideMode(elems, chart.markersOptions, false);
             this.toggle2DElements(elems, false, chart, transitionDuration);
             this.toggleActivityStyle(elems, true);
         });
@@ -126,7 +122,7 @@ export class ElementHighlighter {
             const selectedElems = DomHelper.getChartElementsByKeys(elems, chart.isSegmented, keyFieldName, block.filterEventManager.getSelectedKeys(), SelectionCondition.Exclude);
 
             if (chart.type !== 'bar')
-                MarkDot.shouldMarkDotVisible(selectedElems, chart, false);
+                MarkDot.toggleMarkDotHideMode(selectedElems, chart.markersOptions, false);
             this.toggle2DElements(selectedElems, false, chart, transitionDuration);
             if (block.filterEventManager.getSelectedKeys().length > 0)
                 this.toggleActivityStyle(selectedElems, false);
