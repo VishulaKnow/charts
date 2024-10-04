@@ -32,7 +32,6 @@ export class TwoDimensionalModel {
         const canvasModel = modelInstance.canvasModel;
         const resolvedTitle = getResolvedTitle(options.title, modelInstance.dataModel.repository.getRawRows())
         const scaleModel = new ScaleModel();
-        const keyAxis = AxisModel.getKeyAxis(options, modelInstance.dataModel.repository.getScopedFullSource(), designerConfig.canvas.axisLabel, canvasModel, designerConfig.elementsOptions.tooltip, () => scaleValueInfo.scaleFn(0));
         const scaleMarginRecalcer = new ScaleAxisRecalcer(() => scaleModel.getScaleLinear(options, modelInstance.dataModel.repository.getScopedRows(), canvasModel, configReader));
         scaleMarginRecalcer.recalculateMargin(canvasModel, options.orientation, options.axis.key);
         const scaleValueInfo = scaleMarginRecalcer.getScaleValue();
@@ -42,6 +41,8 @@ export class TwoDimensionalModel {
             secondaryScaleMarginRecalcer.recalculateMargin(canvasModel, options.orientation, options.axis.key);
             secondaryScaleValueInfo = secondaryScaleMarginRecalcer.getScaleValue();
         }
+
+        const keyAxis = AxisModel.getKeyAxis(options, modelInstance.dataModel.repository.getScopedFullSource(), designerConfig.canvas.axisLabel, canvasModel, designerConfig.elementsOptions.tooltip, () => scaleValueInfo.scaleFn(0));
 
         return {
             legend: canvasModel.legendCanvas.getModel(),

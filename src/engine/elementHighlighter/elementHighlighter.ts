@@ -4,7 +4,6 @@ import { BlockMargin, MarkersStyleOptions, TwoDimensionalChartModel } from "../.
 import { Block } from "../block/block";
 import { easeLinear } from 'd3-ease';
 import { interrupt, Transition } from 'd3-transition';
-import { DonutHelper } from '../polarNotation/donut/DonutHelper';
 import { DomHelper, SelectionCondition } from '../helpers/domHelper';
 import { MdtChartsDataRow, Size } from '../../config/config';
 import { Donut } from '../polarNotation/donut/donut';
@@ -13,6 +12,7 @@ import { RectElemWithAttrs } from '../twoDimensionalNotation/bar/bar';
 import { Helper } from '../helpers/helper';
 import * as chroma from 'chroma-js';
 import { NamesHelper } from '../helpers/namesHelper';
+import { DonutHelper } from '../polarNotation/donut/DonutHelper';
 
 export class ElementHighlighter {
     private static inactiveElemClass = NamesHelper.getClassName("opacity-inactive");
@@ -109,7 +109,7 @@ export class ElementHighlighter {
         markDots.classed(MarkDot.hiddenDotClass, !isHighlight);
     }
 
-    public static remove2DChartsFullHighlighting(block: Block, keyFieldName: string, charts: TwoDimensionalChartModel[], transitionDuration: number = 0): void {
+    public static remove2DChartsFullHighlighting(block: Block, charts: TwoDimensionalChartModel[], transitionDuration: number = 0): void {
         charts.forEach(chart => {
             const elems = DomHelper.get2DChartElements(block, chart);
 
