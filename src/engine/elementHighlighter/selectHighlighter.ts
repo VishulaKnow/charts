@@ -18,14 +18,14 @@ export class SelectHighlighter {
             if (!appendKey) {
                 ElementHighlighter.toggle2DElements(selectedElements, false, chart, block.transitionManager.durations.markerHover);
                 if (chart.type !== 'bar')
-                    MarkDot.toggleMarkDotHideMode(selectedElements, chart.markersOptions, false);
+                    MarkDot.tryMakeMarkDotVisible(selectedElements, chart.markersOptions, false);
 
                 if (selectedKeys.length > 0) {
                     ElementHighlighter.toggleActivityStyle(selectedElements, false);
                 } else {
                     ElementHighlighter.toggleActivityStyle(elements, true);
                     if (chart.type !== 'bar')
-                        MarkDot.toggleMarkDotHideMode(elements, chart.markersOptions, false);
+                        MarkDot.tryMakeMarkDotVisible(elements, chart.markersOptions, false);
                 }
                 return;
             }
@@ -38,13 +38,13 @@ export class SelectHighlighter {
                 ElementHighlighter.toggle2DElements(DomHelper.getChartElementsByKeys(elements, chart.isSegmented, options.data.keyField.name, selectedKeys, SelectionCondition.Exclude), false, chart, block.transitionManager.durations.markerHover);
                 ElementHighlighter.toggleActivityStyle(elements, false);
                 if (chart.type !== 'bar')
-                    MarkDot.toggleMarkDotHideMode(elements, chart.markersOptions, false);
+                    MarkDot.tryMakeMarkDotVisible(elements, chart.markersOptions, false);
 
                 ElementHighlighter.toggleActivityStyle(selectedElements, true);
                 ElementHighlighter.toggle2DElements(selectedElements, true, chart, block.transitionManager.durations.markerHover);
             }
             if (chart.type !== 'bar')
-                MarkDot.toggleMarkDotHideMode(selectedElements, chart.markersOptions, true);
+                MarkDot.tryMakeMarkDotVisible(selectedElements, chart.markersOptions, true);
         });
     }
 
@@ -91,7 +91,7 @@ export class SelectHighlighter {
             ElementHighlighter.toggle2DElements(elements, false, chart, block.transitionManager.durations.markerHover);
             ElementHighlighter.toggleActivityStyle(elements, true);
             if (chart.type !== 'bar')
-                MarkDot.toggleMarkDotHideMode(elements, chart.markersOptions, false);
+                MarkDot.tryMakeMarkDotVisible(elements, chart.markersOptions, false);
         });
     }
 

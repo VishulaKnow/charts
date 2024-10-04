@@ -36,7 +36,7 @@ export class MarkDot {
         this.setAttrs(block, dots, attrs, chart.markersOptions.styles);
 
         this.setClassesAndStyle(dots, chart.cssClasses, vfIndex, chart.style.elementColors);
-        MarkDot.toggleMarkDotHideMode(dots, chart.markersOptions, false);
+        MarkDot.tryMakeMarkDotVisible(dots, chart.markersOptions, false);
     }
 
     public static update(block: Block, newData: MdtChartsDataRow[], keyAxisOrient: Orient, scales: Scales, margin: BlockMargin, keyFieldName: string, vfIndex: number, valueFieldName: string, chart: TwoDimensionalChartModel): void {
@@ -58,7 +58,7 @@ export class MarkDot {
         this.setAttrs(block, newDots, attrs, chart.markersOptions.styles);
 
         this.setClassesAndStyle(newDots, chart.cssClasses, vfIndex, chart.style.elementColors);
-        MarkDot.toggleMarkDotHideMode(newDots, chart.markersOptions, false);
+        MarkDot.tryMakeMarkDotVisible(newDots, chart.markersOptions, false);
 
         const animationName = 'data-updating';
         dots
@@ -80,10 +80,10 @@ export class MarkDot {
             .selectAll(`.${MarkDot.markerDotClass}${Helper.getCssClassesLine(chartCssClasses)}`);
     }
 
-    public static toggleMarkDotHideMode(elems: Selection<BaseType, MdtChartsDataRow, BaseType, unknown>, markersOptions: MarkersOptions, turnOffIfCan: boolean): void {
+    public static tryMakeMarkDotVisible(elems: Selection<BaseType, MdtChartsDataRow, BaseType, unknown>, markersOptions: MarkersOptions, turnOnIfCan: boolean): void {
         elems.each(function (datum) {
             if (!markersOptions.show({ row: datum, valueFieldName: (datum as MarkDotDataItem).$mdtChartsMetadata?.valueFieldName }))
-                MarkDot.toggleMarkDotVisible(select(this), turnOffIfCan);
+                MarkDot.toggleMarkDotVisible(select(this), turnOnIfCan);
         });
     }
 
