@@ -5,7 +5,7 @@ import { Scales, Scale } from "../../features/scale/scale";
 import { LineGenerator } from './lineGenerator';
 import { Pipeline } from '../../helpers/pipeline/Pipeline';
 import { BaseType, Selection } from 'd3-selection';
-import { Segment } from "src/engine/twoDimensionalNotation/line/line";
+import { Segment } from './line';
 
 interface LineGeneratorFactoryOptions {
     keyAxisOrient: Orient;
@@ -75,12 +75,12 @@ export function applyLineDash(lineSelection: Selection<SVGElement, any, BaseType
 
 export function getStackedData(data: MdtChartsDataRow[], chart: TwoDimensionalChartModel): Segment[][] {
     let stackedData = stack().keys(chart.data.valueFields.map(field => field.name))(data)
-      .map((layer, index) => {
-          const fieldName = chart.data.valueFields[index].name;
-          return layer.map((segment: Segment) => {
-              segment.fieldName = fieldName;
-              return segment
-          });
-      });
+        .map((layer, index) => {
+            const fieldName = chart.data.valueFields[index].name;
+            return layer.map((segment: Segment) => {
+                segment.fieldName = fieldName;
+                return segment
+            });
+        });
     return stackedData
 }

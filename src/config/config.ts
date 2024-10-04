@@ -159,7 +159,10 @@ interface GridLineFlag {
 export interface TwoDimensionalAxis {
     key: DiscreteAxisOptions;
     value: NumberAxisOptions;
+    valueSecondary?: NumberSecondaryAxisOptions;
 }
+
+export type NumberSecondaryAxisOptions = Omit<NumberAxisOptions, 'position'>;
 
 export interface AxisOptions {
     visibility: boolean;
@@ -262,6 +265,7 @@ export interface MdtChartsTwoDimensionalChart extends ChartSettings, MdtChartsLi
     data: TwoDimensionalChartData;
     embeddedLabels: EmbeddedLabelType;
     isSegmented: boolean;
+    valueLabels?: TwoDimensionalChartValueLabels;
 }
 
 export interface PolarChart extends ChartSettings {
@@ -281,6 +285,8 @@ export interface TwoDimensionalChartData {
     valueFields: TwoDimValueField[];
     valueGroup?: TwoDimensionalValueGroup;
 }
+
+export type TwoDimensionalChartValueLabels = { enabled: boolean }
 
 export type TwoDimensionalValueGroup = 'main' | 'secondary'
 

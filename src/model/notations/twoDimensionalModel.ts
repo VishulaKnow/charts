@@ -5,29 +5,43 @@ import { TwoDimensionalChartStyleModel } from "../chartStyleModel/twoDimensional
 import { AxisModel } from "../featuresModel/axisModel";
 import { ScaleAxisRecalcer } from "../featuresModel/scaleModel/scaleAxisRecalcer";
 import { ScaleModel } from "../featuresModel/scaleModel/scaleModel";
-import { TwoDimensionalOptionsModel, TwoDimensionalChartModel, EmbeddedLabelTypeModel, AdditionalElementsOptions, TwoDimChartElementsSettings } from "../model";
+import {
+    TwoDimensionalOptionsModel,
+    TwoDimensionalChartModel,
+    EmbeddedLabelTypeModel,
+    AdditionalElementsOptions,
+    TwoDimChartElementsSettings, Orient
+} from "../model";
 import { TwoDimConfigReader } from "../modelInstance/configReader";
 import { ModelInstance } from "../modelInstance/modelInstance";
 import { getLegendMarkerOptions, parseDashStyles, parseShape } from "./twoDimensional/styles";
 import { getResolvedTitle } from "../../model/featuresModel/titleModel";
 import { DataRepositoryModel } from "../modelInstance/dataModel/dataRepository";
+import {
+    calculateValueLabelAlignment,
+    getValueLabelX, getValueLabelY
+} from "../../model/featuresModel/valueLabelsModel/valueLabelsModel";
+import { CanvasModel } from "../modelInstance/canvasModel/canvasModel";
 import { TwoDimensionalModelHelper } from "../helpers/twoDimensionalModelHelper";
 
 
 export class TwoDimensionalModel {
     public static getOptions(configReader: TwoDimConfigReader, designerConfig: DesignerConfig, modelInstance: ModelInstance): TwoDimensionalOptionsModel {
+        let secondaryScaleValueInfo;
         const options = configReader.options;
         const canvasModel = modelInstance.canvasModel;
         const resolvedTitle = getResolvedTitle(options.title, modelInstance.dataModel.repository.getRawRows())
         const scaleModel = new ScaleModel();
-
+        const keyAxis = AxisModel.getKeyAxis(options, modelInstance.dataModel.repository.getScopedFullSource(), designerConfig.canvas.axisLabel, canvasModel, designerConfig.elementsOptions.tooltip, () => scaleValueInfo.scaleFn(0));
         const scaleMarginRecalcer = new ScaleAxisRecalcer(() => scaleModel.getScaleLinear(options, modelInstance.dataModel.repository.getScopedRows(), canvasModel, configReader));
         scaleMarginRecalcer.recalculateMargin(canvasModel, options.orientation, options.axis.key);
         const scaleValueInfo = scaleMarginRecalcer.getScaleValue();
 
-        const secondaryScaleMarginRecalcer = new ScaleAxisRecalcer(() => scaleModel.getScaleSecondaryLinear(options, modelInstance.dataModel.repository.getScopedRows(), canvasModel, configReader));
-        secondaryScaleMarginRecalcer.recalculateMargin(canvasModel, options.orientation, options.axis.key);
-        const secondaryScaleValueInfo = secondaryScaleMarginRecalcer.getScaleValue();
+        if (configReader.containsSecondaryAxis()) {
+            const secondaryScaleMarginRecalcer = new ScaleAxisRecalcer(() => scaleModel.getScaleSecondaryLinear(options, modelInstance.dataModel.repository.getScopedRows(), canvasModel, configReader));
+            secondaryScaleMarginRecalcer.recalculateMargin(canvasModel, options.orientation, options.axis.key);
+            secondaryScaleValueInfo = secondaryScaleMarginRecalcer.getScaleValue();
+        }
 
         return {
             legend: canvasModel.legendCanvas.getModel(),
@@ -37,15 +51,16 @@ export class TwoDimensionalModel {
             scale: {
                 key: scaleModel.getScaleKey(modelInstance.dataModel.getAllowableKeys(), options.orientation, canvasModel, options.charts, this.getChartsByType(options.charts, 'bar')),
                 value: scaleValueInfo.scale,
-                valueSecondary: secondaryScaleValueInfo.scale,
+                ...(configReader.containsSecondaryAxis() && { valueSecondary: secondaryScaleValueInfo.scale }),
             },
             axis: {
-                key: AxisModel.getKeyAxis(options, modelInstance.dataModel.repository.getScopedFullSource(), designerConfig.canvas.axisLabel, canvasModel, designerConfig.elementsOptions.tooltip, () => scaleValueInfo.scaleFn(0)),
-                value: AxisModel.getValueAxis(options.orientation, options.axis.value, designerConfig.canvas.axisLabel, canvasModel)
+                key: keyAxis,
+                value: AxisModel.getMainValueAxis(options.orientation, options.axis.value.position, options.axis.value, designerConfig.canvas.axisLabel, canvasModel),
+                ...(configReader.containsSecondaryAxis() && { valueSecondary: AxisModel.getSecondaryValueAxis(options.orientation, options.axis.value.position, options.axis.valueSecondary, designerConfig.canvas.axisLabel, canvasModel) }),
             },
             type: options.type,
             data: { ...options.data },
-            charts: this.getChartsModel(options.charts, options.orientation, designerConfig, modelInstance.dataModel.repository, options.data.keyField.name),
+            charts: this.getChartsModel(options.charts, options.orientation, designerConfig, modelInstance.dataModel.repository, keyAxis.orient, canvasModel, options.data.keyField.name),
             additionalElements: this.getAdditionalElements(options),
             tooltip: options.tooltip,
             chartSettings: this.getChartsSettings(designerConfig.canvas.chartOptions, options.orientation)
@@ -76,7 +91,7 @@ export class TwoDimensionalModel {
         }
     }
 
-    private static getChartsModel(charts: MdtChartsTwoDimensionalChart[], chartOrientation: ChartOrientation, designerConfig: DesignerConfig, dataModelRep: DataRepositoryModel, keyFieldName: string): TwoDimensionalChartModel[] {
+    private static getChartsModel(charts: MdtChartsTwoDimensionalChart[], chartOrientation: ChartOrientation, designerConfig: DesignerConfig, dataModelRep: DataRepositoryModel, keyAxisOrient: Orient, canvasModel: CanvasModel, keyFieldName: string): TwoDimensionalChartModel[] {
         const styleModel = new TwoDimensionalChartStyleModel(charts, designerConfig.chartStyle);
         this.sortCharts(charts);
         const chartsModel: TwoDimensionalChartModel[] = [];
@@ -109,7 +124,16 @@ export class TwoDimensionalModel {
                 },
                 barViewOptions: { hatch: { on: chart.barStyles?.hatch?.on ?? false } },
                 legend: getLegendMarkerOptions(chart),
-                index
+                index,
+                ...(chart.valueLabels?.enabled && {
+                    valueLabels: {
+                        show: false,
+                        handleX: (scaledValue) => getValueLabelX(scaledValue, keyAxisOrient, canvasModel.getMargin()),
+                        handleY: (scaledValue) => getValueLabelY(scaledValue, keyAxisOrient, canvasModel.getMargin()),
+                        textAnchor: calculateValueLabelAlignment(keyAxisOrient).textAnchor,
+                        dominantBaseline: calculateValueLabelAlignment(keyAxisOrient).dominantBaseline,
+                    }
+                })
             });
         });
 
