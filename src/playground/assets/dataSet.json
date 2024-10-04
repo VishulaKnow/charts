@@ -24,7 +24,7 @@
         {
             "$id": 4,
             "brand": "AUDI",
-            "price": 20000,
+            "price": null,
             "count": 500,
             "color": "yellow"
         },
@@ -38,7 +38,7 @@
         {
             "$id": 6,
             "brand": "DODGE",
-            "price": 115000,
+            "price": null,
             "count": 4000,
             "color": "red"
         },
@@ -59,14 +59,14 @@
         {
             "$id": 9,
             "brand": "TOYOTA",
-            "price": 40000,
+            "price": null,
             "count": 15000,
             "color": "pink"
         },
         {
             "$id": 9,
             "brand": "LEXUS",
-            "price": null,
+            "price": 20000,
             "count": 15000,
             "color": "pink"
         }

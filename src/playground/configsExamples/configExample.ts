@@ -81,7 +81,7 @@ const configCars: MdtChartsConfig = {
                             title: 'Стоимость за 2020 год'
                         },
                     ],
-                    valueGroup: "secondary"
+                    valueGroup: "main"
                 },
                 tooltip: {
                     show: true
@@ -137,14 +137,6 @@ const configCars: MdtChartsConfig = {
                 }
             }
         ],
-        tooltip: {
-            aggregator: {
-                content: ({ row }) => {
-                    return { type: "captionValue", caption: "Общая сумма", value: row.price + row.count };
-                },
-                position: 'underValues'
-            }
-        }
     }
     // options: {
     //     type: 'polar',

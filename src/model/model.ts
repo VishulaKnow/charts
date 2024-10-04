@@ -319,9 +319,12 @@ export interface ValueField extends Field {
 }
 
 export interface MarkersOptions {
-    show: boolean;
+    show: MarkersOptionsShow;
     styles: MarkersStyleOptions;
 }
+
+export type MarkDotDatumItem = MdtChartsDataRow | { "1": any } & Array<number>
+export type MarkersOptionsShow = (options: { row: MarkDotDatumItem; valueFieldName: string }) => boolean;
 
 export interface MarkersStyleOptions {
     highlighted: MarkerStyle;
