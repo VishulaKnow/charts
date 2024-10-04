@@ -103,39 +103,39 @@ const configCars: MdtChartsConfig = {
                     }
                 }
             },
-            // {
-            //     isSegmented: false,
-            //     type: 'bar',
-            //     data: {
-            //         valueFields: [
-            //             {
-            //                 name: 'count',
-            //                 format: 'money',
-            //                 title: 'Стоимость за 2020 год'
-            //             }
-            //         ],
-            //         valueGroup: "main"
-            //     },
-            //     tooltip: {
-            //         show: true
-            //     },
-            //     embeddedLabels: 'none',
-            //     markers: {
-            //         show: false
-            //     },
-            //     lineStyles: {
-            //         dash: {
-            //             on: true,
-            //             dashSize: 3,
-            //             gapSize: 3
-            //         }
-            //     },
-            //     barStyles: {
-            //         hatch: {
-            //             on: false
-            //         }
-            //     }
-            // }
+            {
+                isSegmented: false,
+                type: 'bar',
+                data: {
+                    valueFields: [
+                        {
+                            name: 'count',
+                            format: 'money',
+                            title: 'Стоимость за 2020 год'
+                        }
+                    ],
+                    valueGroup: "main"
+                },
+                tooltip: {
+                    show: true
+                },
+                embeddedLabels: 'none',
+                markers: {
+                    show: false
+                },
+                lineStyles: {
+                    dash: {
+                        on: true,
+                        dashSize: 3,
+                        gapSize: 3
+                    }
+                },
+                barStyles: {
+                    hatch: {
+                        on: false
+                    }
+                }
+            }
         ],
     }
     // options: {
