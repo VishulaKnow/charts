@@ -674,14 +674,14 @@ const model = assembleModel(config, data, designerConfig);
 engine.render(model, getPreparedData(model, data, config), document.querySelector('.main-wrapper'));
 new Listeners(engine, config, designerConfig, data);
 
-setTimeout(() => {
-    const newData = { dataSet: data.dataSet.map((r: any) => ({ ...r })) };
-    newData.dataSet[4].price = 10_000;
-    newData.dataSet[8].count = 1000;
-    newData.dataSet.push({ brand: "asdasfasf", price: null })
-    const model = assembleModel(config, newData, designerConfig);
-    engine.updateData(model, newData);
-}, 5000);
+// setTimeout(() => {
+//     const newData = { dataSet: data.dataSet.map((r: any) => ({ ...r })) };
+//     newData.dataSet[4].price = 10_000;
+//     newData.dataSet[8].count = 1000;
+//     newData.dataSet.push({ brand: "asdasfasf", price: null })
+//     const model = assembleModel(config, newData, designerConfig);
+//     engine.updateData(model, newData);
+// }, 5000);
 
 const config3 = require('./configsExamples/configTest2D.json');
 const model3 = assembleModel(config3, data, designerConfig);
