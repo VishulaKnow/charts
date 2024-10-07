@@ -18,7 +18,7 @@ import { Bar } from "./bar/bar";
 import { BarHelper } from "./bar/barHelper";
 import { TwoDimRecordOverflowAlert } from "./extenders/twoDimRecordOverflowAlert";
 import { Line } from "./line/line";
-import { CanvasValueLabels, ValueLabelsOptions } from "../../engine/features/valueLabels/valueLabels";
+import { CanvasValueLabels } from "../../engine/features/valueLabels/valueLabels";
 
 
 export class TwoDimensionalManager implements ChartContentManager {
@@ -26,17 +26,6 @@ export class TwoDimensionalManager implements ChartContentManager {
 
     public render(engine: Engine, model: Model<TwoDimensionalOptionsModel>): void {
         const options = model.options;
-        const valueLabelsOptions: ValueLabelsOptions = {
-            elementAccessors: {
-                getBlock: () => engine.block,
-            },
-            data: {
-                keyFieldName: options.data.keyField.name,
-            },
-            canvas: {
-                keyAxisOrient: options.axis.key.orient,
-            },
-        };
 
         const scales = Scale.getScalesWithSecondary(options.scale.key,
             options.scale.value,
@@ -86,7 +75,17 @@ export class TwoDimensionalManager implements ChartContentManager {
                     engine.block.filterEventManager.clearKeysFor2D(options);
             });
 
-        this.canvasValueLabels = new CanvasValueLabels(valueLabelsOptions);
+        this.canvasValueLabels = new CanvasValueLabels({
+            elementAccessors: {
+                getBlock: () => engine.block,
+            },
+            data: {
+                keyFieldName: options.data.keyField.name,
+            },
+            canvas: {
+                keyAxisOrient: options.axis.key.orient,
+            },
+        });
         this.canvasValueLabels.render(scales, options.charts, engine.data, options.data);
     }
 
