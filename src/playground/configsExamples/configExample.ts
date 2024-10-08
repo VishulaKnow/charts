@@ -101,7 +101,8 @@ const configCars: MdtChartsConfig = {
                     hatch: {
                         on: false
                     }
-                }
+                },
+                valueLabels: { enabled: true }
             },
             {
                 isSegmented: false,

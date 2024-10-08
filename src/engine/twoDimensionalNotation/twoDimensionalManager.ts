@@ -1,5 +1,5 @@
 import { MdtChartsDataSource, Size } from "../../config/config";
-import { BarChartSettings, BlockMargin, Model, OptionsModelData, Orient, TwoDimChartElementsSettings, TwoDimensionalChartModel, TwoDimensionalOptionsModel } from "../../model/model";
+import { BlockMargin, Model, OptionsModelData, Orient, TwoDimChartElementsSettings, TwoDimensionalChartModel, TwoDimensionalOptionsModel } from "../../model/model";
 import { Block } from "../block/block";
 import { ChartContentManager } from "../contentManager/contentManagerFactory";
 import { ElementHighlighter } from "../elementHighlighter/elementHighlighter";
@@ -18,8 +18,12 @@ import { Bar } from "./bar/bar";
 import { BarHelper } from "./bar/barHelper";
 import { TwoDimRecordOverflowAlert } from "./extenders/twoDimRecordOverflowAlert";
 import { Line } from "./line/line";
+import { CanvasValueLabels } from "../../engine/features/valueLabels/valueLabels";
+
 
 export class TwoDimensionalManager implements ChartContentManager {
+    private canvasValueLabels?: CanvasValueLabels;
+
     public render(engine: Engine, model: Model<TwoDimensionalOptionsModel>): void {
         const options = model.options;
 
@@ -70,6 +74,19 @@ export class TwoDimensionalManager implements ChartContentManager {
                 if (e.target === engine.block.getSvg().node())
                     engine.block.filterEventManager.clearKeysFor2D(options);
             });
+
+        this.canvasValueLabels = new CanvasValueLabels({
+            elementAccessors: {
+                getBlock: () => engine.block,
+            },
+            data: {
+                keyFieldName: options.data.keyField.name,
+            },
+            canvas: {
+                keyAxisOrient: options.axis.key.orient,
+            },
+        });
+        this.canvasValueLabels.render(scales, options.charts, engine.data, options.data);
     }
 
     public updateData(block: Block, model: Model<TwoDimensionalOptionsModel>, data: MdtChartsDataSource) {
@@ -120,6 +137,9 @@ export class TwoDimensionalManager implements ChartContentManager {
             hidedRecordsAmount: model.dataSettings.scope.hidedRecordsAmount,
             chartOrientation: options.orient
         });
+
+        if (this.canvasValueLabels)
+            this.canvasValueLabels.update(scales, options.charts, data, model.options.data);
     }
 
     public updateColors(block: Block, model: Model<TwoDimensionalOptionsModel>): void {
