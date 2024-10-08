@@ -112,7 +112,7 @@ export class ChartValueLabels {
 }
 
 export class CanvasValueLabels {
-    private chartValueLabels: { chartIndex: number; instance: ChartValueLabels }[] = [];
+    private chartsValueLabels: ChartValueLabels[] = [];
 
     constructor(private readonly options: ValueLabelsOptions) { }
 
@@ -120,53 +120,30 @@ export class CanvasValueLabels {
         const chartsWithLabels: TwoDimensionalChartModel[]  = charts.filter(chart => chart.valueLabels?.show);
         if (chartsWithLabels.length === 0) return;
 
-        this.renderOrUpdateChartLabels(chartsWithLabels, scales, data, dataOptions, 'render')
+        chartsWithLabels.forEach(chart => {
+            const chartScales = this.getChartScales(scales, chart);
+
+            const chartValueLabels = new ChartValueLabels(this.options, chart);
+            this.chartsValueLabels.push(chartValueLabels);
+
+            chartValueLabels.render(chartScales, data[dataOptions.dataSource])
+        });
     }
 
     update(scales: ScalesWithSecondary, charts: TwoDimensionalChartModel[], data: MdtChartsDataSource, dataOptions: OptionsModelData) {
-        const chartsWithLabels = charts.filter(chart => chart.valueLabels?.show);
+        const chartsWithLabels: TwoDimensionalChartModel[]  = charts.filter(chart => chart.valueLabels?.show);
+        if (chartsWithLabels.length === 0) return;
 
-        if (chartsWithLabels.length === 0) {
-            this.clearAllLabels();
-            return;
+        chartsWithLabels.forEach((chart, index) => {
+            const chartScales = this.getChartScales(scales, chart);
+            this.chartsValueLabels[index].update(chartScales, data[dataOptions.dataSource])
+        });
+    }
+
+    private getChartScales(scales: ScalesWithSecondary, chart: TwoDimensionalChartModel): Scales {
+        return {
+            key: scales.key,
+            value: chart.data.valueGroup === "secondary" ? scales.valueSecondary : scales.value
         }
-
-        this.renderOrUpdateChartLabels(chartsWithLabels, scales, data, dataOptions, 'update');
-
-        this.chartValueLabels = this.chartValueLabels.filter(chartEntry => {
-            const isChartWithLabels = chartsWithLabels.some(chart => chart.index === chartEntry.chartIndex);
-            if (!isChartWithLabels) {
-                this.removeChartValueLabels(chartEntry.instance);
-            }
-            return isChartWithLabels;
-        });
-    }
-
-    private renderOrUpdateChartLabels(chartsWithLabels: TwoDimensionalChartModel[], scales: ScalesWithSecondary, data: MdtChartsDataSource, dataOptions: OptionsModelData, action: CanvasValueLabelsAction) {
-        chartsWithLabels.forEach(chart => {
-            const chartScales: Scales = {
-                key: scales.key,
-                value: chart.data.valueGroup === "secondary" ? scales.valueSecondary : scales.value
-            };
-            let chartValueLabelsEntry = this.chartValueLabels.find(chartEntry => chartEntry.chartIndex === chart.index);
-
-            if (!chartValueLabelsEntry) {
-                const chartValueLabel = new ChartValueLabels(this.options, chart);
-                chartValueLabelsEntry = { chartIndex: chart.index, instance: chartValueLabel };
-                this.chartValueLabels.push(chartValueLabelsEntry);
-            }
-            chartValueLabelsEntry.instance[action](chartScales, data[dataOptions.dataSource])
-        });
-    }
-
-    private removeChartValueLabels(instance: ChartValueLabels) {
-        instance.remove();
-    }
-
-    private clearAllLabels() {
-        this.chartValueLabels.forEach(chartEntry => {
-            this.removeChartValueLabels(chartEntry.instance);
-        });
-        this.chartValueLabels = [];
     }
 }
