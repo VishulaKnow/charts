@@ -7,15 +7,14 @@ import {
     ValueLabelAnchor, ValueLabelDominantBaseline
 } from "../../../model/model";
 import { MdtChartsDataRow, MdtChartsDataSource } from "../../../config/config";
-import { Scales, ScalesWithSecondary} from "../../../engine/features/scale/scale";
+import { Scales, ScalesWithSecondary } from "../../../engine/features/scale/scale";
 import { ValueLabelsHelper } from "../../../engine/features/valueLabels/valueLabelsHelper";
 import { Helper } from "../../../engine/helpers/helper";
-import {BaseType, selection, Selection} from "d3-selection";
+import { BaseType, Selection } from "d3-selection";
 import { DomHelper } from "../../../engine/helpers/domHelper";
 import { CLASSES } from "../../../model/modelBuilder";
 
 
-type CanvasValueLabelsAction = 'render' | 'update';
 export interface ValueLabelsOptions {
     elementAccessors: {
         getBlock: () => Block;
@@ -117,7 +116,7 @@ export class CanvasValueLabels {
     constructor(private readonly options: ValueLabelsOptions) { }
 
     render(scales: ScalesWithSecondary, charts: TwoDimensionalChartModel[], data: MdtChartsDataSource, dataOptions: OptionsModelData) {
-        const chartsWithLabels: TwoDimensionalChartModel[]  = charts.filter(chart => chart.valueLabels?.show);
+        const chartsWithLabels: TwoDimensionalChartModel[] = charts.filter(chart => chart.valueLabels?.show);
         if (chartsWithLabels.length === 0) return;
 
         chartsWithLabels.forEach(chart => {
@@ -131,7 +130,7 @@ export class CanvasValueLabels {
     }
 
     update(scales: ScalesWithSecondary, charts: TwoDimensionalChartModel[], data: MdtChartsDataSource, dataOptions: OptionsModelData) {
-        const chartsWithLabels: TwoDimensionalChartModel[]  = charts.filter(chart => chart.valueLabels?.show);
+        const chartsWithLabels: TwoDimensionalChartModel[] = charts.filter(chart => chart.valueLabels?.show);
         if (chartsWithLabels.length === 0) return;
 
         chartsWithLabels.forEach((chart, index) => {
