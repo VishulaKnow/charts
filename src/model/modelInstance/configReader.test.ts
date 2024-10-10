@@ -1,6 +1,7 @@
 import { TwoDimConfigReader } from "./configReader";
 import { DataRepositoryModel } from "../../model/modelInstance/dataModel/dataRepository";
 import { MdtChartsConfig, MdtChartsDataRow, MdtChartsTwoDimensionalOptions, NumberDomain } from "../../config/config";
+import { DesignerConfig, Formatter } from "../../designer/designerConfig";
 
 describe('getFieldsBySegments', () => {
     let reader: TwoDimConfigReader;
@@ -290,3 +291,119 @@ describe('getBiggestValueAndDecrementedSecondary', () => {
         expect(res).toStrictEqual([11000, 10999])
     });
 });
+
+describe('getValueLabelsFormatter', () => {
+    let config: MdtChartsConfig;
+    let options: MdtChartsTwoDimensionalOptions;
+    let reader: TwoDimConfigReader;
+    let designerConfig: DesignerConfig;
+    let formatters: Formatter;
+
+    beforeEach(() => {
+        options = {
+            type: '2d',
+            axis: {
+                key: null,
+                value: {
+                    domain: null,
+                    position: 'start',
+                    ticks: { flag: false },
+                    visibility: false,
+                    labels: {
+                        format: () => ''
+                    }
+                },
+                valueSecondary: {
+                    domain: null,
+                    ticks: { flag: false },
+                    visibility: false,
+                    labels: {
+                        format: () => ''
+                    }
+                }
+            },
+            charts: [
+                {
+                    type: "bar",
+                    data: {
+                        valueFields: [
+                            { name: "price", title: "", format: "money" },
+                        ],
+                    },
+                    tooltip: null,
+                    markers: null,
+                    barStyles: null,
+                    embeddedLabels: null,
+                    isSegmented: null,
+                    lineStyles: null,
+                    valueLabels: {
+                        enabled: true,
+                        format: value => ''
+                    },
+                },
+            ],
+            title: '',
+            selectable: true,
+            additionalElements: null,
+            legend: null,
+            orientation: null,
+            data: null,
+            tooltip: null
+        };
+        config = {
+            canvas: null,
+            options
+        }
+        formatters = jest.fn((value: any, options: { type?: string; title?: string; empty?: string; } = {}) => {
+            return `Formatted ${value} as ${options.type}`;
+        });
+        designerConfig = {
+            canvas: null,
+            chartStyle: null,
+            transitions: null,
+            elementsOptions: null,
+            dataFormat: {
+                formatters
+            }
+        }
+        reader = new TwoDimConfigReader(config, designerConfig);
+    })
+
+    test('should return valueLabels formatter', () => {
+        const formatFn = reader.getValueLabelFormatterForChart(0);
+        expect(formatFn).toBe(options.charts[0].valueLabels.format);
+    });
+
+    test('should return mainAxis labels formatter', () => {
+        options.charts[0].valueLabels.format = null;
+
+        const formatFn = reader.getValueLabelFormatterForChart(0);
+        expect(formatFn).toBe(options.axis.value.labels.format);
+    });
+
+    test('should return secondaryAxis labels formatter', () => {
+        options.charts[0].valueLabels.format = null;
+        options.charts[0].data.valueGroup = 'secondary';
+
+        const formatFn = reader.getValueLabelFormatterForChart(0);
+        expect(formatFn).toBe(options.axis.valueSecondary.labels.format);
+    });
+
+    test('should return designerConfig formatter', () => {
+        options.charts[0].valueLabels.format = null;
+        options.axis.value.labels = null;
+        options.axis.valueSecondary.labels = null;
+
+        const formatFn = reader.getValueLabelFormatterForChart(0);
+
+        const testValue = 100;
+        const expectedFormatType = 'money';
+        const expectedFormattedValue = `Formatted ${testValue} as ${expectedFormatType}`;
+
+        const result = formatFn(testValue);
+
+        expect(typeof formatFn).toBe('function');
+        expect(designerConfig.dataFormat.formatters).toHaveBeenCalledWith(testValue, { type: expectedFormatType });
+        expect(result).toBe(expectedFormattedValue);
+    });
+})

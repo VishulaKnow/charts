@@ -102,7 +102,10 @@ const configCars: MdtChartsConfig = {
                         on: false
                     }
                 },
-                valueLabels: { enabled: true }
+                valueLabels: {
+                    enabled: true,
+                    format: (value) => nFormatter(value),
+                }
             },
             {
                 isSegmented: false,
@@ -181,5 +184,28 @@ function createIcon(iconName: string) {
     element.classList.add("fa", iconName);
     return element;
 }
+
+function nFormatter(num: number, digits: number = 1) {
+    function toFixed(num: number, fixed: number) {
+        var re = new RegExp('^-?\\d+(?:\.\\d{0,' + (fixed || -1) + '})?');
+        return num.toString().match(re)[0];
+    }
+
+    const lookup = [
+        { value: 1, symbol: "" },
+        { value: 1e3, symbol: "тыс" },
+        { value: 1e6, symbol: "млн" },
+        { value: 1e9, symbol: "млрд" },
+        { value: 1e12, symbol: "трлн" },
+        { value: 1e15, symbol: "квдр" },
+        { value: 1e18, symbol: "E" }
+    ];
+
+    const regexp = /\.0+$|(?<=\.[0-9]*[1-9])0+$/;
+    const item = lookup.reverse().find(item => num >= item.value);
+    const finalValue = item ? toFixed(num / item.value, digits).replace(regexp, "").concat(` ${item.symbol}`) : "0";
+
+    return finalValue.replace(".", ",");
+};
 
 export default configCars;

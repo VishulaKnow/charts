@@ -306,17 +306,20 @@ export interface TwoDimensionalChartDataModel {
     valueGroup?: TwoDimensionalValueGroup;
 }
 
+export interface ValueField extends Field {
+    title: string;
+}
+
 export interface TwoDimChartValueLabelsOptions {
     show: boolean;
     handleX: (scaledValue: number) => number
     handleY: (scaledValue: number) => number;
     textAnchor: ValueLabelAnchor;
     dominantBaseline: ValueLabelDominantBaseline;
+    format: ValueLabelsFormatter;
 }
 
-export interface ValueField extends Field {
-    title: string;
-}
+export type ValueLabelsFormatter = (value: number) => string
 
 export interface MarkersOptions {
     show: MarkersOptionsShow;

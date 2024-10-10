@@ -6,10 +6,11 @@ import {
     MdtChartsFieldName,
     MdtChartsPolarOptions,
     MdtChartsTwoDimensionalChart,
-    MdtChartsTwoDimensionalOptions, NumberAxisOptions,
+    MdtChartsTwoDimensionalOptions,
+    NumberAxisOptions,
     NumberSecondaryAxisOptions,
     TwoDimensionalChartType,
-    TwoDimensionalValueGroup
+    TwoDimensionalValueGroup, ValueLabelsFormatter
 } from "../../config/config";
 import { DesignerConfig } from "../../designer/designerConfig";
 import { DataRepositoryModel } from "../../model/modelInstance/dataModel/dataRepository";
@@ -82,6 +83,27 @@ export class TwoDimConfigReader implements BaseConfigReader {
         return !!this.options.axis.valueSecondary && this.options.charts.some(chart => chart.data.valueGroup === 'secondary')
     }
 
+    getValueLabelFormatterForChart(chartIndex: number): ValueLabelsFormatter {
+        const chart = this.options.charts[chartIndex];
+        const axis = this.options.axis;
+
+        if (chart.valueLabels.format)
+            return chart.valueLabels.format
+
+        if (chart.data.valueGroup === "secondary") {
+            if (axis.valueSecondary.labels?.format)
+                return axis.valueSecondary.labels.format
+
+            else if (axis.value.labels?.format)
+                return axis.value.labels.format
+
+        } else if (axis.value.labels?.format)
+            return axis.value.labels.format
+
+        const valueFieldFormat = chart.data.valueFields[0].format;
+        return (v) => this.designerConfig.dataFormat.formatters(v, { type: valueFieldFormat });
+    }
+
     private calculateBiggestValueAndDecremented(repository: DataRepositoryModel, domain: AxisNumberDomain, fields: MdtChartsFieldName[][]): number[] {
         const resolvedDomain = getResolvedDomain(domain, repository.getRawRows())
 
@@ -97,7 +119,6 @@ export class TwoDimConfigReader implements BaseConfigReader {
         const valueFieldFormat = this.options.charts[0].data.valueFields[0].format;
         return (v) => this.designerConfig.dataFormat.formatters(v, { type: valueFieldFormat });
     }
-
 }
 
 export class PolarConfigReader implements BaseConfigReader {
