@@ -10,9 +10,7 @@ const configCars: MdtChartsConfig = {
     },
     options: {
         type: '2d',
-        title: (params) => params.data.reduce((acc, row) => {
-            return acc + row.count
-        }, 0).toString(),
+        title: "Объем товародвижения по брендам",
         selectable: true,
         axis: {
             key: {
@@ -71,14 +69,14 @@ const configCars: MdtChartsConfig = {
         },
         charts: [
             {
-                isSegmented: false,
+                isSegmented: true,
                 type: 'line',
                 data: {
                     valueFields: [
                         {
                             name: 'price',
                             format: 'money',
-                            title: 'Стоимость за 2020 год'
+                            title: 'Рубли'
                         },
                     ],
                     valueGroup: "main"
@@ -112,7 +110,7 @@ const configCars: MdtChartsConfig = {
                         {
                             name: 'count',
                             format: 'money',
-                            title: 'Стоимость за 2020 год'
+                            title: 'Количество'
                         }
                     ],
                     valueGroup: "main"
