@@ -32,16 +32,4 @@ export class AreaHelper {
                 .y(d => Scale.getScaledValue(scales.key, d.data[keyFieldName]) + margin.top);
         }
     }
-
-    public static getZeroCoordinate(axisOrient: Orient, margin: BlockMargin, blockSize: Size): number {
-        if (axisOrient === 'bottom')
-            return blockSize.height - margin.bottom;
-        if (axisOrient === 'top')
-            return margin.top;
-
-        if (axisOrient === 'left')
-            return margin.left;
-        if (axisOrient === 'right')
-            return blockSize.width - margin.right;
-    }
 }
