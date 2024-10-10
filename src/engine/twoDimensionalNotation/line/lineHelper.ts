@@ -6,6 +6,7 @@ import { LineGenerator } from './lineGenerator';
 import { Pipeline } from '../../helpers/pipeline/Pipeline';
 import { BaseType, Selection } from 'd3-selection';
 import { Segment } from './line';
+import { LineLikeGeneratorCurveMiddleware } from '../lineLike/generatorMiddleware/lineLikeGeneratorCurveMiddleware';
 
 interface LineGeneratorFactoryOptions {
     keyAxisOrient: Orient;
@@ -22,7 +23,7 @@ export class LineGeneratorFactory {
     public getLineGenerator(valueFieldName: string): ILine<MdtChartsDataRow> {
         const { keyAxisOrient, scales, keyFieldName, margin, shouldRenderLine } = this.options;
 
-        const generator = new LineGenerator({ curve: this.options.curve });
+        const generator = new LineGenerator({ middlewares: [new LineLikeGeneratorCurveMiddleware({ curve: this.options.curve })] });
 
         if (keyAxisOrient === 'bottom' || keyAxisOrient === 'top') {
             return generator.get(
@@ -42,7 +43,7 @@ export class LineGeneratorFactory {
     public getSegmentedLineGenerator(): ILine<MdtChartsDataRow> {
         const { keyAxisOrient, scales, keyFieldName, margin, shouldRenderLine } = this.options;
 
-        const generator = new LineGenerator({ curve: this.options.curve });
+        const generator = new LineGenerator({ middlewares: [new LineLikeGeneratorCurveMiddleware({ curve: this.options.curve })] });
 
         if (keyAxisOrient === 'bottom' || keyAxisOrient === 'top') {
             return generator.get(
