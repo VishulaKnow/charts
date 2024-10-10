@@ -10,12 +10,11 @@ import { MdtChartsDataRow, MdtChartsDataSource } from "../../../config/config";
 import { Scales, ScalesWithSecondary} from "../../../engine/features/scale/scale";
 import { ValueLabelsHelper } from "../../../engine/features/valueLabels/valueLabelsHelper";
 import { Helper } from "../../../engine/helpers/helper";
-import {BaseType, selection, Selection} from "d3-selection";
+import { BaseType, Selection } from "d3-selection";
 import { DomHelper } from "../../../engine/helpers/domHelper";
 import { CLASSES } from "../../../model/modelBuilder";
 
 
-type CanvasValueLabelsAction = 'render' | 'update';
 export interface ValueLabelsOptions {
     elementAccessors: {
         getBlock: () => Block;
@@ -41,55 +40,51 @@ export class ChartValueLabels {
     constructor(private readonly globalOptions: ValueLabelsOptions, private readonly chart: TwoDimensionalChartModel) { }
 
     render(scales: Scales, data: MdtChartsDataRow[]) {
-        const valueLabels = this.getAllValueLabels()
-            .data(data)
-            .enter()
-            .append('text');
-
-        const attrs = ValueLabelsHelper.getValueLabelsAttrs(this.globalOptions, this.chart, scales)
-
-        this.setAttrs(valueLabels, attrs);
-        this.setClasses(valueLabels, this.chart.cssClasses, this.chart.index)
+        this.chart.data.valueFields.forEach((valueField, vfIndex) => {
+            const valueLabels = this.getAllValueLabels(vfIndex)
+                .data(data)
+                .enter()
+                .append('text');
+            const attrs = ValueLabelsHelper.getValueLabelsAttrs(this.globalOptions, this.chart.valueLabels, scales, valueField)
+            this.setAttrs(valueLabels, attrs, valueField.name);
+            this.setClasses(valueLabels, this.chart.cssClasses, vfIndex)
+        })
     }
 
     update(scales: Scales, newData: MdtChartsDataRow[]) {
-        const valueLabels = this.getAllValueLabels()
-            .data(newData)
-        valueLabels.exit().remove();
+        this.chart.data.valueFields.forEach((valueField, vfIndex) => {
+            const valueLabels = this.getAllValueLabels(vfIndex)
+                .data(newData)
+            valueLabels.exit().remove();
 
-        const attrs = ValueLabelsHelper.getValueLabelsAttrs(this.globalOptions, this.chart, scales)
+            const attrs = ValueLabelsHelper.getValueLabelsAttrs(this.globalOptions, this.chart.valueLabels, scales, valueField)
 
-        const newValueLabels = valueLabels
-            .enter()
-            .append('text')
+            const newValueLabels = valueLabels
+                .enter()
+                .append('text')
 
-        const mergedValueLabels = newValueLabels.merge(valueLabels as Selection<SVGTextElement, MdtChartsDataRow, SVGGElement, unknown>);
+            const mergedValueLabels = newValueLabels.merge(valueLabels as Selection<SVGTextElement, MdtChartsDataRow, SVGGElement, unknown>);
 
-        this.setAttrs(newValueLabels, attrs);
-        this.setClasses(mergedValueLabels, this.chart.cssClasses, this.chart.index);
+            this.setAttrs(newValueLabels, attrs, valueField.name);
+            this.setClasses(mergedValueLabels, this.chart.cssClasses, vfIndex);
 
-        this.setAttrs(valueLabels, attrs, true)
+            this.setAttrs(valueLabels, attrs, valueField.name, true)
+        })
     }
 
-    public remove() {
-        this.getAllValueLabels().remove();
-    }
-
-    private getAllValueLabels(): Selection<BaseType, unknown, SVGGElement, unknown> {
+    private getAllValueLabels(vfIndex: number): Selection<BaseType, unknown, SVGGElement, unknown> {
         const block = this.globalOptions.elementAccessors.getBlock().svg.getChartBlock()
         return block
-            .selectAll(`.${this.valueLabelClass}.${CLASSES.dataLabel}${Helper.getCssClassesLine(this.chart.cssClasses)}`)
+            .selectAll(`.${this.valueLabelClass}.${CLASSES.dataLabel}${Helper.getCssClassesLine(this.chart.cssClasses)}.chart-element-${vfIndex}`)
     }
 
-    private setAttrs(valueLabels: Selection<SVGTextElement | BaseType, MdtChartsDataRow, BaseType, any>, attrs: ValueLabelAttrs, animate: boolean = false) {
-        const valueFieldName = this.chart.data.valueFields[0].name
+    private setAttrs(valueLabels: Selection<SVGTextElement | BaseType, MdtChartsDataRow, BaseType, any>, attrs: ValueLabelAttrs, valueFieldName: string, animate: boolean = false) {
         const animationName = 'labels-updating';
 
         valueLabels
             .text(d => d[valueFieldName])
             .attr('dominant-baseline', attrs.dominantBaseline)
             .attr('text-anchor', attrs.textAnchor);
-
         if (animate) {
             valueLabels
                 .interrupt(animationName)
@@ -105,8 +100,8 @@ export class ChartValueLabels {
     }
 
     private setClasses(textLabels: Selection<SVGTextElement, MdtChartsDataRow, BaseType, any>, cssClasses: string[], vfIndex: number): void {
-        textLabels.classed(this.valueLabelClass, true)
-        textLabels.classed(CLASSES.dataLabel, true)
+        textLabels.classed(this.valueLabelClass, true);
+        textLabels.classed(CLASSES.dataLabel, true);
         DomHelper.setCssClasses(textLabels, Helper.getCssClassesWithElementIndex(cssClasses, vfIndex));
     }
 }
