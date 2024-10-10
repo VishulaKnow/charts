@@ -22,6 +22,7 @@ import {
     getValueLabelX, getValueLabelY
 } from "../../model/featuresModel/valueLabelsModel/valueLabelsModel";
 import { CanvasModel } from "../modelInstance/canvasModel/canvasModel";
+import { TwoDimensionalModelHelper } from "../helpers/twoDimensionalModelHelper";
 
 
 export class TwoDimensionalModel {
@@ -42,6 +43,8 @@ export class TwoDimensionalModel {
             secondaryScaleValueInfo = secondaryScaleMarginRecalcer.getScaleValue();
         }
 
+        const keyAxis = AxisModel.getKeyAxis(options, modelInstance.dataModel.repository.getScopedFullSource(), designerConfig.canvas.axisLabel, canvasModel, designerConfig.elementsOptions.tooltip, () => scaleValueInfo.scaleFn(0));
+
         return {
             legend: canvasModel.legendCanvas.getModel(),
             title: resolvedTitle,
@@ -59,7 +62,7 @@ export class TwoDimensionalModel {
             },
             type: options.type,
             data: { ...options.data },
-            charts: this.getChartsModel(options.charts, options.orientation, designerConfig, modelInstance.dataModel.repository, keyAxis.orient, canvasModel),
+            charts: this.getChartsModel(options.charts, options.orientation, designerConfig, modelInstance.dataModel.repository, keyAxis.orient, canvasModel, options.data.keyField.name),
             additionalElements: this.getAdditionalElements(options),
             tooltip: options.tooltip,
             chartSettings: this.getChartsSettings(designerConfig.canvas.chartOptions, options.orientation)
@@ -90,11 +93,10 @@ export class TwoDimensionalModel {
         }
     }
 
-    private static getChartsModel(charts: MdtChartsTwoDimensionalChart[], chartOrientation: ChartOrientation, designerConfig: DesignerConfig, dataModelRep: DataRepositoryModel, keyAxisOrient: Orient, canvasModel: CanvasModel): TwoDimensionalChartModel[] {
+    private static getChartsModel(charts: MdtChartsTwoDimensionalChart[], chartOrientation: ChartOrientation, designerConfig: DesignerConfig, dataModelRep: DataRepositoryModel, keyAxisOrient: Orient, canvasModel: CanvasModel, keyFieldName: string): TwoDimensionalChartModel[] {
         const styleModel = new TwoDimensionalChartStyleModel(charts, designerConfig.chartStyle);
         this.sortCharts(charts);
         const chartsModel: TwoDimensionalChartModel[] = [];
-
         charts.forEach((chart, index) => {
             chartsModel.push({
                 type: chart.type,
@@ -105,7 +107,7 @@ export class TwoDimensionalModel {
                 style: styleModel.getChartStyle(chart, index),
                 embeddedLabels: this.getEmbeddedLabelType(chart, chartOrientation),
                 markersOptions: {
-                    show: dataModelRep.getScopedRows().length === 1 ? true : chart.markers.show,
+                    show: ({ row, valueFieldName }) => TwoDimensionalModelHelper.shouldMarkerShow(chart, dataModelRep.getRawRows(), valueFieldName, row, keyFieldName),
                     styles: {
                         highlighted: {
                             size: { radius: designerConfig.canvas.markers?.highlighted?.radius ?? 4, borderSize: '3.5px' }

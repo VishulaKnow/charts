@@ -4,15 +4,15 @@ import { BlockMargin, MarkersStyleOptions, TwoDimensionalChartModel } from "../.
 import { Block } from "../block/block";
 import { easeLinear } from 'd3-ease';
 import { interrupt, Transition } from 'd3-transition';
-import { DonutHelper } from '../polarNotation/donut/DonutHelper';
 import { DomHelper, SelectionCondition } from '../helpers/domHelper';
-import { MdtChartsDataRow, Size, TwoDimensionalChartType } from '../../config/config';
+import { MdtChartsDataRow, Size } from '../../config/config';
 import { Donut } from '../polarNotation/donut/donut';
 import { MarkDot } from '../features/markDots/markDot';
 import { RectElemWithAttrs } from '../twoDimensionalNotation/bar/bar';
 import { Helper } from '../helpers/helper';
 import * as chroma from 'chroma-js';
 import { NamesHelper } from '../helpers/namesHelper';
+import { DonutHelper } from '../polarNotation/donut/DonutHelper';
 
 export class ElementHighlighter {
     private static inactiveElemClass = NamesHelper.getClassName("opacity-inactive");
@@ -105,16 +105,12 @@ export class ElementHighlighter {
         });
     }
 
-    public static toggleMarkDotVisible(markDots: Selection<BaseType, any, BaseType, any>, isHighlight: boolean) {
-        markDots.classed(MarkDot.hiddenDotClass, !isHighlight);
-    }
-
     public static remove2DChartsFullHighlighting(block: Block, charts: TwoDimensionalChartModel[], transitionDuration: number = 0): void {
         charts.forEach(chart => {
             const elems = DomHelper.get2DChartElements(block, chart);
 
-            if (chart.type !== 'bar' && !chart.markersOptions.show)
-                elems.classed(MarkDot.hiddenDotClass, true);
+            if (chart.type !== 'bar')
+                MarkDot.tryMakeMarkDotVisible(elems, chart.markersOptions, false);
             this.toggle2DElements(elems, false, chart, transitionDuration);
             this.toggleActivityStyle(elems, true);
         });
@@ -125,8 +121,8 @@ export class ElementHighlighter {
             const elems = DomHelper.get2DChartElements(block, chart);
             const selectedElems = DomHelper.getChartElementsByKeys(elems, chart.isSegmented, keyFieldName, block.filterEventManager.getSelectedKeys(), SelectionCondition.Exclude);
 
-            if (chart.type !== 'bar' && !chart.markersOptions.show)
-                selectedElems.classed(MarkDot.hiddenDotClass, true);
+            if (chart.type !== 'bar')
+                MarkDot.tryMakeMarkDotVisible(selectedElems, chart.markersOptions, false);
             this.toggle2DElements(selectedElems, false, chart, transitionDuration);
             if (block.filterEventManager.getSelectedKeys().length > 0)
                 this.toggleActivityStyle(selectedElems, false);
