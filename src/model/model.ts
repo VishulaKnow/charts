@@ -266,10 +266,10 @@ interface TwoDimensionalLineLikeChartModel {
 
 interface TwoDimensionalLineLikeChartViewModel {
     dashedStyles: LineLikeChartDashOptions;
-    renderForKey: LineLikeChartRenderOptions
+    renderForKey: LineLikeChartRenderFn
 }
 
-export type LineLikeChartRenderOptions = (dataRow: MdtChartsDataRow, valueFieldName: string) => boolean
+export type LineLikeChartRenderFn = (dataRow: MdtChartsDataRow, valueFieldName: string) => boolean
 
 interface TwoDimensionalBarLikeChartModel {
     barViewOptions: TwoDimensionalBarLikeChartViewModel;

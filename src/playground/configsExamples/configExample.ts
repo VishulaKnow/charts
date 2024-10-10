@@ -69,7 +69,7 @@ const configCars: MdtChartsConfig = {
         },
         charts: [
             {
-                isSegmented: true,
+                isSegmented: false,
                 type: 'line',
                 data: {
                     valueFields: [

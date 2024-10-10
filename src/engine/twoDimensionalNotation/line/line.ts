@@ -15,10 +15,6 @@ interface LineChartOptions {
     staticSettings: LineLikeChartSettings;
 }
 
-export interface Segment extends SeriesPoint<{ [p: string]: number }> {
-    fieldName: string;
-}
-
 export class Line {
     public static readonly lineChartClass = 'line';
 
