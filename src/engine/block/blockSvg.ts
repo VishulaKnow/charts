@@ -91,7 +91,7 @@ export class BlockSvg {
         this.hatchPatternDef.appendToDefsBlock(this.ensureDefsRendered());
     }
 
-    private ensureDefsRendered(): Selection<SVGDefsElement, unknown, HTMLElement, unknown> {
+    ensureDefsRendered(): Selection<SVGDefsElement, unknown, HTMLElement, unknown> {
         let defs = this.getBlock().select<SVGDefsElement>('defs');
         if (defs.empty())
             defs = this.getBlock().append<SVGDefsElement>('defs');
