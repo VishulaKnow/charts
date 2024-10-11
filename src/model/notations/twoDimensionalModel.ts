@@ -30,7 +30,6 @@ export class TwoDimensionalModel {
         let secondaryScaleValueInfo;
         const options = configReader.options;
         const canvasModel = modelInstance.canvasModel;
-        const resolvedTitle = getResolvedTitle(options.title, modelInstance.dataModel.repository.getRawRows())
         const scaleModel = new ScaleModel();
         const scaleMarginRecalcer = new ScaleAxisRecalcer(() => scaleModel.getScaleLinear(options, modelInstance.dataModel.repository.getScopedRows(), canvasModel, configReader));
         scaleMarginRecalcer.recalculateMargin(canvasModel, options.orientation, options.axis.key);
@@ -46,7 +45,7 @@ export class TwoDimensionalModel {
 
         return {
             legend: canvasModel.legendCanvas.getModel(),
-            title: resolvedTitle,
+            title: getResolvedTitle(options.title, modelInstance.dataModel.repository.getRawRows()),
             selectable: !!options.selectable,
             orient: options.orientation,
             scale: {
