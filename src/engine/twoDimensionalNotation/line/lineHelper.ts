@@ -34,14 +34,14 @@ export class LineGeneratorFactory {
             return generator.get(
                 d => Scale.getScaledValue(scales.key, d[keyFieldName]) + margin.left,
                 d => scales.value(d[valueFieldName]) + margin.top
-            ).defined(d => shouldRenderLine(d, valueFieldName));
+            );
         }
 
         if (keyAxisOrient === 'left' || keyAxisOrient === 'right') {
             return generator.get(
                 d => scales.value(d[valueFieldName]) + margin.left,
                 d => Scale.getScaledValue(scales.key, d[keyFieldName]) + margin.top
-            ).defined(d => shouldRenderLine(d, valueFieldName));
+            );
         }
     }
 
@@ -59,14 +59,14 @@ export class LineGeneratorFactory {
             return generator.get(
                 d => Scale.getScaledValue(scales.key, d.data[keyFieldName]) + margin.left,
                 d => scales.value(d[1]) + margin.top
-            ).defined(d => shouldRenderLine(d.data, d.fieldName));
+            );
         }
 
         if (keyAxisOrient === 'left' || keyAxisOrient === 'right') {
             return generator.get(
                 d => scales.value(d[1]) + margin.left,
                 d => Scale.getScaledValue(scales.key, d.data[keyFieldName]) + margin.top
-            ).defined(d => shouldRenderLine(d.data, d.fieldName));
+            );
         }
     }
 }

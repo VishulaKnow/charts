@@ -1,12 +1,11 @@
 import { line } from "d3-shape";
 import { MdtChartsDataRow } from "../../../config/config";
 import { LineLikeGeneratorMiddleware } from "../lineLike/generatorMiddleware/lineLikeGeneratorMiddleware";
+import { CoordinateGetter } from "../lineLike/coordinateGetter";
 
 interface LineGeneratorOptions {
     middlewares: LineLikeGeneratorMiddleware[];
 }
-
-type CoordinateGetter = (dataRow: MdtChartsDataRow) => number
 
 export class LineGenerator {
     constructor(private options: LineGeneratorOptions) { }

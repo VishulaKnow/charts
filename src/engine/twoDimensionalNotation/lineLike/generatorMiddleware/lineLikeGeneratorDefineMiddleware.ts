@@ -17,6 +17,7 @@ export class LineLikeGeneratorDefinedMiddleware implements LineLikeGeneratorMidd
     constructor(private readonly options: LineLikeGeneratorDefinedMiddlewareOptions) { }
 
     handle(generator: Line<MdtChartsDataRow> | Area<MdtChartsDataRow>): Line<MdtChartsDataRow> | Area<MdtChartsDataRow> {
-        return generator.defined(d => this.options.definedFn(this.options.dataRowGetter(d), this.options.valueFieldNameGetter(d)));
+        generator.defined(d => this.options.definedFn(this.options.dataRowGetter(d), this.options.valueFieldNameGetter(d)));
+        return generator;
     }
 }
