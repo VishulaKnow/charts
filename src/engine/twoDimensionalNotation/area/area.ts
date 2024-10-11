@@ -1,10 +1,10 @@
 import { Area as IArea } from 'd3-shape';
 import { BaseType, select, Selection } from 'd3-selection'
-import { BlockMargin, Field, Orient, TwoDimensionalChartModel } from "../../../model/model";
+import { BlockMargin, Field, LineCurveType, Orient, TwoDimensionalChartModel } from "../../../model/model";
 import { Scales } from "../../features/scale/scale";
 import { Block } from "../../block/block";
 import { MarkDot } from "../../features/markDots/markDot";
-import { AreaHelper } from './areaHelper';
+import { AreaGeneratorFactory } from './areaHelper';
 import { DomHelper } from '../../helpers/domHelper';
 import { Helper } from '../../helpers/helper';
 import { MdtChartsDataRow, Size } from '../../../config/config';
@@ -41,9 +41,10 @@ export class Area {
     }
 
     private static renderGrouped(block: Block, scales: Scales, data: MdtChartsDataRow[], keyField: Field, margin: BlockMargin, keyAxisOrient: Orient, chart: TwoDimensionalChartModel, blockSize: Size): void {
-        chart.data.valueFields.forEach((field, valueIndex) => {
-            const area = AreaHelper.getGroupedAreaGenerator(keyAxisOrient, scales, margin, keyField.name, field.name, blockSize);
+        const generatorFactory = new AreaGeneratorFactory({ keyAxisOrient, scales, keyFieldName: keyField.name, margin, shouldRender: () => true, curve: LineCurveType.none });
 
+        chart.data.valueFields.forEach((field, valueIndex) => {
+            const area = generatorFactory.getAreaGenerator(field.name);
             const path = block.svg.getChartGroup(chart.index)
                 .append('path')
                 .attr('d', area(data))
@@ -60,7 +61,8 @@ export class Area {
 
     private static renderSegmented(block: Block, scales: Scales, data: MdtChartsDataRow[], keyField: Field, margin: BlockMargin, keyAxisOrient: Orient, chart: TwoDimensionalChartModel): void {
         const stackedData = getStackedDataWithOwn(data, chart.data.valueFields.map(field => field.name));
-        const areaGenerator = AreaHelper.getSegmentedAreaGenerator(keyAxisOrient, scales, margin, keyField.name);
+        const generatorFactory = new AreaGeneratorFactory({ keyAxisOrient, scales, keyFieldName: keyField.name, margin, shouldRender: () => true, curve: LineCurveType.none });
+        const areaGenerator = generatorFactory.getSegmentedAreaGenerator();
 
         const areas = block.svg.getChartGroup(chart.index)
             .selectAll(`.${this.areaChartClass}${Helper.getCssClassesLine(chart.cssClasses)}`)
@@ -85,8 +87,9 @@ export class Area {
 
     private static updateGrouped(block: Block, scales: Scales, newData: MdtChartsDataRow[], keyField: Field, margin: BlockMargin, chart: TwoDimensionalChartModel, keyAxisOrient: Orient, blockSize: Size): Promise<any>[] {
         const promises: Promise<any>[] = [];
+        const generatorFactory = new AreaGeneratorFactory({ keyAxisOrient, scales, keyFieldName: keyField.name, margin, shouldRender: () => true, curve: LineCurveType.none });
         chart.data.valueFields.forEach((field, valueIndex) => {
-            const areaGenerator = AreaHelper.getGroupedAreaGenerator(keyAxisOrient, scales, margin, keyField.name, field.name, blockSize);
+            const areaGenerator = generatorFactory.getAreaGenerator(field.name);
             const areaObject = block.svg.getChartGroup(chart.index)
                 .select(`.${this.areaChartClass}${Helper.getCssClassesLine(chart.cssClasses)}.chart-element-${valueIndex}`)
 
@@ -100,7 +103,8 @@ export class Area {
 
     private static updateSegmented(block: Block, scales: Scales, newData: MdtChartsDataRow[], keyField: Field, margin: BlockMargin, chart: TwoDimensionalChartModel, keyAxisOrient: Orient): Promise<any>[] {
         const stackedData = getStackedDataWithOwn(newData, chart.data.valueFields.map(field => field.name));
-        const areaGenerator = AreaHelper.getSegmentedAreaGenerator(keyAxisOrient, scales, margin, keyField.name);
+        const generatorFactory = new AreaGeneratorFactory({ keyAxisOrient, scales, keyFieldName: keyField.name, margin, shouldRender: () => true, curve: LineCurveType.none });
+        const areaGenerator = generatorFactory.getSegmentedAreaGenerator();
         const areas = block.svg.getChartGroup(chart.index)
             .selectAll<SVGRectElement, MdtChartsDataRow[]>(`path.${this.areaChartClass}${Helper.getCssClassesLine(chart.cssClasses)}`)
             .data(stackedData);

@@ -1,10 +1,14 @@
 import { area, Area as IArea } from 'd3-shape';
-import { MdtChartsDataRow, Size } from '../../../config/config';
-import { BlockMargin, Orient } from "../../../model/model";
-import { Scales, Scale } from "../../features/scale/scale";
+import { MdtChartsDataRow } from '../../../config/config';
+import { Scale } from "../../features/scale/scale";
+import { LineLikeGeneratorFactoryOptions } from '../lineLike/generatorFactory/lineLikeGeneratorFactory';
 
-export class AreaHelper {
-    public static getGroupedAreaGenerator(keyAxisOrient: Orient, scales: Scales, margin: BlockMargin, keyFieldName: string, valueFieldName: string, blockSize: Size): IArea<MdtChartsDataRow> {
+export class AreaGeneratorFactory {
+    constructor(private readonly options: LineLikeGeneratorFactoryOptions) { }
+
+    public getAreaGenerator(valueFieldName: string): IArea<MdtChartsDataRow> {
+        const { keyAxisOrient, scales, keyFieldName, margin } = this.options;
+
         if (keyAxisOrient === 'bottom' || keyAxisOrient === 'top')
             return area<MdtChartsDataRow>()
                 .x(d => Scale.getScaledValue(scales.key, d[keyFieldName]) + margin.left)
@@ -17,7 +21,9 @@ export class AreaHelper {
                 .y(d => Scale.getScaledValue(scales.key, d[keyFieldName]) + margin.top);
     }
 
-    public static getSegmentedAreaGenerator(keyAxisOrient: Orient, scales: Scales, margin: BlockMargin, keyFieldName: string): IArea<MdtChartsDataRow> {
+    public getSegmentedAreaGenerator(): IArea<MdtChartsDataRow> {
+        const { keyAxisOrient, scales, margin, keyFieldName } = this.options;
+
         if (keyAxisOrient === 'bottom' || keyAxisOrient === 'top') {
             return area<MdtChartsDataRow>()
                 .x(d => Scale.getScaledValue(scales.key, d.data[keyFieldName]) + margin.left)
