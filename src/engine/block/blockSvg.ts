@@ -3,7 +3,7 @@ import { Size } from "../../config/config";
 import { BlockMargin } from "../../model/model";
 import { NamesHelper } from "../helpers/namesHelper";
 import { BlockHelper } from "./blockHelper";
-import { HatchPatternDef } from "./defs";
+import { HatchPatternDef } from "./defs/hatchPattern";
 
 interface BlockSvgOptions {
     parentBlockId: number;
