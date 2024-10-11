@@ -20,4 +20,15 @@ export class AreaGenerator {
 
         return generator;
     }
+
+    getHorizontal(x0Value: CoordinateGetter, x1Value: CoordinateGetter, yValue: CoordinateGetter): IArea<MdtChartsDataRow> {
+        const generator = area<MdtChartsDataRow>()
+            .x0(x0Value)
+            .x1(x1Value)
+            .y(yValue);
+
+        this.options.middlewares.forEach(middleware => middleware.handle(generator));
+
+        return generator;
+    }
 }

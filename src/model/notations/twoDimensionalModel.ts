@@ -119,7 +119,7 @@ export class TwoDimensionalModel {
                         }
                     }
                 },
-                lineViewOptions: {
+                lineLikeViewOptions: {
                     dashedStyles: parseDashStyles(chart.lineStyles?.dash),
                     renderForKey: (dataRow, valueFieldName) => dataRow[valueFieldName] !== null && dataRow[valueFieldName] !== undefined
                 },

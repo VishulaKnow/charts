@@ -65,8 +65,8 @@ export class LineGeneratorFactory {
 
 export function onLineChartInit(creatingPipeline: Pipeline<Selection<SVGElement, any, BaseType, any>, TwoDimensionalChartModel>) {
     creatingPipeline.push((path, chart) => {
-        if (chart.lineViewOptions.dashedStyles.on) {
-            return applyLineDash(path, chart.lineViewOptions.dashedStyles.dashSize, chart.lineViewOptions.dashedStyles.gapSize);
+        if (chart.lineLikeViewOptions.dashedStyles.on) {
+            return applyLineDash(path, chart.lineLikeViewOptions.dashedStyles.dashSize, chart.lineLikeViewOptions.dashedStyles.gapSize);
         }
         return path;
     });

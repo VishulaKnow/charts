@@ -260,7 +260,7 @@ export interface TwoDimensionalChartLegendLineModel extends Omit<TwoDimensionalL
 }
 
 interface TwoDimensionalLineLikeChartModel {
-    lineViewOptions: TwoDimensionalLineLikeChartViewModel;
+    lineLikeViewOptions: TwoDimensionalLineLikeChartViewModel;
     markersOptions: MarkersOptions;
 }
 

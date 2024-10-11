@@ -2,6 +2,7 @@ import { Area, Line, SeriesPoint } from "d3-shape";
 import { LineLikeGeneratorMiddleware } from "./lineLikeGeneratorMiddleware";
 import { MdtChartsDataRow } from "../../../../config/config";
 import { LineLikeChartRenderFn } from "../../../../model/model";
+import { SegmentWithFieldName } from "../../bar/stackedData/dataStacker";
 
 interface LineLikeGeneratorDefinedMiddlewareOptions {
     definedFn: LineLikeChartRenderFn;
@@ -9,9 +10,7 @@ interface LineLikeGeneratorDefinedMiddlewareOptions {
     dataRowGetter: (d: MdtChartsDataRow | Segment) => MdtChartsDataRow;
 }
 
-export interface Segment extends SeriesPoint<{ [p: string]: number }> {
-    fieldName: string;
-}
+export interface Segment extends SeriesPoint<{ [p: string]: number }>, SegmentWithFieldName { }
 
 export class LineLikeGeneratorDefinedMiddleware implements LineLikeGeneratorMiddleware {
     constructor(private readonly options: LineLikeGeneratorDefinedMiddlewareOptions) { }
