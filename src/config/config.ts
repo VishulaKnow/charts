@@ -134,8 +134,8 @@ export interface TooltipAggregator {
 }
 
 export type TooltipAggregatorContent =
-  | { type: "plainText", textContent: string; }
-  | { type: "captionValue", caption: string; value: any; };
+    | { type: "plainText", textContent: string; }
+    | { type: "captionValue", caption: string; value: any; };
 
 export type TooltipFormatValue = (params: { rawValue: number | null | undefined; autoFormattedValue: string }) => string
 
@@ -286,7 +286,7 @@ export interface TwoDimensionalChartData {
     valueGroup?: TwoDimensionalValueGroup;
 }
 
-export type TwoDimensionalChartValueLabels = { enabled: boolean }
+export type TwoDimensionalChartValueLabels = { on: boolean }
 
 export type TwoDimensionalValueGroup = 'main' | 'secondary'
 

@@ -126,7 +126,7 @@ export class TwoDimensionalModel {
                 barViewOptions: { hatch: { on: chart.barStyles?.hatch?.on ?? false } },
                 legend: getLegendMarkerOptions(chart),
                 index,
-                ...(chart.valueLabels?.enabled && {
+                ...(chart.valueLabels?.on && {
                     valueLabels: {
                         show: true,
                         handleX: (scaledValue) => getValueLabelX(scaledValue, keyAxisOrient, canvasModel.getMargin()),
