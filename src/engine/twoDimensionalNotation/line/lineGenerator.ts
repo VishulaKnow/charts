@@ -1,7 +1,7 @@
 import { line } from "d3-shape";
 import { MdtChartsDataRow } from "../../../config/config";
 import { LineLikeGeneratorMiddleware } from "../lineLike/generatorMiddleware/lineLikeGeneratorMiddleware";
-import { CoordinateGetter } from "../lineLike/coordinateGetter";
+import { CoordinateGetter } from "../lineLike/generatorFactory/lineLikeGeneratorFactory";
 
 interface LineGeneratorOptions {
     middlewares: LineLikeGeneratorMiddleware[];

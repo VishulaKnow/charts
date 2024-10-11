@@ -1,24 +1,16 @@
 import { Line as ILine, stack } from 'd3-shape';
 import { MdtChartsDataRow } from '../../../config/config';
-import { Orient, BlockMargin, LineCurveType, TwoDimensionalChartModel, LineLikeChartRenderFn } from "../../../model/model";
-import { Scales, Scale } from "../../features/scale/scale";
+import { TwoDimensionalChartModel } from "../../../model/model";
+import { Scale } from "../../features/scale/scale";
 import { LineGenerator } from './lineGenerator';
 import { Pipeline } from '../../helpers/pipeline/Pipeline';
 import { BaseType, Selection } from 'd3-selection';
 import { LineLikeGeneratorCurveMiddleware } from '../lineLike/generatorMiddleware/lineLikeGeneratorCurveMiddleware';
 import { LineLikeGeneratorDefinedMiddleware, Segment } from '../lineLike/generatorMiddleware/lineLikeGeneratorDefineMiddleware';
-
-interface LineGeneratorFactoryOptions {
-    keyAxisOrient: Orient;
-    scales: Scales;
-    keyFieldName: string;
-    margin: BlockMargin;
-    curve: LineCurveType;
-    shouldRenderLine: LineLikeChartRenderFn;
-}
+import { LineLikeGeneratorFactoryOptions } from '../lineLike/generatorFactory/lineLikeGeneratorFactory';
 
 export class LineGeneratorFactory {
-    constructor(private options: LineGeneratorFactoryOptions) { }
+    constructor(private options: LineLikeGeneratorFactoryOptions) { }
 
     public getLineGenerator(valueFieldName: string): ILine<MdtChartsDataRow> {
         const { keyAxisOrient, scales, keyFieldName, margin, shouldRenderLine } = this.options;
