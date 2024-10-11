@@ -10,5 +10,5 @@ export interface LineLikeGeneratorFactoryOptions {
     keyFieldName: string;
     margin: BlockMargin;
     curve: LineCurveType;
-    shouldRenderLine: LineLikeChartRenderFn;
+    shouldRender: LineLikeChartRenderFn;
 }

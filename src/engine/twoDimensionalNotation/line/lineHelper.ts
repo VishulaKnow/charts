@@ -13,12 +13,12 @@ export class LineGeneratorFactory {
     constructor(private options: LineLikeGeneratorFactoryOptions) { }
 
     public getLineGenerator(valueFieldName: string): ILine<MdtChartsDataRow> {
-        const { keyAxisOrient, scales, keyFieldName, margin, shouldRenderLine } = this.options;
+        const { keyAxisOrient, scales, keyFieldName, margin, shouldRender } = this.options;
 
         const generator = new LineGenerator({
             middlewares: [
                 new LineLikeGeneratorCurveMiddleware({ curve: this.options.curve }),
-                new LineLikeGeneratorDefinedMiddleware({ definedFn: shouldRenderLine, valueFieldNameGetter: () => valueFieldName, dataRowGetter: (d) => d })
+                new LineLikeGeneratorDefinedMiddleware({ definedFn: shouldRender, valueFieldNameGetter: () => valueFieldName, dataRowGetter: (d) => d })
             ]
         });
 
@@ -38,12 +38,12 @@ export class LineGeneratorFactory {
     }
 
     public getSegmentedLineGenerator(): ILine<MdtChartsDataRow> {
-        const { keyAxisOrient, scales, keyFieldName, margin, shouldRenderLine } = this.options;
+        const { keyAxisOrient, scales, keyFieldName, margin, shouldRender } = this.options;
 
         const generator = new LineGenerator({
             middlewares: [
                 new LineLikeGeneratorCurveMiddleware({ curve: this.options.curve }),
-                new LineLikeGeneratorDefinedMiddleware({ definedFn: shouldRenderLine, valueFieldNameGetter: (d) => d.fieldName, dataRowGetter: (d) => d.data })
+                new LineLikeGeneratorDefinedMiddleware({ definedFn: shouldRender, valueFieldNameGetter: (d) => d.fieldName, dataRowGetter: (d) => d.data })
             ]
         });
 

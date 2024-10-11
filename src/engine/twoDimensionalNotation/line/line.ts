@@ -57,7 +57,7 @@ export class Line {
     }
 
     private renderGrouped(block: Block, scales: Scales, data: MdtChartsDataRow[], keyField: Field, margin: BlockMargin, keyAxisOrient: Orient, chart: TwoDimensionalChartModel): void {
-        const generatorFactory = new LineGeneratorFactory({ keyAxisOrient, scales, keyFieldName: keyField.name, margin, curve: this.options.staticSettings.shape.curve.type, shouldRenderLine: chart.lineViewOptions.renderForKey });
+        const generatorFactory = new LineGeneratorFactory({ keyAxisOrient, scales, keyFieldName: keyField.name, margin, curve: this.options.staticSettings.shape.curve.type, shouldRender: chart.lineViewOptions.renderForKey });
         chart.data.valueFields.forEach((valueField, valueIndex) => {
             const lineGenerator = generatorFactory.getLineGenerator(valueField.name);
 
@@ -80,7 +80,7 @@ export class Line {
 
     private renderSegmented(block: Block, scales: Scales, data: MdtChartsDataRow[], keyField: Field, margin: BlockMargin, keyAxisOrient: Orient, chart: TwoDimensionalChartModel): void {
         let stackedData = getStackedData(data, chart);
-        const generatorFactory = new LineGeneratorFactory({ keyAxisOrient, scales, keyFieldName: keyField.name, margin, curve: this.options.staticSettings.shape.curve.type, shouldRenderLine: chart.lineViewOptions.renderForKey });
+        const generatorFactory = new LineGeneratorFactory({ keyAxisOrient, scales, keyFieldName: keyField.name, margin, curve: this.options.staticSettings.shape.curve.type, shouldRender: chart.lineViewOptions.renderForKey });
         const lineGenerator = generatorFactory.getSegmentedLineGenerator();
 
         let lines = block.svg.getChartGroup(chart.index)
@@ -109,7 +109,7 @@ export class Line {
 
     private updateGrouped(block: Block, scales: Scales, newData: MdtChartsDataRow[], keyField: Field, margin: BlockMargin, keyAxisOrient: Orient, chart: TwoDimensionalChartModel): Promise<any>[] {
         const promises: Promise<any>[] = [];
-        const generatorFactory = new LineGeneratorFactory({ keyAxisOrient, scales, keyFieldName: keyField.name, margin, curve: this.options.staticSettings.shape.curve.type, shouldRenderLine: chart.lineViewOptions.renderForKey });
+        const generatorFactory = new LineGeneratorFactory({ keyAxisOrient, scales, keyFieldName: keyField.name, margin, curve: this.options.staticSettings.shape.curve.type, shouldRender: chart.lineViewOptions.renderForKey });
         chart.data.valueFields.forEach((valueField, valueFieldIndex) => {
             const lineGenerator = generatorFactory.getLineGenerator(valueField.name);
 
@@ -126,7 +126,7 @@ export class Line {
 
     private updateSegmented(block: Block, scales: Scales, newData: MdtChartsDataRow[], keyField: Field, margin: BlockMargin, keyAxisOrient: Orient, chart: TwoDimensionalChartModel): Promise<any>[] {
         let stackedData = getStackedData(newData, chart);
-        const generatorFactory = new LineGeneratorFactory({ keyAxisOrient, scales, keyFieldName: keyField.name, margin, curve: this.options.staticSettings.shape.curve.type, shouldRenderLine: chart.lineViewOptions.renderForKey });
+        const generatorFactory = new LineGeneratorFactory({ keyAxisOrient, scales, keyFieldName: keyField.name, margin, curve: this.options.staticSettings.shape.curve.type, shouldRender: chart.lineViewOptions.renderForKey });
         const lineGenerator = generatorFactory.getSegmentedLineGenerator();
         const lines = block.svg.getChartGroup(chart.index)
             .selectAll<SVGPathElement, MdtChartsDataRow[]>(`path.${this.lineChartClass}${Helper.getCssClassesLine(chart.cssClasses)}`)
