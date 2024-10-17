@@ -1,27 +1,37 @@
 import { Area as IArea } from 'd3-shape';
 import { BaseType, select, Selection } from 'd3-selection'
-import { BlockMargin, Field, Orient, TwoDimensionalChartModel } from "../../../model/model";
+import { BlockMargin, Field, LineCurveType, LineLikeChartSettings, Orient, TwoDimensionalChartModel } from "../../../model/model";
 import { Scales } from "../../features/scale/scale";
 import { Block } from "../../block/block";
 import { MarkDot } from "../../features/markDots/markDot";
-import { AreaHelper } from './areaHelper';
+import { AreaGeneratorFactory } from './areaHelper';
 import { DomHelper } from '../../helpers/domHelper';
 import { Helper } from '../../helpers/helper';
 import { MdtChartsDataRow, Size } from '../../../config/config';
 import { Transition } from 'd3-transition';
 import { getStackedDataWithOwn } from '../bar/stackedData/dataStacker';
 
+interface AreaOptions {
+    staticSettings: LineLikeChartSettings;
+}
+
 export class Area {
     public static readonly areaChartClass = 'area';
 
-    public static render(block: Block, scales: Scales, data: MdtChartsDataRow[], keyField: Field, margin: BlockMargin, keyAxisOrient: Orient, chart: TwoDimensionalChartModel, blockSize: Size): void {
+    public static get(options: AreaOptions) {
+        return new Area(options);
+    }
+
+    constructor(private readonly options: AreaOptions) { }
+
+    public render(block: Block, scales: Scales, data: MdtChartsDataRow[], keyField: Field, margin: BlockMargin, keyAxisOrient: Orient, chart: TwoDimensionalChartModel, blockSize: Size): void {
         if (chart.isSegmented)
             this.renderSegmented(block, scales, data, keyField, margin, keyAxisOrient, chart);
         else
-            this.renderGrouped(block, scales, data, keyField, margin, keyAxisOrient, chart, blockSize);
+            this.renderGrouped(block, scales, data, keyField, margin, keyAxisOrient, chart);
     }
 
-    public static update(block: Block, scales: Scales, newData: MdtChartsDataRow[], keyField: Field, margin: BlockMargin, chart: TwoDimensionalChartModel, keyAxisOrient: Orient, blockSize: Size): Promise<any>[] {
+    public update(block: Block, scales: Scales, newData: MdtChartsDataRow[], keyField: Field, margin: BlockMargin, chart: TwoDimensionalChartModel, keyAxisOrient: Orient, blockSize: Size): Promise<any>[] {
         let promises: Promise<any>[];
         if (chart.isSegmented) {
             promises = this.updateSegmented(block, scales, newData, keyField, margin, chart, keyAxisOrient);
@@ -31,23 +41,24 @@ export class Area {
         return promises;
     }
 
-    public static updateColors(block: Block, chart: TwoDimensionalChartModel): void {
+    public updateColors(block: Block, chart: TwoDimensionalChartModel): void {
         chart.data.valueFields.forEach((_vf, valueIndex) => {
             const path = block.svg.getChartGroup(chart.index)
-                .select(`.${this.areaChartClass}${Helper.getCssClassesLine(chart.cssClasses)}.chart-element-${valueIndex}`);
+                .select(`.${Area.areaChartClass}${Helper.getCssClassesLine(chart.cssClasses)}.chart-element-${valueIndex}`);
             DomHelper.setChartStyle(path, chart.style, valueIndex, 'fill');
             MarkDot.updateColors(block, chart, valueIndex);
         });
     }
 
-    private static renderGrouped(block: Block, scales: Scales, data: MdtChartsDataRow[], keyField: Field, margin: BlockMargin, keyAxisOrient: Orient, chart: TwoDimensionalChartModel, blockSize: Size): void {
-        chart.data.valueFields.forEach((field, valueIndex) => {
-            const area = AreaHelper.getGroupedAreaGenerator(keyAxisOrient, scales, margin, keyField.name, field.name, blockSize);
+    private renderGrouped(block: Block, scales: Scales, data: MdtChartsDataRow[], keyField: Field, margin: BlockMargin, keyAxisOrient: Orient, chart: TwoDimensionalChartModel): void {
+        const generatorFactory = new AreaGeneratorFactory({ keyAxisOrient, scales, keyFieldName: keyField.name, margin, shouldRender: chart.lineLikeViewOptions.renderForKey, curve: this.options.staticSettings.shape.curve.type });
 
+        chart.data.valueFields.forEach((field, valueIndex) => {
+            const area = generatorFactory.getAreaGenerator(field.name);
             const path = block.svg.getChartGroup(chart.index)
                 .append('path')
                 .attr('d', area(data))
-                .attr('class', this.areaChartClass)
+                .attr('class', Area.areaChartClass)
                 .style('clip-path', `url(#${block.svg.getClipPathId()})`)
                 .style('pointer-events', 'none');
 
@@ -58,17 +69,18 @@ export class Area {
         });
     }
 
-    private static renderSegmented(block: Block, scales: Scales, data: MdtChartsDataRow[], keyField: Field, margin: BlockMargin, keyAxisOrient: Orient, chart: TwoDimensionalChartModel): void {
+    private renderSegmented(block: Block, scales: Scales, data: MdtChartsDataRow[], keyField: Field, margin: BlockMargin, keyAxisOrient: Orient, chart: TwoDimensionalChartModel): void {
         const stackedData = getStackedDataWithOwn(data, chart.data.valueFields.map(field => field.name));
-        const areaGenerator = AreaHelper.getSegmentedAreaGenerator(keyAxisOrient, scales, margin, keyField.name);
+        const generatorFactory = new AreaGeneratorFactory({ keyAxisOrient, scales, keyFieldName: keyField.name, margin, shouldRender: chart.lineLikeViewOptions.renderForKey, curve: this.options.staticSettings.shape.curve.type });
+        const areaGenerator = generatorFactory.getSegmentedAreaGenerator();
 
         const areas = block.svg.getChartGroup(chart.index)
-            .selectAll(`.${this.areaChartClass}${Helper.getCssClassesLine(chart.cssClasses)}`)
+            .selectAll(`.${Area.areaChartClass}${Helper.getCssClassesLine(chart.cssClasses)}`)
             .data(stackedData)
             .enter()
             .append('path')
             .attr('d', d => areaGenerator(d))
-            .attr('class', this.areaChartClass)
+            .attr('class', Area.areaChartClass)
             .style('clip-path', `url(#${block.svg.getClipPathId()})`)
             .style('pointer-events', 'none');
 
@@ -83,12 +95,13 @@ export class Area {
         });
     }
 
-    private static updateGrouped(block: Block, scales: Scales, newData: MdtChartsDataRow[], keyField: Field, margin: BlockMargin, chart: TwoDimensionalChartModel, keyAxisOrient: Orient, blockSize: Size): Promise<any>[] {
+    private updateGrouped(block: Block, scales: Scales, newData: MdtChartsDataRow[], keyField: Field, margin: BlockMargin, chart: TwoDimensionalChartModel, keyAxisOrient: Orient, blockSize: Size): Promise<any>[] {
         const promises: Promise<any>[] = [];
+        const generatorFactory = new AreaGeneratorFactory({ keyAxisOrient, scales, keyFieldName: keyField.name, margin, shouldRender: chart.lineLikeViewOptions.renderForKey, curve: this.options.staticSettings.shape.curve.type });
         chart.data.valueFields.forEach((field, valueIndex) => {
-            const areaGenerator = AreaHelper.getGroupedAreaGenerator(keyAxisOrient, scales, margin, keyField.name, field.name, blockSize);
+            const areaGenerator = generatorFactory.getAreaGenerator(field.name);
             const areaObject = block.svg.getChartGroup(chart.index)
-                .select(`.${this.areaChartClass}${Helper.getCssClassesLine(chart.cssClasses)}.chart-element-${valueIndex}`)
+                .select(`.${Area.areaChartClass}${Helper.getCssClassesLine(chart.cssClasses)}.chart-element-${valueIndex}`)
 
             const prom = this.updateGroupedPath(block, areaObject, areaGenerator, newData);
             promises.push(prom);
@@ -98,11 +111,12 @@ export class Area {
         return promises;
     }
 
-    private static updateSegmented(block: Block, scales: Scales, newData: MdtChartsDataRow[], keyField: Field, margin: BlockMargin, chart: TwoDimensionalChartModel, keyAxisOrient: Orient): Promise<any>[] {
+    private updateSegmented(block: Block, scales: Scales, newData: MdtChartsDataRow[], keyField: Field, margin: BlockMargin, chart: TwoDimensionalChartModel, keyAxisOrient: Orient): Promise<any>[] {
         const stackedData = getStackedDataWithOwn(newData, chart.data.valueFields.map(field => field.name));
-        const areaGenerator = AreaHelper.getSegmentedAreaGenerator(keyAxisOrient, scales, margin, keyField.name);
+        const generatorFactory = new AreaGeneratorFactory({ keyAxisOrient, scales, keyFieldName: keyField.name, margin, shouldRender: chart.lineLikeViewOptions.renderForKey, curve: this.options.staticSettings.shape.curve.type });
+        const areaGenerator = generatorFactory.getSegmentedAreaGenerator();
         const areas = block.svg.getChartGroup(chart.index)
-            .selectAll<SVGRectElement, MdtChartsDataRow[]>(`path.${this.areaChartClass}${Helper.getCssClassesLine(chart.cssClasses)}`)
+            .selectAll<SVGRectElement, MdtChartsDataRow[]>(`path.${Area.areaChartClass}${Helper.getCssClassesLine(chart.cssClasses)}`)
             .data(stackedData);
 
         const prom = this.updateSegmentedPath(block, areas, areaGenerator);
@@ -114,7 +128,7 @@ export class Area {
         return [prom];
     }
 
-    private static updateGroupedPath(block: Block, areaObject: Selection<BaseType, any, BaseType, any>, areaGenerator: IArea<MdtChartsDataRow>, newData: MdtChartsDataRow[]): Promise<any> {
+    private updateGroupedPath(block: Block, areaObject: Selection<BaseType, any, BaseType, any>, areaGenerator: IArea<MdtChartsDataRow>, newData: MdtChartsDataRow[]): Promise<any> {
         return new Promise(resolve => {
             if (areaObject.size() === 0) {
                 resolve('');
@@ -137,7 +151,7 @@ export class Area {
         });
     }
 
-    private static updateSegmentedPath(block: Block, areasObjects: Selection<BaseType, any, BaseType, any>, areaGenerator: IArea<MdtChartsDataRow>): Promise<any> {
+    private updateSegmentedPath(block: Block, areasObjects: Selection<BaseType, any, BaseType, any>, areaGenerator: IArea<MdtChartsDataRow>): Promise<any> {
         return new Promise(resolve => {
             if (areasObjects.size() === 0) {
                 resolve('');
@@ -160,7 +174,7 @@ export class Area {
         });
     }
 
-    private static setSegmentColor(segments: Selection<SVGGElement, unknown, SVGGElement, unknown>, colorPalette: string[]): void {
+    private setSegmentColor(segments: Selection<SVGGElement, unknown, SVGGElement, unknown>, colorPalette: string[]): void {
         segments.style('fill', (d, i) => colorPalette[i % colorPalette.length]);
     }
 }

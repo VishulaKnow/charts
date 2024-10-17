@@ -5,7 +5,7 @@ import { Helper } from "../../helpers/helper";
 import { MdtChartsDataRow, Size } from "../../../config/config";
 import { Pipeline } from "../../helpers/pipeline/Pipeline";
 import { BaseType, Selection } from "d3-selection";
-import { HatchPatternDef } from "../../block/defs";
+import { HatchPatternDef } from "../../block/defs/hatchPattern";
 
 export interface BarAttrsHelper {
     x: (dataRow: MdtChartsDataRow) => number;

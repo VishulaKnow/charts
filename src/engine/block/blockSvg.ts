@@ -3,7 +3,7 @@ import { Size } from "../../config/config";
 import { BlockMargin } from "../../model/model";
 import { NamesHelper } from "../helpers/namesHelper";
 import { BlockHelper } from "./blockHelper";
-import { HatchPatternDef } from "./defs";
+import { HatchPatternDef } from "./defs/hatchPattern";
 
 interface BlockSvgOptions {
     parentBlockId: number;
@@ -91,7 +91,7 @@ export class BlockSvg {
         this.hatchPatternDef.appendToDefsBlock(this.ensureDefsRendered());
     }
 
-    private ensureDefsRendered(): Selection<SVGDefsElement, unknown, HTMLElement, unknown> {
+    ensureDefsRendered(): Selection<SVGDefsElement, unknown, HTMLElement, unknown> {
         let defs = this.getBlock().select<SVGDefsElement>('defs');
         if (defs.empty())
             defs = this.getBlock().append<SVGDefsElement>('defs');

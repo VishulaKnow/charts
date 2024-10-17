@@ -30,7 +30,6 @@ export class TwoDimensionalModel {
         let secondaryScaleValueInfo;
         const options = configReader.options;
         const canvasModel = modelInstance.canvasModel;
-        const resolvedTitle = getResolvedTitle(options.title, modelInstance.dataModel.repository.getRawRows())
         const scaleModel = new ScaleModel();
         const scaleMarginRecalcer = new ScaleAxisRecalcer(() => scaleModel.getScaleLinear(options, modelInstance.dataModel.repository.getScopedRows(), canvasModel, configReader));
         scaleMarginRecalcer.recalculateMargin(canvasModel, options.orientation, options.axis.key);
@@ -46,7 +45,7 @@ export class TwoDimensionalModel {
 
         return {
             legend: canvasModel.legendCanvas.getModel(),
-            title: resolvedTitle,
+            title: getResolvedTitle(options.title, modelInstance.dataModel.repository.getRawRows()),
             selectable: !!options.selectable,
             orient: options.orientation,
             scale: {
@@ -119,14 +118,14 @@ export class TwoDimensionalModel {
                         }
                     }
                 },
-                lineViewOptions: {
+                lineLikeViewOptions: {
                     dashedStyles: parseDashStyles(chart.lineStyles?.dash),
                     renderForKey: (dataRow, valueFieldName) => dataRow[valueFieldName] !== null && dataRow[valueFieldName] !== undefined
                 },
                 barViewOptions: { hatch: { on: chart.barStyles?.hatch?.on ?? false } },
                 legend: getLegendMarkerOptions(chart),
                 index,
-                ...(chart.valueLabels?.enabled && {
+                ...(chart.valueLabels?.on && {
                     valueLabels: {
                         show: true,
                         handleX: (scaledValue) => getValueLabelX(scaledValue, keyAxisOrient, canvasModel.getMargin()),

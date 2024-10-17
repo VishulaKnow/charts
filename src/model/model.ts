@@ -260,16 +260,16 @@ export interface TwoDimensionalChartLegendLineModel extends Omit<TwoDimensionalL
 }
 
 interface TwoDimensionalLineLikeChartModel {
-    lineViewOptions: TwoDimensionalLineLikeChartViewModel;
+    lineLikeViewOptions: TwoDimensionalLineLikeChartViewModel;
     markersOptions: MarkersOptions;
 }
 
 interface TwoDimensionalLineLikeChartViewModel {
     dashedStyles: LineLikeChartDashOptions;
-    renderForKey: LineLikeChartRenderOptions
+    renderForKey: LineLikeChartRenderFn
 }
 
-export type LineLikeChartRenderOptions = (dataRow: MdtChartsDataRow, valueFieldName: string) => boolean
+export type LineLikeChartRenderFn = (dataRow: MdtChartsDataRow, valueFieldName: string) => boolean
 
 interface TwoDimensionalBarLikeChartModel {
     barViewOptions: TwoDimensionalBarLikeChartViewModel;

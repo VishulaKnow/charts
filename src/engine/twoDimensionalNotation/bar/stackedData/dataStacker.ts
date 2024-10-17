@@ -1,8 +1,11 @@
-import { stack } from "d3-shape";
 import { MdtChartsDataRow } from "../../../../config/config";
 import { DataStackerService } from "./dataStackerService";
 
-export interface StackedDataRow {
+export interface SegmentWithFieldName {
+    fieldName: string;
+}
+
+export interface StackedDataRow extends SegmentWithFieldName {
     0: number;
     1: number;
     data: MdtChartsDataRow;
@@ -28,7 +31,8 @@ export class DataStacker {
                 fieldStack.push({
                     "0": value0,
                     "1": value1,
-                    data: dataRow
+                    data: dataRow,
+                    fieldName: vField
                 });
             });
 
@@ -43,8 +47,4 @@ export class DataStacker {
 export function getStackedDataWithOwn(rawData: MdtChartsDataRow[], valueFields: string[]): StackedDataFull {
     const stacker = new DataStacker();
     return stacker.getStackedData(rawData, valueFields);
-}
-
-export function getStackedDataWithD3(rawData: MdtChartsDataRow[], valueFields: string[]): StackedDataFull {
-    return stack().keys(valueFields)(rawData);
 }

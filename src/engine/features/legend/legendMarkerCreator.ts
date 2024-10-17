@@ -1,7 +1,7 @@
 import { BaseType, Selection } from "d3-selection";
 import { ChartLegendModel, TwoDimensionalChartLegendBarModel, TwoDimensionalChartLegendLineModel } from "../../../model/model";
 import { Legend } from "./legend";
-import { HatchPatternDef } from "../../block/defs";
+import { HatchPatternDef } from "../../block/defs/hatchPattern";
 import { applyLineDash } from "../../twoDimensionalNotation/line/lineHelper";
 
 interface MarkerCreationOptions extends ChartLegendModel {

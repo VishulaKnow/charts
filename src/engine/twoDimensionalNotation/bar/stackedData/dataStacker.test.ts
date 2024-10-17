@@ -19,16 +19,16 @@ describe('DataStacker', () => {
                 const res = stacker.getStackedData(dataRows, valueFields);
                 expect(res).toEqual<StackedDataFull>([
                     [
-                        { "0": 0, "1": 12, data: dataRows[0] },
-                        { "0": 0, "1": 30, data: dataRows[1] },
-                        { "0": 0, "1": 0, data: dataRows[2] },
-                        { "0": 0, "1": 10, data: dataRows[3] },
+                        { "0": 0, "1": 12, data: dataRows[0], fieldName: "price" },
+                        { "0": 0, "1": 30, data: dataRows[1], fieldName: "price" },
+                        { "0": 0, "1": 0, data: dataRows[2], fieldName: "price" },
+                        { "0": 0, "1": 10, data: dataRows[3], fieldName: "price" },
                     ],
                     [
-                        { "0": 12, "1": 42, data: dataRows[0] },
-                        { "0": 30, "1": 42, data: dataRows[1] },
-                        { "0": 0, "1": 100, data: dataRows[2] },
-                        { "0": 10, "1": 10, data: dataRows[3] },
+                        { "0": 12, "1": 42, data: dataRows[0], fieldName: "count" },
+                        { "0": 30, "1": 42, data: dataRows[1], fieldName: "count" },
+                        { "0": 0, "1": 100, data: dataRows[2], fieldName: "count" },
+                        { "0": 10, "1": 10, data: dataRows[3], fieldName: "count" },
                     ]
                 ])
             });
@@ -47,16 +47,16 @@ describe('DataStacker', () => {
                 const res = stacker.getStackedData(dataRows, valueFields);
                 expect(res).toEqual<StackedDataFull>([
                     [
-                        { "0": 0, "1": -12, data: dataRows[0] },
-                        { "0": 0, "1": -30, data: dataRows[1] },
-                        { "0": 0, "1": 0, data: dataRows[2] },
-                        { "0": 0, "1": -10, data: dataRows[3] },
+                        { "0": 0, "1": -12, data: dataRows[0], fieldName: "price" },
+                        { "0": 0, "1": -30, data: dataRows[1], fieldName: "price" },
+                        { "0": 0, "1": 0, data: dataRows[2], fieldName: "price" },
+                        { "0": 0, "1": -10, data: dataRows[3], fieldName: "price" },
                     ],
                     [
-                        { "0": -12, "1": -42, data: dataRows[0] },
-                        { "0": -30, "1": -42, data: dataRows[1] },
-                        { "0": 0, "1": -100, data: dataRows[2] },
-                        { "0": -10, "1": -10, data: dataRows[3] },
+                        { "0": -12, "1": -42, data: dataRows[0], fieldName: "count" },
+                        { "0": -30, "1": -42, data: dataRows[1], fieldName: "count" },
+                        { "0": 0, "1": -100, data: dataRows[2], fieldName: "count" },
+                        { "0": -10, "1": -10, data: dataRows[3], fieldName: "count" },
                     ]
                 ])
             });
@@ -68,8 +68,8 @@ describe('DataStackerService', () => {
     const service = new DataStackerService();
     let data: StackedDataFull = [
         [
-            { "0": 0, "1": 42, data: {} },
-            { "0": 0, "1": -123, data: {} }
+            { "0": 0, "1": 42, data: {}, fieldName: "price" },
+            { "0": 0, "1": -123, data: {}, fieldName: "price" }
         ]
     ]
 
@@ -187,26 +187,26 @@ describe('real example (positive only)', () => {
     const valueFields = ["price", "count"]
     const stackedData = [
         [
-            { "0": 0, "1": 100000, data: data[0] },
-            { "0": 0, "1": 0, data: data[1] },
-            { "0": 0, "1": 15000, data: data[2] },
-            { "0": 0, "1": 20000, data: data[3] },
-            { "0": 0, "1": 115000, data: data[4] },
-            { "0": 0, "1": 115000, data: data[5] },
-            { "0": 0, "1": 50000, data: data[6] },
-            { "0": 0, "1": 20000, data: data[7] },
-            { "0": 0, "1": 40000, data: data[8] }
+            { "0": 0, "1": 100000, data: data[0], fieldName: "price" },
+            { "0": 0, "1": 0, data: data[1], fieldName: "price" },
+            { "0": 0, "1": 15000, data: data[2], fieldName: "price" },
+            { "0": 0, "1": 20000, data: data[3], fieldName: "price" },
+            { "0": 0, "1": 115000, data: data[4], fieldName: "price" },
+            { "0": 0, "1": 115000, data: data[5], fieldName: "price" },
+            { "0": 0, "1": 50000, data: data[6], fieldName: "price" },
+            { "0": 0, "1": 20000, data: data[7], fieldName: "price" },
+            { "0": 0, "1": 40000, data: data[8], fieldName: "price" }
         ],
         [
-            { "0": 100000, "1": 112000, data: data[0] },
-            { "0": 0, "1": 1000, data: data[1] },
-            { "0": 15000, "1": 16200, data: data[2] },
-            { "0": 20000, "1": 20500, data: data[3] },
-            { "0": 115000, "1": 121000, data: data[4] },
-            { "0": 115000, "1": 119000, data: data[5] },
-            { "0": 50000, "1": 61000, data: data[6] },
-            { "0": 20000, "1": 22000, data: data[7] },
-            { "0": 40000, "1": 55000, data: data[8] }
+            { "0": 100000, "1": 112000, data: data[0], fieldName: "count" },
+            { "0": 0, "1": 1000, data: data[1], fieldName: "count" },
+            { "0": 15000, "1": 16200, data: data[2], fieldName: "count" },
+            { "0": 20000, "1": 20500, data: data[3], fieldName: "count" },
+            { "0": 115000, "1": 121000, data: data[4], fieldName: "count" },
+            { "0": 115000, "1": 119000, data: data[5], fieldName: "count" },
+            { "0": 50000, "1": 61000, data: data[6], fieldName: "count" },
+            { "0": 20000, "1": 22000, data: data[7], fieldName: "count" },
+            { "0": 40000, "1": 55000, data: data[8], fieldName: "count" }
         ]
     ];
 

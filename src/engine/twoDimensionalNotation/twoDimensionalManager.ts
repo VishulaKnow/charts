@@ -150,7 +150,7 @@ export class TwoDimensionalManager implements ChartContentManager {
             else if (chart.type === 'line')
                 Line.get({ staticSettings: model.options.chartSettings.lineLike }).updateColors(block, chart);
             else if (chart.type === 'area')
-                Area.updateColors(block, chart);
+                Area.get({ staticSettings: model.options.chartSettings.lineLike }).updateColors(block, chart);
         });
     }
 
@@ -183,7 +183,7 @@ export class TwoDimensionalManager implements ChartContentManager {
                     keyAxisOrient,
                     chart);
             else if (chart.type === 'area')
-                Area.render(block,
+                Area.get({ staticSettings: chartSettings.lineLike }).render(block,
                     chartScales,
                     data[dataOptions.dataSource],
                     dataOptions.keyField,
@@ -225,7 +225,7 @@ export class TwoDimensionalManager implements ChartContentManager {
                     chart);
             }
             else if (chart.type === 'area') {
-                proms = Area.update(block,
+                proms = Area.get({ staticSettings: chartSettings.lineLike }).update(block,
                     chartScales,
                     data[dataOptions.dataSource],
                     dataOptions.keyField,
