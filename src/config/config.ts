@@ -286,7 +286,12 @@ export interface TwoDimensionalChartData {
     valueGroup?: TwoDimensionalValueGroup;
 }
 
-export type TwoDimensionalChartValueLabels = { on: boolean }
+export interface TwoDimensionalChartValueLabels {
+    on: boolean
+    format?: ValueLabelsFormatter;
+}
+
+export type ValueLabelsFormatter = (value: number) => string;
 
 export type TwoDimensionalValueGroup = 'main' | 'secondary'
 

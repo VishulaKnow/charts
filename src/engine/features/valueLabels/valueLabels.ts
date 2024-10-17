@@ -4,7 +4,9 @@ import {
     OptionsModelData,
     Orient,
     TwoDimensionalChartModel,
-    ValueLabelAnchor, ValueLabelDominantBaseline
+    ValueLabelAnchor,
+    ValueLabelDominantBaseline,
+    ValueLabelsFormatter,
 } from "../../../model/model";
 import { MdtChartsDataRow, MdtChartsDataSource } from "../../../config/config";
 import { Scales, ScalesWithSecondary } from "../../../engine/features/scale/scale";
@@ -46,7 +48,7 @@ export class ChartValueLabels {
                 .enter()
                 .append('text');
             const attrs = ValueLabelsHelper.getValueLabelsAttrs(this.globalOptions, this.chart.valueLabels, scales, valueField)
-            this.setAttrs(valueLabels, attrs, valueField.name);
+            this.setAttrs(valueLabels, attrs, valueField.name, this.chart.valueLabels.format);
             this.setClasses(valueLabels, this.chart.cssClasses, vfIndex)
         })
     }
@@ -65,10 +67,10 @@ export class ChartValueLabels {
 
             const mergedValueLabels = newValueLabels.merge(valueLabels as Selection<SVGTextElement, MdtChartsDataRow, SVGGElement, unknown>);
 
-            this.setAttrs(newValueLabels, attrs, valueField.name);
+            this.setAttrs(newValueLabels, attrs, valueField.name, this.chart.valueLabels.format);
             this.setClasses(mergedValueLabels, this.chart.cssClasses, vfIndex);
 
-            this.setAttrs(valueLabels, attrs, valueField.name, true)
+            this.setAttrs(valueLabels, attrs, valueField.name, this.chart.valueLabels.format, true)
         })
     }
 
@@ -78,11 +80,11 @@ export class ChartValueLabels {
             .selectAll(`.${this.valueLabelClass}.${CLASSES.dataLabel}${Helper.getCssClassesLine(this.chart.cssClasses)}.chart-element-${vfIndex}`)
     }
 
-    private setAttrs(valueLabels: Selection<SVGTextElement | BaseType, MdtChartsDataRow, BaseType, any>, attrs: ValueLabelAttrs, valueFieldName: string, animate: boolean = false) {
+    private setAttrs(valueLabels: Selection<SVGTextElement | BaseType, MdtChartsDataRow, BaseType, any>, attrs: ValueLabelAttrs, valueFieldName: string, formatter: ValueLabelsFormatter, animate: boolean = false) {
         const animationName = 'labels-updating';
 
         valueLabels
-            .text(d => d[valueFieldName])
+            .text(d => formatter(d[valueFieldName]))
             .attr('dominant-baseline', attrs.dominantBaseline)
             .attr('text-anchor', attrs.textAnchor);
         if (animate) {
