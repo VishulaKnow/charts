@@ -337,7 +337,7 @@ describe('getValueLabelsFormatter', () => {
                     isSegmented: null,
                     lineStyles: null,
                     valueLabels: {
-                        enabled: true,
+                        on: true,
                         format: value => ''
                     },
                 },
