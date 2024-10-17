@@ -35,6 +35,9 @@ const configCars: MdtChartsConfig = {
                 ticks: {
                     flag: false
                 },
+                labels: {
+                    format: (value) => nFormatter(value),
+                }
             },
             valueSecondary: {
                 domain: {
@@ -102,7 +105,7 @@ const configCars: MdtChartsConfig = {
                 },
                 valueLabels: {
                     on: true,
-                    format: (value) => nFormatter(value),
+                    // format: (value) => nFormatter(value),
                 }
             },
             {
