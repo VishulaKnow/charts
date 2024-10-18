@@ -20,6 +20,7 @@ export type ScaleKeyType = "band" | "point";
 export type ScaleValueType = "linear" | "datetime";
 export type LegendPosition = "off" | "top" | "bottom" | "left" | "right";
 export type EmbeddedLabelTypeModel = "none" | "key" | "value";
+export type ValueLabelsCollisionMode = "none" | "hide";
 export type DataOptions = {
     [option: string]: any;
 };
@@ -72,6 +73,7 @@ export interface TwoDimensionalOptionsModel extends GraphicNotationOptionsModel 
     additionalElements: AdditionalElementsOptions;
     orient: ChartOrientation;
     chartSettings: TwoDimChartElementsSettings;
+    valueLabels?: TwoDimensionalValueLabels;
 }
 export interface PolarOptionsModel extends GraphicNotationOptionsModel {
     type: "polar";
@@ -206,6 +208,15 @@ interface LineLikeChartCurveOptions {
 interface BarLikeChartHatchOptions {
     on: boolean;
 }
+
+export interface TwoDimensionalValueLabels {
+    collision: ValueLabelsCollision
+}
+
+export interface ValueLabelsCollision {
+    mode: ValueLabelsCollisionMode
+}
+
 
 //====================================================== PolarOptionsModel
 export interface DonutChartSettings extends Omit<DonutOptionsCanvas, "aggregatorPad" | "thickness"> {
