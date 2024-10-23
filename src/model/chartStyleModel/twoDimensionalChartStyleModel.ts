@@ -19,7 +19,6 @@ export class TwoDimensionalChartStyleModel {
         return {
             elementColors: this.service.getChartColors(chart, this.chartStyleConfig, fieldsAmounts, chartIndex),
             opacity,
-            areaStyles: chart.areaStyles
         }
     }
 

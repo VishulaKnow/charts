@@ -262,15 +262,6 @@ interface TooltipModel {
 export interface ChartStyle {
     elementColors: string[];
     opacity: number;
-    areaStyles?: MdtChartsLineLikeChartAreaStyles;
-}
-
-export interface MdtChartsLineLikeChartAreaStyles {
-    gradient?: AreaStylesGradient;
-}
-
-export interface AreaStylesGradient {
-    on: boolean;
 }
 
 export interface ChartLegendModel {

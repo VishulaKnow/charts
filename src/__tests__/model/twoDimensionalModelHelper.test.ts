@@ -102,11 +102,6 @@ describe('getGradientDefs', () => {
                 style: {
                     opacity: 1,
                     elementColors: ['green', 'red'],
-                    areaStyles: {
-                        gradient: {
-                            on: true
-                        }
-                    }
                 },
                 embeddedLabels: null,
                 markersOptions: null,
@@ -116,7 +111,7 @@ describe('getGradientDefs', () => {
                 index: 1,
             },
             {
-                type: 'area',
+                type: 'line',
                 isSegmented: false,
                 data: null,
                 tooltip: null,
@@ -124,11 +119,6 @@ describe('getGradientDefs', () => {
                 style: {
                     opacity: 1,
                     elementColors: ['green', 'red'],
-                    areaStyles: {
-                        gradient: {
-                            on: false
-                        }
-                    }
                 },
                 embeddedLabels: null,
                 markersOptions: null,
@@ -150,13 +140,6 @@ describe('getGradientDefs', () => {
 
     test('should return empty array because no charts area type', () => {
         charts[0].type = 'line';
-        const gradients = TwoDimensionalModelHelper.getGradientDefs(charts, 'right', 'horizontal')
-
-        expect(gradients.length).toEqual(0);
-    });
-
-    test('should return empty array because no charts with gradient', () => {
-        charts[0].style.areaStyles.gradient = null;
         const gradients = TwoDimensionalModelHelper.getGradientDefs(charts, 'right', 'horizontal')
 
         expect(gradients.length).toEqual(0);
