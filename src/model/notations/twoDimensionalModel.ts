@@ -63,7 +63,8 @@ export class TwoDimensionalModel {
             charts: this.getChartsModel(options.charts, configReader, options.orientation, designerConfig, modelInstance.dataModel.repository, keyAxis.orient, canvasModel, options.data.keyField.name),
             additionalElements: this.getAdditionalElements(options),
             tooltip: options.tooltip,
-            chartSettings: this.getChartsSettings(designerConfig.canvas.chartOptions, options.orientation)
+            chartSettings: this.getChartsSettings(designerConfig.canvas.chartOptions, options.orientation),
+            valueLabels: options.valueLabels ?? { collision: { mode: "none" } }
         }
     }
 
