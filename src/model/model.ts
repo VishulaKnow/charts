@@ -73,7 +73,7 @@ export interface TwoDimensionalOptionsModel extends GraphicNotationOptionsModel 
     additionalElements: AdditionalElementsOptions;
     orient: ChartOrientation;
     chartSettings: TwoDimChartElementsSettings;
-    valueLabels?: TwoDimensionalValueLabels;
+    valueLabels: TwoDimensionalValueLabels;
 }
 export interface PolarOptionsModel extends GraphicNotationOptionsModel {
     type: "polar";
