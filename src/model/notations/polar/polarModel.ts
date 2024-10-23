@@ -24,7 +24,8 @@ export class PolarModel {
             charts: this.getChartsModel(options.chart, modelInstance.dataModel.repository.getScopedRows().length, designerConfig.chartStyle),
             legend: modelInstance.canvasModel.legendCanvas.getModel(),
             tooltip: options.tooltip,
-            chartCanvas: this.getDonutSettings(designerConfig.canvas.chartOptions.donut, options.chart, modelInstance.dataModel.repository.getRawRows())
+            chartCanvas: this.getDonutSettings(designerConfig.canvas.chartOptions.donut, options.chart, modelInstance.dataModel.repository.getRawRows()),
+            defs: { gradients: [] },
         }
     }
 

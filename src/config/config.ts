@@ -235,10 +235,11 @@ interface Tooltip {
 
 interface MdtChartsLineLikeChart {
     markers: MarkersOptions;
-    lineStyles?: MdtChartsLineLikeChartStyles;
+    lineStyles?: MdtChartsLineLikeChartLineStyles;
+    areaStyles?: MdtChartsLineLikeChartAreaStyles;
 }
 
-export interface MdtChartsLineLikeChartStyles {
+export interface MdtChartsLineLikeChartLineStyles {
     dash?: MdtChartsLineLikeChartDashedStyles;
 }
 
@@ -246,6 +247,14 @@ export interface MdtChartsLineLikeChartDashedStyles {
     on: boolean;
     dashSize?: number;
     gapSize?: number;
+}
+
+export interface MdtChartsLineLikeChartAreaStyles {
+    gradient?: AreaStylesGradient;
+}
+
+export interface AreaStylesGradient {
+    on: boolean;
 }
 
 interface MdtChartsBarLikeChart {

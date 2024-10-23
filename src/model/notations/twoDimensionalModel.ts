@@ -43,6 +43,8 @@ export class TwoDimensionalModel {
 
         const keyAxis = AxisModel.getKeyAxis(options, modelInstance.dataModel.repository.getScopedFullSource(), designerConfig.canvas.axisLabel, canvasModel, designerConfig.elementsOptions.tooltip, () => scaleValueInfo.scaleFn(0));
 
+        const charts = this.getChartsModel(options.charts, configReader, options.orientation, designerConfig, modelInstance.dataModel.repository, keyAxis.orient, canvasModel, options.data.keyField.name);
+
         return {
             legend: canvasModel.legendCanvas.getModel(),
             title: getResolvedTitle(options.title, modelInstance.dataModel.repository.getRawRows()),
@@ -60,10 +62,13 @@ export class TwoDimensionalModel {
             },
             type: options.type,
             data: { ...options.data },
-            charts: this.getChartsModel(options.charts, configReader, options.orientation, designerConfig, modelInstance.dataModel.repository, keyAxis.orient, canvasModel, options.data.keyField.name),
+            charts,
             additionalElements: this.getAdditionalElements(options),
             tooltip: options.tooltip,
-            chartSettings: this.getChartsSettings(designerConfig.canvas.chartOptions, options.orientation)
+            chartSettings: this.getChartsSettings(designerConfig.canvas.chartOptions, options.orientation),
+            defs: {
+                gradients: TwoDimensionalModelHelper.getGradientDefs(charts, keyAxis.orient, options.orientation)
+            }
         }
     }
 

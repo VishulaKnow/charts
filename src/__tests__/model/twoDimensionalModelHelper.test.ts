@@ -1,6 +1,6 @@
 import { TwoDimensionalModelHelper } from "../../model/helpers/twoDimensionalModelHelper";
 import { MdtChartsDataRow, MdtChartsTwoDimensionalChart } from "../../config/config";
-import { MarkDotDatumItem } from "../../model/model";
+import { MarkDotDatumItem, TwoDimensionalChartModel } from "../../model/model";
 
 describe('shouldMarkerShow', () => {
 
@@ -84,5 +84,94 @@ describe('shouldMarkerShow', () => {
         currentRow[keyFieldName] = 'someKeyField';
         const res = TwoDimensionalModelHelper.shouldMarkerShow(chart, dataRows, valueFieldName, currentRow, keyFieldName)
         expect(res).toBeFalsy();
+    });
+});
+
+describe('getGradientDefs', () => {
+
+    let charts: TwoDimensionalChartModel[];
+
+    beforeEach(()=> {
+        charts = [
+            {
+                type: 'area',
+                isSegmented: false,
+                data: null,
+                tooltip: null,
+                cssClasses: null,
+                style: {
+                    opacity: 1,
+                    elementColors: ['green', 'red'],
+                    areaStyles: {
+                        gradient: {
+                            on: true
+                        }
+                    }
+                },
+                embeddedLabels: null,
+                markersOptions: null,
+                lineLikeViewOptions: null,
+                barViewOptions: null,
+                legend: null,
+                index: 1,
+            },
+            {
+                type: 'area',
+                isSegmented: false,
+                data: null,
+                tooltip: null,
+                cssClasses: null,
+                style: {
+                    opacity: 1,
+                    elementColors: ['green', 'red'],
+                    areaStyles: {
+                        gradient: {
+                            on: false
+                        }
+                    }
+                },
+                embeddedLabels: null,
+                markersOptions: null,
+                lineLikeViewOptions: null,
+                barViewOptions: null,
+                legend: null,
+                index: 2,
+            },
+        ]
+    })
+
+    test('should return array with two gradients of chart area type', () => {
+        const gradients = TwoDimensionalModelHelper.getGradientDefs(charts, 'right', 'horizontal')
+
+        expect(gradients.length).toEqual(2);
+        expect(gradients[0].id).toEqual('gradient-chart-1-sub-0');
+        expect(gradients[1].id).toEqual('gradient-chart-1-sub-1');
+    });
+
+    test('should return empty array because no charts area type', () => {
+        charts[0].type = 'line';
+        const gradients = TwoDimensionalModelHelper.getGradientDefs(charts, 'right', 'horizontal')
+
+        expect(gradients.length).toEqual(0);
+    });
+
+    test('should return empty array because no charts with gradient', () => {
+        charts[0].style.areaStyles.gradient = null;
+        const gradients = TwoDimensionalModelHelper.getGradientDefs(charts, 'right', 'horizontal')
+
+        expect(gradients.length).toEqual(0);
+    });
+
+    test('should return opacity of gradient items 1 and 0, because keyAxisOrient is left', () => {
+        const gradients = TwoDimensionalModelHelper.getGradientDefs(charts, 'left', 'horizontal')
+
+        expect(gradients[0].items[0].opacity).toEqual(0);
+        expect(gradients[0].items[1].opacity).toEqual(1);
+    });
+
+    test('should return position of y2 gradient is 1, because chartOrient is vertical', () => {
+        const gradients = TwoDimensionalModelHelper.getGradientDefs(charts, 'left', 'vertical')
+
+        expect(gradients[0].position.y2).toEqual(1);
     });
 });

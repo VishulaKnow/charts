@@ -12,9 +12,14 @@ export class TwoDimensionalChartStyleModel {
 
     getChartStyle(chart: MdtChartsTwoDimensionalChart, chartIndex: number): ChartStyle {
         const fieldsAmounts = this.getChartsValueFieldsAmounts();
+        const opacity = chart.type === 'area' && chart.areaStyles?.gradient?.on
+            ? 1
+            : this.service.getChartOpacity(this.charts.length, chart.type, fieldsAmounts[chartIndex], chart.isSegmented);
+
         return {
             elementColors: this.service.getChartColors(chart, this.chartStyleConfig, fieldsAmounts, chartIndex),
-            opacity: this.service.getChartOpacity(this.charts.length, chart.type, fieldsAmounts[chartIndex], chart.isSegmented)
+            opacity,
+            areaStyles: chart.areaStyles
         }
     }
 

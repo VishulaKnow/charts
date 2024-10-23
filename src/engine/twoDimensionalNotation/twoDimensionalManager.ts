@@ -19,10 +19,12 @@ import { BarHelper } from "./bar/barHelper";
 import { TwoDimRecordOverflowAlert } from "./extenders/twoDimRecordOverflowAlert";
 import { Line } from "./line/line";
 import { CanvasValueLabels } from "../../engine/features/valueLabels/valueLabels";
+import { LinearGradientDef } from "../../engine/block/defs/LinearGradientDef";
 
 
 export class TwoDimensionalManager implements ChartContentManager {
     private canvasValueLabels?: CanvasValueLabels;
+    private linearGradientDef? : LinearGradientDef;
 
     public render(engine: Engine, model: Model<TwoDimensionalOptionsModel>): void {
         const options = model.options;
@@ -87,6 +89,11 @@ export class TwoDimensionalManager implements ChartContentManager {
             },
         });
         this.canvasValueLabels.render(scales, options.charts, engine.data, options.data);
+
+        if (options.defs) {
+            this.linearGradientDef = new LinearGradientDef();
+            this.linearGradientDef.render(engine.block.svg.ensureDefsRendered(), options.defs.gradients);
+        }
     }
 
     public updateData(block: Block, model: Model<TwoDimensionalOptionsModel>, data: MdtChartsDataSource) {
