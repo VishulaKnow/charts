@@ -10,6 +10,8 @@ import {
     ShowTickFn,
     MdtChartsDataRow,
     TwoDimensionalValueGroup,
+    ValueLabelsCollisionMode,
+    ValueLabelsCollision,
 } from "../config/config";
 import { DataType, DonutOptionsCanvas, Formatter, StaticLegendBlockCanvas, TooltipSettings, Transitions } from "../designer/designerConfig";
 
@@ -20,7 +22,6 @@ export type ScaleKeyType = "band" | "point";
 export type ScaleValueType = "linear" | "datetime";
 export type LegendPosition = "off" | "top" | "bottom" | "left" | "right";
 export type EmbeddedLabelTypeModel = "none" | "key" | "value";
-export type ValueLabelsCollisionMode = "none" | "hide";
 export type DataOptions = {
     [option: string]: any;
 };
@@ -210,11 +211,7 @@ interface BarLikeChartHatchOptions {
 }
 
 export interface TwoDimensionalValueLabels {
-    collision: ValueLabelsCollision
-}
-
-export interface ValueLabelsCollision {
-    mode: ValueLabelsCollisionMode
+    collision: ValueLabelsCollision;
 }
 
 
