@@ -1,4 +1,6 @@
-import { ValueLabelAttrs, ValueLabelsOptions } from "../../../engine/features/valueLabels/valueLabels";
+import {
+    ValueLabelAttrs, ValueLabelsOptions
+} from "../../../engine/features/valueLabels/valueLabels";
 import { TwoDimChartValueLabelsOptions, ValueField } from "../../../model/model";
 import { Scale, Scales } from "../../../engine/features/scale/scale";
 
@@ -12,13 +14,13 @@ export class ValueLabelsHelper {
         }
         const orient = globalOptions.canvas.keyAxisOrient
 
-            if (orient === 'left' || orient === 'right') {
-                attrs.x = d => valueLabels.handleX(scales.value(d[valueField.name]));
-                attrs.y = d => valueLabels.handleY(Scale.getScaledValue(scales.key, d[globalOptions.data.keyFieldName]));
-            } else if (orient === 'bottom' || orient === 'top') {
-                attrs.x = d => valueLabels.handleX(Scale.getScaledValue(scales.key, d[globalOptions.data.keyFieldName]));
-                attrs.y = d => valueLabels.handleY(scales.value(d[valueField.name]));
-            }
+        if (orient === 'left' || orient === 'right') {
+            attrs.x = d => valueLabels.handleX(scales.value(d[valueField.name]));
+            attrs.y = d => valueLabels.handleY(Scale.getScaledValue(scales.key, d[globalOptions.data.keyFieldName]));
+        } else if (orient === 'bottom' || orient === 'top') {
+            attrs.x = d => valueLabels.handleX(Scale.getScaledValue(scales.key, d[globalOptions.data.keyFieldName]));
+            attrs.y = d => valueLabels.handleY(scales.value(d[valueField.name]));
+        }
 
         return attrs;
     }

@@ -66,6 +66,7 @@ export class TwoDimensionalModel {
             additionalElements: this.getAdditionalElements(options),
             tooltip: options.tooltip,
             chartSettings: this.getChartsSettings(designerConfig.canvas.chartOptions, options.orientation),
+            valueLabels: options.valueLabels ?? { collision: { mode: "none" } },
             defs: {
                 gradients: TwoDimensionalModelHelper.getGradientDefs(charts, keyAxis.orient, options.orientation)
             }
