@@ -24,7 +24,7 @@
         {
             "$id": 4,
             "brand": "AUDI",
-            "price": 2100,
+            "price": null,
             "count": 500,
             "color": "yellow"
         },
@@ -38,14 +38,14 @@
         {
             "$id": 6,
             "brand": "DODGE",
-            "price": 2000,
+            "price": 90000,
             "count": 4000,
             "color": "red"
         },
         {
             "$id": 7,
             "brand": "SAAB",
-            "price": 50000,
+            "price": 114000,
             "count": 11000,
             "color": "orange"
         },
@@ -59,7 +59,7 @@
         {
             "$id": 9,
             "brand": "TOYOTA",
-            "price": 3000,
+            "price": 18000,
             "count": 15000,
             "color": "pink"
         },
@@ -68,6 +68,78 @@
             "brand": "LEXUS",
             "price": 20000,
             "count": 15000,
+            "color": "pink"
+        }
+    ],
+    "dataSet-months": [
+        {
+            "$id": 1,
+            "brand": "JAN",
+            "price": 15.02,
+            "count": 10,
+            "color": "red"
+        },
+        {
+            "$id": 2,
+            "brand": "FEB",
+            "price": 0,
+            "count": 1,
+            "color": "green"
+        },
+        {
+            "$id": 3,
+            "brand": "MAR",
+            "price": 9.3,
+            "count": 2,
+            "color": "blue"
+        },
+        {
+            "$id": 4,
+            "brand": "MAY",
+            "price": null,
+            "count": 5,
+            "color": "yellow"
+        },
+        {
+            "$id": 5,
+            "brand": "JUN",
+            "price": 1,
+            "count": 6,
+            "color": "cyan"
+        },
+        {
+            "$id": 6,
+            "brand": "JUL",
+            "price": 14.2,
+            "count": 2,
+            "color": "red"
+        },
+        {
+            "$id": 7,
+            "brand": "AUG",
+            "price": 11,
+            "count": 9.3,
+            "color": "orange"
+        },
+        {
+            "$id": 8,
+            "brand": "SEP",
+            "price": 2,
+            "count": 0.2,
+            "color": "brown"
+        },
+        {
+            "$id": 9,
+            "brand": "OCT",
+            "price": 8.7,
+            "count": 1.5,
+            "color": "pink"
+        },
+        {
+            "$id": 9,
+            "brand": "NOV",
+            "price": 2.2,
+            "count": 3.1,
             "color": "pink"
         }
     ],

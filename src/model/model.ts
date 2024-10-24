@@ -10,6 +10,8 @@ import {
     ShowTickFn,
     MdtChartsDataRow,
     TwoDimensionalValueGroup,
+    ValueLabelsCollisionMode,
+    ValueLabelsCollision,
 } from "../config/config";
 import { DataType, DonutOptionsCanvas, Formatter, StaticLegendBlockCanvas, TooltipSettings, Transitions } from "../designer/designerConfig";
 
@@ -74,6 +76,7 @@ export interface TwoDimensionalOptionsModel extends GraphicNotationOptionsModel 
     additionalElements: AdditionalElementsOptions;
     orient: ChartOrientation;
     chartSettings: TwoDimChartElementsSettings;
+    valueLabels: TwoDimensionalValueLabels;
 }
 export interface PolarOptionsModel extends GraphicNotationOptionsModel {
     type: "polar";
@@ -228,6 +231,11 @@ interface LineLikeChartCurveOptions {
 interface BarLikeChartHatchOptions {
     on: boolean;
 }
+
+export interface TwoDimensionalValueLabels {
+    collision: ValueLabelsCollision;
+}
+
 
 //====================================================== PolarOptionsModel
 export interface DonutChartSettings extends Omit<DonutOptionsCanvas, "aggregatorPad" | "thickness"> {

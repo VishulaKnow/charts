@@ -82,11 +82,12 @@ export class TwoDimensionalManager implements ChartContentManager {
                 getBlock: () => engine.block,
             },
             data: {
-                keyFieldName: options.data.keyField.name,
+                keyFieldName: options.data.keyField.name
             },
             canvas: {
                 keyAxisOrient: options.axis.key.orient,
-            },
+                valueLabels: options.valueLabels,
+            }
         });
         this.canvasValueLabels.render(scales, options.charts, engine.data, options.data);
 

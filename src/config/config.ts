@@ -9,6 +9,7 @@ export type TwoDimensionalChartType = 'line' | 'bar' | 'area';
 export type PolarChartType = 'donut';
 export type IntervalChartType = 'gantt';
 export type EmbeddedLabelType = 'none' | 'key' | 'value';
+export type ValueLabelsCollisionMode = "none" | "hide";
 export type MdtChartsDataRow = {
     [field: string]: any
 }
@@ -65,6 +66,7 @@ export interface MdtChartsTwoDimensionalOptions extends GraphicNotationOptions {
     additionalElements: AdditionalElements;
     charts: MdtChartsTwoDimensionalChart[];
     orientation: ChartOrientation;
+    valueLabels?: TwoDimensionalValueLabels;
 }
 
 export interface MdtChartsPolarOptions extends GraphicNotationOptions {
@@ -213,6 +215,14 @@ export type ShowTickFn = (dataKey: string, index: number) => string | undefined;
 export interface MdtChartsShowAxisLabelRule {
     spaceForOneLabel?: number;
     showTickFn?: ShowTickFn;
+}
+
+export interface TwoDimensionalValueLabels {
+    collision: ValueLabelsCollision
+}
+
+export interface ValueLabelsCollision {
+    mode: ValueLabelsCollisionMode
 }
 
 

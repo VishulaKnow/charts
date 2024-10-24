@@ -115,7 +115,7 @@ describe('get axes', () => {
             type: "key",
             cssClass: "key-axis",
             labels: {
-                maxSize: 0,
+                maxSize: 60,
                 position: 'straight',
                 visible: true,
                 defaultTooltip: true,
@@ -148,7 +148,7 @@ describe('get axes', () => {
             type: "key",
             cssClass: "key-axis",
             labels: {
-                maxSize: 0,
+                maxSize: 60,
                 position: 'straight',
                 visible: true,
                 defaultTooltip: false,
@@ -443,5 +443,17 @@ describe('get rounded value', () => {
         const expectedNumber = AxisModel.getRoundValue(inputNumber)
 
         expect(expectedNumber).toEqual(-15000)
+    });
+
+    test('should handle size that less than 100', () => {
+        const inputNumber = 15.65;
+        const expectedNumber = AxisModel.getRoundValue(inputNumber)
+        expect(expectedNumber).toEqual(10)
+    });
+
+    test('should handle size that less than 100 (2)', () => {
+        const inputNumber = 95.2;
+        const expectedNumber = AxisModel.getRoundValue(inputNumber)
+        expect(expectedNumber).toEqual(90)
     });
 })

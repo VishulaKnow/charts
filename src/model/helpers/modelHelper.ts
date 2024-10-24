@@ -1,11 +1,12 @@
 import { DomHelper } from "../../engine/helpers/domHelper";
 
 export class ModelHelper {
+    private static readonly defaultBaseFontSize = 13;
     private static baseFontSize: number
 
     private static getBaseFontSize() {
         if (!this.baseFontSize) this.baseFontSize = parseInt(DomHelper.getCssPropertyValue(document.documentElement, '--chart-base-font-size'))
-        return this.baseFontSize
+        return (!this.baseFontSize || isNaN(this.baseFontSize)) ? this.defaultBaseFontSize : this.baseFontSize
     }
 
     public static getSum(items: number[]): number {
@@ -24,7 +25,7 @@ export class ModelHelper {
 
         const fontSize = this.getBaseFontSize()
         let score = 0;
-        const upperLetterScore = fontSize / 13;
+        const upperLetterScore = fontSize / 10;
         const lowerLetterScore = fontSize / 15;
         const digitScore = fontSize / 15;
         const otherSymbolScore = fontSize / 23;
