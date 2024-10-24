@@ -33,7 +33,7 @@ export class AxisModel {
             cssClass: 'key-axis',
             ticks: axisConfig.ticks,
             labels: {
-                maxSize: AxisModel.getLabelSizeLegacy(labelConfig.maxSize.main, data[dataOptions.dataSource].map(d => d[dataOptions.keyField.name])).width,
+                maxSize: AxisModel.getLabelSize(labelConfig.maxSize.main, data[dataOptions.dataSource].map(d => d[dataOptions.keyField.name])).width,
                 position: AxisModel.getKeyAxisLabelPosition(canvasModel, DataManagerModel.getDataValuesByKeyField(data, dataOptions.dataSource, dataOptions.keyField.name).length, axisConfig),
                 visible: !TwoDimensionalModel.getChartsEmbeddedLabelsFlag(charts, orientation),
                 defaultTooltip: tooltipSettings.position === 'fixed',
