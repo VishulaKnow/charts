@@ -161,6 +161,8 @@ export class AxisModel {
 
         if (absValue < 10) return value;
 
+        if (absValue < 100) return sign * Math.floor(absValue / 10) * 10;
+
         const valueStr = absValue.toString();
         const firstTwoDigits = Math.floor(absValue / Math.pow(10, valueStr.length - 2));
         const roundedFirstTwoDigits = firstTwoDigits < 10 ? firstTwoDigits : Math.floor(firstTwoDigits / 5) * 5;

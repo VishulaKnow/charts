@@ -75,71 +75,71 @@
         {
             "$id": 1,
             "brand": "JAN",
-            "price": 100000,
-            "count": 10000,
+            "price": 15.02,
+            "count": 10,
             "color": "red"
         },
         {
             "$id": 2,
             "brand": "FEB",
             "price": 0,
-            "count": 1000,
+            "count": 1,
             "color": "green"
         },
         {
             "$id": 3,
             "brand": "MAR",
-            "price": 15000,
-            "count": 1200,
+            "price": 9.3,
+            "count": 2,
             "color": "blue"
         },
         {
             "$id": 4,
             "brand": "MAY",
             "price": null,
-            "count": 500,
+            "count": 5,
             "color": "yellow"
         },
         {
             "$id": 5,
             "brand": "JUN",
-            "price": 115000,
-            "count": 6000,
+            "price": 1,
+            "count": 6,
             "color": "cyan"
         },
         {
             "$id": 6,
             "brand": "JUL",
-            "price": 90000,
-            "count": 4000,
+            "price": 14.2,
+            "count": 2,
             "color": "red"
         },
         {
             "$id": 7,
             "brand": "AUG",
-            "price": 114000,
-            "count": 11000,
+            "price": 11,
+            "count": 9.3,
             "color": "orange"
         },
         {
             "$id": 8,
             "brand": "SEP",
-            "price": 20000,
-            "count": 2000,
+            "price": 2,
+            "count": 0.2,
             "color": "brown"
         },
         {
             "$id": 9,
             "brand": "OCT",
-            "price": 18000,
-            "count": 15000,
+            "price": 8.7,
+            "count": 1.5,
             "color": "pink"
         },
         {
             "$id": 9,
             "brand": "NOV",
-            "price": 20000,
-            "count": 15000,
+            "price": 2.2,
+            "count": 3.1,
             "color": "pink"
         }
     ],

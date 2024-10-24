@@ -444,4 +444,16 @@ describe('get rounded value', () => {
 
         expect(expectedNumber).toEqual(-15000)
     });
+
+    test('should handle size that less than 100', () => {
+        const inputNumber = 15.65;
+        const expectedNumber = AxisModel.getRoundValue(inputNumber)
+        expect(expectedNumber).toEqual(10)
+    });
+
+    test('should handle size that less than 100 (2)', () => {
+        const inputNumber = 95.2;
+        const expectedNumber = AxisModel.getRoundValue(inputNumber)
+        expect(expectedNumber).toEqual(90)
+    });
 })
