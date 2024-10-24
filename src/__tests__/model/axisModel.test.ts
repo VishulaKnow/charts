@@ -115,7 +115,7 @@ describe('get axes', () => {
             type: "key",
             cssClass: "key-axis",
             labels: {
-                maxSize: 0,
+                maxSize: 60,
                 position: 'straight',
                 visible: true,
                 defaultTooltip: true,
@@ -148,7 +148,7 @@ describe('get axes', () => {
             type: "key",
             cssClass: "key-axis",
             labels: {
-                maxSize: 0,
+                maxSize: 60,
                 position: 'straight',
                 visible: true,
                 defaultTooltip: false,
