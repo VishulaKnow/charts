@@ -45,7 +45,7 @@ export class Area {
         chart.data.valueFields.forEach((_vf, valueIndex) => {
             const path = block.svg.getChartGroup(chart.index)
                 .select(`.${Area.areaChartClass}${Helper.getCssClassesLine(chart.cssClasses)}.chart-element-${valueIndex}`);
-            DomHelper.setChartStyle(path, chart.style, valueIndex, 'fill');
+            this.setChartFillStyle(chart, path, valueIndex)
             MarkDot.updateColors(block, chart, valueIndex);
         });
     }
@@ -63,7 +63,7 @@ export class Area {
                 .style('pointer-events', 'none');
 
             DomHelper.setCssClasses(path, Helper.getCssClassesWithElementIndex(chart.cssClasses, valueIndex));
-            DomHelper.setChartStyle(path, chart.style, valueIndex, 'fill');
+            this.setChartFillStyle(chart, path, valueIndex)
 
             MarkDot.render(block, data, keyAxisOrient, scales, margin, keyField.name, valueIndex, field.name, chart);
         });
@@ -176,5 +176,12 @@ export class Area {
 
     private setSegmentColor(segments: Selection<SVGGElement, unknown, SVGGElement, unknown>, colorPalette: string[]): void {
         segments.style('fill', (d, i) => colorPalette[i % colorPalette.length]);
+    }
+
+    private setChartFillStyle(chart: TwoDimensionalChartModel, path: Selection<BaseType, unknown, BaseType, unknown>, valueIndex: number): void {
+        if (chart.areaViewOptions.fill.type === 'gradient')
+            DomHelper.setChartGradientStyle(path, chart.index, valueIndex)
+        else
+            DomHelper.setChartStyle(path, chart.style, valueIndex, 'fill');
     }
 }

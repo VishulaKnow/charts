@@ -109,6 +109,15 @@ describe('getGradientDefs', () => {
                 barViewOptions: null,
                 legend: null,
                 index: 1,
+                areaViewOptions: {
+                    fill: {
+                        type: "gradient",
+                        ids: [
+                            'gradient-chart-1-sub-0',
+                            'gradient-chart-1-sub-1'
+                        ]
+                    }
+                }
             },
             {
                 type: 'line',
@@ -145,6 +154,13 @@ describe('getGradientDefs', () => {
         expect(gradients.length).toEqual(0);
     });
 
+    test('should return empty array because no areaViewOptions in charts', () => {
+        charts[0].areaViewOptions = null;
+        const gradients = TwoDimensionalModelHelper.getGradientDefs(charts, 'right', 'horizontal')
+
+        expect(gradients.length).toEqual(0);
+    });
+
     test('should return opacity of gradient items 1 and 0, because keyAxisOrient is left', () => {
         const gradients = TwoDimensionalModelHelper.getGradientDefs(charts, 'left', 'horizontal')
 
@@ -153,7 +169,7 @@ describe('getGradientDefs', () => {
     });
 
     test('should return position of y2 gradient is 1, because chartOrient is vertical', () => {
-        const gradients = TwoDimensionalModelHelper.getGradientDefs(charts, 'left', 'vertical')
+        const gradients = TwoDimensionalModelHelper.getGradientDefs(charts, 'right', 'vertical')
 
         expect(gradients[0].position.y2).toEqual(1);
     });

@@ -20,4 +20,15 @@ export class LinearGradientDef {
             });
         });
     }
+
+    updateColors(defs: Selection<SVGDefsElement, unknown, HTMLElement, any>, gradients: GradientDef[]) {
+        gradients.forEach(gradient => {
+            const linearGradient = defs.select(`#${gradient.id}`);
+
+            gradient.items.forEach(item => {
+                linearGradient.select(`#${item.id}`)
+                    .attr("stop-color", item.color);
+            })
+        });
+    }
 }
