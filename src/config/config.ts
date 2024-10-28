@@ -245,11 +245,11 @@ interface Tooltip {
 
 interface MdtChartsLineLikeChart {
     markers: MarkersOptions;
-    lineStyles?: MdtChartsLineLikeChartLineStyles;
+    lineStyles?: MdtChartsLineLikeChartStyles;
     areaStyles?: MdtChartsLineLikeChartAreaStyles;
 }
 
-export interface MdtChartsLineLikeChartLineStyles {
+export interface MdtChartsLineLikeChartStyles {
     dash?: MdtChartsLineLikeChartDashedStyles;
 }
 
