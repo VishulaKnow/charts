@@ -152,7 +152,7 @@ export class TwoDimensionalManager implements ChartContentManager {
 
     public updateColors(block: Block, model: Model<TwoDimensionalOptionsModel>): void {
         Legend.get().updateColors(block, model.options);
-        this.linearGradientDef.updateColors(block.svg.ensureDefsRendered(), model.options.defs.gradients);
+        this.linearGradientDef?.updateColors(block.svg.ensureDefsRendered(), model.options.defs.gradients);
 
         model.options.charts.forEach(chart => {
             if (chart.type === 'bar')

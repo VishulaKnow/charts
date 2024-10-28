@@ -26,7 +26,7 @@ export class TwoDimensionalModelHelper {
         let gradients: GradientDef[] = [];
 
         charts.forEach((chart) => {
-            if (chart.type === 'area' && chart.areaViewOptions?.fill?.type === 'gradient') {
+            if (chart.type === 'area' && chart.areaViewOptions.fill.type === 'gradient') {
                 chart.style.elementColors?.forEach((elementColor, subIndex) => {
                     const gradientId = getGradientId(chart.index, subIndex);
 

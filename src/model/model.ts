@@ -310,11 +310,11 @@ interface TwoDimensionalBarLikeChartViewModel {
 }
 
 interface TwoDimensionalAreaChartModel {
-    areaViewOptions?: AreaChartViewOptions;
+    areaViewOptions: AreaChartViewOptions;
 }
 
 export interface AreaChartViewOptions {
-    fill?: AreaViewFill;
+    fill: AreaViewFill;
 }
 
 export type AreaViewFill = { type: "paletteColor" } | { type: "gradient"; ids: GradientId[] };
