@@ -1,15 +1,4 @@
-import {
-    AreaChartViewOptions,
-    AreaViewBorderLine,
-    AreaViewFill,
-    ChartLegendModel,
-    ChartStyle,
-    GradientId,
-    LegendMarkerShape,
-    LineCurveType,
-    LineLikeChartDashOptions,
-    LineLikeChartShapeOptions
-} from "../../model";
+import { AreaChartViewOptions, AreaViewBorderLine, AreaViewFill, ChartLegendModel, ChartStyle, GradientId, LegendMarkerShape, LineCurveType, LineLikeChartDashOptions, LineLikeChartShapeOptions } from "../../model";
 import { ChartOrientation, MdtChartsLineLikeChartDashedStyles, MdtChartsTwoDimensionalChart, TwoDimensionalChartType } from "../../../config/config";
 import { MdtChartsLineLikeChartCurveType, MdtChartsLineLikeChartShape } from "../../../designer/designerConfig";
 import { styledElementValues } from "../../modelBuilder";
@@ -82,6 +71,6 @@ export function getAreaViewOptions(chart: MdtChartsTwoDimensionalChart, chartInd
     return { fill, borderLine };
 }
 
-export function getGradientId(chartIndex: number, subIndex: number): GradientId  {
-        return `gradient-chart-${chartIndex}-sub-${subIndex}`;
+export function getGradientId(chartIndex: number, subIndex: number): GradientId {
+    return `gradient-chart-${chartIndex}-sub-${subIndex}`;
 }

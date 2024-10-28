@@ -35,7 +35,7 @@ export class TwoDimensionalModelHelper {
                         position: {
                             x1: 0,
                             y1: 0,
-                            x2: 1,
+                            x2: chartOrient === 'horizontal' ? 1 : 0,
                             y2: chartOrient === 'horizontal' ? 0 : 1,
                         },
                         items: this.getGradientItems(gradientId, elementColor, keyAxisOrient),

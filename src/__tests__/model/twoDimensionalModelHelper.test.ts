@@ -10,11 +10,11 @@ describe('shouldMarkerShow', () => {
     let currentRow: MarkDotDatumItem;
     let keyFieldName: string
 
-    beforeEach(()=> {
+    beforeEach(() => {
         chart = {
             isSegmented: false,
-                type: 'line',
-                data: {
+            type: 'line',
+            data: {
                 valueFields: [
                     {
                         name: 'price',
@@ -32,16 +32,16 @@ describe('shouldMarkerShow', () => {
             embeddedLabels: 'key'
         }
         dataRows = [
-            {$id: 1, brand: 'BMW', price: 100000, count: 10000, color: 'red', $mdtChartsMetadata: { valueFieldName: 'price' }},
-            {$id: 2, brand: 'LADA', price: 0, count: 1000, color: 'green', $mdtChartsMetadata: { valueFieldName: 'price' }},
-            {$id: 3, brand: 'MERCEDES', price: 15000, count: 1200, color: 'blue', $mdtChartsMetadata: { valueFieldName: 'price' }},
-            {$id: 4, brand: 'AUDI', price: null, count: 500, color: 'yellow', $mdtChartsMetadata: { valueFieldName: 'price' }},
-            {$id: 5, brand: 'VOLKSWAGEN', price: 115000, count: 6000, color: 'cyan', $mdtChartsMetadata: { valueFieldName: 'price' }},
-            {$id: 6, brand: 'DODGE', price: null, count: 4000, color: 'red', $mdtChartsMetadata: { valueFieldName: 'price' }},
-            {$id: 7, brand: 'SAAB', price: 50000, count: 11000, color: 'orange', $mdtChartsMetadata: { valueFieldName: 'price' }},
-            {$id: 8, brand: 'HONDA', price: 20000, count: 2000, color: 'brown', $mdtChartsMetadata: { valueFieldName: 'price' }},
-            {$id: 9, brand: 'TOYOTA', price: null, count: 15000, color: 'pink', $mdtChartsMetadata: { valueFieldName: 'price' }},
-            {$id: 9, brand: 'LEXUS', price: 15000, count: 15000, color: 'pink', $mdtChartsMetadata: { valueFieldName: 'price' }},
+            { $id: 1, brand: 'BMW', price: 100000, count: 10000, color: 'red', $mdtChartsMetadata: { valueFieldName: 'price' } },
+            { $id: 2, brand: 'LADA', price: 0, count: 1000, color: 'green', $mdtChartsMetadata: { valueFieldName: 'price' } },
+            { $id: 3, brand: 'MERCEDES', price: 15000, count: 1200, color: 'blue', $mdtChartsMetadata: { valueFieldName: 'price' } },
+            { $id: 4, brand: 'AUDI', price: null, count: 500, color: 'yellow', $mdtChartsMetadata: { valueFieldName: 'price' } },
+            { $id: 5, brand: 'VOLKSWAGEN', price: 115000, count: 6000, color: 'cyan', $mdtChartsMetadata: { valueFieldName: 'price' } },
+            { $id: 6, brand: 'DODGE', price: null, count: 4000, color: 'red', $mdtChartsMetadata: { valueFieldName: 'price' } },
+            { $id: 7, brand: 'SAAB', price: 50000, count: 11000, color: 'orange', $mdtChartsMetadata: { valueFieldName: 'price' } },
+            { $id: 8, brand: 'HONDA', price: 20000, count: 2000, color: 'brown', $mdtChartsMetadata: { valueFieldName: 'price' } },
+            { $id: 9, brand: 'TOYOTA', price: null, count: 15000, color: 'pink', $mdtChartsMetadata: { valueFieldName: 'price' } },
+            { $id: 9, brand: 'LEXUS', price: 15000, count: 15000, color: 'pink', $mdtChartsMetadata: { valueFieldName: 'price' } },
         ];
         valueFieldName = 'price';
         keyFieldName = 'brand';
@@ -80,7 +80,7 @@ describe('shouldMarkerShow', () => {
     });
 
     test('should return false, because there is no such row in dataRows ', () => {
-        currentRow = {...dataRows[0]};
+        currentRow = { ...dataRows[0] };
         currentRow[keyFieldName] = 'someKeyField';
         const res = TwoDimensionalModelHelper.shouldMarkerShow(chart, dataRows, valueFieldName, currentRow, keyFieldName)
         expect(res).toBeFalsy();
@@ -91,7 +91,7 @@ describe('getGradientDefs', () => {
 
     let charts: TwoDimensionalChartModel[];
 
-    beforeEach(()=> {
+    beforeEach(() => {
         charts = [
             {
                 type: 'area',
@@ -142,7 +142,7 @@ describe('getGradientDefs', () => {
                 barViewOptions: null,
                 legend: null,
                 index: 2,
-                areaViewOptions: null
+                areaViewOptions: { fill: { type: "paletteColor" } }
             },
         ]
     })
@@ -163,7 +163,7 @@ describe('getGradientDefs', () => {
     });
 
     test('should return empty array because no areaViewOptions in charts', () => {
-        charts[0].areaViewOptions = null;
+        charts[0].type = "line";
         const gradients = TwoDimensionalModelHelper.getGradientDefs(charts, 'right', 'horizontal')
 
         expect(gradients.length).toEqual(0);
@@ -183,9 +183,16 @@ describe('getGradientDefs', () => {
         expect(gradients[0].items[1].opacity).toEqual(0);
     });
 
-    test('should return position equal to expected position, because chartOrient is vertical', () => {
+    test('should return y2 equal to 1 and x2 equal to 0, because chartOrient is vertical', () => {
         const gradients = TwoDimensionalModelHelper.getGradientDefs(charts, 'top', 'vertical')
-        const expectedPosition =  { x1: 0, y1: 0, x2: 1, y2: 1 };
+        const expectedPosition = { x1: 0, y1: 0, x2: 0, y2: 1 };
+
+        expect(gradients[0].position).toEqual(expectedPosition);
+    });
+
+    test('should return y2 equal to 0 and x2 equal to 1, because chartOrient is horizontal', () => {
+        const gradients = TwoDimensionalModelHelper.getGradientDefs(charts, 'left', 'horizontal')
+        const expectedPosition = { x1: 0, y1: 0, x2: 1, y2: 0 };
 
         expect(gradients[0].position).toEqual(expectedPosition);
     });
