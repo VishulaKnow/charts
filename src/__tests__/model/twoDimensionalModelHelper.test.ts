@@ -135,6 +135,7 @@ describe('getGradientDefs', () => {
                 barViewOptions: null,
                 legend: null,
                 index: 2,
+                areaViewOptions: { fill: { type: "paletteColor" } }
             },
         ]
     })
@@ -155,7 +156,7 @@ describe('getGradientDefs', () => {
     });
 
     test('should return empty array because no areaViewOptions in charts', () => {
-        charts[0].areaViewOptions = null;
+        charts[0].type = "line";
         const gradients = TwoDimensionalModelHelper.getGradientDefs(charts, 'right', 'horizontal')
 
         expect(gradients.length).toEqual(0);
