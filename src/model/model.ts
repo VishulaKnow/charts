@@ -65,6 +65,7 @@ interface GraphicNotationOptionsModel extends BasicOptionsModel {
     data: OptionsModelData;
     title: string;
     selectable: boolean;
+    defs: OptionsModelGradients;
 }
 export interface TwoDimensionalOptionsModel extends GraphicNotationOptionsModel {
     type: "2d";
@@ -104,6 +105,26 @@ export interface OptionsModelData extends BasicOptionsModelData {
 export interface Field {
     name: string;
     format: DataType;
+}
+
+export interface OptionsModelGradients {
+    gradients: GradientDef[];
+}
+
+export interface GradientDef {
+    id: string;
+    position: {
+        x1: number;
+        x2: number;
+        y1: number;
+        y2: number;
+    };
+    items: {
+        id: string;
+        color: string;
+        offset: number;
+        opacity: number;
+    }[];
 }
 
 //====================================================== TwoDimensionalOptionsModel & IntervalOptionsModel

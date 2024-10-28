@@ -1,5 +1,5 @@
-import { MdtChartsDataRow, MdtChartsTwoDimensionalChart } from "../../config/config";
-import { MarkDotDatumItem } from "../model";
+import { ChartOrientation, MdtChartsDataRow, MdtChartsTwoDimensionalChart } from "../../config/config";
+import { GradientDef, MarkDotDatumItem, Orient, TwoDimensionalChartModel } from "../model";
 
 export class TwoDimensionalModelHelper {
     public static shouldMarkerShow(chart: MdtChartsTwoDimensionalChart, dataRows: MdtChartsDataRow[], valueFieldName: string, currentRow: MarkDotDatumItem, keyFieldName: string): boolean {
@@ -20,4 +20,45 @@ export class TwoDimensionalModelHelper {
 
         return (isFirst && nextRow?.[valueFieldName] === null) || (isLast && previousRow?.[valueFieldName] === null) || hasNullNeighborsRows;
     }
+
+    public static getGradientDefs(charts: TwoDimensionalChartModel[], keyAxisOrient: Orient, chartOrient: ChartOrientation): GradientDef[] {
+        let gradients: GradientDef[] = [];
+
+        charts.forEach((chart) => {
+            if (chart.type === 'area') {
+                chart.style.elementColors?.forEach((elementColor, subIndex) => {
+                    const gradientId = `gradient-chart-${chart.index}-sub-${subIndex}`;
+
+                    gradients.push({
+                        id: gradientId,
+                        position: {
+                            x1: 0,
+                            y1: 0,
+                            x2: chartOrient === 'horizontal' ? 1 : 0,
+                            y2: chartOrient === 'horizontal' ? 0 : 1,
+                        },
+                        items: this.getGradientItems(gradientId, elementColor, keyAxisOrient),
+                    });
+                })
+            }
+        });
+
+        return gradients;
+    }
+
+    private static getGradientItems(gradientId: string, elementColor: string, keyAxisOrient: Orient) {
+        return [0, 1].map(indexItem => ({
+            id: gradientId + `-item-${indexItem}`,
+            color: elementColor,
+            offset: indexItem,
+            opacity: this.calculateOpacityItem(indexItem, keyAxisOrient)
+        }));
+    }
+
+    private static calculateOpacityItem(indexItem: number, orientation: Orient): number {
+        if (orientation === 'bottom' || orientation === 'right')
+            return indexItem === 0 ? 1 : 0;
+        else
+            return indexItem === 0 ? 0 : 1;
+    };
 }
