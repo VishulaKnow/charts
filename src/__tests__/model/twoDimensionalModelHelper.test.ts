@@ -142,7 +142,13 @@ describe('getGradientDefs', () => {
                 barViewOptions: null,
                 legend: null,
                 index: 2,
-                areaViewOptions: { fill: { type: "paletteColor" } }
+                areaViewOptions: {
+                    fill: { type: "paletteColor" },
+                    borderLine: {
+                        on: false,
+                        colorStyle: null,
+                    }
+                }
             },
         ]
     })
