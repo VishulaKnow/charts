@@ -109,6 +109,15 @@ describe('getGradientDefs', () => {
                 barViewOptions: null,
                 legend: null,
                 index: 1,
+                areaViewOptions: {
+                    fill: {
+                        type: "gradient",
+                        ids: [
+                            'gradient-chart-1-sub-0',
+                            'gradient-chart-1-sub-1'
+                        ]
+                    }
+                }
             },
             {
                 type: 'line',
@@ -126,6 +135,7 @@ describe('getGradientDefs', () => {
                 barViewOptions: null,
                 legend: null,
                 index: 2,
+                areaViewOptions: { fill: { type: "paletteColor" } }
             },
         ]
     })
@@ -140,6 +150,13 @@ describe('getGradientDefs', () => {
 
     test('should return empty array because no charts area type', () => {
         charts[0].type = 'line';
+        const gradients = TwoDimensionalModelHelper.getGradientDefs(charts, 'right', 'horizontal')
+
+        expect(gradients.length).toEqual(0);
+    });
+
+    test('should return empty array because no areaViewOptions in charts', () => {
+        charts[0].type = "line";
         const gradients = TwoDimensionalModelHelper.getGradientDefs(charts, 'right', 'horizontal')
 
         expect(gradients.length).toEqual(0);

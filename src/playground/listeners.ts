@@ -679,8 +679,10 @@ new Listeners(engine, config, designerConfig, data);
 //     newData.dataSet[4].price = 10_000;
 //     newData.dataSet[8].count = 1000;
 //     newData.dataSet.push({ brand: "asdasfasf", price: null })
-//     const model = assembleModel(config, newData, designerConfig);
+//     // const model = assembleModel(config, newData, designerConfig);
+//     const model = assembleModel(config, newData, { ...designerConfig, chartStyle: { baseColors: ["red", "green", "blue"] } });
 //     engine.updateData(model, newData);
+//     engine.updateColors(model);
 // }, 5000);
 
 const config3 = require('./configsExamples/configTest2D.json');

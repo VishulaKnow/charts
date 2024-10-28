@@ -1,5 +1,6 @@
 import { ChartOrientation, MdtChartsDataRow, MdtChartsTwoDimensionalChart } from "../../config/config";
 import { GradientDef, MarkDotDatumItem, Orient, TwoDimensionalChartModel } from "../model";
+import { getGradientId } from "../../model/notations/twoDimensional/styles";
 
 export class TwoDimensionalModelHelper {
     public static shouldMarkerShow(chart: MdtChartsTwoDimensionalChart, dataRows: MdtChartsDataRow[], valueFieldName: string, currentRow: MarkDotDatumItem, keyFieldName: string): boolean {
@@ -25,9 +26,9 @@ export class TwoDimensionalModelHelper {
         let gradients: GradientDef[] = [];
 
         charts.forEach((chart) => {
-            if (chart.type === 'area') {
+            if (chart.type === 'area' && chart.areaViewOptions.fill.type === 'gradient') {
                 chart.style.elementColors?.forEach((elementColor, subIndex) => {
-                    const gradientId = `gradient-chart-${chart.index}-sub-${subIndex}`;
+                    const gradientId = getGradientId(chart.index, subIndex);
 
                     gradients.push({
                         id: gradientId,

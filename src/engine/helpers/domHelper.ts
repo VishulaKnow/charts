@@ -4,6 +4,7 @@ import { ChartStyle, TwoDimensionalChartModel } from "../../model/model";
 import { Block } from "../block/block";
 import { MarkDot } from "../features/markDots/markDot";
 import { Bar } from "../twoDimensionalNotation/bar/bar";
+import { getGradientId } from "../../model/notations/twoDimensional/styles";
 
 type StyleColorType = 'fill' | 'stroke';
 
@@ -75,6 +76,10 @@ export class DomHelper {
 
             return condition === SelectionCondition.Exclude ? i === -1 : i !== -1;
         });
+    }
+
+    public static setChartGradientStyle(element: Selection<BaseType, unknown, BaseType, unknown>, chartIndex: number, valueIndex: number): void {
+        element.style('fill', `url(#${getGradientId(chartIndex, valueIndex)})`)
     }
 
     private static setChartOpacity(elements: Selection<BaseType, unknown, BaseType, unknown>, opacity: number): void {

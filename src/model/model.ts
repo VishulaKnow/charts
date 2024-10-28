@@ -28,6 +28,7 @@ export type DataOptions = {
 export type UnitsFromConfig = "%" | "px";
 export type ValueLabelAnchor = "start" | "middle" | "end"
 export type ValueLabelDominantBaseline = "hanging" | "middle" | "auto"
+export type GradientId = string;
 
 export type OptionsModel = TwoDimensionalOptionsModel | PolarOptionsModel | IntervalOptionsModel;
 
@@ -112,7 +113,7 @@ export interface OptionsModelGradients {
 }
 
 export interface GradientDef {
-    id: string;
+    id: GradientId;
     position: {
         x1: number;
         x2: number;
@@ -308,7 +309,17 @@ interface TwoDimensionalBarLikeChartViewModel {
     hatch: BarLikeChartHatchOptions;
 }
 
-export interface TwoDimensionalChartModel extends ChartModel, TwoDimensionalLineLikeChartModel, TwoDimensionalBarLikeChartModel {
+interface TwoDimensionalAreaChartModel {
+    areaViewOptions: AreaChartViewOptions;
+}
+
+export interface AreaChartViewOptions {
+    fill: AreaViewFill;
+}
+
+export type AreaViewFill = { type: "paletteColor" } | { type: "gradient"; ids: GradientId[] };
+
+export interface TwoDimensionalChartModel extends ChartModel, TwoDimensionalLineLikeChartModel, TwoDimensionalBarLikeChartModel, TwoDimensionalAreaChartModel {
     type: TwoDimensionalChartType;
     data: TwoDimensionalChartDataModel;
     index: number;

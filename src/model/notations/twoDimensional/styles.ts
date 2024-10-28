@@ -1,4 +1,4 @@
-import { ChartLegendModel, LegendMarkerShape, LineCurveType, LineLikeChartDashOptions, LineLikeChartShapeOptions } from "../../model";
+import { AreaChartViewOptions, AreaViewFill, ChartLegendModel, GradientId, LegendMarkerShape, LineCurveType, LineLikeChartDashOptions, LineLikeChartShapeOptions } from "../../model";
 import { ChartOrientation, MdtChartsLineLikeChartDashedStyles, MdtChartsTwoDimensionalChart, TwoDimensionalChartType } from "../../../config/config";
 import { MdtChartsLineLikeChartCurveType, MdtChartsLineLikeChartShape } from "../../../designer/designerConfig";
 import { styledElementValues } from "../../modelBuilder";
@@ -48,4 +48,21 @@ export function getWidthOfLegendMarkerByType(chartType: TwoDimensionalChartType)
     if (chartType === "bar") return 10;
     if (chartType === "line") return 30;
     if (chartType === "area") return styledElementValues.defaultLegendMarkerSizes.widthPx
+}
+
+export function getAreaViewOptions(chart: MdtChartsTwoDimensionalChart, chartIndex: number, chartColorsAmount: number): AreaChartViewOptions {
+    let gradientIds: GradientId[] = [];
+    for (let index = 0; index < chartColorsAmount; index++) {
+        gradientIds.push(getGradientId(chartIndex, index));
+    }
+
+    const fill: AreaViewFill = chart.areaStyles?.gradient?.on
+        ? { type: "gradient", ids: gradientIds }
+        : { type: "paletteColor" }
+
+    return { fill }
+}
+
+export function getGradientId(chartIndex: number, subIndex: number): GradientId {
+    return `gradient-chart-${chartIndex}-sub-${subIndex}`
 }

@@ -14,7 +14,7 @@ import {
 } from "../model";
 import { TwoDimConfigReader } from "../modelInstance/configReader";
 import { ModelInstance } from "../modelInstance/modelInstance";
-import { getLegendMarkerOptions, parseDashStyles, parseShape } from "./twoDimensional/styles";
+import { getAreaViewOptions, getLegendMarkerOptions, parseDashStyles, parseShape } from "./twoDimensional/styles";
 import { getResolvedTitle } from "../../model/featuresModel/titleModel";
 import { DataRepositoryModel } from "../modelInstance/dataModel/dataRepository";
 import {
@@ -102,13 +102,15 @@ export class TwoDimensionalModel {
         this.sortCharts(charts);
         const chartsModel: TwoDimensionalChartModel[] = [];
         charts.forEach((chart, index) => {
+            const style = styleModel.getChartStyle(chart, index);
+
             chartsModel.push({
                 type: chart.type,
                 isSegmented: chart.isSegmented,
                 data: { ...chart.data },
                 tooltip: chart.tooltip,
                 cssClasses: ChartStyleModelService.getCssClasses(index),
-                style: styleModel.getChartStyle(chart, index),
+                style,
                 embeddedLabels: this.getEmbeddedLabelType(chart, chartOrientation),
                 markersOptions: {
                     show: ({ row, valueFieldName }) => TwoDimensionalModelHelper.shouldMarkerShow(chart, dataModelRep.getRawRows(), valueFieldName, row, keyFieldName),
@@ -140,7 +142,8 @@ export class TwoDimensionalModel {
                         dominantBaseline: calculateValueLabelAlignment(keyAxisOrient).dominantBaseline,
                         format: configReader.getValueLabelFormatterForChart(index),
                     }
-                })
+                }),
+                areaViewOptions: getAreaViewOptions(chart, index, style.elementColors.length),
             });
         });
 
