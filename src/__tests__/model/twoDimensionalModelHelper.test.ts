@@ -116,6 +116,13 @@ describe('getGradientDefs', () => {
                             'gradient-chart-1-sub-0',
                             'gradient-chart-1-sub-1'
                         ]
+                    },
+                    borderLine: {
+                        on: true,
+                        colorStyle: {
+                            opacity: 1,
+                            elementColors: ['green', 'red'],
+                        },
                     }
                 }
             },
@@ -135,6 +142,7 @@ describe('getGradientDefs', () => {
                 barViewOptions: null,
                 legend: null,
                 index: 2,
+                areaViewOptions: null
             },
         ]
     })

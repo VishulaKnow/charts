@@ -7,7 +7,7 @@
 .bar, .area, .donut {
     stroke: none;
 }
-.line {
+.line, .area-border-line {
     fill: none;
     stroke-width: 4;
 }
@@ -157,7 +157,7 @@
     border-radius: 50%;
 }
 .tooltip-text-item {
-    font-family: "Roboto" sans-serif;
+    font-family: "Roboto", sans-serif;
     font-style: normal;
     width: 100%;
     flex: 1;

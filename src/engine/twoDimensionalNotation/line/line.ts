@@ -116,7 +116,7 @@ export class Line {
             const lineObject = block.svg.getChartGroup(chart.index)
                 .select(`.${this.lineChartClass}${Helper.getCssClassesLine(chart.cssClasses)}.chart-element-${valueFieldIndex}`);
 
-            const prom = this.updateGroupedPath(block, lineObject, lineGenerator, newData);
+            const prom = Line.updateGroupedPath(block, lineObject, lineGenerator, newData);
             promises.push(prom);
 
             MarkDot.update(block, newData, keyAxisOrient, scales, margin, keyField.name, valueFieldIndex, valueField.name, chart);
@@ -140,7 +140,7 @@ export class Line {
         return [prom];
     }
 
-    private updateGroupedPath(block: Block, lineObject: Selection<BaseType, any, BaseType, any>, lineGenerator: ILine<MdtChartsDataRow>, newData: MdtChartsDataRow[]): Promise<any> {
+    public static updateGroupedPath(block: Block, lineObject: Selection<BaseType, any, BaseType, any>, lineGenerator: ILine<MdtChartsDataRow>, newData: MdtChartsDataRow[]): Promise<any> {
         return new Promise(resolve => {
             if (lineObject.size() === 0) {
                 resolve('');
