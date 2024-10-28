@@ -63,6 +63,6 @@ export function getAreaViewOptions(chart: MdtChartsTwoDimensionalChart, chartInd
     return { fill }
 }
 
-export function getGradientId(chartIndex: number, subIndex: number): GradientId  {
-        return `gradient-chart-${chartIndex}-sub-${subIndex}`
+export function getGradientId(chartIndex: number, subIndex: number): GradientId {
+    return `gradient-chart-${chartIndex}-sub-${subIndex}`
 }
