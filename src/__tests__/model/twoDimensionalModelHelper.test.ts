@@ -145,16 +145,24 @@ describe('getGradientDefs', () => {
         expect(gradients.length).toEqual(0);
     });
 
-    test('should return opacity of gradient items 1 and 0, because keyAxisOrient is left', () => {
+    test('should return opacity of gradient items 0 and 1, because keyAxisOrient is left', () => {
         const gradients = TwoDimensionalModelHelper.getGradientDefs(charts, 'left', 'horizontal')
 
         expect(gradients[0].items[0].opacity).toEqual(0);
         expect(gradients[0].items[1].opacity).toEqual(1);
     });
 
-    test('should return position of y2 gradient is 1, because chartOrient is vertical', () => {
-        const gradients = TwoDimensionalModelHelper.getGradientDefs(charts, 'left', 'vertical')
+    test('should return opacity of gradient items 1 and 0, because keyAxisOrient is right', () => {
+        const gradients = TwoDimensionalModelHelper.getGradientDefs(charts, 'right', 'horizontal')
 
-        expect(gradients[0].position.y2).toEqual(1);
+        expect(gradients[0].items[0].opacity).toEqual(1);
+        expect(gradients[0].items[1].opacity).toEqual(0);
+    });
+
+    test('should return position equal to expected position, because chartOrient is vertical', () => {
+        const gradients = TwoDimensionalModelHelper.getGradientDefs(charts, 'top', 'vertical')
+        const expectedPosition =  { x1: 0, y1: 0, x2: 1, y2: 1 };
+
+        expect(gradients[0].position).toEqual(expectedPosition);
     });
 });

@@ -51,9 +51,14 @@ export class TwoDimensionalModelHelper {
             id: gradientId + `-item-${indexItem}`,
             color: elementColor,
             offset: indexItem,
-            opacity: (keyAxisOrient === 'bottom' || keyAxisOrient === 'right')
-                ? 1 - indexItem
-                : indexItem
+            opacity: this.calculateOpacityItem(indexItem, keyAxisOrient)
         }));
     }
+
+    private static calculateOpacityItem(indexItem: number, orientation: Orient): number {
+        if (orientation === 'bottom' || orientation === 'right')
+            return indexItem === 0 ? 1 : 0;
+        else
+            return indexItem === 0 ? 0 : 1;
+    };
 }
