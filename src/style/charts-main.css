@@ -1,4 +1,6 @@
-@import './css-vars.css';
+:root {
+	--chart-base-font-size: 13px;
+}
 
 .wrapper {
     margin: 0 auto;
@@ -7,10 +9,16 @@
 .bar, .area, .donut {
     stroke: none;
 }
-.line, .area-border-line {
+.line {
     fill: none;
     stroke-width: 4;
 }
+
+.area-border-line {
+    fill: none;
+    stroke-width: 2;
+}
+
 .donut-block * {
     transition: filter 0.15s;
 }
@@ -275,4 +283,11 @@
 .mdt-charts-html-chart {
     width: 100%;
     height: 100%;
+}
+
+/* Value Labels */
+.mdt-charts-value-label {
+    opacity: 0.5;
+    font-size: 10px;
+    letter-spacing: -0.4px;
 }
