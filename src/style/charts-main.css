@@ -1,4 +1,6 @@
-@import './css-vars.css';
+:root {
+	--chart-base-font-size: 13px;
+}
 
 .wrapper {
     margin: 0 auto;
