@@ -60,8 +60,8 @@ export function getAreaViewOptions(chart: MdtChartsTwoDimensionalChart, chartInd
         ? { type: "gradient", ids: gradientIds }
         : { type: "paletteColor" };
 
-    const borderLine: AreaViewBorderLine = chart.areaStyles?.borderLine?.on && {
-        on: true,
+    const borderLine: AreaViewBorderLine = {
+        on: chart.areaStyles?.borderLine?.on,
         colorStyle: {
             elementColors: style.elementColors,
             opacity: 1

@@ -59,7 +59,7 @@ export class Area {
                 .select(`.${Area.areaChartClass}${Helper.getCssClassesLine(chart.cssClasses)}.chart-element-${valueIndex}`);
             this.setChartFillStyle(chart, areaPath, valueIndex);
 
-            if (chart.areaViewOptions.borderLine?.on) {
+            if (chart.areaViewOptions.borderLine.on) {
                 const borderLinePath = chartGroup
                     .select(`.${Area.areaBorderLineClass}${Helper.getCssClassesLine(chart.cssClasses)}.chart-element-${valueIndex}`);
                 DomHelper.setChartElementColor(borderLinePath, chart.style.elementColors, valueIndex, 'stroke');
@@ -71,7 +71,7 @@ export class Area {
 
     private renderGrouped(block: Block, scales: Scales, data: MdtChartsDataRow[], keyField: Field, margin: BlockMargin, keyAxisOrient: Orient, chart: TwoDimensionalChartModel): void {
         const areaGeneratorFactory = this.createAreaGeneratorFactory(chart, scales, margin, keyAxisOrient, keyField);
-        const lineGeneratorFactory = chart.areaViewOptions.borderLine?.on
+        const lineGeneratorFactory = chart.areaViewOptions.borderLine.on
             && this.createLineGeneratorFactory(chart, scales, margin, keyAxisOrient, keyField);
 
         chart.data.valueFields.forEach((field, valueIndex) => {
@@ -114,7 +114,7 @@ export class Area {
         const promises: Promise<any>[] = [];
 
         const areaGeneratorFactory = this.createAreaGeneratorFactory(chart, scales, margin, keyAxisOrient, keyField);
-        const lineGeneratorFactory = chart.areaViewOptions.borderLine?.on
+        const lineGeneratorFactory = chart.areaViewOptions.borderLine.on
             && this.createLineGeneratorFactory(chart, scales, margin, keyAxisOrient, keyField);
 
         chart.data.valueFields.forEach((field, valueIndex) => {
