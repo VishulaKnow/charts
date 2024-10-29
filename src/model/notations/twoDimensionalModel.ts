@@ -143,7 +143,7 @@ export class TwoDimensionalModel {
                         format: configReader.getValueLabelFormatterForChart(index),
                     }
                 }),
-                areaViewOptions: getAreaViewOptions(chart, index, style.elementColors.length),
+                areaViewOptions: getAreaViewOptions(chart, index, style),
             });
         });
 

@@ -1,6 +1,13 @@
 import { Area as IArea } from 'd3-shape';
 import { BaseType, select, Selection } from 'd3-selection'
-import { BlockMargin, Field, LineCurveType, LineLikeChartSettings, Orient, TwoDimensionalChartModel } from "../../../model/model";
+import {
+    BlockMargin,
+    Field,
+    LineLikeChartSettings,
+    Orient,
+    TwoDimensionalChartModel,
+    ValueField
+} from "../../../model/model";
 import { Scales } from "../../features/scale/scale";
 import { Block } from "../../block/block";
 import { MarkDot } from "../../features/markDots/markDot";
@@ -10,6 +17,8 @@ import { Helper } from '../../helpers/helper';
 import { MdtChartsDataRow, Size } from '../../../config/config';
 import { Transition } from 'd3-transition';
 import { getStackedDataWithOwn } from '../bar/stackedData/dataStacker';
+import { LineGeneratorFactory } from "../../../engine/twoDimensionalNotation/line/lineHelper";
+import { Line } from "../../../engine/twoDimensionalNotation/line/line";
 
 interface AreaOptions {
     staticSettings: LineLikeChartSettings;
@@ -17,6 +26,7 @@ interface AreaOptions {
 
 export class Area {
     public static readonly areaChartClass = 'area';
+    public static readonly areaBorderLineClass = 'area-border-line';
 
     public static get(options: AreaOptions) {
         return new Area(options);
@@ -43,27 +53,31 @@ export class Area {
 
     public updateColors(block: Block, chart: TwoDimensionalChartModel): void {
         chart.data.valueFields.forEach((_vf, valueIndex) => {
-            const path = block.svg.getChartGroup(chart.index)
+            const chartGroup = block.svg.getChartGroup(chart.index);
+
+            const areaPath = chartGroup
                 .select(`.${Area.areaChartClass}${Helper.getCssClassesLine(chart.cssClasses)}.chart-element-${valueIndex}`);
-            this.setChartFillStyle(chart, path, valueIndex)
+            this.setChartFillStyle(chart, areaPath, valueIndex);
+
+            if (chart.areaViewOptions.borderLine.on) {
+                const borderLinePath = chartGroup
+                    .select(`.${Area.areaBorderLineClass}${Helper.getCssClassesLine(chart.cssClasses)}.chart-element-${valueIndex}`);
+                DomHelper.setChartElementColor(borderLinePath, chart.style.elementColors, valueIndex, 'stroke');
+            }
+
             MarkDot.updateColors(block, chart, valueIndex);
         });
     }
 
     private renderGrouped(block: Block, scales: Scales, data: MdtChartsDataRow[], keyField: Field, margin: BlockMargin, keyAxisOrient: Orient, chart: TwoDimensionalChartModel): void {
-        const generatorFactory = new AreaGeneratorFactory({ keyAxisOrient, scales, keyFieldName: keyField.name, margin, shouldRender: chart.lineLikeViewOptions.renderForKey, curve: this.options.staticSettings.shape.curve.type });
+        const areaGeneratorFactory = this.createAreaGeneratorFactory(chart, scales, margin, keyAxisOrient, keyField);
+        const lineGeneratorFactory = chart.areaViewOptions.borderLine.on
+            && this.createLineGeneratorFactory(chart, scales, margin, keyAxisOrient, keyField);
 
         chart.data.valueFields.forEach((field, valueIndex) => {
-            const area = generatorFactory.getAreaGenerator(field.name);
-            const path = block.svg.getChartGroup(chart.index)
-                .append('path')
-                .attr('d', area(data))
-                .attr('class', Area.areaChartClass)
-                .style('clip-path', `url(#${block.svg.getClipPathId()})`)
-                .style('pointer-events', 'none');
-
-            DomHelper.setCssClasses(path, Helper.getCssClassesWithElementIndex(chart.cssClasses, valueIndex));
-            this.setChartFillStyle(chart, path, valueIndex)
+            this.renderArea(areaGeneratorFactory, block, chart, data, field, valueIndex);
+            if (lineGeneratorFactory)
+                this.renderBorderLine(lineGeneratorFactory, block, chart, data, field, valueIndex);
 
             MarkDot.render(block, data, keyAxisOrient, scales, margin, keyField.name, valueIndex, field.name, chart);
         });
@@ -71,8 +85,9 @@ export class Area {
 
     private renderSegmented(block: Block, scales: Scales, data: MdtChartsDataRow[], keyField: Field, margin: BlockMargin, keyAxisOrient: Orient, chart: TwoDimensionalChartModel): void {
         const stackedData = getStackedDataWithOwn(data, chart.data.valueFields.map(field => field.name));
-        const generatorFactory = new AreaGeneratorFactory({ keyAxisOrient, scales, keyFieldName: keyField.name, margin, shouldRender: chart.lineLikeViewOptions.renderForKey, curve: this.options.staticSettings.shape.curve.type });
-        const areaGenerator = generatorFactory.getSegmentedAreaGenerator();
+        const areaGeneratorFactory = this.createAreaGeneratorFactory(chart, scales, margin, keyAxisOrient, keyField);
+
+        const areaGenerator = areaGeneratorFactory.getSegmentedAreaGenerator();
 
         const areas = block.svg.getChartGroup(chart.index)
             .selectAll(`.${Area.areaChartClass}${Helper.getCssClassesLine(chart.cssClasses)}`)
@@ -97,14 +112,21 @@ export class Area {
 
     private updateGrouped(block: Block, scales: Scales, newData: MdtChartsDataRow[], keyField: Field, margin: BlockMargin, chart: TwoDimensionalChartModel, keyAxisOrient: Orient, blockSize: Size): Promise<any>[] {
         const promises: Promise<any>[] = [];
-        const generatorFactory = new AreaGeneratorFactory({ keyAxisOrient, scales, keyFieldName: keyField.name, margin, shouldRender: chart.lineLikeViewOptions.renderForKey, curve: this.options.staticSettings.shape.curve.type });
-        chart.data.valueFields.forEach((field, valueIndex) => {
-            const areaGenerator = generatorFactory.getAreaGenerator(field.name);
-            const areaObject = block.svg.getChartGroup(chart.index)
-                .select(`.${Area.areaChartClass}${Helper.getCssClassesLine(chart.cssClasses)}.chart-element-${valueIndex}`)
 
-            const prom = this.updateGroupedPath(block, areaObject, areaGenerator, newData);
-            promises.push(prom);
+        const areaGeneratorFactory = this.createAreaGeneratorFactory(chart, scales, margin, keyAxisOrient, keyField);
+        const lineGeneratorFactory = chart.areaViewOptions.borderLine.on
+            && this.createLineGeneratorFactory(chart, scales, margin, keyAxisOrient, keyField);
+
+        chart.data.valueFields.forEach((field, valueIndex) => {
+            const chartGroup = block.svg.getChartGroup(chart.index);
+
+            const areaProm = this.updateArea(areaGeneratorFactory, chartGroup, block, field, chart, newData, valueIndex);
+            promises.push(areaProm);
+
+            if (lineGeneratorFactory) {
+                const lineProm = this.updateBorderLine(lineGeneratorFactory, chartGroup, block, field, chart, newData, valueIndex);
+                promises.push(lineProm);
+            }
 
             MarkDot.update(block, newData, keyAxisOrient, scales, margin, keyField.name, valueIndex, field.name, chart);
         });
@@ -113,7 +135,8 @@ export class Area {
 
     private updateSegmented(block: Block, scales: Scales, newData: MdtChartsDataRow[], keyField: Field, margin: BlockMargin, chart: TwoDimensionalChartModel, keyAxisOrient: Orient): Promise<any>[] {
         const stackedData = getStackedDataWithOwn(newData, chart.data.valueFields.map(field => field.name));
-        const generatorFactory = new AreaGeneratorFactory({ keyAxisOrient, scales, keyFieldName: keyField.name, margin, shouldRender: chart.lineLikeViewOptions.renderForKey, curve: this.options.staticSettings.shape.curve.type });
+        const generatorFactory = this.createAreaGeneratorFactory(chart, scales, margin, keyAxisOrient, keyField);
+
         const areaGenerator = generatorFactory.getSegmentedAreaGenerator();
         const areas = block.svg.getChartGroup(chart.index)
             .selectAll<SVGRectElement, MdtChartsDataRow[]>(`path.${Area.areaChartClass}${Helper.getCssClassesLine(chart.cssClasses)}`)
@@ -183,5 +206,58 @@ export class Area {
             DomHelper.setChartGradientStyle(path, chart.index, valueIndex)
         else
             DomHelper.setChartStyle(path, chart.style, valueIndex, 'fill');
+    }
+
+    private createAreaGeneratorFactory(chart: TwoDimensionalChartModel, scales: Scales, margin: BlockMargin, keyAxisOrient: Orient, keyField: Field): AreaGeneratorFactory {
+        return new AreaGeneratorFactory({ keyAxisOrient, scales, keyFieldName: keyField.name, margin, shouldRender: chart.lineLikeViewOptions.renderForKey, curve: this.options.staticSettings.shape.curve.type });
+    }
+
+    private createLineGeneratorFactory(chart: TwoDimensionalChartModel, scales: Scales, margin: BlockMargin, keyAxisOrient: Orient, keyField: Field): LineGeneratorFactory {
+        return new LineGeneratorFactory({ keyAxisOrient, scales, keyFieldName: keyField.name, margin, shouldRender: chart.lineLikeViewOptions.renderForKey, curve: this.options.staticSettings.shape.curve.type });
+    }
+
+    private renderArea(areaGeneratorFactory: AreaGeneratorFactory, block: Block, chart: TwoDimensionalChartModel, data: MdtChartsDataRow[], field: ValueField, valueIndex: number) {
+
+        const area = areaGeneratorFactory.getAreaGenerator(field.name);
+        const path = block.svg.getChartGroup(chart.index)
+            .append('path')
+            .attr('d', area(data))
+            .attr('class', Area.areaChartClass)
+            .style('clip-path', `url(#${block.svg.getClipPathId()})`)
+            .style('pointer-events', 'none');
+
+        DomHelper.setCssClasses(path, Helper.getCssClassesWithElementIndex(chart.cssClasses, valueIndex));
+        this.setChartFillStyle(chart, path, valueIndex)
+    }
+
+    private renderBorderLine(lineGeneratorFactory: LineGeneratorFactory, block: Block, chart: TwoDimensionalChartModel, data: MdtChartsDataRow[], field: ValueField, valueIndex: number) {
+        const lineGenerator = lineGeneratorFactory.getLineGenerator(field.name);
+
+        const linePath = block.svg.getChartGroup(chart.index)
+            .append('path')
+            .attr('d', lineGenerator(data))
+            .attr('class', `${Area.areaBorderLineClass}`)
+            .style('fill', 'none')
+            .style('clip-path', `url(#${block.svg.getClipPathId()})`)
+            .style('pointer-events', 'none');
+
+        DomHelper.setCssClasses(linePath, Helper.getCssClassesWithElementIndex(chart.cssClasses, valueIndex));
+        DomHelper.setChartStyle(linePath, chart.areaViewOptions.borderLine.colorStyle, valueIndex, 'stroke');
+    }
+
+    private updateArea(areaGeneratorFactory: AreaGeneratorFactory, chartGroup: Selection<SVGGElement, any, BaseType, any>, block: Block, field: Field, chart: TwoDimensionalChartModel, newData: MdtChartsDataRow[], valueIndex: number): Promise<any> {
+        const areaGenerator = areaGeneratorFactory.getAreaGenerator(field.name);
+        const areaObject = chartGroup
+            .select(`.${Area.areaChartClass}${Helper.getCssClassesLine(chart.cssClasses)}.chart-element-${valueIndex}`);
+
+        return this.updateGroupedPath(block, areaObject, areaGenerator, newData);
+    }
+
+    private updateBorderLine(lineGeneratorFactory: LineGeneratorFactory, chartGroup: Selection<SVGGElement, any, BaseType, any>, block: Block, field: Field, chart: TwoDimensionalChartModel, newData: MdtChartsDataRow[], valueIndex: number) {
+        const borderLineGenerator = lineGeneratorFactory.getLineGenerator(field.name);
+        const borderLineObject = chartGroup
+            .select(`.${Area.areaBorderLineClass}${Helper.getCssClassesLine(chart.cssClasses)}.chart-element-${valueIndex}`);
+
+        return Line.updateGroupedPath(block, borderLineObject, borderLineGenerator, newData);
     }
 }

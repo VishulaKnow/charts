@@ -261,9 +261,14 @@ export interface MdtChartsLineLikeChartDashedStyles {
 
 export interface MdtChartsLineLikeChartAreaStyles {
     gradient?: AreaStylesGradient;
+    borderLine?: AreaStylesBorderLine;
 }
 
 export interface AreaStylesGradient {
+    on: boolean;
+}
+
+export interface AreaStylesBorderLine {
     on: boolean;
 }
 
