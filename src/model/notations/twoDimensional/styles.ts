@@ -61,7 +61,7 @@ export function getAreaViewOptions(chart: MdtChartsTwoDimensionalChart, chartInd
         : { type: "paletteColor" };
 
     const borderLine: AreaViewBorderLine = {
-        on: chart.areaStyles?.borderLine?.on,
+        on: chart.areaStyles?.borderLine?.on ?? false,
         colorStyle: {
             elementColors: style.elementColors,
             opacity: 1
