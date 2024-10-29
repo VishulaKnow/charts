@@ -9,10 +9,16 @@
 .bar, .area, .donut {
     stroke: none;
 }
-.line, .area-border-line {
+.line {
     fill: none;
     stroke-width: 4;
 }
+
+.area-border-line {
+    fill: none;
+    stroke-width: 2;
+}
+
 .donut-block * {
     transition: filter 0.15s;
 }
