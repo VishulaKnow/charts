@@ -179,13 +179,13 @@ describe('getGradientDefs', () => {
         const gradients = TwoDimensionalModelHelper.getGradientDefs(charts, 'left', 'horizontal')
 
         expect(gradients[0].items[0].opacity).toEqual(0);
-        expect(gradients[0].items[1].opacity).toEqual(0.7);
+        expect(gradients[0].items[1].opacity).toEqual(0.4);
     });
 
     test('should return opacity of gradient items 1 and 0, because keyAxisOrient is right', () => {
         const gradients = TwoDimensionalModelHelper.getGradientDefs(charts, 'right', 'horizontal')
 
-        expect(gradients[0].items[0].opacity).toEqual(0.7);
+        expect(gradients[0].items[0].opacity).toEqual(0.4);
         expect(gradients[0].items[1].opacity).toEqual(0);
     });
 
