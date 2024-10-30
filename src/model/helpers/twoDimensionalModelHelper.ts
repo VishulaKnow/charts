@@ -57,7 +57,7 @@ export class TwoDimensionalModelHelper {
     }
 
     private static calculateOpacityItem(indexItem: number, orientation: Orient): number {
-        const maxOpacity = 0.4;
+        const maxOpacity = 0.3;
         const minOpacity = 0;
 
         if (orientation === 'bottom' || orientation === 'right')
