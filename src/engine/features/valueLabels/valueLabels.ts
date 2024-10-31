@@ -133,7 +133,6 @@ export class CanvasValueLabels {
     constructor(private readonly options: ValueLabelsOptions) { }
 
     render(scales: ScalesWithSecondary, charts: TwoDimensionalChartModel[], data: MdtChartsDataSource, dataOptions: OptionsModelData) {
-        const duration = this.options.elementAccessors.getBlock().transitionManager.durations.chartUpdate;
         const valueLabelsSettings = this.options.canvas.valueLabels;
 
         const chartsWithLabels: TwoDimensionalChartModel[] = charts.filter(chart => chart.valueLabels?.show);
@@ -148,17 +147,16 @@ export class CanvasValueLabels {
         });
 
             const valueLabels = this.getAllValueLabels();
-            ValueLabelsCollision.resolveValueLabelsCollisions(valueLabels, valueLabelsSettings, duration);
+            ValueLabelsCollision.resolveValueLabelsCollisions(valueLabels, valueLabelsSettings);
     }
 
     update(scales: ScalesWithSecondary, charts: TwoDimensionalChartModel[], data: MdtChartsDataSource, dataOptions: OptionsModelData) {
-        const duration = this.options.elementAccessors.getBlock().transitionManager.durations.chartUpdate;
         const valueLabelsSettings = this.options.canvas.valueLabels;
 
         const chartsWithLabels: TwoDimensionalChartModel[] = charts.filter(chart => chart.valueLabels?.show);
         if (chartsWithLabels.length === 0) return;
 
-        if (this.options.canvas.valueLabels.otherValueLables.mode === 'hide')
+        if (this.options.canvas.valueLabels.collision.mode === 'hide')
             this.toggleOldValueLabelsVisibility();
 
         const chartsUpdatePromises = chartsWithLabels.map((chart, index) => {
@@ -168,7 +166,7 @@ export class CanvasValueLabels {
 
         Promise.all(chartsUpdatePromises).then(() => {
             const newValueLabels = this.getAllValueLabels();
-            ValueLabelsCollision.resolveValueLabelsCollisions(newValueLabels, valueLabelsSettings, duration);
+            ValueLabelsCollision.resolveValueLabelsCollisions(newValueLabels, valueLabelsSettings);
         });
     }
 

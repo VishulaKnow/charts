@@ -27,12 +27,12 @@ export interface LabelVisibility {
 }
 
 export class ValueLabelsCollision {
-    public static resolveValueLabelsCollisions(newValueLabels: Selection<SVGTextElement, MdtChartsDataRow, SVGGElement, unknown>, valueLabelsSettings: TwoDimensionalValueLabels, duration: number): void {
+    public static resolveValueLabelsCollisions(newValueLabels: Selection<SVGTextElement, MdtChartsDataRow, SVGGElement, unknown>, valueLabelsSettings: TwoDimensionalValueLabels): void {
         const valueLabelElementsRectInfo = this.getValueLabelElementsRectInfo(newValueLabels);
 
-        this.shiftValueLabelsCollision(valueLabelElementsRectInfo, valueLabelsSettings.chartBlock, duration);
+        this.shiftValueLabelsCollision(valueLabelElementsRectInfo, valueLabelsSettings.chartBlock);
 
-        if (valueLabelsSettings.otherValueLables.mode === 'hide')
+        if (valueLabelsSettings.collision.mode === 'hide')
             this.toggleValueLabelElementsVisibility(valueLabelElementsRectInfo);
     }
 
@@ -54,15 +54,15 @@ export class ValueLabelsCollision {
         return ValueLabelElementsReactInfo;
     }
 
-    private static shiftValueLabelsCollision(valueLabelElementsRectInfo: ValueLabelElement[], chartBlock: ValueLabelsChartBlock, duration: number) {
+    private static shiftValueLabelsCollision(valueLabelElementsRectInfo: ValueLabelElement[], chartBlock: ValueLabelsChartBlock) {
         valueLabelElementsRectInfo.forEach(element => {
             if (chartBlock.left.mode === 'shift' && chartBlock.left.hasCollision(element.boundingClientRect)) {
                 chartBlock.left.shiftCoordinate(element.boundingClientRect);
-                this.changeLabelElementCoordinateX(element, duration);
+                this.changeLabelElementCoordinateX(element);
             }
             if (chartBlock.right.mode === 'shift' && chartBlock.right.hasCollision(element.boundingClientRect)) {
                 chartBlock.right.shiftCoordinate(element.boundingClientRect);
-                this.changeLabelElementCoordinateX(element, duration);
+                this.changeLabelElementCoordinateX(element);
             }
         });
     }
@@ -78,12 +78,8 @@ export class ValueLabelsCollision {
         });
     }
 
-    private static changeLabelElementCoordinateX(element: ValueLabelElement, duration: number): void {
-        const animationName = 'labels-shifting';
+    private static changeLabelElementCoordinateX(element: ValueLabelElement): void {
         select(element.svgElement)
-            .interrupt(animationName)
-            .transition(animationName)
-            .duration(duration)
             .attr('x', element.boundingClientRect.x);
     }
 }

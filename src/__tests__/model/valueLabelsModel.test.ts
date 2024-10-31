@@ -137,21 +137,23 @@ describe('hasCollisionRightSide', () => {
 
     let labelClientRect: BoundingRect;
     let blockSize: Size;
+    let margin: BlockMargin;
 
     beforeEach(() => {
         labelClientRect = { x: 150, y: 50, width: 30, height: 10 };
         blockSize = { width: 100, height: 50 };
+        margin = { top: 100, bottom: 50, right: 70, left: 70 };
     });
 
     test('should return true, because element coordinate X and width more block width', () => {
-        const isCollision = hasCollisionRightSide(labelClientRect, blockSize);
+        const isCollision = hasCollisionRightSide(labelClientRect, blockSize, margin);
 
         expect(isCollision).toBeTruthy();
     });
 
     test('should return false, because element coordinate X and width less block width', () => {
         labelClientRect.x = 50;
-        const isCollision = hasCollisionRightSide(labelClientRect, blockSize);
+        const isCollision = hasCollisionRightSide(labelClientRect, blockSize, margin);
 
         expect(isCollision).toBeFalsy();
     });

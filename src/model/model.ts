@@ -233,7 +233,7 @@ interface BarLikeChartHatchOptions {
 }
 
 export interface TwoDimensionalValueLabels {
-    otherValueLables: ValueLabelsCollision;
+    collision: ValueLabelsCollision;
     chartBlock: ValueLabelsChartBlock;
 }
 

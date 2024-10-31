@@ -2,7 +2,8 @@ import {
     ChartOrientation,
     MdtChartsTwoDimensionalChart,
     TwoDimensionalChartType,
-    MdtChartsTwoDimensionalOptions, ValueLabelsCollisionMode
+    MdtChartsTwoDimensionalOptions,
+    ValueLabelsCollisionMode
 } from "../../config/config";
 import { ChartOptionsCanvas, DesignerConfig } from "../../designer/designerConfig";
 import { ChartStyleModelService } from "../chartStyleModel/chartStyleModel";
@@ -190,7 +191,7 @@ export class TwoDimensionalModel {
 
     private static getValueLabels(collisionMode: ValueLabelsCollisionMode, canvasModel: CanvasModel): TwoDimensionalValueLabels {
         return {
-            otherValueLables: {
+            collision: {
                 mode: collisionMode
             },
             chartBlock: {
@@ -201,7 +202,7 @@ export class TwoDimensionalModel {
                 },
                 right: {
                     mode: 'shift',
-                    hasCollision: (labelClientRect: BoundingRect) => hasCollisionRightSide(labelClientRect, canvasModel.getBlockSize()),
+                    hasCollision: (labelClientRect: BoundingRect) => hasCollisionRightSide(labelClientRect, canvasModel.getBlockSize(), canvasModel.getMargin()),
                     shiftCoordinate: (labelClientRect: BoundingRect) => shiftCoordinateXLeft(labelClientRect),
                 }
             }

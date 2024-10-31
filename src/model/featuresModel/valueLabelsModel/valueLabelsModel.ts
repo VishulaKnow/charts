@@ -8,7 +8,7 @@ interface ValueLabelAlignment {
 }
 
 const OFFSET_SIZE_PX = 10;
-const BORDER_OFFSET_SIZE_PX = 5;
+const BORDER_OFFSET_SIZE_PX = 2;
 
 export function getValueLabelY(scaledValue: number, keyAxisOrient: Orient, margin: BlockMargin) {
     switch (keyAxisOrient) {
@@ -49,8 +49,8 @@ export function hasCollisionLeftSide(labelClientRect: BoundingRect, margin: Bloc
     return labelClientRect.x <= margin.left;
 }
 
-export function hasCollisionRightSide(labelClientRect: BoundingRect, blockSize: Size): boolean {
-    return labelClientRect.x + labelClientRect.width / 2 >= blockSize.width;
+export function hasCollisionRightSide(labelClientRect: BoundingRect, blockSize: Size, margin: BlockMargin): boolean {
+    return labelClientRect.x + labelClientRect.width / 2 >= blockSize.width - margin.right;
 }
 
 export function shiftCoordinateXLeft(labelClientRect: BoundingRect): void {
