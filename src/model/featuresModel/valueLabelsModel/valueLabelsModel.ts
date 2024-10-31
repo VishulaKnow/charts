@@ -1,4 +1,6 @@
 import { BlockMargin, Orient, ValueLabelAnchor, ValueLabelDominantBaseline } from "../../model";
+import { BoundingRect } from "../../../engine/features/valueLabelsCollision/valueLabelsCollision";
+import { Size } from "../../../config/config";
 
 interface ValueLabelAlignment {
     dominantBaseline: ValueLabelDominantBaseline
@@ -6,6 +8,7 @@ interface ValueLabelAlignment {
 }
 
 const OFFSET_SIZE_PX = 10;
+const BORDER_OFFSET_SIZE_PX = 5;
 
 export function getValueLabelY(scaledValue: number, keyAxisOrient: Orient, margin: BlockMargin) {
     switch (keyAxisOrient) {
@@ -40,4 +43,20 @@ export function calculateValueLabelAlignment(keyAxisOrient: Orient): ValueLabelA
         case "right":
             return { dominantBaseline: "middle", textAnchor: "end" }
     }
+}
+
+export function hasCollisionLeftSide(labelClientRect: BoundingRect, margin: BlockMargin): boolean {
+    return labelClientRect.x <= margin.left;
+}
+
+export function hasCollisionRightSide(labelClientRect: BoundingRect, blockSize: Size): boolean {
+    return labelClientRect.x + labelClientRect.width / 2 >= blockSize.width;
+}
+
+export function shiftCoordinateXLeft(labelClientRect: BoundingRect): void {
+    labelClientRect.x -= labelClientRect.width / 2 + BORDER_OFFSET_SIZE_PX;
+}
+
+export function shiftCoordinateXRight(labelClientRect: BoundingRect): void {
+    labelClientRect.x += + labelClientRect.width / 2 + BORDER_OFFSET_SIZE_PX;
 }

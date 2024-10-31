@@ -1,4 +1,9 @@
-import { ChartOrientation, MdtChartsTwoDimensionalChart, TwoDimensionalChartType, MdtChartsTwoDimensionalOptions } from "../../config/config";
+import {
+    ChartOrientation,
+    MdtChartsTwoDimensionalChart,
+    TwoDimensionalChartType,
+    MdtChartsTwoDimensionalOptions, ValueLabelsCollisionMode
+} from "../../config/config";
 import { ChartOptionsCanvas, DesignerConfig } from "../../designer/designerConfig";
 import { ChartStyleModelService } from "../chartStyleModel/chartStyleModel";
 import { TwoDimensionalChartStyleModel } from "../chartStyleModel/twoDimensionalChartStyleModel";
@@ -10,7 +15,8 @@ import {
     TwoDimensionalChartModel,
     EmbeddedLabelTypeModel,
     AdditionalElementsOptions,
-    TwoDimChartElementsSettings, Orient
+    TwoDimChartElementsSettings,
+    Orient, TwoDimensionalValueLabels
 } from "../model";
 import { TwoDimConfigReader } from "../modelInstance/configReader";
 import { ModelInstance } from "../modelInstance/modelInstance";
@@ -19,10 +25,15 @@ import { getResolvedTitle } from "../../model/featuresModel/titleModel";
 import { DataRepositoryModel } from "../modelInstance/dataModel/dataRepository";
 import {
     calculateValueLabelAlignment,
-    getValueLabelX, getValueLabelY
+    getValueLabelX,
+    getValueLabelY,
+    hasCollisionLeftSide,
+    hasCollisionRightSide,
+    shiftCoordinateXLeft, shiftCoordinateXRight
 } from "../../model/featuresModel/valueLabelsModel/valueLabelsModel";
 import { CanvasModel } from "../modelInstance/canvasModel/canvasModel";
 import { TwoDimensionalModelHelper } from "../helpers/twoDimensionalModelHelper";
+import { BoundingRect } from "../../engine/features/valueLabelsCollision/valueLabelsCollision";
 
 
 export class TwoDimensionalModel {
@@ -45,7 +56,7 @@ export class TwoDimensionalModel {
 
         const charts = this.getChartsModel(options.charts, configReader, options.orientation, designerConfig, modelInstance.dataModel.repository, keyAxis.orient, canvasModel, options.data.keyField.name);
 
-        return {
+        return  {
             legend: canvasModel.legendCanvas.getModel(),
             title: getResolvedTitle(options.title, modelInstance.dataModel.repository.getRawRows()),
             selectable: !!options.selectable,
@@ -66,7 +77,7 @@ export class TwoDimensionalModel {
             additionalElements: this.getAdditionalElements(options),
             tooltip: options.tooltip,
             chartSettings: this.getChartsSettings(designerConfig.canvas.chartOptions, options.orientation),
-            valueLabels: options.valueLabels ?? { collision: { mode: "none" } },
+            valueLabels: this.getValueLabels(options.valueLabels?.collision.mode, canvasModel),
             defs: {
                 gradients: TwoDimensionalModelHelper.getGradientDefs(charts, keyAxis.orient, options.orientation)
             }
@@ -175,5 +186,25 @@ export class TwoDimensionalModel {
 
     private static getChartsByType(charts: MdtChartsTwoDimensionalChart[], type: TwoDimensionalChartType): MdtChartsTwoDimensionalChart[] {
         return charts.filter(chart => chart.type === type);
+    }
+
+    private static getValueLabels(collisionMode: ValueLabelsCollisionMode, canvasModel: CanvasModel): TwoDimensionalValueLabels {
+        return {
+            otherValueLables: {
+                mode: collisionMode
+            },
+            chartBlock: {
+                left: {
+                    mode: 'shift',
+                    hasCollision: (labelClientRect: BoundingRect) => hasCollisionLeftSide(labelClientRect, canvasModel.getMargin()),
+                    shiftCoordinate: (labelClientRect: BoundingRect) => shiftCoordinateXRight(labelClientRect),
+                },
+                right: {
+                    mode: 'shift',
+                    hasCollision: (labelClientRect: BoundingRect) => hasCollisionRightSide(labelClientRect, canvasModel.getBlockSize()),
+                    shiftCoordinate: (labelClientRect: BoundingRect) => shiftCoordinateXLeft(labelClientRect),
+                }
+            }
+        }
     }
 }

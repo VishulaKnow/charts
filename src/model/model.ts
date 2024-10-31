@@ -10,10 +10,10 @@ import {
     ShowTickFn,
     MdtChartsDataRow,
     TwoDimensionalValueGroup,
-    ValueLabelsCollisionMode,
     ValueLabelsCollision,
 } from "../config/config";
 import { DataType, DonutOptionsCanvas, Formatter, StaticLegendBlockCanvas, TooltipSettings, Transitions } from "../designer/designerConfig";
+import { BoundingRect } from "../engine/features/valueLabelsCollision/valueLabelsCollision";
 
 type AxisType = "key" | "value";
 
@@ -233,7 +233,21 @@ interface BarLikeChartHatchOptions {
 }
 
 export interface TwoDimensionalValueLabels {
-    collision: ValueLabelsCollision;
+    otherValueLables: ValueLabelsCollision;
+    chartBlock: ValueLabelsChartBlock;
+}
+
+export interface ValueLabelsChartBlock {
+    left: {
+        mode: "none" | "shift";
+        hasCollision: (labelClientRect: BoundingRect) => boolean;
+        shiftCoordinate: (labelClientRect: BoundingRect) => void;
+    };
+    right: {
+        mode: "none" | "shift";
+        hasCollision: (labelClientRect: BoundingRect) => boolean;
+        shiftCoordinate: (labelClientRect: BoundingRect) => void;
+    };
 }
 
 
