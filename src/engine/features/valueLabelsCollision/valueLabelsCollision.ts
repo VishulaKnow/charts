@@ -30,9 +30,9 @@ export class ValueLabelsCollision {
     public static resolveValueLabelsCollisions(newValueLabels: Selection<SVGTextElement, MdtChartsDataRow, SVGGElement, unknown>, valueLabelsSettings: TwoDimensionalValueLabels): void {
         const valueLabelElementsRectInfo = this.getValueLabelElementsRectInfo(newValueLabels);
 
-        this.shiftValueLabelsCollision(valueLabelElementsRectInfo, valueLabelsSettings.chartBlock);
+        this.shiftValueLabelsCollision(valueLabelElementsRectInfo, valueLabelsSettings.collision.chartBlock);
 
-        if (valueLabelsSettings.collision.mode === 'hide')
+        if (valueLabelsSettings.collision.otherValueLables.mode === 'hide')
             this.toggleValueLabelElementsVisibility(valueLabelElementsRectInfo);
     }
 

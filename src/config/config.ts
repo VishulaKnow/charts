@@ -1,3 +1,5 @@
+import {BoundingRect} from "src/engine/features/valueLabelsCollision/valueLabelsCollision";
+
 type DataType = string;
 export type MdtChartsIconElement = () => HTMLElement;
 
@@ -10,6 +12,7 @@ export type PolarChartType = 'donut';
 export type IntervalChartType = 'gantt';
 export type EmbeddedLabelType = 'none' | 'key' | 'value';
 export type ValueLabelsCollisionMode = "none" | "hide";
+export type ValueLablesChartBlockMode = "none" | "shift";
 export type MdtChartsDataRow = {
     [field: string]: any
 }
@@ -218,11 +221,29 @@ export interface MdtChartsShowAxisLabelRule {
 }
 
 export interface TwoDimensionalValueLabels {
-    collision: ValueLabelsCollision
+    collision: ValueLabelsCollision;
 }
 
 export interface ValueLabelsCollision {
-    mode: ValueLabelsCollisionMode
+    otherValueLables: OtherValueLables;
+    chartBlock: ValueLabelsChartBlock;
+}
+
+export interface ValueLabelsChartBlock {
+    left: {
+        mode: ValueLablesChartBlockMode;
+        hasCollision: (labelClientRect: BoundingRect) => boolean;
+        shiftCoordinate: (labelClientRect: BoundingRect) => void;
+    };
+    right: {
+        mode: ValueLablesChartBlockMode;
+        hasCollision: (labelClientRect: BoundingRect) => boolean;
+        shiftCoordinate: (labelClientRect: BoundingRect) => void;
+    };
+}
+
+export interface OtherValueLables {
+    mode: ValueLabelsCollisionMode;
 }
 
 

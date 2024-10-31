@@ -156,7 +156,7 @@ export class CanvasValueLabels {
         const chartsWithLabels: TwoDimensionalChartModel[] = charts.filter(chart => chart.valueLabels?.show);
         if (chartsWithLabels.length === 0) return;
 
-        if (this.options.canvas.valueLabels.collision.mode === 'hide')
+        if (this.options.canvas.valueLabels.collision.otherValueLables.mode === 'hide')
             this.toggleOldValueLabelsVisibility();
 
         const chartsUpdatePromises = chartsWithLabels.map((chart, index) => {

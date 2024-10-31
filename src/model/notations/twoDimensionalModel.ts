@@ -3,7 +3,6 @@ import {
     MdtChartsTwoDimensionalChart,
     TwoDimensionalChartType,
     MdtChartsTwoDimensionalOptions,
-    ValueLabelsCollisionMode
 } from "../../config/config";
 import { ChartOptionsCanvas, DesignerConfig } from "../../designer/designerConfig";
 import { ChartStyleModelService } from "../chartStyleModel/chartStyleModel";
@@ -17,7 +16,8 @@ import {
     EmbeddedLabelTypeModel,
     AdditionalElementsOptions,
     TwoDimChartElementsSettings,
-    Orient, TwoDimensionalValueLabels
+    Orient,
+    TwoDimensionalValueLabels
 } from "../model";
 import { TwoDimConfigReader } from "../modelInstance/configReader";
 import { ModelInstance } from "../modelInstance/modelInstance";
@@ -78,7 +78,7 @@ export class TwoDimensionalModel {
             additionalElements: this.getAdditionalElements(options),
             tooltip: options.tooltip,
             chartSettings: this.getChartsSettings(designerConfig.canvas.chartOptions, options.orientation),
-            valueLabels: this.getValueLabels(options.valueLabels?.collision.mode, canvasModel),
+            valueLabels: this.getValueLabels(options.valueLabels, canvasModel),
             defs: {
                 gradients: TwoDimensionalModelHelper.getGradientDefs(charts, keyAxis.orient, options.orientation)
             }
@@ -189,23 +189,25 @@ export class TwoDimensionalModel {
         return charts.filter(chart => chart.type === type);
     }
 
-    private static getValueLabels(collisionMode: ValueLabelsCollisionMode, canvasModel: CanvasModel): TwoDimensionalValueLabels {
+    private static getValueLabels(valueLabels: TwoDimensionalValueLabels, canvasModel: CanvasModel): TwoDimensionalValueLabels {
         return {
             collision: {
-                mode: collisionMode
-            },
-            chartBlock: {
-                left: {
-                    mode: 'shift',
-                    hasCollision: (labelClientRect: BoundingRect) => hasCollisionLeftSide(labelClientRect, canvasModel.getMargin()),
-                    shiftCoordinate: (labelClientRect: BoundingRect) => shiftCoordinateXRight(labelClientRect),
+                otherValueLables: valueLabels?.collision.otherValueLables ?? {
+                    mode: 'none'
                 },
-                right: {
-                    mode: 'shift',
-                    hasCollision: (labelClientRect: BoundingRect) => hasCollisionRightSide(labelClientRect, canvasModel.getBlockSize(), canvasModel.getMargin()),
-                    shiftCoordinate: (labelClientRect: BoundingRect) => shiftCoordinateXLeft(labelClientRect),
+                chartBlock: {
+                    left: {
+                        mode: 'shift',
+                        hasCollision: (labelClientRect: BoundingRect) => hasCollisionLeftSide(labelClientRect, canvasModel.getMargin()),
+                        shiftCoordinate: (labelClientRect: BoundingRect) => shiftCoordinateXRight(labelClientRect),
+                    },
+                    right: {
+                        mode: 'shift',
+                        hasCollision: (labelClientRect: BoundingRect) => hasCollisionRightSide(labelClientRect, canvasModel.getBlockSize(), canvasModel.getMargin()),
+                        shiftCoordinate: (labelClientRect: BoundingRect) => shiftCoordinateXLeft(labelClientRect),
+                    }
                 }
-            }
+            },
         }
     }
 }

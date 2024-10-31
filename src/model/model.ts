@@ -10,7 +10,7 @@ import {
     ShowTickFn,
     MdtChartsDataRow,
     TwoDimensionalValueGroup,
-    ValueLabelsCollision,
+    ValueLabelsCollisionMode,
 } from "../config/config";
 import { DataType, DonutOptionsCanvas, Formatter, StaticLegendBlockCanvas, TooltipSettings, Transitions } from "../designer/designerConfig";
 import { BoundingRect } from "../engine/features/valueLabelsCollision/valueLabelsCollision";
@@ -234,7 +234,15 @@ interface BarLikeChartHatchOptions {
 
 export interface TwoDimensionalValueLabels {
     collision: ValueLabelsCollision;
+}
+
+export interface ValueLabelsCollision {
+    otherValueLables: OtherValueLables;
     chartBlock: ValueLabelsChartBlock;
+}
+
+export interface OtherValueLables {
+    mode: ValueLabelsCollisionMode;
 }
 
 export interface ValueLabelsChartBlock {
