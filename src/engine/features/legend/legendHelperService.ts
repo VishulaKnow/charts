@@ -35,6 +35,6 @@ export class LegendHelperService {
     }
 
     private doesLegendInTopBy2d(legendPosition: LegendPosition, chartNotation: ChartNotation,) {
-        return legendPosition === 'top' && chartNotation === "2d"
+        return (legendPosition === 'top' || legendPosition === 'bottom') && chartNotation === "2d"
     }
 }
