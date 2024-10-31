@@ -329,9 +329,15 @@ interface TwoDimensionalAreaChartModel {
 
 export interface AreaChartViewOptions {
     fill: AreaViewFill;
+    borderLine: AreaViewBorderLine;
 }
 
 export type AreaViewFill = { type: "paletteColor" } | { type: "gradient"; ids: GradientId[] };
+
+export interface AreaViewBorderLine {
+    on: boolean;
+    colorStyle: ChartStyle;
+}
 
 export interface TwoDimensionalChartModel extends ChartModel, TwoDimensionalLineLikeChartModel, TwoDimensionalBarLikeChartModel, TwoDimensionalAreaChartModel {
     type: TwoDimensionalChartType;

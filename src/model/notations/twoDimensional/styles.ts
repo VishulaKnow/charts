@@ -1,4 +1,4 @@
-import { AreaChartViewOptions, AreaViewFill, ChartLegendModel, GradientId, LegendMarkerShape, LineCurveType, LineLikeChartDashOptions, LineLikeChartShapeOptions } from "../../model";
+import { AreaChartViewOptions, AreaViewBorderLine, AreaViewFill, ChartLegendModel, ChartStyle, GradientId, LegendMarkerShape, LineCurveType, LineLikeChartDashOptions, LineLikeChartShapeOptions } from "../../model";
 import { ChartOrientation, MdtChartsLineLikeChartDashedStyles, MdtChartsTwoDimensionalChart, TwoDimensionalChartType } from "../../../config/config";
 import { MdtChartsLineLikeChartCurveType, MdtChartsLineLikeChartShape } from "../../../designer/designerConfig";
 import { styledElementValues } from "../../modelBuilder";
@@ -50,19 +50,27 @@ export function getWidthOfLegendMarkerByType(chartType: TwoDimensionalChartType)
     if (chartType === "area") return styledElementValues.defaultLegendMarkerSizes.widthPx
 }
 
-export function getAreaViewOptions(chart: MdtChartsTwoDimensionalChart, chartIndex: number, chartColorsAmount: number): AreaChartViewOptions {
+export function getAreaViewOptions(chart: MdtChartsTwoDimensionalChart, chartIndex: number, style: ChartStyle): AreaChartViewOptions {
     let gradientIds: GradientId[] = [];
-    for (let index = 0; index < chartColorsAmount; index++) {
+    for (let index = 0; index < style.elementColors.length; index++) {
         gradientIds.push(getGradientId(chartIndex, index));
     }
 
     const fill: AreaViewFill = chart.areaStyles?.gradient?.on
         ? { type: "gradient", ids: gradientIds }
-        : { type: "paletteColor" }
+        : { type: "paletteColor" };
 
-    return { fill }
+    const borderLine: AreaViewBorderLine = {
+        on: chart.areaStyles?.borderLine?.on ?? false,
+        colorStyle: {
+            elementColors: style.elementColors,
+            opacity: 1
+        }
+    }
+
+    return { fill, borderLine };
 }
 
 export function getGradientId(chartIndex: number, subIndex: number): GradientId {
-    return `gradient-chart-${chartIndex}-sub-${subIndex}`
+    return `gradient-chart-${chartIndex}-sub-${subIndex}`;
 }
