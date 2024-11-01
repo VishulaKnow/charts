@@ -202,4 +202,24 @@ describe('getGradientDefs', () => {
 
         expect(gradients[0].position).toEqual(expectedPosition);
     });
+
+    it('should return first color by chart if chart key axis is bottom or right', () => {
+        let gradients = TwoDimensionalModelHelper.getGradientDefs(charts, 'bottom', 'vertical')
+        expect(gradients[0].items[0].color).toEqual('green');
+        expect(gradients[0].items[1].color).toEqual('white');
+
+        gradients = TwoDimensionalModelHelper.getGradientDefs(charts, 'right', 'horizontal')
+        expect(gradients[0].items[0].color).toEqual('green');
+        expect(gradients[0].items[1].color).toEqual('white');
+    });
+
+    it('should return second color by chart if chart key axis is top or left', () => {
+        let gradients = TwoDimensionalModelHelper.getGradientDefs(charts, 'top', 'vertical')
+        expect(gradients[0].items[0].color).toEqual('white');
+        expect(gradients[0].items[1].color).toEqual('green');
+
+        gradients = TwoDimensionalModelHelper.getGradientDefs(charts, 'left', 'horizontal')
+        expect(gradients[0].items[0].color).toEqual('white');
+        expect(gradients[0].items[1].color).toEqual('green');
+    });
 });
