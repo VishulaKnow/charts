@@ -53,7 +53,7 @@ abstract class SvgMarkerCreator {
     protected renderSvg(selection: MarkerParentSelection) {
         return selection.append('svg')
             .style("display", "inline-block")
-            .style("height", '10px')
+            .style("height", '8px')
             .classed(Legend.markerClass, true);
     }
 }
@@ -69,7 +69,7 @@ class BarMarkerCreator extends SvgMarkerCreator implements MarkerCreator {
             .append('rect')
             .attr('x', 0)
             .attr('y', 0)
-            .attr('height', 10)
+            .attr('height', this.options.width)
             .attr('width', this.options.width)
             .style('fill', color);
 
