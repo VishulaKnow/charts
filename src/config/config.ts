@@ -266,6 +266,7 @@ export interface AreaStylesBorderLine {
 
 interface MdtChartsBarLikeChart {
     barStyles?: MdtChartsBarLikeChartStyles;
+    embeddedLabels: EmbeddedLabelType;
 }
 
 interface MdtChartsBarLikeChartStyles {
@@ -279,7 +280,6 @@ interface MdtChartsBarLikeChartHatchedStyles {
 export interface MdtChartsTwoDimensionalChart extends MdtChartsLineLikeChart, MdtChartsBarLikeChart {
     type: TwoDimensionalChartType;
     data: TwoDimensionalChartData;
-    embeddedLabels: EmbeddedLabelType;
     isSegmented: boolean;
     valueLabels?: TwoDimensionalChartValueLabels;
 }
