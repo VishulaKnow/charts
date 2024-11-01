@@ -70,6 +70,13 @@ const configCars: MdtChartsConfig = {
                 format: 'string'
             }
         },
+        valueLabels: {
+            collision: {
+                otherValueLabels: {
+                    mode: "hide"
+                }
+            }
+        },
         charts: [
             {
                 isSegmented: false,

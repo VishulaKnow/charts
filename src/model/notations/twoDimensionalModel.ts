@@ -3,6 +3,7 @@ import {
     MdtChartsTwoDimensionalChart,
     TwoDimensionalChartType,
     MdtChartsTwoDimensionalOptions,
+    MdtChartsTwoDimensionalValueLabels,
 } from "../../config/config";
 import { ChartOptionsCanvas, DesignerConfig } from "../../designer/designerConfig";
 import { ChartStyleModelService } from "../chartStyleModel/chartStyleModel";
@@ -17,7 +18,7 @@ import {
     AdditionalElementsOptions,
     TwoDimChartElementsSettings,
     Orient,
-    TwoDimensionalValueLabels
+    TwoDimensionalValueLabels,
 } from "../model";
 import { TwoDimConfigReader } from "../modelInstance/configReader";
 import { ModelInstance } from "../modelInstance/modelInstance";
@@ -57,7 +58,7 @@ export class TwoDimensionalModel {
 
         const charts = this.getChartsModel(options.charts, configReader, options.orientation, designerConfig, modelInstance.dataModel.repository, keyAxis.orient, canvasModel, options.data.keyField.name);
 
-        return  {
+        return {
             legend: canvasModel.legendCanvas.getModel(),
             title: getResolvedTitle(options.title, modelInstance.dataModel.repository.getRawRows()),
             selectable: !!options.selectable,
@@ -189,10 +190,10 @@ export class TwoDimensionalModel {
         return charts.filter(chart => chart.type === type);
     }
 
-    private static getValueLabels(valueLabels: TwoDimensionalValueLabels, canvasModel: CanvasModel): TwoDimensionalValueLabels {
+    private static getValueLabels(valueLabels: MdtChartsTwoDimensionalValueLabels, canvasModel: CanvasModel): TwoDimensionalValueLabels {
         return {
             collision: {
-                otherValueLables: valueLabels?.collision.otherValueLables ?? {
+                otherValueLables: valueLabels?.collision.otherValueLabels ?? {
                     mode: 'none'
                 },
                 chartBlock: {

@@ -1,4 +1,4 @@
-import {BoundingRect} from "src/engine/features/valueLabelsCollision/valueLabelsCollision";
+import { BoundingRect } from "src/engine/features/valueLabelsCollision/valueLabelsCollision";
 
 type DataType = string;
 export type MdtChartsIconElement = () => HTMLElement;
@@ -69,7 +69,7 @@ export interface MdtChartsTwoDimensionalOptions extends GraphicNotationOptions {
     additionalElements: AdditionalElements;
     charts: MdtChartsTwoDimensionalChart[];
     orientation: ChartOrientation;
-    valueLabels?: TwoDimensionalValueLabels;
+    valueLabels?: MdtChartsTwoDimensionalValueLabels;
 }
 
 export interface MdtChartsPolarOptions extends GraphicNotationOptions {
@@ -220,29 +220,15 @@ export interface MdtChartsShowAxisLabelRule {
     showTickFn?: ShowTickFn;
 }
 
-export interface TwoDimensionalValueLabels {
+export interface MdtChartsTwoDimensionalValueLabels {
     collision: ValueLabelsCollision;
 }
 
 export interface ValueLabelsCollision {
-    otherValueLables: OtherValueLables;
-    chartBlock: ValueLabelsChartBlock;
+    otherValueLabels: OtherValueLabels
 }
 
-export interface ValueLabelsChartBlock {
-    left: {
-        mode: ValueLablesChartBlockMode;
-        hasCollision: (labelClientRect: BoundingRect) => boolean;
-        shiftCoordinate: (labelClientRect: BoundingRect) => void;
-    };
-    right: {
-        mode: ValueLablesChartBlockMode;
-        hasCollision: (labelClientRect: BoundingRect) => boolean;
-        shiftCoordinate: (labelClientRect: BoundingRect) => void;
-    };
-}
-
-export interface OtherValueLables {
+export interface OtherValueLabels {
     mode: ValueLabelsCollisionMode;
 }
 
