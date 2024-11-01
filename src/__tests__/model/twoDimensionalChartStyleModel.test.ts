@@ -1,6 +1,6 @@
 import { ChartStyleConfig } from "../../designer/designerConfig";
 import { MdtChartsTwoDimensionalChart, TwoDimValueField } from "../../config/config";
-import { TwoDimensionalChartStyleService } from "../../model/chartStyleModel/TwoDimensionalChartStyleModel";
+import { TwoDimensionalChartStyleService } from "../../model/chartStyleModel/twoDimensionalChartStyleModel";
 
 describe('TwoDimensionalChartStyleService', () => {
     describe('getChartColors', () => {
