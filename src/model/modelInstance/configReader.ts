@@ -87,7 +87,7 @@ export class TwoDimConfigReader implements BaseConfigReader {
         const chart = this.options.charts[chartIndex];
         const axis = this.options.axis;
 
-        if (chart.valueLabels.format)
+        if (chart.valueLabels?.format)
             return chart.valueLabels.format
 
         if (chart.data.valueGroup === "secondary") {

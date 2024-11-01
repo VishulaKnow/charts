@@ -15,7 +15,7 @@ export interface BarAttrsHelper {
 }
 
 export class BarHelper {
-    public static getGroupedBarAttrs(keyAxisOrient: Orient, scales: Scales, margin: BlockMargin, keyField: string, valueFieldName: string, blockSize: Size, barIndex: number, barsAmount: number, barSettings: BarChartSettings): BarAttrsHelper {
+    public static getGroupedBarAttrs(keyAxisOrient: Orient, scales: Scales, margin: BlockMargin, keyField: string, valueFieldName: string, barIndex: number, barsAmount: number, barSettings: BarChartSettings): BarAttrsHelper {
         const attrs: BarAttrsHelper = {
             x: null,
             y: null,
@@ -24,12 +24,12 @@ export class BarHelper {
         }
 
         this.setBarAttrsByKey(attrs, keyAxisOrient, scales.key, margin, keyField, barIndex, barsAmount, barSettings, false);
-        this.setGroupedBarAttrsByValue(attrs, keyAxisOrient, margin, scales.value, valueFieldName, blockSize);
+        this.setGroupedBarAttrsByValue(attrs, keyAxisOrient, margin, scales.value, valueFieldName);
 
         return attrs;
     }
 
-    public static getStackedBarAttr(keyAxisOrient: Orient, scales: Scales, margin: BlockMargin, keyField: string, blockSize: Size, barIndex: number, barsAmount: number, barSettings: BarChartSettings): BarAttrsHelper {
+    public static getStackedBarAttr(keyAxisOrient: Orient, scales: Scales, margin: BlockMargin, keyField: string, barIndex: number, barsAmount: number, barSettings: BarChartSettings): BarAttrsHelper {
         const attrs: BarAttrsHelper = {
             x: null,
             y: null,
@@ -38,7 +38,7 @@ export class BarHelper {
         }
 
         this.setBarAttrsByKey(attrs, keyAxisOrient, scales.key, margin, keyField, barIndex, barsAmount, barSettings, true);
-        this.setSegmentedBarAttrsByValue(attrs, keyAxisOrient, scales.value, margin, blockSize);
+        this.setSegmentedBarAttrsByValue(attrs, keyAxisOrient, scales.value, margin);
 
         return attrs;
     }
@@ -73,7 +73,7 @@ export class BarHelper {
         return index;
     }
 
-    private static setBarAttrsByKey(attrs: BarAttrsHelper, keyAxisOrient: Orient, scaleKey: AxisScale<any>, margin: BlockMargin, keyField: string, barIndex: number, barsAmount: number, barSettings: BarChartSettings, isSegmented: boolean): void {
+    static setBarAttrsByKey(attrs: BarAttrsHelper, keyAxisOrient: Orient, scaleKey: AxisScale<any>, margin: BlockMargin, keyField: string, barIndex: number, barsAmount: number, barSettings: BarChartSettings, isSegmented: boolean): void {
         const barStep = (Scale.getScaleBandWidth(scaleKey) - barSettings.barDistance * (barsAmount - 1)) / barsAmount; // Space for one bar
         const barSize = barStep > barSettings.maxBarWidth ? barSettings.maxBarWidth : barStep;
         const barDiff = (barStep - barSize) * barsAmount / 2; // if bar bigger than maxWidth, diff for x coordinate
@@ -89,26 +89,39 @@ export class BarHelper {
         }
     }
 
-    private static setGroupedBarAttrsByValue(attrs: BarAttrsHelper, keyAxisOrient: Orient, margin: BlockMargin, scaleValue: AxisScale<any>, valueFieldName: string, blockSize: Size): void {
+    private static setGroupedBarAttrsByValue(attrs: BarAttrsHelper, keyAxisOrient: Orient, margin: BlockMargin, scaleValue: AxisScale<any>, valueFieldName: string): void {
+        this.setGroupedBandStartCoordinateAttr(attrs, keyAxisOrient, scaleValue, margin, valueFieldName);
+
         if (keyAxisOrient === 'top') {
-            attrs.y = d => scaleValue(Math.min(d[valueFieldName], 0)) + margin.top;
             attrs.height = d => Math.abs(scaleValue(d[valueFieldName]) - scaleValue(0));
         }
         if (keyAxisOrient === 'bottom') {
-            attrs.y = d => scaleValue(Math.max(d[valueFieldName], 0)) + margin.top;
             attrs.height = d => Math.abs(scaleValue(d[valueFieldName]) - scaleValue(0));
         }
         if (keyAxisOrient === 'left') {
-            attrs.x = d => scaleValue(Math.min(d[valueFieldName], 0)) + margin.left;
             attrs.width = d => Math.abs(scaleValue(d[valueFieldName]) - scaleValue(0));
         }
         if (keyAxisOrient === 'right') {
-            attrs.x = d => scaleValue(Math.max(d[valueFieldName], 0)) + margin.left;
             attrs.width = d => Math.abs(scaleValue(d[valueFieldName]) - scaleValue(0));
         }
     }
 
-    private static setSegmentedBarAttrsByValue(attrs: BarAttrsHelper, keyAxisOrient: Orient, scaleValue: AxisScale<any>, margin: BlockMargin, blockSize: Size): void {
+    static setGroupedBandStartCoordinateAttr(attrs: BarAttrsHelper, keyAxisOrient: Orient, scaleValue: AxisScale<any>, margin: BlockMargin, valueFieldName: string) {
+        if (keyAxisOrient === 'top') {
+            attrs.y = d => scaleValue(Math.min(d[valueFieldName], 0)) + margin.top;
+        }
+        if (keyAxisOrient === 'bottom') {
+            attrs.y = d => scaleValue(Math.max(d[valueFieldName], 0)) + margin.top;
+        }
+        if (keyAxisOrient === 'left') {
+            attrs.x = d => scaleValue(Math.min(d[valueFieldName], 0)) + margin.left;
+        }
+        if (keyAxisOrient === 'right') {
+            attrs.x = d => scaleValue(Math.max(d[valueFieldName], 0)) + margin.left;
+        }
+    }
+
+    private static setSegmentedBarAttrsByValue(attrs: BarAttrsHelper, keyAxisOrient: Orient, scaleValue: AxisScale<any>, margin: BlockMargin): void {
         if (keyAxisOrient === 'top') {
             attrs.y = d => scaleValue(Math.min(d[1], d[0])) + margin.top;
             attrs.height = d => Math.abs(scaleValue(d[1]) - scaleValue(d[0]));
