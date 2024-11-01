@@ -63,7 +63,7 @@ export class PolarModel {
         chartsModel.push({
             type: chart.type,
             data: { ...chart.data },
-            tooltip: chart.tooltip,
+            tooltip: { show: true },
             cssClasses: ChartStyleModelService.getCssClasses(0),
             style: ChartStyleModelService.getChartStyle(dataLength, chartStyleConfig),
             legend: {

@@ -24,7 +24,6 @@ describe('TwoDimensionalChartStyleService', () => {
                 type: "bar",
                 embeddedLabels: null,
                 isSegmented: false,
-                tooltip: null,
                 markers: null,
                 data: {
                     valueFields: fieldsColors ? fieldsColors.map(fc => valueField(fc)) : [valueField()]

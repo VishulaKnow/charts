@@ -24,9 +24,6 @@ describe('check chart sorting in order: [area, bar, line]', () => {
                         }
                     ]
                 },
-                tooltip: {
-                    show: true
-                },
                 embeddedLabels: 'none',
             },
             {
@@ -48,9 +45,6 @@ describe('check chart sorting in order: [area, bar, line]', () => {
                             title: 'Количество автомобилей на душу населения'
                         }
                     ]
-                },
-                tooltip: {
-                    show: true
                 },
                 embeddedLabels: 'none'
             }
@@ -81,9 +75,6 @@ describe('check chart sorting in order: [area, bar, line]', () => {
                         }
                     ]
                 },
-                tooltip: {
-                    show: true
-                },
                 embeddedLabels: 'none'
             },
             {
@@ -105,9 +96,6 @@ describe('check chart sorting in order: [area, bar, line]', () => {
                             title: 'Количество автомобилей на душу населения'
                         }
                     ]
-                },
-                tooltip: {
-                    show: true
                 },
                 embeddedLabels: 'none'
             },
@@ -131,9 +119,6 @@ describe('check chart sorting in order: [area, bar, line]', () => {
                         }
                     ]
                 },
-                tooltip: {
-                    show: true
-                },
                 embeddedLabels: 'none'
             },
             {
@@ -155,9 +140,6 @@ describe('check chart sorting in order: [area, bar, line]', () => {
                             title: 'Количество автомобилей на душу населения'
                         }
                     ]
-                },
-                tooltip: {
-                    show: true
                 },
                 embeddedLabels: 'none'
             }

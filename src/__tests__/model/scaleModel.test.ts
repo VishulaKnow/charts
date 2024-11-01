@@ -57,9 +57,6 @@ describe('getScaleMaxValue test', () => {
                         }
                     ]
                 },
-                tooltip: {
-                    show: true
-                },
                 markers: {
                     show: true
                 },
@@ -149,9 +146,7 @@ describe('getScaleMaxValue test', () => {
                                 }
                             ]
                         },
-                        tooltip: {
-                            show: true
-                        },
+
                         markers: {
                             show: true
                         },
@@ -169,9 +164,7 @@ describe('getScaleMaxValue test', () => {
                                 }
                             ]
                         },
-                        tooltip: {
-                            show: true
-                        },
+
                         markers: {
                             show: true
                         },
@@ -201,9 +194,7 @@ describe('getScaleMaxValue test', () => {
                                 }
                             ]
                         },
-                        tooltip: {
-                            show: true
-                        },
+
                         embeddedLabels: 'key',
                         markers: {
                             show: true
@@ -221,9 +212,7 @@ describe('getScaleMaxValue test', () => {
                                 }
                             ]
                         },
-                        tooltip: {
-                            show: true
-                        },
+
                         markers: {
                             show: true
                         },
@@ -258,9 +247,7 @@ describe('getScaleMaxValue test', () => {
                                 }
                             ]
                         },
-                        tooltip: {
-                            show: true
-                        },
+
                         embeddedLabels: 'key'
                     },
                     {
@@ -278,9 +265,7 @@ describe('getScaleMaxValue test', () => {
                                 }
                             ]
                         },
-                        tooltip: {
-                            show: true
-                        },
+
                         embeddedLabels: 'key'
                     }
                 ]
@@ -310,9 +295,6 @@ describe('getScaleMaxValue test', () => {
                                 }
                             ]
                         },
-                        tooltip: {
-                            show: true
-                        },
                         embeddedLabels: 'key'
                     },
                     {
@@ -335,9 +317,7 @@ describe('getScaleMaxValue test', () => {
                                 }
                             ]
                         },
-                        tooltip: {
-                            show: true
-                        },
+
                         embeddedLabels: 'key'
                     }
                 ]
@@ -367,9 +347,6 @@ describe('getScaleMaxValue test', () => {
                                 }
                             ]
                         },
-                        tooltip: {
-                            show: true
-                        },
                         embeddedLabels: 'key'
                     },
                     {
@@ -387,9 +364,7 @@ describe('getScaleMaxValue test', () => {
                                 }
                             ]
                         },
-                        tooltip: {
-                            show: true
-                        },
+
                         embeddedLabels: 'key'
                     },
                     {
@@ -417,9 +392,7 @@ describe('getScaleMaxValue test', () => {
                                 }
                             ]
                         },
-                        tooltip: {
-                            show: true
-                        },
+
                         embeddedLabels: 'key'
                     }
                 ]
@@ -453,7 +426,6 @@ describe('getScaleMinValue', () => {
                         }
                     ]
                 },
-                tooltip: null,
                 markers: null,
                 embeddedLabels: 'key'
             }
@@ -503,9 +475,6 @@ describe('get scales tests', () => {
                         }
                     ]
                 },
-                tooltip: {
-                    show: true
-                },
                 markers: {
                     show: true
                 },
@@ -527,9 +496,6 @@ describe('get scales tests', () => {
                             title: 'Количество автомобилей на душу населения'
                         }
                     ]
-                },
-                tooltip: {
-                    show: true
                 },
                 markers: {
                     show: true
@@ -739,9 +705,6 @@ describe('getScaleLinearDomain', () => {
                         ],
                         valueGroup: "secondary",
                     },
-                    tooltip: {
-                        show: true
-                    },
                     embeddedLabels: 'none',
                     markers: {
                         show: false
@@ -771,9 +734,6 @@ describe('getScaleLinearDomain', () => {
                             }
                         ],
                         valueGroup: "main",
-                    },
-                    tooltip: {
-                        show: true
                     },
                     embeddedLabels: 'none',
                     markers: {

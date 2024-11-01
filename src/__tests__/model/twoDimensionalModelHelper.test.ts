@@ -23,9 +23,6 @@ describe('shouldMarkerShow', () => {
                     }
                 ]
             },
-            tooltip: {
-                show: true
-            },
             markers: {
                 show: false
             },

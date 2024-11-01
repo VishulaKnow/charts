@@ -59,9 +59,6 @@ describe('get axes', () => {
                         }
                     ]
                 },
-                tooltip: {
-                    show: true
-                },
                 markers: {
                     show: true
                 },
@@ -83,9 +80,6 @@ describe('get axes', () => {
                             title: 'Количество автомобилей на душу населения'
                         }
                     ]
-                },
-                tooltip: {
-                    show: true
                 },
                 markers: {
                     show: true
