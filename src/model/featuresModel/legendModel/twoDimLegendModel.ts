@@ -37,11 +37,6 @@ export class TwoDimLegendModel {
         }
     }
 
-    private getLegendSizeLegacy(): number {
-        const heightOfLegendItemWithoutWordWrapping = 20;
-        return heightOfLegendItemWithoutWordWrapping;
-    }
-
     private getLegendModel(legendOptions: Legend): ILegendModel {
         const position: LegendPosition = legendOptions.show ? "top" : "off";
         return {
