@@ -10,8 +10,8 @@ import { ModelInstance } from "../../modelInstance/modelInstance";
 import { TwoDimensionalModel } from "../../notations/twoDimensionalModel";
 import { ChartOrientation } from "../../../config/config";
 
-export const AXIS_HORIZONTAL_LABEL_PADDING = 15;
-export const AXIS_VERTICAL_LABEL_PADDING = 10;
+export const AXIS_HORIZONTAL_LABEL_PADDING = 12;
+export const AXIS_VERTICAL_LABEL_PADDING = 8;
 
 export class TwoDimMarginModel {
     private twoDimLegendModel = new TwoDimLegendModel(this.configReader);

@@ -45,8 +45,8 @@ export function getLegendMarkerOptions(chart: MdtChartsTwoDimensionalChart): Cha
 }
 
 export function getWidthOfLegendMarkerByType(chartType: TwoDimensionalChartType): number {
-    if (chartType === "bar") return 10;
-    if (chartType === "line") return 30;
+    if (chartType === "bar") return 8;
+    if (chartType === "line") return 24;
     if (chartType === "area") return styledElementValues.defaultLegendMarkerSizes.widthPx
 }
 

@@ -1,5 +1,5 @@
 :root {
-	--chart-base-font-size: 13px;
+	--chart-base-font-size: 12px;
 }
 
 .wrapper {
@@ -80,7 +80,7 @@
     text-overflow: ellipsis;
 }
 .legend-wrapper-without-wrap .legend-item-inline:not(:last-of-type) {
-    margin-right: 12px
+    margin-right: 16px
 }
 .legend-wrapper-with-wrap .legend-item-inline {
     margin: 2px;
