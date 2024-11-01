@@ -50,14 +50,12 @@ export class DataManagerModel {
 
     private static initDataScopeFor2D(configOptions: MdtChartsTwoDimensionalOptions, modelInstance: ModelInstance, data: MdtChartsDataSource, designerConfig: DesignerConfig): void {
         modelInstance.dataModel.initMaxRecordsAmount(configOptions.data.maxRecordsAmount);
-        let itemsLength = configOptions.charts.filter((chart) => chart.type === 'bar').length;
-        if (itemsLength === 0) itemsLength = 1; // Если баров нет, то для одной записи выделяется столько же места, сколько для одного столбика
 
         const axisLength = AxisModel.getAxisLength(configOptions.orientation, modelInstance.canvasModel);
         const uniqueKeys = ModelHelper.getUniqueValues(data[configOptions.data.dataSource].map(d => d[configOptions.data.keyField.name]));
         const dataLength = uniqueKeys.length;
 
-        const limit = this.getDataLimitByItemSize(this.getElementsInGroupAmount(configOptions, itemsLength), dataLength, axisLength, designerConfig.canvas.chartOptions.bar);
+        const limit = this.getDataLimitByItemSize(this.getElementsInGroupAmount(configOptions), dataLength, axisLength, designerConfig.canvas.chartOptions.bar);
         const allowableKeys = uniqueKeys.slice(0, limit);
         const hidedRecordsAmount = dataLength - allowableKeys.length;
 
@@ -133,11 +131,8 @@ export class DataManagerModel {
      * @param configOptions 
      * @param chartsLength 
      */
-    private static getElementsInGroupAmount(configOptions: MdtChartsTwoDimensionalOptions, chartsLength: number): number {
-        if (configOptions.type === '2d')
-            return this.getBarChartsInGroupAmount(configOptions.charts);
-
-        return chartsLength;
+    private static getElementsInGroupAmount(configOptions: MdtChartsTwoDimensionalOptions): number {
+        return this.getBarChartsInGroupAmount(configOptions.charts);
     }
 
     private static getBarChartsInGroupAmount(charts: MdtChartsTwoDimensionalChart[]): number {
