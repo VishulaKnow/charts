@@ -60,6 +60,8 @@ export class CanvasDotChart {
 
             const settingsStore = new DotChartSettingsStore({ scaleBandWidth: Scale.getScaleBandWidth(scales.key) });
 
+            // TODO: refactor
+
             if (this.options.canvas.keyAxisOrient === 'top' || this.options.canvas.keyAxisOrient === 'bottom') {
                 const handleBase: (dataRow: MdtChartsDataRow) => number = d => scales.key(Helper.getKeyFieldValue(d, this.options.dataOptions.keyFieldName, false)) + this.options.canvas.margin.left + settingsStore.getBandItemPad()
 
