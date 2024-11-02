@@ -41,7 +41,6 @@ export class CanvasDotChart {
                 .data(this.options.dataSourceRecords)
                 .enter()
                 .append('line')
-                .style("stroke", "black")
                 .style("stroke-width", "2")
                 .attr('class', this.dotChartItemClass);
 
