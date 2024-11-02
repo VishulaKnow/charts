@@ -5,7 +5,7 @@ export type AxisPosition = 'start' | 'end';
 export type ChartOrientation = 'vertical' | 'horizontal';
 export type ChartNotation = '2d' | 'polar' | 'interval';
 export type ChartType = 'bar' | 'line' | 'area' | 'donut' | 'gantt';
-export type TwoDimensionalChartType = 'line' | 'bar' | 'area';
+export type TwoDimensionalChartType = 'line' | 'bar' | 'area' | 'dot';
 export type PolarChartType = 'donut';
 export type IntervalChartType = 'gantt';
 export type EmbeddedLabelType = 'none' | 'key' | 'value';
@@ -277,7 +277,22 @@ interface MdtChartsBarLikeChartHatchedStyles {
     on: boolean;
 }
 
-export interface MdtChartsTwoDimensionalChart extends MdtChartsLineLikeChart, MdtChartsBarLikeChart {
+interface MdtChartsDotChart {
+    /** @alpha */
+    dotLikeStyles?: MdtChartsDotLikeChartStyles;
+}
+
+interface MdtChartsDotLikeChartStyles {
+    shape?: MdtChartsDotLikeChartShape;
+}
+
+interface MdtChartsDotLikeChartShape {
+    type: "line";
+    width?: number;
+}
+
+export interface MdtChartsTwoDimensionalChart extends MdtChartsLineLikeChart, MdtChartsBarLikeChart, MdtChartsDotChart {
+    /** @alpha dot type has no full support */
     type: TwoDimensionalChartType;
     data: TwoDimensionalChartData;
     isSegmented: boolean;

@@ -20,11 +20,13 @@ import { TwoDimRecordOverflowAlert } from "./extenders/twoDimRecordOverflowAlert
 import { Line } from "./line/line";
 import { CanvasValueLabels } from "../../engine/features/valueLabels/valueLabels";
 import { LinearGradientDef } from "../../engine/block/defs/LinearGradientDef";
+import { CanvasDotChart } from "./dot/dotChart";
 
 
 export class TwoDimensionalManager implements ChartContentManager {
     private canvasValueLabels?: CanvasValueLabels;
-    private linearGradientDef? : LinearGradientDef;
+    private linearGradientDef?: LinearGradientDef;
+    private dotChart: CanvasDotChart;
 
     public render(engine: Engine, model: Model<TwoDimensionalOptionsModel>): void {
         const options = model.options;
@@ -40,6 +42,23 @@ export class TwoDimensionalManager implements ChartContentManager {
         Axis.render(engine.block, scales, options.scale, options.axis, model.blockCanvas.size);
 
         GridLine.render(engine.block, options.additionalElements.gridLine.flag, options.axis, model.blockCanvas.size, model.chartBlock.margin, scales);
+
+        this.dotChart = new CanvasDotChart({
+            elementAccessors: {
+                getBlock: () => engine.block,
+            },
+            canvas: {
+                keyAxisOrient: options.axis.key.orient,
+                margin: model.chartBlock.margin,
+            },
+            dataSourceRecords: engine.data[options.data.dataSource],
+            dataOptions: {
+                keyFieldName: options.data.keyField.name
+            },
+            bandOptions: {
+                settings: options.chartSettings.bar
+            }
+        });
 
         this.renderCharts(engine.block,
             options.charts,
@@ -201,6 +220,8 @@ export class TwoDimensionalManager implements ChartContentManager {
                     keyAxisOrient,
                     chart,
                     blockSize);
+            else if (chart.type === 'dot')
+                this.dotChart.render(chartScales, chart);
         });
         EmbeddedLabels.raiseGroups(block);
     }

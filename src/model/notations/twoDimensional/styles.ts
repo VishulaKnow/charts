@@ -35,7 +35,8 @@ export function getLegendMarkerOptions(chart: MdtChartsTwoDimensionalChart): Cha
     const shapeByType: Record<TwoDimensionalChartType, LegendMarkerShape> = {
         area: "default",
         bar: "bar",
-        line: "line"
+        line: "line",
+        dot: "default"
     }
     return {
         markerShape: shapeByType[chart.type],
