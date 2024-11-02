@@ -36,7 +36,7 @@ export function getLegendMarkerOptions(chart: MdtChartsTwoDimensionalChart): Cha
         area: "default",
         bar: "bar",
         line: "line",
-        dot: "line"
+        dot: "default"
     }
     return {
         markerShape: shapeByType[chart.type],

@@ -86,7 +86,7 @@ export class TwoDimensionalModel {
      * @param charts Чарты из конфига
      */
     public static sortCharts(charts: MdtChartsTwoDimensionalChart[]): void {
-        const chartOrder: TwoDimensionalChartType[] = ['area', 'bar', 'line'];
+        const chartOrder: TwoDimensionalChartType[] = ['area', 'bar', 'line', 'dot'];
         charts.sort((chart1, chart2) => chartOrder.indexOf(chart1.type) - chartOrder.indexOf(chart2.type));
     }
 
@@ -145,8 +145,8 @@ export class TwoDimensionalModel {
                 dotViewOptions: {
                     shape: {
                         type: "line",
-                        handleSize: (v) => v,
-                        handleStartCoordinate: (v) => v,
+                        handleEndCoordinate: (v) => v + 3,
+                        handleStartCoordinate: (v) => v - 3,
                         width: 2
                     }
                 }

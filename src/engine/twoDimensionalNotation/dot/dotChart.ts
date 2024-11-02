@@ -1,6 +1,6 @@
 import { sum } from "d3-array";
-import { MdtChartsDataRow, MdtChartsDataSource } from "../../../config/config";
-import { BarChartSettings, BlockMargin, Orient, TwoDimensionalChartModel } from "../../../model/model";
+import { MdtChartsDataRow } from "../../../config/config";
+import { BarChartSettings, BlockMargin, DotChartViewModel, Orient, TwoDimensionalChartModel } from "../../../model/model";
 import { Block } from "../../block/block";
 import { Scales } from "../../features/scale/scale";
 import { DomHelper } from "../../helpers/domHelper";
@@ -68,14 +68,15 @@ export class CanvasDotChart {
             if (!attrs.width) attrs.width = attrs.x;
             if (!attrs.height) attrs.height = attrs.y;
 
-            elements.attr('x1', d => attrs.x(d))
+            elements.attr('x1', d => chart.dotViewOptions.shape.handleStartCoordinate(attrs.x(d)))
                 .attr('y1', d => attrs.y(d))
                 // .attr('x2', d => attrs.x !== attrs.width ? attrs.x(d) : attrs.x(d) + attrs.width(d))
                 // .attr('y2', d => attrs.y !== attrs.height ? attrs.y(d) : attrs.y(d) + attrs.height(d));
-                .attr('x2', d => attrs.x(d) + attrs.width(d))
+                .attr('x2', d => chart.dotViewOptions.shape.handleEndCoordinate(attrs.x(d) + attrs.width(d)))
                 .attr('y2', d => attrs.y(d));
 
             DomHelper.setCssClasses(elements, Helper.getCssClassesWithElementIndex(chart.cssClasses, index));
+            DomHelper.setChartStyle(elements, chart.style, index, 'stroke');
         });
     }
 }

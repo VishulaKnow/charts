@@ -328,13 +328,13 @@ export interface AreaViewBorderLine {
 export interface DotChartModel {
     dotViewOptions: DotChartViewModel;
 }
-interface DotChartViewModel {
+export interface DotChartViewModel {
     shape: DotChartShapeOptions;
 }
 interface DotChartShapeOptions {
     type: "line";
     handleStartCoordinate: (calculatedBandItemStartCoordinate: number) => number;
-    handleSize: (calculatedBandItemSize: number) => number;
+    handleEndCoordinate: (calculatedBandItemSize: number) => number;
     width: number;
 }
 

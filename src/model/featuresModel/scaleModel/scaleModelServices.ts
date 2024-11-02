@@ -1,4 +1,4 @@
-import { ChartOrientation, MdtChartsTwoDimensionalChart } from "../../../config/config";
+import { ChartOrientation, MdtChartsTwoDimensionalChart, TwoDimensionalChartType } from "../../../config/config";
 import { CanvasSizesModel } from "../../modelInstance/canvasModel/canvasSizesModel/canvasSizeModel";
 
 export function getScaleKeyRangePeek(chartOrientation: ChartOrientation, canvasModel: CanvasSizesModel) {
@@ -17,13 +17,16 @@ export function getElementsAmountForScale(barCharts: MdtChartsTwoDimensionalChar
     if (barCharts.length === 0)
         return 1;
 
-    let barsAmount = 0;
+    let barAmounts: Partial<Record<TwoDimensionalChartType, number>> = {};
     barCharts.forEach(chart => {
+        if (!barAmounts[chart.type])
+            barAmounts[chart.type] = 0;
+
         if (chart.isSegmented)
-            barsAmount += 1; // Если бар сегментированный, то все valueFields являются частями одного бара
+            barAmounts[chart.type] += 1; // Если бар сегментированный, то все valueFields являются частями одного бара
         else
-            barsAmount += chart.data.valueFields.length;
+            barAmounts[chart.type] += chart.data.valueFields.length;
     });
 
-    return barsAmount;
+    return Math.max(...Object.values(barAmounts));
 }
