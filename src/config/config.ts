@@ -278,6 +278,7 @@ interface MdtChartsBarLikeChartHatchedStyles {
 }
 
 export interface MdtChartsTwoDimensionalChart extends MdtChartsLineLikeChart, MdtChartsBarLikeChart {
+    /** @alpha dot type has no full support */
     type: TwoDimensionalChartType;
     data: TwoDimensionalChartData;
     isSegmented: boolean;
