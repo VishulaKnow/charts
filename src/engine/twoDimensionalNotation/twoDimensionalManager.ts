@@ -56,8 +56,6 @@ export class TwoDimensionalManager implements ChartContentManager {
                 keyFieldName: options.data.keyField.name
             },
             bandOptions: {
-                bandItemsForEachChart: BarHelper.getBarsInGroupAmount(options.charts),
-                firstDotChartIndex: options.charts.findIndex(ch => ch.type === 'dot'),
                 settings: options.chartSettings.bar
             }
         });

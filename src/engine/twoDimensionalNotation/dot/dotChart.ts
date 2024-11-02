@@ -22,9 +22,6 @@ export interface CanvasDotChartOptions {
     dataSourceRecords: MdtChartsDataRow[];
     bandOptions: {
         settings: BarChartSettings;
-        bandItemsForEachChart: number[];
-        //TODO: remove this
-        firstDotChartIndex: number;
     }
 }
 
