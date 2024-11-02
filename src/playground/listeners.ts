@@ -160,12 +160,6 @@ class Listeners {
         }
     }
 
-    private getTooltipConfig(): any {
-        return {
-            show: true
-        }
-    }
-
     private changeConfigOptions(notationType: '2d' | 'polar' | 'interval'): void {
         if (notationType === '2d') {
             const options: MdtChartsTwoDimensionalOptions = {
@@ -185,7 +179,6 @@ class Listeners {
                     {
                         data: this.getDataConfig(notationType),
                         isSegmented: false,
-                        tooltip: this.getTooltipConfig(),
                         type: ListenersHelper.getInputValue('#chart-2d-type') === 'barLine' ? 'bar' : ListenersHelper.getInputValue('#chart-2d-type') as 'line' | 'bar' | 'area',
                         embeddedLabels: 'none',
                         markers: {
@@ -239,7 +232,6 @@ class Listeners {
                 type: notationType,
                 chart: {
                     data: this.getDataConfig(notationType),
-                    tooltip: this.getTooltipConfig(),
                     type: 'donut'
                 },
                 tooltip: this.config.options.tooltip
@@ -261,7 +253,6 @@ class Listeners {
                 type: notationType,
                 chart: {
                     data: this.getDataConfig(notationType),
-                    tooltip: this.getTooltipConfig(),
                     type: 'gantt'
                 },
                 axis: {

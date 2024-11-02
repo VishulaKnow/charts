@@ -1,6 +1,6 @@
 import { ChartStyleConfig } from "../../designer/designerConfig";
 import { MdtChartsTwoDimensionalChart, TwoDimValueField } from "../../config/config";
-import { TwoDimensionalChartStyleService } from "../../model/chartStyleModel/TwoDimensionalChartStyleModel";
+import { TwoDimensionalChartStyleService } from "../../model/chartStyleModel/twoDimensionalChartStyleModel";
 
 describe('TwoDimensionalChartStyleService', () => {
     describe('getChartColors', () => {
@@ -24,7 +24,6 @@ describe('TwoDimensionalChartStyleService', () => {
                 type: "bar",
                 embeddedLabels: null,
                 isSegmented: false,
-                tooltip: null,
                 markers: null,
                 data: {
                     valueFields: fieldsColors ? fieldsColors.map(fc => valueField(fc)) : [valueField()]

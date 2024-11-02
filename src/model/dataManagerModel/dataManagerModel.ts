@@ -2,7 +2,7 @@ import { MdtChartsConfig, MdtChartsTwoDimensionalChart, MdtChartsTwoDimensionalO
 import { BarOptionsCanvas, DesignerConfig, LegendBlockCanvas } from "../../designer/designerConfig";
 import { AxisModel } from "../featuresModel/axisModel";
 import { LegendCanvasModel, LegendItemContentOptions } from "../featuresModel/legendModel/legendCanvasModel";
-import { DataScope, Field, LegendBlockModel } from "../model";
+import { DataScope, LegendBlockModel } from "../model";
 import { ModelHelper } from "../helpers/modelHelper";
 import { CanvasModel } from "../modelInstance/canvasModel/canvasModel";
 import { DataModelInstance } from "../modelInstance/dataModel/dataModel";
@@ -50,25 +50,16 @@ export class DataManagerModel {
 
     private static initDataScopeFor2D(configOptions: MdtChartsTwoDimensionalOptions, modelInstance: ModelInstance, data: MdtChartsDataSource, designerConfig: DesignerConfig): void {
         modelInstance.dataModel.initMaxRecordsAmount(configOptions.data.maxRecordsAmount);
-        let itemsLength: number = 1;
-        itemsLength = (configOptions.charts)
-            .filter((chart) => chart.type === 'bar').length;
-        if (itemsLength === 0) itemsLength = 1; // Если баров нет, то для одной записи выделяется столько же места, сколько для одного столбика
 
-        if (itemsLength !== 0) {
-            const axisLength = AxisModel.getAxisLength(configOptions.orientation, modelInstance.canvasModel);
-            const uniqueKeys = ModelHelper.getUniqueValues(data[configOptions.data.dataSource].map(d => d[configOptions.data.keyField.name]));
-            const dataLength = uniqueKeys.length;
+        const axisLength = AxisModel.getAxisLength(configOptions.orientation, modelInstance.canvasModel);
+        const uniqueKeys = ModelHelper.getUniqueValues(data[configOptions.data.dataSource].map(d => d[configOptions.data.keyField.name]));
+        const dataLength = uniqueKeys.length;
 
-            const limit = this.getDataLimitByItemSize(this.getElementsInGroupAmount(configOptions, itemsLength), dataLength, axisLength, designerConfig.canvas.chartOptions.bar);
-            const allowableKeys = uniqueKeys.slice(0, limit);
-            const hidedRecordsAmount = dataLength - allowableKeys.length;
+        const limit = this.getDataLimitByItemSize(this.getElementsInGroupAmount(configOptions), dataLength, axisLength, designerConfig.canvas.chartOptions.bar);
+        const allowableKeys = uniqueKeys.slice(0, limit);
+        const hidedRecordsAmount = dataLength - allowableKeys.length;
 
-            modelInstance.dataModel.initScope(this.limitAllowableKeys(allowableKeys, hidedRecordsAmount, modelInstance.dataModel));
-        } else {
-            const allKeys = this.getDataValuesByKeyField(data, configOptions.data.dataSource, configOptions.data.keyField.name);
-            modelInstance.dataModel.initScope(this.getMaximumPossibleScope(allKeys, modelInstance.dataModel));
-        }
+        modelInstance.dataModel.initScope(this.limitAllowableKeys(allowableKeys, hidedRecordsAmount, modelInstance.dataModel));
     }
 
     private static initDataScopeForPolar(configOptions: MdtChartsPolarOptions, modelInstance: ModelInstance, data: MdtChartsDataSource, legendBlock: LegendBlockModel, legendCanvas: LegendBlockCanvas): void {
@@ -140,11 +131,8 @@ export class DataManagerModel {
      * @param configOptions 
      * @param chartsLength 
      */
-    private static getElementsInGroupAmount(configOptions: MdtChartsTwoDimensionalOptions, chartsLength: number): number {
-        if (configOptions.type === '2d')
-            return this.getBarChartsInGroupAmount(configOptions.charts);
-
-        return chartsLength;
+    private static getElementsInGroupAmount(configOptions: MdtChartsTwoDimensionalOptions): number {
+        return this.getBarChartsInGroupAmount(configOptions.charts);
     }
 
     private static getBarChartsInGroupAmount(charts: MdtChartsTwoDimensionalChart[]): number {
@@ -167,14 +155,6 @@ export class DataManagerModel {
 
     private static getScopedChartData(data: MdtChartsDataRow[], allowableKeys: string[], keyFieldName: string): MdtChartsDataRow[] {
         return data.filter(d => allowableKeys.findIndex(key => key === d[keyFieldName]) !== -1);
-    }
-
-    private static getTypedData(data: MdtChartsDataRow[], field: Field): MdtChartsDataRow[] {
-        if (field.format === 'date')
-            data.forEach(d => {
-                d[field.name] = new Date(d[field.name]);
-            });
-        return data;
     }
 
     private static getDataLimitByItemSize(elementsInGroupAmount: number, dataLength: number, axisLength: number, barOptions: BarOptionsCanvas): number {

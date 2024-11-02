@@ -235,14 +235,6 @@ export interface IntervalAxis {
 interface DateAxisOptions extends AxisOptions { }
 
 //====================================================== Charts
-interface ChartSettings {
-    tooltip: Tooltip;
-}
-
-interface Tooltip {
-    show: boolean;
-}
-
 interface MdtChartsLineLikeChart {
     markers: MarkersOptions;
     lineStyles?: MdtChartsLineLikeChartStyles;
@@ -274,6 +266,7 @@ export interface AreaStylesBorderLine {
 
 interface MdtChartsBarLikeChart {
     barStyles?: MdtChartsBarLikeChartStyles;
+    embeddedLabels: EmbeddedLabelType;
 }
 
 export interface MdtChartsBarLikeChartStyles {
@@ -292,21 +285,20 @@ interface MdtChartsBarLikeChartHatchedStyles {
     on: boolean;
 }
 
-export interface MdtChartsTwoDimensionalChart extends ChartSettings, MdtChartsLineLikeChart, MdtChartsBarLikeChart {
+export interface MdtChartsTwoDimensionalChart extends MdtChartsLineLikeChart, MdtChartsBarLikeChart {
     type: TwoDimensionalChartType;
     data: TwoDimensionalChartData;
-    embeddedLabels: EmbeddedLabelType;
     isSegmented: boolean;
     valueLabels?: TwoDimensionalChartValueLabels;
 }
 
-export interface PolarChart extends ChartSettings {
+export interface PolarChart {
     type: PolarChartType;
     data: PolarChartData;
     aggregator?: MdtChartsDonutAggregator;
 }
 
-export interface IntervalChart extends ChartSettings {
+export interface IntervalChart {
     type: IntervalChartType;
     data: IntervalChartData;
 }
