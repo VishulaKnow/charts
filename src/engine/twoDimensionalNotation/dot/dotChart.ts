@@ -2,11 +2,11 @@ import { sum } from "d3-array";
 import { MdtChartsDataRow } from "../../../config/config";
 import { BarChartSettings, BlockMargin, DotChartViewModel, Orient, TwoDimensionalChartModel } from "../../../model/model";
 import { Block } from "../../block/block";
-import { Scales } from "../../features/scale/scale";
+import { Scale, Scales } from "../../features/scale/scale";
 import { DomHelper } from "../../helpers/domHelper";
 import { Helper } from "../../helpers/helper";
 import { NamesHelper } from "../../helpers/namesHelper";
-import { BarAttrsHelper, BarHelper } from "../bar/barHelper";
+import { BarAttrsHelper, BarHelper, BarSettingsStore } from "../bar/barHelper";
 
 export interface CanvasDotChartOptions {
     elementAccessors: {
@@ -59,8 +59,7 @@ export class CanvasDotChart {
                 this.options.canvas.margin,
                 this.options.dataOptions.keyFieldName,
                 0,
-                1,
-                this.options.bandOptions.settings,
+                new BarSettingsStore(this.options.bandOptions.settings, { scaleBandWidth: Scale.getScaleBandWidth(scales.key), barsAmount: 1 }),
                 false
             );
 
