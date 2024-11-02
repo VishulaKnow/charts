@@ -122,18 +122,16 @@ export class BarHelper {
     private static setGroupedBarAttrsByValue(attrs: BarAttrsHelper, keyAxisOrient: Orient, margin: BlockMargin, scaleValue: AxisScale<any>, valueFieldName: string): void {
         this.setGroupedBandStartCoordinateAttr(attrs, keyAxisOrient, scaleValue, margin, valueFieldName);
 
-        if (keyAxisOrient === 'top') {
-            attrs.height = d => Math.abs(scaleValue(d[valueFieldName]) - scaleValue(0));
+        if (keyAxisOrient === 'top' || keyAxisOrient === 'bottom') {
+            attrs.height = this.getBandItemValueStretch(scaleValue, valueFieldName);
         }
-        if (keyAxisOrient === 'bottom') {
-            attrs.height = d => Math.abs(scaleValue(d[valueFieldName]) - scaleValue(0));
+        if (keyAxisOrient === 'left' || keyAxisOrient === 'right') {
+            attrs.width = this.getBandItemValueStretch(scaleValue, valueFieldName);
         }
-        if (keyAxisOrient === 'left') {
-            attrs.width = d => Math.abs(scaleValue(d[valueFieldName]) - scaleValue(0));
-        }
-        if (keyAxisOrient === 'right') {
-            attrs.width = d => Math.abs(scaleValue(d[valueFieldName]) - scaleValue(0));
-        }
+    }
+
+    static getBandItemValueStretch(scaleValue: AxisScale<any>, valueFieldName: string): (dataRow: MdtChartsDataRow) => number {
+        return d => Math.abs(scaleValue(d[valueFieldName]) - scaleValue(0));
     }
 
     static setGroupedBandStartCoordinateAttr(attrs: BarAttrsHelper, keyAxisOrient: Orient, scaleValue: AxisScale<any>, margin: BlockMargin, valueFieldName: string) {

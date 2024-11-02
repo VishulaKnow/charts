@@ -25,6 +25,13 @@ export interface CanvasDotChartOptions {
     }
 }
 
+export interface DotItemAttrGetters {
+    x1: (dataRow: MdtChartsDataRow) => number;
+    y1: (dataRow: MdtChartsDataRow) => number;
+    x2: (dataRow: MdtChartsDataRow) => number;
+    y2: (dataRow: MdtChartsDataRow) => number;
+}
+
 export class CanvasDotChart {
     private readonly dotChartItemClass = NamesHelper.getClassName("dot-chart-item");
 
@@ -44,35 +51,49 @@ export class CanvasDotChart {
                 .style("stroke-width", "2")
                 .attr('class', this.dotChartItemClass);
 
-            const attrs: BarAttrsHelper = {
-                x: null,
-                y: null,
-                width: null,
-                height: null
+            const attrs: DotItemAttrGetters = {
+                x1: null,
+                y1: null,
+                x2: null,
+                y2: null
             }
 
-            BarHelper.setBarAttrsByKey(
-                attrs,
-                this.options.canvas.keyAxisOrient,
-                scales.key,
-                this.options.canvas.margin,
-                this.options.dataOptions.keyFieldName,
-                0,
-                new DotChartSettingsStore({ scaleBandWidth: Scale.getScaleBandWidth(scales.key) }),
-                false
-            );
+            const settingsStore = new DotChartSettingsStore({ scaleBandWidth: Scale.getScaleBandWidth(scales.key) });
 
-            BarHelper.setGroupedBandStartCoordinateAttr(attrs, this.options.canvas.keyAxisOrient, scales.value, this.options.canvas.margin, field.name);
+            if (this.options.canvas.keyAxisOrient === 'top' || this.options.canvas.keyAxisOrient === 'bottom') {
+                const handleBase: (dataRow: MdtChartsDataRow) => number = d => scales.key(Helper.getKeyFieldValue(d, this.options.dataOptions.keyFieldName, false)) + this.options.canvas.margin.left + settingsStore.getBandItemPad()
 
-            if (!attrs.width) attrs.width = attrs.x;
-            if (!attrs.height) attrs.height = attrs.y;
+                attrs.x1 = d => chart.dotViewOptions.shape.handleStartCoordinate(handleBase(d));
+                attrs.x2 = d => chart.dotViewOptions.shape.handleEndCoordinate(handleBase(d) + settingsStore.getBandItemSize());
+            }
+            if (this.options.canvas.keyAxisOrient === 'left' || this.options.canvas.keyAxisOrient === 'right') {
+                const handleBase: (dataRow: MdtChartsDataRow) => number = d => scales.key(Helper.getKeyFieldValue(d, this.options.dataOptions.keyFieldName, false)) + this.options.canvas.margin.top + settingsStore.getBandItemPad()
 
-            elements.attr('x1', d => chart.dotViewOptions.shape.handleStartCoordinate(attrs.x(d)))
-                .attr('y1', d => attrs.y(d))
-                // .attr('x2', d => attrs.x !== attrs.width ? attrs.x(d) : attrs.x(d) + attrs.width(d))
-                // .attr('y2', d => attrs.y !== attrs.height ? attrs.y(d) : attrs.y(d) + attrs.height(d));
-                .attr('x2', d => chart.dotViewOptions.shape.handleEndCoordinate(attrs.x(d) + attrs.width(d)))
-                .attr('y2', d => attrs.y(d));
+                attrs.y1 = d => chart.dotViewOptions.shape.handleStartCoordinate(handleBase(d));
+                attrs.y2 = d => chart.dotViewOptions.shape.handleEndCoordinate(handleBase(d) + settingsStore.getBandItemSize());
+            }
+
+            if (this.options.canvas.keyAxisOrient === 'top') {
+                attrs.y1 = d => scales.value(Math.min(d[field.name], 0)) + this.options.canvas.margin.top + BarHelper.getBandItemValueStretch(scales.value, field.name)(d);
+                attrs.y2 = d => scales.value(Math.min(d[field.name], 0)) + this.options.canvas.margin.top + BarHelper.getBandItemValueStretch(scales.value, field.name)(d);
+            }
+            if (this.options.canvas.keyAxisOrient === 'bottom') {
+                attrs.y1 = d => scales.value(Math.max(d[field.name], 0)) + this.options.canvas.margin.top;
+                attrs.y2 = d => scales.value(Math.max(d[field.name], 0)) + this.options.canvas.margin.top;
+            }
+            if (this.options.canvas.keyAxisOrient === 'left') {
+                attrs.x1 = d => scales.value(Math.min(d[field.name], 0)) + this.options.canvas.margin.left + BarHelper.getBandItemValueStretch(scales.value, field.name)(d);
+                attrs.x2 = d => scales.value(Math.min(d[field.name], 0)) + this.options.canvas.margin.left + BarHelper.getBandItemValueStretch(scales.value, field.name)(d);
+            }
+            if (this.options.canvas.keyAxisOrient === 'right') {
+                attrs.x1 = d => scales.value(Math.max(d[field.name], 0)) + this.options.canvas.margin.left;
+                attrs.x2 = d => scales.value(Math.max(d[field.name], 0)) + this.options.canvas.margin.left;
+            }
+
+            elements.attr('x1', d => attrs.x1(d))
+                .attr('y1', d => attrs.y1(d))
+                .attr('x2', d => attrs.x2(d))
+                .attr('y2', d => attrs.y2(d));
 
             DomHelper.setCssClasses(elements, Helper.getCssClassesWithElementIndex(chart.cssClasses, index));
             DomHelper.setChartStyle(elements, chart.style, index, 'stroke');
