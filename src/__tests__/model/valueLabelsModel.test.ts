@@ -140,19 +140,19 @@ describe('hasCollisionRightSide', () => {
     let margin: BlockMargin;
 
     beforeEach(() => {
-        labelClientRect = { x: 150, y: 50, width: 30, height: 10 };
-        blockSize = { width: 100, height: 50 };
+        labelClientRect = { x: 450, y: 50, width: 30, height: 10 };
+        blockSize = { width: 500, height: 50 };
         margin = { top: 100, bottom: 50, right: 70, left: 70 };
     });
 
-    test('should return true, because element coordinate X and width more block width', () => {
+    test('should return true, because element coordinate X and width more block width without margin right', () => {
         const isCollision = hasCollisionRightSide(labelClientRect, blockSize, margin);
 
         expect(isCollision).toBeTruthy();
     });
 
-    test('should return false, because element coordinate X and width less block width', () => {
-        labelClientRect.x = 50;
+    test('should return false, because element coordinate X and width less block width without margin right', () => {
+        labelClientRect.x = 150;
         const isCollision = hasCollisionRightSide(labelClientRect, blockSize, margin);
 
         expect(isCollision).toBeFalsy();
@@ -166,10 +166,10 @@ describe('shiftCoordinateXLeft', () => {
         labelClientRect = { x: 100, y: 50, width: 30, height: 10 };
     });
 
-    test('should shift X coordinate to the left by half label width and BORDER_OFFSET_SIZE_PX ', () => {
+    test('should shift X coordinate to the left by half label width and BORDER_OFFSET_SIZE_PX', () => {
         shiftCoordinateXLeft(labelClientRect);
 
-        expect(labelClientRect.x).toEqual(80);
+        expect(labelClientRect.x).toEqual(83);
     });
 });
 
@@ -180,9 +180,9 @@ describe('shiftCoordinateXRight', () => {
         labelClientRect = { x: 100, y: 50, width: 30, height: 10 };
     });
 
-    test('should shift X coordinate to the right by half label width and BORDER_OFFSET_SIZE_PX ', () => {
+    test('should shift X coordinate to the right by half label width and BORDER_OFFSET_SIZE_PX', () => {
         shiftCoordinateXRight(labelClientRect);
 
-        expect(labelClientRect.x).toEqual(120);
+        expect(labelClientRect.x).toEqual(117);
     });
 });

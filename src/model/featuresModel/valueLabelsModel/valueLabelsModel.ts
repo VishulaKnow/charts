@@ -46,7 +46,7 @@ export function calculateValueLabelAlignment(keyAxisOrient: Orient): ValueLabelA
 }
 
 export function hasCollisionLeftSide(labelClientRect: BoundingRect, margin: BlockMargin): boolean {
-    return labelClientRect.x <= margin.left;
+    return labelClientRect.x - labelClientRect.width / 2 <= margin.left;
 }
 
 export function hasCollisionRightSide(labelClientRect: BoundingRect, blockSize: Size, margin: BlockMargin): boolean {
