@@ -49,9 +49,7 @@ export class TwoDimensionalManager implements ChartContentManager {
             },
             canvas: {
                 keyAxisOrient: options.axis.key.orient,
-                margin: model.chartBlock.margin,
             },
-            dataSourceRecords: engine.data[options.data.dataSource],
             dataOptions: {
                 keyFieldName: options.data.keyField.name
             },
@@ -221,7 +219,7 @@ export class TwoDimensionalManager implements ChartContentManager {
                     chart,
                     blockSize);
             else if (chart.type === 'dot')
-                this.dotChart.render(chartScales, chart);
+                this.dotChart.render(chartScales, chart, data[dataOptions.dataSource], margin);
         });
         EmbeddedLabels.raiseGroups(block);
     }
@@ -264,6 +262,9 @@ export class TwoDimensionalManager implements ChartContentManager {
                     chart,
                     keyAxisOrient,
                     blockSize);
+            }
+            else if (chart.type === 'dot') {
+                proms = this.dotChart.update(chartScales, data[dataOptions.dataSource], margin);
             }
             promises.push(...proms);
         });
