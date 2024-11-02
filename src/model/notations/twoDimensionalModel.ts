@@ -147,7 +147,7 @@ export class TwoDimensionalModel {
                         type: "line",
                         handleEndCoordinate: (v) => v + 3,
                         handleStartCoordinate: (v) => v - 3,
-                        width: 2
+                        width: chart.dotLikeStyles?.shape?.width ?? 2
                     }
                 }
             });
