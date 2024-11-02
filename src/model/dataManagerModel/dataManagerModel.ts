@@ -133,7 +133,7 @@ export class DataManagerModel {
      */
     private static getElementsInGroupAmount(configOptions: MdtChartsTwoDimensionalOptions): number {
         const bars = this.getBarLikeChartsInGroupAmount(configOptions.charts, 'bar');
-        const dots = this.getBarLikeChartsInGroupAmount(configOptions.charts, 'dot');
+        const dots = configOptions.charts.some(chart => chart.type === 'dot') ? 1 : 0;
         return Math.max(bars, dots);
     }
 

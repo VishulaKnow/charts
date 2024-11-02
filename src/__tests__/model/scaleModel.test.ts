@@ -580,6 +580,26 @@ describe('get scales tests', () => {
         })
     });
 
+    test('should make scale for one band if there are dotted charts without bars', () => {
+        const canvasModel = new CanvasModel();
+        canvasModel.initMargin({ bottom: 20, left: 20, right: 20, top: 20 });
+        canvasModel.initBlockSize({ height: 500, width: 1000 });
+
+        charts[1].type = 'dot';
+        charts[0].type = 'dot';
+
+        const result = scaleModel.getScaleKey(['BMW', 'LADA', 'MECEDES'], 'vertical', canvasModel, charts, charts.filter(chart => chart.type === 'bar'));
+        expect(result).toEqual({
+            domain: ['BMW', 'LADA', 'MECEDES'],
+            range: {
+                start: 0,
+                end: 960
+            },
+            type: 'band',
+            elementsAmount: 1
+        })
+    });
+
     test('get scale linear', () => {
         const canvasModel = new CanvasModel();
         canvasModel.initMargin({ bottom: 20, left: 20, right: 20, top: 20 });

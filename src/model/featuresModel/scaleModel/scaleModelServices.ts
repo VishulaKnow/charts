@@ -13,19 +13,21 @@ export function getScaleValueRangePeek(chartOrientation: string, canvasModel: Ca
     return canvasModel.getChartBlockWidth();
 }
 
-export function getElementsAmountForScale(barCharts: MdtChartsTwoDimensionalChart[]) {
-    if (barCharts.length === 0)
+export function getElementsAmountForScale(bandLikeCharts: MdtChartsTwoDimensionalChart[]) {
+    if (bandLikeCharts.length === 0)
         return 1;
 
     let barAmounts: Partial<Record<TwoDimensionalChartType, number>> = {};
-    barCharts.forEach(chart => {
+    bandLikeCharts.forEach(chart => {
         if (!barAmounts[chart.type])
             barAmounts[chart.type] = 0;
 
-        if (chart.isSegmented)
-            barAmounts[chart.type] += 1; // Если бар сегментированный, то все valueFields являются частями одного бара
-        else
-            barAmounts[chart.type] += chart.data.valueFields.length;
+        if (chart.type === 'dot') barAmounts[chart.type] = 1;
+
+        if (chart.type === 'bar') {
+            if (chart.isSegmented) barAmounts[chart.type] += 1;
+            else barAmounts[chart.type] += chart.data.valueFields.length;
+        }
     });
 
     return Math.max(...Object.values(barAmounts));

@@ -31,10 +31,14 @@ export interface CanvasDotChartOptions {
 export class CanvasDotChart {
     private readonly dotChartItemClass = NamesHelper.getClassName("dot-chart-item");
 
+    private chartRendered = false;
+
     constructor(private readonly options: CanvasDotChartOptions) { }
 
     render(scales: Scales, chart: TwoDimensionalChartModel) {
-        chart.data.valueFields.forEach((field, index) => {
+        if (this.chartRendered) return;
+
+        chart.data.valueFields.slice(0, 1).forEach((field, index) => {
             const elements = this.options.elementAccessors.getBlock().svg.getChartGroup(chart.index)
                 .selectAll(`.${this.dotChartItemClass}${Helper.getCssClassesLine(chart.cssClasses)}${Helper.getCssClassesLine(Helper.getCssClassesWithElementIndex(chart.cssClasses, index))}`)
                 .data(this.options.dataSourceRecords)
@@ -57,8 +61,8 @@ export class CanvasDotChart {
                 scales.key,
                 this.options.canvas.margin,
                 this.options.dataOptions.keyFieldName,
-                BarHelper.getBarIndex(this.options.bandOptions.bandItemsForEachChart, chart.index - this.options.bandOptions.firstDotChartIndex) + index,
-                sum(this.options.bandOptions.bandItemsForEachChart),
+                0,
+                1,
                 this.options.bandOptions.settings,
                 false
             );
@@ -78,5 +82,7 @@ export class CanvasDotChart {
             DomHelper.setCssClasses(elements, Helper.getCssClassesWithElementIndex(chart.cssClasses, index));
             DomHelper.setChartStyle(elements, chart.style, index, 'stroke');
         });
+
+        this.chartRendered = true;
     }
 }
