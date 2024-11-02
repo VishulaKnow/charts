@@ -6,7 +6,7 @@ import { Scale, Scales } from "../../features/scale/scale";
 import { DomHelper } from "../../helpers/domHelper";
 import { Helper } from "../../helpers/helper";
 import { NamesHelper } from "../../helpers/namesHelper";
-import { BarAttrsHelper, BarHelper, BarSettingsStore } from "../bar/barHelper";
+import { BarAttrsHelper, BarHelper, BarSettingsStore, DotChartSettingsStore } from "../bar/barHelper";
 
 export interface CanvasDotChartOptions {
     elementAccessors: {
@@ -58,7 +58,7 @@ export class CanvasDotChart {
                 this.options.canvas.margin,
                 this.options.dataOptions.keyFieldName,
                 0,
-                new BarSettingsStore(this.options.bandOptions.settings, { scaleBandWidth: Scale.getScaleBandWidth(scales.key), barsAmount: 1 }),
+                new DotChartSettingsStore({ scaleBandWidth: Scale.getScaleBandWidth(scales.key) }),
                 false
             );
 

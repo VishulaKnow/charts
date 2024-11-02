@@ -14,17 +14,33 @@ export interface BarAttrsHelper {
     height: (dataRow: MdtChartsDataRow) => number;
 }
 
+interface BandLikeChartSettingsStore {
+    getBandItemSize(): number;
+    getBandItemPad(bandItemIndex: number): number;
+}
+
+export class DotChartSettingsStore implements BandLikeChartSettingsStore {
+    constructor(private readonly canvasConfig: { scaleBandWidth: number; }) { }
+    getBandItemSize(): number {
+        return this.canvasConfig.scaleBandWidth;
+    }
+
+    getBandItemPad(): number {
+        return 0;
+    }
+}
+
 export class BarSettingsStore {
     constructor(private readonly modelSettings: BarChartSettings, private readonly canvasConfig: { scaleBandWidth: number; barsAmount: number }) { }
 
-    getBarSize() {
+    getBandItemSize() {
         const barSize = this.getBarStep() > this.modelSettings.maxBarWidth ? this.modelSettings.maxBarWidth : this.getBarStep();
         return barSize;
     }
 
-    getBarPad(barIndex: number) {
-        const barDiff = (this.getBarStep() - this.getBarSize()) * this.canvasConfig.barsAmount / 2; // if bar bigger than maxWidth, diff for x coordinate
-        const barPad = this.getBarSize() * barIndex + this.modelSettings.barDistance * barIndex + barDiff; // Отступ бара от края. Зависит от количества баров в одной группе и порядке текущего бара
+    getBandItemPad(barIndex: number) {
+        const barDiff = (this.getBarStep() - this.getBandItemSize()) * this.canvasConfig.barsAmount / 2; // if bar bigger than maxWidth, diff for x coordinate
+        const barPad = this.getBandItemSize() * barIndex + this.modelSettings.barDistance * barIndex + barDiff; // Отступ бара от края. Зависит от количества баров в одной группе и порядке текущего бара
         return barPad;
     }
 
@@ -92,14 +108,14 @@ export class BarHelper {
         return index;
     }
 
-    static setBarAttrsByKey(attrs: BarAttrsHelper, keyAxisOrient: Orient, scaleKey: AxisScale<any>, margin: BlockMargin, keyField: string, barIndex: number, settingsStore: BarSettingsStore, isSegmented: boolean): void {
+    static setBarAttrsByKey(attrs: BarAttrsHelper, keyAxisOrient: Orient, scaleKey: AxisScale<any>, margin: BlockMargin, keyField: string, barIndex: number, settingsStore: BandLikeChartSettingsStore, isSegmented: boolean): void {
         if (keyAxisOrient === 'top' || keyAxisOrient === 'bottom') {
-            attrs.x = d => scaleKey(Helper.getKeyFieldValue(d, keyField, isSegmented)) + margin.left + settingsStore.getBarPad(barIndex);
-            attrs.width = d => settingsStore.getBarSize();
+            attrs.x = d => scaleKey(Helper.getKeyFieldValue(d, keyField, isSegmented)) + margin.left + settingsStore.getBandItemPad(barIndex);
+            attrs.width = d => settingsStore.getBandItemSize();
         }
         if (keyAxisOrient === 'left' || keyAxisOrient === 'right') {
-            attrs.y = d => scaleKey(Helper.getKeyFieldValue(d, keyField, isSegmented)) + margin.top + settingsStore.getBarPad(barIndex);
-            attrs.height = d => settingsStore.getBarSize();
+            attrs.y = d => scaleKey(Helper.getKeyFieldValue(d, keyField, isSegmented)) + margin.top + settingsStore.getBandItemPad(barIndex);
+            attrs.height = d => settingsStore.getBandItemSize();
         }
     }
 
