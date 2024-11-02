@@ -1,5 +1,5 @@
-import { AreaChartViewOptions, AreaViewBorderLine, AreaViewFill, ChartLegendModel, ChartStyle, GradientId, LegendMarkerShape, LineCurveType, LineLikeChartDashOptions, LineLikeChartShapeOptions } from "../../model";
-import { ChartOrientation, MdtChartsLineLikeChartDashedStyles, MdtChartsTwoDimensionalChart, TwoDimensionalChartType } from "../../../config/config";
+import { AreaChartViewOptions, AreaViewBorderLine, AreaViewFill, ChartLegendModel, ChartStyle, GradientId, LegendMarkerShape, LineCurveType, LineLikeChartDashOptions, LineLikeChartShapeOptions, TwoDimensionalBarLikeChartViewModel } from "../../model";
+import { ChartOrientation, MdtChartsBarLikeChartStyles, MdtChartsLineLikeChartDashedStyles, MdtChartsTwoDimensionalChart, TwoDimensionalChartType } from "../../../config/config";
 import { MdtChartsLineLikeChartCurveType, MdtChartsLineLikeChartShape } from "../../../designer/designerConfig";
 import { styledElementValues } from "../../modelBuilder";
 
@@ -31,7 +31,26 @@ export function parseDashStyles(configOptions?: MdtChartsLineLikeChartDashedStyl
     }
 }
 
-export function getLegendMarkerOptions(chart: MdtChartsTwoDimensionalChart): ChartLegendModel {
+export function getBarViewOptions(barStyles: MdtChartsBarLikeChartStyles): TwoDimensionalBarLikeChartViewModel {
+    const hatch = { on: barStyles?.hatch?.on ?? false };
+
+    const borderRadius = barStyles?.borderRadius && {
+        grouped: getRadiusValues(barStyles?.borderRadius.value ?? 2)
+    };
+
+    return { hatch, borderRadius };
+}
+
+function getRadiusValues(value: number) {
+    return {
+        topLeft: value,
+        topRight: value,
+        bottomLeft: value,
+        bottomRight: value
+    }
+}
+
+export function getLegendMarkerOptions(chart: MdtChartsTwoDimensionalChart, barViewOptions: TwoDimensionalBarLikeChartViewModel): ChartLegendModel {
     const shapeByType: Record<TwoDimensionalChartType, LegendMarkerShape> = {
         area: "default",
         bar: "bar",
@@ -39,7 +58,7 @@ export function getLegendMarkerOptions(chart: MdtChartsTwoDimensionalChart): Cha
     }
     return {
         markerShape: shapeByType[chart.type],
-        barViewOptions: { hatch: { on: chart.barStyles?.hatch?.on ?? false }, width: getWidthOfLegendMarkerByType("bar") },
+        barViewOptions: { ...barViewOptions, width: getWidthOfLegendMarkerByType("bar" ) },
         lineViewOptions: { dashedStyles: parseDashStyles(chart.lineStyles?.dash), width: getWidthOfLegendMarkerByType("line") }
     }
 }

@@ -232,6 +232,17 @@ interface BarLikeChartHatchOptions {
     on: boolean;
 }
 
+export interface BarLikeChartBorderRadius {
+    grouped: BarBorderRadius;
+}
+
+interface BarBorderRadius {
+    topLeft: number;
+    topRight: number;
+    bottomLeft: number;
+    bottomRight: number;
+}
+
 export interface TwoDimensionalValueLabels {
     collision: ValueLabelsCollision;
 }
@@ -281,7 +292,9 @@ export interface ChartLegendModel {
 
 export type LegendMarkerShape = "default" | "bar" | "line";
 
-export interface TwoDimensionalChartLegendBarModel extends TwoDimensionalBarLikeChartViewModel {
+export interface TwoDimensionalChartLegendBarModel {
+    hatch: BarLikeChartHatchOptions;
+    borderRadius: BarLikeChartBorderRadius;
     width: number;
 }
 
@@ -305,8 +318,9 @@ interface TwoDimensionalBarLikeChartModel {
     barViewOptions: TwoDimensionalBarLikeChartViewModel;
 }
 
-interface TwoDimensionalBarLikeChartViewModel {
+export interface TwoDimensionalBarLikeChartViewModel {
     hatch: BarLikeChartHatchOptions;
+    borderRadius: BarLikeChartBorderRadius;
 }
 
 interface TwoDimensionalAreaChartModel {

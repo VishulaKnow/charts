@@ -3,6 +3,7 @@ import { ChartLegendModel, TwoDimensionalChartLegendBarModel, TwoDimensionalChar
 import { Legend } from "./legend";
 import { HatchPatternDef } from "../../block/defs/hatchPattern";
 import { applyLineDash } from "../../twoDimensionalNotation/line/lineHelper";
+import { getClipPathValue } from "../../../engine/twoDimensionalNotation/bar/barHelper";
 
 interface MarkerCreationOptions extends ChartLegendModel {
     color: string;
@@ -76,6 +77,9 @@ class BarMarkerCreator extends SvgMarkerCreator implements MarkerCreator {
         if (this.options.hatch.on) {
             bars.style('mask', HatchPatternDef.getMaskValue());
         }
+
+        if (this.options.borderRadius)
+            bars.style('clip-path', getClipPathValue(this.options.borderRadius));
 
         return bars;
     }

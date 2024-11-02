@@ -68,7 +68,10 @@ export class PolarModel {
             style: ChartStyleModelService.getChartStyle(dataLength, chartStyleConfig),
             legend: {
                 markerShape: "default",
-                barViewOptions: { hatch: { on: false }, width: 0 },
+                barViewOptions: {
+                    hatch: { on: false },
+                    borderRadius: { grouped: { topLeft: 0, topRight: 0, bottomLeft: 0, bottomRight: 0 } },
+                    width: 0 },
                 lineViewOptions: { dashedStyles: { on: false, dashSize: 0, gapSize: 0 }, width: 0 }
             }
         });
