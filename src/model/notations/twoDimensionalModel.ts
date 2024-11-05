@@ -145,8 +145,8 @@ export class TwoDimensionalModel {
                 dotViewOptions: {
                     shape: {
                         type: "line",
-                        handleEndCoordinate: (v) => v + 3,
-                        handleStartCoordinate: (v) => v - 3,
+                        handleEndCoordinate: (v) => v + 2,
+                        handleStartCoordinate: (v) => v - 2,
                         width: chart.dotLikeStyles?.shape?.width ?? 2
                     }
                 }
