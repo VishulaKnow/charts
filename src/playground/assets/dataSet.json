@@ -85,78 +85,89 @@
 		{
 			"$id": 1,
 			"brand": "JAN",
-			"price": 15.02,
-			"count": 10,
+			"price": 1500,
+			"price2": 1200,
+			"count": 1000,
 			"color": "red"
 		},
 		{
 			"$id": 2,
 			"brand": "FEB",
-			"price": 0,
-			"count": 1,
+			"price": 4000,
+			"price2": 1200,
+			"count": 1000,
 			"color": "green"
 		},
 		{
 			"$id": 3,
 			"brand": "MAR",
-			"price": 9.3,
-			"count": 2,
+			"price": 9300,
+			"price2": 1200,
+			"count": 2000,
 			"color": "blue"
 		},
 		{
 			"$id": 4,
 			"brand": "MAY",
-			"price": null,
-			"count": 5,
+			"price2": 1500,
+			"price": 2300,
+			"count": 500,
 			"color": "yellow"
 		},
 		{
 			"$id": 5,
 			"brand": "JUN",
-			"price": 1,
-			"count": 6,
+			"price2": 6000,
+			"price": 1000,
+			"count": 600,
 			"color": "cyan"
 		},
 		{
 			"$id": 6,
 			"brand": "JUL",
-			"price": 14.2,
+			"price": 14200,
+			"price2": 1532,
 			"count": 2,
 			"color": "red"
 		},
 		{
 			"$id": 7,
 			"brand": "AUG",
-			"price": 11,
-			"count": 9.3,
+			"price2": 1100,
+			"price": 1100,
+			"count": 9300,
 			"color": "orange"
 		},
 		{
 			"$id": 8,
 			"brand": "SEP",
-			"price": 2,
-			"count": 0.2,
+			"price2": 2000,
+			"price": 2000,
+			"count": 200,
 			"color": "brown"
 		},
 		{
 			"$id": 9,
 			"brand": "OCT",
-			"price": 8.7,
-			"count": 1.5,
+			"price2": 1400,
+			"price": 8800,
+			"count": 1400,
 			"color": "pink"
 		},
 		{
 			"$id": 9,
 			"brand": "NOV",
-			"price": 2.2,
-			"count": 3.1,
+			"price": 22000,
+			"price2": 1000,
+			"count": 3100,
 			"color": "pink"
 		},
 		{
 			"$id": 10,
 			"brand": "DEC",
-			"price": 2.2,
-			"count": 3.1,
+			"price": 2200,
+			"price2": 900,
+			"count": 3100,
 			"color": "pink"
 		}
 	],
