@@ -102,7 +102,6 @@ describe('getBiggestValueAndDecremented', () => {
                         ],
                         valueGroup: 'secondary'
                     },
-                    tooltip: null,
                     markers: null,
                     barStyles: null,
                     embeddedLabels: null,
@@ -117,7 +116,6 @@ describe('getBiggestValueAndDecremented', () => {
                         ],
                         valueGroup: 'main'
                     },
-                    tooltip: null,
                     markers: null,
                     barStyles: null,
                     embeddedLabels: null,
@@ -221,7 +219,6 @@ describe('getBiggestValueAndDecrementedSecondary', () => {
                         ],
                         valueGroup: 'secondary'
                     },
-                    tooltip: null,
                     markers: null,
                     barStyles: null,
                     embeddedLabels: null,
@@ -236,7 +233,6 @@ describe('getBiggestValueAndDecrementedSecondary', () => {
                         ],
                         valueGroup: 'main'
                     },
-                    tooltip: null,
                     markers: null,
                     barStyles: null,
                     embeddedLabels: null,
@@ -330,7 +326,6 @@ describe('getValueLabelsFormatter', () => {
                             { name: "price", title: "", format: "money" },
                         ],
                     },
-                    tooltip: null,
                     markers: null,
                     barStyles: null,
                     embeddedLabels: null,

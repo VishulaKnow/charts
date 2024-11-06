@@ -127,34 +127,6 @@ export class AxisModel {
         }
     }
 
-    public static getLabelSizeLegacy(labelMaxWidth: number, labelTexts: string[]): LabelSize {
-        const labelSize = {
-            width: 0,
-            height: 0
-        }
-        const textBlock = document.createElement('span');
-        textBlock.style.opacity = '0';
-        textBlock.style.position = 'absolute';
-        textBlock.style.whiteSpace = 'nowrap';
-        textBlock.classList.add(CLASSES.dataLabel);
-        let maxLabel = '';
-        let biggestScore = 0;
-        let maxWidth = 0;
-        labelTexts.forEach((text: string) => {
-            if (ModelHelper.getStringScore(text) > biggestScore) {
-                maxLabel = text;
-                biggestScore = ModelHelper.getStringScore(text);
-            }
-        });
-        textBlock.textContent = maxLabel === '0000' ? maxLabel : maxLabel;
-        document.body.append(textBlock);
-        maxWidth = Math.ceil(textBlock.getBoundingClientRect().width);
-        labelSize.height = textBlock.getBoundingClientRect().height;
-        labelSize.width = maxWidth > labelMaxWidth ? labelMaxWidth : maxWidth;
-        textBlock.remove();
-        return labelSize;
-    }
-
     public static getRoundValue(value: number): number {
         const absValue = Math.abs(value);
         const sign = Math.sign(value);

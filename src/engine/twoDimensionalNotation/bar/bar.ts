@@ -43,7 +43,7 @@ export class Bar {
 
     public render(block: Block, scales: Scales, data: MdtChartsDataRow[], keyField: Field, margin: BlockMargin, keyAxisOrient: Orient, chart: TwoDimensionalChartModel, blockSize: Size, barSettings: BarChartSettings, barsAmounts: number[], isSegmented: boolean, firstBarIndex: number): void {
         if (isSegmented)
-            this.renderSegmented(block, scales, data, keyField, margin, keyAxisOrient, chart, barsAmounts, blockSize, firstBarIndex, barSettings);
+            this.renderSegmented(block, scales, data, keyField, margin, keyAxisOrient, chart, barsAmounts, firstBarIndex, barSettings);
         else
             this.renderGrouped(block, scales, data, keyField, margin, keyAxisOrient, chart, barsAmounts, blockSize, firstBarIndex, barSettings);
     }
@@ -107,7 +107,6 @@ export class Bar {
                 margin,
                 keyField.name,
                 field.name,
-                blockSize,
                 BarHelper.getBarIndex(barsAmounts, chart.index - firstBarIndex) + index,
                 sum(barsAmounts),
                 barSettings);
@@ -124,7 +123,7 @@ export class Bar {
         });
     }
 
-    private renderSegmented(block: Block, scales: Scales, data: MdtChartsDataRow[], keyField: Field, margin: BlockMargin, keyAxisOrient: Orient, chart: TwoDimensionalChartModel, barsAmounts: number[], blockSize: Size, firstBarIndex: number, barSettings: BarChartSettings): void {
+    private renderSegmented(block: Block, scales: Scales, data: MdtChartsDataRow[], keyField: Field, margin: BlockMargin, keyAxisOrient: Orient, chart: TwoDimensionalChartModel, barsAmounts: number[], firstBarIndex: number, barSettings: BarChartSettings): void {
         const stackedData = getStackedDataWithOwn(data, chart.data.valueFields.map(field => field.name));
 
         let groups = block.svg.getChartGroup(chart.index)
@@ -152,7 +151,6 @@ export class Bar {
             scales,
             margin,
             keyField.name,
-            blockSize,
             BarHelper.getBarIndex(barsAmounts, chart.index) - firstBarIndex,
             sum(barsAmounts),
             barSettings);
@@ -212,7 +210,6 @@ export class Bar {
                 margin,
                 keyField.name,
                 valueField.name,
-                blockSize,
                 BarHelper.getBarIndex(barsAmounts, chart.index) + index - firstBarIndex,
                 sum(barsAmounts),
                 barSettings);
@@ -273,7 +270,6 @@ export class Bar {
             scales,
             margin,
             keyField.name,
-            blockSize,
             BarHelper.getBarIndex(barsAmounts, chart.index) - firstBarIndex,
             sum(barsAmounts),
             barSettings);

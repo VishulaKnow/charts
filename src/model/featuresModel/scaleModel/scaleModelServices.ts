@@ -1,4 +1,4 @@
-import { ChartOrientation, MdtChartsTwoDimensionalChart } from "../../../config/config";
+import { ChartOrientation, MdtChartsTwoDimensionalChart, TwoDimensionalChartType } from "../../../config/config";
 import { CanvasSizesModel } from "../../modelInstance/canvasModel/canvasSizesModel/canvasSizeModel";
 
 export function getScaleKeyRangePeek(chartOrientation: ChartOrientation, canvasModel: CanvasSizesModel) {
@@ -13,17 +13,22 @@ export function getScaleValueRangePeek(chartOrientation: string, canvasModel: Ca
     return canvasModel.getChartBlockWidth();
 }
 
-export function getElementsAmountForScale(barCharts: MdtChartsTwoDimensionalChart[]) {
-    if (barCharts.length === 0)
+export function getElementsAmountForScale(bandLikeCharts: MdtChartsTwoDimensionalChart[]) {
+    if (bandLikeCharts.length === 0)
         return 1;
 
-    let barsAmount = 0;
-    barCharts.forEach(chart => {
-        if (chart.isSegmented)
-            barsAmount += 1; // Если бар сегментированный, то все valueFields являются частями одного бара
-        else
-            barsAmount += chart.data.valueFields.length;
+    let barAmounts: Partial<Record<TwoDimensionalChartType, number>> = {};
+    bandLikeCharts.forEach(chart => {
+        if (!barAmounts[chart.type])
+            barAmounts[chart.type] = 0;
+
+        if (chart.type === 'dot') barAmounts[chart.type] = 1;
+
+        if (chart.type === 'bar') {
+            if (chart.isSegmented) barAmounts[chart.type] += 1;
+            else barAmounts[chart.type] += chart.data.valueFields.length;
+        }
     });
 
-    return barsAmount;
+    return Math.max(...Object.values(barAmounts));
 }
