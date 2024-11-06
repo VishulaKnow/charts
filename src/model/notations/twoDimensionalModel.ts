@@ -101,7 +101,7 @@ export class TwoDimensionalModel {
         const chartsModel: TwoDimensionalChartModel[] = [];
         charts.forEach((chart, index) => {
             const style = styleModel.getChartStyle(chart, index);
-            const barViewOptions = getBarViewOptions(chart.barStyles, keyAxisOrient);
+            const barViewOptions = getBarViewOptions(chart, keyAxisOrient);
 
             chartsModel.push({
                 type: chart.type,

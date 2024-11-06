@@ -1,5 +1,5 @@
 import { AreaChartViewOptions, AreaViewBorderLine, AreaViewFill, BarBorderRadius, BarLikeChartBorderRadius, ChartLegendModel, ChartStyle, GradientId, LegendMarkerShape, LineCurveType, LineLikeChartDashOptions, LineLikeChartShapeOptions, Orient, TwoDimensionalBarLikeChartViewModel } from "../../model";
-import { ChartOrientation, MdtChartsBarLikeChartStyles, MdtChartsLineLikeChartDashedStyles, MdtChartsTwoDimensionalChart, TwoDimensionalChartType } from "../../../config/config";
+import { ChartOrientation, MdtChartsLineLikeChartDashedStyles, MdtChartsTwoDimensionalChart, TwoDimensionalChartType } from "../../../config/config";
 import { MdtChartsLineLikeChartCurveType, MdtChartsLineLikeChartShape } from "../../../designer/designerConfig";
 import { styledElementValues } from "../../modelBuilder";
 
@@ -31,11 +31,11 @@ export function parseDashStyles(configOptions?: MdtChartsLineLikeChartDashedStyl
     }
 }
 
-export function getBarViewOptions(barStyles: MdtChartsBarLikeChartStyles, keyAxisOrient: Orient): TwoDimensionalBarLikeChartViewModel {
-    const hatch = { on: barStyles?.hatch?.on ?? false };
-    const defaultRadius = barStyles?.borderRadius?.value ?? 2;
+export function getBarViewOptions(chart: MdtChartsTwoDimensionalChart, keyAxisOrient: Orient): TwoDimensionalBarLikeChartViewModel {
+    const hatch = { on: chart.barStyles?.hatch?.on ?? false };
+    const defaultRadius = chart.barStyles?.borderRadius?.value ?? 2;
 
-    const borderRadius: BarLikeChartBorderRadius = barStyles?.borderRadius && {
+    const borderRadius: BarLikeChartBorderRadius = chart.barStyles && {
         grouped: getRadiusValues(defaultRadius),
         segmented: {
             handle: (valueIndex: number, valueFieldsLength: number) => getSegmentedRadiusValues(valueFieldsLength, valueIndex, keyAxisOrient, defaultRadius),
