@@ -10,17 +10,15 @@ import {
     TwoDimensionalChartModel,
     EmbeddedLabelTypeModel,
     AdditionalElementsOptions,
-    TwoDimChartElementsSettings, Orient
+    TwoDimChartElementsSettings,
+    Orient
 } from "../model";
 import { TwoDimConfigReader } from "../modelInstance/configReader";
 import { ModelInstance } from "../modelInstance/modelInstance";
-import { getAreaViewOptions, getLegendMarkerOptions, parseDashStyles, parseShape } from "./twoDimensional/styles";
+import { getAreaViewOptions, getBarViewOptions, getLegendMarkerOptions, parseDashStyles, parseShape } from "./twoDimensional/styles";
 import { getResolvedTitle } from "../../model/featuresModel/titleModel";
 import { DataRepositoryModel } from "../modelInstance/dataModel/dataRepository";
-import {
-    calculateValueLabelAlignment,
-    getValueLabelX, getValueLabelY
-} from "../../model/featuresModel/valueLabelsModel/valueLabelsModel";
+import { calculateValueLabelAlignment, getValueLabelX, getValueLabelY } from "../../model/featuresModel/valueLabelsModel/valueLabelsModel";
 import { CanvasModel } from "../modelInstance/canvasModel/canvasModel";
 import { TwoDimensionalModelHelper } from "../helpers/twoDimensionalModelHelper";
 
@@ -103,6 +101,7 @@ export class TwoDimensionalModel {
         const chartsModel: TwoDimensionalChartModel[] = [];
         charts.forEach((chart, index) => {
             const style = styleModel.getChartStyle(chart, index);
+            const barViewOptions = getBarViewOptions(chart.barStyles);
 
             chartsModel.push({
                 type: chart.type,
@@ -130,8 +129,8 @@ export class TwoDimensionalModel {
                     dashedStyles: parseDashStyles(chart.lineStyles?.dash),
                     renderForKey: (dataRow, valueFieldName) => dataRow[valueFieldName] !== null && dataRow[valueFieldName] !== undefined
                 },
-                barViewOptions: { hatch: { on: chart.barStyles?.hatch?.on ?? false } },
-                legend: getLegendMarkerOptions(chart),
+                barViewOptions,
+                legend: getLegendMarkerOptions(chart, barViewOptions),
                 index,
                 valueLabels: {
                     show: chart.valueLabels?.on ?? false,
