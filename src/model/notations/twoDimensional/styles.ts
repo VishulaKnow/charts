@@ -34,8 +34,8 @@ export function parseDashStyles(configOptions?: MdtChartsLineLikeChartDashedStyl
 export function getBarViewOptions(barStyles: MdtChartsBarLikeChartStyles): TwoDimensionalBarLikeChartViewModel {
     const hatch = { on: barStyles?.hatch?.on ?? false };
 
-    const borderRadius = barStyles?.borderRadius && {
-        grouped: getRadiusValues(barStyles?.borderRadius.value ?? 2)
+    const borderRadius = barStyles && {
+        grouped: getRadiusValues(barStyles.borderRadius?.value ?? 2)
     };
 
     return { hatch, borderRadius };
