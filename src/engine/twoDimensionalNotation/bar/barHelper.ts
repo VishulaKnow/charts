@@ -14,8 +14,43 @@ export interface BarAttrsHelper {
     height: (dataRow: MdtChartsDataRow) => number;
 }
 
+interface BandLikeChartSettingsStore {
+    getBandItemSize(): number;
+    getBandItemPad(bandItemIndex: number): number;
+}
+
+export class DotChartSettingsStore implements BandLikeChartSettingsStore {
+    constructor(private readonly canvasConfig: { scaleBandWidth: number; }) { }
+    getBandItemSize(): number {
+        return this.canvasConfig.scaleBandWidth;
+    }
+
+    getBandItemPad(): number {
+        return 0;
+    }
+}
+
+export class BarSettingsStore {
+    constructor(private readonly modelSettings: BarChartSettings, private readonly canvasConfig: { scaleBandWidth: number; barsAmount: number }) { }
+
+    getBandItemSize() {
+        const barSize = this.getBarStep() > this.modelSettings.maxBarWidth ? this.modelSettings.maxBarWidth : this.getBarStep();
+        return barSize;
+    }
+
+    getBandItemPad(barIndex: number) {
+        const barDiff = (this.getBarStep() - this.getBandItemSize()) * this.canvasConfig.barsAmount / 2; // if bar bigger than maxWidth, diff for x coordinate
+        const barPad = this.getBandItemSize() * barIndex + this.modelSettings.barDistance * barIndex + barDiff; // Отступ бара от края. Зависит от количества баров в одной группе и порядке текущего бара
+        return barPad;
+    }
+
+    private getBarStep() {
+        return (this.canvasConfig.scaleBandWidth - this.modelSettings.barDistance * (this.canvasConfig.barsAmount - 1)) / this.canvasConfig.barsAmount; // Space for one bar
+    }
+}
+
 export class BarHelper {
-    public static getGroupedBarAttrs(keyAxisOrient: Orient, scales: Scales, margin: BlockMargin, keyField: string, valueFieldName: string, blockSize: Size, barIndex: number, barsAmount: number, barSettings: BarChartSettings): BarAttrsHelper {
+    public static getGroupedBarAttrs(keyAxisOrient: Orient, scales: Scales, margin: BlockMargin, keyField: string, valueFieldName: string, barIndex: number, barsAmount: number, barSettings: BarChartSettings): BarAttrsHelper {
         const attrs: BarAttrsHelper = {
             x: null,
             y: null,
@@ -23,13 +58,13 @@ export class BarHelper {
             height: null
         }
 
-        this.setBarAttrsByKey(attrs, keyAxisOrient, scales.key, margin, keyField, barIndex, barsAmount, barSettings, false);
-        this.setGroupedBarAttrsByValue(attrs, keyAxisOrient, margin, scales.value, valueFieldName, blockSize);
+        this.setBarAttrsByKey(attrs, keyAxisOrient, scales.key, margin, keyField, barIndex, new BarSettingsStore(barSettings, { scaleBandWidth: Scale.getScaleBandWidth(scales.key), barsAmount }), false);
+        this.setGroupedBarAttrsByValue(attrs, keyAxisOrient, margin, scales.value, valueFieldName);
 
         return attrs;
     }
 
-    public static getStackedBarAttr(keyAxisOrient: Orient, scales: Scales, margin: BlockMargin, keyField: string, blockSize: Size, barIndex: number, barsAmount: number, barSettings: BarChartSettings): BarAttrsHelper {
+    public static getStackedBarAttr(keyAxisOrient: Orient, scales: Scales, margin: BlockMargin, keyField: string, barIndex: number, barsAmount: number, barSettings: BarChartSettings): BarAttrsHelper {
         const attrs: BarAttrsHelper = {
             x: null,
             y: null,
@@ -37,8 +72,8 @@ export class BarHelper {
             height: null
         }
 
-        this.setBarAttrsByKey(attrs, keyAxisOrient, scales.key, margin, keyField, barIndex, barsAmount, barSettings, true);
-        this.setSegmentedBarAttrsByValue(attrs, keyAxisOrient, scales.value, margin, blockSize);
+        this.setBarAttrsByKey(attrs, keyAxisOrient, scales.key, margin, keyField, barIndex, new BarSettingsStore(barSettings, { scaleBandWidth: Scale.getScaleBandWidth(scales.key), barsAmount }), true);
+        this.setSegmentedBarAttrsByValue(attrs, keyAxisOrient, scales.value, margin);
 
         return attrs;
     }
@@ -73,42 +108,48 @@ export class BarHelper {
         return index;
     }
 
-    private static setBarAttrsByKey(attrs: BarAttrsHelper, keyAxisOrient: Orient, scaleKey: AxisScale<any>, margin: BlockMargin, keyField: string, barIndex: number, barsAmount: number, barSettings: BarChartSettings, isSegmented: boolean): void {
-        const barStep = (Scale.getScaleBandWidth(scaleKey) - barSettings.barDistance * (barsAmount - 1)) / barsAmount; // Space for one bar
-        const barSize = barStep > barSettings.maxBarWidth ? barSettings.maxBarWidth : barStep;
-        const barDiff = (barStep - barSize) * barsAmount / 2; // if bar bigger than maxWidth, diff for x coordinate
-        const barPad = barSize * barIndex + barSettings.barDistance * barIndex + barDiff; // Отступ бара от края. Зависит от количества баров в одной группе и порядке текущего бара
-
+    static setBarAttrsByKey(attrs: BarAttrsHelper, keyAxisOrient: Orient, scaleKey: AxisScale<any>, margin: BlockMargin, keyField: string, barIndex: number, settingsStore: BandLikeChartSettingsStore, isSegmented: boolean): void {
         if (keyAxisOrient === 'top' || keyAxisOrient === 'bottom') {
-            attrs.x = d => scaleKey(Helper.getKeyFieldValue(d, keyField, isSegmented)) + margin.left + barPad;
-            attrs.width = d => barSize;
+            attrs.x = d => scaleKey(Helper.getKeyFieldValue(d, keyField, isSegmented)) + margin.left + settingsStore.getBandItemPad(barIndex);
+            attrs.width = d => settingsStore.getBandItemSize();
         }
         if (keyAxisOrient === 'left' || keyAxisOrient === 'right') {
-            attrs.y = d => scaleKey(Helper.getKeyFieldValue(d, keyField, isSegmented)) + margin.top + barPad;
-            attrs.height = d => barSize;
+            attrs.y = d => scaleKey(Helper.getKeyFieldValue(d, keyField, isSegmented)) + margin.top + settingsStore.getBandItemPad(barIndex);
+            attrs.height = d => settingsStore.getBandItemSize();
         }
     }
 
-    private static setGroupedBarAttrsByValue(attrs: BarAttrsHelper, keyAxisOrient: Orient, margin: BlockMargin, scaleValue: AxisScale<any>, valueFieldName: string, blockSize: Size): void {
+    private static setGroupedBarAttrsByValue(attrs: BarAttrsHelper, keyAxisOrient: Orient, margin: BlockMargin, scaleValue: AxisScale<any>, valueFieldName: string): void {
+        this.setGroupedBandStartCoordinateAttr(attrs, keyAxisOrient, scaleValue, margin, valueFieldName);
+
+        if (keyAxisOrient === 'top' || keyAxisOrient === 'bottom') {
+            attrs.height = this.getBandItemValueStretch(scaleValue, valueFieldName);
+        }
+        if (keyAxisOrient === 'left' || keyAxisOrient === 'right') {
+            attrs.width = this.getBandItemValueStretch(scaleValue, valueFieldName);
+        }
+    }
+
+    static getBandItemValueStretch(scaleValue: AxisScale<any>, valueFieldName: string): (dataRow: MdtChartsDataRow) => number {
+        return d => Math.abs(scaleValue(d[valueFieldName]) - scaleValue(0));
+    }
+
+    static setGroupedBandStartCoordinateAttr(attrs: BarAttrsHelper, keyAxisOrient: Orient, scaleValue: AxisScale<any>, margin: BlockMargin, valueFieldName: string) {
         if (keyAxisOrient === 'top') {
             attrs.y = d => scaleValue(Math.min(d[valueFieldName], 0)) + margin.top;
-            attrs.height = d => Math.abs(scaleValue(d[valueFieldName]) - scaleValue(0));
         }
         if (keyAxisOrient === 'bottom') {
             attrs.y = d => scaleValue(Math.max(d[valueFieldName], 0)) + margin.top;
-            attrs.height = d => Math.abs(scaleValue(d[valueFieldName]) - scaleValue(0));
         }
         if (keyAxisOrient === 'left') {
             attrs.x = d => scaleValue(Math.min(d[valueFieldName], 0)) + margin.left;
-            attrs.width = d => Math.abs(scaleValue(d[valueFieldName]) - scaleValue(0));
         }
         if (keyAxisOrient === 'right') {
             attrs.x = d => scaleValue(Math.max(d[valueFieldName], 0)) + margin.left;
-            attrs.width = d => Math.abs(scaleValue(d[valueFieldName]) - scaleValue(0));
         }
     }
 
-    private static setSegmentedBarAttrsByValue(attrs: BarAttrsHelper, keyAxisOrient: Orient, scaleValue: AxisScale<any>, margin: BlockMargin, blockSize: Size): void {
+    private static setSegmentedBarAttrsByValue(attrs: BarAttrsHelper, keyAxisOrient: Orient, scaleValue: AxisScale<any>, margin: BlockMargin): void {
         if (keyAxisOrient === 'top') {
             attrs.y = d => scaleValue(Math.min(d[1], d[0])) + margin.top;
             attrs.height = d => Math.abs(scaleValue(d[1]) - scaleValue(d[0]));

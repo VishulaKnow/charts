@@ -11,30 +11,6 @@ export interface LegendItemContentOptions {
 }
 
 export class LegendCanvasModel {
-    public static getLegendItemWidth(text: string): number {
-        const itemWrapper = document.createElement('div');
-        itemWrapper.style.opacity = '0';
-        const colorBlock = document.createElement('span');
-        const textBlock = document.createElement('span');
-
-        itemWrapper.style.display = 'inline-block';
-        itemWrapper.classList.add(CLASSES.legendItem);
-        colorBlock.classList.add(CLASSES.legendColor);
-        textBlock.classList.add(CLASSES.legendLabel);
-
-        textBlock.textContent = text;
-        itemWrapper.append(colorBlock, textBlock);
-
-        document.body.append(itemWrapper);
-
-        const sumWidth = itemWrapper.getBoundingClientRect().width
-            + parseFloat(window.getComputedStyle(itemWrapper, null).getPropertyValue('margin-left'))
-            + parseFloat(window.getComputedStyle(itemWrapper, null).getPropertyValue('margin-right'));
-
-        itemWrapper.remove();
-        return sumWidth;
-    }
-
     //TODO: find better solution
     public static findElementsAmountByLegendSize(items: LegendItemContentOptions[], position: LegendPosition, legendBlockWidth: number, legendBlockHeight: number): DataLegendParams {
         const legendWrapper = this.getLegendWrapperEl(legendBlockWidth, position === "right" ? "column" : "row");

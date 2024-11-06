@@ -339,14 +339,27 @@ export interface AreaViewBorderLine {
     colorStyle: ChartStyle;
 }
 
-export interface TwoDimensionalChartModel extends ChartModel, TwoDimensionalLineLikeChartModel, TwoDimensionalBarLikeChartModel, TwoDimensionalAreaChartModel {
+export interface DotChartModel {
+    dotViewOptions: DotChartViewModel;
+}
+export interface DotChartViewModel {
+    shape: DotChartShapeOptions;
+}
+interface DotChartShapeOptions {
+    type: "line";
+    handleStartCoordinate: (calculatedBandItemStartCoordinate: number) => number;
+    handleEndCoordinate: (calculatedBandItemSize: number) => number;
+    width: number;
+}
+
+export interface TwoDimensionalChartModel extends ChartModel, TwoDimensionalLineLikeChartModel, TwoDimensionalBarLikeChartModel, TwoDimensionalAreaChartModel, DotChartModel, DotChartModel {
     type: TwoDimensionalChartType;
     data: TwoDimensionalChartDataModel;
     index: number;
     embeddedLabels: EmbeddedLabelTypeModel;
     isSegmented: boolean;
     legend: ChartLegendModel;
-    valueLabels?: TwoDimChartValueLabelsOptions;
+    valueLabels: TwoDimChartValueLabelsOptions;
 }
 
 export interface IntervalChartModel extends Omit<ChartModel, "legend"> { //TODO: remove

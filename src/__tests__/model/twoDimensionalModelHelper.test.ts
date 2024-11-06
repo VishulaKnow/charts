@@ -121,7 +121,9 @@ describe('getGradientDefs', () => {
                             elementColors: ['green', 'red'],
                         },
                     }
-                }
+                },
+                dotViewOptions: null,
+                valueLabels: null
             },
             {
                 type: 'line',
@@ -145,7 +147,9 @@ describe('getGradientDefs', () => {
                         on: false,
                         colorStyle: null,
                     }
-                }
+                },
+                dotViewOptions: null,
+                valueLabels: null
             },
         ]
     })

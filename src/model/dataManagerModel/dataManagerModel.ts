@@ -1,4 +1,4 @@
-import { MdtChartsConfig, MdtChartsTwoDimensionalChart, MdtChartsTwoDimensionalOptions, MdtChartsPolarOptions, MdtChartsDataSource, MdtChartsDataRow, DataOptions } from "../../config/config";
+import { MdtChartsConfig, MdtChartsTwoDimensionalChart, MdtChartsTwoDimensionalOptions, MdtChartsPolarOptions, MdtChartsDataSource, MdtChartsDataRow, DataOptions, TwoDimensionalChartType } from "../../config/config";
 import { BarOptionsCanvas, DesignerConfig, LegendBlockCanvas } from "../../designer/designerConfig";
 import { AxisModel } from "../featuresModel/axisModel";
 import { LegendCanvasModel, LegendItemContentOptions } from "../featuresModel/legendModel/legendCanvasModel";
@@ -132,15 +132,17 @@ export class DataManagerModel {
      * @param chartsLength 
      */
     private static getElementsInGroupAmount(configOptions: MdtChartsTwoDimensionalOptions): number {
-        return this.getBarChartsInGroupAmount(configOptions.charts);
+        const bars = this.getBarLikeChartsInGroupAmount(configOptions.charts, 'bar');
+        const dots = configOptions.charts.some(chart => chart.type === 'dot') ? 1 : 0;
+        return Math.max(bars, dots);
     }
 
-    private static getBarChartsInGroupAmount(charts: MdtChartsTwoDimensionalChart[]): number {
+    private static getBarLikeChartsInGroupAmount(charts: MdtChartsTwoDimensionalChart[], type: TwoDimensionalChartType): number {
         let barsAmount = 0;
         charts.forEach(chart => {
-            if (chart.type === 'bar' && chart.isSegmented)
+            if (chart.type === type && chart.isSegmented)
                 barsAmount += 1; // в сегментированном баре все valueFields находятся внутри одного бара, поэтому бар всегда один.
-            else if (chart.type === 'bar')
+            else if (chart.type === type)
                 barsAmount += chart.data.valueFields.length;
         });
         return barsAmount;
