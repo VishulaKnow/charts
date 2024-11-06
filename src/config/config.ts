@@ -269,8 +269,16 @@ interface MdtChartsBarLikeChart {
     embeddedLabels: EmbeddedLabelType;
 }
 
-interface MdtChartsBarLikeChartStyles {
+export interface MdtChartsBarLikeChartStyles {
     hatch?: MdtChartsBarLikeChartHatchedStyles;
+    borderRadius?: MdtChartsBarLikeChartBorderRadius;
+}
+
+interface MdtChartsBarLikeChartBorderRadius {
+    /**
+     * @default 2
+     */
+    value?: number;
 }
 
 interface MdtChartsBarLikeChartHatchedStyles {

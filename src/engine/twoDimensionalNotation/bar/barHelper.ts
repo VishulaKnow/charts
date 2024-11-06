@@ -1,5 +1,5 @@
 import { AxisScale } from "d3-axis";
-import { BarChartSettings, BlockMargin, Orient, TwoDimensionalChartModel } from "../../../model/model";
+import { BarChartSettings, BarLikeChartBorderRadius, BlockMargin, Orient, TwoDimensionalChartModel } from "../../../model/model";
 import { Scale, Scales } from "../../features/scale/scale";
 import { Helper } from "../../helpers/helper";
 import { MdtChartsDataRow, Size } from "../../../config/config";
@@ -171,6 +171,22 @@ export class BarHelper {
 
 export function onBarChartInit(createBarPipeline: Pipeline<Selection<SVGRectElement, any, BaseType, any>, TwoDimensionalChartModel>) {
     createBarPipeline.push(hatchBar);
+    createBarPipeline.push(roundBar);
+}
+
+function roundBar(bars: Selection<SVGRectElement, any, BaseType, any>, chart: TwoDimensionalChartModel): Selection<SVGRectElement, any, BaseType, any> {
+    if (chart.isSegmented) return;
+
+    if (chart.barViewOptions.borderRadius)
+        bars.style('clip-path', getClipPathValue(chart.barViewOptions.borderRadius))
+
+    return bars
+}
+
+export function getClipPathValue(borderRadius: BarLikeChartBorderRadius): string {
+    const { topLeft, topRight, bottomLeft, bottomRight } = borderRadius.grouped;
+
+    return `inset(0px round ${topLeft}px ${topRight}px ${bottomRight}px ${bottomLeft}px)`
 }
 
 function hatchBar(bars: Selection<SVGRectElement, any, BaseType, any>, chart: TwoDimensionalChartModel) {
