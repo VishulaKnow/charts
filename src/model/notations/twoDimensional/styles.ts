@@ -1,4 +1,4 @@
-import { AreaChartViewOptions, AreaViewBorderLine, AreaViewFill, ChartLegendModel, ChartStyle, GradientId, LegendMarkerShape, LineCurveType, LineLikeChartDashOptions, LineLikeChartShapeOptions, TwoDimensionalBarLikeChartViewModel } from "../../model";
+import { AreaChartViewOptions, AreaViewBorderLine, AreaViewFill, BarBorderRadius, BarLikeChartBorderRadius, ChartLegendModel, ChartStyle, GradientId, LegendMarkerShape, LineCurveType, LineLikeChartDashOptions, LineLikeChartShapeOptions, Orient, TwoDimensionalBarLikeChartViewModel } from "../../model";
 import { ChartOrientation, MdtChartsBarLikeChartStyles, MdtChartsLineLikeChartDashedStyles, MdtChartsTwoDimensionalChart, TwoDimensionalChartType } from "../../../config/config";
 import { MdtChartsLineLikeChartCurveType, MdtChartsLineLikeChartShape } from "../../../designer/designerConfig";
 import { styledElementValues } from "../../modelBuilder";
@@ -31,23 +31,56 @@ export function parseDashStyles(configOptions?: MdtChartsLineLikeChartDashedStyl
     }
 }
 
-export function getBarViewOptions(barStyles: MdtChartsBarLikeChartStyles): TwoDimensionalBarLikeChartViewModel {
+export function getBarViewOptions(barStyles: MdtChartsBarLikeChartStyles, keyAxisOrient: Orient): TwoDimensionalBarLikeChartViewModel {
     const hatch = { on: barStyles?.hatch?.on ?? false };
+    const defaultRadius = barStyles?.borderRadius?.value ?? 2;
 
-    const borderRadius = barStyles?.borderRadius && {
-        grouped: getRadiusValues(barStyles?.borderRadius.value ?? 2)
+    const borderRadius: BarLikeChartBorderRadius = barStyles?.borderRadius && {
+        grouped: getRadiusValues(defaultRadius),
+        segmented: {
+            handle: (valueIndex: number, valueFieldsLength: number) => getSegmentedRadiusValues(valueFieldsLength, valueIndex, keyAxisOrient, defaultRadius),
+        }
     };
 
     return { hatch, borderRadius };
 }
 
-function getRadiusValues(value: number) {
+function getRadiusValues(defaultRadius: number) {
     return {
-        topLeft: value,
-        topRight: value,
-        bottomLeft: value,
-        bottomRight: value
+        topLeft: defaultRadius,
+        topRight: defaultRadius,
+        bottomLeft: defaultRadius,
+        bottomRight: defaultRadius
     }
+}
+
+export function getSegmentedRadiusValues(segmentsLength: number, segmentIndex: number, keyAxisOrient: Orient, defaultRadius: number): BarBorderRadius {
+    const radiusConfigs = {
+        first: {
+            top: { topLeft: defaultRadius, topRight: defaultRadius, bottomLeft: 0, bottomRight: 0 },
+            bottom: { topLeft: 0, topRight: 0, bottomLeft: defaultRadius, bottomRight: defaultRadius },
+            left: { topLeft: defaultRadius, topRight: 0, bottomLeft: defaultRadius, bottomRight: 0 },
+            right: { topLeft: 0, topRight: defaultRadius, bottomLeft: 0, bottomRight: defaultRadius },
+        },
+        last: {
+            top: { topLeft: 0, topRight: 0, bottomLeft: defaultRadius, bottomRight: defaultRadius },
+            bottom: { topLeft: defaultRadius, topRight: defaultRadius, bottomLeft: 0, bottomRight: 0 },
+            left: { topLeft: 0, topRight: defaultRadius, bottomLeft: 0, bottomRight: defaultRadius },
+            right: { topLeft: defaultRadius, topRight: 0, bottomLeft: defaultRadius, bottomRight: 0 },
+        },
+        middle: { topLeft: 0, topRight: 0, bottomLeft: 0, bottomRight: 0 },
+        default: getRadiusValues(defaultRadius)
+    };
+
+    if (segmentsLength === 1)
+        return radiusConfigs.default;
+    else if (segmentIndex === 0)
+        return radiusConfigs.first[keyAxisOrient];
+    else if (segmentIndex === segmentsLength - 1)
+        return radiusConfigs.last[keyAxisOrient];
+    else
+        return radiusConfigs.middle;
+
 }
 
 export function getLegendMarkerOptions(chart: MdtChartsTwoDimensionalChart, barViewOptions: TwoDimensionalBarLikeChartViewModel): ChartLegendModel {

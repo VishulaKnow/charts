@@ -78,8 +78,8 @@ class BarMarkerCreator extends SvgMarkerCreator implements MarkerCreator {
             bars.style('mask', HatchPatternDef.getMaskValue());
         }
 
-        if (this.options.borderRadius)
-            bars.style('clip-path', getClipPathValue(this.options.borderRadius));
+        if (this.options.borderRadius?.grouped)
+            bars.style('clip-path', getClipPathValue(this.options.borderRadius.grouped));
 
         return bars;
     }
