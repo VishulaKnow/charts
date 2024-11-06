@@ -35,7 +35,7 @@ export function getBarViewOptions(chart: MdtChartsTwoDimensionalChart, keyAxisOr
     const hatch = { on: chart.barStyles?.hatch?.on ?? false };
     const defaultRadius = chart.barStyles?.borderRadius?.value ?? 2;
 
-    const borderRadius: BarLikeChartBorderRadius = chart.barStyles && {
+    const borderRadius: BarLikeChartBorderRadius = {
         grouped: getRadiusValues(defaultRadius),
         segmented: {
             handle: (valueIndex: number, valueFieldsLength: number) => getSegmentedRadiusValues(valueFieldsLength, valueIndex, keyAxisOrient, defaultRadius),
@@ -92,7 +92,7 @@ export function getLegendMarkerOptions(chart: MdtChartsTwoDimensionalChart, barV
     }
     return {
         markerShape: shapeByType[chart.type],
-        barViewOptions: { ...barViewOptions, width: getWidthOfLegendMarkerByType("bar" ) },
+        barViewOptions: { ...barViewOptions, width: getWidthOfLegendMarkerByType("bar") },
         lineViewOptions: { dashedStyles: parseDashStyles(chart.lineStyles?.dash), width: getWidthOfLegendMarkerByType("line") }
     }
 }
