@@ -15,7 +15,13 @@ import {
 } from "../model";
 import { TwoDimConfigReader } from "../modelInstance/configReader";
 import { ModelInstance } from "../modelInstance/modelInstance";
-import { getAreaViewOptions, getBarViewOptions, getLegendMarkerOptions, parseDashStyles, parseShape } from "./twoDimensional/styles";
+import {
+    getAreaViewOptions,
+    getBarViewOptions,
+    getLegendMarkerOptions, LINE_CHART_DEFAULT_WIDTH,
+    parseDashStyles,
+    parseShape
+} from "./twoDimensional/styles";
 import { getResolvedTitle } from "../../model/featuresModel/titleModel";
 import { DataRepositoryModel } from "../modelInstance/dataModel/dataRepository";
 import { calculateValueLabelAlignment, getValueLabelX, getValueLabelY } from "../../model/featuresModel/valueLabelsModel/valueLabelsModel";
@@ -126,6 +132,7 @@ export class TwoDimensionalModel {
                 },
                 lineLikeViewOptions: {
                     dashedStyles: parseDashStyles(chart.lineStyles?.dash),
+                    strokeWidth: chart.lineStyles?.width ?? LINE_CHART_DEFAULT_WIDTH,
                     renderForKey: (dataRow, valueFieldName) => dataRow[valueFieldName] !== null && dataRow[valueFieldName] !== undefined
                 },
                 barViewOptions: getBarViewOptions(chart, keyAxisOrient),

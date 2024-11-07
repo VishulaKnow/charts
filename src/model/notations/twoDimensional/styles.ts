@@ -4,6 +4,7 @@ import { MdtChartsLineLikeChartCurveType, MdtChartsLineLikeChartShape } from "..
 import { styledElementValues } from "../../modelBuilder";
 
 const BAR_CHART_BORDER_RADIUS_DEFAULT = 2;
+export const LINE_CHART_DEFAULT_WIDTH = 2;
 
 export function parseShape(chartOrientation: ChartOrientation, configOptions?: MdtChartsLineLikeChartShape): LineLikeChartShapeOptions {
     const curveType = configOptions?.curve?.type;
@@ -97,8 +98,13 @@ export function getLegendMarkerOptions(chart: MdtChartsTwoDimensionalChart): Cha
         barViewOptions: {
             hatch: { on: chart.barStyles?.hatch?.on ?? false },
             borderRadius: getRadiusValues(chart.barStyles?.borderRadius?.value ?? BAR_CHART_BORDER_RADIUS_DEFAULT),
-            width: getWidthOfLegendMarkerByType("bar") },
-        lineViewOptions: { dashedStyles: parseDashStyles(chart.lineStyles?.dash), width: getWidthOfLegendMarkerByType("line") }
+            width: getWidthOfLegendMarkerByType("bar")
+        },
+        lineViewOptions: {
+            dashedStyles: parseDashStyles(chart.lineStyles?.dash),
+            strokeWidth: chart.lineStyles?.width ?? LINE_CHART_DEFAULT_WIDTH,
+            length: getWidthOfLegendMarkerByType("line")
+        }
     }
 }
 

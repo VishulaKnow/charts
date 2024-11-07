@@ -303,7 +303,7 @@ export interface TwoDimensionalChartLegendBarModel {
 }
 
 export interface TwoDimensionalChartLegendLineModel extends Omit<TwoDimensionalLineLikeChartViewModel, 'renderForKey'> {
-    width: number;
+    length: number;
 }
 
 interface TwoDimensionalLineLikeChartModel {
@@ -313,6 +313,7 @@ interface TwoDimensionalLineLikeChartModel {
 
 interface TwoDimensionalLineLikeChartViewModel {
     dashedStyles: LineLikeChartDashOptions;
+    strokeWidth: number;
     renderForKey: LineLikeChartRenderFn
 }
 

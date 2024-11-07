@@ -31,7 +31,11 @@ describe('Donut ColorReader', () => {
                         hatch: { on: false },
                         borderRadius: { topLeft: 0, topRight: 0, bottomLeft: 0, bottomRight: 0 },
                         width: 42 },
-                    lineViewOptions: { dashedStyles: { dashSize: 0, gapSize: 0, on: false }, width: 42 }
+                    lineViewOptions: {
+                        dashedStyles: { dashSize: 0, gapSize: 0, on: false },
+                        strokeWidth: 0,
+                        length: 42
+                    }
                 }
             }
         }
