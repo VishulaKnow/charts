@@ -127,6 +127,7 @@ export class TwoDimensionalModel {
                 },
                 lineLikeViewOptions: {
                     dashedStyles: parseDashStyles(chart.lineStyles?.dash),
+                    strokeWidth: chart.lineStyles?.width ?? 2,
                     renderForKey: (dataRow, valueFieldName) => dataRow[valueFieldName] !== null && dataRow[valueFieldName] !== undefined
                 },
                 barViewOptions,

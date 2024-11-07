@@ -72,7 +72,11 @@ export class PolarModel {
                     hatch: { on: false },
                     borderRadius: { grouped: { topLeft: 0, topRight: 0, bottomLeft: 0, bottomRight: 0 } },
                     width: 0 },
-                lineViewOptions: { dashedStyles: { on: false, dashSize: 0, gapSize: 0 }, width: 0 }
+                lineViewOptions: {
+                    dashedStyles: { on: false, dashSize: 0, gapSize: 0 },
+                    strokeWidth: 0,
+                    length: 0
+                }
             }
         });
         return chartsModel;

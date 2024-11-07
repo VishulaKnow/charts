@@ -243,6 +243,10 @@ interface MdtChartsLineLikeChart {
 
 export interface MdtChartsLineLikeChartStyles {
     dash?: MdtChartsLineLikeChartDashedStyles;
+    /**
+     * @default 2
+     */
+    width?: number;
 }
 
 export interface MdtChartsLineLikeChartDashedStyles {

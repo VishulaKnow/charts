@@ -70,6 +70,11 @@ export function onLineChartInit(creatingPipeline: Pipeline<Selection<SVGElement,
         }
         return path;
     });
+    creatingPipeline.push(setStrokeWidth);
+}
+
+function setStrokeWidth(path: Selection<SVGElement, any, BaseType, any>, chart: TwoDimensionalChartModel): Selection<SVGElement, any, BaseType, any> {
+    return path.style('stroke-width', chart.lineLikeViewOptions.strokeWidth);
 }
 
 export function applyLineDash(lineSelection: Selection<SVGElement, any, BaseType, any>, dashSize: number, gapSize: number) {

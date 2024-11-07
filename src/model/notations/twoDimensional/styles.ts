@@ -60,7 +60,11 @@ export function getLegendMarkerOptions(chart: MdtChartsTwoDimensionalChart, barV
     return {
         markerShape: shapeByType[chart.type],
         barViewOptions: { ...barViewOptions, width: getWidthOfLegendMarkerByType("bar") },
-        lineViewOptions: { dashedStyles: parseDashStyles(chart.lineStyles?.dash), width: getWidthOfLegendMarkerByType("line") }
+        lineViewOptions: {
+            dashedStyles: parseDashStyles(chart.lineStyles?.dash),
+            strokeWidth: chart.lineStyles?.width ?? 2,
+            length: getWidthOfLegendMarkerByType("line")
+        }
     }
 }
 

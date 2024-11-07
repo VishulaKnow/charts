@@ -95,16 +95,17 @@ class LineMarkerCreator extends SvgMarkerCreator implements MarkerCreator {
     }
 
     renderMarker(selection: MarkerParentSelection, color: string) {
-        const svg = this.renderSvg(selection).style("width", this.options.width);
+        const svg = this.renderSvg(selection).style("width", this.options.length);
         const line = svg
             .append('line')
             .style('stroke', 'red')
             .classed("line", true)
             .attr('x1', 0)
-            .attr('x2', this.options.width)
+            .attr('x2', this.options.length)
             .attr('y1', 5)
             .attr('y2', 5)
-            .style('stroke', color);
+            .style('stroke', color)
+            .style('stroke-width', this.options.strokeWidth);
 
         if (this.options.dashedStyles.on) {
             applyLineDash(line, this.options.dashedStyles.dashSize, this.options.dashedStyles.gapSize);
