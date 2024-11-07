@@ -1,6 +1,7 @@
 import { TwoDimensionalModelHelper } from "../../model/helpers/twoDimensionalModelHelper";
 import { MdtChartsDataRow, MdtChartsTwoDimensionalChart } from "../../config/config";
 import { MarkDotDatumItem, TwoDimensionalChartModel } from "../../model/model";
+import { getSegmentedRadiusValues } from "../../model/notations/twoDimensional/styles";
 
 describe('shouldMarkerShow', () => {
 
@@ -222,5 +223,62 @@ describe('getGradientDefs', () => {
         gradients = TwoDimensionalModelHelper.getGradientDefs(charts, 'left', 'horizontal')
         expect(gradients[0].items[0].color).toEqual('white');
         expect(gradients[0].items[1].color).toEqual('green');
+    });
+});
+
+describe('getSegmentedRadiusValues', () => {
+
+    test('should return radius for bottomLeft and bottomRight equal to 2, because key position is bottom and the segment of bars is first', () => {
+        const radiusValues = getSegmentedRadiusValues(3, 0, 'bottom', 2);
+
+        expect(radiusValues.topLeft).toEqual(0);
+        expect(radiusValues.topRight).toEqual(0);
+        expect(radiusValues.bottomLeft).toEqual(2);
+        expect(radiusValues.bottomRight).toEqual(2);
+    });
+
+    test('should return radius for topLeft and topRight equal to 2, because key position is bottom and the segment of bars is last', () => {
+        const radiusValues = getSegmentedRadiusValues(3, 2, 'bottom', 2);
+
+        expect(radiusValues.topLeft).toEqual(2);
+        expect(radiusValues.topRight).toEqual(2);
+        expect(radiusValues.bottomLeft).toEqual(0);
+        expect(radiusValues.bottomRight).toEqual(0);
+    });
+
+    test('should return radius for topLeft and bottomLeft equal to 2, because key position is left and the segment of bars is first', () => {
+        const radiusValues = getSegmentedRadiusValues(3, 0, 'left', 2);
+
+        expect(radiusValues.topLeft).toEqual(2);
+        expect(radiusValues.topRight).toEqual(0);
+        expect(radiusValues.bottomLeft).toEqual(2);
+        expect(radiusValues.bottomRight).toEqual(0);
+    });
+
+    test('should return radius for topRight and bottomRight equal to 2, because key position is left and the segment of bars is last', () => {
+        const radiusValues = getSegmentedRadiusValues(3, 2, 'left', 2);
+
+        expect(radiusValues.topLeft).toEqual(0);
+        expect(radiusValues.topRight).toEqual(2);
+        expect(radiusValues.bottomLeft).toEqual(0);
+        expect(radiusValues.bottomRight).toEqual(2);
+    });
+
+    test('should return radius for all sides equal to 0, because the segment of bars is not first or last', () => {
+        const radiusValues = getSegmentedRadiusValues(3, 1, 'bottom', 2);
+
+        expect(radiusValues.topLeft).toEqual(0);
+        expect(radiusValues.topRight).toEqual(0);
+        expect(radiusValues.bottomLeft).toEqual(0);
+        expect(radiusValues.bottomRight).toEqual(0);
+    });
+
+    test('should return radius for all sides equal to 2, because length of segments amount equal to 1', () => {
+        const radiusValues = getSegmentedRadiusValues(1, 0, 'bottom', 2);
+
+        expect(radiusValues.topLeft).toEqual(2);
+        expect(radiusValues.topRight).toEqual(2);
+        expect(radiusValues.bottomLeft).toEqual(2);
+        expect(radiusValues.bottomRight).toEqual(2);
     });
 });
