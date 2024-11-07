@@ -2,7 +2,7 @@ import { AxisScale } from "d3-axis";
 import { BarBorderRadius, BarChartSettings, BlockMargin, Orient, TwoDimensionalChartModel } from "../../../model/model";
 import { Scale, Scales } from "../../features/scale/scale";
 import { Helper } from "../../helpers/helper";
-import { MdtChartsDataRow, Size } from "../../../config/config";
+import { MdtChartsDataRow } from "../../../config/config";
 import { Pipeline } from "../../helpers/pipeline/Pipeline";
 import { BaseType, Selection } from "d3-selection";
 import { HatchPatternDef } from "../../block/defs/hatchPattern";
@@ -15,7 +15,6 @@ export interface BarAttrsHelper {
 }
 
 export interface GroupBarsSegment {
-    segmentsAmount: number;
     segmentIndex: number;
     chart: TwoDimensionalChartModel;
 }
@@ -183,20 +182,14 @@ export function onBarChartInit(createBarPipeline: Pipeline<Selection<SVGRectElem
 }
 
 function roundSegmentedBars(bars: Selection<SVGRectElement, any, BaseType, any>, segment: GroupBarsSegment): Selection<SVGRectElement, any, BaseType, any> {
-    if (segment.chart.barViewOptions.borderRadius) {
-        const radiusValues = segment.chart.barViewOptions.borderRadius.segmented.handle(segment.segmentIndex, segment.segmentsAmount);
-        bars.style('clip-path', getClipPathValue(radiusValues));
-    }
+    const radiusValues = segment.chart.barViewOptions.borderRadius.segmented.handle(segment.segmentIndex);
 
-    return bars;
+    return bars.style('clip-path', getClipPathValue(radiusValues));
 }
 
 
 function roundGroupedBars(bars: Selection<SVGRectElement, any, BaseType, any>, chart: TwoDimensionalChartModel): Selection<SVGRectElement, any, BaseType, any> {
-    if (chart.barViewOptions.borderRadius)
-        bars.style('clip-path', getClipPathValue(chart.barViewOptions.borderRadius.grouped));
-
-    return bars;
+    return bars.style('clip-path', getClipPathValue(chart.barViewOptions.borderRadius.grouped));
 }
 
 export function getClipPathValue({ topLeft, topRight, bottomLeft, bottomRight }: BarBorderRadius): string {

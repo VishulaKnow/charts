@@ -167,7 +167,7 @@ export class Bar {
             const barsInGroup = select(this).selectAll<SVGRectElement, MdtChartsDataRow>(`rect${Helper.getCssClassesLine(chart.cssClasses)}`);
 
             DomHelper.setCssClasses(barsInGroup, Helper.getCssClassesWithElementIndex(chart.cssClasses, i)); // Для обозначения принадлежности бара к конкретной части стака
-            thisClass.createSegmentGroupBarsPipeline.execute(barsInGroup, { segmentsAmount: groups.size(), segmentIndex: i, chart });
+            thisClass.createSegmentGroupBarsPipeline.execute(barsInGroup, { segmentIndex: i, chart });
             thisClass.setSegmentColor(select(this).selectAll(Helper.getCssClassesLine(chart.cssClasses)), chart.style.elementColors, i);
         });
     }
@@ -290,7 +290,7 @@ export class Bar {
             const barsInGroup = select(this).selectAll<SVGRectElement, MdtChartsDataRow>(`rect${Helper.getCssClassesLine(chart.cssClasses)}`);
 
             DomHelper.setCssClasses(barsInGroup, Helper.getCssClassesWithElementIndex(chart.cssClasses, i)); // Для обозначения принадлежности бара к конкретной части стака
-            thisClass.createSegmentGroupBarsPipeline.execute(barsInGroup, { segmentsAmount: groups.size(), segmentIndex: i, chart });
+            thisClass.createSegmentGroupBarsPipeline.execute(barsInGroup, { segmentIndex: i, chart });
             thisClass.setSegmentColor(select(this).selectAll(Helper.getCssClassesLine(chart.cssClasses)), chart.style.elementColors, i);
         });
 

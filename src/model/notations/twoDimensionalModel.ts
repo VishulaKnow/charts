@@ -101,7 +101,6 @@ export class TwoDimensionalModel {
         const chartsModel: TwoDimensionalChartModel[] = [];
         charts.forEach((chart, index) => {
             const style = styleModel.getChartStyle(chart, index);
-            const barViewOptions = getBarViewOptions(chart, keyAxisOrient);
 
             chartsModel.push({
                 type: chart.type,
@@ -129,8 +128,8 @@ export class TwoDimensionalModel {
                     dashedStyles: parseDashStyles(chart.lineStyles?.dash),
                     renderForKey: (dataRow, valueFieldName) => dataRow[valueFieldName] !== null && dataRow[valueFieldName] !== undefined
                 },
-                barViewOptions,
-                legend: getLegendMarkerOptions(chart, barViewOptions),
+                barViewOptions: getBarViewOptions(chart, keyAxisOrient),
+                legend: getLegendMarkerOptions(chart),
                 index,
                 valueLabels: {
                     show: chart.valueLabels?.on ?? false,

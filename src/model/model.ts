@@ -244,7 +244,7 @@ export interface BarBorderRadius {
 }
 
 interface SegmentedBarBorderRadius{
-    handle: (segmentIndex: number, valueFieldsLength: number) => BarBorderRadius;
+    handle: (segmentIndex: number) => BarBorderRadius;
 }
 
 export interface TwoDimensionalValueLabels {
@@ -298,7 +298,7 @@ export type LegendMarkerShape = "default" | "bar" | "line";
 
 export interface TwoDimensionalChartLegendBarModel {
     hatch: BarLikeChartHatchOptions;
-    borderRadius: BarLikeChartBorderRadius;
+    borderRadius: BarBorderRadius;
     width: number;
 }
 
