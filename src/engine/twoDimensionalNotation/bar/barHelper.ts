@@ -1,8 +1,8 @@
 import { AxisScale } from "d3-axis";
-import { BarChartSettings, BarLikeChartBorderRadius, BlockMargin, Orient, TwoDimensionalChartModel } from "../../../model/model";
+import { BarBorderRadius, BarChartSettings, BlockMargin, Orient, TwoDimensionalChartModel } from "../../../model/model";
 import { Scale, Scales } from "../../features/scale/scale";
 import { Helper } from "../../helpers/helper";
-import { MdtChartsDataRow, Size } from "../../../config/config";
+import { MdtChartsDataRow } from "../../../config/config";
 import { Pipeline } from "../../helpers/pipeline/Pipeline";
 import { BaseType, Selection } from "d3-selection";
 import { HatchPatternDef } from "../../block/defs/hatchPattern";
@@ -12,6 +12,11 @@ export interface BarAttrsHelper {
     y: (dataRow: MdtChartsDataRow) => number;
     width: (dataRow: MdtChartsDataRow) => number;
     height: (dataRow: MdtChartsDataRow) => number;
+}
+
+export interface GroupBarsSegment {
+    segmentIndex: number;
+    chart: TwoDimensionalChartModel;
 }
 
 interface BandLikeChartSettingsStore {
@@ -169,24 +174,26 @@ export class BarHelper {
     }
 }
 
-export function onBarChartInit(createBarPipeline: Pipeline<Selection<SVGRectElement, any, BaseType, any>, TwoDimensionalChartModel>) {
+export function onBarChartInit(createBarPipeline: Pipeline<Selection<SVGRectElement, any, BaseType, any>, TwoDimensionalChartModel>, createSegmentGroupBarsPipeline: Pipeline<Selection<SVGRectElement, any, BaseType, any>, GroupBarsSegment>) {
     createBarPipeline.push(hatchBar);
-    createBarPipeline.push(roundBar);
+    createBarPipeline.push(roundGroupedBars);
+
+    createSegmentGroupBarsPipeline.push(roundSegmentedBars);
 }
 
-function roundBar(bars: Selection<SVGRectElement, any, BaseType, any>, chart: TwoDimensionalChartModel): Selection<SVGRectElement, any, BaseType, any> {
-    if (chart.isSegmented) return;
+function roundSegmentedBars(bars: Selection<SVGRectElement, any, BaseType, any>, segment: GroupBarsSegment): Selection<SVGRectElement, any, BaseType, any> {
+    const radiusValues = segment.chart.barViewOptions.borderRadius.segmented.handle(segment.segmentIndex);
 
-    if (chart.barViewOptions.borderRadius)
-        bars.style('clip-path', getClipPathValue(chart.barViewOptions.borderRadius))
-
-    return bars
+    return bars.style('clip-path', getClipPathValue(radiusValues));
 }
 
-export function getClipPathValue(borderRadius: BarLikeChartBorderRadius): string {
-    const { topLeft, topRight, bottomLeft, bottomRight } = borderRadius.grouped;
 
-    return `inset(0px round ${topLeft}px ${topRight}px ${bottomRight}px ${bottomLeft}px)`
+function roundGroupedBars(bars: Selection<SVGRectElement, any, BaseType, any>, chart: TwoDimensionalChartModel): Selection<SVGRectElement, any, BaseType, any> {
+    return bars.style('clip-path', getClipPathValue(chart.barViewOptions.borderRadius.grouped));
+}
+
+export function getClipPathValue({ topLeft, topRight, bottomLeft, bottomRight }: BarBorderRadius): string {
+    return `inset(0px round ${topLeft}px ${topRight}px ${bottomRight}px ${bottomLeft}px)`;
 }
 
 function hatchBar(bars: Selection<SVGRectElement, any, BaseType, any>, chart: TwoDimensionalChartModel) {

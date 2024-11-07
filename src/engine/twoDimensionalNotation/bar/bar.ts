@@ -4,7 +4,7 @@ import { Scales } from "../../features/scale/scale";
 import { Block } from "../../block/block";
 import { EmbeddedLabels } from "../../features/embeddedLabels/embeddedLabels";
 import { EmbeddedLabelsHelper } from "../../features/embeddedLabels/embeddedLabelsHelper";
-import { BarAttrsHelper, BarHelper, onBarChartInit } from "./barHelper";
+import { BarAttrsHelper, BarHelper, GroupBarsSegment, onBarChartInit } from "./barHelper";
 import { sum } from "d3-array";
 import { Transition } from "d3-transition";
 import { DomHelper } from "../../helpers/domHelper";
@@ -35,9 +35,10 @@ export class Bar {
     private readonly barSegmentGroupClass = 'bar-segment-group';
 
     private createBarPipeline = new Pipeline<Selection<SVGRectElement, any, BaseType, any>, TwoDimensionalChartModel>();
+    private createSegmentGroupBarsPipeline = new Pipeline<Selection<SVGRectElement, any, BaseType, any>, GroupBarsSegment>();
 
     constructor() {
-        onBarChartInit(this.createBarPipeline);
+        onBarChartInit(this.createBarPipeline, this.createSegmentGroupBarsPipeline);
     }
 
     public render(block: Block, scales: Scales, data: MdtChartsDataRow[], keyField: Field, margin: BlockMargin, keyAxisOrient: Orient, chart: TwoDimensionalChartModel, blockSize: Size, barSettings: BarChartSettings, barsAmounts: number[], isSegmented: boolean, firstBarIndex: number): void {
@@ -163,7 +164,10 @@ export class Bar {
 
         const thisClass = this;
         groups.each(function (d, i) {
-            DomHelper.setCssClasses(select(this).selectAll(`rect${Helper.getCssClassesLine(chart.cssClasses)}`), Helper.getCssClassesWithElementIndex(chart.cssClasses, i)); // Для обозначения принадлежности бара к конкретной части стака
+            const barsInGroup = select(this).selectAll<SVGRectElement, MdtChartsDataRow>(`rect${Helper.getCssClassesLine(chart.cssClasses)}`);
+
+            DomHelper.setCssClasses(barsInGroup, Helper.getCssClassesWithElementIndex(chart.cssClasses, i)); // Для обозначения принадлежности бара к конкретной части стака
+            thisClass.createSegmentGroupBarsPipeline.execute(barsInGroup, { segmentIndex: i, chart });
             thisClass.setSegmentColor(select(this).selectAll(Helper.getCssClassesLine(chart.cssClasses)), chart.style.elementColors, i);
         });
     }
@@ -283,7 +287,10 @@ export class Bar {
 
         const thisClass = this;
         groups.each(function (d, i) {
-            DomHelper.setCssClasses(select(this).selectAll(`rect${Helper.getCssClassesLine(chart.cssClasses)}`), Helper.getCssClassesWithElementIndex(chart.cssClasses, i)); // Для обозначения принадлежности бара к конкретной части стака
+            const barsInGroup = select(this).selectAll<SVGRectElement, MdtChartsDataRow>(`rect${Helper.getCssClassesLine(chart.cssClasses)}`);
+
+            DomHelper.setCssClasses(barsInGroup, Helper.getCssClassesWithElementIndex(chart.cssClasses, i)); // Для обозначения принадлежности бара к конкретной части стака
+            thisClass.createSegmentGroupBarsPipeline.execute(barsInGroup, { segmentIndex: i, chart });
             thisClass.setSegmentColor(select(this).selectAll(Helper.getCssClassesLine(chart.cssClasses)), chart.style.elementColors, i);
         });
 
