@@ -3,7 +3,7 @@ import { ChartOrientation, MdtChartsLineLikeChartDashedStyles, MdtChartsTwoDimen
 import { MdtChartsLineLikeChartCurveType, MdtChartsLineLikeChartShape } from "../../../designer/designerConfig";
 import { styledElementValues } from "../../modelBuilder";
 
-const BORDER_RADIUS_DEFAULT = 2;
+const BAR_CHART_BORDER_RADIUS_DEFAULT = 2;
 
 export function parseShape(chartOrientation: ChartOrientation, configOptions?: MdtChartsLineLikeChartShape): LineLikeChartShapeOptions {
     const curveType = configOptions?.curve?.type;
@@ -35,7 +35,7 @@ export function parseDashStyles(configOptions?: MdtChartsLineLikeChartDashedStyl
 
 export function getBarViewOptions(chart: MdtChartsTwoDimensionalChart, keyAxisOrient: Orient): TwoDimensionalBarLikeChartViewModel {
     const hatch = { on: chart.barStyles?.hatch?.on ?? false };
-    const defaultRadius = chart.barStyles?.borderRadius?.value ?? BORDER_RADIUS_DEFAULT;
+    const defaultRadius = chart.barStyles?.borderRadius?.value ?? BAR_CHART_BORDER_RADIUS_DEFAULT;
 
     const borderRadius: BarLikeChartBorderRadius = {
         grouped: getRadiusValues(defaultRadius),
@@ -96,7 +96,7 @@ export function getLegendMarkerOptions(chart: MdtChartsTwoDimensionalChart): Cha
         markerShape: shapeByType[chart.type],
         barViewOptions: {
             hatch: { on: chart.barStyles?.hatch?.on ?? false },
-            borderRadius: getRadiusValues(chart.barStyles?.borderRadius?.value ?? BORDER_RADIUS_DEFAULT),
+            borderRadius: getRadiusValues(chart.barStyles?.borderRadius?.value ?? BAR_CHART_BORDER_RADIUS_DEFAULT),
             width: getWidthOfLegendMarkerByType("bar") },
         lineViewOptions: { dashedStyles: parseDashStyles(chart.lineStyles?.dash), width: getWidthOfLegendMarkerByType("line") }
     }
