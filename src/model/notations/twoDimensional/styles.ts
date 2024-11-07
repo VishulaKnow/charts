@@ -3,6 +3,8 @@ import { ChartOrientation, MdtChartsBarLikeChartStyles, MdtChartsLineLikeChartDa
 import { MdtChartsLineLikeChartCurveType, MdtChartsLineLikeChartShape } from "../../../designer/designerConfig";
 import { styledElementValues } from "../../modelBuilder";
 
+export const LINE_CHART_DEFAULT_WIDTH = 2;
+
 export function parseShape(chartOrientation: ChartOrientation, configOptions?: MdtChartsLineLikeChartShape): LineLikeChartShapeOptions {
     const curveType = configOptions?.curve?.type;
     return {
@@ -62,7 +64,7 @@ export function getLegendMarkerOptions(chart: MdtChartsTwoDimensionalChart, barV
         barViewOptions: { ...barViewOptions, width: getWidthOfLegendMarkerByType("bar") },
         lineViewOptions: {
             dashedStyles: parseDashStyles(chart.lineStyles?.dash),
-            strokeWidth: chart.lineStyles?.width ?? 2,
+            strokeWidth: chart.lineStyles?.width ?? LINE_CHART_DEFAULT_WIDTH,
             length: getWidthOfLegendMarkerByType("line")
         }
     }
