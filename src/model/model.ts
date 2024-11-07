@@ -10,7 +10,6 @@ import {
     ShowTickFn,
     MdtChartsDataRow,
     TwoDimensionalValueGroup,
-    ValueLabelsCollisionMode,
     ValueLabelsCollision,
 } from "../config/config";
 import { DataType, DonutOptionsCanvas, Formatter, StaticLegendBlockCanvas, TooltipSettings, Transitions } from "../designer/designerConfig";
@@ -234,13 +233,18 @@ interface BarLikeChartHatchOptions {
 
 export interface BarLikeChartBorderRadius {
     grouped: BarBorderRadius;
+    segmented: SegmentedBarBorderRadius;
 }
 
-interface BarBorderRadius {
+export interface BarBorderRadius {
     topLeft: number;
     topRight: number;
     bottomLeft: number;
     bottomRight: number;
+}
+
+interface SegmentedBarBorderRadius{
+    handle: (segmentIndex: number) => BarBorderRadius;
 }
 
 export interface TwoDimensionalValueLabels {
@@ -294,7 +298,7 @@ export type LegendMarkerShape = "default" | "bar" | "line";
 
 export interface TwoDimensionalChartLegendBarModel {
     hatch: BarLikeChartHatchOptions;
-    borderRadius: BarLikeChartBorderRadius;
+    borderRadius: BarBorderRadius;
     width: number;
 }
 

@@ -29,7 +29,7 @@ describe('Donut ColorReader', () => {
                     markerShape: "default",
                     barViewOptions: {
                         hatch: { on: false },
-                        borderRadius: { grouped: { topLeft: 0, topRight: 0, bottomLeft: 0, bottomRight: 0 } },
+                        borderRadius: { topLeft: 0, topRight: 0, bottomLeft: 0, bottomRight: 0 },
                         width: 42 },
                     lineViewOptions: { dashedStyles: { dashSize: 0, gapSize: 0, on: false }, width: 42 }
                 }
