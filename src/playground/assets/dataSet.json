@@ -119,7 +119,7 @@
 			"brand": "JUN",
 			"price2": 6000,
 			"price": 1000,
-			"count": 600,
+			"count": 1000,
 			"color": "cyan"
 		},
 		{
@@ -127,7 +127,7 @@
 			"brand": "JUL",
 			"price": 14200,
 			"price2": 1532,
-			"count": 2,
+			"count": 2000,
 			"color": "red"
 		},
 		{
