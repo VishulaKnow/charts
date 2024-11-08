@@ -108,6 +108,7 @@ export class LegendHelper {
         return {
             wrapperClasses: [
                 Legend.legendBlockClass,
+                chartNotation === "2d" ? "legend-block-centered" : "",
                 this.service.getWrapperClassByItemsDirection(itemsDirection),
                 this.service.getWrapperClassByWrappingItems(legendPosition, chartNotation)
             ],
