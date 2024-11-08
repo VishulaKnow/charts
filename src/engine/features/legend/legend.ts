@@ -121,7 +121,7 @@ export class Legend {
                 const markers = markerCreator.create(selection, { ...d, color: colorPalette[i % colorPalette.length] });
                 markers.classed(options.itemsOptions.markerClass, true)
             });
-debugger
+
         itemWrappers
             .append('span')
             .attr('class', options.itemsOptions.labelClass)
