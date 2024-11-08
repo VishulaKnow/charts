@@ -52,6 +52,7 @@
 /*========================================================================== Legend */
 .legend-block {
     display: flex;
+    justify-content: center;
     height: 100%;
 }
 .legend-block-column {
@@ -60,9 +61,6 @@
 .legend-block-row {
     flex-direction: row;
     flex-wrap: wrap;
-}
-.legend-block-centered {
-    justify-content: center;
 }
 .legend-item {
     cursor: default;
@@ -101,6 +99,9 @@
     width: calc(100% - 19px);
     overflow: hidden;
     line-height: normal;
+}
+.legend-2d-label {
+    font-weight: 500;
 }
 .legend-label-nowrap {
     white-space: nowrap;

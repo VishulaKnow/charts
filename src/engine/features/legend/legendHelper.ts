@@ -103,21 +103,32 @@ export class LegendHelper {
 
     public static getContentRenderingOptions(chartNotation: ChartNotation, legendPosition: LegendPosition, legendBlockModel: LegendBlockModel): LegendContentRenderingOptions {
         const itemsDirection: LegendItemsDirection = this.service.getLegendItemsDirection(legendPosition);
+        const legendLabelClass = this.getLegendClassByChartNotation(chartNotation);
 
         return {
             wrapperClasses: [
                 Legend.legendBlockClass,
                 this.service.getWrapperClassByItemsDirection(itemsDirection),
-                this.service.getWrapperJustifyContentClass(itemsDirection, legendPosition),
                 this.service.getWrapperClassByWrappingItems(legendPosition, chartNotation)
             ],
             shouldCropLabels: chartNotation === "2d",
             blockModel: legendBlockModel,
             itemsOptions: {
                 markerClass: Legend.markerClass,
-                labelClass: this.service.getLegendLabelClassByPosition(legendPosition, chartNotation, Legend.labelClass),
+                labelClass: this.service.getLegendLabelClassByPosition(legendPosition, chartNotation, legendLabelClass),
                 wrapperClasses: [Legend.itemClass, this.service.getItemClasses(itemsDirection)]
             }
         }
     }
+
+    private static getLegendClassByChartNotation(chartNotation: ChartNotation): string {
+        const legendClasses: Record<ChartNotation, string> = {
+            '2d': Legend.label2DClass,
+            'polar': Legend.labelPolarClass,
+            'interval': Legend.labelIntervalClass
+        };
+
+        return `${Legend.labelClass} ${legendClasses[chartNotation]}`;
+    }
+
 }

@@ -27,6 +27,9 @@ export class Legend {
 
     public static readonly objectClass = 'legend-object';
     public static readonly labelClass = 'legend-label';
+    public static readonly label2DClass = 'legend-2d-label';
+    public static readonly labelPolarClass = 'legend-polar-label';
+    public static readonly labelIntervalClass = 'legend-interval-label';
     public static readonly itemClass = 'legend-item';
     public static readonly markerClass = 'legend-marker';
     public static readonly markerCircle = 'legend-circle';
@@ -118,7 +121,7 @@ export class Legend {
                 const markers = markerCreator.create(selection, { ...d, color: colorPalette[i % colorPalette.length] });
                 markers.classed(options.itemsOptions.markerClass, true)
             });
-
+debugger
         itemWrappers
             .append('span')
             .attr('class', options.itemsOptions.labelClass)

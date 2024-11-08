@@ -10,6 +10,7 @@ export type PolarChartType = 'donut';
 export type IntervalChartType = 'gantt';
 export type EmbeddedLabelType = 'none' | 'key' | 'value';
 export type ValueLabelsCollisionMode = "none" | "hide";
+export type TwoDimLegenPosition = "top" | "bottom";
 export type MdtChartsDataRow = {
     [field: string]: any
 }
@@ -55,7 +56,7 @@ interface BasicOptions {
 
 interface GraphicNotationOptions extends BasicOptions {
     data: DataOptions;
-    legend: Legend;
+    legend: MdtChartsTwoDimLegend;
     title?: Title;
     selectable: boolean;
 }
@@ -87,6 +88,11 @@ export interface MdtChartsIntervalOptions extends GraphicNotationOptions {
 export interface Legend {
     show: boolean;
 }
+
+export interface MdtChartsTwoDimLegend extends Legend {
+    position?: TwoDimLegenPosition;
+}
+
 export interface TitleFunctionParams {
     data: MdtChartsDataRow[]
 }
