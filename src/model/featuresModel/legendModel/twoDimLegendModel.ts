@@ -1,4 +1,4 @@
-import { Legend } from "../../../config/config";
+import { MdtChartsTwoDimLegend } from "../../../config/config";
 import { ILegendModel, LegendBlockModel, LegendPosition } from "../../model";
 import { styledElementValues } from "../../modelBuilder";
 import { TwoDimConfigReader } from "../../modelInstance/configReader";
@@ -10,7 +10,7 @@ import { LegendModel } from "./legendModel";
 export class TwoDimLegendModel {
     constructor(private configReader: TwoDimConfigReader) { }
 
-    recalcMarginWith2DLegend(modelInstance: ModelInstance, legendBlockModel: LegendBlockModel, legendOptions: Legend): void {
+    recalcMarginWith2DLegend(modelInstance: ModelInstance, legendBlockModel: LegendBlockModel, legendOptions: MdtChartsTwoDimLegend): void {
         const canvasModel = modelInstance.canvasModel;
 
         const legendPosition = this.getLegendModel(legendOptions).position;
@@ -37,8 +37,11 @@ export class TwoDimLegendModel {
         }
     }
 
-    private getLegendModel(legendOptions: Legend): ILegendModel {
-        const position: LegendPosition = legendOptions.show ? "top" : "off";
+    private getLegendModel(legendOptions: MdtChartsTwoDimLegend): ILegendModel {
+        const position: LegendPosition = legendOptions.show
+            ? legendOptions.position ?? "top"
+            : "off";
+
         return {
             position
         }

@@ -107,7 +107,7 @@ export class DataManagerModel {
             wrapperSize: { marginRightPx: styledElementValues.legend.inlineDynamicItemWrapperMarginRightPx }
         }))
         if (position === 'right') {
-            return LegendCanvasModel.findElementsAmountByLegendSize(legendItemContentOptions, position, this.polarMarginCalculator.getMaxLegendWidth(legendCanvas, canvasModel.getBlockSize().width), canvasModel.getChartBlockHeight() - legendBlock.coordinate.bottom.margin.bottom);
+            return LegendCanvasModel.findElementsAmountByLegendSize(legendItemContentOptions, position, this.polarMarginCalculator.getMaxLegendWidth(legendCanvas, canvasModel.getBlockSize().width), canvasModel.getChartBlockHeight() - legendBlock.coordinate.right.margin.bottom);
         } else {
             return LegendCanvasModel.findElementsAmountByLegendSize(
                 legendItemContentOptions,
