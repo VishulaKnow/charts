@@ -10,7 +10,7 @@ export type PolarChartType = 'donut';
 export type IntervalChartType = 'gantt';
 export type EmbeddedLabelType = 'none' | 'key' | 'value';
 export type ValueLabelsCollisionMode = "none" | "hide";
-export type TwoDimLegenPosition = "top" | "bottom";
+export type TwoDimLegendPosition = "top" | "bottom";
 export type MdtChartsDataRow = {
     [field: string]: any
 }
@@ -90,7 +90,7 @@ export interface Legend {
 }
 
 export interface MdtChartsTwoDimLegend extends Legend {
-    position?: TwoDimLegenPosition;
+    position?: TwoDimLegendPosition;
 }
 
 export interface TitleFunctionParams {
