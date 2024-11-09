@@ -91,9 +91,6 @@ const configCars: MdtChartsConfig = {
                     ],
                     valueGroup: "main"
                 },
-                tooltip: {
-                    show: true
-                },
                 embeddedLabels: 'none',
                 markers: {
                     show: false
@@ -127,9 +124,6 @@ const configCars: MdtChartsConfig = {
                         }
                     ],
                     valueGroup: "main"
-                },
-                tooltip: {
-                    show: true
                 },
                 embeddedLabels: 'none',
                 markers: {

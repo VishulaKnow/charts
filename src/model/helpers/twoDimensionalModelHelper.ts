@@ -48,21 +48,31 @@ export class TwoDimensionalModelHelper {
     }
 
     private static getGradientItems(gradientId: string, elementColor: string, keyAxisOrient: Orient) {
-        return [0, 1].map(indexItem => ({
-            id: gradientId + `-item-${indexItem}`,
-            color: elementColor,
-            offset: indexItem,
-            opacity: this.calculateOpacityItem(indexItem, keyAxisOrient)
+        return [0, 1].map(itemIndex => ({
+            id: gradientId + `-item-${itemIndex}`,
+            color: this.getGradientItemColor(itemIndex, keyAxisOrient, elementColor),
+            offset: itemIndex,
+            opacity: this.calculateOpacityItem(itemIndex, keyAxisOrient)
         }));
     }
 
-    private static calculateOpacityItem(indexItem: number, orientation: Orient): number {
+    private static calculateOpacityItem(itemIndex: number, orientation: Orient): number {
         const maxOpacity = 0.3;
         const minOpacity = 0;
 
         if (orientation === 'bottom' || orientation === 'right')
-            return indexItem === 0 ? maxOpacity : minOpacity;
+            return itemIndex === 0 ? maxOpacity : minOpacity;
         else
-            return indexItem === 0 ? minOpacity : maxOpacity;
+            return itemIndex === 0 ? minOpacity : maxOpacity;
     };
+
+    private static getGradientItemColor(itemIndex: number, orientation: Orient, elementColor: string): string {
+        const maxColor = elementColor;
+        const minColor = "white";
+
+        if (orientation === 'bottom' || orientation === 'right')
+            return itemIndex === 0 ? maxColor : minColor;
+        else
+            return itemIndex === 0 ? minColor : maxColor;
+    }
 }

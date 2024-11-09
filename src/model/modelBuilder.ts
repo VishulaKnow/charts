@@ -89,13 +89,11 @@ export function assembleModel(config: MdtChartsConfig, data: MdtChartsDataSource
             dataSettings: null
         }
 
-    const dataRows = modelInstance.dataModel.repository.getRawRows();
-    const resolvedTitle = getResolvedTitle(config.options.title, dataRows);
     const otherComponents = OtherComponentsModel.getOtherComponentsModel(
         {
             elementsOptions: designerConfig.elementsOptions,
             legendConfig: designerConfig.canvas.legendBlock,
-            title: resolvedTitle
+            title: getResolvedTitle(config.options.title, modelInstance.dataModel.repository.getRawRows())
         },
         modelInstance
     );

@@ -11,7 +11,7 @@ export enum ScaleType {
 }
 
 export class ScaleModel {
-    getScaleKey(allowableKeys: string[], orient: ChartOrientation, canvasModel: CanvasModel, charts: MdtChartsTwoDimensionalChart[], barCharts: MdtChartsTwoDimensionalChart[]): ScaleKeyModel {
+    getScaleKey(allowableKeys: string[], orient: ChartOrientation, canvasModel: CanvasModel, charts: MdtChartsTwoDimensionalChart[], bandLikeCharts: MdtChartsTwoDimensionalChart[]): ScaleKeyModel {
         return {
             domain: allowableKeys,
             range: {
@@ -19,7 +19,7 @@ export class ScaleModel {
                 end: getScaleKeyRangePeek(orient, canvasModel)
             },
             type: this.getScaleKeyType(charts),
-            elementsAmount: getElementsAmountForScale(barCharts)
+            elementsAmount: getElementsAmountForScale(bandLikeCharts)
         }
     }
 
@@ -48,8 +48,8 @@ export class ScaleModel {
     }
 
     private getScaleKeyType(charts: MdtChartsTwoDimensionalChart[]): ScaleKeyType {
-        if (charts.findIndex((chart: MdtChartsTwoDimensionalChart) => chart.type === 'bar') === -1)
-            return 'point';
-        return 'band';
+        if (charts.some((chart: MdtChartsTwoDimensionalChart) => chart.type === 'bar' || chart.type === 'dot'))
+            return 'band';
+        return 'point';
     }
 }

@@ -22,7 +22,13 @@ import {
 } from "../model";
 import { TwoDimConfigReader } from "../modelInstance/configReader";
 import { ModelInstance } from "../modelInstance/modelInstance";
-import { getAreaViewOptions, getLegendMarkerOptions, parseDashStyles, parseShape } from "./twoDimensional/styles";
+import {
+    getAreaViewOptions,
+    getBarViewOptions,
+    getLegendMarkerOptions, LINE_CHART_DEFAULT_WIDTH,
+    parseDashStyles,
+    parseShape
+} from "./twoDimensional/styles";
 import { getResolvedTitle } from "../../model/featuresModel/titleModel";
 import { DataRepositoryModel } from "../modelInstance/dataModel/dataRepository";
 import {
@@ -40,7 +46,6 @@ import { BoundingRect } from "../../engine/features/valueLabelsCollision/valueLa
 
 export class TwoDimensionalModel {
     public static getOptions(configReader: TwoDimConfigReader, designerConfig: DesignerConfig, modelInstance: ModelInstance): TwoDimensionalOptionsModel {
-        let secondaryScaleValueInfo;
         const options = configReader.options;
         const canvasModel = modelInstance.canvasModel;
         const scaleModel = new ScaleModel();
@@ -48,6 +53,7 @@ export class TwoDimensionalModel {
         scaleMarginRecalcer.recalculateMargin(canvasModel, options.orientation, options.axis.key);
         const scaleValueInfo = scaleMarginRecalcer.getScaleValue();
 
+        let secondaryScaleValueInfo;
         if (configReader.containsSecondaryAxis()) {
             const secondaryScaleMarginRecalcer = new ScaleAxisRecalcer(() => scaleModel.getScaleSecondaryLinear(options, modelInstance.dataModel.repository.getScopedRows(), canvasModel, configReader));
             secondaryScaleMarginRecalcer.recalculateMargin(canvasModel, options.orientation, options.axis.key);
@@ -64,7 +70,7 @@ export class TwoDimensionalModel {
             selectable: !!options.selectable,
             orient: options.orientation,
             scale: {
-                key: scaleModel.getScaleKey(modelInstance.dataModel.getAllowableKeys(), options.orientation, canvasModel, options.charts, this.getChartsByType(options.charts, 'bar')),
+                key: scaleModel.getScaleKey(modelInstance.dataModel.getAllowableKeys(), options.orientation, canvasModel, options.charts, this.getChartsByTypes(options.charts, ['bar', 'dot'])),
                 value: scaleValueInfo.scale,
                 ...(configReader.containsSecondaryAxis() && { valueSecondary: secondaryScaleValueInfo.scale }),
             },
@@ -99,7 +105,7 @@ export class TwoDimensionalModel {
      * @param charts Чарты из конфига
      */
     public static sortCharts(charts: MdtChartsTwoDimensionalChart[]): void {
-        const chartOrder: TwoDimensionalChartType[] = ['area', 'bar', 'line'];
+        const chartOrder: TwoDimensionalChartType[] = ['area', 'bar', 'line', 'dot'];
         charts.sort((chart1, chart2) => chartOrder.indexOf(chart1.type) - chartOrder.indexOf(chart2.type));
     }
 
@@ -121,7 +127,7 @@ export class TwoDimensionalModel {
                 type: chart.type,
                 isSegmented: chart.isSegmented,
                 data: { ...chart.data },
-                tooltip: chart.tooltip,
+                tooltip: { show: true },
                 cssClasses: ChartStyleModelService.getCssClasses(index),
                 style,
                 embeddedLabels: this.getEmbeddedLabelType(chart, chartOrientation),
@@ -141,22 +147,29 @@ export class TwoDimensionalModel {
                 },
                 lineLikeViewOptions: {
                     dashedStyles: parseDashStyles(chart.lineStyles?.dash),
+                    strokeWidth: chart.lineStyles?.width ?? LINE_CHART_DEFAULT_WIDTH,
                     renderForKey: (dataRow, valueFieldName) => dataRow[valueFieldName] !== null && dataRow[valueFieldName] !== undefined
                 },
-                barViewOptions: { hatch: { on: chart.barStyles?.hatch?.on ?? false } },
+                barViewOptions: getBarViewOptions(chart, keyAxisOrient),
                 legend: getLegendMarkerOptions(chart),
                 index,
-                ...(chart.valueLabels?.on && {
-                    valueLabels: {
-                        show: true,
-                        handleX: (scaledValue) => getValueLabelX(scaledValue, keyAxisOrient, canvasModel.getMargin()),
-                        handleY: (scaledValue) => getValueLabelY(scaledValue, keyAxisOrient, canvasModel.getMargin()),
-                        textAnchor: calculateValueLabelAlignment(keyAxisOrient).textAnchor,
-                        dominantBaseline: calculateValueLabelAlignment(keyAxisOrient).dominantBaseline,
-                        format: configReader.getValueLabelFormatterForChart(index),
-                    }
-                }),
+                valueLabels: {
+                    show: chart.valueLabels?.on ?? false,
+                    handleX: (scaledValue) => getValueLabelX(scaledValue, keyAxisOrient, canvasModel.getMargin()),
+                    handleY: (scaledValue) => getValueLabelY(scaledValue, keyAxisOrient, canvasModel.getMargin()),
+                    textAnchor: calculateValueLabelAlignment(keyAxisOrient).textAnchor,
+                    dominantBaseline: calculateValueLabelAlignment(keyAxisOrient).dominantBaseline,
+                    format: configReader.getValueLabelFormatterForChart(index),
+                },
                 areaViewOptions: getAreaViewOptions(chart, index, style),
+                dotViewOptions: {
+                    shape: {
+                        type: "line",
+                        handleEndCoordinate: (v) => v + 2,
+                        handleStartCoordinate: (v) => v - 2,
+                        width: chart.dotLikeStyles?.shape?.width ?? 2
+                    }
+                }
             });
         });
 
@@ -186,8 +199,8 @@ export class TwoDimensionalModel {
         }
     }
 
-    private static getChartsByType(charts: MdtChartsTwoDimensionalChart[], type: TwoDimensionalChartType): MdtChartsTwoDimensionalChart[] {
-        return charts.filter(chart => chart.type === type);
+    private static getChartsByTypes(charts: MdtChartsTwoDimensionalChart[], types: TwoDimensionalChartType[]): MdtChartsTwoDimensionalChart[] {
+        return charts.filter(chart => types.includes(chart.type));
     }
 
     private static getValueLabels(valueLabels: MdtChartsTwoDimensionalValueLabels, canvasModel: CanvasModel): TwoDimensionalValueLabels {

@@ -232,6 +232,22 @@ interface BarLikeChartHatchOptions {
     on: boolean;
 }
 
+export interface BarLikeChartBorderRadius {
+    grouped: BarBorderRadius;
+    segmented: SegmentedBarBorderRadius;
+}
+
+export interface BarBorderRadius {
+    topLeft: number;
+    topRight: number;
+    bottomLeft: number;
+    bottomRight: number;
+}
+
+interface SegmentedBarBorderRadius {
+    handle: (segmentIndex: number) => BarBorderRadius;
+}
+
 export interface TwoDimensionalValueLabels {
     collision: ValueLabelsCollision;
 }
@@ -303,12 +319,14 @@ export interface ChartLegendModel {
 
 export type LegendMarkerShape = "default" | "bar" | "line";
 
-export interface TwoDimensionalChartLegendBarModel extends TwoDimensionalBarLikeChartViewModel {
+export interface TwoDimensionalChartLegendBarModel {
+    hatch: BarLikeChartHatchOptions;
+    borderRadius: BarBorderRadius;
     width: number;
 }
 
 export interface TwoDimensionalChartLegendLineModel extends Omit<TwoDimensionalLineLikeChartViewModel, 'renderForKey'> {
-    width: number;
+    length: number;
 }
 
 interface TwoDimensionalLineLikeChartModel {
@@ -318,6 +336,7 @@ interface TwoDimensionalLineLikeChartModel {
 
 interface TwoDimensionalLineLikeChartViewModel {
     dashedStyles: LineLikeChartDashOptions;
+    strokeWidth: number;
     renderForKey: LineLikeChartRenderFn
 }
 
@@ -327,8 +346,9 @@ interface TwoDimensionalBarLikeChartModel {
     barViewOptions: TwoDimensionalBarLikeChartViewModel;
 }
 
-interface TwoDimensionalBarLikeChartViewModel {
+export interface TwoDimensionalBarLikeChartViewModel {
     hatch: BarLikeChartHatchOptions;
+    borderRadius: BarLikeChartBorderRadius;
 }
 
 interface TwoDimensionalAreaChartModel {
@@ -347,14 +367,27 @@ export interface AreaViewBorderLine {
     colorStyle: ChartStyle;
 }
 
-export interface TwoDimensionalChartModel extends ChartModel, TwoDimensionalLineLikeChartModel, TwoDimensionalBarLikeChartModel, TwoDimensionalAreaChartModel {
+export interface DotChartModel {
+    dotViewOptions: DotChartViewModel;
+}
+export interface DotChartViewModel {
+    shape: DotChartShapeOptions;
+}
+interface DotChartShapeOptions {
+    type: "line";
+    handleStartCoordinate: (calculatedBandItemStartCoordinate: number) => number;
+    handleEndCoordinate: (calculatedBandItemSize: number) => number;
+    width: number;
+}
+
+export interface TwoDimensionalChartModel extends ChartModel, TwoDimensionalLineLikeChartModel, TwoDimensionalBarLikeChartModel, TwoDimensionalAreaChartModel, DotChartModel, DotChartModel {
     type: TwoDimensionalChartType;
     data: TwoDimensionalChartDataModel;
     index: number;
     embeddedLabels: EmbeddedLabelTypeModel;
     isSegmented: boolean;
     legend: ChartLegendModel;
-    valueLabels?: TwoDimChartValueLabelsOptions;
+    valueLabels: TwoDimChartValueLabelsOptions;
 }
 
 export interface IntervalChartModel extends Omit<ChartModel, "legend"> { //TODO: remove

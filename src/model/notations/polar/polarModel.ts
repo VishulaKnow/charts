@@ -63,13 +63,20 @@ export class PolarModel {
         chartsModel.push({
             type: chart.type,
             data: { ...chart.data },
-            tooltip: chart.tooltip,
+            tooltip: { show: true },
             cssClasses: ChartStyleModelService.getCssClasses(0),
             style: ChartStyleModelService.getChartStyle(dataLength, chartStyleConfig),
             legend: {
                 markerShape: "default",
-                barViewOptions: { hatch: { on: false }, width: 0 },
-                lineViewOptions: { dashedStyles: { on: false, dashSize: 0, gapSize: 0 }, width: 0 }
+                barViewOptions: {
+                    hatch: { on: false },
+                    borderRadius: { topLeft: 0, topRight: 0, bottomLeft: 0, bottomRight: 0 },
+                    width: 0 },
+                lineViewOptions: {
+                    dashedStyles: { on: false, dashSize: 0, gapSize: 0 },
+                    strokeWidth: 0,
+                    length: 0
+                }
             }
         });
         return chartsModel;

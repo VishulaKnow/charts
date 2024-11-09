@@ -4,7 +4,7 @@ import { Scales } from "../../features/scale/scale";
 import { Block } from "../../block/block";
 import { EmbeddedLabels } from "../../features/embeddedLabels/embeddedLabels";
 import { EmbeddedLabelsHelper } from "../../features/embeddedLabels/embeddedLabelsHelper";
-import { BarAttrsHelper, BarHelper, onBarChartInit } from "./barHelper";
+import { BarAttrsHelper, BarHelper, GroupBarsSegment, onBarChartInit } from "./barHelper";
 import { sum } from "d3-array";
 import { Transition } from "d3-transition";
 import { DomHelper } from "../../helpers/domHelper";
@@ -35,14 +35,15 @@ export class Bar {
     private readonly barSegmentGroupClass = 'bar-segment-group';
 
     private createBarPipeline = new Pipeline<Selection<SVGRectElement, any, BaseType, any>, TwoDimensionalChartModel>();
+    private createSegmentGroupBarsPipeline = new Pipeline<Selection<SVGRectElement, any, BaseType, any>, GroupBarsSegment>();
 
     constructor() {
-        onBarChartInit(this.createBarPipeline);
+        onBarChartInit(this.createBarPipeline, this.createSegmentGroupBarsPipeline);
     }
 
     public render(block: Block, scales: Scales, data: MdtChartsDataRow[], keyField: Field, margin: BlockMargin, keyAxisOrient: Orient, chart: TwoDimensionalChartModel, blockSize: Size, barSettings: BarChartSettings, barsAmounts: number[], isSegmented: boolean, firstBarIndex: number): void {
         if (isSegmented)
-            this.renderSegmented(block, scales, data, keyField, margin, keyAxisOrient, chart, barsAmounts, blockSize, firstBarIndex, barSettings);
+            this.renderSegmented(block, scales, data, keyField, margin, keyAxisOrient, chart, barsAmounts, firstBarIndex, barSettings);
         else
             this.renderGrouped(block, scales, data, keyField, margin, keyAxisOrient, chart, barsAmounts, blockSize, firstBarIndex, barSettings);
     }
@@ -106,7 +107,6 @@ export class Bar {
                 margin,
                 keyField.name,
                 field.name,
-                blockSize,
                 BarHelper.getBarIndex(barsAmounts, chart.index - firstBarIndex) + index,
                 sum(barsAmounts),
                 barSettings);
@@ -123,7 +123,7 @@ export class Bar {
         });
     }
 
-    private renderSegmented(block: Block, scales: Scales, data: MdtChartsDataRow[], keyField: Field, margin: BlockMargin, keyAxisOrient: Orient, chart: TwoDimensionalChartModel, barsAmounts: number[], blockSize: Size, firstBarIndex: number, barSettings: BarChartSettings): void {
+    private renderSegmented(block: Block, scales: Scales, data: MdtChartsDataRow[], keyField: Field, margin: BlockMargin, keyAxisOrient: Orient, chart: TwoDimensionalChartModel, barsAmounts: number[], firstBarIndex: number, barSettings: BarChartSettings): void {
         const stackedData = getStackedDataWithOwn(data, chart.data.valueFields.map(field => field.name));
 
         let groups = block.svg.getChartGroup(chart.index)
@@ -151,7 +151,6 @@ export class Bar {
             scales,
             margin,
             keyField.name,
-            blockSize,
             BarHelper.getBarIndex(barsAmounts, chart.index) - firstBarIndex,
             sum(barsAmounts),
             barSettings);
@@ -165,7 +164,10 @@ export class Bar {
 
         const thisClass = this;
         groups.each(function (d, i) {
-            DomHelper.setCssClasses(select(this).selectAll(`rect${Helper.getCssClassesLine(chart.cssClasses)}`), Helper.getCssClassesWithElementIndex(chart.cssClasses, i)); // Для обозначения принадлежности бара к конкретной части стака
+            const barsInGroup = select(this).selectAll<SVGRectElement, MdtChartsDataRow>(`rect${Helper.getCssClassesLine(chart.cssClasses)}`);
+
+            DomHelper.setCssClasses(barsInGroup, Helper.getCssClassesWithElementIndex(chart.cssClasses, i)); // Для обозначения принадлежности бара к конкретной части стака
+            thisClass.createSegmentGroupBarsPipeline.execute(barsInGroup, { segmentIndex: i, chart });
             thisClass.setSegmentColor(select(this).selectAll(Helper.getCssClassesLine(chart.cssClasses)), chart.style.elementColors, i);
         });
     }
@@ -208,7 +210,6 @@ export class Bar {
                 margin,
                 keyField.name,
                 valueField.name,
-                blockSize,
                 BarHelper.getBarIndex(barsAmounts, chart.index) + index - firstBarIndex,
                 sum(barsAmounts),
                 barSettings);
@@ -269,7 +270,6 @@ export class Bar {
             scales,
             margin,
             keyField.name,
-            blockSize,
             BarHelper.getBarIndex(barsAmounts, chart.index) - firstBarIndex,
             sum(barsAmounts),
             barSettings);
@@ -287,7 +287,10 @@ export class Bar {
 
         const thisClass = this;
         groups.each(function (d, i) {
-            DomHelper.setCssClasses(select(this).selectAll(`rect${Helper.getCssClassesLine(chart.cssClasses)}`), Helper.getCssClassesWithElementIndex(chart.cssClasses, i)); // Для обозначения принадлежности бара к конкретной части стака
+            const barsInGroup = select(this).selectAll<SVGRectElement, MdtChartsDataRow>(`rect${Helper.getCssClassesLine(chart.cssClasses)}`);
+
+            DomHelper.setCssClasses(barsInGroup, Helper.getCssClassesWithElementIndex(chart.cssClasses, i)); // Для обозначения принадлежности бара к конкретной части стака
+            thisClass.createSegmentGroupBarsPipeline.execute(barsInGroup, { segmentIndex: i, chart });
             thisClass.setSegmentColor(select(this).selectAll(Helper.getCssClassesLine(chart.cssClasses)), chart.style.elementColors, i);
         });
 

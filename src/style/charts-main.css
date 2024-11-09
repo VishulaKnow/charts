@@ -11,7 +11,6 @@
 }
 .line {
     fill: none;
-    stroke-width: 4;
 }
 
 .area-border-line {
@@ -55,15 +54,15 @@
     display: flex;
     height: 100%;
 }
+.legend-block-centered {
+    justify-content: center;
+}
 .legend-block-column {
     flex-direction: column;
 }
 .legend-block-row {
     flex-direction: row;
     flex-wrap: wrap;
-}
-.legend-block-centered {
-    justify-content: center;
 }
 .legend-item {
     cursor: default;
@@ -102,6 +101,9 @@
     width: calc(100% - 19px);
     overflow: hidden;
     line-height: normal;
+}
+.legend-2d-label {
+    font-weight: 500;
 }
 .legend-label-nowrap {
     white-space: nowrap;

@@ -1,766 +1,794 @@
 {
-    "dataSet": [
-        {
-            "$id": 1,
-            "brand": "BMW",
-            "price": 100000,
-            "count": 10000,
-            "color": "red"
-        },
-        {
-            "$id": 2,
-            "brand": "LADA",
-            "price": 0,
-            "count": 1000,
-            "color": "green"
-        },
-        {
-            "$id": 3,
-            "brand": "MERCEDES",
-            "price": 15000,
-            "count": 1200,
-            "color": "blue"
-        },
-        {
-            "$id": 4,
-            "brand": "AUDI",
-            "price": null,
-            "count": 500,
-            "color": "yellow"
-        },
-        {
-            "$id": 5,
-            "brand": "VOLKSWAGEN",
-            "price": 115000,
-            "count": 6000,
-            "color": "cyan"
-        },
-        {
-            "$id": 6,
-            "brand": "DODGE",
-            "price": 90000,
-            "count": 4000,
-            "color": "red"
-        },
-        {
-            "$id": 7,
-            "brand": "SAAB",
-            "price": 114000,
-            "count": 11000,
-            "color": "orange"
-        },
-        {
-            "$id": 8,
-            "brand": "HONDA",
-            "price": 20000,
-            "count": 2000,
-            "color": "brown"
-        },
-        {
-            "$id": 9,
-            "brand": "TOYOTA",
-            "price": 18000,
-            "count": 15000,
-            "color": "pink"
-        },
-        {
-            "$id": 9,
-            "brand": "LEXUS",
-            "price": 20000,
-            "count": 15000,
-            "color": "pink"
-        }
-    ],
-    "dataSet-months": [
-        {
-            "$id": 1,
-            "brand": "JAN",
-            "price": 15.02,
-            "count": 10,
-            "color": "red"
-        },
-        {
-            "$id": 2,
-            "brand": "FEB",
-            "price": 0,
-            "count": 1,
-            "color": "green"
-        },
-        {
-            "$id": 3,
-            "brand": "MAR",
-            "price": 9.3,
-            "count": 2,
-            "color": "blue"
-        },
-        {
-            "$id": 4,
-            "brand": "MAY",
-            "price": null,
-            "count": 5,
-            "color": "yellow"
-        },
-        {
-            "$id": 5,
-            "brand": "JUN",
-            "price": 1,
-            "count": 6,
-            "color": "cyan"
-        },
-        {
-            "$id": 6,
-            "brand": "JUL",
-            "price": 14.2,
-            "count": 2,
-            "color": "red"
-        },
-        {
-            "$id": 7,
-            "brand": "AUG",
-            "price": 11,
-            "count": 9.3,
-            "color": "orange"
-        },
-        {
-            "$id": 8,
-            "brand": "SEP",
-            "price": 2,
-            "count": 0.2,
-            "color": "brown"
-        },
-        {
-            "$id": 9,
-            "brand": "OCT",
-            "price": 8.7,
-            "count": 1.5,
-            "color": "pink"
-        },
-        {
-            "$id": 9,
-            "brand": "NOV",
-            "price": 2.2,
-            "count": 3.1,
-            "color": "pink"
-        }
-    ],
-    "dataSet-negative": [
-        {
-            "$id": 1,
-            "brand": "BMW BMW",
-            "price": 100000,
-            "count": 12000,
-            "color": "red"
-        },
-        {
-            "$id": 2,
-            "brand": "LADA",
-            "price": 0,
-            "count": 1000,
-            "color": "green"
-        },
-        {
-            "$id": 3,
-            "brand": "MERCEDES",
-            "price": 15000,
-            "count": 1200,
-            "color": "blue"
-        },
-        {
-            "$id": 4,
-            "brand": "AUDI",
-            "price": -20000,
-            "count": 500,
-            "color": "yellow"
-        },
-        {
-            "$id": 5,
-            "brand": "VOLKSWAGEN",
-            "price": 115000,
-            "count": 6000,
-            "color": "cyan"
-        },
-        {
-            "$id": 6,
-            "brand": "DODGE",
-            "price": -115000,
-            "count": 4000,
-            "color": "red"
-        },
-        {
-            "$id": 7,
-            "brand": "SAAB",
-            "price": -50000,
-            "count": 11000,
-            "color": "orange"
-        },
-        {
-            "$id": 8,
-            "brand": "HONDA",
-            "price": -20000,
-            "count": 2000,
-            "color": "brown"
-        },
-        {
-            "$id": 9,
-            "brand": "TOYOTA",
-            "price": 40000,
-            "count": 15000,
-            "color": "pink"
-        }
-    ],
-    "dataSet_large": [
-        {
-            "brand": "BMW",
-            "price": 120,
-            "count": 12
-        },
-        {
-            "brand": "LADA",
-            "price": 50,
-            "count": 10
-        },
-        {
-            "brand": "MERCEDES",
-            "price": 15,
-            "count": 12
-        },
-        {
-            "brand": "AUDI",
-            "price": 20,
-            "count": 5
-        },
-        {
-            "brand": "VOLKSWAGEN",
-            "price": 40,
-            "count": 10
-        },
-        {
-            "brand": "DODGE",
-            "price": 70,
-            "count": 4
-        },
-        {
-            "brand": "SAAB",
-            "price": 50,
-            "count": 11
-        },
-        {
-            "brand": "HONDA",
-            "price": 20,
-            "count": 20
-        },
-        {
-            "brand": "TOYOTA",
-            "price": 115,
-            "count": 30
-        },
-        {
-            "brand": "BMW2",
-            "price": 120,
-            "count": 12
-        },
-        {
-            "brand": "LADA2",
-            "price": 50,
-            "count": 10
-        },
-        {
-            "brand": "MERCEDES2",
-            "price": 15,
-            "count": 12
-        },
-        {
-            "brand": "AUDI2",
-            "price": 20,
-            "count": 5
-        },
-        {
-            "brand": "VOLKSWAGEN2",
-            "price": 40,
-            "count": 10
-        },
-        {
-            "brand": "DODGE2",
-            "price": 70,
-            "count": 4
-        },
-        {
-            "brand": "SAAB2",
-            "price": 50,
-            "count": 11
-        },
-        {
-            "brand": "HONDA2",
-            "price": 20,
-            "count": 7
-        },
-        {
-            "brand": "TOYOTA2",
-            "price": 115,
-            "count": 8
-        }
-    ],
-    "dataSet_gantt": [
-        {
-            "task": "Planning",
-            "start": "2020-12-03",
-            "end": "2020-12-05"
-        },
-        {
-            "task": "Build architecture",
-            "start": "2020-12-05",
-            "end": "2020-12-10"
-        },
-        {
-            "task": "Programming",
-            "start": "2020-12-10",
-            "end": "2020-12-11"
-        },
-        {
-            "task": "Testing",
-            "start": "2020-12-12",
-            "end": "2020-12-19"
-        },
-        {
-            "task": "Deploying",
-            "start": "2020-12-20",
-            "end": "2020-12-31"
-        }
-    ],
-    "dataSet-72": [
-        {
-            "brand": "BMW",
-            "price": 120,
-            "count": 12
-        },
-        {
-            "brand": "LADA",
-            "price": 50,
-            "count": 10
-        },
-        {
-            "brand": "MERCEDES",
-            "price": 15,
-            "count": 12
-        },
-        {
-            "brand": "AUDI",
-            "price": 20,
-            "count": 5
-        },
-        {
-            "brand": "VOLKSWAGEN",
-            "price": 40,
-            "count": 10
-        },
-        {
-            "brand": "DODGE",
-            "price": 70,
-            "count": 4
-        },
-        {
-            "brand": "SAAB",
-            "price": 50,
-            "count": 11
-        },
-        {
-            "brand": "HONDA",
-            "price": 20,
-            "count": 2
-        },
-        {
-            "brand": "TOYOTA",
-            "price": 115,
-            "count": 1
-        },
-        {
-            "brand": "BMW2",
-            "price": 120,
-            "count": 12
-        },
-        {
-            "brand": "LADA2",
-            "price": 50,
-            "count": 10
-        },
-        {
-            "brand": "MERCEDES2",
-            "price": 15,
-            "count": 12
-        },
-        {
-            "brand": "AUDI2",
-            "price": 20,
-            "count": 5
-        },
-        {
-            "brand": "VOLKSWAGEN2",
-            "price": 40,
-            "count": 10
-        },
-        {
-            "brand": "DODGE2",
-            "price": 70,
-            "count": 4
-        },
-        {
-            "brand": "SAAB2",
-            "price": 50,
-            "count": 11
-        },
-        {
-            "brand": "HONDA2",
-            "price": 20,
-            "count": 2
-        },
-        {
-            "brand": "TOYOTA2",
-            "price": 115,
-            "count": 1
-        },
-        {
-            "brand": "BMW3",
-            "price": 120,
-            "count": 12
-        },
-        {
-            "brand": "LADA3",
-            "price": 50,
-            "count": 10
-        },
-        {
-            "brand": "MERCEDES3",
-            "price": 15,
-            "count": 12
-        },
-        {
-            "brand": "AUDI3",
-            "price": 20,
-            "count": 5
-        },
-        {
-            "brand": "VOLKSWAGEN3",
-            "price": 40,
-            "count": 10
-        },
-        {
-            "brand": "DODGE3",
-            "price": 70,
-            "count": 4
-        },
-        {
-            "brand": "SAAB3",
-            "price": 50,
-            "count": 11
-        },
-        {
-            "brand": "HONDA3",
-            "price": 20,
-            "count": 2
-        },
-        {
-            "brand": "TOYOTA3",
-            "price": 115,
-            "count": 1
-        },
-        {
-            "brand": "BMW4",
-            "price": 120,
-            "count": 12
-        },
-        {
-            "brand": "LADA4",
-            "price": 50,
-            "count": 10
-        },
-        {
-            "brand": "MERCEDES4",
-            "price": 15,
-            "count": 12
-        },
-        {
-            "brand": "AUDI4",
-            "price": 20,
-            "count": 5
-        },
-        {
-            "brand": "VOLKSWAGEN4",
-            "price": 40,
-            "count": 10
-        },
-        {
-            "brand": "DODGE4",
-            "price": 70,
-            "count": 4
-        },
-        {
-            "brand": "SAAB4",
-            "price": 50,
-            "count": 11
-        },
-        {
-            "brand": "HONDA4",
-            "price": 20,
-            "count": 2
-        },
-        {
-            "brand": "TOYOTA4",
-            "price": 115,
-            "count": 1
-        },
-        {
-            "brand": "BMW5",
-            "price": 120,
-            "count": 12
-        },
-        {
-            "brand": "LADA5",
-            "price": 50,
-            "count": 10
-        },
-        {
-            "brand": "MERCEDES5",
-            "price": 15,
-            "count": 12
-        },
-        {
-            "brand": "AUDI5",
-            "price": 20,
-            "count": 5
-        },
-        {
-            "brand": "VOLKSWAGEN5",
-            "price": 40,
-            "count": 10
-        },
-        {
-            "brand": "DODGE5",
-            "price": 70,
-            "count": 4
-        },
-        {
-            "brand": "SAAB5",
-            "price": 50,
-            "count": 11
-        },
-        {
-            "brand": "HONDA5",
-            "price": 20,
-            "count": 2
-        },
-        {
-            "brand": "TOYOTA5",
-            "price": 115,
-            "count": 1
-        },
-        {
-            "brand": "BMW6",
-            "price": 120,
-            "count": 12
-        },
-        {
-            "brand": "LADA6",
-            "price": 50,
-            "count": 10
-        },
-        {
-            "brand": "MERCEDES6",
-            "price": 15,
-            "count": 12
-        },
-        {
-            "brand": "AUDI6",
-            "price": 20,
-            "count": 5
-        },
-        {
-            "brand": "VOLKSWAGEN6",
-            "price": 40,
-            "count": 10
-        },
-        {
-            "brand": "DODGE6",
-            "price": 70,
-            "count": 4
-        },
-        {
-            "brand": "SAAB6",
-            "price": 50,
-            "count": 11
-        },
-        {
-            "brand": "HONDA6",
-            "price": 20,
-            "count": 2
-        },
-        {
-            "brand": "TOYOTA6",
-            "price": 115,
-            "count": 1
-        },
-        {
-            "brand": "BMW7",
-            "price": 120,
-            "count": 12
-        },
-        {
-            "brand": "LADA7",
-            "price": 50,
-            "count": 10
-        },
-        {
-            "brand": "MERCEDES7",
-            "price": 15,
-            "count": 12
-        },
-        {
-            "brand": "AUDI7",
-            "price": 20,
-            "count": 5
-        },
-        {
-            "brand": "VOLKSWAGEN7",
-            "price": 40,
-            "count": 10
-        },
-        {
-            "brand": "DODGE7",
-            "price": 70,
-            "count": 4
-        },
-        {
-            "brand": "SAAB7",
-            "price": 50,
-            "count": 11
-        },
-        {
-            "brand": "HONDA7",
-            "price": 20,
-            "count": 2
-        },
-        {
-            "brand": "TOYOTA7",
-            "price": 115,
-            "count": 1
-        },
-        {
-            "brand": "BMW8",
-            "price": 120,
-            "count": 12
-        },
-        {
-            "brand": "LADA8",
-            "price": 50,
-            "count": 10
-        },
-        {
-            "brand": "MERCEDES8",
-            "price": 15,
-            "count": 12
-        },
-        {
-            "brand": "AUDI8",
-            "price": 20,
-            "count": 5
-        },
-        {
-            "brand": "VOLKSWAGEN8",
-            "price": 40,
-            "count": 10
-        },
-        {
-            "brand": "DODGE8",
-            "price": 70,
-            "count": 4
-        },
-        {
-            "brand": "SAAB8",
-            "price": 50,
-            "count": 11
-        },
-        {
-            "brand": "HONDA8",
-            "price": 20,
-            "count": 2
-        },
-        {
-            "brand": "TOYOTA8",
-            "price": 115,
-            "count": 1
-        }
-    ],
-    "dataSet_data": [
-        {
-            "SortOrder": 202007,
-            "ec": 19000.0,
-            "ac": 8000.0,
-            "x": "Jul 20"
-        },
-        {
-            "SortOrder": 202008,
-            "ec": 166000.0,
-            "ac": 31000.0,
-            "x": "Aug 20"
-        },
-        {
-            "SortOrder": 202010,
-            "ec": 17000.0,
-            "ac": 0.0,
-            "x": "Oct 20"
-        },
-        {
-            "SortOrder": 202011,
-            "ec": 15000.0,
-            "ac": 0.0,
-            "x": "Nov 20"
-        },
-        {
-            "SortOrder": 202012,
-            "ec": 317007.0,
-            "ac": 36000.0,
-            "x": "Dec 20"
-        },
-        {
-            "SortOrder": 202101,
-            "ec": 4500.0,
-            "ac": 0.0,
-            "x": "Jan 21"
-        },
-        {
-            "SortOrder": 202102,
-            "ec": 200000.0,
-            "ac": 0.0,
-            "x": "Feb 21"
-        }
-    ],
-    "dataSet-negative-stack": [
-        {
-            "$id": 1,
-            "brand": "BMW BMW",
-            "price": 88000,
-            "count": 12000,
-            "price2": -32000
-        },
-        {
-            "$id": 2,
-            "brand": "LADA",
-            "price": 0,
-            "count": -35000,
-            "price2": -32000
-        },
-        {
-            "$id": 3,
-            "brand": "MERCEDES",
-            "price": 12000,
-            "count": 12000,
-            "price2": -3000
-        },
-        {
-            "$id": 4,
-            "brand": "AUDI",
-            "price": -20000,
-            "count": 5000,
-            "price2": -60000
-        }
-    ]
+	"dataSet": [
+		{
+			"$id": 1,
+			"brand": "BMW",
+			"price": 100000,
+			"price2": 120000,
+			"count": 10000,
+			"color": "red"
+		},
+		{
+			"$id": 2,
+			"brand": "LADA",
+			"price": 12000,
+			"price2": 20000,
+			"count": 1000,
+			"color": "green"
+		},
+		{
+			"$id": 3,
+			"brand": "MERCEDES",
+			"price": 15000,
+			"price2": 17000,
+			"count": 1200,
+			"color": "blue"
+		},
+		{
+			"$id": 4,
+			"brand": "AUDI",
+			"price": 2000,
+			"price2": 20000,
+			"count": 500,
+			"color": "yellow"
+		},
+		{
+			"$id": 5,
+			"brand": "VOLKSWAGEN",
+			"price": 115000,
+			"price2": 135000,
+			"count": 6000,
+			"color": "cyan"
+		},
+		{
+			"$id": 6,
+			"brand": "DODGE",
+			"price": 90000,
+			"price2": 110000,
+			"count": 4000,
+			"color": "red"
+		},
+		{
+			"$id": 7,
+			"brand": "SAAB",
+			"price": 114000,
+			"price2": 110000,
+			"count": 11000,
+			"color": "orange"
+		},
+		{
+			"$id": 8,
+			"brand": "HONDA",
+			"price": 20000,
+			"price2": 22000,
+			"count": 2000,
+			"color": "brown"
+		},
+		{
+			"$id": 9,
+			"brand": "TOYOTA",
+			"price": 18000,
+			"price2": 12000,
+			"count": 15000,
+			"color": "pink"
+		},
+		{
+			"$id": 9,
+			"brand": "LEXUS",
+			"price": 20000,
+			"price2": 22000,
+			"count": 15000,
+			"color": "pink"
+		}
+	],
+	"dataSet-months": [
+		{
+			"$id": 1,
+			"brand": "JAN",
+			"price": 1500,
+			"price2": 1200,
+			"count": 1000,
+			"color": "red"
+		},
+		{
+			"$id": 2,
+			"brand": "FEB",
+			"price": 4000,
+			"price2": 1200,
+			"count": 1000,
+			"color": "green"
+		},
+		{
+			"$id": 3,
+			"brand": "MAR",
+			"price": 9300,
+			"price2": 1200,
+			"count": 2000,
+			"color": "blue"
+		},
+		{
+			"$id": 4,
+			"brand": "MAY",
+			"price2": 1500,
+			"price": 2300,
+			"count": 500,
+			"color": "yellow"
+		},
+		{
+			"$id": 5,
+			"brand": "JUN",
+			"price2": 6000,
+			"price": 1000,
+			"count": 1000,
+			"color": "cyan"
+		},
+		{
+			"$id": 6,
+			"brand": "JUL",
+			"price": 14200,
+			"price2": 1532,
+			"count": 2000,
+			"color": "red"
+		},
+		{
+			"$id": 7,
+			"brand": "AUG",
+			"price2": 1100,
+			"price": 1100,
+			"count": 9300,
+			"color": "orange"
+		},
+		{
+			"$id": 8,
+			"brand": "SEP",
+			"price2": 2000,
+			"price": 2000,
+			"count": 200,
+			"color": "brown"
+		},
+		{
+			"$id": 9,
+			"brand": "OCT",
+			"price2": 1400,
+			"price": 8800,
+			"count": 1400,
+			"color": "pink"
+		},
+		{
+			"$id": 9,
+			"brand": "NOV",
+			"price": 22000,
+			"price2": 1000,
+			"count": 3100,
+			"color": "pink"
+		},
+		{
+			"$id": 10,
+			"brand": "DEC",
+			"price": 2200,
+			"price2": 900,
+			"count": 3100,
+			"color": "pink"
+		}
+	],
+	"dataSet-negative": [
+		{
+			"$id": 1,
+			"brand": "BMW BMW",
+			"price": 100000,
+			"count": 12000,
+			"color": "red"
+		},
+		{
+			"$id": 2,
+			"brand": "LADA",
+			"price": 0,
+			"count": 1000,
+			"color": "green"
+		},
+		{
+			"$id": 3,
+			"brand": "MERCEDES",
+			"price": 15000,
+			"count": 1200,
+			"color": "blue"
+		},
+		{
+			"$id": 4,
+			"brand": "AUDI",
+			"price": -20000,
+			"count": 500,
+			"color": "yellow"
+		},
+		{
+			"$id": 5,
+			"brand": "VOLKSWAGEN",
+			"price": 115000,
+			"count": 6000,
+			"color": "cyan"
+		},
+		{
+			"$id": 6,
+			"brand": "DODGE",
+			"price": -115000,
+			"count": 4000,
+			"color": "red"
+		},
+		{
+			"$id": 7,
+			"brand": "SAAB",
+			"price": -50000,
+			"count": 11000,
+			"color": "orange"
+		},
+		{
+			"$id": 8,
+			"brand": "HONDA",
+			"price": -20000,
+			"count": 2000,
+			"color": "brown"
+		},
+		{
+			"$id": 9,
+			"brand": "TOYOTA",
+			"price": 40000,
+			"count": 15000,
+			"color": "pink"
+		}
+	],
+	"dataSet_large": [
+		{
+			"brand": "BMW",
+			"price": 120,
+			"count": 12
+		},
+		{
+			"brand": "LADA",
+			"price": 50,
+			"count": 10
+		},
+		{
+			"brand": "MERCEDES",
+			"price": 15,
+			"count": 12
+		},
+		{
+			"brand": "AUDI",
+			"price": 20,
+			"count": 5
+		},
+		{
+			"brand": "VOLKSWAGEN",
+			"price": 40,
+			"count": 10
+		},
+		{
+			"brand": "DODGE",
+			"price": 70,
+			"count": 4
+		},
+		{
+			"brand": "SAAB",
+			"price": 50,
+			"count": 11
+		},
+		{
+			"brand": "HONDA",
+			"price": 20,
+			"count": 20
+		},
+		{
+			"brand": "TOYOTA",
+			"price": 115,
+			"count": 30
+		},
+		{
+			"brand": "BMW2",
+			"price": 120,
+			"count": 12
+		},
+		{
+			"brand": "LADA2",
+			"price": 50,
+			"count": 10
+		},
+		{
+			"brand": "MERCEDES2",
+			"price": 15,
+			"count": 12
+		},
+		{
+			"brand": "AUDI2",
+			"price": 20,
+			"count": 5
+		},
+		{
+			"brand": "VOLKSWAGEN2",
+			"price": 40,
+			"count": 10
+		},
+		{
+			"brand": "DODGE2",
+			"price": 70,
+			"count": 4
+		},
+		{
+			"brand": "SAAB2",
+			"price": 50,
+			"count": 11
+		},
+		{
+			"brand": "HONDA2",
+			"price": 20,
+			"count": 7
+		},
+		{
+			"brand": "TOYOTA2",
+			"price": 115,
+			"count": 8
+		}
+	],
+	"dataSet_gantt": [
+		{
+			"task": "Planning",
+			"start": "2020-12-03",
+			"end": "2020-12-05"
+		},
+		{
+			"task": "Build architecture",
+			"start": "2020-12-05",
+			"end": "2020-12-10"
+		},
+		{
+			"task": "Programming",
+			"start": "2020-12-10",
+			"end": "2020-12-11"
+		},
+		{
+			"task": "Testing",
+			"start": "2020-12-12",
+			"end": "2020-12-19"
+		},
+		{
+			"task": "Deploying",
+			"start": "2020-12-20",
+			"end": "2020-12-31"
+		}
+	],
+	"dataSet-72": [
+		{
+			"brand": "BMW",
+			"price": 120,
+			"count": 12
+		},
+		{
+			"brand": "LADA",
+			"price": 50,
+			"count": 10
+		},
+		{
+			"brand": "MERCEDES",
+			"price": 15,
+			"count": 12
+		},
+		{
+			"brand": "AUDI",
+			"price": 20,
+			"count": 5
+		},
+		{
+			"brand": "VOLKSWAGEN",
+			"price": 40,
+			"count": 10
+		},
+		{
+			"brand": "DODGE",
+			"price": 70,
+			"count": 4
+		},
+		{
+			"brand": "SAAB",
+			"price": 50,
+			"count": 11
+		},
+		{
+			"brand": "HONDA",
+			"price": 20,
+			"count": 2
+		},
+		{
+			"brand": "TOYOTA",
+			"price": 115,
+			"count": 1
+		},
+		{
+			"brand": "BMW2",
+			"price": 120,
+			"count": 12
+		},
+		{
+			"brand": "LADA2",
+			"price": 50,
+			"count": 10
+		},
+		{
+			"brand": "MERCEDES2",
+			"price": 15,
+			"count": 12
+		},
+		{
+			"brand": "AUDI2",
+			"price": 20,
+			"count": 5
+		},
+		{
+			"brand": "VOLKSWAGEN2",
+			"price": 40,
+			"count": 10
+		},
+		{
+			"brand": "DODGE2",
+			"price": 70,
+			"count": 4
+		},
+		{
+			"brand": "SAAB2",
+			"price": 50,
+			"count": 11
+		},
+		{
+			"brand": "HONDA2",
+			"price": 20,
+			"count": 2
+		},
+		{
+			"brand": "TOYOTA2",
+			"price": 115,
+			"count": 1
+		},
+		{
+			"brand": "BMW3",
+			"price": 120,
+			"count": 12
+		},
+		{
+			"brand": "LADA3",
+			"price": 50,
+			"count": 10
+		},
+		{
+			"brand": "MERCEDES3",
+			"price": 15,
+			"count": 12
+		},
+		{
+			"brand": "AUDI3",
+			"price": 20,
+			"count": 5
+		},
+		{
+			"brand": "VOLKSWAGEN3",
+			"price": 40,
+			"count": 10
+		},
+		{
+			"brand": "DODGE3",
+			"price": 70,
+			"count": 4
+		},
+		{
+			"brand": "SAAB3",
+			"price": 50,
+			"count": 11
+		},
+		{
+			"brand": "HONDA3",
+			"price": 20,
+			"count": 2
+		},
+		{
+			"brand": "TOYOTA3",
+			"price": 115,
+			"count": 1
+		},
+		{
+			"brand": "BMW4",
+			"price": 120,
+			"count": 12
+		},
+		{
+			"brand": "LADA4",
+			"price": 50,
+			"count": 10
+		},
+		{
+			"brand": "MERCEDES4",
+			"price": 15,
+			"count": 12
+		},
+		{
+			"brand": "AUDI4",
+			"price": 20,
+			"count": 5
+		},
+		{
+			"brand": "VOLKSWAGEN4",
+			"price": 40,
+			"count": 10
+		},
+		{
+			"brand": "DODGE4",
+			"price": 70,
+			"count": 4
+		},
+		{
+			"brand": "SAAB4",
+			"price": 50,
+			"count": 11
+		},
+		{
+			"brand": "HONDA4",
+			"price": 20,
+			"count": 2
+		},
+		{
+			"brand": "TOYOTA4",
+			"price": 115,
+			"count": 1
+		},
+		{
+			"brand": "BMW5",
+			"price": 120,
+			"count": 12
+		},
+		{
+			"brand": "LADA5",
+			"price": 50,
+			"count": 10
+		},
+		{
+			"brand": "MERCEDES5",
+			"price": 15,
+			"count": 12
+		},
+		{
+			"brand": "AUDI5",
+			"price": 20,
+			"count": 5
+		},
+		{
+			"brand": "VOLKSWAGEN5",
+			"price": 40,
+			"count": 10
+		},
+		{
+			"brand": "DODGE5",
+			"price": 70,
+			"count": 4
+		},
+		{
+			"brand": "SAAB5",
+			"price": 50,
+			"count": 11
+		},
+		{
+			"brand": "HONDA5",
+			"price": 20,
+			"count": 2
+		},
+		{
+			"brand": "TOYOTA5",
+			"price": 115,
+			"count": 1
+		},
+		{
+			"brand": "BMW6",
+			"price": 120,
+			"count": 12
+		},
+		{
+			"brand": "LADA6",
+			"price": 50,
+			"count": 10
+		},
+		{
+			"brand": "MERCEDES6",
+			"price": 15,
+			"count": 12
+		},
+		{
+			"brand": "AUDI6",
+			"price": 20,
+			"count": 5
+		},
+		{
+			"brand": "VOLKSWAGEN6",
+			"price": 40,
+			"count": 10
+		},
+		{
+			"brand": "DODGE6",
+			"price": 70,
+			"count": 4
+		},
+		{
+			"brand": "SAAB6",
+			"price": 50,
+			"count": 11
+		},
+		{
+			"brand": "HONDA6",
+			"price": 20,
+			"count": 2
+		},
+		{
+			"brand": "TOYOTA6",
+			"price": 115,
+			"count": 1
+		},
+		{
+			"brand": "BMW7",
+			"price": 120,
+			"count": 12
+		},
+		{
+			"brand": "LADA7",
+			"price": 50,
+			"count": 10
+		},
+		{
+			"brand": "MERCEDES7",
+			"price": 15,
+			"count": 12
+		},
+		{
+			"brand": "AUDI7",
+			"price": 20,
+			"count": 5
+		},
+		{
+			"brand": "VOLKSWAGEN7",
+			"price": 40,
+			"count": 10
+		},
+		{
+			"brand": "DODGE7",
+			"price": 70,
+			"count": 4
+		},
+		{
+			"brand": "SAAB7",
+			"price": 50,
+			"count": 11
+		},
+		{
+			"brand": "HONDA7",
+			"price": 20,
+			"count": 2
+		},
+		{
+			"brand": "TOYOTA7",
+			"price": 115,
+			"count": 1
+		},
+		{
+			"brand": "BMW8",
+			"price": 120,
+			"count": 12
+		},
+		{
+			"brand": "LADA8",
+			"price": 50,
+			"count": 10
+		},
+		{
+			"brand": "MERCEDES8",
+			"price": 15,
+			"count": 12
+		},
+		{
+			"brand": "AUDI8",
+			"price": 20,
+			"count": 5
+		},
+		{
+			"brand": "VOLKSWAGEN8",
+			"price": 40,
+			"count": 10
+		},
+		{
+			"brand": "DODGE8",
+			"price": 70,
+			"count": 4
+		},
+		{
+			"brand": "SAAB8",
+			"price": 50,
+			"count": 11
+		},
+		{
+			"brand": "HONDA8",
+			"price": 20,
+			"count": 2
+		},
+		{
+			"brand": "TOYOTA8",
+			"price": 115,
+			"count": 1
+		}
+	],
+	"dataSet_data": [
+		{
+			"SortOrder": 202007,
+			"ec": 19000.0,
+			"ac": 8000.0,
+			"x": "Jul 20"
+		},
+		{
+			"SortOrder": 202008,
+			"ec": 166000.0,
+			"ac": 31000.0,
+			"x": "Aug 20"
+		},
+		{
+			"SortOrder": 202010,
+			"ec": 17000.0,
+			"ac": 0.0,
+			"x": "Oct 20"
+		},
+		{
+			"SortOrder": 202011,
+			"ec": 15000.0,
+			"ac": 0.0,
+			"x": "Nov 20"
+		},
+		{
+			"SortOrder": 202012,
+			"ec": 317007.0,
+			"ac": 36000.0,
+			"x": "Dec 20"
+		},
+		{
+			"SortOrder": 202101,
+			"ec": 4500.0,
+			"ac": 0.0,
+			"x": "Jan 21"
+		},
+		{
+			"SortOrder": 202102,
+			"ec": 200000.0,
+			"ac": 0.0,
+			"x": "Feb 21"
+		}
+	],
+	"dataSet-negative-stack": [
+		{
+			"$id": 1,
+			"brand": "BMW BMW",
+			"price": 88000,
+			"count": 12000,
+			"price2": -32000
+		},
+		{
+			"$id": 2,
+			"brand": "LADA",
+			"price": 0,
+			"count": -35000,
+			"price2": -32000
+		},
+		{
+			"$id": 3,
+			"brand": "MERCEDES",
+			"price": 12000,
+			"count": 12000,
+			"price2": -3000
+		},
+		{
+			"$id": 4,
+			"brand": "AUDI",
+			"price": -20000,
+			"count": 5000,
+			"price2": -60000
+		}
+	]
 }

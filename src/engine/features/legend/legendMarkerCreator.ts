@@ -3,6 +3,7 @@ import { ChartLegendModel, TwoDimensionalChartLegendBarModel, TwoDimensionalChar
 import { Legend } from "./legend";
 import { HatchPatternDef } from "../../block/defs/hatchPattern";
 import { applyLineDash } from "../../twoDimensionalNotation/line/lineHelper";
+import { getClipPathValue } from "../../../engine/twoDimensionalNotation/bar/barHelper";
 
 interface MarkerCreationOptions extends ChartLegendModel {
     color: string;
@@ -71,7 +72,8 @@ class BarMarkerCreator extends SvgMarkerCreator implements MarkerCreator {
             .attr('y', 0)
             .attr('height', this.options.width)
             .attr('width', this.options.width)
-            .style('fill', color);
+            .style('fill', color)
+            .style('clip-path', getClipPathValue(this.options.borderRadius));
 
         if (this.options.hatch.on) {
             bars.style('mask', HatchPatternDef.getMaskValue());
@@ -91,16 +93,17 @@ class LineMarkerCreator extends SvgMarkerCreator implements MarkerCreator {
     }
 
     renderMarker(selection: MarkerParentSelection, color: string) {
-        const svg = this.renderSvg(selection).style("width", this.options.width);
+        const svg = this.renderSvg(selection).style("width", this.options.length);
         const line = svg
             .append('line')
             .style('stroke', 'red')
             .classed("line", true)
             .attr('x1', 0)
-            .attr('x2', this.options.width)
+            .attr('x2', this.options.length)
             .attr('y1', 5)
             .attr('y2', 5)
-            .style('stroke', color);
+            .style('stroke', color)
+            .style('stroke-width', this.options.strokeWidth);
 
         if (this.options.dashedStyles.on) {
             applyLineDash(line, this.options.dashedStyles.dashSize, this.options.dashedStyles.gapSize);
