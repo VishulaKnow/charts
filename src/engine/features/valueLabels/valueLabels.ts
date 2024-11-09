@@ -133,28 +133,30 @@ export class CanvasValueLabels {
     constructor(private readonly options: ValueLabelsOptions) { }
 
     render(scales: ScalesWithSecondary, charts: TwoDimensionalChartModel[], data: MdtChartsDataSource, dataOptions: OptionsModelData) {
+        const valueLabelsSettings = this.options.canvas.valueLabels;
+
         const chartsWithLabels: TwoDimensionalChartModel[] = charts.filter(chart => chart.valueLabels?.show);
         if (chartsWithLabels.length === 0) return;
 
         chartsWithLabels.forEach(chart => {
             const chartScales = this.getChartScales(scales, chart);
-
             const chartValueLabels = new ChartValueLabels(this.options, chart);
             this.chartsValueLabels.push(chartValueLabels);
 
             chartValueLabels.render(chartScales, data[dataOptions.dataSource]);
         });
 
-        if (this.options.canvas.valueLabels.collision.mode === 'hide') {
-            this.hideValueLabelsCollision();
-        }
+            const valueLabels = this.getAllValueLabels();
+            ValueLabelsCollision.resolveValueLabelsCollisions(valueLabels, valueLabelsSettings);
     }
 
     update(scales: ScalesWithSecondary, charts: TwoDimensionalChartModel[], data: MdtChartsDataSource, dataOptions: OptionsModelData) {
+        const valueLabelsSettings = this.options.canvas.valueLabels;
+
         const chartsWithLabels: TwoDimensionalChartModel[] = charts.filter(chart => chart.valueLabels?.show);
         if (chartsWithLabels.length === 0) return;
 
-        if (this.options.canvas.valueLabels.collision.mode === 'hide')
+        if (this.options.canvas.valueLabels.collision.otherValueLables.mode === 'hide')
             this.toggleOldValueLabelsVisibility();
 
         const chartsUpdatePromises = chartsWithLabels.map((chart, index) => {
@@ -162,11 +164,10 @@ export class CanvasValueLabels {
             return this.chartsValueLabels[index].update(chartScales, data[dataOptions.dataSource]);
         });
 
-        if (this.options.canvas.valueLabels.collision.mode === 'hide') {
-            Promise.all(chartsUpdatePromises).then(() => {
-                this.hideValueLabelsCollision();
-            });
-        }
+        Promise.all(chartsUpdatePromises).then(() => {
+            const newValueLabels = this.getAllValueLabels();
+            ValueLabelsCollision.resolveValueLabelsCollisions(newValueLabels, valueLabelsSettings);
+        });
     }
 
     private toggleOldValueLabelsVisibility() {
@@ -176,13 +177,6 @@ export class CanvasValueLabels {
             if (this.style.display === 'none')
                 select(this).style('display', 'block');
         })
-    }
-
-    private hideValueLabelsCollision(): void {
-        const newValueLabels = this.getAllValueLabels();
-
-        const valueLabelElementsRectInfo = ValueLabelsCollision.getValueLabelElementsRectInfo(newValueLabels);
-        ValueLabelsCollision.toggleValueLabelElementsVisibility(valueLabelElementsRectInfo);
     }
 
     private getAllValueLabels(): Selection<SVGTextElement, MdtChartsDataRow, SVGGElement, unknown> {

@@ -67,7 +67,7 @@ export interface MdtChartsTwoDimensionalOptions extends GraphicNotationOptions {
     additionalElements: AdditionalElements;
     charts: MdtChartsTwoDimensionalChart[];
     orientation: ChartOrientation;
-    valueLabels?: TwoDimensionalValueLabels;
+    valueLabels?: MdtChartsTwoDimensionalValueLabels;
 }
 
 export interface MdtChartsPolarOptions extends GraphicNotationOptions {
@@ -223,12 +223,16 @@ export interface MdtChartsShowAxisLabelRule {
     showTickFn?: ShowTickFn;
 }
 
-export interface TwoDimensionalValueLabels {
-    collision: ValueLabelsCollision
+export interface MdtChartsTwoDimensionalValueLabels {
+    collision: ValueLabelsCollision;
 }
 
 export interface ValueLabelsCollision {
-    mode: ValueLabelsCollisionMode
+    otherValueLabels: OtherValueLabels
+}
+
+export interface OtherValueLabels {
+    mode: ValueLabelsCollisionMode;
 }
 
 

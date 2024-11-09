@@ -10,9 +10,10 @@ import {
     ShowTickFn,
     MdtChartsDataRow,
     TwoDimensionalValueGroup,
-    ValueLabelsCollision,
+    ValueLabelsCollisionMode,
 } from "../config/config";
 import { DataType, DonutOptionsCanvas, Formatter, StaticLegendBlockCanvas, TooltipSettings, Transitions } from "../designer/designerConfig";
+import { BoundingRect } from "../engine/features/valueLabelsCollision/valueLabelsCollision";
 
 type AxisType = "key" | "value";
 
@@ -243,12 +244,34 @@ export interface BarBorderRadius {
     bottomRight: number;
 }
 
-interface SegmentedBarBorderRadius{
+interface SegmentedBarBorderRadius {
     handle: (segmentIndex: number) => BarBorderRadius;
 }
 
 export interface TwoDimensionalValueLabels {
     collision: ValueLabelsCollision;
+}
+
+export interface ValueLabelsCollision {
+    otherValueLables: OtherValueLables;
+    chartBlock: ValueLabelsChartBlock;
+}
+
+export interface OtherValueLables {
+    mode: ValueLabelsCollisionMode;
+}
+
+export interface ValueLabelsChartBlock {
+    left: {
+        mode: "none" | "shift";
+        hasCollision: (labelClientRect: BoundingRect) => boolean;
+        shiftCoordinate: (labelClientRect: BoundingRect) => void;
+    };
+    right: {
+        mode: "none" | "shift";
+        hasCollision: (labelClientRect: BoundingRect) => boolean;
+        shiftCoordinate: (labelClientRect: BoundingRect) => void;
+    };
 }
 
 
