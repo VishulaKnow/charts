@@ -57,6 +57,9 @@ export class Axis {
             .attr('class', `${this.axesClass} ${axisOptions.cssClass} data-label`);
         AxisDomHelper.updateAxisElement(axisGenerator, axisElement, axisOptions.translate);
 
+        if (!axisOptions.line.visible)
+            axisElement.select('.domain').style('display', 'none');
+
         if (!axisOptions.labels.visible) {
             AxisLabelHelper.hideLabels(axisElement);
             return;

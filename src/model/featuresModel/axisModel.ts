@@ -16,6 +16,8 @@ export interface LabelSize {
 export const MINIMAL_VERTICAL_STEP_SIZE = 60;
 export const MINIMAL_HORIZONTAL_STEP_SIZE = 100;
 
+const DEFAULT_AXIS_LINE_VISIBLE = true;
+
 export class AxisModel {
     private static service = new AxisModelService();
 
@@ -40,7 +42,10 @@ export class AxisModel {
                 showTick: tickCalculator.createFunctionCalculator(this.getAxisLength(orientation, canvasModel)),
                 linearTickStep: MINIMAL_HORIZONTAL_STEP_SIZE
             },
-            visibility: axisConfig.visibility
+            visibility: axisConfig.visibility,
+            line: {
+                visible: axisConfig.line?.visible ?? DEFAULT_AXIS_LINE_VISIBLE
+            }
         }
     }
 
@@ -71,7 +76,10 @@ export class AxisModel {
                 linearTickStep: axisConfig.labels?.stepSize
                     ?? (orient === "horizontal" ? MINIMAL_HORIZONTAL_STEP_SIZE : MINIMAL_VERTICAL_STEP_SIZE)
             },
-            visibility: axisConfig.visibility
+            visibility: axisConfig.visibility,
+            line: {
+                visible: axisConfig.line?.visible ?? DEFAULT_AXIS_LINE_VISIBLE
+            }
         }
     }
 

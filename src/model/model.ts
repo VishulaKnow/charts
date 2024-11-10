@@ -164,7 +164,13 @@ export interface AxisModelOptions {
     cssClass: string;
     ticks: AxisTicksModel;
     labels: AxisLabelModel;
+    line: AxisLineModel;
 }
+
+export interface AxisLineModel {
+    visible: boolean;
+}
+
 export interface TranslateModel {
     translateX: number;
     translateY: number;

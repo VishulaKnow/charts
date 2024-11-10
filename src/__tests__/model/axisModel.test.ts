@@ -123,6 +123,9 @@ describe('get axes', () => {
             translate: {
                 translateX: 20,
                 translateY: 480
+            },
+            line: {
+                visible: true
             }
         }
 
@@ -156,6 +159,9 @@ describe('get axes', () => {
             translate: {
                 translateX: 20,
                 translateY: 20
+            },
+            line: {
+                visible: true
             }
         }
         expect(result).toEqual(expected);
@@ -187,6 +193,9 @@ describe('get axes', () => {
             translate: {
                 translateX: 20,
                 translateY: 480
+            },
+            line: {
+                visible: true
             }
         }
 
@@ -225,6 +234,9 @@ describe('get axes', () => {
             translate: {
                 translateX: 20,
                 translateY: 480
+            },
+            line: {
+                visible: true
             }
         }
 
@@ -264,6 +276,9 @@ describe('get axes', () => {
             translate: {
                 translateX: 20,
                 translateY: 480
+            },
+            line: {
+                visible: true
             }
         }
 
@@ -299,6 +314,9 @@ describe('get axes', () => {
             translate: {
                 translateX: 20,
                 translateY: 20
+            },
+            line: {
+                visible: true
             }
         }
         expect(result).toEqual(expected);
@@ -329,6 +347,9 @@ describe('get axes', () => {
             translate: {
                 translateX: 20,
                 translateY: 20
+            },
+            line: {
+                visible: true
             }
         }
         expect(result).toEqual(expected);
@@ -359,6 +380,9 @@ describe('get axes', () => {
             translate: {
                 translateX: 980,
                 translateY: 20
+            },
+            line: {
+                visible: true
             }
         }
         expect(result).toEqual(expected);

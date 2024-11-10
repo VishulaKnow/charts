@@ -176,10 +176,16 @@ export interface AxisOptions {
     visibility: boolean;
     position: AxisPosition;
     ticks: AxisTicks;
+    line?: AxisLineOptions;
 }
 
 interface AxisTicks {
     flag: boolean;
+}
+
+interface AxisLineOptions {
+    /** @default true */
+    visible?: boolean;
 }
 
 export interface NumberAxisOptions extends AxisOptions {

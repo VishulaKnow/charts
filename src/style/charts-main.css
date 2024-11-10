@@ -205,10 +205,10 @@
 
 /*========================================================================= Additional */
 .mdt-charts-axis .domain {
-    stroke: #D2D2D2;
+    stroke: rgba(231, 229, 228, 0.8);
 }
 .mdt-charts-axis .tick line:first-of-type {
-    stroke: #D2D2D2;
+    stroke: rgba(231, 229, 228, 0.8);
 }
 
 /* Aggregator */
