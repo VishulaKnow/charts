@@ -10,6 +10,7 @@ export type PolarChartType = 'donut';
 export type IntervalChartType = 'gantt';
 export type EmbeddedLabelType = 'none' | 'key' | 'value';
 export type ValueLabelsCollisionMode = "none" | "hide";
+export type TwoDimLegendPosition = "top" | "bottom";
 export type MdtChartsDataRow = {
     [field: string]: any
 }
@@ -55,7 +56,7 @@ interface BasicOptions {
 
 interface GraphicNotationOptions extends BasicOptions {
     data: DataOptions;
-    legend: Legend;
+    legend: MdtChartsTwoDimLegend;
     title?: Title;
     selectable: boolean;
 }
@@ -66,7 +67,7 @@ export interface MdtChartsTwoDimensionalOptions extends GraphicNotationOptions {
     additionalElements: AdditionalElements;
     charts: MdtChartsTwoDimensionalChart[];
     orientation: ChartOrientation;
-    valueLabels?: TwoDimensionalValueLabels;
+    valueLabels?: MdtChartsTwoDimensionalValueLabels;
 }
 
 export interface MdtChartsPolarOptions extends GraphicNotationOptions {
@@ -87,6 +88,11 @@ export interface MdtChartsIntervalOptions extends GraphicNotationOptions {
 export interface Legend {
     show: boolean;
 }
+
+export interface MdtChartsTwoDimLegend extends Legend {
+    position?: TwoDimLegendPosition;
+}
+
 export interface TitleFunctionParams {
     data: MdtChartsDataRow[]
 }
@@ -179,10 +185,16 @@ export interface AxisOptions {
     visibility: boolean;
     position: AxisPosition;
     ticks: AxisTicks;
+    line?: AxisLineOptions;
 }
 
 interface AxisTicks {
     flag: boolean;
+}
+
+interface AxisLineOptions {
+    /** @default true */
+    visible?: boolean;
 }
 
 export interface NumberAxisOptions extends AxisOptions {
@@ -226,12 +238,16 @@ export interface MdtChartsShowAxisLabelRule {
     showTickFn?: ShowTickFn;
 }
 
-export interface TwoDimensionalValueLabels {
-    collision: ValueLabelsCollision
+export interface MdtChartsTwoDimensionalValueLabels {
+    collision: ValueLabelsCollision;
 }
 
 export interface ValueLabelsCollision {
-    mode: ValueLabelsCollisionMode
+    otherValueLabels: OtherValueLabels
+}
+
+export interface OtherValueLabels {
+    mode: ValueLabelsCollisionMode;
 }
 
 

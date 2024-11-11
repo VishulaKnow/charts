@@ -7,10 +7,6 @@ export class LegendHelperService {
         return itemsDirection === "column" ? "legend-block-column" : "legend-block-row";
     }
 
-    getWrapperJustifyContentClass(itemsDirection: LegendItemsDirection, legendPosition: LegendPosition) {
-        return itemsDirection === "column" && legendPosition === "right" ? "legend-block-centered" : "";
-    }
-
     getWrapperClassByWrappingItems(legendPosition: LegendPosition, chartNotation: ChartNotation) {
         if (this.doesLegendInTopBy2d(legendPosition, chartNotation)) {
             return "legend-wrapper-without-wrap"
