@@ -12,7 +12,10 @@ export class GridLine {
         if (options.flag.value) {
             const lineLength = GridLineHelper.getGridLineLength('value', axes.key, axes.value, blockSize, margin);
             const lineAttributes = GridLineHelper.getLineAttributes(axes.value, lineLength);
-            this.renderLine(block, axes.value, lineAttributes, options);
+            this.renderLine(block, axes.value, lineAttributes, options)
+                .style('display', (d, i, group) => {
+                    return d === 0 ? 'none' : 'block';
+                });
         }
         if (options.flag.key) {
             const lineAttributes = GridLineHelper.getKeyLineAttributes(axes.key, scales.value);
@@ -27,7 +30,7 @@ export class GridLine {
         this.render(block, options, axes, blockSize, margin, scales);
     }
 
-    private static renderLine(block: Block, axis: AxisModelOptions, lineAttributes: GridLineAttributes, options: GridLineOptions): void {
+    private static renderLine(block: Block, axis: AxisModelOptions, lineAttributes: GridLineAttributes, options: GridLineOptions): Selection<SVGLineElement, unknown, BaseType, unknown> {
         const gridLine = block
             .getSvg()
             .selectAll(`.${axis.cssClass}`)
@@ -40,7 +43,9 @@ export class GridLine {
             .attr('y2', lineAttributes.y2);
 
         if (options.styles.dash.on)
-            gridLine.style('stroke-dasharray', 3)
+            gridLine.style('stroke-dasharray', 3);
+
+        return gridLine;
     }
 
     private static clear(block: Block, keyAxisClass: string, valueAxisClass: string): void {

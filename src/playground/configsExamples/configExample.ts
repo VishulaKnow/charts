@@ -37,6 +37,9 @@ const configCars: MdtChartsConfig = {
                 },
                 labels: {
                     format: (value) => nFormatter(value),
+                },
+                line: {
+                    visible: false
                 }
             },
             valueSecondary: {
@@ -60,7 +63,8 @@ const configCars: MdtChartsConfig = {
             }
         },
         legend: {
-            show: true
+            show: true,
+            position: "bottom"
         },
         orientation: 'vertical',
         data: {
