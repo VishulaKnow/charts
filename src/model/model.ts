@@ -268,16 +268,16 @@ export interface OtherValueLables {
 }
 
 export interface ValueLabelsChartBlock {
-    left: {
-        mode: "none" | "shift";
-        hasCollision: (labelClientRect: BoundingRect) => boolean;
-        shiftCoordinate: (labelClientRect: BoundingRect) => void;
-    };
-    right: {
-        mode: "none" | "shift";
-        hasCollision: (labelClientRect: BoundingRect) => boolean;
-        shiftCoordinate: (labelClientRect: BoundingRect) => void;
-    };
+    left: ValueLabelsChartBlockSide;
+    right: ValueLabelsChartBlockSide;
+    top: ValueLabelsChartBlockSide;
+    bottom: ValueLabelsChartBlockSide;
+}
+
+export interface ValueLabelsChartBlockSide {
+    mode: "none" | "shift";
+    hasCollision: (labelClientRect: BoundingRect) => boolean;
+    shiftCoordinate: (labelClientRect: BoundingRect) => void;
 }
 
 

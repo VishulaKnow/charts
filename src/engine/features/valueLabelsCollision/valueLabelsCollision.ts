@@ -1,8 +1,9 @@
 import { select, Selection } from "d3-selection";
 import { ValueLabelsCollisionHelper } from "../../../engine/features/valueLabelsCollision/valueLabelsCollisionHelper";
-import { TwoDimensionalValueLabels, ValueLabelsChartBlock } from "../../../model/model";
-import { MdtChartsDataRow } from "../../../config/config";
+import { TwoDimensionalValueLabels, ValueLabelsChartBlock, ValueLabelsChartBlockSide } from "../../../model/model";
+import { ChartOrientation, MdtChartsDataRow } from "../../../config/config";
 
+type CoordinateAxis = 'x' | 'y';
 export type ValueLabelOnCanvasIndex = number;
 
 export interface BoundingRect {
@@ -27,10 +28,10 @@ export interface LabelVisibility {
 }
 
 export class ValueLabelsCollision {
-    public static resolveValueLabelsCollisions(newValueLabels: Selection<SVGTextElement, MdtChartsDataRow, SVGGElement, unknown>, valueLabelsSettings: TwoDimensionalValueLabels): void {
+    public static resolveValueLabelsCollisions(newValueLabels: Selection<SVGTextElement, MdtChartsDataRow, SVGGElement, unknown>, valueLabelsSettings: TwoDimensionalValueLabels, chartOrientation: ChartOrientation): void {
         const valueLabelElementsRectInfo = this.getValueLabelElementsRectInfo(newValueLabels);
 
-        this.shiftValueLabelsCollision(valueLabelElementsRectInfo, valueLabelsSettings.collision.chartBlock);
+        this.shiftValueLabelsCollision(valueLabelElementsRectInfo, valueLabelsSettings.collision.chartBlock, chartOrientation);
 
         if (valueLabelsSettings.collision.otherValueLables.mode === 'hide')
             this.toggleValueLabelElementsVisibility(valueLabelElementsRectInfo);
@@ -54,17 +55,24 @@ export class ValueLabelsCollision {
         return ValueLabelElementsReactInfo;
     }
 
-    private static shiftValueLabelsCollision(valueLabelElementsRectInfo: ValueLabelElement[], chartBlock: ValueLabelsChartBlock) {
+    private static shiftValueLabelsCollision(valueLabelElementsRectInfo: ValueLabelElement[], chartBlock: ValueLabelsChartBlock, chartOrientation: ChartOrientation) {
         valueLabelElementsRectInfo.forEach(element => {
-            if (chartBlock.left.mode === 'shift' && chartBlock.left.hasCollision(element.boundingClientRect)) {
-                chartBlock.left.shiftCoordinate(element.boundingClientRect);
-                this.changeLabelElementCoordinateX(element);
-            }
-            if (chartBlock.right.mode === 'shift' && chartBlock.right.hasCollision(element.boundingClientRect)) {
-                chartBlock.right.shiftCoordinate(element.boundingClientRect);
-                this.changeLabelElementCoordinateX(element);
+
+            if (chartOrientation === 'vertical') {
+                this.handleCollisionShift(chartBlock.left, element, chartOrientation);
+                this.handleCollisionShift(chartBlock.right, element, chartOrientation);
+            } else {
+                this.handleCollisionShift(chartBlock.top, element, chartOrientation);
+                this.handleCollisionShift(chartBlock.bottom, element, chartOrientation);
             }
         });
+    }
+
+    private static handleCollisionShift(blockSide: ValueLabelsChartBlockSide, element: ValueLabelElement, chartOrientation: ChartOrientation): void {
+        if (blockSide.mode === 'shift' && blockSide.hasCollision(element.boundingClientRect)) {
+            blockSide.shiftCoordinate(element.boundingClientRect);
+            this.changeLabelElementCoordinateByAxis(element, chartOrientation === "vertical" ? 'x' : 'y');
+        }
     }
 
     private static toggleValueLabelElementsVisibility(elements: ValueLabelElement[]): void {
@@ -78,8 +86,8 @@ export class ValueLabelsCollision {
         });
     }
 
-    private static changeLabelElementCoordinateX(element: ValueLabelElement): void {
+    private static changeLabelElementCoordinateByAxis(element: ValueLabelElement, axis: CoordinateAxis): void {
         select(element.svgElement)
-            .attr('x', element.boundingClientRect.x);
+            .attr(axis, element.boundingClientRect[axis]);
     }
 }

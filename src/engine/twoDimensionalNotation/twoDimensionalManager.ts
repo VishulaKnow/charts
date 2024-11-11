@@ -103,6 +103,7 @@ export class TwoDimensionalManager implements ChartContentManager {
             },
             canvas: {
                 keyAxisOrient: options.axis.key.orient,
+                chartOrientation: options.orient,
                 valueLabels: options.valueLabels,
             }
         });

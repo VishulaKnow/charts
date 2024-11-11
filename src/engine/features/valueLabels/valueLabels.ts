@@ -9,7 +9,7 @@ import {
     ValueLabelDominantBaseline,
     ValueLabelsFormatter,
 } from "../../../model/model";
-import { MdtChartsDataRow, MdtChartsDataSource } from "../../../config/config";
+import { ChartOrientation, MdtChartsDataRow, MdtChartsDataSource } from "../../../config/config";
 import { Scales, ScalesWithSecondary } from "../../../engine/features/scale/scale";
 import { ValueLabelsHelper } from "../../../engine/features/valueLabels/valueLabelsHelper";
 import { Helper } from "../../../engine/helpers/helper";
@@ -28,6 +28,7 @@ export interface ValueLabelsOptions {
     }
     canvas: {
         keyAxisOrient: Orient;
+        chartOrientation: ChartOrientation;
         valueLabels: TwoDimensionalValueLabels;
     }
 }
@@ -134,6 +135,7 @@ export class CanvasValueLabels {
 
     render(scales: ScalesWithSecondary, charts: TwoDimensionalChartModel[], data: MdtChartsDataSource, dataOptions: OptionsModelData) {
         const valueLabelsSettings = this.options.canvas.valueLabels;
+        const chartOrientation = this.options.canvas.chartOrientation;
 
         const chartsWithLabels: TwoDimensionalChartModel[] = charts.filter(chart => chart.valueLabels?.show);
         if (chartsWithLabels.length === 0) return;
@@ -147,11 +149,12 @@ export class CanvasValueLabels {
         });
 
             const valueLabels = this.getAllValueLabels();
-            ValueLabelsCollision.resolveValueLabelsCollisions(valueLabels, valueLabelsSettings);
+            ValueLabelsCollision.resolveValueLabelsCollisions(valueLabels, valueLabelsSettings, chartOrientation);
     }
 
     update(scales: ScalesWithSecondary, charts: TwoDimensionalChartModel[], data: MdtChartsDataSource, dataOptions: OptionsModelData) {
         const valueLabelsSettings = this.options.canvas.valueLabels;
+        const chartOrientation = this.options.canvas.chartOrientation;
 
         const chartsWithLabels: TwoDimensionalChartModel[] = charts.filter(chart => chart.valueLabels?.show);
         if (chartsWithLabels.length === 0) return;
@@ -166,7 +169,7 @@ export class CanvasValueLabels {
 
         Promise.all(chartsUpdatePromises).then(() => {
             const newValueLabels = this.getAllValueLabels();
-            ValueLabelsCollision.resolveValueLabelsCollisions(newValueLabels, valueLabelsSettings);
+            ValueLabelsCollision.resolveValueLabelsCollisions(newValueLabels, valueLabelsSettings, chartOrientation);
         });
     }
 

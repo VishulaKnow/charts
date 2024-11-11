@@ -25,7 +25,8 @@ import { ModelInstance } from "../modelInstance/modelInstance";
 import {
     getAreaViewOptions,
     getBarViewOptions,
-    getLegendMarkerOptions, LINE_CHART_DEFAULT_WIDTH,
+    getLegendMarkerOptions,
+    LINE_CHART_DEFAULT_WIDTH,
     parseDashStyles,
     parseShape
 } from "./twoDimensional/styles";
@@ -35,9 +36,14 @@ import {
     calculateValueLabelAlignment,
     getValueLabelX,
     getValueLabelY,
+    hasCollisionBottomSide,
     hasCollisionLeftSide,
     hasCollisionRightSide,
-    shiftCoordinateXLeft, shiftCoordinateXRight
+    hasCollisionTopSide,
+    shiftCoordinateXLeft,
+    shiftCoordinateXRight,
+    shiftCoordinateYBottom,
+    shiftCoordinateYTop
 } from "../../model/featuresModel/valueLabelsModel/valueLabelsModel";
 import { CanvasModel } from "../modelInstance/canvasModel/canvasModel";
 import { TwoDimensionalModelHelper } from "../helpers/twoDimensionalModelHelper";
@@ -219,6 +225,16 @@ export class TwoDimensionalModel {
                         mode: 'shift',
                         hasCollision: (labelClientRect: BoundingRect) => hasCollisionRightSide(labelClientRect, canvasModel.getBlockSize(), canvasModel.getMargin()),
                         shiftCoordinate: (labelClientRect: BoundingRect) => shiftCoordinateXLeft(labelClientRect),
+                    },
+                    top: {
+                        mode: 'shift',
+                        hasCollision: (labelClientRect: BoundingRect) => hasCollisionTopSide(labelClientRect, canvasModel.getMargin()),
+                        shiftCoordinate: (labelClientRect: BoundingRect) => shiftCoordinateYBottom(labelClientRect),
+                    },
+                    bottom: {
+                        mode: 'shift',
+                        hasCollision: (labelClientRect: BoundingRect) => hasCollisionBottomSide(labelClientRect, canvasModel.getBlockSize(), canvasModel.getMargin()),
+                        shiftCoordinate: (labelClientRect: BoundingRect) => shiftCoordinateYTop(labelClientRect),
                     }
                 }
             },
