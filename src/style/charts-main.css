@@ -63,6 +63,7 @@
 .legend-block-row {
     flex-direction: row;
     flex-wrap: wrap;
+    align-items: flex-end;
 }
 .legend-item {
     cursor: default;
