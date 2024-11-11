@@ -231,8 +231,7 @@
 
 /* Grid */
 .grid-line {
-    stroke: #D2D2D2;
-    stroke-dasharray: 3;
+    stroke: rgba(231, 229, 228, 0.8);
 }
 
 /* Record overflow */

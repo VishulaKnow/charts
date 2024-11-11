@@ -155,11 +155,20 @@ export interface AdditionalElements {
 
 interface GridLineOptions {
     flag: GridLineFlag;
+    styles?: GridLineStyles;
 }
 
 interface GridLineFlag {
     key: boolean;
     value: boolean;
+}
+
+interface GridLineStyles {
+    dash?: GridLineStylesDash;
+}
+
+interface GridLineStylesDash {
+    on?: boolean
 }
 
 

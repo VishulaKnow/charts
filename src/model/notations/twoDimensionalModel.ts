@@ -194,8 +194,15 @@ export class TwoDimensionalModel {
     }
 
     private static getAdditionalElements(options: MdtChartsTwoDimensionalOptions): AdditionalElementsOptions {
+        const { flag, styles } = options.additionalElements.gridLine;
+
         return {
-            gridLine: options.additionalElements.gridLine
+            gridLine: {
+                flag,
+                styles: {
+                    dash: { on: styles?.dash?.on ?? false }
+                }
+            }
         }
     }
 
