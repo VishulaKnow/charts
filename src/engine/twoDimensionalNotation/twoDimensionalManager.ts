@@ -41,7 +41,7 @@ export class TwoDimensionalManager implements ChartContentManager {
 
         Axis.render(engine.block, scales, options.scale, options.axis, model.blockCanvas.size);
 
-        GridLine.render(engine.block, options.additionalElements.gridLine.flag, options.axis, model.blockCanvas.size, model.chartBlock.margin, scales);
+        GridLine.render(engine.block, options.additionalElements.gridLine.flag, options.axis, model.blockCanvas.size, model.chartBlock.margin, scales, options.additionalElements);
 
         this.dotChart = new CanvasDotChart({
             elementAccessors: {
@@ -139,7 +139,8 @@ export class TwoDimensionalManager implements ChartContentManager {
             options.axis,
             model.blockCanvas.size,
             model.chartBlock.margin,
-            scales);
+            scales,
+            options.additionalElements);
 
         const promises = this.updateCharts(block,
             options.charts,

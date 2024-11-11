@@ -185,10 +185,19 @@ export interface AdditionalElementsOptions {
 }
 export interface GridLineOptions {
     flag: GridLineFlag;
+    styles: GridLineStyles;
 }
 export interface GridLineFlag {
     key: boolean;
     value: boolean;
+}
+
+interface GridLineStyles {
+    dash: GridLineStylesDash;
+}
+
+interface GridLineStylesDash {
+    on: boolean
 }
 
 export interface TwoDimChartElementsSettings {

@@ -1,5 +1,5 @@
 import { Size } from "../../../config/config";
-import { AxisModelOptions, BlockMargin, GridLineFlag, IAxisModel } from "../../../model/model";
+import { AdditionalElementsOptions, AxisModelOptions, BlockMargin, GridLineFlag, IAxisModel } from "../../../model/model";
 import { Block } from "../../block/block";
 import { Scales } from "../scale/scale";
 import { GridLineAttributes, GridLineHelper } from "./gidLineHelper";
@@ -8,27 +8,27 @@ import { Selection, BaseType } from "d3-selection";
 export class GridLine {
     private static readonly gridLineClass = 'grid-line';
 
-    public static render(block: Block, gridLineFlag: GridLineFlag, axes: IAxisModel, blockSize: Size, margin: BlockMargin, scales: Scales): void {
+    public static render(block: Block, gridLineFlag: GridLineFlag, axes: IAxisModel, blockSize: Size, margin: BlockMargin, scales: Scales, additionalElements: AdditionalElementsOptions): void {
         if (gridLineFlag.value) {
             const lineLength = GridLineHelper.getGridLineLength('value', axes.key, axes.value, blockSize, margin);
             const lineAttributes = GridLineHelper.getLineAttributes(axes.value, lineLength);
-            this.renderLine(block, axes.value, lineAttributes);
+            this.renderLine(block, axes.value, lineAttributes, additionalElements);
         }
         if (gridLineFlag.key) {
             const lineAttributes = GridLineHelper.getKeyLineAttributes(axes.key, scales.value);
-            this.renderLine(block, axes.key, lineAttributes);
+            this.renderLine(block, axes.key, lineAttributes, additionalElements);
         }
 
         this.removeGridLinesOnAxes(block, axes.key, axes.value, true);
     }
 
-    public static update(block: Block, gridLineFlag: GridLineFlag, axes: IAxisModel, blockSize: Size, margin: BlockMargin, scales: Scales): void {
+    public static update(block: Block, gridLineFlag: GridLineFlag, axes: IAxisModel, blockSize: Size, margin: BlockMargin, scales: Scales, additionalElements: AdditionalElementsOptions): void {
         this.clear(block, axes.key.cssClass, axes.value.cssClass);
-        this.render(block, gridLineFlag, axes, blockSize, margin, scales);
+        this.render(block, gridLineFlag, axes, blockSize, margin, scales, additionalElements);
     }
 
-    private static renderLine(block: Block, axis: AxisModelOptions, lineAttributes: GridLineAttributes): void {
-        block
+    private static renderLine(block: Block, axis: AxisModelOptions, lineAttributes: GridLineAttributes, additionalElements: AdditionalElementsOptions): void {
+        const gridLine = block
             .getSvg()
             .selectAll(`.${axis.cssClass}`)
             .selectAll('g.tick')
@@ -38,6 +38,9 @@ export class GridLine {
             .attr('y1', lineAttributes.y1)
             .attr('x2', lineAttributes.x2)
             .attr('y2', lineAttributes.y2);
+
+        if (additionalElements.gridLine.styles.dash.on)
+            gridLine.style('stroke-dasharray', 3)
     }
 
     private static clear(block: Block, keyAxisClass: string, valueAxisClass: string): void {
