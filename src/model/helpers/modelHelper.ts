@@ -26,7 +26,7 @@ export class ModelHelper {
         const fontSize = this.getBaseFontSize()
         let score = 0;
         const upperLetterScore = fontSize / 10;
-        const lowerLetterScore = fontSize / 15;
+        const lowerLetterScore = fontSize / 14;
         const digitScore = fontSize / 15;
         const otherSymbolScore = fontSize / 23;
         const specialSmallSymbols = [",", ".", " "]
