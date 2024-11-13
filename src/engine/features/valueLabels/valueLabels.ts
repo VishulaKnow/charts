@@ -28,7 +28,6 @@ export interface ValueLabelsOptions {
     }
     canvas: {
         keyAxisOrient: Orient;
-        chartOrientation: ChartOrientation;
         valueLabels: TwoDimensionalValueLabels;
     }
 }
@@ -135,7 +134,6 @@ export class CanvasValueLabels {
 
     render(scales: ScalesWithSecondary, charts: TwoDimensionalChartModel[], data: MdtChartsDataSource, dataOptions: OptionsModelData) {
         const valueLabelsSettings = this.options.canvas.valueLabels;
-        const chartOrientation = this.options.canvas.chartOrientation;
 
         const chartsWithLabels: TwoDimensionalChartModel[] = charts.filter(chart => chart.valueLabels?.show);
         if (chartsWithLabels.length === 0) return;
@@ -149,12 +147,11 @@ export class CanvasValueLabels {
         });
 
             const valueLabels = this.getAllValueLabels();
-            ValueLabelsCollision.resolveValueLabelsCollisions(valueLabels, valueLabelsSettings, chartOrientation);
+        ValueLabelsCollision.resolveValueLabelsCollisions(valueLabels, valueLabelsSettings);
     }
 
     update(scales: ScalesWithSecondary, charts: TwoDimensionalChartModel[], data: MdtChartsDataSource, dataOptions: OptionsModelData) {
         const valueLabelsSettings = this.options.canvas.valueLabels;
-        const chartOrientation = this.options.canvas.chartOrientation;
 
         const chartsWithLabels: TwoDimensionalChartModel[] = charts.filter(chart => chart.valueLabels?.show);
         if (chartsWithLabels.length === 0) return;
@@ -169,7 +166,7 @@ export class CanvasValueLabels {
 
         Promise.all(chartsUpdatePromises).then(() => {
             const newValueLabels = this.getAllValueLabels();
-            ValueLabelsCollision.resolveValueLabelsCollisions(newValueLabels, valueLabelsSettings, chartOrientation);
+            ValueLabelsCollision.resolveValueLabelsCollisions(newValueLabels, valueLabelsSettings);
         });
     }
 

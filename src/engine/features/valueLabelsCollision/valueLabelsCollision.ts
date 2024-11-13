@@ -28,10 +28,10 @@ export interface LabelVisibility {
 }
 
 export class ValueLabelsCollision {
-    public static resolveValueLabelsCollisions(newValueLabels: Selection<SVGTextElement, MdtChartsDataRow, SVGGElement, unknown>, valueLabelsSettings: TwoDimensionalValueLabels, chartOrientation: ChartOrientation): void {
+    public static resolveValueLabelsCollisions(newValueLabels: Selection<SVGTextElement, MdtChartsDataRow, SVGGElement, unknown>, valueLabelsSettings: TwoDimensionalValueLabels): void {
         const valueLabelElementsRectInfo = this.getValueLabelElementsRectInfo(newValueLabels);
 
-        this.shiftValueLabelsCollision(valueLabelElementsRectInfo, valueLabelsSettings.collision.chartBlock, chartOrientation);
+        this.shiftValueLabelsCollision(valueLabelElementsRectInfo, valueLabelsSettings.collision.chartBlock);
 
         if (valueLabelsSettings.collision.otherValueLables.mode === 'hide')
             this.toggleValueLabelElementsVisibility(valueLabelElementsRectInfo);
@@ -55,24 +55,24 @@ export class ValueLabelsCollision {
         return ValueLabelElementsReactInfo;
     }
 
-    private static shiftValueLabelsCollision(valueLabelElementsRectInfo: ValueLabelElement[], chartBlock: ValueLabelsChartBlock, chartOrientation: ChartOrientation) {
+    private static shiftValueLabelsCollision(valueLabelElementsRectInfo: ValueLabelElement[], chartBlock: ValueLabelsChartBlock) {
         valueLabelElementsRectInfo.forEach(element => {
-
-            if (chartOrientation === 'vertical') {
-                this.handleCollisionShift(chartBlock.left, element, chartOrientation);
-                this.handleCollisionShift(chartBlock.right, element, chartOrientation);
-            } else {
-                this.handleCollisionShift(chartBlock.top, element, chartOrientation);
-                this.handleCollisionShift(chartBlock.bottom, element, chartOrientation);
-            }
+            this.handleCollisionShift(chartBlock, element);
         });
     }
 
-    private static handleCollisionShift(blockSide: ValueLabelsChartBlockSide, element: ValueLabelElement, chartOrientation: ChartOrientation): void {
-        if (blockSide.mode === 'shift' && blockSide.hasCollision(element.boundingClientRect)) {
-            blockSide.shiftCoordinate(element.boundingClientRect);
-            this.changeLabelElementCoordinateByAxis(element, chartOrientation === "vertical" ? 'x' : 'y');
-        }
+    private static handleCollisionShift(chartBlock: ValueLabelsChartBlock, element: ValueLabelElement): void {
+        const sides = Object.keys(chartBlock) as (keyof ValueLabelsChartBlock)[];
+
+        sides.forEach(side => {
+            const blockSide = chartBlock[side];
+            const axisCoordinate = side === 'left' || side === 'right' ? 'x' : 'y';
+
+            if (blockSide.hasCollision?.(element.boundingClientRect)) {
+                blockSide.shiftCoordinate(element.boundingClientRect);
+                this.changeLabelElementCoordinateByAxis(element, axisCoordinate);
+            }
+        });
     }
 
     private static toggleValueLabelElementsVisibility(elements: ValueLabelElement[]): void {
