@@ -64,6 +64,8 @@ export class TwoDimensionalModel {
 
         const charts = this.getChartsModel(options.charts, configReader, options.orientation, designerConfig, modelInstance.dataModel.repository, keyAxis.orient, canvasModel, options.data.keyField.name);
 
+        const defaultFormatter = configReader.calculateDefaultFormatter();
+
         return {
             legend: canvasModel.legendCanvas.getModel(),
             title: getResolvedTitle(options.title, modelInstance.dataModel.repository.getRawRows()),
@@ -76,8 +78,7 @@ export class TwoDimensionalModel {
             },
             axis: {
                 key: keyAxis,
-                value: AxisModel.getMainValueAxis(options.orientation, options.axis.value.position, options.axis.value, designerConfig.canvas.axisLabel, canvasModel),
-                ...(configReader.containsSecondaryAxis() && { valueSecondary: AxisModel.getSecondaryValueAxis(options.orientation, options.axis.value.position, options.axis.valueSecondary, designerConfig.canvas.axisLabel, canvasModel) }),
+                value: AxisModel.getMainValueAxis(defaultFormatter, options.orientation, options.axis.value.position, options.axis.value, designerConfig.canvas.axisLabel, canvasModel), ...(configReader.containsSecondaryAxis() && { valueSecondary: AxisModel.getSecondaryValueAxis(defaultFormatter, options.orientation, options.axis.value.position, options.axis.valueSecondary, designerConfig.canvas.axisLabel, canvasModel) })
             },
             type: options.type,
             data: { ...options.data },

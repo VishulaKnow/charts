@@ -165,6 +165,11 @@ export interface AxisModelOptions {
     ticks: AxisTicksModel;
     labels: AxisLabelModel;
     line: AxisLineModel;
+    browserTooltip: AxisBrowserTooltipModel;
+}
+
+export interface AxisBrowserTooltipModel {
+    format: (value: number | string) => string | number
 }
 
 export interface AxisLineModel {

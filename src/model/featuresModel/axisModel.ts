@@ -1,7 +1,7 @@
-import { AxisPosition, ChartOrientation, MdtChartsDataSource, NumberAxisOptions, AxisLabelPosition, MdtChartsTwoDimensionalOptions, DiscreteAxisOptions, NumberSecondaryAxisOptions } from "../../config/config";
+import { AxisPosition, ChartOrientation, MdtChartsDataSource, NumberAxisOptions, AxisLabelPosition, MdtChartsTwoDimensionalOptions, DiscreteAxisOptions, NumberSecondaryAxisOptions, AxisLabelFormatter } from "../../config/config";
 import { AxisModelOptions, Orient, TranslateModel } from "../model";
 import { ModelHelper } from "../helpers/modelHelper";
-import { AxisType, CLASSES } from "../modelBuilder";
+import { AxisType } from "../modelBuilder";
 import { DataManagerModel } from "../dataManagerModel/dataManagerModel";
 import { TwoDimensionalModel } from "../notations/twoDimensionalModel";
 import { AxisLabelCanvas, TooltipSettings } from "../../designer/designerConfig";
@@ -45,19 +45,22 @@ export class AxisModel {
             visibility: axisConfig.visibility,
             line: {
                 visible: axisConfig.line?.visible ?? DEFAULT_AXIS_LINE_VISIBLE
+            },
+            browserTooltip: {
+                format: value => value
             }
         }
     }
 
-    public static getMainValueAxis(orient: ChartOrientation, position: AxisPosition, axisConfig: NumberAxisOptions, labelConfig: AxisLabelCanvas, canvasModel: CanvasModel): AxisModelOptions {
-        return this.getValueAxis(orient, position, 'value-axis', axisConfig, labelConfig, canvasModel)
+    public static getMainValueAxis(defaultFormatter: AxisLabelFormatter, orient: ChartOrientation, position: AxisPosition, axisConfig: NumberAxisOptions, labelConfig: AxisLabelCanvas, canvasModel: CanvasModel): AxisModelOptions {
+        return this.getValueAxis(defaultFormatter, orient, position, 'value-axis', axisConfig, labelConfig, canvasModel)
     }
 
-    public static getSecondaryValueAxis(orient: ChartOrientation, mainAxisPosition: AxisPosition, axisConfig: NumberSecondaryAxisOptions, labelConfig: AxisLabelCanvas, canvasModel: CanvasModel): AxisModelOptions {
-        return this.getValueAxis(orient, mainAxisPosition === "start" ? "end" : "start", 'value-secondary-axis', axisConfig, labelConfig, canvasModel)
+    public static getSecondaryValueAxis(defaultFormatter: AxisLabelFormatter, orient: ChartOrientation, mainAxisPosition: AxisPosition, axisConfig: NumberSecondaryAxisOptions, labelConfig: AxisLabelCanvas, canvasModel: CanvasModel): AxisModelOptions {
+        return this.getValueAxis(defaultFormatter, orient, mainAxisPosition === "start" ? "end" : "start", 'value-secondary-axis', axisConfig, labelConfig, canvasModel)
     }
 
-    private static getValueAxis(orient: ChartOrientation, position: AxisPosition, cssClass: string, axisConfig: NumberAxisOptions | NumberSecondaryAxisOptions, labelConfig: AxisLabelCanvas, canvasModel: CanvasModel): AxisModelOptions {
+    private static getValueAxis(defaultFormatter: AxisLabelFormatter, orient: ChartOrientation, position: AxisPosition, cssClass: string, axisConfig: NumberAxisOptions | NumberSecondaryAxisOptions, labelConfig: AxisLabelCanvas, canvasModel: CanvasModel): AxisModelOptions {
         return {
             type: 'value',
             orient: AxisModel.getAxisOrient(AxisType.Value, orient, position),
@@ -79,6 +82,9 @@ export class AxisModel {
             visibility: axisConfig.visibility,
             line: {
                 visible: axisConfig.line?.visible ?? DEFAULT_AXIS_LINE_VISIBLE
+            },
+            browserTooltip: {
+                format: value => defaultFormatter(value)
             }
         }
     }
