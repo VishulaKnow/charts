@@ -293,8 +293,7 @@ describe('getValueLabels', () => {
         canvasModelMock = new CanvasModel();
     });
 
-    describe('при вертикальной ориентации графика', () => {
-        test('использует функции hasCollision для left и right', () => {
+    test('should return shift value mode for left and right sides, because chartOrientation is vertical', () => {
             const result = TwoDimensionalModelHelper.getValueLabels(valueLabels, canvasModelMock, 'vertical');
 
             expect(result.collision.chartBlock.left.mode).toEqual('shift');
@@ -302,10 +301,8 @@ describe('getValueLabels', () => {
             expect(result.collision.chartBlock.top.mode).toEqual('none');
             expect(result.collision.chartBlock.bottom.mode).toEqual('none');
         });
-    });
 
-    describe('при горизонтальной ориентации графика', () => {
-        test('использует функции hasCollision для top и bottom', () => {
+    test('should return shift value mode for top and bottom sides, because chartOrientation is horizontal', () => {
             const result = TwoDimensionalModelHelper.getValueLabels(valueLabels, canvasModelMock, 'horizontal');
 
             expect(result.collision.chartBlock.left.mode).toEqual('none');
@@ -313,5 +310,4 @@ describe('getValueLabels', () => {
             expect(result.collision.chartBlock.top.mode).toEqual('shift');
             expect(result.collision.chartBlock.bottom.mode).toEqual('shift');
         });
-    });
 });
