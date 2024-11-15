@@ -274,10 +274,12 @@ export interface ValueLabelsChartBlock {
     bottom: ValueLabelsChartBlockSide;
 }
 
-export interface ValueLabelsChartBlockSide {
-    mode: "none" | "shift";
+export type ValueLabelsChartBlockSide = | {
+    mode: "shift";
     hasCollision: (labelClientRect: BoundingRect) => boolean;
     shiftCoordinate: (labelClientRect: BoundingRect) => void;
+} | {
+    mode: "none"
 }
 
 

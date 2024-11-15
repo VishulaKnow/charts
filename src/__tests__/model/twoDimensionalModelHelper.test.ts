@@ -1,7 +1,8 @@
 import { TwoDimensionalModelHelper } from "../../model/helpers/twoDimensionalModelHelper";
-import { MdtChartsDataRow, MdtChartsTwoDimensionalChart } from "../../config/config";
+import { MdtChartsDataRow, MdtChartsTwoDimensionalChart, MdtChartsTwoDimensionalValueLabels } from "../../config/config";
 import { MarkDotDatumItem, TwoDimensionalChartModel } from "../../model/model";
 import { getSegmentedRadiusValues } from "../../model/notations/twoDimensional/styles";
+import { CanvasModel } from "../../model/modelInstance/canvasModel/canvasModel";
 
 describe('shouldMarkerShow', () => {
 
@@ -280,5 +281,37 @@ describe('getSegmentedRadiusValues', () => {
         expect(radiusValues.topRight).toEqual(2);
         expect(radiusValues.bottomLeft).toEqual(2);
         expect(radiusValues.bottomRight).toEqual(2);
+    });
+});
+
+describe('getValueLabels', () => {
+    let canvasModelMock: CanvasModel;
+    let valueLabels: MdtChartsTwoDimensionalValueLabels;
+
+    beforeEach(() => {
+        valueLabels = { collision: { otherValueLabels: { mode: "hide" } } };
+        canvasModelMock = new CanvasModel();
+    });
+
+    describe('при вертикальной ориентации графика', () => {
+        test('использует функции hasCollision для left и right', () => {
+            const result = TwoDimensionalModelHelper.getValueLabels(valueLabels, canvasModelMock, 'vertical');
+
+            expect(result.collision.chartBlock.left.mode).toEqual('shift');
+            expect(result.collision.chartBlock.right.mode).toEqual('shift');
+            expect(result.collision.chartBlock.top.mode).toEqual('none');
+            expect(result.collision.chartBlock.bottom.mode).toEqual('none');
+        });
+    });
+
+    describe('при горизонтальной ориентации графика', () => {
+        test('использует функции hasCollision для top и bottom', () => {
+            const result = TwoDimensionalModelHelper.getValueLabels(valueLabels, canvasModelMock, 'horizontal');
+
+            expect(result.collision.chartBlock.left.mode).toEqual('none');
+            expect(result.collision.chartBlock.right.mode).toEqual('none');
+            expect(result.collision.chartBlock.top.mode).toEqual('shift');
+            expect(result.collision.chartBlock.bottom.mode).toEqual('shift');
+        });
     });
 });

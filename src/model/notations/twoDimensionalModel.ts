@@ -3,7 +3,6 @@ import {
     MdtChartsTwoDimensionalChart,
     TwoDimensionalChartType,
     MdtChartsTwoDimensionalOptions,
-    MdtChartsTwoDimensionalValueLabels,
 } from "../../config/config";
 import { ChartOptionsCanvas, DesignerConfig } from "../../designer/designerConfig";
 import { ChartStyleModelService } from "../chartStyleModel/chartStyleModel";
@@ -18,7 +17,6 @@ import {
     AdditionalElementsOptions,
     TwoDimChartElementsSettings,
     Orient,
-    TwoDimensionalValueLabels,
 } from "../model";
 import { TwoDimConfigReader } from "../modelInstance/configReader";
 import { ModelInstance } from "../modelInstance/modelInstance";
@@ -34,20 +32,10 @@ import { getResolvedTitle } from "../../model/featuresModel/titleModel";
 import { DataRepositoryModel } from "../modelInstance/dataModel/dataRepository";
 import {
     calculateValueLabelAlignment,
-    getValueLabelX,
-    getValueLabelY,
-    hasCollisionBottomSide,
-    hasCollisionLeftSide,
-    hasCollisionRightSide,
-    hasCollisionTopSide,
-    shiftCoordinateXLeft,
-    shiftCoordinateXRight,
-    shiftCoordinateYBottom,
-    shiftCoordinateYTop
+    getValueLabelX, getValueLabelY
 } from "../../model/featuresModel/valueLabelsModel/valueLabelsModel";
 import { CanvasModel } from "../modelInstance/canvasModel/canvasModel";
 import { TwoDimensionalModelHelper } from "../helpers/twoDimensionalModelHelper";
-import { BoundingRect } from "../../engine/features/valueLabelsCollision/valueLabelsCollision";
 
 
 export class TwoDimensionalModel {
@@ -91,7 +79,7 @@ export class TwoDimensionalModel {
             additionalElements: this.getAdditionalElements(options),
             tooltip: options.tooltip,
             chartSettings: this.getChartsSettings(designerConfig.canvas.chartOptions, options.orientation),
-            valueLabels: this.getValueLabels(options.valueLabels, canvasModel, options.orientation),
+            valueLabels: TwoDimensionalModelHelper.getValueLabels(options.valueLabels, canvasModel, options.orientation),
             defs: {
                 gradients: TwoDimensionalModelHelper.getGradientDefs(charts, keyAxis.orient, options.orientation)
             }
@@ -207,53 +195,5 @@ export class TwoDimensionalModel {
 
     private static getChartsByTypes(charts: MdtChartsTwoDimensionalChart[], types: TwoDimensionalChartType[]): MdtChartsTwoDimensionalChart[] {
         return charts.filter(chart => types.includes(chart.type));
-    }
-
-    private static getValueLabels(valueLabels: MdtChartsTwoDimensionalValueLabels, canvasModel: CanvasModel, chartOrientation: ChartOrientation): TwoDimensionalValueLabels {
-        const isVertical = chartOrientation === 'vertical';
-        const blockSidesOptions = this.getChartBlockSidesOptions(canvasModel);
-
-        return {
-            collision: {
-                otherValueLables: valueLabels?.collision.otherValueLabels ?? {
-                    mode: 'none'
-                },
-                chartBlock: {
-                    left: {
-                        mode: 'shift',
-                        hasCollision: isVertical ? blockSidesOptions.hasCollisionLeft : null,
-                        shiftCoordinate: blockSidesOptions.shiftRight
-                    },
-                    right: {
-                        mode: 'shift',
-                        hasCollision: isVertical ? blockSidesOptions.hasCollisionRight : null,
-                        shiftCoordinate: blockSidesOptions.shiftLeft
-                    },
-                    top: {
-                        mode: 'shift',
-                        hasCollision: isVertical ? null : blockSidesOptions.hasCollisionTop,
-                        shiftCoordinate: blockSidesOptions.shiftBottom
-                    },
-                    bottom: {
-                        mode: 'shift',
-                        hasCollision: isVertical ? null : blockSidesOptions.hasCollisionBottom,
-                        shiftCoordinate: blockSidesOptions.shiftTop
-                    }
-                }
-            }
-        }
-    }
-
-    private static getChartBlockSidesOptions(canvasModel: CanvasModel) {
-        return {
-            hasCollisionLeft: (labelClientRect: BoundingRect) => hasCollisionLeftSide(labelClientRect, canvasModel.getMargin()),
-            shiftLeft: (labelClientRect: BoundingRect) => shiftCoordinateXLeft(labelClientRect),
-            hasCollisionRight: (labelClientRect: BoundingRect) => hasCollisionRightSide(labelClientRect, canvasModel.getBlockSize(), canvasModel.getMargin()),
-            shiftRight: (labelClientRect: BoundingRect) => shiftCoordinateXRight(labelClientRect),
-            hasCollisionTop: (labelClientRect: BoundingRect) => hasCollisionTopSide(labelClientRect, canvasModel.getMargin()),
-            shiftTop: (labelClientRect: BoundingRect) => shiftCoordinateYTop(labelClientRect),
-            hasCollisionBottom: (labelClientRect: BoundingRect) => hasCollisionBottomSide(labelClientRect, canvasModel.getBlockSize(), canvasModel.getMargin()),
-            shiftBottom: (labelClientRect: BoundingRect) => shiftCoordinateYBottom(labelClientRect)
-        }
     }
 }

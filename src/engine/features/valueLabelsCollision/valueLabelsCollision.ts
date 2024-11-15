@@ -1,7 +1,7 @@
 import { select, Selection } from "d3-selection";
 import { ValueLabelsCollisionHelper } from "../../../engine/features/valueLabelsCollision/valueLabelsCollisionHelper";
-import { TwoDimensionalValueLabels, ValueLabelsChartBlock, ValueLabelsChartBlockSide } from "../../../model/model";
-import { ChartOrientation, MdtChartsDataRow } from "../../../config/config";
+import { TwoDimensionalValueLabels, ValueLabelsChartBlock } from "../../../model/model";
+import { MdtChartsDataRow } from "../../../config/config";
 
 type CoordinateAxis = 'x' | 'y';
 export type ValueLabelOnCanvasIndex = number;
@@ -68,7 +68,7 @@ export class ValueLabelsCollision {
             const blockSide = chartBlock[side];
             const axisCoordinate = side === 'left' || side === 'right' ? 'x' : 'y';
 
-            if (blockSide.hasCollision?.(element.boundingClientRect)) {
+            if (blockSide.mode === 'shift' && blockSide.hasCollision(element.boundingClientRect)) {
                 blockSide.shiftCoordinate(element.boundingClientRect);
                 this.changeLabelElementCoordinateByAxis(element, axisCoordinate);
             }
