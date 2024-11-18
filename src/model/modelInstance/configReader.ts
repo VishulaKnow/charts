@@ -104,7 +104,7 @@ export class TwoDimConfigReader implements BaseConfigReader {
         return (v) => this.designerConfig.dataFormat.formatters(v, { type: valueFieldFormat });
     }
 
-    calculateDefaultFormatter(): AxisLabelFormatter {
+    calculateDefaultAxisLabelFormatter(): AxisLabelFormatter {
         const valueFieldFormat = this.options.charts[0].data.valueFields[0].format;
         return (v) => this.designerConfig.dataFormat.formatters(v, { type: valueFieldFormat });
     }
@@ -121,7 +121,7 @@ export class TwoDimConfigReader implements BaseConfigReader {
 
     private calculateAxisLabelFormatter(axisValue: NumberAxisOptions | NumberSecondaryAxisOptions): AxisLabelFormatter {
         if (axisValue.labels?.format) return axisValue.labels?.format;
-        return this.calculateDefaultFormatter();
+        return this.calculateDefaultAxisLabelFormatter();
     }
 }
 
