@@ -1,7 +1,8 @@
 import { TwoDimensionalModelHelper } from "../../model/helpers/twoDimensionalModelHelper";
-import { MdtChartsDataRow, MdtChartsTwoDimensionalChart } from "../../config/config";
-import { MarkDotDatumItem, TwoDimensionalChartModel } from "../../model/model";
-import { getSegmentedRadiusValues } from "../../model/notations/twoDimensional/styles";
+import { MdtChartsDataRow, MdtChartsLineLikeChartDashedStyles, MdtChartsTwoDimensionalChart } from "../../config/config";
+import { MarkDotDatumItem, TwoDimensionalChartLegendLineModel, TwoDimensionalChartModel } from "../../model/model";
+import { getLineViewOptions, getSegmentedRadiusValues, getWidthOfLegendMarkerByType, LINE_CHART_DEFAULT_WIDTH, parseDashStyles } from "../../model/notations/twoDimensional/styles";
+import { styledElementValues } from "../../model/modelBuilder";
 
 describe('shouldMarkerShow', () => {
 
@@ -280,5 +281,186 @@ describe('getSegmentedRadiusValues', () => {
         expect(radiusValues.topRight).toEqual(2);
         expect(radiusValues.bottomLeft).toEqual(2);
         expect(radiusValues.bottomRight).toEqual(2);
+    });
+});
+
+describe('getLegendMarkerOptions', () => {
+
+    let chart: MdtChartsTwoDimensionalChart;
+
+    beforeEach(() => {
+        chart = {
+            isSegmented: false,
+            type: 'line',
+            data: {
+                valueFields: [{
+                    name: 'price',
+                    format: 'money',
+                    title: 'Рубли'
+                }],
+                valueGroup: "main"
+            },
+            embeddedLabels: 'none',
+            markers: {
+                show: false
+            },
+            lineStyles: {
+                dash: {
+                    on: true,
+                    dashSize: 3,
+                    gapSize: 3
+                },
+                width: 10
+            },
+            barStyles: {
+                hatch: {
+                    on: false
+                }
+            },
+            dotLikeStyles: {
+                shape: {
+                    type: "line",
+                    width: 5
+                }
+            },
+            valueLabels: {
+                on: true
+            }
+        }
+    })
+
+    test('should return lineViewOptions for line type chart', () => {
+        const result = getLineViewOptions(chart);
+        const expected: TwoDimensionalChartLegendLineModel = {
+            dashedStyles: {
+                on: true,
+                dashSize: 3,
+                gapSize: 3
+            },
+            strokeWidth: 10,
+            length: 24
+        };
+
+        expect(result).toEqual(expected);
+    });
+
+    test('should return lineViewOptions for dot type chart', () => {
+        chart.type = 'dot';
+
+        const result = getLineViewOptions(chart);
+        const expected: TwoDimensionalChartLegendLineModel = {
+            dashedStyles: {
+                on: false,
+                dashSize: 0,
+                gapSize: 0
+            },
+            strokeWidth: 5,
+            length: 24
+        };
+
+        expect(result).toEqual(expected);
+    });
+
+    test('should return strokeWidth equal to LINE_CHART_DEFAULT_WIDTH, because lineStyles is empty', () => {
+        chart.lineStyles = null;
+        const result = getLineViewOptions(chart);
+
+        expect(result.strokeWidth).toEqual(LINE_CHART_DEFAULT_WIDTH);
+    });
+
+    test('should return strokeWidth equal to LINE_CHART_DEFAULT_WIDTH, because lineStyles is empty', () => {
+        chart.lineStyles.width = null;
+        const result = getLineViewOptions(chart);
+
+        expect(result.strokeWidth).toEqual(LINE_CHART_DEFAULT_WIDTH);
+    });
+
+
+    test('should return strokeWidth equal to LINE_CHART_DEFAULT_WIDTH, because dotLikeStyles is empty', () => {
+        chart.type = 'dot';
+        chart.dotLikeStyles = null;
+        const result = getLineViewOptions(chart);
+
+        expect(result.strokeWidth).toEqual(LINE_CHART_DEFAULT_WIDTH);
+    });
+
+    test('should return strokeWidth equal to LINE_CHART_DEFAULT_WIDTH, because shape is empty', () => {
+        chart.type = 'dot';
+        chart.dotLikeStyles.shape = null;
+        const result = getLineViewOptions(chart);
+
+        expect(result.strokeWidth).toEqual(LINE_CHART_DEFAULT_WIDTH);
+    });
+
+    test('should return strokeWidth equal to LINE_CHART_DEFAULT_WIDTH, because width is empty', () => {
+        chart.type = 'dot';
+        chart.dotLikeStyles.shape.width = null;
+        const result = getLineViewOptions(chart);
+
+        expect(result.strokeWidth).toEqual(LINE_CHART_DEFAULT_WIDTH);
+    });
+});
+
+describe('getWidthOfLegendMarkerByType', () => {
+
+    test('should return width equal to 8', () => {
+        const result = getWidthOfLegendMarkerByType('bar');
+
+        expect(result).toEqual(8);
+    });
+
+    test('should return width equal to 24', () => {
+        const result = getWidthOfLegendMarkerByType('line');
+
+        expect(result).toEqual(24);
+    });
+
+    test('should return width from styledElementValues', () => {
+        const result = getWidthOfLegendMarkerByType('area');
+
+        expect(result).toEqual(styledElementValues.defaultLegendMarkerSizes.widthPx);
+    });
+
+});
+
+describe('parseDashStyles', () => {
+
+    let dashOptionsConfig: MdtChartsLineLikeChartDashedStyles;
+
+    beforeEach(() => {
+        dashOptionsConfig = {
+            on: true,
+            dashSize: 3,
+            gapSize: 3
+        }
+    })
+
+    test('should return dashStyles from config', () => {
+        const result = parseDashStyles(dashOptionsConfig);
+
+        expect(result).toEqual({
+            on: true,
+            dashSize: 3,
+            gapSize: 3
+        });
+    });
+
+    test('should return dash with default values, because dashSize and gapSize are not exist', () => {
+        delete dashOptionsConfig.dashSize
+        delete dashOptionsConfig.gapSize
+        const result = parseDashStyles({ on: true });
+
+        expect(result).toEqual({
+            on: true,
+            dashSize: 10,
+            gapSize: 3
+        });
+    });
+
+    test('should return dashStyles off, because dashOptions is empty', () => {
+        dashOptionsConfig = null;
+        const result = parseDashStyles();
+
+        expect(result.on).toBeFalsy();
     });
 });
