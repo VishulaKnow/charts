@@ -22,7 +22,7 @@ export class Line {
     readonly creatingPipeline = new Pipeline<Selection<SVGPathElement, any, BaseType, any>, TwoDimensionalChartModel>();
 
     private readonly lineChartClass = Line.lineChartClass; //TODO: remove after refactor
-    private lineBuilder = LineBuilder;
+    private lineBuilder: LineBuilder;
 
     public static get(options: LineChartOptions) {
         return new Line(options);
@@ -86,7 +86,12 @@ export class Line {
         const generatorFactory = this.createLineGeneratorFactory(chart, scales, margin, keyAxisOrient, keyField);
         const lineGenerator = generatorFactory.getSegmentedLineGenerator();
 
-        let lines = this.lineBuilder.renderSegmented(lineGenerator, stackedData, block, chart, Line.lineChartClass);
+        // Вынести в конструктор
+        this.lineBuilder = new LineBuilder({
+            elementAccessors: { getBlock: () => block }
+        }, chart, lineGenerator);
+
+        let lines = this.lineBuilder.renderSegmented(stackedData, Line.lineChartClass);
 
         lines = this.creatingPipeline.execute(lines, chart);
         this.lineBuilder.setSegmentColor(lines, chart.style.elementColors);
@@ -124,8 +129,12 @@ export class Line {
         const generatorFactory = this.createLineGeneratorFactory(chart, scales, margin, keyAxisOrient, keyField);
         const lineGenerator = generatorFactory.getSegmentedLineGenerator();
 
-        let lines = this.lineBuilder.getAllLines(stackedData, block, chart, Line.lineChartClass);
-        const prom = this.lineBuilder.updateSegmentedPath(block, lines, lineGenerator);
+        this.lineBuilder = new LineBuilder({
+            elementAccessors: { getBlock: () => block }
+        }, chart, lineGenerator);
+
+        let lines = this.lineBuilder.getAllLinesWithNewData(stackedData, Line.lineChartClass);
+        const prom = this.lineBuilder.updateSegmentedPath(lines);
 
         lines.each((dataset, index) => {
             MarkDot.update(block, dataset, keyAxisOrient, scales, margin, keyField.name, index, '1', chart);

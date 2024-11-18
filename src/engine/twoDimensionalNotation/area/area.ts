@@ -7,12 +7,11 @@ import { MarkDot } from "../../features/markDots/markDot";
 import { AreaGeneratorFactory } from './areaHelper';
 import { DomHelper } from '../../helpers/domHelper';
 import { Helper } from '../../helpers/helper';
-import { MdtChartsDataRow, Size } from '../../../config/config';
+import { MdtChartsDataRow } from '../../../config/config';
 import { Transition } from 'd3-transition';
 import { getStackedDataWithOwn, StackedDataFull, StackedDataRow } from '../bar/stackedData/dataStacker';
 import { getStackedData, LineGeneratorFactory } from "../../../engine/twoDimensionalNotation/line/lineHelper";
 import { Line } from "../../../engine/twoDimensionalNotation/line/line";
-import { Pipeline } from "../../../engine/helpers/pipeline/Pipeline";
 import { LineBuilder } from "../../../engine/twoDimensionalNotation/line/lineBuilder";
 
 interface AreaOptions {
@@ -22,15 +21,15 @@ interface AreaOptions {
 export class Area {
     public static readonly areaChartClass = 'area';
     public static readonly areaBorderLineClass = 'area-border-line';
-    private lineBuilder = LineBuilder;
-
-    readonly creatingPipeline = new Pipeline<Selection<SVGPathElement, any, BaseType, any>, TwoDimensionalChartModel>();
+    private lineBuilder: LineBuilder;
 
     public static get(options: AreaOptions) {
         return new Area(options);
     }
 
-    constructor(private readonly options: AreaOptions) { }
+    constructor(private readonly options: AreaOptions) {
+
+    }
 
     public render(block: Block, scales: Scales, data: MdtChartsDataRow[], keyField: Field, margin: BlockMargin, keyAxisOrient: Orient, chart: TwoDimensionalChartModel): void {
         if (chart.isSegmented)
@@ -39,7 +38,7 @@ export class Area {
             this.renderGrouped(block, scales, data, keyField, margin, keyAxisOrient, chart);
     }
 
-    public update(block: Block, scales: Scales, newData: MdtChartsDataRow[], keyField: Field, margin: BlockMargin, chart: TwoDimensionalChartModel, keyAxisOrient: Orient, blockSize: Size): Promise<any>[] {
+    public update(block: Block, scales: Scales, newData: MdtChartsDataRow[], keyField: Field, margin: BlockMargin, chart: TwoDimensionalChartModel, keyAxisOrient: Orient): Promise<any>[] {
         let promises: Promise<any>[];
         if (chart.isSegmented) {
             promises = this.updateSegmented(block, scales, newData, keyField, margin, chart, keyAxisOrient);
@@ -238,9 +237,11 @@ export class Area {
         let stackedData = getStackedData(data, chart);
         const lineGenerator = generatorFactory.getSegmentedLineGenerator();
 
-        let lines = this.lineBuilder.renderSegmented(lineGenerator, stackedData, block, chart, Area.areaBorderLineClass);
+        this.lineBuilder = new LineBuilder({
+            elementAccessors: { getBlock: () => block }
+        }, chart, lineGenerator);
 
-        lines = this.creatingPipeline.execute(lines, chart);
+        let lines = this.lineBuilder.renderSegmented(stackedData, Area.areaBorderLineClass);
         this.lineBuilder.setSegmentColor(lines, chart.style.elementColors);
 
         lines.each(function (_, i) {
@@ -257,10 +258,8 @@ export class Area {
         const areas = this.getAllAreas(stackedData, block, chart, Area.areaChartClass);
         const prom = this.updateSegmentedPath(block, areas, areaGenerator);
 
-        const thisClass = this;
         areas.each(function (dataset, index) {
             // '1' - атрибут, показывающий координаты согласно полю значения
-            thisClass.setChartFillStyle(chart, select(this), index);
             MarkDot.update(block, dataset, keyAxisOrient, scales, margin, keyField.name, index, '1', chart);
         });
 
@@ -273,8 +272,12 @@ export class Area {
         const generatorFactory = this.createLineGeneratorFactory(chart, scales, margin, keyAxisOrient, keyField);
         const lineGenerator = generatorFactory.getSegmentedLineGenerator();
 
-        let lines = this.lineBuilder.getAllLines(stackedData, block, chart, Area.areaBorderLineClass);
-        let prom = this.lineBuilder.updateSegmentedPath(block, lines, lineGenerator);
+        this.lineBuilder = new LineBuilder({
+            elementAccessors: { getBlock: () => block }
+        }, chart, lineGenerator);
+
+        let lines = this.lineBuilder.getAllLinesWithNewData(stackedData, Area.areaBorderLineClass);
+        let prom = this.lineBuilder.updateSegmentedPath(lines);
 
         return prom;
     }
