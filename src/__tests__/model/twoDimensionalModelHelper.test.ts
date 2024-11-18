@@ -1,7 +1,7 @@
 import { TwoDimensionalModelHelper } from "../../model/helpers/twoDimensionalModelHelper";
 import { MdtChartsDataRow, MdtChartsLineLikeChartDashedStyles, MdtChartsTwoDimensionalChart } from "../../config/config";
 import { MarkDotDatumItem, TwoDimensionalChartLegendLineModel, TwoDimensionalChartModel } from "../../model/model";
-import { getLineViewOptions, getSegmentedRadiusValues, getWidthOfLegendMarkerByType, LINE_CHART_DEFAULT_WIDTH, parseDashStyles } from "../../model/notations/twoDimensional/styles";
+import { getLegendMarkerOptions, getLineViewOptions, getSegmentedRadiusValues, getWidthOfLegendMarkerByType, LINE_CHART_DEFAULT_WIDTH, parseDashStyles } from "../../model/notations/twoDimensional/styles";
 import { styledElementValues } from "../../model/modelBuilder";
 
 describe('shouldMarkerShow', () => {
@@ -291,15 +291,81 @@ describe('getLegendMarkerOptions', () => {
     beforeEach(() => {
         chart = {
             isSegmented: false,
-            type: 'line',
-            data: {
-                valueFields: [{
-                    name: 'price',
-                    format: 'money',
-                    title: 'Рубли'
-                }],
-                valueGroup: "main"
+            type: 'dot',
+            data: null,
+            embeddedLabels: 'none',
+            markers: {
+                show: false
             },
+            lineStyles: {
+                dash: {
+                    on: true,
+                    dashSize: 3,
+                    gapSize: 3
+                },
+                width: 10
+            },
+            barStyles: {
+                hatch: {
+                    on: false
+                }
+            },
+            dotLikeStyles: {
+                shape: {
+                    type: "line",
+                    width: 5
+                }
+            },
+            valueLabels: {
+                on: true
+            }
+        }
+    });
+
+    test('should return line because chart type is dot and type of dot styles is line', () => {
+        const result = getLegendMarkerOptions(chart);
+
+        expect(result.markerShape).toEqual('line');
+    });
+
+    test('should return line because chart type is dot and dotLikeStyles is empty', () => {
+        chart.dotLikeStyles = null;
+        const result = getLegendMarkerOptions(chart);
+
+        expect(result.markerShape).toEqual('line');
+    });
+
+    test('should return line because chart type is dot and shape is empty', () => {
+        chart.dotLikeStyles.shape = null;
+        const result = getLegendMarkerOptions(chart);
+
+        expect(result.markerShape).toEqual('line');
+    });
+
+    test('should return line because chart type is dot and type of shape is empty', () => {
+        chart.dotLikeStyles.shape.type = null;
+        const result = getLegendMarkerOptions(chart);
+
+        expect(result.markerShape).toEqual('line');
+    });
+
+    test('should return ', () => {
+        const result = getLegendMarkerOptions(chart);
+
+        expect(result.markerShape).toEqual('line');
+    });
+
+})
+
+describe('getLineViewOptions', () => {
+
+    let chart: MdtChartsTwoDimensionalChart;
+
+    beforeEach(() => {
+        chart = {
+            isSegmented: false,
+            type: 'line',
+            data: null,
             embeddedLabels: 'none',
             markers: {
                 show: false
