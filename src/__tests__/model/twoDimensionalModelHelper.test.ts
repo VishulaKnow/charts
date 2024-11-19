@@ -1,8 +1,9 @@
 import { TwoDimensionalModelHelper } from "../../model/helpers/twoDimensionalModelHelper";
-import { MdtChartsDataRow, MdtChartsLineLikeChartDashedStyles, MdtChartsTwoDimensionalChart } from "../../config/config";
+import { MdtChartsDataRow, MdtChartsLineLikeChartDashedStyles, MdtChartsTwoDimensionalChart, MdtChartsTwoDimensionalValueLabels } from "../../config/config";
 import { MarkDotDatumItem, TwoDimensionalChartLegendLineModel, TwoDimensionalChartModel } from "../../model/model";
 import { getLegendMarkerOptions, getLineViewOptions, getSegmentedRadiusValues, getWidthOfLegendMarkerByType, LINE_CHART_DEFAULT_WIDTH, parseDashStyles } from "../../model/notations/twoDimensional/styles";
 import { styledElementValues } from "../../model/modelBuilder";
+import { CanvasModel } from "../../model/modelInstance/canvasModel/canvasModel";
 
 describe('shouldMarkerShow', () => {
 
@@ -528,5 +529,33 @@ describe('parseDashStyles', () => {
         const result = parseDashStyles();
 
         expect(result.on).toBeFalsy();
+    });
+});
+
+describe('getValueLabels', () => {
+    let canvasModelMock: CanvasModel;
+    let valueLabels: MdtChartsTwoDimensionalValueLabels;
+
+    beforeEach(() => {
+        valueLabels = { collision: { otherValueLabels: { mode: "hide" } } };
+        canvasModelMock = new CanvasModel();
+    });
+
+    test('should return shift value mode for left and right sides, because chartOrientation is vertical', () => {
+        const result = TwoDimensionalModelHelper.getValueLabels(valueLabels, canvasModelMock, 'vertical');
+
+        expect(result.collision.chartBlock.left.mode).toEqual('shift');
+        expect(result.collision.chartBlock.right.mode).toEqual('shift');
+        expect(result.collision.chartBlock.top.mode).toEqual('none');
+        expect(result.collision.chartBlock.bottom.mode).toEqual('none');
+    });
+
+    test('should return shift value mode for top and bottom sides, because chartOrientation is horizontal', () => {
+        const result = TwoDimensionalModelHelper.getValueLabels(valueLabels, canvasModelMock, 'horizontal');
+
+        expect(result.collision.chartBlock.left.mode).toEqual('none');
+        expect(result.collision.chartBlock.right.mode).toEqual('none');
+        expect(result.collision.chartBlock.top.mode).toEqual('shift');
+        expect(result.collision.chartBlock.bottom.mode).toEqual('shift');
     });
 });

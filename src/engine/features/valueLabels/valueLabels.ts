@@ -9,7 +9,7 @@ import {
     ValueLabelDominantBaseline,
     ValueLabelsFormatter,
 } from "../../../model/model";
-import { MdtChartsDataRow, MdtChartsDataSource } from "../../../config/config";
+import { ChartOrientation, MdtChartsDataRow, MdtChartsDataSource } from "../../../config/config";
 import { Scales, ScalesWithSecondary } from "../../../engine/features/scale/scale";
 import { ValueLabelsHelper } from "../../../engine/features/valueLabels/valueLabelsHelper";
 import { Helper } from "../../../engine/helpers/helper";
@@ -147,7 +147,7 @@ export class CanvasValueLabels {
         });
 
             const valueLabels = this.getAllValueLabels();
-            ValueLabelsCollision.resolveValueLabelsCollisions(valueLabels, valueLabelsSettings);
+        ValueLabelsCollision.resolveValueLabelsCollisions(valueLabels, valueLabelsSettings);
     }
 
     update(scales: ScalesWithSecondary, charts: TwoDimensionalChartModel[], data: MdtChartsDataSource, dataOptions: OptionsModelData) {

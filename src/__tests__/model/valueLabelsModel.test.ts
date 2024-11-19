@@ -3,10 +3,14 @@ import {
     calculateValueLabelAlignment,
     getValueLabelX,
     getValueLabelY,
+    hasCollisionBottomSide,
     hasCollisionLeftSide,
     hasCollisionRightSide,
+    hasCollisionTopSide,
     shiftCoordinateXLeft,
-    shiftCoordinateXRight
+    shiftCoordinateXRight,
+    shiftCoordinateYBottom,
+    shiftCoordinateYTop
 } from "../../model/featuresModel/valueLabelsModel/valueLabelsModel";
 import { BlockMargin } from "../../model/model";
 import { BoundingRect } from "../../engine/features/valueLabelsCollision/valueLabelsCollision";
@@ -119,13 +123,13 @@ describe('hasCollisionLeftSide', () => {
         margin = { top: 100, bottom: 50, right: 70, left: 70 };
     });
 
-    test('should return true, because element coordinate X more margin left side', () => {
+    test('should return true, because element coordinate X and half width less margin left side', () => {
         const isCollision = hasCollisionLeftSide(labelClientRect, margin);
 
         expect(isCollision).toBeTruthy();
     });
 
-    test('should return false, because element coordinate X less margin left side', () => {
+    test('should return false, because element coordinate X and half width more margin left side', () => {
         labelClientRect.x = 100;
         const isCollision = hasCollisionLeftSide(labelClientRect, margin);
 
@@ -145,15 +149,65 @@ describe('hasCollisionRightSide', () => {
         margin = { top: 100, bottom: 50, right: 70, left: 70 };
     });
 
-    test('should return true, because element coordinate X and width more block width without margin right', () => {
+    test('should return true, because element coordinate X and half width more block width without margin right', () => {
         const isCollision = hasCollisionRightSide(labelClientRect, blockSize, margin);
 
         expect(isCollision).toBeTruthy();
     });
 
-    test('should return false, because element coordinate X and width less block width without margin right', () => {
+    test('should return false, because element coordinate X and half width less block width without margin right', () => {
         labelClientRect.x = 150;
         const isCollision = hasCollisionRightSide(labelClientRect, blockSize, margin);
+
+        expect(isCollision).toBeFalsy();
+    });
+});
+
+describe('hasCollisionTopSide', () => {
+
+    let labelClientRect: BoundingRect;
+    let margin: BlockMargin;
+
+    beforeEach(() => {
+        labelClientRect = { x: 50, y: 50, width: 30, height: 10 };
+        margin = { top: 50, bottom: 50, right: 70, left: 70 };
+    });
+
+    test('should return true, because element coordinate Y and half height less margin top side', () => {
+        const isCollision = hasCollisionTopSide(labelClientRect, margin);
+
+        expect(isCollision).toBeTruthy();
+    });
+
+    test('should return false, because element coordinate Y and half height more margin top side', () => {
+        labelClientRect.y = 100;
+        const isCollision = hasCollisionTopSide(labelClientRect, margin);
+
+        expect(isCollision).toBeFalsy();
+    });
+});
+
+describe('hasCollisionBottomSide', () => {
+
+    let labelClientRect: BoundingRect;
+    let blockSize: Size;
+    let margin: BlockMargin;
+
+    beforeEach(() => {
+        labelClientRect = { x: 450, y: 300, width: 30, height: 10 };
+        blockSize = { width: 500, height: 300 };
+        margin = { top: 50, bottom: 50, right: 70, left: 70 };
+    });
+
+    test('should return true, because element coordinate Y and half height more block height without margin bottom', () => {
+        const isCollision = hasCollisionBottomSide(labelClientRect, blockSize, margin);
+
+        expect(isCollision).toBeTruthy();
+    });
+
+    test('should return false, because element coordinate Y and half height less block height without margin bottom', () => {
+        labelClientRect.y = 150;
+        const isCollision = hasCollisionBottomSide(labelClientRect, blockSize, margin);
 
         expect(isCollision).toBeFalsy();
     });
@@ -184,5 +238,33 @@ describe('shiftCoordinateXRight', () => {
         shiftCoordinateXRight(labelClientRect);
 
         expect(labelClientRect.x).toEqual(117);
+    });
+});
+
+describe('shiftCoordinateYTop', () => {
+    let labelClientRect: BoundingRect;
+
+    beforeEach(() => {
+        labelClientRect = { x: 100, y: 50, width: 30, height: 10 };
+    });
+
+    test('should shift Y coordinate to the top by half label height and BORDER_OFFSET_SIZE_PX', () => {
+        shiftCoordinateYTop(labelClientRect);
+
+        expect(labelClientRect.y).toEqual(43);
+    });
+});
+
+describe('shiftCoordinateYBottom', () => {
+    let labelClientRect: BoundingRect;
+
+    beforeEach(() => {
+        labelClientRect = { x: 100, y: 50, width: 30, height: 10 };
+    });
+
+    test('should shift Y coordinate to the bottom by half label height and BORDER_OFFSET_SIZE_PX', () => {
+        shiftCoordinateYBottom(labelClientRect);
+
+        expect(labelClientRect.y).toEqual(57);
     });
 });
