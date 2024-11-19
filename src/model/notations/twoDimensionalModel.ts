@@ -161,7 +161,7 @@ export class TwoDimensionalModel {
                         type: "line",
                         handleEndCoordinate: (v) => v + 2,
                         handleStartCoordinate: (v) => v - 2,
-                        width: chart.dotLikeStyles?.shape?.width ?? 2
+                        width: chart.dotLikeStyles?.shape?.width ?? LINE_CHART_DEFAULT_WIDTH
                     }
                 }
             });
@@ -188,8 +188,15 @@ export class TwoDimensionalModel {
     }
 
     private static getAdditionalElements(options: MdtChartsTwoDimensionalOptions): AdditionalElementsOptions {
+        const { flag, styles } = options.additionalElements.gridLine;
+
         return {
-            gridLine: options.additionalElements.gridLine
+            gridLine: {
+                flag,
+                styles: {
+                    dash: { on: styles?.dash?.on ?? false }
+                }
+            }
         }
     }
 

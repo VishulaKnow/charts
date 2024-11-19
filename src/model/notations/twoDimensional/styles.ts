@@ -1,4 +1,4 @@
-import { AreaChartViewOptions, AreaViewBorderLine, AreaViewFill, BarBorderRadius, BarLikeChartBorderRadius, ChartLegendModel, ChartStyle, GradientId, LegendMarkerShape, LineCurveType, LineLikeChartDashOptions, LineLikeChartShapeOptions, Orient, TwoDimensionalBarLikeChartViewModel } from "../../model";
+import { AreaChartViewOptions, AreaViewBorderLine, AreaViewFill, BarBorderRadius, BarLikeChartBorderRadius, ChartLegendModel, ChartStyle, GradientId, LegendMarkerShape, LineCurveType, LineLikeChartDashOptions, LineLikeChartShapeOptions, Orient, TwoDimensionalBarLikeChartViewModel, TwoDimensionalChartLegendLineModel } from "../../model";
 import { ChartOrientation, MdtChartsLineLikeChartDashedStyles, MdtChartsTwoDimensionalChart, TwoDimensionalChartType } from "../../../config/config";
 import { MdtChartsLineLikeChartCurveType, MdtChartsLineLikeChartShape } from "../../../designer/designerConfig";
 import { styledElementValues } from "../../modelBuilder";
@@ -91,8 +91,9 @@ export function getLegendMarkerOptions(chart: MdtChartsTwoDimensionalChart): Cha
         area: "default",
         bar: "bar",
         line: "line",
-        dot: "default"
+        dot: chart.dotLikeStyles?.shape?.type ?? "line"
     }
+
     return {
         markerShape: shapeByType[chart.type],
         barViewOptions: {
@@ -100,7 +101,23 @@ export function getLegendMarkerOptions(chart: MdtChartsTwoDimensionalChart): Cha
             borderRadius: getRadiusValues(chart.barStyles?.borderRadius?.value ?? BAR_CHART_BORDER_RADIUS_DEFAULT),
             width: getWidthOfLegendMarkerByType("bar")
         },
-        lineViewOptions: {
+        lineViewOptions: getLineViewOptions(chart)
+    }
+}
+
+export function getLineViewOptions(chart: MdtChartsTwoDimensionalChart): TwoDimensionalChartLegendLineModel {
+    if (chart.type === "dot") {
+        return {
+            dashedStyles: {
+                on: false,
+                dashSize: 0,
+                gapSize: 0
+            },
+            strokeWidth: chart.dotLikeStyles?.shape?.width ?? LINE_CHART_DEFAULT_WIDTH,
+            length: getWidthOfLegendMarkerByType("line")
+        }
+    } else {
+        return {
             dashedStyles: parseDashStyles(chart.lineStyles?.dash),
             strokeWidth: chart.lineStyles?.width ?? LINE_CHART_DEFAULT_WIDTH,
             length: getWidthOfLegendMarkerByType("line")

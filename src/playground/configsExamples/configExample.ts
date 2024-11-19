@@ -37,6 +37,9 @@ const configCars: MdtChartsConfig = {
                 },
                 labels: {
                     format: (value) => nFormatter(value),
+                },
+                line: {
+                    visible: false
                 }
             },
             valueSecondary: {
@@ -60,7 +63,8 @@ const configCars: MdtChartsConfig = {
             }
         },
         legend: {
-            show: true
+            show: true,
+            position: "bottom"
         },
         orientation: 'vertical',
         data: {
@@ -204,7 +208,7 @@ function nFormatter(num: number, digits: number = 1) {
     ];
 
     const regexp = /\.0+$|(?<=\.[0-9]*[1-9])0+$/;
-    const item = lookup.reverse().find(item => num >= item.value);
+    const item = lookup.reverse().find(item => num < 0 ? (num <= -item.value) : (num >= item.value));
     const finalValue = item ? toFixed(num / item.value, digits).replace(regexp, "").concat(` ${item.symbol}`) : "0";
 
     return finalValue.replace(".", ",");

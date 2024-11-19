@@ -26,7 +26,7 @@ export class LegendModel {
                 },
                 top: {
                     size: 0,
-                    margin: { top: 5, bottom: 10, left: 0, right: 0 },
+                    margin: { top: 0, bottom: 10, left: 0, right: 0 },
                     pad: canvasModel.titleCanvas.getAllNeededSpace()
                 }
             },
