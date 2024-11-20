@@ -1,4 +1,4 @@
-import { DataOptions, MdtChartsDataSource, DiscreteAxisOptions, NumberAxisOptions, Size, MdtChartsTwoDimensionalChart, AxisLabelPosition, ShowTickFn } from "../../config/config";
+import { DataOptions, MdtChartsDataSource, DiscreteAxisOptions, NumberAxisOptions, Size, MdtChartsTwoDimensionalChart, AxisLabelPosition, ShowTickFn, AxisLabelFormatter } from "../../config/config";
 import { TooltipSettings } from "../../designer/designerConfig";
 import { AxisModel, MINIMAL_HORIZONTAL_STEP_SIZE, MINIMAL_VERTICAL_STEP_SIZE } from "../../model/featuresModel/axisModel";
 import { AxisModelService, showAllTicks } from "../../model/featuresModel/axisModelService";
@@ -39,6 +39,7 @@ describe('get axes', () => {
     let margin: BlockMargin;
     let blockSize: Size;
     let tooltipSettings: TooltipSettings;
+    let defaultFormatter: AxisLabelFormatter;
 
     beforeEach(() => {
         charts = [
@@ -96,6 +97,7 @@ describe('get axes', () => {
         tooltipSettings = {
             position: 'fixed'
         }
+        defaultFormatter = () => 'value'
     });
 
     test('getKeyAxis should return bottom key axis with straight labels', () => {
@@ -126,6 +128,9 @@ describe('get axes', () => {
             },
             line: {
                 visible: true
+            },
+            browserTooltip: {
+                format: expect.any(Function)
             }
         }
 
@@ -162,6 +167,9 @@ describe('get axes', () => {
             },
             line: {
                 visible: true
+            },
+            browserTooltip: {
+                format: expect.any(Function)
             }
         }
         expect(result).toEqual(expected);
@@ -196,6 +204,9 @@ describe('get axes', () => {
             },
             line: {
                 visible: true
+            },
+            browserTooltip: {
+                format: expect.any(Function)
             }
         }
 
@@ -237,6 +248,9 @@ describe('get axes', () => {
             },
             line: {
                 visible: true
+            },
+            browserTooltip: {
+                format: expect.any(Function)
             }
         }
 
@@ -279,6 +293,9 @@ describe('get axes', () => {
             },
             line: {
                 visible: true
+            },
+            browserTooltip: {
+                format: expect.any(Function)
             }
         }
 
@@ -294,7 +311,7 @@ describe('get axes', () => {
         canvasModel.initBlockSize(blockSize);
 
         numberAxisOptions.position = 'start';
-        const result = AxisModel.getMainValueAxis('vertical', numberAxisOptions.position, numberAxisOptions, { maxSize: { main: 60 } }, canvasModel);
+        const result = AxisModel.getMainValueAxis(defaultFormatter, 'vertical', numberAxisOptions.position, numberAxisOptions, { maxSize: { main: 60 } }, canvasModel);
         const expected: AxisModelOptions = {
             visibility: true,
             type: "value",
@@ -317,6 +334,9 @@ describe('get axes', () => {
             },
             line: {
                 visible: true
+            },
+            browserTooltip: {
+                format: expect.any(Function)
             }
         }
         expect(result).toEqual(expected);
@@ -327,7 +347,7 @@ describe('get axes', () => {
         canvasModel.initMargin(margin);
         canvasModel.initBlockSize(blockSize);
 
-        const result = AxisModel.getMainValueAxis('vertical', 'start', numberAxisOptions, { maxSize: { main: 60 } }, canvasModel);
+        const result = AxisModel.getMainValueAxis(defaultFormatter, 'vertical', 'start', numberAxisOptions, { maxSize: { main: 60 } }, canvasModel);
         const expected: AxisModelOptions = {
             visibility: true,
             type: "value",
@@ -350,6 +370,9 @@ describe('get axes', () => {
             },
             line: {
                 visible: true
+            },
+            browserTooltip: {
+                format: expect.any(Function)
             }
         }
         expect(result).toEqual(expected);
@@ -360,7 +383,7 @@ describe('get axes', () => {
         canvasModel.initMargin(margin);
         canvasModel.initBlockSize(blockSize);
 
-        const result = AxisModel.getSecondaryValueAxis('vertical', 'start', numberAxisOptions, { maxSize: { main: 60 } }, canvasModel);
+        const result = AxisModel.getSecondaryValueAxis(defaultFormatter, 'vertical', 'start', numberAxisOptions, { maxSize: { main: 60 } }, canvasModel);
         const expected: AxisModelOptions = {
             visibility: true,
             type: "value",
@@ -383,6 +406,9 @@ describe('get axes', () => {
             },
             line: {
                 visible: true
+            },
+            browserTooltip: {
+                format: expect.any(Function)
             }
         }
         expect(result).toEqual(expected);

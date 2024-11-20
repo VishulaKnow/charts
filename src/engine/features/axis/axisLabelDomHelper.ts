@@ -1,6 +1,6 @@
 import { Selection, BaseType, select } from 'd3-selection';
 import { AxisScale, Axis as IAxis } from 'd3-axis';
-import { ScaleBand, ScaleLinear } from 'd3-scale'
+import { ScaleBand } from 'd3-scale'
 import { AxisModelOptions, Orient, ScaleKeyModel, ScaleValueModel } from "../../../model/model";
 import { Block } from "../../block/block";
 import { DomHelper } from '../../helpers/domHelper';
@@ -11,16 +11,16 @@ import { AXIS_HORIZONTAL_LABEL_PADDING, AXIS_VERTICAL_LABEL_PADDING } from '../.
 type TextAnchor = 'start' | 'end' | 'middle';
 
 export class AxisLabelHelper {
-    public static setTitles(axisElement: Selection<SVGGElement, unknown, BaseType, any>): void {
+    public static setTitles(axisElement: Selection<SVGGElement, unknown, BaseType, any>, axisOptions: AxisModelOptions): void {
         axisElement.selectAll<SVGTextElement, string>('.tick text')
             .each(function (d, i) {
                 const tickTitle = select(this).select('title');
                 if (tickTitle.empty())
                     select(this)
                         .append('title')
-                        .text(d);
-                else
-                    tickTitle.text(d);
+                        .text(axisOptions.browserTooltip.format(d)); else {
+                    tickTitle.text((axisOptions.browserTooltip.format(d)));
+                }
             });
     }
 
