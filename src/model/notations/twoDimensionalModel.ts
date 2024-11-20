@@ -64,7 +64,7 @@ export class TwoDimensionalModel {
 
         const charts = this.getChartsModel(options.charts, configReader, options.orientation, designerConfig, modelInstance.dataModel.repository, keyAxis.orient, canvasModel, options.data.keyField.name);
 
-        const defaultFormatter = configReader.calculateDefaultFormatter();
+        const defaultFormatter = configReader.calculateDefaultAxisLabelFormatter();
 
         return {
             legend: canvasModel.legendCanvas.getModel(),
