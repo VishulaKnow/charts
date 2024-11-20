@@ -88,7 +88,7 @@ export function getSegmentedRadiusValues(segmentsLength: number, segmentIndex: n
 
 export function getLegendMarkerOptions(chart: MdtChartsTwoDimensionalChart): ChartLegendModel {
     const shapeByType: Record<TwoDimensionalChartType, LegendMarkerShape> = {
-        area: "default",
+        area: "line",
         bar: "bar",
         line: "line",
         dot: chart.dotLikeStyles?.shape?.type ?? "line"
@@ -106,22 +106,25 @@ export function getLegendMarkerOptions(chart: MdtChartsTwoDimensionalChart): Cha
 }
 
 export function getLineViewOptions(chart: MdtChartsTwoDimensionalChart): TwoDimensionalChartLegendLineModel {
-    if (chart.type === "dot") {
-        return {
-            dashedStyles: {
-                on: false,
-                dashSize: 0,
-                gapSize: 0
-            },
-            strokeWidth: chart.dotLikeStyles?.shape?.width ?? LINE_CHART_DEFAULT_WIDTH,
-            length: getWidthOfLegendMarkerByType("line")
-        }
-    } else {
-        return {
-            dashedStyles: parseDashStyles(chart.lineStyles?.dash),
-            strokeWidth: chart.lineStyles?.width ?? LINE_CHART_DEFAULT_WIDTH,
-            length: getWidthOfLegendMarkerByType("line")
-        }
+    switch (chart.type) {
+        case "dot":
+            return {
+                dashedStyles: { on: false, dashSize: 0, gapSize: 0 },
+                strokeWidth: chart.dotLikeStyles?.shape?.width ?? LINE_CHART_DEFAULT_WIDTH,
+                length: getWidthOfLegendMarkerByType("line")
+            }
+        case "area":
+            return {
+                dashedStyles: { on: false, dashSize: 0, gapSize: 0 },
+                strokeWidth: chart.areaStyles?.borderLine?.width ?? LINE_CHART_DEFAULT_WIDTH,
+                length: getWidthOfLegendMarkerByType("line")
+            }
+        default:
+            return {
+                dashedStyles: parseDashStyles(chart.lineStyles?.dash),
+                strokeWidth: chart.lineStyles?.width ?? LINE_CHART_DEFAULT_WIDTH,
+                length: getWidthOfLegendMarkerByType("line")
+            }
     }
 }
 

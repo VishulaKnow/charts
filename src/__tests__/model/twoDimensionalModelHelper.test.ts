@@ -384,6 +384,12 @@ describe('getLineViewOptions', () => {
                     on: false
                 }
             },
+            areaStyles: {
+                borderLine: {
+                    on: true,
+                    width: 5
+                }
+            },
             dotLikeStyles: {
                 shape: {
                     type: "line",
@@ -428,6 +434,23 @@ describe('getLineViewOptions', () => {
         expect(result).toEqual(expected);
     });
 
+    test('should return lineViewOptions for area type chart', () => {
+        chart.type = 'area';
+
+        const result = getLineViewOptions(chart);
+        const expected: TwoDimensionalChartLegendLineModel = {
+            dashedStyles: {
+                on: false,
+                dashSize: 0,
+                gapSize: 0
+            },
+            strokeWidth: 5,
+            length: 24
+        };
+
+        expect(result).toEqual(expected);
+    });
+
     test('should return strokeWidth equal to LINE_CHART_DEFAULT_WIDTH, because lineStyles is empty', () => {
         chart.lineStyles = null;
         const result = getLineViewOptions(chart);
@@ -435,13 +458,12 @@ describe('getLineViewOptions', () => {
         expect(result.strokeWidth).toEqual(LINE_CHART_DEFAULT_WIDTH);
     });
 
-    test('should return strokeWidth equal to LINE_CHART_DEFAULT_WIDTH, because lineStyles is empty', () => {
+    test('should return strokeWidth equal to LINE_CHART_DEFAULT_WIDTH, because width is empty', () => {
         chart.lineStyles.width = null;
         const result = getLineViewOptions(chart);
 
         expect(result.strokeWidth).toEqual(LINE_CHART_DEFAULT_WIDTH);
     });
-
 
     test('should return strokeWidth equal to LINE_CHART_DEFAULT_WIDTH, because dotLikeStyles is empty', () => {
         chart.type = 'dot';
@@ -462,6 +484,30 @@ describe('getLineViewOptions', () => {
     test('should return strokeWidth equal to LINE_CHART_DEFAULT_WIDTH, because width is empty', () => {
         chart.type = 'dot';
         chart.dotLikeStyles.shape.width = null;
+        const result = getLineViewOptions(chart);
+
+        expect(result.strokeWidth).toEqual(LINE_CHART_DEFAULT_WIDTH);
+    });
+
+    test('should return strokeWidth equal to LINE_CHART_DEFAULT_WIDTH, because areaStyles is empty', () => {
+        chart.type = 'area';
+        chart.areaStyles = null;
+        const result = getLineViewOptions(chart);
+
+        expect(result.strokeWidth).toEqual(LINE_CHART_DEFAULT_WIDTH);
+    });
+
+    test('should return strokeWidth equal to LINE_CHART_DEFAULT_WIDTH, because borderLine is empty', () => {
+        chart.type = 'area';
+        chart.areaStyles.borderLine = null;
+        const result = getLineViewOptions(chart);
+
+        expect(result.strokeWidth).toEqual(LINE_CHART_DEFAULT_WIDTH);
+    });
+
+    test('should return strokeWidth equal to LINE_CHART_DEFAULT_WIDTH, because width is empty', () => {
+        chart.type = 'area';
+        chart.areaStyles.borderLine.width = null;
         const result = getLineViewOptions(chart);
 
         expect(result.strokeWidth).toEqual(LINE_CHART_DEFAULT_WIDTH);

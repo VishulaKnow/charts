@@ -291,6 +291,7 @@ export interface AreaStylesGradient {
 
 export interface AreaStylesBorderLine {
     on: boolean;
+    width?: number;
 }
 
 interface MdtChartsBarLikeChart {
