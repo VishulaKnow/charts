@@ -104,6 +104,10 @@ export class TwoDimConfigReader implements BaseConfigReader {
         return (v) => this.designerConfig.dataFormat.formatters(v, { type: valueFieldFormat });
     }
 
+    isValueLabelsOn(): boolean {
+        return this.options.charts.some(chart => chart.valueLabels?.on);
+    }
+
     private calculateBiggestValueAndDecremented(repository: DataRepositoryModel, domain: AxisNumberDomain, fields: MdtChartsFieldName[][]): number[] {
         const resolvedDomain = getResolvedDomain(domain, repository.getRawRows())
 

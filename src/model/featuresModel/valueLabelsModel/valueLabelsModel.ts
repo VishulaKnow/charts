@@ -8,7 +8,7 @@ interface ValueLabelAlignment {
 }
 
 const OFFSET_SIZE_PX = 10;
-const BORDER_OFFSET_SIZE_PX = 2;
+export const BORDER_OFFSET_SIZE_PX = 2;
 
 export function getValueLabelY(scaledValue: number, keyAxisOrient: Orient, margin: BlockMargin) {
     switch (keyAxisOrient) {

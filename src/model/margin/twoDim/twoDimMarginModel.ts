@@ -9,6 +9,8 @@ import { TwoDimConfigReader } from "../../modelInstance/configReader";
 import { ModelInstance } from "../../modelInstance/modelInstance";
 import { TwoDimensionalModel } from "../../notations/twoDimensionalModel";
 import { ChartOrientation } from "../../../config/config";
+import { ModelHelper } from "../../helpers/modelHelper";
+import { BORDER_OFFSET_SIZE_PX } from "../../featuresModel/valueLabelsModel/valueLabelsModel";
 
 export const AXIS_HORIZONTAL_LABEL_PADDING = 20;
 export const AXIS_VERTICAL_LABEL_PADDING = 8;
@@ -38,7 +40,7 @@ export class TwoDimMarginModel {
             const secondaryLabelSize = this.getMaxLabelSizeSecondary(modelInstance);
             this.recalcMarginBySecondaryAxisLabelSize(secondaryLabelSize, canvasModel)
         }
-
+        this.recalcVerticalMarginWithValueLabelsOn(canvasModel);
     }
 
     public recalcMarginByVerticalAxisLabel(modelInstance: ModelInstance): void {
@@ -125,5 +127,19 @@ export class TwoDimMarginModel {
         if (this.configReader.options.axis.valueSecondary.visibility) {
             canvasModel.increaseMarginSide(secondaryOrient, sizeMap[this.configReader.options.orientation]);
         }
+    }
+
+    private recalcVerticalMarginWithValueLabelsOn(canvasModel: CanvasModel) {
+        const keyAxisOrient = AxisModel.getAxisOrient(AxisType.Key, this.configReader.options.orientation, this.configReader.options.axis.key.position);
+        const valueLabelFontSize = ModelHelper.getBaseFontSize('--value-label-font-size');
+        const axisMarginMapping: Record<Orient, Orient> = {
+            top: "bottom",
+            bottom: "top",
+            left: "right",
+            right: "left",
+        }
+
+        if (this.configReader.isValueLabelsOn() && this.configReader.options.orientation === 'vertical')
+            canvasModel.increaseMarginSide(axisMarginMapping[keyAxisOrient], valueLabelFontSize + BORDER_OFFSET_SIZE_PX, keyAxisLabelVerticalLog);
     }
 }

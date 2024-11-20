@@ -4,8 +4,8 @@ export class ModelHelper {
     private static readonly defaultBaseFontSize = 13;
     private static baseFontSize: number
 
-    private static getBaseFontSize() {
-        if (!this.baseFontSize) this.baseFontSize = parseInt(DomHelper.getCssPropertyValue(document.documentElement, '--chart-base-font-size'))
+    public static getBaseFontSize(propertyName: string) {
+        if (!this.baseFontSize) this.baseFontSize = parseInt(DomHelper.getCssPropertyValue(document.documentElement, propertyName))
         return (!this.baseFontSize || isNaN(this.baseFontSize)) ? this.defaultBaseFontSize : this.baseFontSize
     }
 
@@ -23,7 +23,7 @@ export class ModelHelper {
         // lower case letter width ~ 0.8 from upper case width.
         // Number width == lower case letter width
 
-        const fontSize = this.getBaseFontSize()
+        const fontSize = this.getBaseFontSize('--chart-base-font-size')
         let score = 0;
         const upperLetterScore = fontSize / 10;
         const lowerLetterScore = fontSize / 14;
