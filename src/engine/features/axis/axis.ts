@@ -83,8 +83,7 @@ export class Axis {
         if (axisOptions.type === "value") {
             AxisLabelHelper.cropLabels(block, scale, scaleOptions, axisOptions, blockSize)
         }
-        if (axisOptions.labels.defaultTooltip)
-            AxisLabelHelper.setTitles(axisElement);
+        if (axisOptions.labels.defaultTooltip) AxisLabelHelper.setTitles(axisElement, axisOptions);
     }
 
     private static updateValueAxis(block: Block, scaleValue: AxisScale<any>, scaleOptions: ScaleValueModel, axisOptions: AxisModelOptions, blockSize: Size): void {
@@ -93,8 +92,7 @@ export class Axis {
         const axisElement = block.getSvg().select<SVGGElement>(`g.${axisOptions.cssClass}`);
         AxisDomHelper.updateAxisElement(axisGenerator, axisElement, axisOptions.translate, block.transitionManager.durations.chartUpdate)
             .then(() => {
-                if (axisOptions.labels.defaultTooltip)
-                    AxisLabelHelper.setTitles(axisElement);
+                if (axisOptions.labels.defaultTooltip) AxisLabelHelper.setTitles(axisElement, axisOptions);
                 if (axisOptions.orient === 'bottom' || axisOptions.orient === 'top') {
                     AxisLabelHelper.cropLabels(block, scaleValue, scaleOptions, axisOptions, blockSize);
                 }
@@ -130,8 +128,7 @@ export class Axis {
                     AxisLabelHelper.cropLabels(block, scaleKey, scaleOptions, axisOptions, blockSize);
                 }
                 AxisLabelsEventManager.setHoverEvents(block, axisElement);
-                if (axisOptions.labels.defaultTooltip)
-                    AxisLabelHelper.setTitles(axisElement);
+                if (axisOptions.labels.defaultTooltip) AxisLabelHelper.setTitles(axisElement, axisOptions);
                 this.handleLabelsHighlight(axisElement, block.filterEventManager.getSelectedKeys())
             });
 

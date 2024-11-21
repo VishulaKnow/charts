@@ -1,6 +1,9 @@
-import { ChartOrientation, MdtChartsDataRow, MdtChartsTwoDimensionalChart } from "../../config/config";
-import { GradientDef, MarkDotDatumItem, Orient, TwoDimensionalChartModel } from "../model";
+import { ChartOrientation, MdtChartsDataRow, MdtChartsTwoDimensionalChart, MdtChartsTwoDimensionalValueLabels } from "../../config/config";
+import { GradientDef, MarkDotDatumItem, Orient, TwoDimensionalChartModel, TwoDimensionalValueLabels, ValueLabelsChartBlock } from "../model";
 import { getGradientId } from "../../model/notations/twoDimensional/styles";
+import { CanvasModel } from "../modelInstance/canvasModel/canvasModel";
+import { BoundingRect } from "../../engine/features/valueLabelsCollision/valueLabelsCollision";
+import { hasCollisionBottomSide, hasCollisionLeftSide, hasCollisionRightSide, hasCollisionTopSide, shiftCoordinateXLeft, shiftCoordinateXRight, shiftCoordinateYBottom, shiftCoordinateYTop } from "../featuresModel/valueLabelsModel/valueLabelsModel";
 
 export class TwoDimensionalModelHelper {
     public static shouldMarkerShow(chart: MdtChartsTwoDimensionalChart, dataRows: MdtChartsDataRow[], valueFieldName: string, currentRow: MarkDotDatumItem, keyFieldName: string): boolean {
@@ -74,5 +77,70 @@ export class TwoDimensionalModelHelper {
             return itemIndex === 0 ? maxColor : minColor;
         else
             return itemIndex === 0 ? minColor : maxColor;
+    }
+
+    public static getValueLabels(valueLabels: MdtChartsTwoDimensionalValueLabels, canvasModel: CanvasModel, chartOrientation: ChartOrientation): TwoDimensionalValueLabels {
+        const blockSidesOptions = this.getChartBlockSidesOptions(canvasModel);
+
+        const chartBlockConfig = {
+            vertical: {
+                left: {
+                    mode: 'shift',
+                    hasCollision: blockSidesOptions.hasCollisionLeft,
+                    shiftCoordinate: blockSidesOptions.shiftRight
+                },
+                right: {
+                    mode: 'shift',
+                    hasCollision: blockSidesOptions.hasCollisionRight,
+                    shiftCoordinate: blockSidesOptions.shiftLeft
+                },
+                top: {
+                    mode: 'none'
+                },
+                bottom: {
+                    mode: 'none'
+                }
+            } as ValueLabelsChartBlock,
+            horizontal: {
+                left: {
+                    mode: 'none'
+                },
+                right: {
+                    mode: 'none'
+                },
+                top: {
+                    mode: 'shift',
+                    hasCollision: blockSidesOptions.hasCollisionTop,
+                    shiftCoordinate: blockSidesOptions.shiftBottom
+                },
+                bottom: {
+                    mode: 'shift',
+                    hasCollision: blockSidesOptions.hasCollisionBottom,
+                    shiftCoordinate: blockSidesOptions.shiftTop
+                }
+            } as ValueLabelsChartBlock
+        };
+
+        return {
+            collision: {
+                otherValueLables: valueLabels?.collision.otherValueLabels ?? {
+                    mode: 'none'
+                },
+                chartBlock: chartBlockConfig[chartOrientation]
+            }
+        }
+    }
+
+    private static getChartBlockSidesOptions(canvasModel: CanvasModel) {
+        return {
+            hasCollisionLeft: (labelClientRect: BoundingRect) => hasCollisionLeftSide(labelClientRect, canvasModel.getMargin()),
+            shiftLeft: (labelClientRect: BoundingRect) => shiftCoordinateXLeft(labelClientRect),
+            hasCollisionRight: (labelClientRect: BoundingRect) => hasCollisionRightSide(labelClientRect, canvasModel.getBlockSize(), canvasModel.getMargin()),
+            shiftRight: (labelClientRect: BoundingRect) => shiftCoordinateXRight(labelClientRect),
+            hasCollisionTop: (labelClientRect: BoundingRect) => hasCollisionTopSide(labelClientRect, canvasModel.getMargin()),
+            shiftTop: (labelClientRect: BoundingRect) => shiftCoordinateYTop(labelClientRect),
+            hasCollisionBottom: (labelClientRect: BoundingRect) => hasCollisionBottomSide(labelClientRect, canvasModel.getBlockSize(), canvasModel.getMargin()),
+            shiftBottom: (labelClientRect: BoundingRect) => shiftCoordinateYBottom(labelClientRect)
+        }
     }
 }

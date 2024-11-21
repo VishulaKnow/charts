@@ -3,6 +3,7 @@ import { ValueLabelsCollisionHelper } from "../../../engine/features/valueLabels
 import { TwoDimensionalValueLabels, ValueLabelsChartBlock } from "../../../model/model";
 import { MdtChartsDataRow } from "../../../config/config";
 
+type CoordinateAxis = 'x' | 'y';
 export type ValueLabelOnCanvasIndex = number;
 
 export interface BoundingRect {
@@ -56,13 +57,20 @@ export class ValueLabelsCollision {
 
     private static shiftValueLabelsCollision(valueLabelElementsRectInfo: ValueLabelElement[], chartBlock: ValueLabelsChartBlock) {
         valueLabelElementsRectInfo.forEach(element => {
-            if (chartBlock.left.mode === 'shift' && chartBlock.left.hasCollision(element.boundingClientRect)) {
-                chartBlock.left.shiftCoordinate(element.boundingClientRect);
-                this.changeLabelElementCoordinateX(element);
-            }
-            if (chartBlock.right.mode === 'shift' && chartBlock.right.hasCollision(element.boundingClientRect)) {
-                chartBlock.right.shiftCoordinate(element.boundingClientRect);
-                this.changeLabelElementCoordinateX(element);
+            this.handleCollisionShift(chartBlock, element);
+        });
+    }
+
+    private static handleCollisionShift(chartBlock: ValueLabelsChartBlock, element: ValueLabelElement): void {
+        const sides = Object.keys(chartBlock) as (keyof ValueLabelsChartBlock)[];
+
+        sides.forEach(side => {
+            const blockSide = chartBlock[side];
+            const axisCoordinate = side === 'left' || side === 'right' ? 'x' : 'y';
+
+            if (blockSide.mode === 'shift' && blockSide.hasCollision(element.boundingClientRect)) {
+                blockSide.shiftCoordinate(element.boundingClientRect);
+                this.changeLabelElementCoordinateByAxis(element, axisCoordinate);
             }
         });
     }
@@ -78,8 +86,8 @@ export class ValueLabelsCollision {
         });
     }
 
-    private static changeLabelElementCoordinateX(element: ValueLabelElement): void {
+    private static changeLabelElementCoordinateByAxis(element: ValueLabelElement, axis: CoordinateAxis): void {
         select(element.svgElement)
-            .attr('x', element.boundingClientRect.x);
+            .attr(axis, element.boundingClientRect[axis]);
     }
 }

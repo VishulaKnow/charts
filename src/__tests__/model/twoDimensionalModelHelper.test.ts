@@ -1,7 +1,9 @@
 import { TwoDimensionalModelHelper } from "../../model/helpers/twoDimensionalModelHelper";
-import { MdtChartsDataRow, MdtChartsTwoDimensionalChart } from "../../config/config";
-import { MarkDotDatumItem, TwoDimensionalChartModel } from "../../model/model";
-import { getSegmentedRadiusValues } from "../../model/notations/twoDimensional/styles";
+import { MdtChartsDataRow, MdtChartsLineLikeChartDashedStyles, MdtChartsTwoDimensionalChart, MdtChartsTwoDimensionalValueLabels } from "../../config/config";
+import { MarkDotDatumItem, TwoDimensionalChartLegendLineModel, TwoDimensionalChartModel } from "../../model/model";
+import { getLegendMarkerOptions, getLineViewOptions, getSegmentedRadiusValues, getWidthOfLegendMarkerByType, LINE_CHART_DEFAULT_WIDTH, parseDashStyles } from "../../model/notations/twoDimensional/styles";
+import { styledElementValues } from "../../model/modelBuilder";
+import { CanvasModel } from "../../model/modelInstance/canvasModel/canvasModel";
 
 describe('shouldMarkerShow', () => {
 
@@ -280,5 +282,280 @@ describe('getSegmentedRadiusValues', () => {
         expect(radiusValues.topRight).toEqual(2);
         expect(radiusValues.bottomLeft).toEqual(2);
         expect(radiusValues.bottomRight).toEqual(2);
+    });
+});
+
+describe('getLegendMarkerOptions', () => {
+
+    let chart: MdtChartsTwoDimensionalChart;
+
+    beforeEach(() => {
+        chart = {
+            isSegmented: false,
+            type: 'dot',
+            data: null,
+            embeddedLabels: 'none',
+            markers: {
+                show: false
+            },
+            lineStyles: {
+                dash: {
+                    on: true,
+                    dashSize: 3,
+                    gapSize: 3
+                },
+                width: 10
+            },
+            barStyles: {
+                hatch: {
+                    on: false
+                }
+            },
+            dotLikeStyles: {
+                shape: {
+                    type: "line",
+                    width: 5
+                }
+            },
+            valueLabels: {
+                on: true
+            }
+        }
+    });
+
+    test('should return line because chart type is dot and type of dot styles is line', () => {
+        const result = getLegendMarkerOptions(chart);
+
+        expect(result.markerShape).toEqual('line');
+    });
+
+    test('should return line because chart type is dot and dotLikeStyles is empty', () => {
+        chart.dotLikeStyles = null;
+        const result = getLegendMarkerOptions(chart);
+
+        expect(result.markerShape).toEqual('line');
+    });
+
+    test('should return line because chart type is dot and shape is empty', () => {
+        chart.dotLikeStyles.shape = null;
+        const result = getLegendMarkerOptions(chart);
+
+        expect(result.markerShape).toEqual('line');
+    });
+
+    test('should return line because chart type is dot and type of shape is empty', () => {
+        chart.dotLikeStyles.shape.type = null;
+        const result = getLegendMarkerOptions(chart);
+
+        expect(result.markerShape).toEqual('line');
+    });
+
+    test('should return ', () => {
+        const result = getLegendMarkerOptions(chart);
+
+        expect(result.markerShape).toEqual('line');
+    });
+
+})
+
+describe('getLineViewOptions', () => {
+
+    let chart: MdtChartsTwoDimensionalChart;
+
+    beforeEach(() => {
+        chart = {
+            isSegmented: false,
+            type: 'line',
+            data: null,
+            embeddedLabels: 'none',
+            markers: {
+                show: false
+            },
+            lineStyles: {
+                dash: {
+                    on: true,
+                    dashSize: 3,
+                    gapSize: 3
+                },
+                width: 10
+            },
+            barStyles: {
+                hatch: {
+                    on: false
+                }
+            },
+            dotLikeStyles: {
+                shape: {
+                    type: "line",
+                    width: 5
+                }
+            },
+            valueLabels: {
+                on: true
+            }
+        }
+    })
+
+    test('should return lineViewOptions for line type chart', () => {
+        const result = getLineViewOptions(chart);
+        const expected: TwoDimensionalChartLegendLineModel = {
+            dashedStyles: {
+                on: true,
+                dashSize: 3,
+                gapSize: 3
+            },
+            strokeWidth: 10,
+            length: 24
+        };
+
+        expect(result).toEqual(expected);
+    });
+
+    test('should return lineViewOptions for dot type chart', () => {
+        chart.type = 'dot';
+
+        const result = getLineViewOptions(chart);
+        const expected: TwoDimensionalChartLegendLineModel = {
+            dashedStyles: {
+                on: false,
+                dashSize: 0,
+                gapSize: 0
+            },
+            strokeWidth: 5,
+            length: 24
+        };
+
+        expect(result).toEqual(expected);
+    });
+
+    test('should return strokeWidth equal to LINE_CHART_DEFAULT_WIDTH, because lineStyles is empty', () => {
+        chart.lineStyles = null;
+        const result = getLineViewOptions(chart);
+
+        expect(result.strokeWidth).toEqual(LINE_CHART_DEFAULT_WIDTH);
+    });
+
+    test('should return strokeWidth equal to LINE_CHART_DEFAULT_WIDTH, because lineStyles is empty', () => {
+        chart.lineStyles.width = null;
+        const result = getLineViewOptions(chart);
+
+        expect(result.strokeWidth).toEqual(LINE_CHART_DEFAULT_WIDTH);
+    });
+
+
+    test('should return strokeWidth equal to LINE_CHART_DEFAULT_WIDTH, because dotLikeStyles is empty', () => {
+        chart.type = 'dot';
+        chart.dotLikeStyles = null;
+        const result = getLineViewOptions(chart);
+
+        expect(result.strokeWidth).toEqual(LINE_CHART_DEFAULT_WIDTH);
+    });
+
+    test('should return strokeWidth equal to LINE_CHART_DEFAULT_WIDTH, because shape is empty', () => {
+        chart.type = 'dot';
+        chart.dotLikeStyles.shape = null;
+        const result = getLineViewOptions(chart);
+
+        expect(result.strokeWidth).toEqual(LINE_CHART_DEFAULT_WIDTH);
+    });
+
+    test('should return strokeWidth equal to LINE_CHART_DEFAULT_WIDTH, because width is empty', () => {
+        chart.type = 'dot';
+        chart.dotLikeStyles.shape.width = null;
+        const result = getLineViewOptions(chart);
+
+        expect(result.strokeWidth).toEqual(LINE_CHART_DEFAULT_WIDTH);
+    });
+});
+
+describe('getWidthOfLegendMarkerByType', () => {
+
+    test('should return width equal to 8', () => {
+        const result = getWidthOfLegendMarkerByType('bar');
+
+        expect(result).toEqual(8);
+    });
+
+    test('should return width equal to 24', () => {
+        const result = getWidthOfLegendMarkerByType('line');
+
+        expect(result).toEqual(24);
+    });
+
+    test('should return width from styledElementValues', () => {
+        const result = getWidthOfLegendMarkerByType('area');
+
+        expect(result).toEqual(styledElementValues.defaultLegendMarkerSizes.widthPx);
+    });
+
+});
+
+describe('parseDashStyles', () => {
+
+    let dashOptionsConfig: MdtChartsLineLikeChartDashedStyles;
+
+    beforeEach(() => {
+        dashOptionsConfig = {
+            on: true,
+            dashSize: 3,
+            gapSize: 3
+        }
+    })
+
+    test('should return dashStyles from config', () => {
+        const result = parseDashStyles(dashOptionsConfig);
+
+        expect(result).toEqual({
+            on: true,
+            dashSize: 3,
+            gapSize: 3
+        });
+    });
+
+    test('should return dash with default values, because dashSize and gapSize are not exist', () => {
+        delete dashOptionsConfig.dashSize
+        delete dashOptionsConfig.gapSize
+        const result = parseDashStyles({ on: true });
+
+        expect(result).toEqual({
+            on: true,
+            dashSize: 10,
+            gapSize: 3
+        });
+    });
+
+    test('should return dashStyles off, because dashOptions is empty', () => {
+        dashOptionsConfig = null;
+        const result = parseDashStyles();
+
+        expect(result.on).toBeFalsy();
+    });
+});
+
+describe('getValueLabels', () => {
+    let canvasModelMock: CanvasModel;
+    let valueLabels: MdtChartsTwoDimensionalValueLabels;
+
+    beforeEach(() => {
+        valueLabels = { collision: { otherValueLabels: { mode: "hide" } } };
+        canvasModelMock = new CanvasModel();
+    });
+
+    test('should return shift value mode for left and right sides, because chartOrientation is vertical', () => {
+        const result = TwoDimensionalModelHelper.getValueLabels(valueLabels, canvasModelMock, 'vertical');
+
+        expect(result.collision.chartBlock.left.mode).toEqual('shift');
+        expect(result.collision.chartBlock.right.mode).toEqual('shift');
+        expect(result.collision.chartBlock.top.mode).toEqual('none');
+        expect(result.collision.chartBlock.bottom.mode).toEqual('none');
+    });
+
+    test('should return shift value mode for top and bottom sides, because chartOrientation is horizontal', () => {
+        const result = TwoDimensionalModelHelper.getValueLabels(valueLabels, canvasModelMock, 'horizontal');
+
+        expect(result.collision.chartBlock.left.mode).toEqual('none');
+        expect(result.collision.chartBlock.right.mode).toEqual('none');
+        expect(result.collision.chartBlock.top.mode).toEqual('shift');
+        expect(result.collision.chartBlock.bottom.mode).toEqual('shift');
     });
 });

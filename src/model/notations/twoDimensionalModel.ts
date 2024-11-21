@@ -3,7 +3,6 @@ import {
     MdtChartsTwoDimensionalChart,
     TwoDimensionalChartType,
     MdtChartsTwoDimensionalOptions,
-    MdtChartsTwoDimensionalValueLabels,
 } from "../../config/config";
 import { ChartOptionsCanvas, DesignerConfig } from "../../designer/designerConfig";
 import { ChartStyleModelService } from "../chartStyleModel/chartStyleModel";
@@ -18,14 +17,14 @@ import {
     AdditionalElementsOptions,
     TwoDimChartElementsSettings,
     Orient,
-    TwoDimensionalValueLabels,
 } from "../model";
 import { TwoDimConfigReader } from "../modelInstance/configReader";
 import { ModelInstance } from "../modelInstance/modelInstance";
 import {
     getAreaViewOptions,
     getBarViewOptions,
-    getLegendMarkerOptions, LINE_CHART_DEFAULT_WIDTH,
+    getLegendMarkerOptions,
+    LINE_CHART_DEFAULT_WIDTH,
     parseDashStyles,
     parseShape
 } from "./twoDimensional/styles";
@@ -33,15 +32,10 @@ import { getResolvedTitle } from "../../model/featuresModel/titleModel";
 import { DataRepositoryModel } from "../modelInstance/dataModel/dataRepository";
 import {
     calculateValueLabelAlignment,
-    getValueLabelX,
-    getValueLabelY,
-    hasCollisionLeftSide,
-    hasCollisionRightSide,
-    shiftCoordinateXLeft, shiftCoordinateXRight
+    getValueLabelX, getValueLabelY
 } from "../../model/featuresModel/valueLabelsModel/valueLabelsModel";
 import { CanvasModel } from "../modelInstance/canvasModel/canvasModel";
 import { TwoDimensionalModelHelper } from "../helpers/twoDimensionalModelHelper";
-import { BoundingRect } from "../../engine/features/valueLabelsCollision/valueLabelsCollision";
 
 
 export class TwoDimensionalModel {
@@ -64,6 +58,8 @@ export class TwoDimensionalModel {
 
         const charts = this.getChartsModel(options.charts, configReader, options.orientation, designerConfig, modelInstance.dataModel.repository, keyAxis.orient, canvasModel, options.data.keyField.name);
 
+        const defaultFormatter = configReader.calculateDefaultAxisLabelFormatter();
+
         return {
             legend: canvasModel.legendCanvas.getModel(),
             title: getResolvedTitle(options.title, modelInstance.dataModel.repository.getRawRows()),
@@ -76,8 +72,7 @@ export class TwoDimensionalModel {
             },
             axis: {
                 key: keyAxis,
-                value: AxisModel.getMainValueAxis(options.orientation, options.axis.value.position, options.axis.value, designerConfig.canvas.axisLabel, canvasModel),
-                ...(configReader.containsSecondaryAxis() && { valueSecondary: AxisModel.getSecondaryValueAxis(options.orientation, options.axis.value.position, options.axis.valueSecondary, designerConfig.canvas.axisLabel, canvasModel) }),
+                value: AxisModel.getMainValueAxis(defaultFormatter, options.orientation, options.axis.value.position, options.axis.value, designerConfig.canvas.axisLabel, canvasModel), ...(configReader.containsSecondaryAxis() && { valueSecondary: AxisModel.getSecondaryValueAxis(defaultFormatter, options.orientation, options.axis.value.position, options.axis.valueSecondary, designerConfig.canvas.axisLabel, canvasModel) })
             },
             type: options.type,
             data: { ...options.data },
@@ -85,7 +80,7 @@ export class TwoDimensionalModel {
             additionalElements: this.getAdditionalElements(options),
             tooltip: options.tooltip,
             chartSettings: this.getChartsSettings(designerConfig.canvas.chartOptions, options.orientation),
-            valueLabels: this.getValueLabels(options.valueLabels, canvasModel),
+            valueLabels: TwoDimensionalModelHelper.getValueLabels(options.valueLabels, canvasModel, options.orientation),
             defs: {
                 gradients: TwoDimensionalModelHelper.getGradientDefs(charts, keyAxis.orient, options.orientation)
             }
@@ -167,7 +162,7 @@ export class TwoDimensionalModel {
                         type: "line",
                         handleEndCoordinate: (v) => v + 2,
                         handleStartCoordinate: (v) => v - 2,
-                        width: chart.dotLikeStyles?.shape?.width ?? 2
+                        width: chart.dotLikeStyles?.shape?.width ?? LINE_CHART_DEFAULT_WIDTH
                     }
                 }
             });
@@ -208,27 +203,5 @@ export class TwoDimensionalModel {
 
     private static getChartsByTypes(charts: MdtChartsTwoDimensionalChart[], types: TwoDimensionalChartType[]): MdtChartsTwoDimensionalChart[] {
         return charts.filter(chart => types.includes(chart.type));
-    }
-
-    private static getValueLabels(valueLabels: MdtChartsTwoDimensionalValueLabels, canvasModel: CanvasModel): TwoDimensionalValueLabels {
-        return {
-            collision: {
-                otherValueLables: valueLabels?.collision.otherValueLabels ?? {
-                    mode: 'none'
-                },
-                chartBlock: {
-                    left: {
-                        mode: 'shift',
-                        hasCollision: (labelClientRect: BoundingRect) => hasCollisionLeftSide(labelClientRect, canvasModel.getMargin()),
-                        shiftCoordinate: (labelClientRect: BoundingRect) => shiftCoordinateXRight(labelClientRect),
-                    },
-                    right: {
-                        mode: 'shift',
-                        hasCollision: (labelClientRect: BoundingRect) => hasCollisionRightSide(labelClientRect, canvasModel.getBlockSize(), canvasModel.getMargin()),
-                        shiftCoordinate: (labelClientRect: BoundingRect) => shiftCoordinateXLeft(labelClientRect),
-                    }
-                }
-            },
-        }
     }
 }

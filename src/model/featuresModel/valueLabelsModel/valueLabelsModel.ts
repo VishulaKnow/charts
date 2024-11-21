@@ -53,10 +53,26 @@ export function hasCollisionRightSide(labelClientRect: BoundingRect, blockSize: 
     return labelClientRect.x + labelClientRect.width / 2 >= blockSize.width - margin.right;
 }
 
+export function hasCollisionTopSide(labelClientRect: BoundingRect, margin: BlockMargin): boolean {
+    return labelClientRect.y - labelClientRect.height / 2 <= margin.top;
+}
+
+export function hasCollisionBottomSide(labelClientRect: BoundingRect, blockSize: Size, margin: BlockMargin): boolean {
+    return labelClientRect.y + labelClientRect.height / 2 >= blockSize.height - margin.bottom;
+}
+
 export function shiftCoordinateXLeft(labelClientRect: BoundingRect): void {
     labelClientRect.x -= labelClientRect.width / 2 + BORDER_OFFSET_SIZE_PX;
 }
 
 export function shiftCoordinateXRight(labelClientRect: BoundingRect): void {
-    labelClientRect.x += + labelClientRect.width / 2 + BORDER_OFFSET_SIZE_PX;
+    labelClientRect.x += labelClientRect.width / 2 + BORDER_OFFSET_SIZE_PX;
+}
+
+export function shiftCoordinateYTop(labelClientRect: BoundingRect): void {
+    labelClientRect.y -= labelClientRect.height / 2 + BORDER_OFFSET_SIZE_PX;
+}
+
+export function shiftCoordinateYBottom(labelClientRect: BoundingRect): void {
+    labelClientRect.y += labelClientRect.height / 2 + BORDER_OFFSET_SIZE_PX;
 }
