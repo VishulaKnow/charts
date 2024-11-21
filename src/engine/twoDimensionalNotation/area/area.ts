@@ -252,7 +252,7 @@ export class Area {
         const generatorFactory = this.createAreaGeneratorFactory(chart, scales, margin, keyAxisOrient, keyField);
         const areaGenerator = generatorFactory.getSegmentedAreaGenerator();
 
-        const areas = this.getAllAreas(stackedData, block, chart, Area.areaChartClass);
+        const areas = this.getAllAreasWithNewData(stackedData, block, chart, Area.areaChartClass);
         const prom = this.updateSegmentedPath(block, areas, areaGenerator);
 
         areas.each(function (dataset, index) {
@@ -295,7 +295,7 @@ export class Area {
         return Line.updateGroupedPath(block, borderLineObject, borderLineGenerator, newData);
     }
 
-    private getAllAreas(stackedData: StackedDataFull, block: Block, chart: TwoDimensionalChartModel, lineClass: string): Selection<SVGRectElement, StackedDataRow[], SVGGElement, any> {
+    private getAllAreasWithNewData(stackedData: StackedDataFull, block: Block, chart: TwoDimensionalChartModel, lineClass: string): Selection<SVGRectElement, StackedDataRow[], SVGGElement, any> {
         return block.svg.getChartGroup(chart.index)
             .selectAll<SVGRectElement, MdtChartsDataRow[]>(`path.${lineClass}${Helper.getCssClassesLine(chart.cssClasses)}`)
             .data(stackedData);

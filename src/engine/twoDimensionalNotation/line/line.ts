@@ -85,7 +85,6 @@ export class Line {
         const generatorFactory = this.createLineGeneratorFactory(chart, scales, margin, keyAxisOrient, keyField);
         const lineGenerator = generatorFactory.getSegmentedLineGenerator();
 
-        // Вынести в конструктор
         const lineBuilder = new LineBuilder({
             elementAccessors: { getBlock: () => block }
         }, chart, lineGenerator);
