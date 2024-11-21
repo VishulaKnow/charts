@@ -1,5 +1,5 @@
 import { Line as ILine } from 'd3-shape';
-import {BaseType, select, Selection} from 'd3-selection';
+import { BaseType, select, Selection } from 'd3-selection';
 import { BlockMargin, Field, LineLikeChartSettings, Orient, TwoDimensionalChartModel } from "../../../model/model";
 import { Scales } from "../../features/scale/scale";
 import { Block } from "../../block/block";
@@ -22,7 +22,6 @@ export class Line {
     readonly creatingPipeline = new Pipeline<Selection<SVGPathElement, any, BaseType, any>, TwoDimensionalChartModel>();
 
     private readonly lineChartClass = Line.lineChartClass; //TODO: remove after refactor
-    private lineBuilder: LineBuilder;
 
     public static get(options: LineChartOptions) {
         return new Line(options);
@@ -87,14 +86,14 @@ export class Line {
         const lineGenerator = generatorFactory.getSegmentedLineGenerator();
 
         // Вынести в конструктор
-        this.lineBuilder = new LineBuilder({
+        const lineBuilder = new LineBuilder({
             elementAccessors: { getBlock: () => block }
         }, chart, lineGenerator);
 
-        let lines = this.lineBuilder.renderSegmented(stackedData, Line.lineChartClass);
+        let lines = lineBuilder.renderSegmented(stackedData, Line.lineChartClass);
 
         lines = this.creatingPipeline.execute(lines, chart);
-        this.lineBuilder.setSegmentColor(lines, chart.style.elementColors);
+        lineBuilder.setSegmentColor(lines, chart.style.elementColors);
 
         lines.each(function (_, i) {
             DomHelper.setCssClasses(select(this), Helper.getCssClassesWithElementIndex(chart.cssClasses, i));
@@ -129,12 +128,12 @@ export class Line {
         const generatorFactory = this.createLineGeneratorFactory(chart, scales, margin, keyAxisOrient, keyField);
         const lineGenerator = generatorFactory.getSegmentedLineGenerator();
 
-        this.lineBuilder = new LineBuilder({
+        const lineBuilder = new LineBuilder({
             elementAccessors: { getBlock: () => block }
         }, chart, lineGenerator);
 
-        let lines = this.lineBuilder.getAllLinesWithNewData(stackedData, Line.lineChartClass);
-        const prom = this.lineBuilder.updateSegmentedPath(lines);
+        let lines = lineBuilder.getAllLinesWithNewData(stackedData, Line.lineChartClass);
+        const prom = lineBuilder.updateSegmentedPath(lines);
 
         lines.each((dataset, index) => {
             MarkDot.update(block, dataset, keyAxisOrient, scales, margin, keyField.name, index, '1', chart);

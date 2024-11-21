@@ -21,15 +21,12 @@ interface AreaOptions {
 export class Area {
     public static readonly areaChartClass = 'area';
     public static readonly areaBorderLineClass = 'area-border-line';
-    private lineBuilder: LineBuilder;
 
     public static get(options: AreaOptions) {
         return new Area(options);
     }
 
-    constructor(private readonly options: AreaOptions) {
-
-    }
+    constructor(private readonly options: AreaOptions) { }
 
     public render(block: Block, scales: Scales, data: MdtChartsDataRow[], keyField: Field, margin: BlockMargin, keyAxisOrient: Orient, chart: TwoDimensionalChartModel): void {
         if (chart.isSegmented)
@@ -237,12 +234,12 @@ export class Area {
         let stackedData = getStackedData(data, chart);
         const lineGenerator = generatorFactory.getSegmentedLineGenerator();
 
-        this.lineBuilder = new LineBuilder({
+        const lineBuilder = new LineBuilder({
             elementAccessors: { getBlock: () => block }
         }, chart, lineGenerator);
 
-        let lines = this.lineBuilder.renderSegmented(stackedData, Area.areaBorderLineClass);
-        this.lineBuilder.setSegmentColor(lines, chart.style.elementColors);
+        let lines = lineBuilder.renderSegmented(stackedData, Area.areaBorderLineClass);
+        lineBuilder.setSegmentColor(lines, chart.style.elementColors);
 
         lines.each(function (_, i) {
             DomHelper.setCssClasses(select(this), Helper.getCssClassesWithElementIndex(chart.cssClasses, i));
@@ -272,12 +269,12 @@ export class Area {
         const generatorFactory = this.createLineGeneratorFactory(chart, scales, margin, keyAxisOrient, keyField);
         const lineGenerator = generatorFactory.getSegmentedLineGenerator();
 
-        this.lineBuilder = new LineBuilder({
+        const lineBuilder = new LineBuilder({
             elementAccessors: { getBlock: () => block }
         }, chart, lineGenerator);
 
-        let lines = this.lineBuilder.getAllLinesWithNewData(stackedData, Area.areaBorderLineClass);
-        let prom = this.lineBuilder.updateSegmentedPath(lines);
+        let lines = lineBuilder.getAllLinesWithNewData(stackedData, Area.areaBorderLineClass);
+        let prom = lineBuilder.updateSegmentedPath(lines);
 
         return prom;
     }
@@ -306,6 +303,6 @@ export class Area {
 
     private getLineGeneratorFactory(chart: TwoDimensionalChartModel, scales: Scales, margin: BlockMargin, keyAxisOrient: Orient, keyField: Field): LineGeneratorFactory {
         return chart.areaViewOptions.borderLine.on
-        && this.createLineGeneratorFactory(chart, scales, margin, keyAxisOrient, keyField);
+            && this.createLineGeneratorFactory(chart, scales, margin, keyAxisOrient, keyField);
     }
 }
