@@ -387,7 +387,6 @@ describe('getLineViewOptions', () => {
             areaStyles: {
                 borderLine: {
                     on: true,
-                    width: 5
                 }
             },
             dotLikeStyles: {
@@ -444,7 +443,7 @@ describe('getLineViewOptions', () => {
                 dashSize: 0,
                 gapSize: 0
             },
-            strokeWidth: 5,
+            strokeWidth: LINE_CHART_DEFAULT_WIDTH,
             length: 24
         };
 
@@ -500,14 +499,6 @@ describe('getLineViewOptions', () => {
     test('should return strokeWidth equal to LINE_CHART_DEFAULT_WIDTH, because borderLine is empty', () => {
         chart.type = 'area';
         chart.areaStyles.borderLine = null;
-        const result = getLineViewOptions(chart);
-
-        expect(result.strokeWidth).toEqual(LINE_CHART_DEFAULT_WIDTH);
-    });
-
-    test('should return strokeWidth equal to LINE_CHART_DEFAULT_WIDTH, because width is empty', () => {
-        chart.type = 'area';
-        chart.areaStyles.borderLine.width = null;
         const result = getLineViewOptions(chart);
 
         expect(result.strokeWidth).toEqual(LINE_CHART_DEFAULT_WIDTH);

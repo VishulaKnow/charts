@@ -116,7 +116,7 @@ export function getLineViewOptions(chart: MdtChartsTwoDimensionalChart): TwoDime
         case "area":
             return {
                 dashedStyles: { on: false, dashSize: 0, gapSize: 0 },
-                strokeWidth: chart.areaStyles?.borderLine?.width ?? LINE_CHART_DEFAULT_WIDTH,
+                strokeWidth: LINE_CHART_DEFAULT_WIDTH,
                 length: getWidthOfLegendMarkerByType("line")
             }
         default:
