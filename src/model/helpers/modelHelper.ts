@@ -4,9 +4,15 @@ export class ModelHelper {
     private static readonly defaultBaseFontSize = 13;
     private static baseFontSize: number
 
-    private static getBaseFontSize() {
-        if (!this.baseFontSize) this.baseFontSize = parseInt(DomHelper.getCssPropertyValue(document.documentElement, '--chart-base-font-size'))
-        return (!this.baseFontSize || isNaN(this.baseFontSize)) ? this.defaultBaseFontSize : this.baseFontSize
+    private static getBaseFontSize(propertyName: string) {
+        if (!this.baseFontSize)
+            this.baseFontSize = this.getFontSizeCssValue(propertyName, this.defaultBaseFontSize);
+        return this.baseFontSize;
+    }
+
+    public static getFontSizeCssValue(propertyName: string, defaultValue: number): number {
+        const value = parseInt(DomHelper.getCssPropertyValue(document.documentElement, propertyName));
+        return isNaN(value) ? defaultValue : value;
     }
 
     public static getSum(items: number[]): number {
@@ -23,7 +29,7 @@ export class ModelHelper {
         // lower case letter width ~ 0.8 from upper case width.
         // Number width == lower case letter width
 
-        const fontSize = this.getBaseFontSize()
+        const fontSize = this.getBaseFontSize('--chart-base-font-size')
         let score = 0;
         const upperLetterScore = fontSize / 10;
         const lowerLetterScore = fontSize / 14;

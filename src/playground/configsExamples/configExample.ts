@@ -112,7 +112,7 @@ const configCars: MdtChartsConfig = {
                     }
                 },
                 valueLabels: {
-                    on: true,
+                    on: false,
                     // format: (value) => nFormatter(value),
                 }
             },
