@@ -1,5 +1,6 @@
 import { TitleBlockModel } from "../model";
 import { MdtChartsDataRow, Title } from "../../config/config";
+import { ModelHelper } from "../helpers/modelHelper";
 
 
 export const getResolvedTitle = (title: Title, dataRows: MdtChartsDataRow[]) => {
@@ -10,7 +11,7 @@ export const getResolvedTitle = (title: Title, dataRows: MdtChartsDataRow[]) => 
 
 export class TitleModel {
     public static getTitleModel(titleText: string): TitleBlockModel {
-        const defaultPads = 20;
+        const defaultPads = ModelHelper.getFontSizeCssValue('--chart-title-font-size', 16);
         const pad = titleText ? defaultPads : 0;
         return {
             margin: {
