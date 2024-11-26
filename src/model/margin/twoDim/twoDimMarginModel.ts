@@ -40,7 +40,9 @@ export class TwoDimMarginModel {
             const secondaryLabelSize = this.getMaxLabelSizeSecondary(modelInstance);
             this.recalcMarginBySecondaryAxisLabelSize(secondaryLabelSize, canvasModel)
         }
-        this.recalcVerticalMarginWithValueLabelsOn(canvasModel);
+        if (this.configReader.isValueLabelsOn() && this.configReader.options.orientation === 'vertical') {
+            this.recalcVerticalMarginWithValueLabelsOn(canvasModel);
+        }
     }
 
     public recalcMarginByVerticalAxisLabel(modelInstance: ModelInstance): void {
@@ -137,7 +139,6 @@ export class TwoDimMarginModel {
             bottom: "top"
         }
 
-        if (this.configReader.isValueLabelsOn() && this.configReader.options.orientation === 'vertical')
-            canvasModel.increaseMarginSide(axisMarginMapping[keyAxisOrient], valueLabelFontSize + OFFSET_SIZE_PX);
+        canvasModel.increaseMarginSide(axisMarginMapping[keyAxisOrient], valueLabelFontSize + OFFSET_SIZE_PX);
     }
 }
