@@ -4,9 +4,15 @@ export class ModelHelper {
     private static readonly defaultBaseFontSize = 13;
     private static baseFontSize: number
 
-    public static getBaseFontSize(propertyName: string) {
-        if (!this.baseFontSize) this.baseFontSize = parseInt(DomHelper.getCssPropertyValue(document.documentElement, propertyName))
-        return (!this.baseFontSize || isNaN(this.baseFontSize)) ? this.defaultBaseFontSize : this.baseFontSize
+    private static getBaseFontSize(propertyName: string) {
+        if (!this.baseFontSize)
+            this.baseFontSize = this.getFontSizeCssValue(propertyName);
+        return this.baseFontSize;
+    }
+
+    public static getFontSizeCssValue(propertyName: string, defaultValue: number = this.defaultBaseFontSize): number {
+        const value = parseInt(DomHelper.getCssPropertyValue(document.documentElement, propertyName));
+        return isNaN(value) ? defaultValue : value;
     }
 
     public static getSum(items: number[]): number {
