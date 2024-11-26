@@ -138,6 +138,6 @@ export class TwoDimMarginModel {
         }
 
         if (this.configReader.isValueLabelsOn() && this.configReader.options.orientation === 'vertical')
-            canvasModel.increaseMarginSide(axisMarginMapping[keyAxisOrient], valueLabelFontSize + OFFSET_SIZE_PX, keyAxisLabelVerticalLog);
+            canvasModel.increaseMarginSide(axisMarginMapping[keyAxisOrient], valueLabelFontSize + OFFSET_SIZE_PX);
     }
 }
