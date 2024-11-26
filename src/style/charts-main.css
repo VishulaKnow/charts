@@ -1,7 +1,7 @@
 :root {
 	--chart-base-font-size: 12px;
-  --value-label-font-size: 10px;
-  --chart-title-font-size: 16px;
+	--value-label-font-size: 10px;
+	--chart-title-font-size: 16px;
 }
 
 .wrapper {

@@ -112,7 +112,7 @@ const configCars: MdtChartsConfig = {
                     }
                 },
                 valueLabels: {
-                    on: true,
+                    on: false,
                     // format: (value) => nFormatter(value),
                 }
             },
@@ -171,9 +171,6 @@ const configCars: MdtChartsConfig = {
     //                 format: 'money',
     //                 title: 'Стоимость очень большой текст'
     //             }
-    //         },
-    //         tooltip: {
-    //             show: true
     //         },
     //         aggregator: {
     //             content: (model) => ({

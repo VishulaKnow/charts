@@ -6,11 +6,11 @@ export class ModelHelper {
 
     private static getBaseFontSize(propertyName: string) {
         if (!this.baseFontSize)
-            this.baseFontSize = this.getFontSizeCssValue(propertyName);
+            this.baseFontSize = this.getFontSizeCssValue(propertyName, this.defaultBaseFontSize);
         return this.baseFontSize;
     }
 
-    public static getFontSizeCssValue(propertyName: string, defaultValue: number = this.defaultBaseFontSize): number {
+    public static getFontSizeCssValue(propertyName: string, defaultValue: number): number {
         const value = parseInt(DomHelper.getCssPropertyValue(document.documentElement, propertyName));
         return isNaN(value) ? defaultValue : value;
     }
