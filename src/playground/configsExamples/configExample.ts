@@ -172,9 +172,6 @@ const configCars: MdtChartsConfig = {
     //                 title: 'Стоимость очень большой текст'
     //             }
     //         },
-    //         tooltip: {
-    //             show: true
-    //         },
     //         aggregator: {
     //             content: (model) => ({
     //                 title: "Big Text text word another one",
