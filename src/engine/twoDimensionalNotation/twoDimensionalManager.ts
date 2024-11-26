@@ -215,9 +215,7 @@ export class TwoDimensionalManager implements ChartContentManager {
                     data[dataOptions.dataSource],
                     dataOptions.keyField,
                     margin,
-                    keyAxisOrient,
-                    chart,
-                    blockSize);
+                    keyAxisOrient, chart);
             else if (chart.type === 'dot')
                 this.dotChart.render(chartScales, chart, data[dataOptions.dataSource], margin);
         });
@@ -259,9 +257,7 @@ export class TwoDimensionalManager implements ChartContentManager {
                     data[dataOptions.dataSource],
                     dataOptions.keyField,
                     margin,
-                    chart,
-                    keyAxisOrient,
-                    blockSize);
+                    chart, keyAxisOrient);
             }
             else if (chart.type === 'dot') {
                 proms = this.dotChart.update(chartScales, data[dataOptions.dataSource], margin);

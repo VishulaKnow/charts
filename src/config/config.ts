@@ -220,7 +220,7 @@ export interface NumberAxisLabel {
     stepSize?: number;
 }
 
-export type AxisLabelFormatter = (v: number) => string;
+export type AxisLabelFormatter = (v: number | string) => string;
 
 export interface DiscreteAxisOptions extends AxisOptions {
     labels?: MdtChartsDiscreteAxisLabel;
