@@ -131,7 +131,7 @@ export class TwoDimMarginModel {
 
     private recalcVerticalMarginWithValueLabelsOn(canvasModel: CanvasModel) {
         const keyAxisOrient = AxisModel.getAxisOrient(AxisType.Key, this.configReader.options.orientation, this.configReader.options.axis.key.position);
-        const valueLabelFontSize = ModelHelper.getFontSizeCssValue('--value-label-font-size');
+        const valueLabelFontSize = ModelHelper.getFontSizeCssValue('--value-label-font-size', 10);
         const axisMarginMapping: Partial<Record<Orient, Orient>> = {
             top: "bottom",
             bottom: "top"
