@@ -55,13 +55,13 @@ class ListenersHelper {
 }
 
 class Listeners {
-    private engine: Engine;
+    private chart: ChartInstanceStorage;
     private config: MdtChartsConfig;
     private designerConfig: DesignerConfig;
     private data: MdtChartsDataSource
     private transition: Transitions = {};
-    constructor(engine: Engine, config: MdtChartsConfig, designerConfig: DesignerConfig, data: MdtChartsDataSource) {
-        this.engine = engine;
+    constructor(chart: ChartInstanceStorage, config: MdtChartsConfig, designerConfig: DesignerConfig, data: MdtChartsDataSource) {
+        this.chart = chart;
         this.config = config;
         this.designerConfig = designerConfig;
         this.data = data;
@@ -77,9 +77,10 @@ class Listeners {
 
     private updateFull(): void {
         this.dropAxisDomain(this.config);
-        const model = getUpdatedModel(this.config, this.data, this.designerConfig);
-        const preparedData = getPreparedData(model, this.data, this.config);
-        this.engine.updateFullBlock(model, preparedData);
+        this.chart.recreateChart(this.config, this.designerConfig, this.data)
+        // const model = getUpdatedModel(this.config, this.data, this.designerConfig);
+        // const preparedData = getPreparedData(model, this.data, this.config);
+        // this.engine.updateFullBlock(model, preparedData);
     }
     private dropAxisDomain(config: MdtChartsConfig) {
 
@@ -459,7 +460,7 @@ class Listeners {
                 const model = getUpdatedModel(thisClass.config, newData, thisClass.designerConfig);
                 const preparedData = getPreparedData(model, newData, config);
 
-                thisClass.engine.updateData(model, preparedData);
+                thisClass.chart.getChart().updateData(newData);
             }
         }
         document.querySelector('.btn-random').addEventListener('click', function () {
@@ -485,40 +486,6 @@ class Listeners {
             if (config.options.type === '2d') {
                 config.options.charts.forEach(chart => chart.embeddedLabels = this.value);
                 thisClass.updateFull();
-            }
-        });
-        document.querySelector('.btn-domain').addEventListener('click', function () {
-            if (config.options.type === '2d') {
-                const start = ListenersHelper.getInputValue('#domain-start');
-                const end = ListenersHelper.getInputValue('#domain-end');
-                config.options.axis.value.domain = { start: -1, end: -1 }
-                config.options.axis.value.domain.start = parseInt(start) || -1;
-                config.options.axis.value.domain.end = parseInt(end) || -1;
-                thisClass.engine.updateData(getUpdatedModel(thisClass.config, thisClass.data, thisClass.designerConfig), thisClass.data);
-            }
-        });
-        document.querySelector('#domain-start').addEventListener('keydown', function (e: any) {
-            if (e.code === 'Enter') {
-                if (config.options.type === '2d') {
-                    const start = ListenersHelper.getInputValue('#domain-start');
-                    const end = ListenersHelper.getInputValue('#domain-end');
-                    config.options.axis.value.domain = { start: -1, end: -1 }
-                    config.options.axis.value.domain.start = parseInt(start) || -1;
-                    config.options.axis.value.domain.end = parseInt(end) || -1;
-                    thisClass.engine.updateData(getUpdatedModel(thisClass.config, thisClass.data, thisClass.designerConfig), thisClass.data);
-                }
-            }
-        });
-        document.querySelector('#domain-end').addEventListener('keydown', function (e: any) {
-            if (e.code === 'Enter') {
-                if (config.options.type === '2d') {
-                    const start = ListenersHelper.getInputValue('#domain-start');
-                    const end = ListenersHelper.getInputValue('#domain-end');
-                    config.options.axis.value.domain = { start: -1, end: -1 }
-                    config.options.axis.value.domain.start = parseInt(start) || -1;
-                    config.options.axis.value.domain.end = parseInt(end) || -1;
-                    thisClass.engine.updateData(getUpdatedModel(thisClass.config, thisClass.data, thisClass.designerConfig), thisClass.data);
-                }
             }
         });
         document.querySelector('#is-segmented').addEventListener('change', function () {
@@ -652,28 +619,40 @@ import '../style/charts-main.css';
 import config from './configsExamples/configExample';
 import designerConfig from './configsExamples/designerConfigExample';
 import { Model } from '../model/model';
+import { Chart } from '../main';
 
 const data = require('./assets/dataSet.json');
 
-// const chart = new Chart(config, designerConfig, data, false);
-// chart.render(document.querySelector('.main-wrapper'));
+class ChartInstanceStorage {
+    private chart: Chart;
 
-const engine = new Engine(2, (rows: MdtChartsDataRow[]) => {
-    console.log('Selected keys:', rows.map(row => row.brand))
-}, undefined);
-const model = assembleModel(config, data, designerConfig);
-engine.render(model, getPreparedData(model, data, config), document.querySelector('.main-wrapper'));
-new Listeners(engine, config, designerConfig, data);
+    constructor(config: MdtChartsConfig, designerConfig: DesignerConfig, data: MdtChartsDataSource) {
+        this.recreateChart(config, designerConfig, data);
+    }
+
+    recreateChart(config: MdtChartsConfig, designerConfig: DesignerConfig, data: MdtChartsDataSource): void {
+        this.chart?.destroy();
+        this.chart = new Chart(config, designerConfig, data, false, (rows: MdtChartsDataRow[]) => {
+            console.log('Selected keys:', rows.map(row => row.brand))
+        }, undefined);
+        this.chart.render(document.querySelector('.main-wrapper'));
+    }
+
+    getChart(): Chart {
+        return this.chart;
+    }
+}
+
+const instance = new ChartInstanceStorage(config, designerConfig, data);
+
+new Listeners(instance, config, designerConfig, data);
 
 // setTimeout(() => {
 //     const newData = { dataSet: data.dataSet.map((r: any) => ({ ...r })) };
 //     newData.dataSet[4].price = 10_000;
 //     newData.dataSet[8].count = 1000;
-//     newData.dataSet.push({ brand: "asdasfasf", price: null })
-//     // const model = assembleModel(config, newData, designerConfig);
-//     const model = assembleModel(config, newData, { ...designerConfig, chartStyle: { baseColors: ["red", "green", "blue"] } });
-//     engine.updateData(model, newData);
-//     engine.updateColors(model);
+//     instance.getChart().updateData(newData);
+//     instance.getChart().updateColors(["red", "yellow", "blue"])
 // }, 5000);
 
 const config3 = require('./configsExamples/configTest2D.json');
@@ -720,8 +699,7 @@ class DataUpdater {
 
                 this.changeData(newData);
 
-                const newModel = getUpdatedModel(config, newData, designerConfig);
-                engine.updateData(newModel, getPreparedData(newModel, newData, config));
+                instance.getChart().updateData(newData);
                 run();
             }, ms)
         }
