@@ -31,6 +31,10 @@ export interface IChart {
      * @param newColors Новые базовые цвета
      */
     updateColors(newColors: string[]): void;
+    /**
+     * Сброс выделения ключей
+     */
+    clearSelection(): void;
 }
 
 export class Chart implements IChart {
@@ -121,6 +125,10 @@ export class Chart implements IChart {
         this.designerConfig.chartStyle.baseColors = [...newColors];
         this.model = assembleModel(this.config, this.data, this.designerConfig);
         this.engine.updateColors(this.model);
+    }
+
+    public clearSelection(): void {
+        this.engine.clearSelection(this.model)
     }
 
     private registerResizeEvent(): void {

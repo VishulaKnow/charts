@@ -22,4 +22,8 @@ export class ContentManager {
     public updateColors(engine: Engine, model: Model): void {
         this.manager.updateColors(engine.block, model);
     }
+
+    public clearSelection(engine: Engine, model: Model): void {
+        this.manager.clearSelection(engine.block.filterEventManager, model);
+    }
 }

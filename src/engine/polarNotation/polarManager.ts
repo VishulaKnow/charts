@@ -1,4 +1,4 @@
-import { BlockMargin, DonutChartSettings, Model, PolarChartModel, PolarOptionsModel } from "../../model/model";
+import { BlockMargin, DonutChartSettings, Model, PolarChartModel, PolarOptionsModel, TwoDimensionalOptionsModel } from "../../model/model";
 import { Block } from "../block/block";
 import { Engine } from "../engine";
 import { Legend } from "../features/legend/legend";
@@ -10,6 +10,7 @@ import { Donut } from "./donut/donut";
 import { MdtChartsDataSource, Size } from "../../config/config";
 import { PolarRecordOverflowAlert } from "./extenders/polarRecordOverflowAlert";
 import { ChartContentManager } from "../contentManager/contentManagerFactory";
+import { FilterEventManager } from "../filterManager/filterEventManager";
 
 export class PolarManager implements ChartContentManager {
     public render(engine: Engine, model: Model<PolarOptionsModel>) {
@@ -44,7 +45,7 @@ export class PolarManager implements ChartContentManager {
         engine.block.getSvg()
             .on('click', (e: MouseEvent) => {
                 if (e.target === engine.block.getSvg().node())
-                    engine.block.filterEventManager.clearKeysForPolar(model.chartBlock.margin, model.blockCanvas.size, options);
+                    this.clearSelection(engine.block.filterEventManager, model);
             });
     }
 
@@ -80,6 +81,10 @@ export class PolarManager implements ChartContentManager {
     public updateColors(block: Block, model: Model<PolarOptionsModel>): void {
         Legend.get().updateColors(block, model.options);
         Donut.updateColors(block, (<PolarOptionsModel>model.options).charts[0]);
+    }
+
+    public clearSelection(filterEventManager: FilterEventManager, model: Model<PolarOptionsModel>): void {
+        filterEventManager.clearKeysForPolar(model.chartBlock.margin, model.blockCanvas.size, model.options);
     }
 
     private renderCharts(block: Block, charts: PolarChartModel[], data: MdtChartsDataSource, dataSource: string, margin: BlockMargin, blockSize: Size, donutSettings: DonutChartSettings) {

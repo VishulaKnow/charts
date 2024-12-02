@@ -58,6 +58,10 @@ export class Engine {
         }
     }
 
+    public clearSelection(model: Model): void {
+        this.contentManager.clearSelection(this, model)
+    }
+
     public updateColors(model: Model): void {
         this.contentManager.updateColors(this, model);
     }
