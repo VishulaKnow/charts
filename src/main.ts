@@ -32,7 +32,7 @@ export interface IChart {
      */
     updateColors(newColors: string[]): void;
     /**
-     * Сброс кросс-фильтрации графика
+     * Сброс выделения ключей
      */
     clearSelection(): void;
 }
