@@ -64,7 +64,7 @@ interface BasicOptionsModel {
 interface GraphicNotationOptionsModel extends BasicOptionsModel {
     legend: ILegendModel;
     data: OptionsModelData;
-    title: string;
+    title: OptionsModelTitle;
     selectable: boolean;
     defs: OptionsModelGradients;
 }
@@ -106,6 +106,11 @@ export interface OptionsModelData extends BasicOptionsModelData {
 export interface Field {
     name: string;
     format: DataType;
+}
+
+export interface OptionsModelTitle {
+    textContent: string;
+    fontSize: number
 }
 
 export interface OptionsModelGradients {

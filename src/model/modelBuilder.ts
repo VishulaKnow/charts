@@ -9,7 +9,7 @@ import { OtherComponentsModel } from './featuresModel/otherComponents';
 import { ConfigValidator } from './configsValidator/configValidator';
 import { ModelInstance } from './modelInstance/modelInstance';
 import { TwoDimConfigReader } from './modelInstance/configReader';
-import { getResolvedTitle } from "../model/featuresModel/titleModel";
+import { TitleConfigReader } from "./modelInstance/titleConfigReader";
 
 
 export enum AxisType {
@@ -79,6 +79,7 @@ function getTransitions(designerConfig: DesignerConfig): Transitions {
 
 export function assembleModel(config: MdtChartsConfig, data: MdtChartsDataSource, designerConfig: DesignerConfig): Model {
     const modelInstance = ModelInstance.create(config, data, designerConfig);
+    const titleConfig = TitleConfigReader.create(config.options.title, modelInstance);
 
     if (!data || Object.keys(data).length === 0)
         return {
@@ -93,7 +94,7 @@ export function assembleModel(config: MdtChartsConfig, data: MdtChartsDataSource
         {
             elementsOptions: designerConfig.elementsOptions,
             legendConfig: designerConfig.canvas.legendBlock,
-            title: getResolvedTitle(config.options.title, modelInstance.dataModel.repository.getRawRows())
+            titleConfig
         },
         modelInstance
     );

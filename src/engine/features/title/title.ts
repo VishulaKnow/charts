@@ -1,6 +1,6 @@
-import { select, Selection } from 'd3-selection'
+import { Selection } from 'd3-selection'
 import { Size } from '../../../config/config';
-import { TitleBlockModel } from "../../../model/model";
+import { OptionsModelTitle, TitleBlockModel } from "../../../model/model";
 import { Block } from "../../block/block";
 import { DomHelper } from '../../helpers/domHelper';
 
@@ -14,8 +14,8 @@ interface TitleAttributes {
 export class Title {
     private static readonly titleCssClass = 'chart-title'
 
-    public static render(block: Block, text: string, titleBlockModel: TitleBlockModel, blockSize: Size): void {
-        if (!text) return;
+    public static render(block: Block, title: OptionsModelTitle, titleBlockModel: TitleBlockModel, blockSize: Size): void {
+        if (!title.textContent) return;
 
         const titleBlock = block.getSvg()
             .append('text')
@@ -23,20 +23,21 @@ export class Title {
 
         const titleCoordinate = this.getTitleAttributes(blockSize, titleBlockModel);
 
-        this.fillTitleBlockAttributes(titleBlock, titleCoordinate, text);
-        this.setTitleTooltip(titleBlock, text);
+        this.fillTitleBlockAttributes(titleBlock, titleCoordinate, title);
+        this.setTitleTooltip(titleBlock, title.textContent);
     }
 
-    public static updateData(block: Block, text: string): void {
-        block.getSvg().select(`.${this.titleCssClass}`).text(text);
+    public static updateData(block: Block, title: OptionsModelTitle): void {
+        block.getSvg().select(`.${this.titleCssClass}`).text(title.textContent);
     }
 
-    private static fillTitleBlockAttributes(titleBlock: Selection<SVGTextElement, unknown, HTMLElement, any>, attributes: TitleAttributes, text: string) {
+    private static fillTitleBlockAttributes(titleBlock: Selection<SVGTextElement, unknown, HTMLElement, any>, attributes: TitleAttributes, title: OptionsModelTitle) {
         titleBlock
             .attr('x', attributes.x)
             .attr('y', attributes.y)
             .attr('dominant-baseline', attributes.dominantBaseline)
-            .text(text);
+            .text(title.textContent)
+            .style('font-size', `${title.fontSize}px`);
 
         DomHelper.cropSvgLabels(titleBlock, attributes.maxWidth);
     }

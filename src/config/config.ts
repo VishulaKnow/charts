@@ -97,11 +97,16 @@ export interface TitleFunctionParams {
     data: MdtChartsDataRow[]
 }
 
-export interface TitleFunction {
+export interface TitleFunc {
     (params: TitleFunctionParams): string;
 }
 
-export type Title = string | TitleFunction;
+export interface TitleObj {
+    text: string | TitleFunc;
+    fontSize?: number;
+}
+
+export type Title = string | TitleFunc | TitleObj;
 
 export interface MdtChartsBasicDataOptions {
     dataSource: string;
