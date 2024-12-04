@@ -79,7 +79,6 @@ function getTransitions(designerConfig: DesignerConfig): Transitions {
 
 export function assembleModel(config: MdtChartsConfig, data: MdtChartsDataSource, designerConfig: DesignerConfig): Model {
     const modelInstance = ModelInstance.create(config, data, designerConfig);
-    const titleConfig = TitleConfigReader.create(config.options.title, modelInstance);
 
     if (!data || Object.keys(data).length === 0)
         return {
@@ -94,7 +93,7 @@ export function assembleModel(config: MdtChartsConfig, data: MdtChartsDataSource
         {
             elementsOptions: designerConfig.elementsOptions,
             legendConfig: designerConfig.canvas.legendBlock,
-            titleConfig
+            titleConfig: TitleConfigReader.create(config.options.title, modelInstance)
         },
         modelInstance
     );

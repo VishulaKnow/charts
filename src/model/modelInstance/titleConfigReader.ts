@@ -23,7 +23,7 @@ export class TitleConfigReader {
 
     getFontSize(): number {
         return typeof this.config === 'object'
-            ? this.config.fontSize
+            ? this.config.fontSize ?? this.defaultCssUnitReader()
             : this.defaultCssUnitReader();
     }
 
