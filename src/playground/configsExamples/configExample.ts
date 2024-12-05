@@ -215,6 +215,8 @@ function nFormatter(num: number, digits: number = 1) {
         return num.toString().match(re)[0];
     }
 
+    if (num !== 0 && num < 1) return num.toFixed(digits);
+
     const lookup = [
         { value: 1, symbol: "" },
         { value: 1e3, symbol: "тыс" },
