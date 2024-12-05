@@ -113,7 +113,6 @@ export class TwoDimensionalModel {
 
     private static getChartsModel(charts: MdtChartsTwoDimensionalChart[], configReader: TwoDimConfigReader, chartOrientation: ChartOrientation, designerConfig: DesignerConfig, dataModelRep: DataRepositoryModel, keyAxisOrient: Orient, canvasModel: CanvasModel, keyFieldName: string): TwoDimensionalChartModel[] {
         const styleModel = new TwoDimensionalChartStyleModel(charts, designerConfig.chartStyle);
-        this.sortCharts(charts);
         const chartsModel: TwoDimensionalChartModel[] = [];
         charts.forEach((chart, index) => {
             const style = styleModel.getChartStyle(chart, index);
