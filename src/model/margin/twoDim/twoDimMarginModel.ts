@@ -12,7 +12,7 @@ import { ChartOrientation } from "../../../config/config";
 import { ModelHelper } from "../../helpers/modelHelper";
 import { OFFSET_SIZE_PX } from "../../featuresModel/valueLabelsModel/valueLabelsModel";
 
-export const AXIS_HORIZONTAL_LABEL_PADDING = 20;
+export const AXIS_HORIZONTAL_LABEL_PADDING = 12;
 export const AXIS_VERTICAL_LABEL_PADDING = 8;
 
 export class TwoDimMarginModel {
