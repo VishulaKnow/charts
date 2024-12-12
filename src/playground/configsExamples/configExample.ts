@@ -51,7 +51,9 @@ const configCars: MdtChartsConfig = {
                     flag: false
                 },
                 visibility: true,
-
+                line: {
+                    visible: false
+                }
             }
         },
         additionalElements: {
@@ -68,7 +70,7 @@ const configCars: MdtChartsConfig = {
         },
         orientation: 'vertical',
         data: {
-            dataSource: 'dataSet',
+            dataSource: 'dataSet-months',
             keyField: {
                 name: 'brand',
                 format: 'string'
@@ -84,13 +86,54 @@ const configCars: MdtChartsConfig = {
         charts: [
             {
                 isSegmented: false,
-                type: 'line',
+                type: 'bar',
+                data: {
+                    valueFields: [
+                        {
+                            name: 'count',
+                            format: 'money',
+                            title: 'Количество',
+                            color: "rgb(204, 204, 204)"
+                        }
+                    ],
+                    valueGroup: "secondary"
+                },
+                embeddedLabels: 'none',
+                markers: {
+                    show: false
+                },
+                lineStyles: {
+                    dash: {
+                        on: true,
+                        dashSize: 3,
+                        gapSize: 3
+                    }
+                },
+                barStyles: {
+                    hatch: {
+                        on: false
+                    },
+                    borderRadius: {
+                        value: 0
+                    }
+                }
+            },
+            {
+                isSegmented: false,
+                type: 'area',
                 data: {
                     valueFields: [
                         {
                             name: 'price',
                             format: 'money',
-                            title: 'Рубли'
+                            title: 'Рубли',
+                            color: "rgb(235, 80, 0)"
+                        },
+                        {
+                            name: 'count',
+                            format: 'money',
+                            title: 'Рубли',
+                            color: "rgb(143, 23, 129)"
                         },
                     ],
                     valueGroup: "main"
@@ -111,41 +154,19 @@ const configCars: MdtChartsConfig = {
                         on: false
                     }
                 },
+                areaStyles: {
+                    borderLine: {
+                        on: true
+                    },
+                    gradient: {
+                        on: true
+                    }
+                },
                 valueLabels: {
                     on: false,
                     // format: (value) => nFormatter(value),
                 }
             },
-            {
-                isSegmented: false,
-                type: 'bar',
-                data: {
-                    valueFields: [
-                        {
-                            name: 'count',
-                            format: 'money',
-                            title: 'Количество'
-                        }
-                    ],
-                    valueGroup: "main"
-                },
-                embeddedLabels: 'none',
-                markers: {
-                    show: false
-                },
-                lineStyles: {
-                    dash: {
-                        on: true,
-                        dashSize: 3,
-                        gapSize: 3
-                    }
-                },
-                barStyles: {
-                    hatch: {
-                        on: false
-                    }
-                }
-            }
         ],
     }
     // options: {
@@ -193,6 +214,8 @@ function nFormatter(num: number, digits: number = 1) {
         var re = new RegExp('^-?\\d+(?:\.\\d{0,' + (fixed || -1) + '})?');
         return num.toString().match(re)[0];
     }
+
+    if (num !== 0 && num < 1) return num.toFixed(digits);
 
     const lookup = [
         { value: 1, symbol: "" },

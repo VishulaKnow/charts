@@ -21,6 +21,7 @@ import { Line } from "./line/line";
 import { CanvasValueLabels } from "../../engine/features/valueLabels/valueLabels";
 import { LinearGradientDef } from "../../engine/block/defs/LinearGradientDef";
 import { CanvasDotChart } from "./dot/dotChart";
+import { FilterEventManager } from "../filterManager/filterEventManager";
 
 
 export class TwoDimensionalManager implements ChartContentManager {
@@ -91,7 +92,7 @@ export class TwoDimensionalManager implements ChartContentManager {
         engine.block.getSvg()
             .on('click', (e: MouseEvent) => {
                 if (e.target === engine.block.getSvg().node())
-                    engine.block.filterEventManager.clearKeysFor2D(options);
+                    this.clearSelection(engine.block.filterEventManager, model);
             });
 
         this.canvasValueLabels = new CanvasValueLabels({
@@ -179,6 +180,10 @@ export class TwoDimensionalManager implements ChartContentManager {
             else if (chart.type === 'area')
                 Area.get({ staticSettings: model.options.chartSettings.lineLike }).updateColors(block, chart);
         });
+    }
+
+    public clearSelection(filterEventManager: FilterEventManager, model: Model<TwoDimensionalOptionsModel>): void {
+        filterEventManager.clearKeysFor2D(model.options);
     }
 
     private renderCharts(block: Block, charts: TwoDimensionalChartModel[], scales: ScalesWithSecondary, data: MdtChartsDataSource, dataOptions: OptionsModelData, margin: BlockMargin, keyAxisOrient: Orient, chartSettings: TwoDimChartElementsSettings, blockSize: Size) {

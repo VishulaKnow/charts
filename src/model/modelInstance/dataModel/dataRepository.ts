@@ -31,7 +31,8 @@ export class DataRepositoryModel {
             })
         });
         const biggest = Math.max(...values);
-        return [biggest, biggest - 1];
+        const biggestDecremented = Math.abs(biggest) > 1 ? (biggest - 1) : (biggest - 0.1);
+        return [biggest, biggestDecremented];
     }
 
     initRawFullSource(rawSource: MdtChartsDataSource) {
