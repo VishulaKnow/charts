@@ -273,7 +273,6 @@
     font-family: "Roboto", sans-serif;
     font-style: normal;
     font-weight: 500;
-    font-size: var(--chart-title-font-size);
     line-height: 140.62%;
     cursor: default;
 }

@@ -28,7 +28,6 @@ import {
     parseDashStyles,
     parseShape
 } from "./twoDimensional/styles";
-import { getResolvedTitle } from "../../model/featuresModel/titleModel";
 import { DataRepositoryModel } from "../modelInstance/dataModel/dataRepository";
 import {
     calculateValueLabelAlignment,
@@ -36,6 +35,7 @@ import {
 } from "../../model/featuresModel/valueLabelsModel/valueLabelsModel";
 import { CanvasModel } from "../modelInstance/canvasModel/canvasModel";
 import { TwoDimensionalModelHelper } from "../helpers/twoDimensionalModelHelper";
+import { TitleConfigReader } from "../modelInstance/titleConfigReader";
 
 
 export class TwoDimensionalModel {
@@ -43,6 +43,7 @@ export class TwoDimensionalModel {
         const options = configReader.options;
         const canvasModel = modelInstance.canvasModel;
         const scaleModel = new ScaleModel();
+        const titleConfig = TitleConfigReader.create(options.title, modelInstance);
         const scaleMarginRecalcer = new ScaleAxisRecalcer(() => scaleModel.getScaleLinear(options, modelInstance.dataModel.repository.getScopedRows(), canvasModel, configReader));
         scaleMarginRecalcer.recalculateMargin(canvasModel, options.orientation, options.axis.key);
         const scaleValueInfo = scaleMarginRecalcer.getScaleValue();
@@ -62,7 +63,10 @@ export class TwoDimensionalModel {
 
         return {
             legend: canvasModel.legendCanvas.getModel(),
-            title: getResolvedTitle(options.title, modelInstance.dataModel.repository.getRawRows()),
+            title: {
+                textContent: titleConfig.getTextContent(),
+                fontSize: titleConfig.getFontSize(),
+            },
             selectable: !!options.selectable,
             orient: options.orientation,
             scale: {

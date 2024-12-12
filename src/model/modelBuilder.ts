@@ -9,7 +9,7 @@ import { OtherComponentsModel } from './featuresModel/otherComponents';
 import { ConfigValidator } from './configsValidator/configValidator';
 import { ModelInstance } from './modelInstance/modelInstance';
 import { TwoDimConfigReader } from './modelInstance/configReader';
-import { getResolvedTitle } from "../model/featuresModel/titleModel";
+import { TitleConfigReader } from "./modelInstance/titleConfigReader";
 
 
 export enum AxisType {
@@ -93,7 +93,7 @@ export function assembleModel(config: MdtChartsConfig, data: MdtChartsDataSource
         {
             elementsOptions: designerConfig.elementsOptions,
             legendConfig: designerConfig.canvas.legendBlock,
-            title: getResolvedTitle(config.options.title, modelInstance.dataModel.repository.getRawRows())
+            titleConfig: TitleConfigReader.create(config.options.title, modelInstance)
         },
         modelInstance
     );
