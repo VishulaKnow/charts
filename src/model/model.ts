@@ -275,6 +275,7 @@ interface SegmentedBarBorderRadius {
 
 export interface TwoDimensionalValueLabels {
     collision: ValueLabelsCollision;
+    style: ValueLabelsStyleModel;
 }
 
 export interface ValueLabelsCollision {
@@ -284,6 +285,12 @@ export interface ValueLabelsCollision {
 
 export interface OtherValueLables {
     mode: ValueLabelsCollisionMode;
+}
+
+export interface ValueLabelsStyleModel {
+    cssClassName?: string;
+    fontSize: number;
+    color: string;
 }
 
 export interface ValueLabelsChartBlock {

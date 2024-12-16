@@ -70,7 +70,7 @@ const configCars: MdtChartsConfig = {
         },
         orientation: 'vertical',
         data: {
-            dataSource: 'dataSet-months',
+            dataSource: 'dataSet',
             keyField: {
                 name: 'brand',
                 format: 'string'
@@ -81,43 +81,59 @@ const configCars: MdtChartsConfig = {
                 otherValueLabels: {
                     mode: "hide"
                 }
+            },
+            style: {
+                cssClassName: "value-labels-style",
+                fontSize: 12,
+                color: "rgba(68, 68, 68, 1)"
             }
         },
-        charts: [
-            {
-                isSegmented: false,
-                type: 'bar',
-                data: {
-                    valueFields: [
-                        {
-                            name: 'count',
-                            format: 'money',
-                            title: 'Количество',
-                            color: "rgb(204, 204, 204)"
-                        }
-                    ],
-                    valueGroup: "secondary"
-                },
-                embeddedLabels: 'none',
-                markers: {
-                    show: false
-                },
-                lineStyles: {
-                    dash: {
-                        on: true,
-                        dashSize: 3,
-                        gapSize: 3
+        tooltip: {
+            aggregator: {
+                content: ({ row }) => {
+                    return {
+                        type: "captionValue",
+                        caption: "Количество",
+                        value: row.brand
                     }
                 },
-                barStyles: {
-                    hatch: {
-                        on: false
-                    },
-                    borderRadius: {
-                        value: 0
-                    }
-                }
+                position: "underValues"
             },
+        },
+        charts: [
+            // {
+            //     isSegmented: false,
+            //     type: 'bar',
+            //     data: {
+            //         valueFields: [
+            //             {
+            //                 name: 'count',
+            //                 format: 'money',
+            //                 title: 'Количество'
+            //             }
+            //         ],
+            //         valueGroup: "secondary"
+            //     },
+            //     embeddedLabels: 'none',
+            //     markers: {
+            //         show: false
+            //     },
+            //     lineStyles: {
+            //         dash: {
+            //             on: true,
+            //             dashSize: 3,
+            //             gapSize: 3
+            //         }
+            //     },
+            //     barStyles: {
+            //         hatch: {
+            //             on: false
+            //         },
+            //         borderRadius: {
+            //             value: 0
+            //         }
+            //     }
+            // },
             {
                 isSegmented: false,
                 type: 'area',
@@ -128,12 +144,6 @@ const configCars: MdtChartsConfig = {
                             format: 'money',
                             title: 'Рубли',
                             color: "rgb(235, 80, 0)"
-                        },
-                        {
-                            name: 'count',
-                            format: 'money',
-                            title: 'Рубли',
-                            color: "rgb(143, 23, 129)"
                         },
                     ],
                     valueGroup: "main"
@@ -163,7 +173,7 @@ const configCars: MdtChartsConfig = {
                     }
                 },
                 valueLabels: {
-                    on: false,
+                    on: true,
                     // format: (value) => nFormatter(value),
                 }
             },

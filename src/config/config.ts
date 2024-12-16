@@ -244,7 +244,8 @@ export interface MdtChartsShowAxisLabelRule {
 }
 
 export interface MdtChartsTwoDimensionalValueLabels {
-    collision: ValueLabelsCollision;
+    collision?: ValueLabelsCollision;
+    style?: ValueLabelsStyleOptions;
 }
 
 export interface ValueLabelsCollision {
@@ -253,6 +254,12 @@ export interface ValueLabelsCollision {
 
 export interface OtherValueLabels {
     mode: ValueLabelsCollisionMode;
+}
+
+export interface ValueLabelsStyleOptions {
+    cssClassName?: string;
+    fontSize?: number;
+    color?: string;
 }
 
 

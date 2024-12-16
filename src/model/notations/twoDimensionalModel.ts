@@ -84,7 +84,7 @@ export class TwoDimensionalModel {
             additionalElements: this.getAdditionalElements(options),
             tooltip: options.tooltip,
             chartSettings: this.getChartsSettings(designerConfig.canvas.chartOptions, options.orientation),
-            valueLabels: TwoDimensionalModelHelper.getValueLabels(options.valueLabels, canvasModel, options.orientation),
+            valueLabels: TwoDimensionalModelHelper.getValueLabels(options.valueLabels, canvasModel, options.orientation, configReader.getValueLabelsStyleModel()),
             defs: {
                 gradients: TwoDimensionalModelHelper.getGradientDefs(charts, keyAxis.orient, options.orientation)
             }

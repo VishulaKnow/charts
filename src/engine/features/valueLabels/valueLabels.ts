@@ -8,6 +8,7 @@ import {
     ValueLabelAnchor,
     ValueLabelDominantBaseline,
     ValueLabelsFormatter,
+    ValueLabelsStyleModel,
 } from "../../../model/model";
 import { ChartOrientation, MdtChartsDataRow, MdtChartsDataSource } from "../../../config/config";
 import { Scales, ScalesWithSecondary } from "../../../engine/features/scale/scale";
@@ -17,6 +18,7 @@ import { BaseType, select, Selection } from "d3-selection";
 import { DomHelper } from "../../../engine/helpers/domHelper";
 import { CLASSES } from "../../../model/modelBuilder";
 import { ValueLabelsCollision } from "../../../engine/features/valueLabelsCollision/valueLabelsCollision";
+import { Pipeline } from "../../helpers/pipeline/Pipeline";
 
 
 export interface ValueLabelsOptions {
@@ -29,6 +31,7 @@ export interface ValueLabelsOptions {
     canvas: {
         keyAxisOrient: Orient;
         valueLabels: TwoDimensionalValueLabels;
+        style: ValueLabelsStyleModel;
     }
 }
 
@@ -41,16 +44,31 @@ export interface ValueLabelAttrs {
 
 export class ChartValueLabels {
     private static readonly valueLabelClass = NamesHelper.getClassName("value-label");
+    private readonly renderPipeline = new Pipeline<Selection<SVGTextElement, MdtChartsDataRow, SVGGElement, unknown>, { style: ValueLabelsStyleModel }>();
 
-    constructor(private readonly globalOptions: ValueLabelsOptions, private readonly chart: TwoDimensionalChartModel) { }
+
+    constructor(private readonly globalOptions: ValueLabelsOptions, private readonly chart: TwoDimensionalChartModel) {
+        this.renderPipeline.push((valueLabels, { style }) => {
+            valueLabels
+                .attr('fill', 'currentColor')
+                .style('font-size', style.fontSize)
+                .style('color', style.color);
+
+            if (style.cssClassName)
+                valueLabels.classed(style.cssClassName, true);
+
+            return valueLabels;
+        });
+    }
 
     render(scales: Scales, data: MdtChartsDataRow[]) {
         this.chart.data.valueFields.forEach((valueField, vfIndex) => {
-            const valueLabels = this.getAllValueLabelsOfChart(vfIndex)
+            let valueLabels = this.getAllValueLabelsOfChart(vfIndex)
                 .data(data)
                 .enter()
                 .append('text');
 
+            valueLabels = this.renderPipeline.execute(valueLabels, { style: this.globalOptions.canvas.style });
             const attrs = ValueLabelsHelper.getValueLabelsAttrs(this.globalOptions, this.chart.valueLabels, scales, valueField);
 
             this.setAttrs(valueLabels, attrs, valueField.name, this.chart.valueLabels.format);
@@ -69,9 +87,11 @@ export class ChartValueLabels {
 
                 const attrs = ValueLabelsHelper.getValueLabelsAttrs(this.globalOptions, this.chart.valueLabels, scales, valueField);
 
-                const newValueLabels = valueLabels
+                let newValueLabels = valueLabels
                     .enter()
                     .append('text');
+
+                newValueLabels = this.renderPipeline.execute(newValueLabels, { style: this.globalOptions.canvas.style });
 
                 const mergedValueLabels = newValueLabels.merge(valueLabels as Selection<SVGTextElement, MdtChartsDataRow, SVGGElement, unknown>);
 
@@ -146,7 +166,7 @@ export class CanvasValueLabels {
             chartValueLabels.render(chartScales, data[dataOptions.dataSource]);
         });
 
-            const valueLabels = this.getAllValueLabels();
+        const valueLabels = this.getAllValueLabels();
         ValueLabelsCollision.resolveValueLabelsCollisions(valueLabels, valueLabelsSettings);
     }
 

@@ -579,7 +579,7 @@ describe('getValueLabels', () => {
     });
 
     test('should return shift value mode for left and right sides, because chartOrientation is vertical', () => {
-        const result = TwoDimensionalModelHelper.getValueLabels(valueLabels, canvasModelMock, 'vertical');
+        const result = TwoDimensionalModelHelper.getValueLabels(valueLabels, canvasModelMock, 'vertical', { fontSize: 10, color: "rgba(68, 68, 68, 0.7)" });
 
         expect(result.collision.chartBlock.left.mode).toEqual('shift');
         expect(result.collision.chartBlock.right.mode).toEqual('shift');
@@ -588,7 +588,7 @@ describe('getValueLabels', () => {
     });
 
     test('should return shift value mode for top and bottom sides, because chartOrientation is horizontal', () => {
-        const result = TwoDimensionalModelHelper.getValueLabels(valueLabels, canvasModelMock, 'horizontal');
+        const result = TwoDimensionalModelHelper.getValueLabels(valueLabels, canvasModelMock, 'horizontal', { fontSize: 10, color: "rgba(68, 68, 68, 0.7)" });
 
         expect(result.collision.chartBlock.left.mode).toEqual('none');
         expect(result.collision.chartBlock.right.mode).toEqual('none');

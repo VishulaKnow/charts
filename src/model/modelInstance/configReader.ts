@@ -15,6 +15,7 @@ import {
 import { DesignerConfig } from "../../designer/designerConfig";
 import { DataRepositoryModel } from "../../model/modelInstance/dataModel/dataRepository";
 import { getResolvedDomain } from "../../model/featuresModel/scaleModel/scaleDomainService";
+import { ValueLabelsStyleModel } from "../model";
 
 interface BaseConfigReader {
     getValueFields(): MdtChartsField[];
@@ -111,6 +112,14 @@ export class TwoDimConfigReader implements BaseConfigReader {
 
     isValueLabelsOn(): boolean {
         return this.options.charts.some(chart => chart.valueLabels?.on);
+    }
+
+    getValueLabelsStyleModel(): ValueLabelsStyleModel {
+        return {
+            fontSize: this.options.valueLabels?.style?.fontSize ?? 10,
+            color: this.options.valueLabels?.style?.color ?? "rgba(68, 68, 68, 0.5)",
+            cssClassName: this.options.valueLabels?.style?.cssClassName
+        }
     }
 
     private calculateBiggestValueAndDecremented(repository: DataRepositoryModel, domain: AxisNumberDomain, fields: MdtChartsFieldName[][]): number[] {

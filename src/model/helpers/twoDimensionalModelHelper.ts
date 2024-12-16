@@ -1,5 +1,5 @@
 import { ChartOrientation, MdtChartsDataRow, MdtChartsTwoDimensionalChart, MdtChartsTwoDimensionalValueLabels } from "../../config/config";
-import { GradientDef, MarkDotDatumItem, Orient, TwoDimensionalChartModel, TwoDimensionalValueLabels, ValueLabelsChartBlock } from "../model";
+import { GradientDef, MarkDotDatumItem, Orient, TwoDimensionalChartModel, TwoDimensionalValueLabels, ValueLabelsChartBlock, ValueLabelsStyleModel } from "../model";
 import { getGradientId } from "../../model/notations/twoDimensional/styles";
 import { CanvasModel } from "../modelInstance/canvasModel/canvasModel";
 import { BoundingRect } from "../../engine/features/valueLabelsCollision/valueLabelsCollision";
@@ -79,7 +79,7 @@ export class TwoDimensionalModelHelper {
             return itemIndex === 0 ? minColor : maxColor;
     }
 
-    public static getValueLabels(valueLabels: MdtChartsTwoDimensionalValueLabels, canvasModel: CanvasModel, chartOrientation: ChartOrientation): TwoDimensionalValueLabels {
+    public static getValueLabels(valueLabels: MdtChartsTwoDimensionalValueLabels, canvasModel: CanvasModel, chartOrientation: ChartOrientation, styleModel: ValueLabelsStyleModel): TwoDimensionalValueLabels {
         const blockSidesOptions = this.getChartBlockSidesOptions(canvasModel);
 
         const chartBlockConfig = {
@@ -123,11 +123,12 @@ export class TwoDimensionalModelHelper {
 
         return {
             collision: {
-                otherValueLables: valueLabels?.collision.otherValueLabels ?? {
+                otherValueLables: valueLabels?.collision?.otherValueLabels ?? {
                     mode: 'none'
                 },
                 chartBlock: chartBlockConfig[chartOrientation]
-            }
+            },
+            style: styleModel
         }
     }
 
