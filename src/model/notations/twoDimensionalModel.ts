@@ -21,6 +21,7 @@ import {
 import { TwoDimConfigReader } from "../modelInstance/configReader";
 import { ModelInstance } from "../modelInstance/modelInstance";
 import {
+    calculateBarIndexes,
     getAreaViewOptions,
     getBarViewOptions,
     getLegendMarkerOptions,
@@ -148,7 +149,7 @@ export class TwoDimensionalModel {
                     strokeWidth: chart.lineStyles?.width ?? LINE_CHART_DEFAULT_WIDTH,
                     renderForKey: (dataRow, valueFieldName) => dataRow[valueFieldName] !== null && dataRow[valueFieldName] !== undefined
                 },
-                barViewOptions: getBarViewOptions(chart, keyAxisOrient),
+                barViewOptions: getBarViewOptions(chart, keyAxisOrient, calculateBarIndexes(charts, chart, index)),
                 legend: getLegendMarkerOptions(chart),
                 index,
                 valueLabels: {

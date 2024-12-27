@@ -107,7 +107,7 @@ export class Bar {
                 margin,
                 keyField.name,
                 field.name,
-                BarHelper.getBarIndex(barsAmounts, chart.index - firstBarIndex) + index,
+                chart.barViewOptions.barIndexes[index],
                 sum(barsAmounts),
                 barSettings);
 
@@ -151,7 +151,7 @@ export class Bar {
             scales,
             margin,
             keyField.name,
-            BarHelper.getBarIndex(barsAmounts, chart.index) - firstBarIndex,
+            chart.barViewOptions.barIndexes[0],
             sum(barsAmounts),
             barSettings);
 
@@ -210,7 +210,7 @@ export class Bar {
                 margin,
                 keyField.name,
                 valueField.name,
-                BarHelper.getBarIndex(barsAmounts, chart.index) + index - firstBarIndex,
+                chart.barViewOptions.barIndexes[index],
                 sum(barsAmounts),
                 barSettings);
 
@@ -270,7 +270,7 @@ export class Bar {
             scales,
             margin,
             keyField.name,
-            BarHelper.getBarIndex(barsAmounts, chart.index) - firstBarIndex,
+            chart.barViewOptions.barIndexes[0],
             sum(barsAmounts),
             barSettings);
 

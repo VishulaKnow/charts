@@ -34,7 +34,7 @@ export function parseDashStyles(configOptions?: MdtChartsLineLikeChartDashedStyl
     }
 }
 
-export function getBarViewOptions(chart: MdtChartsTwoDimensionalChart, keyAxisOrient: Orient): TwoDimensionalBarLikeChartViewModel {
+export function getBarViewOptions(chart: MdtChartsTwoDimensionalChart, keyAxisOrient: Orient, barIndexes: number[]): TwoDimensionalBarLikeChartViewModel {
     const hatch = { on: chart.barStyles?.hatch?.on ?? false };
     const defaultRadius = chart.barStyles?.borderRadius?.value ?? BAR_CHART_BORDER_RADIUS_DEFAULT;
 
@@ -45,7 +45,17 @@ export function getBarViewOptions(chart: MdtChartsTwoDimensionalChart, keyAxisOr
         }
     };
 
-    return { hatch, borderRadius };
+    return { hatch, borderRadius, barIndexes };
+}
+
+export function calculateBarIndexes(
+    allCharts: Pick<MdtChartsTwoDimensionalChart, "isSegmented" | "data" | "type">[],
+    currentChart: Pick<MdtChartsTwoDimensionalChart, "isSegmented" | "data" | "type">,
+    currentChartIndex: number): number[] {
+    const prevBarCharts = allCharts.slice(0, currentChartIndex).filter(ch => ch.type === "bar");
+    const startBarIndex = prevBarCharts.reduce((acc, ch) => acc + (ch.isSegmented ? 1 : ch.data.valueFields.length), 0);
+    if (currentChart.isSegmented) return [startBarIndex];
+    return currentChart.data.valueFields.map((_, index) => startBarIndex + index);
 }
 
 function getRadiusValues(defaultRadius: number): BarBorderRadius {

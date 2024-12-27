@@ -383,6 +383,7 @@ interface TwoDimensionalBarLikeChartModel {
 export interface TwoDimensionalBarLikeChartViewModel {
     hatch: BarLikeChartHatchOptions;
     borderRadius: BarLikeChartBorderRadius;
+    barIndexes: number[];
 }
 
 interface TwoDimensionalAreaChartModel {

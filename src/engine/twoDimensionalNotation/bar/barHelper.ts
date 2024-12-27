@@ -94,25 +94,6 @@ export class BarHelper {
         return amounts;
     }
 
-    /**
-     * Получение индекса бара среди всх графиков и value-филдов. Используется для того, чтобы узнать, какой по счету в группе 
-     * этот бар идет (сегментированный всегда один, группированный - количество value-филдов).
-     * @param barsAmounts 
-     * @param chartIndex 
-     */
-    public static getBarIndex(barsAmounts: number[], chartIndex: number): number {
-        if (barsAmounts.length < 2)
-            return 0;
-
-        let index = 0;
-        barsAmounts.forEach((chartBars, i) => {
-            if (i < chartIndex) {
-                index += chartBars;
-            }
-        });
-        return index;
-    }
-
     static setBarAttrsByKey(attrs: BarAttrsHelper, keyAxisOrient: Orient, scaleKey: AxisScale<any>, margin: BlockMargin, keyField: string, barIndex: number, settingsStore: BandLikeChartSettingsStore, isSegmented: boolean): void {
         if (keyAxisOrient === 'top' || keyAxisOrient === 'bottom') {
             attrs.x = d => scaleKey(Helper.getKeyFieldValue(d, keyField, isSegmented)) + margin.left + settingsStore.getBandItemPad(barIndex);
