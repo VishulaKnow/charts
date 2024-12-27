@@ -205,7 +205,6 @@ export class TwoDimensionalManager implements ChartContentManager {
                     blockSize,
                     chartSettings.bar,
                     BarHelper.getBarsInGroupAmount(charts),
-                    chart.isSegmented,
                     charts.findIndex(ch => ch.type === 'bar'));
             else if (chart.type === 'line')
                 Line.get({ staticSettings: chartSettings.lineLike }).render(block,
@@ -246,8 +245,7 @@ export class TwoDimensionalManager implements ChartContentManager {
                     BarHelper.getBarsInGroupAmount(charts),
                     dataOptions.keyField,
                     charts.findIndex(ch => ch.type === 'bar'),
-                    chartSettings.bar,
-                    chart.isSegmented);
+                    chartSettings.bar);
             } else if (chart.type === 'line') {
                 proms = Line.get({ staticSettings: chartSettings.lineLike }).update(block,
                     chartScales,
@@ -263,7 +261,8 @@ export class TwoDimensionalManager implements ChartContentManager {
                     data[dataOptions.dataSource],
                     dataOptions.keyField,
                     margin,
-                    chart, keyAxisOrient);
+                    chart,
+                    keyAxisOrient);
             }
             else if (chart.type === 'dot') {
                 proms = this.dotChart.update(chartScales, data[dataOptions.dataSource], margin);

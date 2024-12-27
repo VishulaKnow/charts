@@ -41,16 +41,16 @@ export class Bar {
         onBarChartInit(this.createBarPipeline, this.createSegmentGroupBarsPipeline);
     }
 
-    public render(block: Block, scales: Scales, data: MdtChartsDataRow[], keyField: Field, margin: BlockMargin, keyAxisOrient: Orient, chart: TwoDimensionalChartModel, blockSize: Size, barSettings: BarChartSettings, barsAmounts: number[], isSegmented: boolean, firstBarIndex: number): void {
-        if (isSegmented)
+    public render(block: Block, scales: Scales, data: MdtChartsDataRow[], keyField: Field, margin: BlockMargin, keyAxisOrient: Orient, chart: TwoDimensionalChartModel, blockSize: Size, barSettings: BarChartSettings, barsAmounts: number[], firstBarIndex: number): void {
+        if (chart.isSegmented)
             this.renderSegmented(block, scales, data, keyField, margin, keyAxisOrient, chart, barsAmounts, firstBarIndex, barSettings);
         else
             this.renderGrouped(block, scales, data, keyField, margin, keyAxisOrient, chart, barsAmounts, blockSize, firstBarIndex, barSettings);
     }
 
-    public update(block: Block, newData: MdtChartsDataRow[], scales: Scales, margin: BlockMargin, keyAxisOrient: Orient, chart: TwoDimensionalChartModel, blockSize: Size, barsAmounts: number[], keyField: Field, firstBarIndex: number, barSettings: BarChartSettings, isSegmented: boolean): Promise<any>[] {
+    public update(block: Block, newData: MdtChartsDataRow[], scales: Scales, margin: BlockMargin, keyAxisOrient: Orient, chart: TwoDimensionalChartModel, blockSize: Size, barsAmounts: number[], keyField: Field, firstBarIndex: number, barSettings: BarChartSettings): Promise<any>[] {
         let promises: Promise<any>[];
-        if (isSegmented) {
+        if (chart.isSegmented) {
             promises = this.updateSegmented(block,
                 newData,
                 scales,
