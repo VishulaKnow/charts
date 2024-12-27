@@ -204,8 +204,7 @@ export class TwoDimensionalManager implements ChartContentManager {
                     chart,
                     blockSize,
                     chartSettings.bar,
-                    BarHelper.getBarsInGroupAmount(charts),
-                    charts.findIndex(ch => ch.type === 'bar'));
+                    BarHelper.getBarsInGroupAmount(charts));
             else if (chart.type === 'line')
                 Line.get({ staticSettings: chartSettings.lineLike }).render(block,
                     chartScales,
@@ -244,7 +243,6 @@ export class TwoDimensionalManager implements ChartContentManager {
                     blockSize,
                     BarHelper.getBarsInGroupAmount(charts),
                     dataOptions.keyField,
-                    charts.findIndex(ch => ch.type === 'bar'),
                     chartSettings.bar);
             } else if (chart.type === 'line') {
                 proms = Line.get({ staticSettings: chartSettings.lineLike }).update(block,

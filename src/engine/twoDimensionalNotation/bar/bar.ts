@@ -41,14 +41,14 @@ export class Bar {
         onBarChartInit(this.createBarPipeline, this.createSegmentGroupBarsPipeline);
     }
 
-    public render(block: Block, scales: Scales, data: MdtChartsDataRow[], keyField: Field, margin: BlockMargin, keyAxisOrient: Orient, chart: TwoDimensionalChartModel, blockSize: Size, barSettings: BarChartSettings, barsAmounts: number[], firstBarIndex: number): void {
+    public render(block: Block, scales: Scales, data: MdtChartsDataRow[], keyField: Field, margin: BlockMargin, keyAxisOrient: Orient, chart: TwoDimensionalChartModel, blockSize: Size, barSettings: BarChartSettings, barsAmounts: number[]): void {
         if (chart.isSegmented)
-            this.renderSegmented(block, scales, data, keyField, margin, keyAxisOrient, chart, barsAmounts, firstBarIndex, barSettings);
+            this.renderSegmented(block, scales, data, keyField, margin, keyAxisOrient, chart, barsAmounts, barSettings);
         else
-            this.renderGrouped(block, scales, data, keyField, margin, keyAxisOrient, chart, barsAmounts, blockSize, firstBarIndex, barSettings);
+            this.renderGrouped(block, scales, data, keyField, margin, keyAxisOrient, chart, barsAmounts, blockSize, barSettings);
     }
 
-    public update(block: Block, newData: MdtChartsDataRow[], scales: Scales, margin: BlockMargin, keyAxisOrient: Orient, chart: TwoDimensionalChartModel, blockSize: Size, barsAmounts: number[], keyField: Field, firstBarIndex: number, barSettings: BarChartSettings): Promise<any>[] {
+    public update(block: Block, newData: MdtChartsDataRow[], scales: Scales, margin: BlockMargin, keyAxisOrient: Orient, chart: TwoDimensionalChartModel, blockSize: Size, barsAmounts: number[], keyField: Field, barSettings: BarChartSettings): Promise<any>[] {
         let promises: Promise<any>[];
         if (chart.isSegmented) {
             promises = this.updateSegmented(block,
@@ -57,10 +57,8 @@ export class Bar {
                 margin,
                 keyAxisOrient,
                 chart,
-                blockSize,
                 barsAmounts,
                 keyField,
-                firstBarIndex,
                 barSettings);
         } else {
             promises = this.updateGrouped(block,
@@ -72,7 +70,6 @@ export class Bar {
                 blockSize,
                 barsAmounts,
                 keyField,
-                firstBarIndex,
                 barSettings);
         }
         return promises;
@@ -90,7 +87,7 @@ export class Bar {
         return block.getSvg().selectAll(`rect.${this.barItemClass}${Helper.getCssClassesLine(chartCssClasses)}`);
     }
 
-    private renderGrouped(block: Block, scales: Scales, data: MdtChartsDataRow[], keyField: Field, margin: BlockMargin, keyAxisOrient: Orient, chart: TwoDimensionalChartModel, barsAmounts: number[], blockSize: Size, firstBarIndex: number, barSettings: BarChartSettings): void {
+    private renderGrouped(block: Block, scales: Scales, data: MdtChartsDataRow[], keyField: Field, margin: BlockMargin, keyAxisOrient: Orient, chart: TwoDimensionalChartModel, barsAmounts: number[], blockSize: Size, barSettings: BarChartSettings): void {
         chart.data.valueFields.forEach((field, index) => {
             let bars = block.svg.getChartGroup(chart.index)
                 .selectAll(`.${this.barItemClass}${Helper.getCssClassesLine(chart.cssClasses)}${Helper.getCssClassesLine(Helper.getCssClassesWithElementIndex(chart.cssClasses, index))}`)
@@ -123,7 +120,7 @@ export class Bar {
         });
     }
 
-    private renderSegmented(block: Block, scales: Scales, data: MdtChartsDataRow[], keyField: Field, margin: BlockMargin, keyAxisOrient: Orient, chart: TwoDimensionalChartModel, barsAmounts: number[], firstBarIndex: number, barSettings: BarChartSettings): void {
+    private renderSegmented(block: Block, scales: Scales, data: MdtChartsDataRow[], keyField: Field, margin: BlockMargin, keyAxisOrient: Orient, chart: TwoDimensionalChartModel, barsAmounts: number[], barSettings: BarChartSettings): void {
         const stackedData = getStackedDataWithOwn(data, chart.data.valueFields.map(field => field.name));
 
         let groups = block.svg.getChartGroup(chart.index)
@@ -172,7 +169,7 @@ export class Bar {
         });
     }
 
-    private updateGrouped(block: Block, newData: MdtChartsDataRow[], scales: Scales, margin: BlockMargin, keyAxisOrient: Orient, chart: TwoDimensionalChartModel, blockSize: Size, barsAmounts: number[], keyField: Field, firstBarIndex: number, barSettings: BarChartSettings): Promise<any>[] {
+    private updateGrouped(block: Block, newData: MdtChartsDataRow[], scales: Scales, margin: BlockMargin, keyAxisOrient: Orient, chart: TwoDimensionalChartModel, blockSize: Size, barsAmounts: number[], keyField: Field, barSettings: BarChartSettings): Promise<any>[] {
         const promises: Promise<any>[] = [];
         chart.data.valueFields.forEach((valueField, index) => {
             const indexesOfRemoved: number[] = [];
@@ -238,7 +235,7 @@ export class Bar {
         return promises;
     }
 
-    private updateSegmented(block: Block, newData: MdtChartsDataRow[], scales: Scales, margin: BlockMargin, keyAxisOrient: Orient, chart: TwoDimensionalChartModel, blockSize: Size, barsAmounts: number[], keyField: Field, firstBarIndex: number, barSettings: BarChartSettings): Promise<any>[] {
+    private updateSegmented(block: Block, newData: MdtChartsDataRow[], scales: Scales, margin: BlockMargin, keyAxisOrient: Orient, chart: TwoDimensionalChartModel, barsAmounts: number[], keyField: Field, barSettings: BarChartSettings): Promise<any>[] {
         const stackedData = getStackedDataWithOwn(newData, chart.data.valueFields.map(field => field.name));
 
         block.svg.getChartGroup(chart.index)
