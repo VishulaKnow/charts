@@ -213,12 +213,6 @@ const configCars: MdtChartsConfig = {
     // }
 }
 
-function createIcon(iconName: string) {
-    const element = document.createElement("i");
-    element.classList.add("fa", iconName);
-    return element;
-}
-
 function nFormatter(num: number, digits: number = 1) {
     function toFixed(num: number, fixed: number) {
         var re = new RegExp('^-?\\d+(?:\.\\d{0,' + (fixed || -1) + '})?');
