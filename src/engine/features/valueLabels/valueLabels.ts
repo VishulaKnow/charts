@@ -43,9 +43,9 @@ export interface ValueLabelAttrs {
 }
 
 export class ChartValueLabels {
-    private static readonly valueLabelClass = NamesHelper.getClassName("value-label");
-    private readonly renderPipeline = new Pipeline<Selection<SVGTextElement, MdtChartsDataRow, SVGGElement, unknown>, { style: ValueLabelsStyleModel }>();
+    public static readonly valueLabelClass = NamesHelper.getClassName("value-label");
 
+    private readonly renderPipeline = new Pipeline<Selection<SVGTextElement, MdtChartsDataRow, SVGGElement, unknown>, { style: ValueLabelsStyleModel }>();
 
     constructor(private readonly globalOptions: ValueLabelsOptions, private readonly chart: TwoDimensionalChartModel) {
         this.renderPipeline.push((valueLabels, { style }) => {
@@ -105,10 +105,6 @@ export class ChartValueLabels {
         });
 
         return Promise.all(updatePromises)
-    }
-
-    static getChartValueLabelsClassName(): string {
-        return ChartValueLabels.valueLabelClass;
     }
 
     private getAllValueLabelsOfChart(vfIndex: number): Selection<BaseType, unknown, SVGGElement, unknown> {
@@ -202,7 +198,7 @@ export class CanvasValueLabels {
     private getAllValueLabels(): Selection<SVGTextElement, MdtChartsDataRow, SVGGElement, unknown> {
         const block = this.options.elementAccessors.getBlock().svg.getChartBlock();
         return block
-            .selectAll<SVGTextElement, MdtChartsDataRow>(`.${ChartValueLabels.getChartValueLabelsClassName()}`);
+            .selectAll<SVGTextElement, MdtChartsDataRow>(`.${ChartValueLabels.valueLabelClass}`);
     }
 
     private getChartScales(scales: ScalesWithSecondary, chart: TwoDimensionalChartModel): Scales {
