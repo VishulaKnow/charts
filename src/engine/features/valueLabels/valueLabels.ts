@@ -82,30 +82,19 @@ export class ChartValueLabels {
     update(scales: Scales, newData: MdtChartsDataRow[]) {
         const updatePromises: Promise<void>[] = [];
 
-        this.chart.data.valueFields.forEach((valueField, vfIndex) => {
-            const updateProms = new Promise<void>((resolve) => {
-                const valueLabels = this.getAllValueLabelsOfChart(vfIndex)
-                    .data(newData);
-                valueLabels.exit().remove();
-
-                const attrs = this.attrsProvider.getAttrs(this.globalOptions, this.chart.valueLabels, scales, valueField.name, d => d);
-
-                let newValueLabels = valueLabels
-                    .enter()
-                    .append('text');
-
-                newValueLabels = this.renderPipeline.execute(newValueLabels, { style: this.globalOptions.canvas.style });
-
-                const mergedValueLabels = newValueLabels.merge(valueLabels as Selection<SVGTextElement, MdtChartsDataRow, SVGGElement, unknown>);
-
-                this.setAttrs(newValueLabels, attrs, valueField.name, this.chart.valueLabels.format, d => d);
-                this.setClasses(mergedValueLabels, this.chart.cssClasses, vfIndex);
-
-                this.setAttrs(valueLabels, attrs, valueField.name, this.chart.valueLabels.format, d => d, true, resolve);
+        if (this.chart.isSegmented) {
+            const preparedData = getStackedData(newData, this.chart);
+            preparedData.forEach((segment, segmentIndex) => {
+                const promise = this.updateByGroupIndex(scales, segmentIndex, segment, segment[0].fieldName, '1', d => d.data);
+                updatePromises.push(promise);
             });
-
-            updatePromises.push(updateProms);
-        });
+        }
+        else {
+            this.chart.data.valueFields.forEach((valueField, vfIndex) => {
+                const promise = this.updateByGroupIndex(scales, vfIndex, newData, valueField.name, valueField.name, d => d);
+                updatePromises.push(promise);
+            });
+        }
 
         return Promise.all(updatePromises)
     }
@@ -121,6 +110,36 @@ export class ChartValueLabels {
 
         this.setAttrs(valueLabels, attrs, valueFieldName, this.chart.valueLabels.format, dataRowAccessor);
         this.setClasses(valueLabels, this.chart.cssClasses, groupIndex);
+    }
+
+    private updateByGroupIndex(
+        scales: Scales,
+        groupIndex: number,
+        data: MdtChartsDataRow[] | Segment[],
+        valueFieldName: string,
+        datumField: string,
+        dataRowAccessor: (d: MdtChartsDataRow | Segment) => MdtChartsDataRow
+    ): Promise<void> {
+        return new Promise<void>((resolve) => {
+            const valueLabels = this.getAllValueLabelsOfChart(groupIndex)
+                .data(data);
+            valueLabels.exit().remove();
+
+            const attrs = this.attrsProvider.getAttrs(this.globalOptions, this.chart.valueLabels, scales, datumField, dataRowAccessor);
+
+            let newValueLabels = valueLabels
+                .enter()
+                .append('text');
+
+            newValueLabels = this.renderPipeline.execute(newValueLabels, { style: this.globalOptions.canvas.style });
+
+            const mergedValueLabels = newValueLabels.merge(valueLabels as Selection<SVGTextElement, MdtChartsDataRow, SVGGElement, unknown>);
+
+            this.setAttrs(newValueLabels, attrs, valueFieldName, this.chart.valueLabels.format, dataRowAccessor);
+            this.setClasses(mergedValueLabels, this.chart.cssClasses, groupIndex);
+
+            this.setAttrs(valueLabels, attrs, valueFieldName, this.chart.valueLabels.format, dataRowAccessor, true, resolve);
+        });
     }
 
     private getAllValueLabelsOfChart(vfIndex: number): Selection<BaseType, unknown, SVGGElement, unknown> {
