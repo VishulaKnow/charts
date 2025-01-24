@@ -11,27 +11,31 @@ export const OFFSET_SIZE_PX = 10;
 export const BORDER_OFFSET_SIZE_PX = 2;
 
 export class ValueLabelCoordinateCalculator {
-    constructor(private readonly offsetSizePx: number = OFFSET_SIZE_PX) { }
+    constructor(
+        private readonly offsetSizePx: number = OFFSET_SIZE_PX,
+        private readonly keyAxisOrient: Orient,
+        private readonly margin: BlockMargin
+    ) { }
 
-    getValueLabelY(scaledValue: number, keyAxisOrient: Orient, margin: BlockMargin) {
-        switch (keyAxisOrient) {
+    getValueLabelY(scaledValue: number) {
+        switch (this.keyAxisOrient) {
             case 'bottom':
-                return scaledValue - OFFSET_SIZE_PX + margin.top;
+                return scaledValue - this.offsetSizePx + this.margin.top;
             case 'top':
-                return scaledValue + OFFSET_SIZE_PX + margin.top;
+                return scaledValue + OFFSET_SIZE_PX + this.margin.top;
             default:
-                return scaledValue + margin.top;
+                return scaledValue + this.margin.top;
         }
     }
 
-    getValueLabelX(scaledValue: number, keyAxisOrient: Orient, margin: BlockMargin) {
-        switch (keyAxisOrient) {
+    getValueLabelX(scaledValue: number) {
+        switch (this.keyAxisOrient) {
             case 'right':
-                return scaledValue - OFFSET_SIZE_PX + margin.left;
+                return scaledValue - this.offsetSizePx + this.margin.left;
             case 'left':
-                return scaledValue + OFFSET_SIZE_PX + margin.left;
+                return scaledValue + OFFSET_SIZE_PX + this.margin.left;
             default:
-                return scaledValue + margin.left;
+                return scaledValue + this.margin.left;
         }
     }
 }

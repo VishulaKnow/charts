@@ -15,8 +15,6 @@ import { BlockMargin } from "../../model/model";
 import { BoundingRect } from "../../engine/features/valueLabelsCollision/valueLabelsCollision";
 import { Size } from "../../config/config";
 
-const calculator = new ValueLabelCoordinateCalculator();
-
 describe('getValueLabelX', () => {
     let scaledValue: number;
     let margin: BlockMargin
@@ -32,19 +30,22 @@ describe('getValueLabelX', () => {
     });
 
     test('should return valueLabel equal to 115, because orient is right', () => {
-        const result = calculator.getValueLabelX(scaledValue, 'right', margin)
+        const calculator = new ValueLabelCoordinateCalculator(undefined, 'right', margin);
+        const result = calculator.getValueLabelX(scaledValue)
 
         expect(result).toEqual(115);
     });
 
     test('should return valueLabel equal to 135, because orient is left', () => {
-        const result = calculator.getValueLabelX(scaledValue, 'left', margin)
+        const calculator = new ValueLabelCoordinateCalculator(undefined, 'left', margin);
+        const result = calculator.getValueLabelX(scaledValue)
 
         expect(result).toEqual(135);
     });
 
     test('should return valueLabel equal to 125, because no orient', () => {
-        const result = calculator.getValueLabelX(scaledValue, 'top', margin)
+        const calculator = new ValueLabelCoordinateCalculator(undefined, 'top', margin);
+        const result = calculator.getValueLabelX(scaledValue)
 
         expect(result).toEqual(125);
     });
@@ -65,19 +66,22 @@ describe('getValueLabelY', () => {
     });
 
     test('should return valueLabel equal to 125, because orient is top', () => {
-        const result = calculator.getValueLabelY(scaledValue, 'top', margin)
+        const calculator = new ValueLabelCoordinateCalculator(undefined, 'top', margin);
+        const result = calculator.getValueLabelY(scaledValue)
 
         expect(result).toEqual(125);
     });
 
     test('should return valueLabel equal to 135, because orient is bottom', () => {
-        const result = calculator.getValueLabelY(scaledValue, 'bottom', margin)
+        const calculator = new ValueLabelCoordinateCalculator(undefined, 'bottom', margin);
+        const result = calculator.getValueLabelY(scaledValue)
 
         expect(result).toEqual(105);
     });
 
     test('should return valueLabel equal to 115, because no orient', () => {
-        const result = calculator.getValueLabelY(scaledValue, 'left', margin)
+        const calculator = new ValueLabelCoordinateCalculator(undefined, 'left', margin);
+        const result = calculator.getValueLabelY(scaledValue)
 
         expect(result).toEqual(115);
     });

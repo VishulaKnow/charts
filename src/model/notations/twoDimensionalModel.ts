@@ -119,7 +119,7 @@ export class TwoDimensionalModel {
         charts.forEach((chart, index) => {
             const style = styleModel.getChartStyle(chart, index);
 
-            const valueLabelsCoordinateCalculator = new ValueLabelCoordinateCalculator();
+            const valueLabelsCoordinateCalculator = new ValueLabelCoordinateCalculator(undefined, keyAxisOrient, canvasModel.getMargin());
 
             chartsModel.push({
                 type: chart.type,
@@ -153,8 +153,8 @@ export class TwoDimensionalModel {
                 index,
                 valueLabels: {
                     show: chart.valueLabels?.on ?? false,
-                    handleX: (scaledValue) => valueLabelsCoordinateCalculator.getValueLabelX(scaledValue, keyAxisOrient, canvasModel.getMargin()),
-                    handleY: (scaledValue) => valueLabelsCoordinateCalculator.getValueLabelY(scaledValue, keyAxisOrient, canvasModel.getMargin()),
+                    handleX: (scaledValue) => valueLabelsCoordinateCalculator.getValueLabelX(scaledValue),
+                    handleY: (scaledValue) => valueLabelsCoordinateCalculator.getValueLabelY(scaledValue),
                     textAnchor: calculateValueLabelAlignment(keyAxisOrient).textAnchor,
                     dominantBaseline: calculateValueLabelAlignment(keyAxisOrient).dominantBaseline,
                     format: configReader.getValueLabelFormatterForChart(index),
