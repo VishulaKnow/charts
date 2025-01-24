@@ -30,10 +30,7 @@ import {
     parseShape
 } from "./twoDimensional/styles";
 import { DataRepositoryModel } from "../modelInstance/dataModel/dataRepository";
-import {
-    calculateValueLabelAlignment,
-    getValueLabelX, getValueLabelY
-} from "../../model/featuresModel/valueLabelsModel/valueLabelsModel";
+import { calculateValueLabelAlignment, ValueLabelCoordinateCalculator } from "../../model/featuresModel/valueLabelsModel/valueLabelsModel";
 import { CanvasModel } from "../modelInstance/canvasModel/canvasModel";
 import { TwoDimensionalModelHelper } from "../helpers/twoDimensionalModelHelper";
 import { TitleConfigReader } from "../modelInstance/titleConfigReader";
@@ -122,6 +119,8 @@ export class TwoDimensionalModel {
         charts.forEach((chart, index) => {
             const style = styleModel.getChartStyle(chart, index);
 
+            const valueLabelsCoordinateCalculator = new ValueLabelCoordinateCalculator();
+
             chartsModel.push({
                 type: chart.type,
                 isSegmented: chart.isSegmented,
@@ -154,8 +153,8 @@ export class TwoDimensionalModel {
                 index,
                 valueLabels: {
                     show: chart.valueLabels?.on ?? false,
-                    handleX: (scaledValue) => getValueLabelX(scaledValue, keyAxisOrient, canvasModel.getMargin()),
-                    handleY: (scaledValue) => getValueLabelY(scaledValue, keyAxisOrient, canvasModel.getMargin()),
+                    handleX: (scaledValue) => valueLabelsCoordinateCalculator.getValueLabelX(scaledValue, keyAxisOrient, canvasModel.getMargin()),
+                    handleY: (scaledValue) => valueLabelsCoordinateCalculator.getValueLabelY(scaledValue, keyAxisOrient, canvasModel.getMargin()),
                     textAnchor: calculateValueLabelAlignment(keyAxisOrient).textAnchor,
                     dominantBaseline: calculateValueLabelAlignment(keyAxisOrient).dominantBaseline,
                     format: configReader.getValueLabelFormatterForChart(index),

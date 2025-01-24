@@ -10,29 +10,33 @@ interface ValueLabelAlignment {
 export const OFFSET_SIZE_PX = 10;
 export const BORDER_OFFSET_SIZE_PX = 2;
 
-export function getValueLabelY(scaledValue: number, keyAxisOrient: Orient, margin: BlockMargin) {
-    switch (keyAxisOrient) {
-        case 'bottom':
-            return scaledValue - OFFSET_SIZE_PX + margin.top;
-        case 'top':
-            return scaledValue + OFFSET_SIZE_PX + margin.top;
-        default:
-            return scaledValue + margin.top;
+export class ValueLabelCoordinateCalculator {
+    constructor(private readonly offsetSizePx: number = OFFSET_SIZE_PX) { }
+
+    getValueLabelY(scaledValue: number, keyAxisOrient: Orient, margin: BlockMargin) {
+        switch (keyAxisOrient) {
+            case 'bottom':
+                return scaledValue - OFFSET_SIZE_PX + margin.top;
+            case 'top':
+                return scaledValue + OFFSET_SIZE_PX + margin.top;
+            default:
+                return scaledValue + margin.top;
+        }
+    }
+
+    getValueLabelX(scaledValue: number, keyAxisOrient: Orient, margin: BlockMargin) {
+        switch (keyAxisOrient) {
+            case 'right':
+                return scaledValue - OFFSET_SIZE_PX + margin.left;
+            case 'left':
+                return scaledValue + OFFSET_SIZE_PX + margin.left;
+            default:
+                return scaledValue + margin.left;
+        }
     }
 }
 
-export function getValueLabelX(scaledValue: number, keyAxisOrient: Orient, margin: BlockMargin) {
-    switch (keyAxisOrient) {
-        case 'right':
-            return scaledValue - OFFSET_SIZE_PX + margin.left;
-        case 'left':
-            return scaledValue + OFFSET_SIZE_PX + margin.left;
-        default:
-            return scaledValue + margin.left;
-    }
-}
-
-export function calculateValueLabelAlignment(keyAxisOrient: Orient): ValueLabelAlignment  {
+export function calculateValueLabelAlignment(keyAxisOrient: Orient): ValueLabelAlignment {
     switch (keyAxisOrient) {
         case 'top':
             return { dominantBaseline: "hanging", textAnchor: "middle" }
