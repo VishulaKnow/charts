@@ -159,6 +159,12 @@ export class TwoDimensionalModel {
                     show: chart.valueLabels?.on ?? false,
                     handleX: (scaledValue) => valueLabelsCoordinateCalculator.getValueLabelX(scaledValue),
                     handleY: (scaledValue) => valueLabelsCoordinateCalculator.getValueLabelY(scaledValue),
+                    handleScaledValue: (dataRow, datumField) => {
+                        if (!chart.valueLabels?.position?.mode || chart.valueLabels?.position?.mode === 'after')
+                            return dataRow[datumField];
+                        if (chart.isSegmented) return dataRow[datumField] - (dataRow[datumField] - dataRow['0']) / 2;
+                        else return dataRow[datumField] / 2;
+                    },
                     textAnchor: calculateValueLabelAlignment(keyAxisOrient, chart.valueLabels?.position?.mode).textAnchor,
                     dominantBaseline: calculateValueLabelAlignment(keyAxisOrient, chart.valueLabels?.position?.mode).dominantBaseline,
                     format: configReader.getValueLabelFormatterForChart(index),

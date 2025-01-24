@@ -453,6 +453,7 @@ export interface TwoDimChartValueLabelsOptions {
     textAnchor: ValueLabelAnchor;
     dominantBaseline: ValueLabelDominantBaseline;
     format: ValueLabelsFormatter;
+    handleScaledValue: (dataRow: MdtChartsDataRow, datumField: string) => number;
 }
 
 export type ValueLabelsFormatter = (value: number) => string

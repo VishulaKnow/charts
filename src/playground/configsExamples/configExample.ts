@@ -79,7 +79,7 @@ const configCars: MdtChartsConfig = {
         valueLabels: {
             collision: {
                 otherValueLabels: {
-                    mode: "hide"
+                    mode: "none"
                 }
             },
             style: {
@@ -101,18 +101,63 @@ const configCars: MdtChartsConfig = {
             },
         },
         charts: [
+            {
+                isSegmented: true,
+                type: 'bar',
+                data: {
+                    valueFields: [
+                        {
+                            name: 'price',
+                            format: 'money',
+                            title: 'Количество'
+                        },
+                        {
+                            name: 'count',
+                            format: 'money',
+                            title: 'Количество'
+                        },
+                    ],
+                    valueGroup: "main"
+                },
+                embeddedLabels: 'none',
+                markers: {
+                    show: false
+                },
+                valueLabels: {
+                    on: true,
+                    position: {
+                        mode: "center"
+                    }
+                },
+                lineStyles: {
+                    dash: {
+                        on: true,
+                        dashSize: 3,
+                        gapSize: 3
+                    }
+                },
+                barStyles: {
+                    hatch: {
+                        on: false
+                    },
+                    borderRadius: {
+                        value: 0
+                    }
+                }
+            },
             // {
             //     isSegmented: false,
-            //     type: 'bar',
+            //     type: 'area',
             //     data: {
             //         valueFields: [
             //             {
-            //                 name: 'count',
+            //                 name: 'price',
             //                 format: 'money',
-            //                 title: 'Количество'
-            //             }
+            //                 title: 'Рубли',
+            //                 color: "rgb(235, 80, 0)"
+            //             },
             //         ],
-            //         valueGroup: "secondary"
+            //         valueGroup: "main"
             //     },
             //     embeddedLabels: 'none',
             //     markers: {
@@ -128,55 +173,21 @@ const configCars: MdtChartsConfig = {
             //     barStyles: {
             //         hatch: {
             //             on: false
-            //         },
-            //         borderRadius: {
-            //             value: 0
             //         }
+            //     },
+            //     areaStyles: {
+            //         borderLine: {
+            //             on: true
+            //         },
+            //         gradient: {
+            //             on: true
+            //         }
+            //     },
+            //     valueLabels: {
+            //         on: true,
+            //         // format: (value) => nFormatter(value),
             //     }
             // },
-            {
-                isSegmented: false,
-                type: 'area',
-                data: {
-                    valueFields: [
-                        {
-                            name: 'price',
-                            format: 'money',
-                            title: 'Рубли',
-                            color: "rgb(235, 80, 0)"
-                        },
-                    ],
-                    valueGroup: "main"
-                },
-                embeddedLabels: 'none',
-                markers: {
-                    show: false
-                },
-                lineStyles: {
-                    dash: {
-                        on: true,
-                        dashSize: 3,
-                        gapSize: 3
-                    }
-                },
-                barStyles: {
-                    hatch: {
-                        on: false
-                    }
-                },
-                areaStyles: {
-                    borderLine: {
-                        on: true
-                    },
-                    gradient: {
-                        on: true
-                    }
-                },
-                valueLabels: {
-                    on: true,
-                    // format: (value) => nFormatter(value),
-                }
-            },
         ],
     }
     // options: {
