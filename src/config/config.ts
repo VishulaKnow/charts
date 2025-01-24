@@ -366,8 +366,13 @@ export interface TwoDimensionalChartData {
     valueGroup?: TwoDimensionalValueGroup;
 }
 
+export type ValueLabelsPositionMode = "after" | "center";
+
 export interface TwoDimensionalChartValueLabels {
-    on: boolean
+    on: boolean;
+    position?: {
+        mode?: ValueLabelsPositionMode;
+    };
     format?: ValueLabelsFormatter;
 }
 

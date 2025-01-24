@@ -49,6 +49,27 @@ describe('getValueLabelX', () => {
 
         expect(result).toEqual(125);
     });
+
+    test('shouldnt change valueLabel by offset, because positionMode is center', () => {
+        const calculator = new ValueLabelCoordinateCalculator('center', 'right', margin);
+        const result = calculator.getValueLabelX(scaledValue)
+
+        expect(result).toEqual(125);
+    });
+
+    test('shouldnt change valueLabel by offset, because positionMode is center', () => {
+        const calculator = new ValueLabelCoordinateCalculator('center', 'left', margin);
+        const result = calculator.getValueLabelX(scaledValue)
+
+        expect(result).toEqual(125);
+    });
+
+    test('shouldnt change valueLabel by offset, because positionMode is center', () => {
+        const calculator = new ValueLabelCoordinateCalculator('center', 'bottom', margin);
+        const result = calculator.getValueLabelX(scaledValue)
+
+        expect(result).toEqual(125);
+    });
 });
 
 describe('getValueLabelY', () => {
@@ -85,6 +106,27 @@ describe('getValueLabelY', () => {
 
         expect(result).toEqual(115);
     });
+
+    test('shouldnt change valueLabel by offset, because positionMode is center', () => {
+        const calculator = new ValueLabelCoordinateCalculator('center', 'top', margin);
+        const result = calculator.getValueLabelY(scaledValue)
+
+        expect(result).toEqual(115);
+    });
+
+    test('shouldnt change valueLabel by offset, because positionMode is center', () => {
+        const calculator = new ValueLabelCoordinateCalculator('center', 'bottom', margin);
+        const result = calculator.getValueLabelY(scaledValue)
+
+        expect(result).toEqual(115);
+    });
+
+    test('shouldnt change valueLabel by offset, because positionMode is center', () => {
+        const calculator = new ValueLabelCoordinateCalculator('center', 'left', margin);
+        const result = calculator.getValueLabelY(scaledValue)
+
+        expect(result).toEqual(115);
+    });
 });
 
 describe('calculateValueLabelAlignment', () => {
@@ -115,6 +157,34 @@ describe('calculateValueLabelAlignment', () => {
 
         expect(valueLabelAlignment.dominantBaseline).toEqual('middle');
         expect(valueLabelAlignment.textAnchor).toEqual('end');
+    });
+
+    test('should return dominantBaseline is hanging and textAnchor is middle for top orient', () => {
+        const valueLabelAlignment = calculateValueLabelAlignment('top', 'center')
+
+        expect(valueLabelAlignment.dominantBaseline).toEqual('middle');
+        expect(valueLabelAlignment.textAnchor).toEqual('middle');
+    });
+
+    test('should return dominantBaseline is hanging and textAnchor is middle for bottom orient', () => {
+        const valueLabelAlignment = calculateValueLabelAlignment('bottom', 'center')
+
+        expect(valueLabelAlignment.dominantBaseline).toEqual('middle');
+        expect(valueLabelAlignment.textAnchor).toEqual('middle');
+    });
+
+    test('should return dominantBaseline is hanging and textAnchor is middle for left orient', () => {
+        const valueLabelAlignment = calculateValueLabelAlignment('left', 'center')
+
+        expect(valueLabelAlignment.dominantBaseline).toEqual('middle');
+        expect(valueLabelAlignment.textAnchor).toEqual('middle');
+    });
+
+    test('should return dominantBaseline is hanging and textAnchor is middle for right orient', () => {
+        const valueLabelAlignment = calculateValueLabelAlignment('right', 'center')
+
+        expect(valueLabelAlignment.dominantBaseline).toEqual('middle');
+        expect(valueLabelAlignment.textAnchor).toEqual('middle');
     });
 });
 

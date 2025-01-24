@@ -1,6 +1,6 @@
 import { BlockMargin, Orient, ValueLabelAnchor, ValueLabelDominantBaseline } from "../../model";
 import { BoundingRect } from "../../../engine/features/valueLabelsCollision/valueLabelsCollision";
-import { Size } from "../../../config/config";
+import { Size, ValueLabelsPositionMode } from "../../../config/config";
 
 interface ValueLabelAlignment {
     dominantBaseline: ValueLabelDominantBaseline
@@ -11,18 +11,22 @@ export const OFFSET_SIZE_PX = 10;
 export const BORDER_OFFSET_SIZE_PX = 2;
 
 export class ValueLabelCoordinateCalculator {
+    private readonly offsetSizePx: number;
+
     constructor(
-        private readonly offsetSizePx: number = OFFSET_SIZE_PX,
+        positionMode: ValueLabelsPositionMode | undefined,
         private readonly keyAxisOrient: Orient,
         private readonly margin: BlockMargin
-    ) { }
+    ) {
+        this.offsetSizePx = positionMode === "center" ? 0 : OFFSET_SIZE_PX;
+    }
 
     getValueLabelY(scaledValue: number) {
         switch (this.keyAxisOrient) {
             case 'bottom':
                 return scaledValue - this.offsetSizePx + this.margin.top;
             case 'top':
-                return scaledValue + OFFSET_SIZE_PX + this.margin.top;
+                return scaledValue + this.offsetSizePx + this.margin.top;
             default:
                 return scaledValue + this.margin.top;
         }
@@ -33,23 +37,27 @@ export class ValueLabelCoordinateCalculator {
             case 'right':
                 return scaledValue - this.offsetSizePx + this.margin.left;
             case 'left':
-                return scaledValue + OFFSET_SIZE_PX + this.margin.left;
+                return scaledValue + this.offsetSizePx + this.margin.left;
             default:
                 return scaledValue + this.margin.left;
         }
     }
 }
 
-export function calculateValueLabelAlignment(keyAxisOrient: Orient): ValueLabelAlignment {
-    switch (keyAxisOrient) {
-        case 'top':
-            return { dominantBaseline: "hanging", textAnchor: "middle" }
-        case "bottom":
-            return { dominantBaseline: "auto", textAnchor: "middle" }
-        case "left":
-            return { dominantBaseline: "middle", textAnchor: "start" }
-        case "right":
-            return { dominantBaseline: "middle", textAnchor: "end" }
+export function calculateValueLabelAlignment(keyAxisOrient: Orient, positionMode?: ValueLabelsPositionMode): ValueLabelAlignment {
+    if (!positionMode || positionMode === "after") {
+        switch (keyAxisOrient) {
+            case 'top':
+                return { dominantBaseline: "hanging", textAnchor: "middle" }
+            case "bottom":
+                return { dominantBaseline: "auto", textAnchor: "middle" }
+            case "left":
+                return { dominantBaseline: "middle", textAnchor: "start" }
+            case "right":
+                return { dominantBaseline: "middle", textAnchor: "end" }
+        }
+    } else {
+        return { dominantBaseline: "middle", textAnchor: "middle" };
     }
 }
 
