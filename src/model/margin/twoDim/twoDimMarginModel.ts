@@ -40,7 +40,7 @@ export class TwoDimMarginModel {
             const secondaryLabelSize = this.getMaxLabelSizeSecondary(modelInstance);
             this.recalcMarginBySecondaryAxisLabelSize(secondaryLabelSize, canvasModel)
         }
-        if (this.configReader.isValueLabelsOn() && this.configReader.options.orientation === 'vertical') {
+        if (this.configReader.areValueLabelsOn() && this.configReader.areValueLabelsNeedIncreaseMargin() && this.configReader.options.orientation === 'vertical') {
             this.recalcVerticalMarginWithValueLabelsOn(canvasModel);
         }
     }

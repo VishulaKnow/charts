@@ -110,8 +110,12 @@ export class TwoDimConfigReader implements BaseConfigReader {
         return (v) => this.designerConfig.dataFormat.formatters(v, { type: valueFieldFormat });
     }
 
-    isValueLabelsOn(): boolean {
+    areValueLabelsOn(): boolean {
         return this.options.charts.some(chart => chart.valueLabels?.on);
+    }
+
+    areValueLabelsNeedIncreaseMargin(): boolean {
+        return !this.options.charts.every(chart => chart.valueLabels?.position?.mode === "center");
     }
 
     getValueLabelsStyleModel(): ValueLabelsStyleModel {
