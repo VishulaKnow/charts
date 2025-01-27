@@ -328,33 +328,6 @@
 			"count": 8
 		}
 	],
-	"dataSet_gantt": [
-		{
-			"task": "Planning",
-			"start": "2020-12-03",
-			"end": "2020-12-05"
-		},
-		{
-			"task": "Build architecture",
-			"start": "2020-12-05",
-			"end": "2020-12-10"
-		},
-		{
-			"task": "Programming",
-			"start": "2020-12-10",
-			"end": "2020-12-11"
-		},
-		{
-			"task": "Testing",
-			"start": "2020-12-12",
-			"end": "2020-12-19"
-		},
-		{
-			"task": "Deploying",
-			"start": "2020-12-20",
-			"end": "2020-12-31"
-		}
-	],
 	"dataSet-72": [
 		{
 			"brand": "BMW",
@@ -715,80 +688,6 @@
 			"brand": "TOYOTA8",
 			"price": 115,
 			"count": 1
-		}
-	],
-	"dataSet_data": [
-		{
-			"SortOrder": 202007,
-			"ec": 19000.0,
-			"ac": 8000.0,
-			"x": "Jul 20"
-		},
-		{
-			"SortOrder": 202008,
-			"ec": 166000.0,
-			"ac": 31000.0,
-			"x": "Aug 20"
-		},
-		{
-			"SortOrder": 202010,
-			"ec": 17000.0,
-			"ac": 0.0,
-			"x": "Oct 20"
-		},
-		{
-			"SortOrder": 202011,
-			"ec": 15000.0,
-			"ac": 0.0,
-			"x": "Nov 20"
-		},
-		{
-			"SortOrder": 202012,
-			"ec": 317007.0,
-			"ac": 36000.0,
-			"x": "Dec 20"
-		},
-		{
-			"SortOrder": 202101,
-			"ec": 4500.0,
-			"ac": 0.0,
-			"x": "Jan 21"
-		},
-		{
-			"SortOrder": 202102,
-			"ec": 200000.0,
-			"ac": 0.0,
-			"x": "Feb 21"
-		}
-	],
-	"dataSet-negative-stack": [
-		{
-			"$id": 1,
-			"brand": "BMW BMW",
-			"price": 88000,
-			"count": 12000,
-			"price2": -32000
-		},
-		{
-			"$id": 2,
-			"brand": "LADA",
-			"price": 0,
-			"count": -35000,
-			"price2": -32000
-		},
-		{
-			"$id": 3,
-			"brand": "MERCEDES",
-			"price": 12000,
-			"count": 12000,
-			"price2": -3000
-		},
-		{
-			"$id": 4,
-			"brand": "AUDI",
-			"price": -20000,
-			"count": 5000,
-			"price2": -60000
 		}
 	]
 }
