@@ -19,7 +19,7 @@ type AxisType = "key" | "value";
 
 export type Orient = "top" | "bottom" | "left" | "right";
 export type ScaleKeyType = "band" | "point";
-export type ScaleValueType = "linear" | "datetime";
+export type ScaleValueType = "linear";
 export type LegendPosition = "off" | "top" | "bottom" | "left" | "right";
 export type EmbeddedLabelTypeModel = "none" | "key" | "value";
 export type DataOptions = {

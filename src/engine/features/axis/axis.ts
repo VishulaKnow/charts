@@ -47,7 +47,7 @@ export class Axis {
     private static renderAxis(block: Block, scale: AxisScale<any>, scaleOptions: ScaleKeyModel | ScaleValueModel, axisOptions: AxisModelOptions, blockSize: Size): void {
         const axisGenerator = AxisHelper.getBaseAxisGenerator(axisOptions, scale);
 
-        if (axisOptions.type === 'value' && (scaleOptions.type === 'linear' || scaleOptions.type === 'datetime'))
+        if (axisOptions.type === 'value' && scaleOptions.type === 'linear')
             AxisHelper.setValueAxisLabelsSettings(axisGenerator, scale.range(), scaleOptions, axisOptions.labels);
         else
             axisGenerator.tickFormat(axisOptions.labels.showTick);
