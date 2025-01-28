@@ -31,8 +31,8 @@ export class ModelHelper {
 
         const fontSize = this.getBaseFontSize('--chart-base-font-size')
         let score = 0;
-        const upperLetterScore = fontSize / 10;
-        const lowerLetterScore = fontSize / 14;
+        const upperLetterScore = fontSize / 9;
+        const lowerLetterScore = fontSize / 13;
         const digitScore = fontSize / 15;
         const otherSymbolScore = fontSize / 23;
         const specialSmallSymbols = [",", ".", " "]
