@@ -40,8 +40,8 @@ export class TwoDimensionalModel {
     public static getOptions(configReader: TwoDimConfigReader, designerConfig: DesignerConfig, modelInstance: ModelInstance): TwoDimensionalOptionsModel {
         const options = configReader.options;
         const canvasModel = modelInstance.canvasModel;
+
         const scaleModel = new ScaleModel();
-        const titleConfig = TitleConfigReader.create(options.title, modelInstance);
         const scaleMarginRecalcer = new ScaleAxisRecalcer(() => scaleModel.getScaleLinear(options, modelInstance.dataModel.repository.getScopedRows(), canvasModel, configReader));
         scaleMarginRecalcer.recalculateMargin(canvasModel, options.orientation, options.axis.key);
         const scaleValueInfo = scaleMarginRecalcer.getScaleValue();
@@ -57,6 +57,7 @@ export class TwoDimensionalModel {
 
         const charts = this.getChartsModel(options.charts, configReader, options.orientation, designerConfig, modelInstance.dataModel.repository, keyAxis.orient, canvasModel, options.data.keyField.name);
 
+        const titleConfig = TitleConfigReader.create(options.title, modelInstance);
         const defaultFormatter = configReader.calculateDefaultAxisLabelFormatter();
 
         return {
