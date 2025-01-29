@@ -9,7 +9,7 @@ export const keyAxisLabelHorizontalLog = "keyAxisLabel_horizontal_margin_log";
 
 interface ScaleInfo {
     scale: ScaleValueModel;
-    scaleFn: ScaleLinear<number, number, never> | ScaleTime<number, number, never>;
+    scaleFn: ScaleLinear<number, number, never>;
 }
 
 /**
