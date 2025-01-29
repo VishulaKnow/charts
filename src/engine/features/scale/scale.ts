@@ -38,10 +38,7 @@ export class Scale {
     }
 
     public static getScaleValue(scaleValue: ScaleValueModel) {
-        if (scaleValue.type === 'linear')
-            return this.getScaleLinear(scaleValue.domain, scaleValue.range);
-        else if (scaleValue.type === 'datetime')
-            return this.getScaleTime(scaleValue.domain, scaleValue.range);
+        return this.getScaleLinear(scaleValue.domain, scaleValue.range);
     }
 
     public static getScaleBandWidth(scale: AxisScale<any>): number {
