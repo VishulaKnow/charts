@@ -10,6 +10,8 @@ import { ModelInstance } from "../../modelInstance/modelInstance";
 import { TwoDimensionalModel } from "../../notations/twoDimensionalModel";
 import { ChartOrientation } from "../../../config/config";
 import { OFFSET_SIZE_PX } from "../../featuresModel/valueLabelsModel/valueLabelsModel";
+import { ScaleModel } from "../../featuresModel/scaleModel/scaleModel";
+import { Scale } from "../../../engine/features/scale/scale";
 
 export const AXIS_HORIZONTAL_LABEL_PADDING = 12;
 export const AXIS_VERTICAL_LABEL_PADDING = 8;
@@ -67,8 +69,16 @@ export class TwoDimMarginModel {
         if (keyAxisOrient === 'left' || keyAxisOrient === 'right') {
             labelsTexts = modelInstance.dataModel.repository.getValuesByKeyField();
         } else {
-            labelsTexts = this.configReader.getBiggestValueAndDecremented(modelInstance.dataModel.repository)
-                .map(v => this.configReader.getAxisLabelFormatter()(v).toString());
+            const scaleModel = new ScaleModel(this.configReader.options, modelInstance.canvasModel).getScaleLinear(modelInstance.dataModel.repository.getRawRows(), this.configReader);
+            const scale = Scale.getScaleValue(scaleModel);
+            const ticksPolicy = AxisModel.getTickAmountPolicy(this.configReader.options.orientation, this.configReader.options.axis.value, scaleModel);
+
+            let outputValues: number[];
+            if (ticksPolicy.type === "constant") outputValues = ticksPolicy.values;
+            else if (ticksPolicy.type === "amount") outputValues = scale.ticks(ticksPolicy.amount);
+            else outputValues = this.configReader.getBiggestValueAndDecremented(modelInstance.dataModel.repository)
+
+            labelsTexts = outputValues.map(v => this.configReader.getAxisLabelFormatter()(v).toString());
         }
 
         return AxisModel.getLabelSize(this.designerConfig.canvas.axisLabel.maxSize.main, labelsTexts);

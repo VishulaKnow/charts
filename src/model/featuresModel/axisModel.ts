@@ -165,6 +165,22 @@ export class AxisModel {
         return sign * roundedNumber;
     }
 
+    static getTickAmountPolicy(orient: ChartOrientation, axisConfig: NumberAxisOptions | NumberSecondaryAxisOptions, scaleInfo: ScaleValueModel): TickAmountPolicy {
+        const axisLength = scaleInfo.range.end - scaleInfo.range.start;
+        const linearTickStep = this.getTickStep(orient, axisConfig);
+
+        let tickAmountPolicy: TickAmountPolicy;
+        if (Math.floor(axisLength / linearTickStep) > 2) {
+            tickAmountPolicy = { type: "amount", amount: Math.floor(axisLength / linearTickStep) }
+        }
+        else {
+            const roundedMaxValue = this.getRoundValue(max(scaleInfo.domain))
+            tickAmountPolicy = { type: "constant", values: [min(scaleInfo.domain), roundedMaxValue] }
+        }
+
+        return tickAmountPolicy;
+    }
+
     private static getKeyAxisTranslateModel(chartOrientation: ChartOrientation, axisPosition: AxisPosition, canvasModel: CanvasModel, getZeroCoordinate?: () => number) {
         let translateY;
         let translateX;
@@ -185,22 +201,6 @@ export class AxisModel {
             translateX,
             translateY
         }
-    }
-
-    private static getTickAmountPolicy(orient: ChartOrientation, axisConfig: NumberAxisOptions | NumberSecondaryAxisOptions, scaleInfo: ScaleValueModel): TickAmountPolicy {
-        const axisLength = scaleInfo.range.end - scaleInfo.range.start;
-        const linearTickStep = this.getTickStep(orient, axisConfig);
-
-        let tickAmountPolicy: TickAmountPolicy;
-        if (Math.floor(axisLength / linearTickStep) > 2) {
-            tickAmountPolicy = { type: "amount", amount: Math.floor(axisLength / linearTickStep) }
-        }
-        else {
-            const roundedMaxValue = this.getRoundValue(max(scaleInfo.domain))
-            tickAmountPolicy = { type: "constant", values: [min(scaleInfo.domain), roundedMaxValue] }
-        }
-
-        return tickAmountPolicy;
     }
 
     private static getTickStep(orient: ChartOrientation, axisConfig: NumberAxisOptions | NumberSecondaryAxisOptions): number {
