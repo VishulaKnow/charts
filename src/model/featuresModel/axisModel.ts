@@ -1,5 +1,5 @@
 import { AxisPosition, ChartOrientation, MdtChartsDataSource, NumberAxisOptions, AxisLabelPosition, MdtChartsTwoDimensionalOptions, DiscreteAxisOptions, NumberSecondaryAxisOptions, AxisLabelFormatter } from "../../config/config";
-import { AxisModelOptions, Orient, TranslateModel } from "../model";
+import { AxisModelOptions, Orient, ScaleValueModel, TickAmountPolicy, TranslateModel } from "../model";
 import { ModelHelper } from "../helpers/modelHelper";
 import { AxisType } from "../modelBuilder";
 import { DataManagerModel } from "../dataManagerModel/dataManagerModel";
@@ -7,6 +7,8 @@ import { TwoDimensionalModel } from "../notations/twoDimensionalModel";
 import { AxisLabelCanvas, TooltipSettings } from "../../designer/designerConfig";
 import { CanvasModel } from "../modelInstance/canvasModel/canvasModel";
 import { AxisModelService, AxisModelTickCalculator, showAllTicks } from "./axisModelService";
+import { ScaleValueCalculatedInfo } from "./scaleModel/scaleAxisRecalcer";
+import { max, min } from "d3-array";
 
 export interface LabelSize {
     width: number;
@@ -40,7 +42,10 @@ export class AxisModel {
                 visible: !TwoDimensionalModel.getChartsEmbeddedLabelsFlag(charts, orientation),
                 defaultTooltip: tooltipSettings.position === 'fixed',
                 showTick: tickCalculator.createFunctionCalculator(this.getAxisLength(orientation, canvasModel)),
-                linearTickStep: MINIMAL_HORIZONTAL_STEP_SIZE
+                linearTickStep: MINIMAL_HORIZONTAL_STEP_SIZE,
+                tickAmountSettings: {
+                    policy: { type: "auto" }
+                }
             },
             visibility: axisConfig.visibility,
             line: {
@@ -52,15 +57,15 @@ export class AxisModel {
         }
     }
 
-    public static getMainValueAxis(defaultFormatter: AxisLabelFormatter, orient: ChartOrientation, position: AxisPosition, axisConfig: NumberAxisOptions, labelConfig: AxisLabelCanvas, canvasModel: CanvasModel): AxisModelOptions {
-        return this.getValueAxis(defaultFormatter, orient, position, 'value-axis', axisConfig, labelConfig, canvasModel)
+    public static getMainValueAxis(defaultFormatter: AxisLabelFormatter, orient: ChartOrientation, position: AxisPosition, axisConfig: NumberAxisOptions, labelConfig: AxisLabelCanvas, canvasModel: CanvasModel, scaleInfo: ScaleValueModel): AxisModelOptions {
+        return this.getValueAxis(defaultFormatter, orient, position, 'value-axis', axisConfig, labelConfig, canvasModel, scaleInfo)
     }
 
-    public static getSecondaryValueAxis(defaultFormatter: AxisLabelFormatter, orient: ChartOrientation, mainAxisPosition: AxisPosition, axisConfig: NumberSecondaryAxisOptions, labelConfig: AxisLabelCanvas, canvasModel: CanvasModel): AxisModelOptions {
-        return this.getValueAxis(defaultFormatter, orient, mainAxisPosition === "start" ? "end" : "start", 'value-secondary-axis', axisConfig, labelConfig, canvasModel)
+    public static getSecondaryValueAxis(defaultFormatter: AxisLabelFormatter, orient: ChartOrientation, mainAxisPosition: AxisPosition, axisConfig: NumberSecondaryAxisOptions, labelConfig: AxisLabelCanvas, canvasModel: CanvasModel, scaleInfo: ScaleValueModel): AxisModelOptions {
+        return this.getValueAxis(defaultFormatter, orient, mainAxisPosition === "start" ? "end" : "start", 'value-secondary-axis', axisConfig, labelConfig, canvasModel, scaleInfo)
     }
 
-    private static getValueAxis(defaultFormatter: AxisLabelFormatter, orient: ChartOrientation, position: AxisPosition, cssClass: string, axisConfig: NumberAxisOptions | NumberSecondaryAxisOptions, labelConfig: AxisLabelCanvas, canvasModel: CanvasModel): AxisModelOptions {
+    private static getValueAxis(defaultFormatter: AxisLabelFormatter, orient: ChartOrientation, position: AxisPosition, cssClass: string, axisConfig: NumberAxisOptions | NumberSecondaryAxisOptions, labelConfig: AxisLabelCanvas, canvasModel: CanvasModel, scaleInfo: ScaleValueModel): AxisModelOptions {
         return {
             type: 'value',
             orient: AxisModel.getAxisOrient(AxisType.Value, orient, position),
@@ -76,8 +81,10 @@ export class AxisModel {
                 visible: true,
                 defaultTooltip: true,
                 showTick: showAllTicks,
-                linearTickStep: axisConfig.labels?.stepSize
-                    ?? (orient === "horizontal" ? MINIMAL_HORIZONTAL_STEP_SIZE : MINIMAL_VERTICAL_STEP_SIZE)
+                linearTickStep: this.getTickStep(orient, axisConfig),
+                tickAmountSettings: {
+                    policy: this.getTickAmountPolicy(orient, axisConfig, scaleInfo)
+                }
             },
             visibility: axisConfig.visibility,
             line: {
@@ -178,5 +185,26 @@ export class AxisModel {
             translateX,
             translateY
         }
+    }
+
+    private static getTickAmountPolicy(orient: ChartOrientation, axisConfig: NumberAxisOptions | NumberSecondaryAxisOptions, scaleInfo: ScaleValueModel): TickAmountPolicy {
+        const axisLength = scaleInfo.range.end - scaleInfo.range.start;
+        const linearTickStep = this.getTickStep(orient, axisConfig);
+
+        let tickAmountPolicy: TickAmountPolicy;
+        if (Math.floor(axisLength / linearTickStep) > 2) {
+            tickAmountPolicy = { type: "amount", amount: Math.floor(axisLength / linearTickStep) }
+        }
+        else {
+            const roundedMaxValue = this.getRoundValue(max(scaleInfo.domain))
+            tickAmountPolicy = { type: "constant", values: [min(scaleInfo.domain), roundedMaxValue] }
+        }
+
+        return tickAmountPolicy;
+    }
+
+    private static getTickStep(orient: ChartOrientation, axisConfig: NumberAxisOptions | NumberSecondaryAxisOptions): number {
+        return axisConfig.labels?.stepSize
+            ?? (orient === "horizontal" ? MINIMAL_HORIZONTAL_STEP_SIZE : MINIMAL_VERTICAL_STEP_SIZE);
     }
 }

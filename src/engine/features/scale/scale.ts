@@ -100,11 +100,4 @@ export class Scale {
             .domain(domain)
             .range([range.start, range.end]);
     }
-
-    private static getScaleTime(domain: any, range: RangeModel): ScaleTime<number, number, never> {
-        return scaleTime()
-            .domain(domain)
-            .range([range.start, range.end])
-            .nice();
-    }
 }

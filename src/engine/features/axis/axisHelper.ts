@@ -19,17 +19,12 @@ export class AxisHelper {
 
 
     public static setValueAxisLabelsSettings(axisGenerator: IAxis<any>, range: number[], scaleOptions: ScaleValueModel, labelsOptions: AxisLabelModel): void {
-        const axisLength = range[1] - range[0];
+        if (labelsOptions.tickAmountSettings.policy.type === "amount")
+            axisGenerator.ticks(labelsOptions.tickAmountSettings.policy.amount);
 
-        const minimalStepSize = labelsOptions.linearTickStep;
+        if (labelsOptions.tickAmountSettings.policy.type === "constant")
+            axisGenerator.tickValues(labelsOptions.tickAmountSettings.policy.values);
 
-        if (Math.floor(axisLength / minimalStepSize) > 2) {
-            axisGenerator.ticks(Math.floor(axisLength / minimalStepSize));
-        }
-        else {
-            const roundedMaxValue = AxisModel.getRoundValue(max(scaleOptions.domain))
-            axisGenerator.tickValues([min(scaleOptions.domain), roundedMaxValue]);
-        }
         if (scaleOptions.type === 'linear') {
             this.setNumTickFormat(axisGenerator, scaleOptions.formatter);
         }

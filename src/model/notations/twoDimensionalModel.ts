@@ -75,7 +75,8 @@ export class TwoDimensionalModel {
             },
             axis: {
                 key: keyAxis,
-                value: AxisModel.getMainValueAxis(defaultFormatter, options.orientation, options.axis.value.position, options.axis.value, designerConfig.canvas.axisLabel, canvasModel), ...(configReader.containsSecondaryAxis() && { valueSecondary: AxisModel.getSecondaryValueAxis(defaultFormatter, options.orientation, options.axis.value.position, options.axis.valueSecondary, designerConfig.canvas.axisLabel, canvasModel) })
+                value: AxisModel.getMainValueAxis(defaultFormatter, options.orientation, options.axis.value.position, options.axis.value, designerConfig.canvas.axisLabel, canvasModel, scaleValueInfo.scale),
+                ...(configReader.containsSecondaryAxis() && { valueSecondary: AxisModel.getSecondaryValueAxis(defaultFormatter, options.orientation, options.axis.value.position, options.axis.valueSecondary, designerConfig.canvas.axisLabel, canvasModel, secondaryScaleValueInfo.scale) })
             },
             type: options.type,
             data: { ...options.data },

@@ -116,7 +116,10 @@ describe('get axes', () => {
                 visible: true,
                 defaultTooltip: true,
                 showTick: showAllTicks,
-                linearTickStep: MINIMAL_HORIZONTAL_STEP_SIZE
+                linearTickStep: MINIMAL_HORIZONTAL_STEP_SIZE,
+                tickAmountSettings: {
+                    policy: { type: "auto" }
+                }
             },
             orient: "bottom",
             ticks: {
@@ -155,7 +158,10 @@ describe('get axes', () => {
                 visible: true,
                 defaultTooltip: false,
                 showTick: showAllTicks,
-                linearTickStep: MINIMAL_HORIZONTAL_STEP_SIZE
+                linearTickStep: MINIMAL_HORIZONTAL_STEP_SIZE,
+                tickAmountSettings: {
+                    policy: { type: "auto" }
+                }
             },
             orient: "left",
             ticks: {
@@ -192,7 +198,10 @@ describe('get axes', () => {
                 visible: true,
                 defaultTooltip: true,
                 showTick: (d, i) => i % 2 === 0 ? d : undefined,
-                linearTickStep: MINIMAL_HORIZONTAL_STEP_SIZE
+                linearTickStep: MINIMAL_HORIZONTAL_STEP_SIZE,
+                tickAmountSettings: {
+                    policy: { type: "auto" }
+                }
             },
             orient: "bottom",
             ticks: {
@@ -236,7 +245,10 @@ describe('get axes', () => {
                 visible: true,
                 defaultTooltip: true,
                 showTick: (d, i) => i % 3 === 0 ? d : undefined,
-                linearTickStep: MINIMAL_HORIZONTAL_STEP_SIZE
+                linearTickStep: MINIMAL_HORIZONTAL_STEP_SIZE,
+                tickAmountSettings: {
+                    policy: { type: "auto" }
+                }
             },
             orient: "bottom",
             ticks: {
@@ -281,7 +293,10 @@ describe('get axes', () => {
                 visible: true,
                 defaultTooltip: true,
                 showTick: showRule,
-                linearTickStep: MINIMAL_HORIZONTAL_STEP_SIZE
+                linearTickStep: MINIMAL_HORIZONTAL_STEP_SIZE,
+                tickAmountSettings: {
+                    policy: { type: "auto" }
+                }
             },
             orient: "bottom",
             ticks: {
@@ -311,7 +326,7 @@ describe('get axes', () => {
         canvasModel.initBlockSize(blockSize);
 
         numberAxisOptions.position = 'start';
-        const result = AxisModel.getMainValueAxis(defaultFormatter, 'vertical', numberAxisOptions.position, numberAxisOptions, { maxSize: { main: 60 } }, canvasModel);
+        const result = AxisModel.getMainValueAxis(defaultFormatter, 'vertical', numberAxisOptions.position, numberAxisOptions, { maxSize: { main: 60 } }, canvasModel, { domain: [0, 120], range: { start: 0, end: 120 }, type: 'linear', formatter: () => 'value' });
         const expected: AxisModelOptions = {
             visibility: true,
             type: "value",
@@ -322,7 +337,10 @@ describe('get axes', () => {
                 visible: true,
                 defaultTooltip: true,
                 showTick: showAllTicks,
-                linearTickStep: MINIMAL_VERTICAL_STEP_SIZE
+                linearTickStep: MINIMAL_VERTICAL_STEP_SIZE,
+                tickAmountSettings: {
+                    policy: { type: "constant", values: [0, 100] }
+                }
             },
             orient: "left",
             ticks: {
@@ -347,7 +365,7 @@ describe('get axes', () => {
         canvasModel.initMargin(margin);
         canvasModel.initBlockSize(blockSize);
 
-        const result = AxisModel.getMainValueAxis(defaultFormatter, 'vertical', 'start', numberAxisOptions, { maxSize: { main: 60 } }, canvasModel);
+        const result = AxisModel.getMainValueAxis(defaultFormatter, 'vertical', 'start', numberAxisOptions, { maxSize: { main: 60 } }, canvasModel, { domain: [0, 120], range: { start: 0, end: 120 }, type: 'linear', formatter: () => 'value' });
         const expected: AxisModelOptions = {
             visibility: true,
             type: "value",
@@ -358,7 +376,10 @@ describe('get axes', () => {
                 visible: true,
                 defaultTooltip: true,
                 showTick: showAllTicks,
-                linearTickStep: MINIMAL_VERTICAL_STEP_SIZE
+                linearTickStep: MINIMAL_VERTICAL_STEP_SIZE,
+                tickAmountSettings: {
+                    policy: { type: "constant", values: [0, 100] }
+                }
             },
             orient: "left",
             ticks: {
@@ -383,7 +404,7 @@ describe('get axes', () => {
         canvasModel.initMargin(margin);
         canvasModel.initBlockSize(blockSize);
 
-        const result = AxisModel.getSecondaryValueAxis(defaultFormatter, 'vertical', 'start', numberAxisOptions, { maxSize: { main: 60 } }, canvasModel);
+        const result = AxisModel.getSecondaryValueAxis(defaultFormatter, 'vertical', 'start', numberAxisOptions, { maxSize: { main: 60 } }, canvasModel, { domain: [0, 120], range: { start: 0, end: 120 }, type: 'linear', formatter: () => 'value' });
         const expected: AxisModelOptions = {
             visibility: true,
             type: "value",
@@ -394,7 +415,10 @@ describe('get axes', () => {
                 visible: true,
                 defaultTooltip: true,
                 showTick: showAllTicks,
-                linearTickStep: MINIMAL_VERTICAL_STEP_SIZE
+                linearTickStep: MINIMAL_VERTICAL_STEP_SIZE,
+                tickAmountSettings: {
+                    policy: { type: "constant", values: [0, 100] }
+                }
             },
             orient: "right",
             ticks: {

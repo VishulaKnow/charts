@@ -195,7 +195,16 @@ export interface AxisLabelModel {
     defaultTooltip: boolean;
     showTick: ShowTickFn;
     linearTickStep: number;
+    tickAmountSettings: TickAmountModel;
 }
+
+interface TickAmountModel {
+    policy: TickAmountPolicy;
+}
+
+export type TickAmountPolicy = { type: "auto" }
+    | { type: "amount"; amount: number; }
+    | { type: "constant"; values: number[] };
 
 export interface AdditionalElementsOptions {
     gridLine: GridLineOptions;

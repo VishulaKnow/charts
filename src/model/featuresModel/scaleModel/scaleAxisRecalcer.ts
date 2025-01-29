@@ -1,4 +1,4 @@
-import { ScaleLinear, ScaleTime } from "d3-scale";
+import { ScaleLinear } from "d3-scale";
 import { ChartOrientation, DiscreteAxisOptions } from "../../../config/config";
 import { Scale } from "../../../engine/features/scale/scale";
 import { ScaleValueModel } from "../../model";
@@ -7,7 +7,7 @@ import { CanvasModel } from "../../modelInstance/canvasModel/canvasModel";
 export const keyAxisLabelVerticalLog = "keyAxisLabel_vertical_margin_log";
 export const keyAxisLabelHorizontalLog = "keyAxisLabel_horizontal_margin_log";
 
-interface ScaleInfo {
+export interface ScaleValueCalculatedInfo {
     scale: ScaleValueModel;
     scaleFn: ScaleLinear<number, number, never>;
 }
@@ -35,7 +35,7 @@ export class ScaleAxisRecalcer {
         }
     }
 
-    getScaleValue(): ScaleInfo {
+    getScaleValue(): ScaleValueCalculatedInfo {
         const scale = this.generateScaleLinear();
         return {
             scale,
