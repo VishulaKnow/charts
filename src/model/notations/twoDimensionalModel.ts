@@ -58,7 +58,6 @@ export class TwoDimensionalModel {
         const charts = this.getChartsModel(options.charts, configReader, options.orientation, designerConfig, modelInstance.dataModel.repository, keyAxis.orient, canvasModel, options.data.keyField.name);
 
         const titleConfig = TitleConfigReader.create(options.title, modelInstance);
-        const defaultFormatter = configReader.calculateDefaultAxisLabelFormatter();
 
         return {
             legend: canvasModel.legendCanvas.getModel(),
@@ -75,8 +74,8 @@ export class TwoDimensionalModel {
             },
             axis: {
                 key: keyAxis,
-                value: AxisModel.getMainValueAxis(defaultFormatter, options.orientation, options.axis.value.position, options.axis.value, designerConfig.canvas.axisLabel, canvasModel, scaleValueInfo.scale),
-                ...(configReader.containsSecondaryAxis() && { valueSecondary: AxisModel.getSecondaryValueAxis(defaultFormatter, options.orientation, options.axis.value.position, options.axis.valueSecondary, designerConfig.canvas.axisLabel, canvasModel, secondaryScaleValueInfo.scale) })
+                value: AxisModel.getMainValueAxis(configReader.calculateDefaultAxisLabelFormatter(), options.orientation, options.axis.value.position, options.axis.value, designerConfig.canvas.axisLabel, canvasModel, scaleValueInfo.scale),
+                ...(configReader.containsSecondaryAxis() && { valueSecondary: AxisModel.getSecondaryValueAxis(configReader.calculateDefaultAxisLabelFormatter(), options.orientation, options.axis.value.position, options.axis.valueSecondary, designerConfig.canvas.axisLabel, canvasModel, secondaryScaleValueInfo.scale) })
             },
             type: options.type,
             data: { ...options.data },

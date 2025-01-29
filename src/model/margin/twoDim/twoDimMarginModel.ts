@@ -9,7 +9,6 @@ import { TwoDimConfigReader } from "../../modelInstance/configReader";
 import { ModelInstance } from "../../modelInstance/modelInstance";
 import { TwoDimensionalModel } from "../../notations/twoDimensionalModel";
 import { ChartOrientation } from "../../../config/config";
-import { ModelHelper } from "../../helpers/modelHelper";
 import { OFFSET_SIZE_PX } from "../../featuresModel/valueLabelsModel/valueLabelsModel";
 
 export const AXIS_HORIZONTAL_LABEL_PADDING = 12;

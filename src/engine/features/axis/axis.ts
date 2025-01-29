@@ -48,7 +48,7 @@ export class Axis {
         const axisGenerator = AxisHelper.getBaseAxisGenerator(axisOptions, scale);
 
         if (axisOptions.type === 'value' && scaleOptions.type === 'linear')
-            AxisHelper.setValueAxisLabelsSettings(axisGenerator, scale.range(), scaleOptions, axisOptions.labels);
+            AxisHelper.setValueAxisLabelsSettings(axisGenerator, scaleOptions, axisOptions.labels);
         else
             axisGenerator.tickFormat(axisOptions.labels.showTick);
 
@@ -88,7 +88,7 @@ export class Axis {
 
     private static updateValueAxis(block: Block, scaleValue: AxisScale<any>, scaleOptions: ScaleValueModel, axisOptions: AxisModelOptions, blockSize: Size): void {
         const axisGenerator = AxisHelper.getBaseAxisGenerator(axisOptions, scaleValue);
-        AxisHelper.setValueAxisLabelsSettings(axisGenerator, scaleValue.range(), scaleOptions, axisOptions.labels);
+        AxisHelper.setValueAxisLabelsSettings(axisGenerator, scaleOptions, axisOptions.labels);
         const axisElement = block.getSvg().select<SVGGElement>(`g.${axisOptions.cssClass}`);
         AxisDomHelper.updateAxisElement(axisGenerator, axisElement, axisOptions.translate, block.transitionManager.durations.chartUpdate)
             .then(() => {

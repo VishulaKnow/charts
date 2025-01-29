@@ -1,9 +1,7 @@
 import { axisTop, axisBottom, axisLeft, axisRight, AxisScale, Axis as IAxis } from 'd3-axis';
-import { AxisLabelModel, AxisModelOptions, Orient, ScaleKeyModel, ScaleValueModel } from "../../../model/model";
+import { AxisLabelModel, AxisModelOptions, Orient, ScaleValueModel } from "../../../model/model";
 import { format } from 'd3-format';
 import { AxisLabelHelper } from './axisLabelDomHelper';
-import { max, min } from 'd3-array';
-import { AxisModel } from "../../../model/featuresModel/axisModel";
 
 export class AxisHelper {
     public static getAxisByOrient(orient: Orient, scale: AxisScale<any>): IAxis<any> {
@@ -18,7 +16,7 @@ export class AxisHelper {
     }
 
 
-    public static setValueAxisLabelsSettings(axisGenerator: IAxis<any>, range: number[], scaleOptions: ScaleValueModel, labelsOptions: AxisLabelModel): void {
+    public static setValueAxisLabelsSettings(axisGenerator: IAxis<any>, scaleOptions: ScaleValueModel, labelsOptions: AxisLabelModel): void {
         if (labelsOptions.tickAmountSettings.policy.type === "amount")
             axisGenerator.ticks(labelsOptions.tickAmountSettings.policy.amount);
 
