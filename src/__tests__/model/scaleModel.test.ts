@@ -454,7 +454,7 @@ describe('get scales tests', () => {
     let data: MdtChartsDataSource;
     let dataSource: string;
     let options: MdtChartsTwoDimensionalOptions;
-    const scaleModel = new ScaleModel();
+    let scaleModel: ScaleModel;
 
     beforeEach(() => {
         charts = [
@@ -543,14 +543,16 @@ describe('get scales tests', () => {
                 html: null
             }
         }
-    });
 
-    test('get scale key band', () => {
         const canvasModel = new CanvasModel();
         canvasModel.initMargin({ bottom: 20, left: 20, right: 20, top: 20 });
         canvasModel.initBlockSize({ height: 500, width: 1000 });
 
-        const result = scaleModel.getScaleKey(['BMW', 'LADA', 'MECEDES'], 'vertical', canvasModel, charts, charts.filter(chart => chart.type === 'bar'));
+        scaleModel = new ScaleModel(options, canvasModel);
+    });
+
+    test('get scale key band', () => {
+        const result = scaleModel.getScaleKey(['BMW', 'LADA', 'MECEDES']);
         expect(result).toEqual({
             domain: ['BMW', 'LADA', 'MECEDES'],
             range: {
@@ -563,12 +565,8 @@ describe('get scales tests', () => {
     });
 
     test('get scale key', () => {
-        const canvasModel = new CanvasModel();
-        canvasModel.initMargin({ bottom: 20, left: 20, right: 20, top: 20 });
-        canvasModel.initBlockSize({ height: 500, width: 1000 });
-
         charts[1].type = 'line'
-        const result = scaleModel.getScaleKey(['BMW', 'LADA', 'MECEDES'], 'vertical', canvasModel, charts, charts.filter(chart => chart.type === 'bar'));
+        const result = scaleModel.getScaleKey(['BMW', 'LADA', 'MECEDES']);
         expect(result).toEqual({
             domain: ['BMW', 'LADA', 'MECEDES'],
             range: {
@@ -581,14 +579,10 @@ describe('get scales tests', () => {
     });
 
     test('should make scale for one band if there are dotted charts without bars', () => {
-        const canvasModel = new CanvasModel();
-        canvasModel.initMargin({ bottom: 20, left: 20, right: 20, top: 20 });
-        canvasModel.initBlockSize({ height: 500, width: 1000 });
-
         charts[1].type = 'dot';
         charts[0].type = 'dot';
 
-        const result = scaleModel.getScaleKey(['BMW', 'LADA', 'MECEDES'], 'vertical', canvasModel, charts, charts.filter(chart => chart.type === 'bar'));
+        const result = scaleModel.getScaleKey(['BMW', 'LADA', 'MECEDES']);
         expect(result).toEqual({
             domain: ['BMW', 'LADA', 'MECEDES'],
             range: {
@@ -601,11 +595,7 @@ describe('get scales tests', () => {
     });
 
     test('get scale linear', () => {
-        const canvasModel = new CanvasModel();
-        canvasModel.initMargin({ bottom: 20, left: 20, right: 20, top: 20 });
-        canvasModel.initBlockSize({ height: 500, width: 1000 });
-
-        const result = scaleModel.getScaleLinear(options, data[dataSource], canvasModel);
+        const result = scaleModel.getScaleLinear(data[dataSource]);
         expect(result).toEqual({
             domain: [0, 120],
             range: {

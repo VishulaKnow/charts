@@ -41,14 +41,14 @@ export class TwoDimensionalModel {
         const options = configReader.options;
         const canvasModel = modelInstance.canvasModel;
 
-        const scaleModel = new ScaleModel();
-        const scaleMarginRecalcer = new ScaleAxisRecalcer(() => scaleModel.getScaleLinear(options, modelInstance.dataModel.repository.getScopedRows(), canvasModel, configReader));
+        const scaleModel = new ScaleModel(options, canvasModel);
+        const scaleMarginRecalcer = new ScaleAxisRecalcer(() => scaleModel.getScaleLinear(modelInstance.dataModel.repository.getScopedRows(), configReader));
         scaleMarginRecalcer.recalculateMargin(canvasModel, options.orientation, options.axis.key);
         const scaleValueInfo = scaleMarginRecalcer.getScaleValue();
 
         let secondaryScaleValueInfo;
         if (configReader.containsSecondaryAxis()) {
-            const secondaryScaleMarginRecalcer = new ScaleAxisRecalcer(() => scaleModel.getScaleSecondaryLinear(options, modelInstance.dataModel.repository.getScopedRows(), canvasModel, configReader));
+            const secondaryScaleMarginRecalcer = new ScaleAxisRecalcer(() => scaleModel.getScaleSecondaryLinear(modelInstance.dataModel.repository.getScopedRows(), configReader));
             secondaryScaleMarginRecalcer.recalculateMargin(canvasModel, options.orientation, options.axis.key);
             secondaryScaleValueInfo = secondaryScaleMarginRecalcer.getScaleValue();
         }
@@ -68,7 +68,7 @@ export class TwoDimensionalModel {
             selectable: !!options.selectable,
             orient: options.orientation,
             scale: {
-                key: scaleModel.getScaleKey(modelInstance.dataModel.getAllowableKeys(), options.orientation, canvasModel, options.charts, this.getChartsByTypes(options.charts, ['bar', 'dot'])),
+                key: scaleModel.getScaleKey(modelInstance.dataModel.getAllowableKeys()),
                 value: scaleValueInfo.scale,
                 ...(configReader.containsSecondaryAxis() && { valueSecondary: secondaryScaleValueInfo.scale }),
             },
@@ -213,9 +213,5 @@ export class TwoDimensionalModel {
                 }
             }
         }
-    }
-
-    private static getChartsByTypes(charts: MdtChartsTwoDimensionalChart[], types: TwoDimensionalChartType[]): MdtChartsTwoDimensionalChart[] {
-        return charts.filter(chart => types.includes(chart.type));
     }
 }

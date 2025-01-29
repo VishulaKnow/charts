@@ -19,9 +19,7 @@ export class ScaleAxisRecalcer {
     constructor(private generateScaleLinear: () => ScaleValueModel) { }
 
     recalculateMargin(canvasModel: CanvasModel, chartOrientation: ChartOrientation, keyAxis: DiscreteAxisOptions) {
-        const scaleValue = this.generateScaleLinear();
-        //TODO: rm import from engine
-        const scaleValueFn = Scale.getScaleValue(scaleValue);
+        const { scaleFn: scaleValueFn } = this.getScaleValue();
 
         const coordinateOnChartBlock = (keyAxis.position === "start"
             ? scaleValueFn(0)
