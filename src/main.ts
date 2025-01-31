@@ -46,6 +46,7 @@ export class Chart implements IChart {
     private data: MdtChartsDataSource;
     private parentElement: HTMLElement;
     private isResizable: boolean;
+    private readonly id: number;
 
     private engine: Engine;
 
@@ -60,13 +61,14 @@ export class Chart implements IChart {
      */
     constructor(config: MdtChartsConfig, designerConfig: DesignerConfig, data: MdtChartsDataSource, isResizable: boolean = false, filterCallback: FilterCallback = null, selectedIds: number[] = []) {
         Chart.chartCounter++;
+        this.id = Chart.chartCounter;
         this.config = config;
         this.designerConfig = designerConfig;
         this.data = data;
         this.isResizable = isResizable;
 
-        this.model = assembleModel(this.config, this.data, this.designerConfig);
-        this.engine = new Engine(Chart.chartCounter, filterCallback, selectedIds);
+        this.model = assembleModel(this.config, this.data, this.designerConfig, this.id);
+        this.engine = new Engine(this.id, filterCallback, selectedIds);
     }
 
     /**
@@ -96,7 +98,7 @@ export class Chart implements IChart {
      * @param data Новые данные
      */
     public updateData(data: MdtChartsDataSource): void {
-        this.model = assembleModel(this.config, data, this.designerConfig);
+        this.model = assembleModel(this.config, data, this.designerConfig, this.id);
         this.data = data;
         this.engine.updateData(this.model, getPreparedData(this.model, this.data, this.config));
     }
@@ -113,7 +115,7 @@ export class Chart implements IChart {
         if (newSize.width)
             this.config.canvas.size.width = newSize.width;
 
-        this.model = assembleModel(this.config, this.data, this.designerConfig);
+        this.model = assembleModel(this.config, this.data, this.designerConfig, this.id);
         this.engine.updateFullBlock(this.model, getPreparedData(this.model, this.data, this.config));
     }
 
@@ -123,7 +125,7 @@ export class Chart implements IChart {
      */
     public updateColors(newColors: string[]): void {
         this.designerConfig.chartStyle.baseColors = [...newColors];
-        this.model = assembleModel(this.config, this.data, this.designerConfig);
+        this.model = assembleModel(this.config, this.data, this.designerConfig, this.id);
         this.engine.updateColors(this.model);
     }
 

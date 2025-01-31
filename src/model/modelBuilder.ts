@@ -77,8 +77,8 @@ function getTransitions(designerConfig: DesignerConfig): Transitions {
     return designerConfig.transitions;
 }
 
-export function assembleModel(config: MdtChartsConfig, data: MdtChartsDataSource, designerConfig: DesignerConfig): Model {
-    const modelInstance = ModelInstance.create(config, data, designerConfig);
+export function assembleModel(config: MdtChartsConfig, data: MdtChartsDataSource, designerConfig: DesignerConfig, chartBlockVersion: number): Model {
+    const modelInstance = ModelInstance.create(config, data, designerConfig, chartBlockVersion);
 
     if (!data || Object.keys(data).length === 0)
         return {

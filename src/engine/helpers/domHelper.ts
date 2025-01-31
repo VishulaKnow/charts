@@ -78,10 +78,6 @@ export class DomHelper {
         });
     }
 
-    public static setChartGradientStyle(element: Selection<BaseType, unknown, BaseType, unknown>, chartIndex: number, valueIndex: number): void {
-        element.style('fill', `url(#${getGradientId(chartIndex, valueIndex)})`)
-    }
-
     private static setChartOpacity(elements: Selection<BaseType, unknown, BaseType, unknown>, opacity: number): void {
         elements.attr('opacity', opacity);
     }

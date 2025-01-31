@@ -1,12 +1,13 @@
 import { DataOptions, MdtChartsConfig, MdtChartsDataSource } from "../../config/config";
 import { DesignerConfig } from "../../designer/designerConfig";
 import { CanvasModel } from "./canvasModel/canvasModel";
+import { ChartBlockVersion } from "./chartBlockVersion/chartBlockVersion";
 import { getConfigReader } from "./configReader";
 import { DataModelInstance } from "./dataModel/dataModel";
 
 export class ModelInstance {
-    static create(config: MdtChartsConfig, data: MdtChartsDataSource, designerConfig: DesignerConfig) {
-        const modelInstance = new ModelInstance();
+    static create(config: MdtChartsConfig, data: MdtChartsDataSource, designerConfig: DesignerConfig, chartBlockVersion: number) {
+        const modelInstance = new ModelInstance(chartBlockVersion);
         this.initInitialParams(modelInstance, config, data, designerConfig);
         return modelInstance;
     }
@@ -22,9 +23,11 @@ export class ModelInstance {
 
     canvasModel: CanvasModel;
     dataModel: DataModelInstance;
+    version: ChartBlockVersion;
 
-    constructor() {
+    constructor(chartVersionNumber: number) {
         this.canvasModel = new CanvasModel();
         this.dataModel = new DataModelInstance();
+        this.version = new ChartBlockVersion(chartVersionNumber);
     }
 }
