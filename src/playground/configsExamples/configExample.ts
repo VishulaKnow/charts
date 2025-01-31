@@ -103,7 +103,7 @@ const configCars: MdtChartsConfig = {
         charts: [
             {
                 isSegmented: true,
-                type: 'bar',
+                type: 'area',
                 data: {
                     valueFields: [
                         {
@@ -134,6 +134,14 @@ const configCars: MdtChartsConfig = {
                         on: true,
                         dashSize: 3,
                         gapSize: 3
+                    }
+                },
+                areaStyles: {
+                    gradient: {
+                        on: true
+                    },
+                    borderLine: {
+                        on: true
                     }
                 },
                 barStyles: {

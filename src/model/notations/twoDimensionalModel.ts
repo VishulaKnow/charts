@@ -55,7 +55,7 @@ export class TwoDimensionalModel {
 
         const keyAxis = AxisModel.getKeyAxis(options, modelInstance.dataModel.repository.getScopedFullSource(), designerConfig.canvas.axisLabel, canvasModel, designerConfig.elementsOptions.tooltip, () => scaleValueInfo.scaleFn(0));
 
-        const charts = this.getChartsModel(options.charts, configReader, options.orientation, designerConfig, modelInstance.dataModel.repository, keyAxis.orient, canvasModel, options.data.keyField.name);
+        const charts = this.getChartsModel(options.charts, configReader, options.orientation, designerConfig, modelInstance.dataModel.repository, keyAxis.orient, canvasModel, options.data.keyField.name, modelInstance);
 
         const titleConfig = TitleConfigReader.create(options.title, modelInstance);
 
@@ -85,7 +85,7 @@ export class TwoDimensionalModel {
             chartSettings: this.getChartsSettings(designerConfig.canvas.chartOptions, options.orientation),
             valueLabels: TwoDimensionalModelHelper.getValueLabels(options.valueLabels, canvasModel, options.orientation, configReader.getValueLabelsStyleModel()),
             defs: {
-                gradients: TwoDimensionalModelHelper.getGradientDefs(charts, keyAxis.orient, options.orientation)
+                gradients: TwoDimensionalModelHelper.getGradientDefs(charts, keyAxis.orient, options.orientation, modelInstance.version.getVersionNumber())
             }
         }
     }
@@ -114,7 +114,7 @@ export class TwoDimensionalModel {
         }
     }
 
-    private static getChartsModel(charts: MdtChartsTwoDimensionalChart[], configReader: TwoDimConfigReader, chartOrientation: ChartOrientation, designerConfig: DesignerConfig, dataModelRep: DataRepositoryModel, keyAxisOrient: Orient, canvasModel: CanvasModel, keyFieldName: string): TwoDimensionalChartModel[] {
+    private static getChartsModel(charts: MdtChartsTwoDimensionalChart[], configReader: TwoDimConfigReader, chartOrientation: ChartOrientation, designerConfig: DesignerConfig, dataModelRep: DataRepositoryModel, keyAxisOrient: Orient, canvasModel: CanvasModel, keyFieldName: string, modelInstance: ModelInstance): TwoDimensionalChartModel[] {
         const styleModel = new TwoDimensionalChartStyleModel(charts, designerConfig.chartStyle);
         const chartsModel: TwoDimensionalChartModel[] = [];
         charts.forEach((chart, index) => {
@@ -170,7 +170,7 @@ export class TwoDimensionalModel {
                     dominantBaseline: calculateValueLabelAlignment(keyAxisOrient, chart.valueLabels?.position?.mode).dominantBaseline,
                     format: configReader.getValueLabelFormatterForChart(index),
                 },
-                areaViewOptions: getAreaViewOptions(chart, index, style),
+                areaViewOptions: getAreaViewOptions(chart, index, style, modelInstance.version.getVersionNumber()),
                 dotViewOptions: {
                     shape: {
                         type: "line",

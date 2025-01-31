@@ -158,71 +158,71 @@ describe('getGradientDefs', () => {
     })
 
     test('should return array with two gradients of chart area type', () => {
-        const gradients = TwoDimensionalModelHelper.getGradientDefs(charts, 'right', 'horizontal')
+        const gradients = TwoDimensionalModelHelper.getGradientDefs(charts, 'right', 'horizontal', 42)
 
         expect(gradients.length).toEqual(2);
-        expect(gradients[0].id).toEqual('gradient-chart-1-sub-0');
-        expect(gradients[1].id).toEqual('gradient-chart-1-sub-1');
+        expect(gradients[0].id).toEqual('chart-42-gradient-chart-1-sub-0');
+        expect(gradients[1].id).toEqual('chart-42-gradient-chart-1-sub-1');
     });
 
     test('should return empty array because no charts area type', () => {
         charts[0].type = 'line';
-        const gradients = TwoDimensionalModelHelper.getGradientDefs(charts, 'right', 'horizontal')
+        const gradients = TwoDimensionalModelHelper.getGradientDefs(charts, 'right', 'horizontal', 42)
 
         expect(gradients.length).toEqual(0);
     });
 
     test('should return empty array because no areaViewOptions in charts', () => {
         charts[0].type = "line";
-        const gradients = TwoDimensionalModelHelper.getGradientDefs(charts, 'right', 'horizontal')
+        const gradients = TwoDimensionalModelHelper.getGradientDefs(charts, 'right', 'horizontal', 42)
 
         expect(gradients.length).toEqual(0);
     });
 
     test('should return opacity of gradient items 0 and 1, because keyAxisOrient is left', () => {
-        const gradients = TwoDimensionalModelHelper.getGradientDefs(charts, 'left', 'horizontal')
+        const gradients = TwoDimensionalModelHelper.getGradientDefs(charts, 'left', 'horizontal', 42)
 
         expect(gradients[0].items[0].opacity).toEqual(0);
         expect(gradients[0].items[1].opacity).toEqual(0.3);
     });
 
     test('should return opacity of gradient items 1 and 0, because keyAxisOrient is right', () => {
-        const gradients = TwoDimensionalModelHelper.getGradientDefs(charts, 'right', 'horizontal')
+        const gradients = TwoDimensionalModelHelper.getGradientDefs(charts, 'right', 'horizontal', 42)
 
         expect(gradients[0].items[0].opacity).toEqual(0.3);
         expect(gradients[0].items[1].opacity).toEqual(0);
     });
 
     test('should return y2 equal to 1 and x2 equal to 0, because chartOrient is vertical', () => {
-        const gradients = TwoDimensionalModelHelper.getGradientDefs(charts, 'top', 'vertical')
+        const gradients = TwoDimensionalModelHelper.getGradientDefs(charts, 'top', 'vertical', 42)
         const expectedPosition = { x1: 0, y1: 0, x2: 0, y2: 1 };
 
         expect(gradients[0].position).toEqual(expectedPosition);
     });
 
     test('should return y2 equal to 0 and x2 equal to 1, because chartOrient is horizontal', () => {
-        const gradients = TwoDimensionalModelHelper.getGradientDefs(charts, 'left', 'horizontal')
+        const gradients = TwoDimensionalModelHelper.getGradientDefs(charts, 'left', 'horizontal', 42)
         const expectedPosition = { x1: 0, y1: 0, x2: 1, y2: 0 };
 
         expect(gradients[0].position).toEqual(expectedPosition);
     });
 
     it('should return first color by chart if chart key axis is bottom or right', () => {
-        let gradients = TwoDimensionalModelHelper.getGradientDefs(charts, 'bottom', 'vertical')
+        let gradients = TwoDimensionalModelHelper.getGradientDefs(charts, 'bottom', 'vertical', 42)
         expect(gradients[0].items[0].color).toEqual('green');
         expect(gradients[0].items[1].color).toEqual('white');
 
-        gradients = TwoDimensionalModelHelper.getGradientDefs(charts, 'right', 'horizontal')
+        gradients = TwoDimensionalModelHelper.getGradientDefs(charts, 'right', 'horizontal', 42)
         expect(gradients[0].items[0].color).toEqual('green');
         expect(gradients[0].items[1].color).toEqual('white');
     });
 
     it('should return second color by chart if chart key axis is top or left', () => {
-        let gradients = TwoDimensionalModelHelper.getGradientDefs(charts, 'top', 'vertical')
+        let gradients = TwoDimensionalModelHelper.getGradientDefs(charts, 'top', 'vertical', 42)
         expect(gradients[0].items[0].color).toEqual('white');
         expect(gradients[0].items[1].color).toEqual('green');
 
-        gradients = TwoDimensionalModelHelper.getGradientDefs(charts, 'left', 'horizontal')
+        gradients = TwoDimensionalModelHelper.getGradientDefs(charts, 'left', 'horizontal', 42)
         expect(gradients[0].items[0].color).toEqual('white');
         expect(gradients[0].items[1].color).toEqual('green');
     });

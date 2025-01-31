@@ -25,13 +25,13 @@ export class TwoDimensionalModelHelper {
         return (isFirst && nextRow?.[valueFieldName] === null) || (isLast && previousRow?.[valueFieldName] === null) || hasNullNeighborsRows;
     }
 
-    public static getGradientDefs(charts: TwoDimensionalChartModel[], keyAxisOrient: Orient, chartOrient: ChartOrientation): GradientDef[] {
+    public static getGradientDefs(charts: TwoDimensionalChartModel[], keyAxisOrient: Orient, chartOrient: ChartOrientation, chartBlockId: number): GradientDef[] {
         let gradients: GradientDef[] = [];
 
         charts.forEach((chart) => {
             if (chart.type === 'area' && chart.areaViewOptions.fill.type === 'gradient') {
                 chart.style.elementColors?.forEach((elementColor, subIndex) => {
-                    const gradientId = getGradientId(chart.index, subIndex);
+                    const gradientId = getGradientId(chart.index, subIndex, chartBlockId);
 
                     gradients.push({
                         id: gradientId,

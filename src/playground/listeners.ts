@@ -13,10 +13,6 @@ import {
 } from '../config/config'
 import { DesignerConfig, Transitions } from '../designer/designerConfig';
 
-export function getUpdatedModel(config: MdtChartsConfig, data: MdtChartsDataSource, designerConfig: DesignerConfig): Model {
-    return assembleModel(config, data, designerConfig);
-}
-
 class ListenersHelper {
     static randInt(min: number, max: number): number {
         return Math.round(Math.random() * (max - min) + min);
@@ -78,9 +74,6 @@ class Listeners {
     private updateFull(): void {
         this.dropAxisDomain(this.config);
         this.chart.recreateChart(this.config, this.designerConfig, this.data)
-        // const model = getUpdatedModel(this.config, this.data, this.designerConfig);
-        // const preparedData = getPreparedData(model, this.data, this.config);
-        // this.engine.updateFullBlock(model, preparedData);
     }
     private dropAxisDomain(config: MdtChartsConfig) {
 
@@ -457,9 +450,6 @@ class Listeners {
                 if (config.options.type === '2d' && (config.options.axis.value.domain as NumberDomain).end < max)
                     (config.options.axis.value.domain as NumberDomain).end = -1;
 
-                const model = getUpdatedModel(thisClass.config, newData, thisClass.designerConfig);
-                const preparedData = getPreparedData(model, newData, config);
-
                 thisClass.chart.getChart().updateData(newData);
             }
         }
@@ -655,15 +645,11 @@ new Listeners(instance, config, designerConfig, data);
 //     instance.getChart().updateColors(["red", "yellow", "blue"])
 // }, 5000);
 
-const config3 = require('./configsExamples/configTest2D.json');
-const model3 = assembleModel(config3, data, designerConfig);
-const engine3 = new Engine(3, void 0, undefined);
-engine3.render(model3, getPreparedData(model3, data, config3), document.querySelector('.main-wrapper2'));
+const chart2 = new Chart(require('./configsExamples/configTest2D.json'), designerConfig, data, true);
+chart2.render(document.querySelector('.main-wrapper2'));
 
-const config2 = require('./configsExamples/configTestPolar.json');
-const model2 = assembleModel(config2, data, designerConfig);
-const engine2 = new Engine(4, null, undefined);
-engine2.render(model2, getPreparedData(model2, data, config2), document.querySelector('.main-wrapper2'));
+const chart3 = new Chart(require('./configsExamples/configTestPolar.json'), designerConfig, data, true);
+chart3.render(document.querySelector('.main-wrapper2'));
 
 //====================================================================================================== Data updating
 class DataUpdater {

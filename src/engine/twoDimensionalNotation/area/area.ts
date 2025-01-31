@@ -162,8 +162,9 @@ export class Area {
     }
 
     private setChartFillStyle(chart: TwoDimensionalChartModel, path: Selection<BaseType, unknown, BaseType, unknown>, valueIndex: number): void {
-        if (chart.areaViewOptions.fill.type === 'gradient')
-            DomHelper.setChartGradientStyle(path, chart.index, valueIndex)
+        if (chart.areaViewOptions.fill.type === 'gradient') {
+            path.style('fill', `url(#${chart.areaViewOptions.fill.ids[valueIndex]})`);
+        }
         else
             DomHelper.setChartStyle(path, chart.style, valueIndex, 'fill');
     }
@@ -177,7 +178,6 @@ export class Area {
     }
 
     private renderArea(areaGeneratorFactory: AreaGeneratorFactory, block: Block, chart: TwoDimensionalChartModel, data: MdtChartsDataRow[], field: ValueField, valueIndex: number) {
-
         const area = areaGeneratorFactory.getAreaGenerator(field.name);
         const path = block.svg.getChartGroup(chart.index)
             .append('path')

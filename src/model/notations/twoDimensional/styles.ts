@@ -144,10 +144,10 @@ export function getWidthOfLegendMarkerByType(chartType: TwoDimensionalChartType)
     if (chartType === "area") return styledElementValues.defaultLegendMarkerSizes.widthPx
 }
 
-export function getAreaViewOptions(chart: MdtChartsTwoDimensionalChart, chartIndex: number, style: ChartStyle): AreaChartViewOptions {
+export function getAreaViewOptions(chart: MdtChartsTwoDimensionalChart, chartIndex: number, style: ChartStyle, chartBlockId: number): AreaChartViewOptions {
     let gradientIds: GradientId[] = [];
     for (let index = 0; index < style.elementColors.length; index++) {
-        gradientIds.push(getGradientId(chartIndex, index));
+        gradientIds.push(getGradientId(chartIndex, index, chartBlockId));
     }
 
     const fill: AreaViewFill = chart.areaStyles?.gradient?.on
@@ -165,6 +165,6 @@ export function getAreaViewOptions(chart: MdtChartsTwoDimensionalChart, chartInd
     return { fill, borderLine };
 }
 
-export function getGradientId(chartIndex: number, subIndex: number): GradientId {
-    return `gradient-chart-${chartIndex}-sub-${subIndex}`;
+export function getGradientId(chartIndex: number, subIndex: number, chartBlockId: number): GradientId {
+    return `chart-${chartBlockId}-gradient-chart-${chartIndex}-sub-${subIndex}`;
 }
