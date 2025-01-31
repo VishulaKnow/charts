@@ -645,10 +645,10 @@ new Listeners(instance, config, designerConfig, data);
 //     instance.getChart().updateColors(["red", "yellow", "blue"])
 // }, 5000);
 
-const chart2 = new Chart(require('./configsExamples/configTest2D.json'), designerConfig, data, true);
+const chart2 = new Chart(require('./configsExamples/configTest2D.json'), designerConfig, data, false);
 chart2.render(document.querySelector('.main-wrapper2'));
 
-const chart3 = new Chart(require('./configsExamples/configTestPolar.json'), designerConfig, data, true);
+const chart3 = new Chart(require('./configsExamples/configTestPolar.json'), designerConfig, data, false);
 chart3.render(document.querySelector('.main-wrapper2'));
 
 //====================================================================================================== Data updating
