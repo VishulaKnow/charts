@@ -50,6 +50,9 @@ const configCars: MdtChartsConfig = {
                 ticks: {
                     flag: false
                 },
+                labels: {
+                    format: (value) => nFormatter(value),
+                },
                 visibility: true,
                 line: {
                     visible: false
@@ -109,12 +112,7 @@ const configCars: MdtChartsConfig = {
                         {
                             name: 'price',
                             format: 'money',
-                            title: 'Количество'
-                        },
-                        {
-                            name: 'count',
-                            format: 'money',
-                            title: 'Количество'
+                            title: 'Цена'
                         },
                     ],
                     valueGroup: "main"
@@ -124,7 +122,7 @@ const configCars: MdtChartsConfig = {
                     show: false
                 },
                 valueLabels: {
-                    on: true,
+                    on: false,
                     position: {
                         mode: "center"
                     }
@@ -153,49 +151,49 @@ const configCars: MdtChartsConfig = {
                     }
                 }
             },
-            // {
-            //     isSegmented: false,
-            //     type: 'area',
-            //     data: {
-            //         valueFields: [
-            //             {
-            //                 name: 'price',
-            //                 format: 'money',
-            //                 title: 'Рубли',
-            //                 color: "rgb(235, 80, 0)"
-            //             },
-            //         ],
-            //         valueGroup: "main"
-            //     },
-            //     embeddedLabels: 'none',
-            //     markers: {
-            //         show: false
-            //     },
-            //     lineStyles: {
-            //         dash: {
-            //             on: true,
-            //             dashSize: 3,
-            //             gapSize: 3
-            //         }
-            //     },
-            //     barStyles: {
-            //         hatch: {
-            //             on: false
-            //         }
-            //     },
-            //     areaStyles: {
-            //         borderLine: {
-            //             on: true
-            //         },
-            //         gradient: {
-            //             on: true
-            //         }
-            //     },
-            //     valueLabels: {
-            //         on: true,
-            //         // format: (value) => nFormatter(value),
-            //     }
-            // },
+            {
+                isSegmented: false,
+                type: 'area',
+                data: {
+                    valueFields: [
+                        {
+                            name: 'count',
+                            format: 'money',
+                            title: 'Рубли',
+                            color: "rgb(235, 80, 0)"
+                        },
+                    ],
+                    valueGroup: "secondary"
+                },
+                embeddedLabels: 'none',
+                markers: {
+                    show: false
+                },
+                lineStyles: {
+                    dash: {
+                        on: true,
+                        dashSize: 3,
+                        gapSize: 3
+                    }
+                },
+                barStyles: {
+                    hatch: {
+                        on: false
+                    }
+                },
+                areaStyles: {
+                    borderLine: {
+                        on: true
+                    },
+                    gradient: {
+                        on: true
+                    }
+                },
+                valueLabels: {
+                    on: true,
+                    // format: (value) => nFormatter(value),
+                }
+            },
         ],
     }
     // options: {

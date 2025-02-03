@@ -1,8 +1,8 @@
 import { DesignerConfig } from "../../../designer/designerConfig";
-import { AxisModel, LabelSize } from "../../featuresModel/axisModel";
+import { AxisModel, LABEL_ELEMENT_HEIGHT_PX, LabelSize } from "../../featuresModel/axisModel";
 import { TwoDimLegendModel } from "../../featuresModel/legendModel/twoDimLegendModel";
 import { keyAxisLabelHorizontalLog, keyAxisLabelVerticalLog } from "../../featuresModel/scaleModel/scaleAxisRecalcer";
-import { Orient, OtherCommonComponents } from "../../model";
+import { Orient, OtherCommonComponents, ScaleValueModel } from "../../model";
 import { AxisType } from "../../modelBuilder";
 import { CanvasModel } from "../../modelInstance/canvasModel/canvasModel";
 import { TwoDimConfigReader } from "../../modelInstance/configReader";
@@ -25,8 +25,8 @@ export class TwoDimMarginModel {
         const canvasModel = modelInstance.canvasModel;
 
         this.twoDimLegendModel.recalcMarginWith2DLegend(modelInstance, otherComponents.legendBlock, this.configReader.options.legend);
+        this.recalcVerticalMarginByAxisLabelHeight(LABEL_ELEMENT_HEIGHT_PX, canvasModel);
         const labelSize = this.getMaxLabelSize(modelInstance);
-        this.recalcVerticalMarginByAxisLabelHeight(labelSize, canvasModel);
 
         // Если встроенный лейбл показывает ключи, то лейблы оси ключей не показываются
         // При этом все графики должны иметь: embeddedLabels = 'key'
@@ -70,43 +70,27 @@ export class TwoDimMarginModel {
             labelsTexts = modelInstance.dataModel.repository.getValuesByKeyField();
         } else {
             const scaleModel = new ScaleModel(this.configReader.options, modelInstance.canvasModel).getScaleLinear(modelInstance.dataModel.repository.getRawRows(), this.configReader);
-            const scale = Scale.getScaleValue(scaleModel);
-            const ticksPolicy = AxisModel.getTickAmountPolicy(this.configReader.options.orientation, this.configReader.options.axis.value, scaleModel);
-
-            let outputValues: number[];
-            if (ticksPolicy.type === "constant") outputValues = ticksPolicy.values;
-            else if (ticksPolicy.type === "amount") outputValues = scale.ticks(ticksPolicy.amount);
-            else outputValues = this.configReader.getBiggestValueAndDecremented(modelInstance.dataModel.repository)
-
-            labelsTexts = outputValues.map(v => this.configReader.getAxisLabelFormatter()(v).toString());
+            labelsTexts = this.getValueAxisLabels(scaleModel, modelInstance).map(v => this.configReader.getAxisLabelFormatter()(v).toString());
         }
 
         return AxisModel.getLabelSize(this.designerConfig.canvas.axisLabel.maxSize.main, labelsTexts);
     }
 
     private getMaxLabelSizeSecondary(modelInstance: ModelInstance): LabelSize {
-        const keyAxisOrient = AxisModel.getAxisOrient(AxisType.Key, this.configReader.options.orientation, this.configReader.options.axis.key.position);
-        let labelsTexts: string[];
-
-        if (keyAxisOrient === 'left' || keyAxisOrient === 'right') {
-            labelsTexts = modelInstance.dataModel.repository.getValuesByKeyField();
-        } else {
-            labelsTexts = this.configReader.getBiggestValueAndDecrementedSecondary(modelInstance.dataModel.repository)
-                .map(v => this.configReader.getSecondaryAxisLabelFormatter()(v).toString());
-        }
+        const scaleModel = new ScaleModel(this.configReader.options, modelInstance.canvasModel).getScaleSecondaryLinear(modelInstance.dataModel.repository.getRawRows(), this.configReader);
+        const labelsTexts = this.getValueAxisLabels(scaleModel, modelInstance).map(v => this.configReader.getSecondaryAxisLabelFormatter()(v).toString());
 
         return AxisModel.getLabelSize(this.designerConfig.canvas.axisLabel.maxSize.main, labelsTexts);
     }
 
-    private recalcVerticalMarginByAxisLabelHeight(labelSize: LabelSize, canvasModel: CanvasModel): void {
+    private recalcVerticalMarginByAxisLabelHeight(labelHeight: number, canvasModel: CanvasModel): void {
         const keyAxisOrient = AxisModel.getAxisOrient(AxisType.Key, this.configReader.options.orientation, this.configReader.options.axis.key.position);
         const valueAxisOrient = AxisModel.getAxisOrient(AxisType.Value, this.configReader.options.orientation, this.configReader.options.axis.value.position);
 
-        if ((keyAxisOrient === 'bottom' || keyAxisOrient === 'top')) {
-            if (this.configReader.options.axis.key.visibility)
-                canvasModel.increaseMarginSide(keyAxisOrient, labelSize.height + AXIS_HORIZONTAL_LABEL_PADDING, keyAxisLabelVerticalLog);
-        } else if (this.configReader.options.axis.value.visibility)
-            canvasModel.increaseMarginSide(valueAxisOrient, labelSize.height + AXIS_HORIZONTAL_LABEL_PADDING);
+        if ((keyAxisOrient === 'bottom' || keyAxisOrient === 'top') && this.configReader.options.axis.key.visibility)
+            canvasModel.increaseMarginSide(keyAxisOrient, labelHeight + AXIS_HORIZONTAL_LABEL_PADDING, keyAxisLabelVerticalLog);
+        else if (this.configReader.options.axis.value.visibility)
+            canvasModel.increaseMarginSide(valueAxisOrient, labelHeight + AXIS_HORIZONTAL_LABEL_PADDING);
     }
 
     private recalcHorizontalMarginByAxisLabelWidth(labelSize: LabelSize, canvasModel: CanvasModel, isShow: boolean): void {
@@ -149,5 +133,17 @@ export class TwoDimMarginModel {
         }
 
         canvasModel.increaseMarginSide(axisMarginMapping[keyAxisOrient], valueLabelFontSize + OFFSET_SIZE_PX);
+    }
+
+    private getValueAxisLabels(scaleModel: ScaleValueModel, modelInstance: ModelInstance) {
+        const scale = Scale.getScaleValue(scaleModel);
+        const ticksPolicy = AxisModel.getTickAmountPolicy(this.configReader.options.orientation, this.configReader.options.axis.value, scaleModel);
+
+        let outputValues: number[];
+        if (ticksPolicy.type === "constant") outputValues = ticksPolicy.values;
+        else if (ticksPolicy.type === "amount") outputValues = scale.ticks(ticksPolicy.amount);
+        else outputValues = this.configReader.getBiggestValueAndDecremented(modelInstance.dataModel.repository)
+
+        return outputValues;
     }
 }

@@ -18,6 +18,8 @@ export interface LabelSize {
 export const MINIMAL_VERTICAL_STEP_SIZE = 60;
 export const MINIMAL_HORIZONTAL_STEP_SIZE = 100;
 
+export const LABEL_ELEMENT_HEIGHT_PX = 17
+
 const DEFAULT_AXIS_LINE_VISIBLE = true;
 
 export class AxisModel {
@@ -138,7 +140,6 @@ export class AxisModel {
     }
 
     public static getLabelSize(labelMaxWidth: number, labelTexts: string[]): LabelSize {
-        const LABEL_ELEMENT_HEIGHT_PX = 17;
         const ONE_UPPER_SYMBOL_WIDTH_PX = 8;
         const longestLabelLength = labelTexts.length ? Math.max(...labelTexts.map(t => ModelHelper.getStringScore(t))) : 0;
         const longestLabelWidth = ONE_UPPER_SYMBOL_WIDTH_PX * longestLabelLength;
