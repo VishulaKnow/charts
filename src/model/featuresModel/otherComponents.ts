@@ -7,24 +7,24 @@ import { ModelInstance } from "../modelInstance/modelInstance";
 import { TitleConfigReader } from "../modelInstance/titleConfigReader";
 
 interface OtherComponentsModelDependencies {
-    elementsOptions: ElementsOptions;
-    legendConfig: LegendBlockCanvas;
-    titleConfig: TitleConfigReader;
+	elementsOptions: ElementsOptions;
+	legendConfig: LegendBlockCanvas;
+	titleConfig: TitleConfigReader;
 }
 
 export class OtherComponentsModel {
-    public static getOtherComponentsModel(
-        dependencies: OtherComponentsModelDependencies,
-        modelInstance: ModelInstance
-    ): OtherCommonComponents {
-        const canvasModel = modelInstance.canvasModel;
+	public static getOtherComponentsModel(
+		dependencies: OtherComponentsModelDependencies,
+		modelInstance: ModelInstance
+	): OtherCommonComponents {
+		const canvasModel = modelInstance.canvasModel;
 
-        canvasModel.titleCanvas.init(TitleModel.getTitleModel(dependencies.titleConfig));
+		canvasModel.titleCanvas.init(TitleModel.getTitleModel(dependencies.titleConfig));
 
-        return {
-            legendBlock: LegendModel.getBaseLegendBlockModel(canvasModel, dependencies.legendConfig),
-            titleBlock: canvasModel.titleCanvas.getModel(),
-            tooltipBlock: TooltipModel.getTooltipModel(dependencies.elementsOptions.tooltip)
-        };
-    }
+		return {
+			legendBlock: LegendModel.getBaseLegendBlockModel(canvasModel, dependencies.legendConfig),
+			titleBlock: canvasModel.titleCanvas.getModel(),
+			tooltipBlock: TooltipModel.getTooltipModel(dependencies.elementsOptions.tooltip)
+		};
+	}
 }

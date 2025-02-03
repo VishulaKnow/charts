@@ -1,12 +1,12 @@
 {
-    "compilerOptions": {
-        "outDir": "./lib/",
-        "noImplicitAny": true,
-        "target": "es6",
-        "lib": ["ES2017", "DOM"],
-        "jsx": "react",
-        "allowJs": true,
-        "strictNullChecks": false,
-        "types": ["jest"]
-    }
+	"compilerOptions": {
+		"outDir": "./lib/",
+		"noImplicitAny": true,
+		"target": "es6",
+		"lib": ["ES2017", "DOM"],
+		"jsx": "react",
+		"allowJs": true,
+		"strictNullChecks": false,
+		"types": ["jest"]
+	}
 }

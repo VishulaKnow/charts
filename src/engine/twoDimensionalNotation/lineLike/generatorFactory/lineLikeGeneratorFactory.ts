@@ -5,10 +5,10 @@ import { Scales } from "../../../features/scale/scale";
 export type CoordinateGetter = (dataRow: MdtChartsDataRow) => number;
 
 export interface LineLikeGeneratorFactoryOptions {
-    keyAxisOrient: Orient;
-    scales: Scales;
-    keyFieldName: string;
-    margin: BlockMargin;
-    curve: LineCurveType;
-    shouldRender: LineLikeChartRenderFn;
+	keyAxisOrient: Orient;
+	scales: Scales;
+	keyFieldName: string;
+	margin: BlockMargin;
+	curve: LineCurveType;
+	shouldRender: LineLikeChartRenderFn;
 }

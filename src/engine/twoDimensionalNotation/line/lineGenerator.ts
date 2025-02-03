@@ -4,17 +4,17 @@ import { LineLikeGeneratorMiddleware } from "../lineLike/generatorMiddleware/lin
 import { CoordinateGetter } from "../lineLike/generatorFactory/lineLikeGeneratorFactory";
 
 interface LineGeneratorOptions {
-    middlewares: LineLikeGeneratorMiddleware[];
+	middlewares: LineLikeGeneratorMiddleware[];
 }
 
 export class LineGenerator {
-    constructor(private options: LineGeneratorOptions) {}
+	constructor(private options: LineGeneratorOptions) {}
 
-    get(xValue: CoordinateGetter, yValue: CoordinateGetter) {
-        const generator = line<MdtChartsDataRow>().x(xValue).y(yValue);
+	get(xValue: CoordinateGetter, yValue: CoordinateGetter) {
+		const generator = line<MdtChartsDataRow>().x(xValue).y(yValue);
 
-        this.options.middlewares.forEach((middleware) => middleware.handle(generator));
+		this.options.middlewares.forEach((middleware) => middleware.handle(generator));
 
-        return generator;
-    }
+		return generator;
+	}
 }

@@ -14,58 +14,58 @@ import { Line } from "./twoDimensionalNotation/line/line";
 interface Durations extends Transitions {}
 
 export class TransitionManager {
-    /**
-     * Анимации обновления в ms.
-     */
-    public durations: Durations = {
-        chartUpdate: 1000,
-        tooltipSlide: 75,
-        higlightedScale: 200,
-        markerHover: 50,
-        elementFadeOut: 400
-    };
+	/**
+	 * Анимации обновления в ms.
+	 */
+	public durations: Durations = {
+		chartUpdate: 1000,
+		tooltipSlide: 75,
+		higlightedScale: 200,
+		markerHover: 50,
+		elementFadeOut: 400
+	};
 
-    private block: Block;
-    /**
-     * Классы "подвижных" элементов
-     */
-    private transitionableElemClasses: string[] = [
-        Tooltip.tooltipBlockClass,
-        Tooltip.tooltipLineClass,
-        Axis.axesClass,
-        Area.areaChartClass,
-        Bar.barItemClass,
-        Line.lineChartClass,
-        MarkDot.markerDotClass,
-        EmbeddedLabels.embeddedLabelClass,
-        Donut.arcPathClass,
-        Aggregator.aggregatorValueClass
-    ];
+	private block: Block;
+	/**
+	 * Классы "подвижных" элементов
+	 */
+	private transitionableElemClasses: string[] = [
+		Tooltip.tooltipBlockClass,
+		Tooltip.tooltipLineClass,
+		Axis.axesClass,
+		Area.areaChartClass,
+		Bar.barItemClass,
+		Line.lineChartClass,
+		MarkDot.markerDotClass,
+		EmbeddedLabels.embeddedLabelClass,
+		Donut.arcPathClass,
+		Aggregator.aggregatorValueClass
+	];
 
-    constructor(block: Block, transitionsDurations: Transitions = null) {
-        this.block = block;
-        if (transitionsDurations) this.setDurations(transitionsDurations);
-    }
+	constructor(block: Block, transitionsDurations: Transitions = null) {
+		this.block = block;
+		if (transitionsDurations) this.setDurations(transitionsDurations);
+	}
 
-    public interruptTransitions(): void {
-        this.transitionableElemClasses.forEach((elemClass) => {
-            const elementsSelection = this.block.getSvg().selectAll(`.${elemClass}`).interrupt();
+	public interruptTransitions(): void {
+		this.transitionableElemClasses.forEach((elemClass) => {
+			const elementsSelection = this.block.getSvg().selectAll(`.${elemClass}`).interrupt();
 
-            elementsSelection.nodes().forEach((node) => interrupt(node));
-        });
-        this.block.getSvg().selectAll(`.${Axis.axesClass}`).selectAll("*").interrupt();
-    }
+			elementsSelection.nodes().forEach((node) => interrupt(node));
+		});
+		this.block.getSvg().selectAll(`.${Axis.axesClass}`).selectAll("*").interrupt();
+	}
 
-    private setDurations(durations: Transitions): void {
-        if (durations.chartUpdate !== undefined && durations.chartUpdate >= 0)
-            this.durations.chartUpdate = durations.chartUpdate;
-        if (durations.higlightedScale !== undefined && durations.higlightedScale >= 0)
-            this.durations.higlightedScale = durations.higlightedScale;
-        if (durations.elementFadeOut !== undefined && durations.elementFadeOut >= 0)
-            this.durations.elementFadeOut = durations.elementFadeOut;
-        if (durations.markerHover !== undefined && durations.markerHover >= 0)
-            this.durations.markerHover = durations.markerHover;
-        if (durations.tooltipSlide !== undefined && durations.tooltipSlide >= 0)
-            this.durations.tooltipSlide = durations.tooltipSlide;
-    }
+	private setDurations(durations: Transitions): void {
+		if (durations.chartUpdate !== undefined && durations.chartUpdate >= 0)
+			this.durations.chartUpdate = durations.chartUpdate;
+		if (durations.higlightedScale !== undefined && durations.higlightedScale >= 0)
+			this.durations.higlightedScale = durations.higlightedScale;
+		if (durations.elementFadeOut !== undefined && durations.elementFadeOut >= 0)
+			this.durations.elementFadeOut = durations.elementFadeOut;
+		if (durations.markerHover !== undefined && durations.markerHover >= 0)
+			this.durations.markerHover = durations.markerHover;
+		if (durations.tooltipSlide !== undefined && durations.tooltipSlide >= 0)
+			this.durations.tooltipSlide = durations.tooltipSlide;
+	}
 }

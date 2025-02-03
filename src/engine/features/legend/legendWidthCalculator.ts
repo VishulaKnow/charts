@@ -1,178 +1,178 @@
 type SizePx = number;
 
 interface WidthCalculatorConfig {
-    wrapper: LegendWrapperConfig;
-    items: LegendItemConfig[];
+	wrapper: LegendWrapperConfig;
+	items: LegendItemConfig[];
 }
 
 export function getNewLegendItemWidths(config: WidthCalculatorConfig): SizePx[] {
-    const wrapper = new LegendWrapper(config.wrapper);
-    const collection = new LegendItemCollection(config.items.map((i) => new LegendItem(i)));
+	const wrapper = new LegendWrapper(config.wrapper);
+	const collection = new LegendItemCollection(config.items.map((i) => new LegendItem(i)));
 
-    return getNewWidths(collection, wrapper);
+	return getNewWidths(collection, wrapper);
 }
 
 function getNewWidths(collection: LegendItemCollection, wrapper: LegendWrapper) {
-    let extra = collection.getTotalWidth() - wrapper.getMaxWidth();
-    if (extra <= 0) {
-        return fixWidthsByLinePos(collection, wrapper);
-    }
+	let extra = collection.getTotalWidth() - wrapper.getMaxWidth();
+	if (extra <= 0) {
+		return fixWidthsByLinePos(collection, wrapper);
+	}
 
-    const avgWidth = (wrapper.getMaxWidth() - collection.getTotalMarginSizes()) / collection.getItemsAmount();
-    const biggerThanAvg = collection.getItemsWithWidthBiggerThan(avgWidth);
+	const avgWidth = (wrapper.getMaxWidth() - collection.getTotalMarginSizes()) / collection.getItemsAmount();
+	const biggerThanAvg = collection.getItemsWithWidthBiggerThan(avgWidth);
 
-    let avgExtra = extra / biggerThanAvg.length;
-    biggerThanAvg.forEach((item, index) => {
-        const avgDiff = item.getCurrentWidth() - avgWidth;
-        const decreaseBy = index === biggerThanAvg.length - 1 ? extra : avgDiff < avgExtra ? avgDiff : avgExtra;
-        item.decreaseBy(decreaseBy);
-        extra -= decreaseBy;
-        avgExtra = extra / (biggerThanAvg.length - index - 1);
-    });
+	let avgExtra = extra / biggerThanAvg.length;
+	biggerThanAvg.forEach((item, index) => {
+		const avgDiff = item.getCurrentWidth() - avgWidth;
+		const decreaseBy = index === biggerThanAvg.length - 1 ? extra : avgDiff < avgExtra ? avgDiff : avgExtra;
+		item.decreaseBy(decreaseBy);
+		extra -= decreaseBy;
+		avgExtra = extra / (biggerThanAvg.length - index - 1);
+	});
 
-    return fixWidthsByLinePos(collection, wrapper);
+	return fixWidthsByLinePos(collection, wrapper);
 }
 
 function fixWidthsByLinePos(collection: LegendItemCollection, wrapper: LegendWrapper) {
-    const byRows: LegendItemCollection[] = [];
-    let currentRow: LegendItem[] = [];
-    collection.items.forEach((item, i) => {
-        const currentRowSum = currentRow.reduce((acc, i) => acc + i.getCurrentTotalWidth(), 0);
-        if (currentRowSum + item.getCurrentTotalWidth() <= wrapper.getWidthOfOneLine()) {
-            currentRow.push(item);
-        } else {
-            byRows.push(new LegendItemCollection(currentRow));
-            currentRow = [item];
-        }
-        if (i === collection.items.length - 1) byRows.push(new LegendItemCollection(currentRow));
-    });
+	const byRows: LegendItemCollection[] = [];
+	let currentRow: LegendItem[] = [];
+	collection.items.forEach((item, i) => {
+		const currentRowSum = currentRow.reduce((acc, i) => acc + i.getCurrentTotalWidth(), 0);
+		if (currentRowSum + item.getCurrentTotalWidth() <= wrapper.getWidthOfOneLine()) {
+			currentRow.push(item);
+		} else {
+			byRows.push(new LegendItemCollection(currentRow));
+			currentRow = [item];
+		}
+		if (i === collection.items.length - 1) byRows.push(new LegendItemCollection(currentRow));
+	});
 
-    if (byRows.length <= wrapper.getMaxRowsCount()) return collection.getActualWidths();
+	if (byRows.length <= wrapper.getMaxRowsCount()) return collection.getActualWidths();
 
-    const result: SizePx[] = [];
+	const result: SizePx[] = [];
 
-    for (let i = 0; i < byRows.length - 1; i++) {
-        const top = byRows[i];
-        const bottom = byRows[i + 1];
+	for (let i = 0; i < byRows.length - 1; i++) {
+		const top = byRows[i];
+		const bottom = byRows[i + 1];
 
-        const topFreeSpace = wrapper.getWidthOfOneLine() - top.getTotalWidth();
-        const firstOfBottom = bottom.getFirstItem();
-        if (i === byRows.length - 2) top.pushMany(bottom.shiftAll());
-        else if (topFreeSpace / firstOfBottom.getCurrentTotalWidth() > 0.5) {
-            const fromBottom = bottom.shift();
-            top.push(fromBottom);
-        }
-        result.push(...getNewWidths(top, new LegendWrapper({ maxRowsAmount: 1, width: wrapper.getWidthOfOneLine() })));
-    }
-    return result;
+		const topFreeSpace = wrapper.getWidthOfOneLine() - top.getTotalWidth();
+		const firstOfBottom = bottom.getFirstItem();
+		if (i === byRows.length - 2) top.pushMany(bottom.shiftAll());
+		else if (topFreeSpace / firstOfBottom.getCurrentTotalWidth() > 0.5) {
+			const fromBottom = bottom.shift();
+			top.push(fromBottom);
+		}
+		result.push(...getNewWidths(top, new LegendWrapper({ maxRowsAmount: 1, width: wrapper.getWidthOfOneLine() })));
+	}
+	return result;
 }
 
 interface LegendWrapperConfig {
-    maxRowsAmount: number;
-    width: SizePx;
+	maxRowsAmount: number;
+	width: SizePx;
 }
 
 class LegendWrapper {
-    constructor(private config: LegendWrapperConfig) {}
+	constructor(private config: LegendWrapperConfig) {}
 
-    getMaxWidth() {
-        return this.config.width * this.config.maxRowsAmount;
-    }
+	getMaxWidth() {
+		return this.config.width * this.config.maxRowsAmount;
+	}
 
-    getWidthOfOneLine() {
-        return this.config.width;
-    }
+	getWidthOfOneLine() {
+		return this.config.width;
+	}
 
-    getMaxRowsCount() {
-        return this.config.maxRowsAmount;
-    }
+	getMaxRowsCount() {
+		return this.config.maxRowsAmount;
+	}
 }
 
 export interface LegendItemConfig {
-    marginLeft: SizePx;
-    marginRight: SizePx;
-    width: SizePx;
+	marginLeft: SizePx;
+	marginRight: SizePx;
+	width: SizePx;
 }
 
 class LegendItem {
-    private width: SizePx;
+	private width: SizePx;
 
-    constructor(private config: LegendItemConfig) {
-        this.width = this.config.width;
-    }
+	constructor(private config: LegendItemConfig) {
+		this.width = this.config.width;
+	}
 
-    getCurrentTotalWidth() {
-        return this.width + this.getTotalMarginSize();
-    }
+	getCurrentTotalWidth() {
+		return this.width + this.getTotalMarginSize();
+	}
 
-    getWidthWithoutRightMargin() {
-        return this.width + this.config.marginLeft;
-    }
+	getWidthWithoutRightMargin() {
+		return this.width + this.config.marginLeft;
+	}
 
-    decreaseBy(by: SizePx) {
-        this.width -= by;
-    }
+	decreaseBy(by: SizePx) {
+		this.width -= by;
+	}
 
-    getCurrentWidth() {
-        return Math.round(this.width * 100) / 100;
-    }
+	getCurrentWidth() {
+		return Math.round(this.width * 100) / 100;
+	}
 
-    getTotalMarginSize() {
-        return this.config.marginLeft + this.config.marginRight;
-    }
+	getTotalMarginSize() {
+		return this.config.marginLeft + this.config.marginRight;
+	}
 
-    resetWidthToOriginal() {
-        this.width = this.config.width;
-    }
+	resetWidthToOriginal() {
+		this.width = this.config.width;
+	}
 }
 
 class LegendItemCollection {
-    constructor(public readonly items: LegendItem[]) {}
+	constructor(public readonly items: LegendItem[]) {}
 
-    getTotalWidth() {
-        return this.items.reduce((acc, item) => acc + item.getCurrentTotalWidth(), 0);
-    }
+	getTotalWidth() {
+		return this.items.reduce((acc, item) => acc + item.getCurrentTotalWidth(), 0);
+	}
 
-    getActualWidths() {
-        return this.items.map((item) => item.getCurrentWidth());
-    }
+	getActualWidths() {
+		return this.items.map((item) => item.getCurrentWidth());
+	}
 
-    getTotalMarginSizes() {
-        return this.items.reduce((acc, item) => acc + item.getTotalMarginSize(), 0);
-    }
+	getTotalMarginSizes() {
+		return this.items.reduce((acc, item) => acc + item.getTotalMarginSize(), 0);
+	}
 
-    getItemsAmount() {
-        return this.items.length;
-    }
+	getItemsAmount() {
+		return this.items.length;
+	}
 
-    getItemsWithWidthBiggerThan(thanWidth: SizePx) {
-        return this.items
-            .filter((item) => item.getCurrentWidth() > thanWidth)
-            .sort((a, b) => a.getCurrentWidth() - b.getCurrentWidth());
-    }
+	getItemsWithWidthBiggerThan(thanWidth: SizePx) {
+		return this.items
+			.filter((item) => item.getCurrentWidth() > thanWidth)
+			.sort((a, b) => a.getCurrentWidth() - b.getCurrentWidth());
+	}
 
-    getFirstItem() {
-        return this.items[0];
-    }
+	getFirstItem() {
+		return this.items[0];
+	}
 
-    shift() {
-        return this.items.shift();
-    }
+	shift() {
+		return this.items.shift();
+	}
 
-    shiftAll() {
-        return this.items.splice(0, this.items.length);
-    }
+	shiftAll() {
+		return this.items.splice(0, this.items.length);
+	}
 
-    push(item: LegendItem) {
-        this.items.push(item);
-    }
+	push(item: LegendItem) {
+		this.items.push(item);
+	}
 
-    pushMany(items: LegendItem[]) {
-        this.items.push(...items);
-    }
+	pushMany(items: LegendItem[]) {
+		this.items.push(...items);
+	}
 
-    resetItemsToOriginalWidth() {
-        this.items.forEach((item) => item.resetWidthToOriginal());
-        return this;
-    }
+	resetItemsToOriginalWidth() {
+		this.items.forEach((item) => item.resetWidthToOriginal());
+		return this;
+	}
 }

@@ -8,47 +8,47 @@ import { LegendCanvasModel } from "./legendCanvasModel";
 import { LegendModel } from "./legendModel";
 
 export class TwoDimLegendModel {
-    constructor(private configReader: TwoDimConfigReader) {}
+	constructor(private configReader: TwoDimConfigReader) {}
 
-    recalcMarginWith2DLegend(
-        modelInstance: ModelInstance,
-        legendBlockModel: LegendBlockModel,
-        legendOptions: MdtChartsTwoDimLegend
-    ): void {
-        const canvasModel = modelInstance.canvasModel;
+	recalcMarginWith2DLegend(
+		modelInstance: ModelInstance,
+		legendBlockModel: LegendBlockModel,
+		legendOptions: MdtChartsTwoDimLegend
+	): void {
+		const canvasModel = modelInstance.canvasModel;
 
-        const legendPosition = this.getLegendModel(legendOptions).position;
-        modelInstance.canvasModel.legendCanvas.setPosition(legendPosition);
+		const legendPosition = this.getLegendModel(legendOptions).position;
+		modelInstance.canvasModel.legendCanvas.setPosition(legendPosition);
 
-        if (legendPosition !== "off") {
-            const legendItemInfo = this.configReader.getLegendItemInfo();
-            const legendSize = LegendCanvasModel.findElementsAmountByLegendSize(
-                legendItemInfo.map((i) => ({
-                    text: i.text,
-                    markerSize: {
-                        ...styledElementValues.defaultLegendMarkerSizes,
-                        widthPx: getWidthOfLegendMarkerByType(i.chartType)
-                    },
-                    wrapperSize: { marginRightPx: styledElementValues.legend.inlineItemWrapperMarginRightPx }
-                })),
-                "top",
-                modelInstance.canvasModel.getBlockSize().width,
-                legendBlockModel.static.maxLinesAmount * styledElementValues.legend.inlineLegendOneLineHeightPx
-            ).size.height;
-            canvasModel.increaseMarginSide(legendPosition, legendSize);
+		if (legendPosition !== "off") {
+			const legendItemInfo = this.configReader.getLegendItemInfo();
+			const legendSize = LegendCanvasModel.findElementsAmountByLegendSize(
+				legendItemInfo.map((i) => ({
+					text: i.text,
+					markerSize: {
+						...styledElementValues.defaultLegendMarkerSizes,
+						widthPx: getWidthOfLegendMarkerByType(i.chartType)
+					},
+					wrapperSize: { marginRightPx: styledElementValues.legend.inlineItemWrapperMarginRightPx }
+				})),
+				"top",
+				modelInstance.canvasModel.getBlockSize().width,
+				legendBlockModel.static.maxLinesAmount * styledElementValues.legend.inlineLegendOneLineHeightPx
+			).size.height;
+			canvasModel.increaseMarginSide(legendPosition, legendSize);
 
-            if (legendSize !== 0)
-                LegendModel.appendToGlobalMarginValuesLegendMargin(canvasModel, legendPosition, legendBlockModel);
+			if (legendSize !== 0)
+				LegendModel.appendToGlobalMarginValuesLegendMargin(canvasModel, legendPosition, legendBlockModel);
 
-            legendBlockModel.coordinate[legendPosition].size = legendSize;
-        }
-    }
+			legendBlockModel.coordinate[legendPosition].size = legendSize;
+		}
+	}
 
-    private getLegendModel(legendOptions: MdtChartsTwoDimLegend): ILegendModel {
-        const position: LegendPosition = legendOptions.show ? legendOptions.position ?? "top" : "off";
+	private getLegendModel(legendOptions: MdtChartsTwoDimLegend): ILegendModel {
+		const position: LegendPosition = legendOptions.show ? legendOptions.position ?? "top" : "off";
 
-        return {
-            position
-        };
-    }
+		return {
+			position
+		};
+	}
 }

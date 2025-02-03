@@ -1,15 +1,15 @@
 {
-    "compilerOptions": {
-        "outDir": "./lib/",
-        "noImplicitAny": true,
-        "target": "es6",
-        "lib": ["ES2017", "DOM"],
-        "jsx": "react",
-        "allowJs": true,
-        "types": ["jest"],
-        "declaration": true,
-        "moduleResolution": "Node"
-    },
-    "include": ["src"],
-    "exclude": ["node_modules", "**/__tests__/*", "src/playground/*", "**/*Example.ts", "**/*.test.ts"]
+	"compilerOptions": {
+		"outDir": "./lib/",
+		"noImplicitAny": true,
+		"target": "es6",
+		"lib": ["ES2017", "DOM"],
+		"jsx": "react",
+		"allowJs": true,
+		"types": ["jest"],
+		"declaration": true,
+		"moduleResolution": "Node"
+	},
+	"include": ["src"],
+	"exclude": ["node_modules", "**/__tests__/*", "src/playground/*", "**/*Example.ts", "**/*.test.ts"]
 }

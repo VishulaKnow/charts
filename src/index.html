@@ -1,364 +1,364 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta charset="UTF-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>Charts</title>
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Charts</title>
 
-        <link
-            rel="stylesheet"
-            href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
-        />
-    </head>
+		<link
+			rel="stylesheet"
+			href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
+		/>
+	</head>
 
-    <body>
-        <div class="controls-block designer-block">
-            <h2>Дизайнер (статические настройки)</h2>
-            <div class="form designer">
-                <div class="form-group">
-                    <label for="">Позииция тултипа</label>
-                    <br />
-                    <select name="" id="tooltip-position">
-                        <option value="followCursor">Следование за курсором</option>
-                        <option value="fixed">Фиксированная</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label for="">Макс. ширина подписей</label>
-                    <br />
-                    <input type="number" id="axis-label-width" />
-                </div>
-                <div class="form-group">
-                    <label for="">Расстояние между барами</label>
-                    <br />
-                    <input type="number" id="bar-distance" />
-                </div>
-                <div class="form-group">
-                    <label for="">Мин. расстояние между группами баров</label>
-                    <br />
-                    <input type="number" id="min-bar-group-distance" />
-                </div>
-                <div class="form-group">
-                    <label for="">Макс. расстояние между группами баров</label>
-                    <br />
-                    <input type="number" id="max-bar-group-distance" />
-                </div>
-                <div class="form-group">
-                    <label for="">Мин. ширина бара</label>
-                    <br />
-                    <input type="number" id="min-bar-size" />
-                </div>
-                <div class="form-group">
-                    <label for="">Макс. ширина бара</label>
-                    <br />
-                    <input type="number" id="max-bar-size" />
-                </div>
-                <div class="form-group">
-                    <label for="">Отступ агрегатора</label>
-                    <br />
-                    <input type="number" placeholder="" min="0" id="aggregator-pad" />
-                </div>
-                <div class="form-group">
-                    <label for="">Расстояние между долями доната</label>
-                    <br />
-                    <input type="number" placeholder="" step="0.001" min="0" max="0.1" id="pad-angle" />
-                </div>
-                <div class="form-group">
-                    <label for="">Минимальная ширина доната</label>
-                    <br />
-                    <input type="number" placeholder="" id="donut-min-thickness" />
-                </div>
-                <div class="form-group">
-                    <label for="">Максимальная ширина доната</label>
-                    <br />
-                    <input type="number" placeholder="" id="donut-max-thickness" />
-                </div>
-                <div class="form-group">
-                    <label for="">Базовые цвета</label>
-                    <br />
-                    <input type="text" placeholder="" id="base-colors" style="width: 500px" maxlength="1000" />
-                </div>
-            </div>
-            <div class="designer-margin controls-section">
-                <div>Margin блока с графиком</div>
-                <div class="controls-group">
-                    <div class="form-group">
-                        <label for="">Top</label>
-                        <br />
-                        <input type="number" id="chart-block-margin-top" />
-                    </div>
-                    <div class="form-group">
-                        <label for="">Bottom</label>
-                        <br />
-                        <input type="number" id="chart-block-margin-bottom" />
-                    </div>
-                    <div class="form-group">
-                        <label for="">Left</label>
-                        <br />
-                        <input type="number" id="chart-block-margin-left" />
-                    </div>
-                    <div class="form-group">
-                        <label for="">Right</label>
-                        <br />
-                        <input type="number" id="chart-block-margin-right" />
-                    </div>
-                </div>
-            </div>
-            <div class="designer-transitions controls-section">
-                <div>Длительность анимаций</div>
-                <div class="controls-group">
-                    <div class="form-group">
-                        <label for="">Анимация обновления</label>
-                        <br />
-                        <input type="number" id="chart-block-transition-chartUpdate" value="1000" />
-                    </div>
-                    <div class="form-group">
-                        <label for="">Исчезновение элемента</label>
-                        <br />
-                        <input type="number" id="chart-block-transition-elementFadeOut" value="75" />
-                    </div>
-                    <div class="form-group">
-                        <label for="">Перемещение тултипа</label>
-                        <br />
-                        <input type="number" id="chart-block-transition-tooltipSlide" value="200" />
-                    </div>
-                    <div class="form-group">
-                        <label for="">Наведение на сегмент доната</label>
-                        <br />
-                        <input type="number" id="chart-block-transition-donutHover" value="50" />
-                    </div>
-                    <div class="form-group">
-                        <label for="">Наведение на маркер</label>
-                        <br />
-                        <input type="number" id="chart-block-transition-markerHover" value="400" />
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="controls-block common-block">
-            <h2>Пользовательские настройки</h2>
-            <div class="form notation">
-                <div class="form-group">
-                    <label for="">Тип исчисления</label>
-                    <br />
-                    <select name="" id="notation">
-                        <option value="2d">2D</option>
-                        <option value="polar">Polar</option>
-                        <option value="interval">Interval</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label for="">Ширина</label>
-                    <br />
-                    <input type="number" step="10" id="block-width" />
-                </div>
-                <div class="form-group">
-                    <label for="">Высота</label>
-                    <br />
-                    <input type="number" step="10" id="block-height" />
-                </div>
-                <div class="form-group">
-                    <br />
-                    <input type="checkbox" id="wrapper-border" />
-                    <label for="wrapper-border">Outline chart-блока</label>
-                </div>
-                <div class="form-group">
-                    <br />
-                    <input type="checkbox" id="update-enabler" />
-                    <label for="update-enabler">Автообновление данных</label>
-                </div>
-                <div class="form-group">
-                    <label for="">Refresh, ms</label>
-                    <br />
-                    <input type="number" name="" value="4000" id="refresh" />
-                </div>
-            </div>
-            <div class="form common-options">
-                <div class="form-group">
-                    <label for="">Количество записей</label>
-                    <br />
-                    <select name="" id="data-size">
-                        <option value="normal">9</option>
-                        <option value="large">18</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <br />
-                    <input type="checkbox" id="legend" />
-                    <label for="legend">Показывать легенду</label>
-                </div>
-                <div class="form-group">
-                    <label for="">Максимальное значение</label>
-                    <br />
-                    <input type="number" id="max-random-value" />
-                    <button class="btn-random">Random</button>
-                </div>
-            </div>
-        </div>
-        <div class="controls-block block-2d">
-            <h2>Настройки 2D-графиков</h2>
-            <div class="form controls-2d">
-                <div class="form-group">
-                    <label for="">Тип графика</label>
-                    <br />
-                    <select name="" id="chart-2d-type">
-                        <option value="bar">bar</option>
-                        <option value="line">line</option>
-                        <option value="area">area</option>
-                        <option value="barLine">bar + line</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label for="">Интервал оси значений</label>
-                    <br />
-                    <input type="number" placeholder="start" id="domain-start" />
-                    <input type="number" placeholder="end" id="domain-end" />
-                    <button class="btn-domain">Apply</button>
-                </div>
-                <div class="form-group">
-                    <br />
-                    <input type="checkbox" id="is-segmented" />
-                    <label for="is-segmented">Отображать сегментированно</label>
-                </div>
-                <div class="form-group">
-                    <label for="">Встроенные надписи</label>
-                    <br />
-                    <select name="" id="embedded-labels">
-                        <option value="none">none</option>
-                        <option value="key">key</option>
-                        <option value="value">value</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <br />
-                    <input type="checkbox" id="markers" />
-                    <label for="markers">Отображение маркеров</label>
-                </div>
-            </div>
-        </div>
-        <div class="controls-block block-axis">
-            <h2>Настройки осей</h2>
-            <div class="form controls-2d">
-                <div class="form-group">
-                    <label for="">Ориентация</label>
-                    <br />
-                    <select name="" id="chart-orient">
-                        <option value="vertical">vertical</option>
-                        <option value="horizontal">horizontal</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label for="">Поз. оси ключей</label>
-                    <br />
-                    <select name="" id="key-axis-orient">
-                        <option value="start">start</option>
-                        <option value="end">end</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <br />
-                    <input type="checkbox" id="key-axis-visibility" />
-                    <label for="key-axis-visibility">Отображать ось ключей</label>
-                </div>
-                <div class="form-group">
-                    <label for="">Поз. оси значений</label>
-                    <br />
-                    <select name="" id="value-axis-orient">
-                        <option value="start">start</option>
-                        <option value="end">end</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <br />
-                    <input type="checkbox" id="value-axis-visibility" />
-                    <label for="value-axis-visibility">Отображать ось значений</label>
-                </div>
-                <div class="form-group">
-                    <br />
-                    <input type="checkbox" id="config-key-grid" />
-                    <label for="config-key-grid">Грид оси ключей</label>
-                </div>
-                <div class="form-group">
-                    <br />
-                    <input type="checkbox" id="config-value-grid" />
-                    <label for="config-value-grid">Грид оси значений</label>
-                </div>
-                <div class="form-group">
-                    <br />
-                    <input type="checkbox" id="config-tick-key" />
-                    <label for="config-tick-key">Тики оси ключей</label>
-                </div>
-                <div class="form-group">
-                    <br />
-                    <input type="checkbox" id="config-tick-value" />
-                    <label for="config-tick-value">Тики оси значений</label>
-                </div>
-            </div>
-        </div>
-        <div class="controls-block block-polar">
-            <h2>Настройки Polar-графиков</h2>
-            <div class="controls-polar form">
-                <div class="form-group">
-                    <label for="">Тип графика</label>
-                    <br />
-                    <select name="" id="chart-polar-type">
-                        <option value="donut" selected>donut</option>
-                    </select>
-                </div>
-            </div>
-        </div>
-        <!-- Стили для контролов-->
-        <style>
-            .main-wrapper {
-                display: flex;
-                flex-direction: column;
-                align-items: center;
-            }
+	<body>
+		<div class="controls-block designer-block">
+			<h2>Дизайнер (статические настройки)</h2>
+			<div class="form designer">
+				<div class="form-group">
+					<label for="">Позииция тултипа</label>
+					<br />
+					<select name="" id="tooltip-position">
+						<option value="followCursor">Следование за курсором</option>
+						<option value="fixed">Фиксированная</option>
+					</select>
+				</div>
+				<div class="form-group">
+					<label for="">Макс. ширина подписей</label>
+					<br />
+					<input type="number" id="axis-label-width" />
+				</div>
+				<div class="form-group">
+					<label for="">Расстояние между барами</label>
+					<br />
+					<input type="number" id="bar-distance" />
+				</div>
+				<div class="form-group">
+					<label for="">Мин. расстояние между группами баров</label>
+					<br />
+					<input type="number" id="min-bar-group-distance" />
+				</div>
+				<div class="form-group">
+					<label for="">Макс. расстояние между группами баров</label>
+					<br />
+					<input type="number" id="max-bar-group-distance" />
+				</div>
+				<div class="form-group">
+					<label for="">Мин. ширина бара</label>
+					<br />
+					<input type="number" id="min-bar-size" />
+				</div>
+				<div class="form-group">
+					<label for="">Макс. ширина бара</label>
+					<br />
+					<input type="number" id="max-bar-size" />
+				</div>
+				<div class="form-group">
+					<label for="">Отступ агрегатора</label>
+					<br />
+					<input type="number" placeholder="" min="0" id="aggregator-pad" />
+				</div>
+				<div class="form-group">
+					<label for="">Расстояние между долями доната</label>
+					<br />
+					<input type="number" placeholder="" step="0.001" min="0" max="0.1" id="pad-angle" />
+				</div>
+				<div class="form-group">
+					<label for="">Минимальная ширина доната</label>
+					<br />
+					<input type="number" placeholder="" id="donut-min-thickness" />
+				</div>
+				<div class="form-group">
+					<label for="">Максимальная ширина доната</label>
+					<br />
+					<input type="number" placeholder="" id="donut-max-thickness" />
+				</div>
+				<div class="form-group">
+					<label for="">Базовые цвета</label>
+					<br />
+					<input type="text" placeholder="" id="base-colors" style="width: 500px" maxlength="1000" />
+				</div>
+			</div>
+			<div class="designer-margin controls-section">
+				<div>Margin блока с графиком</div>
+				<div class="controls-group">
+					<div class="form-group">
+						<label for="">Top</label>
+						<br />
+						<input type="number" id="chart-block-margin-top" />
+					</div>
+					<div class="form-group">
+						<label for="">Bottom</label>
+						<br />
+						<input type="number" id="chart-block-margin-bottom" />
+					</div>
+					<div class="form-group">
+						<label for="">Left</label>
+						<br />
+						<input type="number" id="chart-block-margin-left" />
+					</div>
+					<div class="form-group">
+						<label for="">Right</label>
+						<br />
+						<input type="number" id="chart-block-margin-right" />
+					</div>
+				</div>
+			</div>
+			<div class="designer-transitions controls-section">
+				<div>Длительность анимаций</div>
+				<div class="controls-group">
+					<div class="form-group">
+						<label for="">Анимация обновления</label>
+						<br />
+						<input type="number" id="chart-block-transition-chartUpdate" value="1000" />
+					</div>
+					<div class="form-group">
+						<label for="">Исчезновение элемента</label>
+						<br />
+						<input type="number" id="chart-block-transition-elementFadeOut" value="75" />
+					</div>
+					<div class="form-group">
+						<label for="">Перемещение тултипа</label>
+						<br />
+						<input type="number" id="chart-block-transition-tooltipSlide" value="200" />
+					</div>
+					<div class="form-group">
+						<label for="">Наведение на сегмент доната</label>
+						<br />
+						<input type="number" id="chart-block-transition-donutHover" value="50" />
+					</div>
+					<div class="form-group">
+						<label for="">Наведение на маркер</label>
+						<br />
+						<input type="number" id="chart-block-transition-markerHover" value="400" />
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="controls-block common-block">
+			<h2>Пользовательские настройки</h2>
+			<div class="form notation">
+				<div class="form-group">
+					<label for="">Тип исчисления</label>
+					<br />
+					<select name="" id="notation">
+						<option value="2d">2D</option>
+						<option value="polar">Polar</option>
+						<option value="interval">Interval</option>
+					</select>
+				</div>
+				<div class="form-group">
+					<label for="">Ширина</label>
+					<br />
+					<input type="number" step="10" id="block-width" />
+				</div>
+				<div class="form-group">
+					<label for="">Высота</label>
+					<br />
+					<input type="number" step="10" id="block-height" />
+				</div>
+				<div class="form-group">
+					<br />
+					<input type="checkbox" id="wrapper-border" />
+					<label for="wrapper-border">Outline chart-блока</label>
+				</div>
+				<div class="form-group">
+					<br />
+					<input type="checkbox" id="update-enabler" />
+					<label for="update-enabler">Автообновление данных</label>
+				</div>
+				<div class="form-group">
+					<label for="">Refresh, ms</label>
+					<br />
+					<input type="number" name="" value="4000" id="refresh" />
+				</div>
+			</div>
+			<div class="form common-options">
+				<div class="form-group">
+					<label for="">Количество записей</label>
+					<br />
+					<select name="" id="data-size">
+						<option value="normal">9</option>
+						<option value="large">18</option>
+					</select>
+				</div>
+				<div class="form-group">
+					<br />
+					<input type="checkbox" id="legend" />
+					<label for="legend">Показывать легенду</label>
+				</div>
+				<div class="form-group">
+					<label for="">Максимальное значение</label>
+					<br />
+					<input type="number" id="max-random-value" />
+					<button class="btn-random">Random</button>
+				</div>
+			</div>
+		</div>
+		<div class="controls-block block-2d">
+			<h2>Настройки 2D-графиков</h2>
+			<div class="form controls-2d">
+				<div class="form-group">
+					<label for="">Тип графика</label>
+					<br />
+					<select name="" id="chart-2d-type">
+						<option value="bar">bar</option>
+						<option value="line">line</option>
+						<option value="area">area</option>
+						<option value="barLine">bar + line</option>
+					</select>
+				</div>
+				<div class="form-group">
+					<label for="">Интервал оси значений</label>
+					<br />
+					<input type="number" placeholder="start" id="domain-start" />
+					<input type="number" placeholder="end" id="domain-end" />
+					<button class="btn-domain">Apply</button>
+				</div>
+				<div class="form-group">
+					<br />
+					<input type="checkbox" id="is-segmented" />
+					<label for="is-segmented">Отображать сегментированно</label>
+				</div>
+				<div class="form-group">
+					<label for="">Встроенные надписи</label>
+					<br />
+					<select name="" id="embedded-labels">
+						<option value="none">none</option>
+						<option value="key">key</option>
+						<option value="value">value</option>
+					</select>
+				</div>
+				<div class="form-group">
+					<br />
+					<input type="checkbox" id="markers" />
+					<label for="markers">Отображение маркеров</label>
+				</div>
+			</div>
+		</div>
+		<div class="controls-block block-axis">
+			<h2>Настройки осей</h2>
+			<div class="form controls-2d">
+				<div class="form-group">
+					<label for="">Ориентация</label>
+					<br />
+					<select name="" id="chart-orient">
+						<option value="vertical">vertical</option>
+						<option value="horizontal">horizontal</option>
+					</select>
+				</div>
+				<div class="form-group">
+					<label for="">Поз. оси ключей</label>
+					<br />
+					<select name="" id="key-axis-orient">
+						<option value="start">start</option>
+						<option value="end">end</option>
+					</select>
+				</div>
+				<div class="form-group">
+					<br />
+					<input type="checkbox" id="key-axis-visibility" />
+					<label for="key-axis-visibility">Отображать ось ключей</label>
+				</div>
+				<div class="form-group">
+					<label for="">Поз. оси значений</label>
+					<br />
+					<select name="" id="value-axis-orient">
+						<option value="start">start</option>
+						<option value="end">end</option>
+					</select>
+				</div>
+				<div class="form-group">
+					<br />
+					<input type="checkbox" id="value-axis-visibility" />
+					<label for="value-axis-visibility">Отображать ось значений</label>
+				</div>
+				<div class="form-group">
+					<br />
+					<input type="checkbox" id="config-key-grid" />
+					<label for="config-key-grid">Грид оси ключей</label>
+				</div>
+				<div class="form-group">
+					<br />
+					<input type="checkbox" id="config-value-grid" />
+					<label for="config-value-grid">Грид оси значений</label>
+				</div>
+				<div class="form-group">
+					<br />
+					<input type="checkbox" id="config-tick-key" />
+					<label for="config-tick-key">Тики оси ключей</label>
+				</div>
+				<div class="form-group">
+					<br />
+					<input type="checkbox" id="config-tick-value" />
+					<label for="config-tick-value">Тики оси значений</label>
+				</div>
+			</div>
+		</div>
+		<div class="controls-block block-polar">
+			<h2>Настройки Polar-графиков</h2>
+			<div class="controls-polar form">
+				<div class="form-group">
+					<label for="">Тип графика</label>
+					<br />
+					<select name="" id="chart-polar-type">
+						<option value="donut" selected>donut</option>
+					</select>
+				</div>
+			</div>
+		</div>
+		<!-- Стили для контролов-->
+		<style>
+			.main-wrapper {
+				display: flex;
+				flex-direction: column;
+				align-items: center;
+			}
 
-            .main-wrapper2 {
-                margin-top: 2rem;
-            }
+			.main-wrapper2 {
+				margin-top: 2rem;
+			}
 
-            .main-wrapper2 > div {
-                margin: 1rem;
-            }
+			.main-wrapper2 > div {
+				margin: 1rem;
+			}
 
-            .form {
-                display: flex;
-                flex-wrap: wrap;
-            }
+			.form {
+				display: flex;
+				flex-wrap: wrap;
+			}
 
-            .controls-block {
-                font-family: "Roboto";
-                border-bottom: 1px solid black;
-                padding: 0 0.2rem;
-                box-sizing: border-box;
-                margin: 1rem 0;
-            }
+			.controls-block {
+				font-family: "Roboto";
+				border-bottom: 1px solid black;
+				padding: 0 0.2rem;
+				box-sizing: border-box;
+				margin: 1rem 0;
+			}
 
-            .form-group {
-                margin: 10px;
-                font-family: "Roboto";
-            }
+			.form-group {
+				margin: 10px;
+				font-family: "Roboto";
+			}
 
-            .controls-group {
-                display: flex;
-            }
+			.controls-group {
+				display: flex;
+			}
 
-            .controls-section {
-                margin-top: 1rem;
-            }
+			.controls-section {
+				margin-top: 1rem;
+			}
 
-            label {
-                font-size: 12px;
-            }
+			label {
+				font-size: 12px;
+			}
 
-            .outline {
-                outline: 1px solid black;
-            }
-        </style>
+			.outline {
+				outline: 1px solid black;
+			}
+		</style>
 
-        <div class="main-wrapper"></div>
-        <div class="main-wrapper2" style="display: flex; align-items: center; flex-wrap: wrap"></div>
-    </body>
+		<div class="main-wrapper"></div>
+		<div class="main-wrapper2" style="display: flex; align-items: center; flex-wrap: wrap"></div>
+	</body>
 </html>

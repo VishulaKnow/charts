@@ -7,93 +7,93 @@ type CoordinateAxis = "x" | "y";
 export type ValueLabelOnCanvasIndex = number;
 
 export interface BoundingRect {
-    x: number;
-    y: number;
-    width: number;
-    height: number;
+	x: number;
+	y: number;
+	width: number;
+	height: number;
 }
 
 export interface ValueLabelElementRectInfo {
-    index: ValueLabelOnCanvasIndex;
-    boundingClientRect: BoundingRect;
+	index: ValueLabelOnCanvasIndex;
+	boundingClientRect: BoundingRect;
 }
 
 export interface ValueLabelElement extends ValueLabelElementRectInfo {
-    svgElement: SVGTextElement;
+	svgElement: SVGTextElement;
 }
 
 export interface LabelVisibility {
-    index: ValueLabelOnCanvasIndex;
-    isVisible: boolean;
+	index: ValueLabelOnCanvasIndex;
+	isVisible: boolean;
 }
 
 export class ValueLabelsCollision {
-    public static resolveValueLabelsCollisions(
-        newValueLabels: Selection<SVGTextElement, MdtChartsDataRow, SVGGElement, unknown>,
-        valueLabelsSettings: TwoDimensionalValueLabels
-    ): void {
-        const valueLabelElementsRectInfo = this.getValueLabelElementsRectInfo(newValueLabels);
+	public static resolveValueLabelsCollisions(
+		newValueLabels: Selection<SVGTextElement, MdtChartsDataRow, SVGGElement, unknown>,
+		valueLabelsSettings: TwoDimensionalValueLabels
+	): void {
+		const valueLabelElementsRectInfo = this.getValueLabelElementsRectInfo(newValueLabels);
 
-        this.shiftValueLabelsCollision(valueLabelElementsRectInfo, valueLabelsSettings.collision.chartBlock);
+		this.shiftValueLabelsCollision(valueLabelElementsRectInfo, valueLabelsSettings.collision.chartBlock);
 
-        if (valueLabelsSettings.collision.otherValueLables.mode === "hide")
-            this.toggleValueLabelElementsVisibility(valueLabelElementsRectInfo);
-    }
+		if (valueLabelsSettings.collision.otherValueLables.mode === "hide")
+			this.toggleValueLabelElementsVisibility(valueLabelElementsRectInfo);
+	}
 
-    private static getValueLabelElementsRectInfo(
-        valueLabels: Selection<SVGTextElement, unknown, SVGGElement, unknown>
-    ): ValueLabelElement[] {
-        let ValueLabelElementsReactInfo: ValueLabelElement[] = [];
+	private static getValueLabelElementsRectInfo(
+		valueLabels: Selection<SVGTextElement, unknown, SVGGElement, unknown>
+	): ValueLabelElement[] {
+		let ValueLabelElementsReactInfo: ValueLabelElement[] = [];
 
-        valueLabels.each(function (_, index) {
-            const { height, width } = this.getBBox();
-            const x = +this.getAttribute("x");
-            const y = +this.getAttribute("y");
+		valueLabels.each(function (_, index) {
+			const { height, width } = this.getBBox();
+			const x = +this.getAttribute("x");
+			const y = +this.getAttribute("y");
 
-            ValueLabelElementsReactInfo.push({
-                index,
-                svgElement: this,
-                boundingClientRect: { x, y, width, height }
-            });
-        });
+			ValueLabelElementsReactInfo.push({
+				index,
+				svgElement: this,
+				boundingClientRect: { x, y, width, height }
+			});
+		});
 
-        return ValueLabelElementsReactInfo;
-    }
+		return ValueLabelElementsReactInfo;
+	}
 
-    private static shiftValueLabelsCollision(
-        valueLabelElementsRectInfo: ValueLabelElement[],
-        chartBlock: ValueLabelsChartBlock
-    ) {
-        valueLabelElementsRectInfo.forEach((element) => {
-            this.handleCollisionShift(chartBlock, element);
-        });
-    }
+	private static shiftValueLabelsCollision(
+		valueLabelElementsRectInfo: ValueLabelElement[],
+		chartBlock: ValueLabelsChartBlock
+	) {
+		valueLabelElementsRectInfo.forEach((element) => {
+			this.handleCollisionShift(chartBlock, element);
+		});
+	}
 
-    private static handleCollisionShift(chartBlock: ValueLabelsChartBlock, element: ValueLabelElement): void {
-        const sides = Object.keys(chartBlock) as (keyof ValueLabelsChartBlock)[];
+	private static handleCollisionShift(chartBlock: ValueLabelsChartBlock, element: ValueLabelElement): void {
+		const sides = Object.keys(chartBlock) as (keyof ValueLabelsChartBlock)[];
 
-        sides.forEach((side) => {
-            const blockSide = chartBlock[side];
-            const axisCoordinate = side === "left" || side === "right" ? "x" : "y";
+		sides.forEach((side) => {
+			const blockSide = chartBlock[side];
+			const axisCoordinate = side === "left" || side === "right" ? "x" : "y";
 
-            if (blockSide.mode === "shift" && blockSide.hasCollision(element.boundingClientRect)) {
-                blockSide.shiftCoordinate(element.boundingClientRect);
-                this.changeLabelElementCoordinateByAxis(element, axisCoordinate);
-            }
-        });
-    }
+			if (blockSide.mode === "shift" && blockSide.hasCollision(element.boundingClientRect)) {
+				blockSide.shiftCoordinate(element.boundingClientRect);
+				this.changeLabelElementCoordinateByAxis(element, axisCoordinate);
+			}
+		});
+	}
 
-    private static toggleValueLabelElementsVisibility(elements: ValueLabelElement[]): void {
-        const labelsVisibility = ValueLabelsCollisionHelper.calculateValueLabelsVisibility(elements);
+	private static toggleValueLabelElementsVisibility(elements: ValueLabelElement[]): void {
+		const labelsVisibility = ValueLabelsCollisionHelper.calculateValueLabelsVisibility(elements);
 
-        labelsVisibility.forEach((label) => {
-            const labelInfo = elements.find((element) => element.index === label.index);
+		labelsVisibility.forEach((label) => {
+			const labelInfo = elements.find((element) => element.index === label.index);
 
-            if (labelInfo && !label.isVisible) select(labelInfo.svgElement).style("display", "none");
-        });
-    }
+			if (labelInfo && !label.isVisible) select(labelInfo.svgElement).style("display", "none");
+		});
+	}
 
-    private static changeLabelElementCoordinateByAxis(element: ValueLabelElement, axis: CoordinateAxis): void {
-        select(element.svgElement).attr(axis, element.boundingClientRect[axis]);
-    }
+	private static changeLabelElementCoordinateByAxis(element: ValueLabelElement, axis: CoordinateAxis): void {
+		select(element.svgElement).attr(axis, element.boundingClientRect[axis]);
+	}
 }

@@ -1,41 +1,41 @@
 {
-    "canvas": {
-        "class": "svg-chart",
-        "size": {
-            "width": 800,
-            "height": 510
-        }
-    },
-    "options": {
-        "title": "Доля продаж за 2023 год",
-        "type": "polar",
-        "selectable": true,
-        "legend": {
-            "show": true
-        },
-        "data": {
-            "dataSource": "dataSet",
-            "keyField": {
-                "name": "brand",
-                "format": "string"
-            }
-        },
-        "chart": {
-            "title": "Рост стоимости",
-            "type": "donut",
-            "data": {
-                "valueField": {
-                    "name": "price",
-                    "format": "money",
-                    "title": "Стоимость"
-                }
-            },
-            "tooltip": {
-                "show": true
-            },
-            "aggregator": {
-                "text": "Сумма"
-            }
-        }
-    }
+	"canvas": {
+		"class": "svg-chart",
+		"size": {
+			"width": 800,
+			"height": 510
+		}
+	},
+	"options": {
+		"title": "Доля продаж за 2023 год",
+		"type": "polar",
+		"selectable": true,
+		"legend": {
+			"show": true
+		},
+		"data": {
+			"dataSource": "dataSet",
+			"keyField": {
+				"name": "brand",
+				"format": "string"
+			}
+		},
+		"chart": {
+			"title": "Рост стоимости",
+			"type": "donut",
+			"data": {
+				"valueField": {
+					"name": "price",
+					"format": "money",
+					"title": "Стоимость"
+				}
+			},
+			"tooltip": {
+				"show": true
+			},
+			"aggregator": {
+				"text": "Сумма"
+			}
+		}
+	}
 }

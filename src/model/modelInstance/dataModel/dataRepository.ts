@@ -1,61 +1,61 @@
 import { DataOptions, MdtChartsDataSource, MdtChartsField, MdtChartsFieldName } from "../../../config/config";
 
 export class DataRepositoryModel {
-    private rawFullSource: MdtChartsDataSource;
-    private scopedFullSource: MdtChartsDataSource;
+	private rawFullSource: MdtChartsDataSource;
+	private scopedFullSource: MdtChartsDataSource;
 
-    private sourceName: string;
-    private keyField: MdtChartsField;
-    private valueFields: MdtChartsField[];
+	private sourceName: string;
+	private keyField: MdtChartsField;
+	private valueFields: MdtChartsField[];
 
-    initOptions(options: DataOptions, valueFields: MdtChartsField[]) {
-        this.sourceName = options.dataSource;
-        this.keyField = options.keyField;
-        this.valueFields = valueFields;
-    }
+	initOptions(options: DataOptions, valueFields: MdtChartsField[]) {
+		this.sourceName = options.dataSource;
+		this.keyField = options.keyField;
+		this.valueFields = valueFields;
+	}
 
-    getValuesByKeyField() {
-        return this.getRawRows().map((dataRow) => dataRow[this.keyField.name]);
-    }
+	getValuesByKeyField() {
+		return this.getRawRows().map((dataRow) => dataRow[this.keyField.name]);
+	}
 
-    getBiggestValueAndDecremented(segmentedFields?: MdtChartsFieldName[][]): [number, number] {
-        const values: number[] = [];
-        this.getRawRows().forEach((row) => {
-            if (!segmentedFields) {
-                this.valueFields.forEach((vf) => values.push(row[vf.name]));
-                return;
-            }
-            segmentedFields.forEach((fields) => {
-                const valuesBySegment = fields.reduce<number>((acc, f) => acc + row[f], 0);
-                values.push(valuesBySegment);
-            });
-        });
-        const biggest = Math.max(...values);
-        const biggestDecremented = Math.abs(biggest) > 1 ? biggest - 1 : biggest - 0.1;
-        return [biggest, biggestDecremented];
-    }
+	getBiggestValueAndDecremented(segmentedFields?: MdtChartsFieldName[][]): [number, number] {
+		const values: number[] = [];
+		this.getRawRows().forEach((row) => {
+			if (!segmentedFields) {
+				this.valueFields.forEach((vf) => values.push(row[vf.name]));
+				return;
+			}
+			segmentedFields.forEach((fields) => {
+				const valuesBySegment = fields.reduce<number>((acc, f) => acc + row[f], 0);
+				values.push(valuesBySegment);
+			});
+		});
+		const biggest = Math.max(...values);
+		const biggestDecremented = Math.abs(biggest) > 1 ? biggest - 1 : biggest - 0.1;
+		return [biggest, biggestDecremented];
+	}
 
-    initRawFullSource(rawSource: MdtChartsDataSource) {
-        this.rawFullSource = rawSource;
-    }
+	initRawFullSource(rawSource: MdtChartsDataSource) {
+		this.rawFullSource = rawSource;
+	}
 
-    getRawRows() {
-        return this.rawFullSource[this.sourceName];
-    }
+	getRawRows() {
+		return this.rawFullSource[this.sourceName];
+	}
 
-    getFirstRow() {
-        return this.rawFullSource[this.sourceName][0];
-    }
+	getFirstRow() {
+		return this.rawFullSource[this.sourceName][0];
+	}
 
-    initScopedFullSource(scopedSource: MdtChartsDataSource) {
-        this.scopedFullSource = scopedSource;
-    }
+	initScopedFullSource(scopedSource: MdtChartsDataSource) {
+		this.scopedFullSource = scopedSource;
+	}
 
-    getScopedFullSource() {
-        return this.scopedFullSource;
-    }
+	getScopedFullSource() {
+		return this.scopedFullSource;
+	}
 
-    getScopedRows() {
-        return this.scopedFullSource[this.sourceName];
-    }
+	getScopedRows() {
+		return this.scopedFullSource[this.sourceName];
+	}
 }

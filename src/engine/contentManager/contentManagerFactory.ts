@@ -7,31 +7,31 @@ import { TwoDimensionalManager } from "../twoDimensionalNotation/twoDimensionalM
 import { FilterEventManager } from "../filterManager/filterEventManager";
 
 export interface ChartContentManager {
-    render(engine: Engine, model: Model): void;
-    updateData(block: Block, model: Model, newData: MdtChartsDataSource): void;
-    updateColors(block: Block, model: Model): void;
-    clearSelection(filterEventManager: FilterEventManager, model: Model): void;
+	render(engine: Engine, model: Model): void;
+	updateData(block: Block, model: Model, newData: MdtChartsDataSource): void;
+	updateColors(block: Block, model: Model): void;
+	clearSelection(filterEventManager: FilterEventManager, model: Model): void;
 }
 
 interface Managers {
-    [type: string]: {
-        new (): ChartContentManager;
-    };
+	[type: string]: {
+		new (): ChartContentManager;
+	};
 }
 
 export class ContentManagerFactory {
-    private managers: Managers = {
-        "2d": TwoDimensionalManager,
-        polar: PolarManager
-    };
+	private managers: Managers = {
+		"2d": TwoDimensionalManager,
+		polar: PolarManager
+	};
 
-    getManager(type: ChartNotation): ChartContentManager {
-        const managerClass = this.managers[type];
-        return new managerClass();
-    }
+	getManager(type: ChartNotation): ChartContentManager {
+		const managerClass = this.managers[type];
+		return new managerClass();
+	}
 }
 
 export function getChartContentManager(model: Model): ChartContentManager {
-    const factory = new ContentManagerFactory();
-    return factory.getManager(model.options.type);
+	const factory = new ContentManagerFactory();
+	return factory.getManager(model.options.type);
 }
