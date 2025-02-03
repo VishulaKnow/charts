@@ -1,10 +1,10 @@
 export type DataType = string;
 export type DataTypeOptions = {
-    [option: string]: any
-}
+    [option: string]: any;
+};
 
-export type Formatter = (value: any, options?: { type?: string; title?: string; empty?: string; }) => string;
-export type TooltipPosition = 'followCursor' | 'fixed';
+export type Formatter = (value: any, options?: { type?: string; title?: string; empty?: string }) => string;
+export type TooltipPosition = "followCursor" | "fixed";
 
 export interface DesignerConfig {
     canvas: Canvas;
@@ -13,7 +13,6 @@ export interface DesignerConfig {
     elementsOptions: ElementsOptions;
     transitions?: Transitions;
 }
-
 
 // ========================================================================================= Canvas
 interface Canvas {
@@ -39,8 +38,8 @@ interface BlockMargin {
 }
 
 interface MarkerCanvas {
-    highlighted?: { radius?: number; };
-    normal?: { radius?: number; borderSize?: number; };
+    highlighted?: { radius?: number };
+    normal?: { radius?: number; borderSize?: number };
 }
 
 export interface LegendBlockCanvas {
@@ -85,21 +84,18 @@ interface LineOptionsCanvas {
 export type MdtChartsLineLikeChartCurveType = "monotone" | "none";
 
 export interface MdtChartsLineLikeChartShape {
-    curve?: { type?: MdtChartsLineLikeChartCurveType; }
+    curve?: { type?: MdtChartsLineLikeChartCurveType };
 }
-
 
 // ========================================================================================= DataFormat
 interface DataFormat {
     formatters: Formatter;
 }
 
-
 // ========================================================================================= ChartStyle
 export interface ChartStyleConfig {
     baseColors: string[];
 }
-
 
 // ========================================================================================= ElementsOptions
 export interface ElementsOptions {
@@ -108,7 +104,6 @@ export interface ElementsOptions {
 export interface TooltipSettings {
     position: TooltipPosition;
 }
-
 
 // ========================================================================================= Transitions
 export interface Transitions {

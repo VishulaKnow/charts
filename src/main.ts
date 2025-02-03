@@ -9,7 +9,7 @@ import { PublicOptionsService } from "./optionsServices/publicOptionsService";
 export interface IChart {
     /**
      * Рендер графика
-     * @param parentElement родительский элемент для графика 
+     * @param parentElement родительский элемент для графика
      */
     render(parentElement: HTMLElement): void;
     /**
@@ -59,7 +59,14 @@ export class Chart implements IChart {
      * @param filterCallback Функция коллбэк, вызываемая во время клика на элемент графика. Предназначена для обеспечения кросс-фильтрации
      * @param selectedIds Id выделенных записей
      */
-    constructor(config: MdtChartsConfig, designerConfig: DesignerConfig, data: MdtChartsDataSource, isResizable: boolean = false, filterCallback: FilterCallback = null, selectedIds: number[] = []) {
+    constructor(
+        config: MdtChartsConfig,
+        designerConfig: DesignerConfig,
+        data: MdtChartsDataSource,
+        isResizable: boolean = false,
+        filterCallback: FilterCallback = null,
+        selectedIds: number[] = []
+    ) {
         Chart.chartCounter++;
         this.id = Chart.chartCounter;
         this.config = config;
@@ -73,14 +80,13 @@ export class Chart implements IChart {
 
     /**
      * Рендер графика
-     * @param parentElement родительский элемент для графика 
+     * @param parentElement родительский элемент для графика
      */
     public render(parentElement: HTMLElement): void {
         this.parentElement = parentElement;
         this.engine.render(this.model, getPreparedData(this.model, this.data, this.config), this.parentElement);
 
-        if (this.isResizable)
-            this.registerResizeEvent();
+        if (this.isResizable) this.registerResizeEvent();
     }
 
     /**
@@ -89,8 +95,7 @@ export class Chart implements IChart {
     public destroy(): void {
         this.engine.destroy();
 
-        if (this.isResizable)
-            this.removeResizeEvent();
+        if (this.isResizable) this.removeResizeEvent();
     }
 
     /**
@@ -110,10 +115,8 @@ export class Chart implements IChart {
     public updateSize(newSize: Partial<NewSize>): void {
         if (!PublicOptionsService.validateSize(newSize)) return;
 
-        if (newSize.height)
-            this.config.canvas.size.height = newSize.height;
-        if (newSize.width)
-            this.config.canvas.size.width = newSize.width;
+        if (newSize.height) this.config.canvas.size.height = newSize.height;
+        if (newSize.width) this.config.canvas.size.width = newSize.width;
 
         this.model = assembleModel(this.config, this.data, this.designerConfig, this.id);
         this.engine.updateFullBlock(this.model, getPreparedData(this.model, this.data, this.config));
@@ -130,15 +133,15 @@ export class Chart implements IChart {
     }
 
     public clearSelection(): void {
-        this.engine.clearSelection(this.model)
+        this.engine.clearSelection(this.model);
     }
 
     private registerResizeEvent(): void {
-        window.addEventListener('resize', this.resizeHandler);
+        window.addEventListener("resize", this.resizeHandler);
     }
 
     private removeResizeEvent(): void {
-        window.removeEventListener('resize', this.resizeHandler);
+        window.removeEventListener("resize", this.resizeHandler);
     }
 
     private resizeListener(): void {

@@ -8,7 +8,7 @@ import {
     ValueLabelAnchor,
     ValueLabelDominantBaseline,
     ValueLabelsFormatter,
-    ValueLabelsStyleModel,
+    ValueLabelsStyleModel
 } from "../../../model/model";
 import { ChartOrientation, MdtChartsDataRow, MdtChartsDataSource } from "../../../config/config";
 import { Scales, ScalesWithSecondary } from "../../../engine/features/scale/scale";
@@ -22,19 +22,18 @@ import { Pipeline } from "../../helpers/pipeline/Pipeline";
 import { getStackedData } from "../../twoDimensionalNotation/line/lineHelper";
 import { Segment } from "../../twoDimensionalNotation/lineLike/generatorMiddleware/lineLikeGeneratorDefineMiddleware";
 
-
 export interface ValueLabelsOptions {
     elementAccessors: {
         getBlock: () => Block;
-    }
+    };
     data: {
         keyFieldName: string;
-    }
+    };
     canvas: {
         keyAxisOrient: Orient;
         valueLabels: TwoDimensionalValueLabels;
         style: ValueLabelsStyleModel;
-    }
+    };
 }
 
 export interface ValueLabelAttrs {
@@ -47,18 +46,17 @@ export interface ValueLabelAttrs {
 export class ChartValueLabels {
     public static readonly valueLabelClass = NamesHelper.getClassName("value-label");
 
-    private readonly renderPipeline = new Pipeline<Selection<SVGTextElement, MdtChartsDataRow | Segment, SVGGElement, unknown>, { style: ValueLabelsStyleModel }>();
+    private readonly renderPipeline = new Pipeline<
+        Selection<SVGTextElement, MdtChartsDataRow | Segment, SVGGElement, unknown>,
+        { style: ValueLabelsStyleModel }
+    >();
     private readonly attrsProvider = new ValueLabelsAttrsProvider();
 
     constructor(private readonly globalOptions: ValueLabelsOptions, private readonly chart: TwoDimensionalChartModel) {
         this.renderPipeline.push((valueLabels, { style }) => {
-            valueLabels
-                .attr('fill', 'currentColor')
-                .style('font-size', style.fontSize)
-                .style('color', style.color);
+            valueLabels.attr("fill", "currentColor").style("font-size", style.fontSize).style("color", style.color);
 
-            if (style.cssClassName)
-                valueLabels.classed(style.cssClassName, true);
+            if (style.cssClassName) valueLabels.classed(style.cssClassName, true);
 
             return valueLabels;
         });
@@ -69,12 +67,11 @@ export class ChartValueLabels {
             const preparedData = getStackedData(data, this.chart);
 
             preparedData.forEach((segment, segmentIndex) => {
-                this.renderByGroupIndex(scales, segmentIndex, segment, segment[0].fieldName, '1', d => d.data);
+                this.renderByGroupIndex(scales, segmentIndex, segment, segment[0].fieldName, "1", (d) => d.data);
             });
-        }
-        else {
+        } else {
             this.chart.data.valueFields.forEach((valueField, vfIndex) => {
-                this.renderByGroupIndex(scales, vfIndex, data, valueField.name, valueField.name, d => d);
+                this.renderByGroupIndex(scales, vfIndex, data, valueField.name, valueField.name, (d) => d);
             });
         }
     }
@@ -85,28 +82,51 @@ export class ChartValueLabels {
         if (this.chart.isSegmented) {
             const preparedData = getStackedData(newData, this.chart);
             preparedData.forEach((segment, segmentIndex) => {
-                const promise = this.updateByGroupIndex(scales, segmentIndex, segment, segment[0].fieldName, '1', d => d.data);
+                const promise = this.updateByGroupIndex(
+                    scales,
+                    segmentIndex,
+                    segment,
+                    segment[0].fieldName,
+                    "1",
+                    (d) => d.data
+                );
                 updatePromises.push(promise);
             });
-        }
-        else {
+        } else {
             this.chart.data.valueFields.forEach((valueField, vfIndex) => {
-                const promise = this.updateByGroupIndex(scales, vfIndex, newData, valueField.name, valueField.name, d => d);
+                const promise = this.updateByGroupIndex(
+                    scales,
+                    vfIndex,
+                    newData,
+                    valueField.name,
+                    valueField.name,
+                    (d) => d
+                );
                 updatePromises.push(promise);
             });
         }
 
-        return Promise.all(updatePromises)
+        return Promise.all(updatePromises);
     }
 
-    private renderByGroupIndex(scales: Scales, groupIndex: number, data: MdtChartsDataRow[] | Segment[], valueFieldName: string, datumField: string, dataRowAccessor: (d: MdtChartsDataRow | Segment) => MdtChartsDataRow) {
-        let valueLabels = this.getAllValueLabelsOfChart(groupIndex)
-            .data(data)
-            .enter()
-            .append('text');
+    private renderByGroupIndex(
+        scales: Scales,
+        groupIndex: number,
+        data: MdtChartsDataRow[] | Segment[],
+        valueFieldName: string,
+        datumField: string,
+        dataRowAccessor: (d: MdtChartsDataRow | Segment) => MdtChartsDataRow
+    ) {
+        let valueLabels = this.getAllValueLabelsOfChart(groupIndex).data(data).enter().append("text");
 
         valueLabels = this.renderPipeline.execute(valueLabels, { style: this.globalOptions.canvas.style });
-        const attrs = this.attrsProvider.getAttrs(this.globalOptions, this.chart.valueLabels, scales, datumField, dataRowAccessor);
+        const attrs = this.attrsProvider.getAttrs(
+            this.globalOptions,
+            this.chart.valueLabels,
+            scales,
+            datumField,
+            dataRowAccessor
+        );
 
         this.setAttrs(valueLabels, attrs, valueFieldName, this.chart.valueLabels.format, dataRowAccessor);
         this.setClasses(valueLabels, this.chart.cssClasses, groupIndex);
@@ -121,57 +141,82 @@ export class ChartValueLabels {
         dataRowAccessor: (d: MdtChartsDataRow | Segment) => MdtChartsDataRow
     ): Promise<void> {
         return new Promise<void>((resolve) => {
-            const valueLabels = this.getAllValueLabelsOfChart(groupIndex)
-                .data(data);
+            const valueLabels = this.getAllValueLabelsOfChart(groupIndex).data(data);
             valueLabels.exit().remove();
 
-            const attrs = this.attrsProvider.getAttrs(this.globalOptions, this.chart.valueLabels, scales, datumField, dataRowAccessor);
+            const attrs = this.attrsProvider.getAttrs(
+                this.globalOptions,
+                this.chart.valueLabels,
+                scales,
+                datumField,
+                dataRowAccessor
+            );
 
-            let newValueLabels = valueLabels
-                .enter()
-                .append('text');
+            let newValueLabels = valueLabels.enter().append("text");
 
             newValueLabels = this.renderPipeline.execute(newValueLabels, { style: this.globalOptions.canvas.style });
 
-            const mergedValueLabels = newValueLabels.merge(valueLabels as Selection<SVGTextElement, MdtChartsDataRow, SVGGElement, unknown>);
+            const mergedValueLabels = newValueLabels.merge(
+                valueLabels as Selection<SVGTextElement, MdtChartsDataRow, SVGGElement, unknown>
+            );
 
             this.setAttrs(newValueLabels, attrs, valueFieldName, this.chart.valueLabels.format, dataRowAccessor);
             this.setClasses(mergedValueLabels, this.chart.cssClasses, groupIndex);
 
-            this.setAttrs(valueLabels, attrs, valueFieldName, this.chart.valueLabels.format, dataRowAccessor, true, resolve);
+            this.setAttrs(
+                valueLabels,
+                attrs,
+                valueFieldName,
+                this.chart.valueLabels.format,
+                dataRowAccessor,
+                true,
+                resolve
+            );
         });
     }
 
     private getAllValueLabelsOfChart(vfIndex: number): Selection<BaseType, unknown, SVGGElement, unknown> {
         const block = this.globalOptions.elementAccessors.getBlock().svg.getChartBlock();
-        return block
-            .selectAll(`.${ChartValueLabels.valueLabelClass}.${CLASSES.dataLabel}${Helper.getCssClassesLine(this.chart.cssClasses)}.chart-element-${vfIndex}`);
+        return block.selectAll(
+            `.${ChartValueLabels.valueLabelClass}.${CLASSES.dataLabel}${Helper.getCssClassesLine(
+                this.chart.cssClasses
+            )}.chart-element-${vfIndex}`
+        );
     }
 
-    private setAttrs(valueLabels: Selection<SVGTextElement | BaseType, MdtChartsDataRow | Segment, BaseType, any>, attrs: ValueLabelAttrs, valueFieldName: string, formatter: ValueLabelsFormatter, dataRowAccessor: (d: MdtChartsDataRow | Segment) => MdtChartsDataRow, animate: boolean = false, onEndAnimation?: () => void) {
-        const animationName = 'labels-updating';
+    private setAttrs(
+        valueLabels: Selection<SVGTextElement | BaseType, MdtChartsDataRow | Segment, BaseType, any>,
+        attrs: ValueLabelAttrs,
+        valueFieldName: string,
+        formatter: ValueLabelsFormatter,
+        dataRowAccessor: (d: MdtChartsDataRow | Segment) => MdtChartsDataRow,
+        animate: boolean = false,
+        onEndAnimation?: () => void
+    ) {
+        const animationName = "labels-updating";
 
         valueLabels
-            .text(d => formatter(dataRowAccessor(d)[valueFieldName]))
-            .attr('dominant-baseline', attrs.dominantBaseline)
-            .attr('text-anchor', attrs.textAnchor);
+            .text((d) => formatter(dataRowAccessor(d)[valueFieldName]))
+            .attr("dominant-baseline", attrs.dominantBaseline)
+            .attr("text-anchor", attrs.textAnchor);
         if (animate) {
             const transition = valueLabels
                 .interrupt(animationName)
                 .transition(animationName)
                 .duration(this.globalOptions.elementAccessors.getBlock().transitionManager.durations.chartUpdate)
-                .attr('x', d => attrs.x(d))
-                .attr('y', d => attrs.y(d));
-            if (onEndAnimation)
-                transition.on('end', onEndAnimation);
+                .attr("x", (d) => attrs.x(d))
+                .attr("y", (d) => attrs.y(d));
+            if (onEndAnimation) transition.on("end", onEndAnimation);
         } else {
-            valueLabels
-                .attr('x', d => attrs.x(d))
-                .attr('y', d => attrs.y(d));
+            valueLabels.attr("x", (d) => attrs.x(d)).attr("y", (d) => attrs.y(d));
         }
     }
 
-    private setClasses(textLabels: Selection<SVGTextElement, MdtChartsDataRow, BaseType, any>, cssClasses: string[], vfIndex: number): void {
+    private setClasses(
+        textLabels: Selection<SVGTextElement, MdtChartsDataRow, BaseType, any>,
+        cssClasses: string[],
+        vfIndex: number
+    ): void {
         textLabels.classed(ChartValueLabels.valueLabelClass, true);
         textLabels.classed(CLASSES.dataLabel, true);
         DomHelper.setCssClasses(textLabels, Helper.getCssClassesWithElementIndex(cssClasses, vfIndex));
@@ -181,15 +226,20 @@ export class ChartValueLabels {
 export class CanvasValueLabels {
     private chartsValueLabels: ChartValueLabels[] = [];
 
-    constructor(private readonly options: ValueLabelsOptions) { }
+    constructor(private readonly options: ValueLabelsOptions) {}
 
-    render(scales: ScalesWithSecondary, charts: TwoDimensionalChartModel[], data: MdtChartsDataSource, dataOptions: OptionsModelData) {
+    render(
+        scales: ScalesWithSecondary,
+        charts: TwoDimensionalChartModel[],
+        data: MdtChartsDataSource,
+        dataOptions: OptionsModelData
+    ) {
         const valueLabelsSettings = this.options.canvas.valueLabels;
 
-        const chartsWithLabels: TwoDimensionalChartModel[] = charts.filter(chart => chart.valueLabels?.show);
+        const chartsWithLabels: TwoDimensionalChartModel[] = charts.filter((chart) => chart.valueLabels?.show);
         if (chartsWithLabels.length === 0) return;
 
-        chartsWithLabels.forEach(chart => {
+        chartsWithLabels.forEach((chart) => {
             const chartScales = this.getChartScales(scales, chart);
             const chartValueLabels = new ChartValueLabels(this.options, chart);
             this.chartsValueLabels.push(chartValueLabels);
@@ -201,13 +251,18 @@ export class CanvasValueLabels {
         ValueLabelsCollision.resolveValueLabelsCollisions(valueLabels, valueLabelsSettings);
     }
 
-    update(scales: ScalesWithSecondary, charts: TwoDimensionalChartModel[], data: MdtChartsDataSource, dataOptions: OptionsModelData) {
+    update(
+        scales: ScalesWithSecondary,
+        charts: TwoDimensionalChartModel[],
+        data: MdtChartsDataSource,
+        dataOptions: OptionsModelData
+    ) {
         const valueLabelsSettings = this.options.canvas.valueLabels;
 
-        const chartsWithLabels: TwoDimensionalChartModel[] = charts.filter(chart => chart.valueLabels?.show);
+        const chartsWithLabels: TwoDimensionalChartModel[] = charts.filter((chart) => chart.valueLabels?.show);
         if (chartsWithLabels.length === 0) return;
 
-        if (this.options.canvas.valueLabels.collision.otherValueLables.mode === 'hide')
+        if (this.options.canvas.valueLabels.collision.otherValueLables.mode === "hide")
             this.toggleOldValueLabelsVisibility();
 
         const chartsUpdatePromises = chartsWithLabels.map((chart, index) => {
@@ -225,21 +280,19 @@ export class CanvasValueLabels {
         const oldValueLabels = this.getAllValueLabels();
 
         oldValueLabels.each(function () {
-            if (this.style.display === 'none')
-                select(this).style('display', 'block');
-        })
+            if (this.style.display === "none") select(this).style("display", "block");
+        });
     }
 
     private getAllValueLabels(): Selection<SVGTextElement, MdtChartsDataRow, SVGGElement, unknown> {
         const block = this.options.elementAccessors.getBlock().svg.getChartBlock();
-        return block
-            .selectAll<SVGTextElement, MdtChartsDataRow>(`.${ChartValueLabels.valueLabelClass}`);
+        return block.selectAll<SVGTextElement, MdtChartsDataRow>(`.${ChartValueLabels.valueLabelClass}`);
     }
 
     private getChartScales(scales: ScalesWithSecondary, chart: TwoDimensionalChartModel): Scales {
         return {
             key: scales.key,
             value: chart.data.valueGroup === "secondary" ? scales.valueSecondary : scales.value
-        }
+        };
     }
 }

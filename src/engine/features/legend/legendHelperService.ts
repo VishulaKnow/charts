@@ -9,28 +9,31 @@ export class LegendHelperService {
 
     getWrapperClassByWrappingItems(legendPosition: LegendPosition, chartNotation: ChartNotation) {
         if (this.doesLegendInTopBy2d(legendPosition, chartNotation)) {
-            return "legend-wrapper-without-wrap"
+            return "legend-wrapper-without-wrap";
         }
-        return "legend-wrapper-with-wrap"
+        return "legend-wrapper-with-wrap";
     }
 
-    getLegendLabelClassByPosition(legendPosition: LegendPosition, chartNotation: ChartNotation, initialLabelClass: string): string {
+    getLegendLabelClassByPosition(
+        legendPosition: LegendPosition,
+        chartNotation: ChartNotation,
+        initialLabelClass: string
+    ): string {
         if (this.doesLegendInTopBy2d(legendPosition, chartNotation))
-            return `${initialLabelClass} ${initialLabelClass + '-nowrap'}`;
+            return `${initialLabelClass} ${initialLabelClass + "-nowrap"}`;
         return initialLabelClass;
     }
 
     getItemClasses(itemsDirection: LegendItemsDirection): string {
-        return itemsDirection === 'column' ? 'legend-item-row' : 'legend-item-inline';
+        return itemsDirection === "column" ? "legend-item-row" : "legend-item-inline";
     }
 
     getLegendItemsDirection(legendPosition: LegendPosition): LegendItemsDirection {
-        if (legendPosition === 'right' || legendPosition === 'left')
-            return 'column';
+        if (legendPosition === "right" || legendPosition === "left") return "column";
         return "row";
     }
 
-    private doesLegendInTopBy2d(legendPosition: LegendPosition, chartNotation: ChartNotation,) {
-        return (legendPosition === 'top' || legendPosition === 'bottom') && chartNotation === "2d"
+    private doesLegendInTopBy2d(legendPosition: LegendPosition, chartNotation: ChartNotation) {
+        return (legendPosition === "top" || legendPosition === "bottom") && chartNotation === "2d";
     }
 }

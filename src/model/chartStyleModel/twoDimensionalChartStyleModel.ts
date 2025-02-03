@@ -8,27 +8,38 @@ import { ChartStyleModelService } from "./chartStyleModel";
 export class TwoDimensionalChartStyleModel {
     private service = new TwoDimensionalChartStyleService();
 
-    constructor(private charts: MdtChartsTwoDimensionalChart[], private chartStyleConfig: ChartStyleConfig) { }
+    constructor(private charts: MdtChartsTwoDimensionalChart[], private chartStyleConfig: ChartStyleConfig) {}
 
     getChartStyle(chart: MdtChartsTwoDimensionalChart, chartIndex: number): ChartStyle {
         const fieldsAmounts = this.getChartsValueFieldsAmounts();
-        const opacity = chart.type === 'area' && chart.areaStyles?.gradient?.on
-            ? 1
-            : this.service.getChartOpacity(this.charts.length, chart.type, fieldsAmounts[chartIndex], chart.isSegmented);
+        const opacity =
+            chart.type === "area" && chart.areaStyles?.gradient?.on
+                ? 1
+                : this.service.getChartOpacity(
+                      this.charts.length,
+                      chart.type,
+                      fieldsAmounts[chartIndex],
+                      chart.isSegmented
+                  );
 
         return {
             elementColors: this.service.getChartColors(chart, this.chartStyleConfig, fieldsAmounts, chartIndex),
-            opacity,
-        }
+            opacity
+        };
     }
 
     private getChartsValueFieldsAmounts() {
-        return this.charts.map(chart => chart.data.valueFields.length);
+        return this.charts.map((chart) => chart.data.valueFields.length);
     }
 }
 
 export class TwoDimensionalChartStyleService {
-    getChartColors(chart: MdtChartsTwoDimensionalChart, styleConfig: ChartStyleConfig, chartsFieldsAmounts: number[], chartIndex: number) {
+    getChartColors(
+        chart: MdtChartsTwoDimensionalChart,
+        styleConfig: ChartStyleConfig,
+        chartsFieldsAmounts: number[],
+        chartIndex: number
+    ) {
         const generatedColors = this.generateNewChartColors(chart.type, styleConfig, chartsFieldsAmounts, chartIndex);
 
         chart.data.valueFields.forEach((field, fieldIndex) => {
@@ -38,13 +49,27 @@ export class TwoDimensionalChartStyleService {
         return generatedColors;
     }
 
-    getChartOpacity(chartsLength: number, chartType: TwoDimensionalChartType, chartsValueFieldAmount: number, isChartSegmented: boolean): number {
-        if (chartType === 'area' && this.isMoreThanOneValueFieldOnCanvas(chartsLength, chartsValueFieldAmount) && !isChartSegmented)
+    getChartOpacity(
+        chartsLength: number,
+        chartType: TwoDimensionalChartType,
+        chartsValueFieldAmount: number,
+        isChartSegmented: boolean
+    ): number {
+        if (
+            chartType === "area" &&
+            this.isMoreThanOneValueFieldOnCanvas(chartsLength, chartsValueFieldAmount) &&
+            !isChartSegmented
+        )
             return 0.5; // combined area with other charts has 0.5 opacity
         return 1;
     }
 
-    private generateNewChartColors(chartType: TwoDimensionalChartType, styleConfig: ChartStyleConfig, chartsFieldsAmounts: number[], chartIndex: number): string[] {
+    private generateNewChartColors(
+        chartType: TwoDimensionalChartType,
+        styleConfig: ChartStyleConfig,
+        chartsFieldsAmounts: number[],
+        chartIndex: number
+    ): string[] {
         const startIndex = this.getStartIndex(chartIndex, chartsFieldsAmounts);
         const baseColors = ChartStyleModelService.checkAndGet(styleConfig.baseColors);
         const palette = ChartStyleModelService.getColorSet(baseColors, ModelHelper.getSum(chartsFieldsAmounts));
@@ -52,8 +77,7 @@ export class TwoDimensionalChartStyleService {
 
         const selectedColors = palette.slice(startIndex, startIndex + elementsAmount);
 
-        if (chartType !== 'line')
-            return selectedColors;
+        if (chartType !== "line") return selectedColors;
 
         this.makeColorsBrighter(selectedColors);
 
@@ -61,12 +85,12 @@ export class TwoDimensionalChartStyleService {
     }
 
     private isMoreThanOneValueFieldOnCanvas(chartsLength: number, chartsValueFieldAmount: number) {
-        return (chartsLength > 1 || chartsValueFieldAmount > 1)
+        return chartsLength > 1 || chartsValueFieldAmount > 1;
     }
 
     private makeColorsBrighter(initialColors: string[]) {
         for (let i = 0; i < initialColors.length; i++) {
-            initialColors[i] = chroma.mix(initialColors[i], 'white', 0.2).saturate(3).hex();
+            initialColors[i] = chroma.mix(initialColors[i], "white", 0.2).saturate(3).hex();
         }
     }
 

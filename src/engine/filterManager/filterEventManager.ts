@@ -28,7 +28,13 @@ export class FilterEventManager {
 
     public eventEmitter: EventEmitter<FilterEventMap>;
 
-    constructor(private callback: FilterCallback, private fullDataset: MdtChartsDataRow[], filtrable: boolean, keyFieldName: string, selectedIds: number[] = []) {
+    constructor(
+        private callback: FilterCallback,
+        private fullDataset: MdtChartsDataRow[],
+        filtrable: boolean,
+        keyFieldName: string,
+        selectedIds: number[] = []
+    ) {
         this.selectedKeys = Helper.getKeysByIds(selectedIds, keyFieldName, fullDataset);
         this.filterable = filtrable;
         this.eventEmitter = new EventEmitter<FilterEventMap>();
@@ -47,23 +53,28 @@ export class FilterEventManager {
     }
 
     public isSelected(keyValue: string): boolean {
-        return this.selectedKeys.findIndex(key => key === keyValue) !== -1;
+        return this.selectedKeys.findIndex((key) => key === keyValue) !== -1;
     }
 
     public clearKeysFor2D(options: TwoDimensionalOptionsModel): void {
         this.selectedKeys = [];
-        if (this.callback)
-            this.callback([]);
-        this.eventEmitter.emit('change', this.selectedKeys);
+        if (this.callback) this.callback([]);
+        this.eventEmitter.emit("change", this.selectedKeys);
         SelectHighlighter.clear2D(this.block, options);
     }
 
     public clearKeysForPolar(margin: BlockMargin, blockSize: Size, options: PolarOptionsModel): void {
         this.selectedKeys = [];
-        if (this.callback)
-            this.callback([]);
-        this.eventEmitter.emit('change', this.selectedKeys);
-        SelectHighlighter.clearPolar(margin, blockSize, this.block, options, Donut.getAllArcGroups(this.block), options.chartCanvas);
+        if (this.callback) this.callback([]);
+        this.eventEmitter.emit("change", this.selectedKeys);
+        SelectHighlighter.clearPolar(
+            margin,
+            blockSize,
+            this.block,
+            options,
+            Donut.getAllArcGroups(this.block),
+            options.chartCanvas
+        );
     }
 
     private setKey(key: string): void {
@@ -75,12 +86,15 @@ export class FilterEventManager {
     }
 
     private removeId(key: string): void {
-        this.selectedKeys.splice(this.selectedKeys.findIndex(k => k === key), 1);
+        this.selectedKeys.splice(
+            this.selectedKeys.findIndex((k) => k === key),
+            1
+        );
     }
 
     private processKey(multySelect: boolean, keyValue: string): boolean {
         if (multySelect) {
-            if (this.getSelectedKeys().findIndex(key => key === keyValue) === -1) {
+            if (this.getSelectedKeys().findIndex((key) => key === keyValue) === -1) {
                 this.addId(keyValue);
                 return true;
             } else {
@@ -102,58 +116,106 @@ export class FilterEventManager {
     public setListenerPolar(margin: BlockMargin, blockSize: Size, options: PolarOptionsModel): void {
         if (this.filterable) {
             this.registerEventToDonut(margin, blockSize, options, options.chartCanvas);
-            const selectedElems = Donut.getAllArcGroups(this.block).filter(d => this.selectedKeys.findIndex(sid => sid === d.data[options.data.keyField.name]) !== -1);
+            const selectedElems = Donut.getAllArcGroups(this.block).filter(
+                (d) => this.selectedKeys.findIndex((sid) => sid === d.data[options.data.keyField.name]) !== -1
+            );
             this.selectedKeys = [];
-            selectedElems.dispatch('click', { bubbles: false, cancelable: true, detail: { multySelect: true } });
+            selectedElems.dispatch("click", { bubbles: false, cancelable: true, detail: { multySelect: true } });
         }
     }
 
     public event2DUpdate(options: TwoDimensionalOptionsModel): void {
         if (this.filterable) {
             const removedKeys: string[] = [];
-            this.selectedKeys.forEach(key => {
-                if (this.fullDataset.findIndex(row => row[options.data.keyField.name] === key) === -1)
+            this.selectedKeys.forEach((key) => {
+                if (this.fullDataset.findIndex((row) => row[options.data.keyField.name] === key) === -1)
                     removedKeys.push(key);
             });
-            removedKeys.forEach(rKey => this.selectedKeys.splice(this.selectedKeys.findIndex(sKey => sKey === rKey), 1));
+            removedKeys.forEach((rKey) =>
+                this.selectedKeys.splice(
+                    this.selectedKeys.findIndex((sKey) => sKey === rKey),
+                    1
+                )
+            );
             if (removedKeys.length > 0) this.eventEmitter.emit("change", this.selectedKeys);
-            this.selectedKeys.forEach(key => {
+            this.selectedKeys.forEach((key) => {
                 SelectHighlighter.click2DHandler(true, true, key, this.selectedKeys, this.block, options);
             });
         }
     }
 
-    public registerEventFor2D(scaleKey: AxisScale<any>, margin: BlockMargin, blockSize: Size, options: TwoDimensionalOptionsModel): void {
+    public registerEventFor2D(
+        scaleKey: AxisScale<any>,
+        margin: BlockMargin,
+        blockSize: Size,
+        options: TwoDimensionalOptionsModel
+    ): void {
         if (this.filterable) {
             const tipBox = TipBox.renderOrGet(this.block, margin, blockSize);
             const thisClass = this;
 
-            tipBox.on('click', function (e: CustomEvent<SelectDetails>) {
+            tipBox.on("click", function (e: CustomEvent<SelectDetails>) {
                 const multySelect = thisClass.getMultySelectParam(e);
-                const keyValue = e.detail.keyValue || TipBoxHelper.getKeyValueByPointer(pointer(e, this), options.orient, margin, blockSize, scaleKey, options.scale.key.type);
+                const keyValue =
+                    e.detail.keyValue ||
+                    TipBoxHelper.getKeyValueByPointer(
+                        pointer(e, this),
+                        options.orient,
+                        margin,
+                        blockSize,
+                        scaleKey,
+                        options.scale.key.type
+                    );
                 const appended = thisClass.processKey(multySelect, keyValue);
-                SelectHighlighter.click2DHandler(multySelect, appended, keyValue, thisClass.selectedKeys, thisClass.block, options);
+                SelectHighlighter.click2DHandler(
+                    multySelect,
+                    appended,
+                    keyValue,
+                    thisClass.selectedKeys,
+                    thisClass.block,
+                    options
+                );
 
                 if (thisClass.callback) {
-                    thisClass.callback(Helper.getRowsByKeys(thisClass.selectedKeys, options.data.keyField.name, thisClass.fullDataset));
+                    thisClass.callback(
+                        Helper.getRowsByKeys(thisClass.selectedKeys, options.data.keyField.name, thisClass.fullDataset)
+                    );
                 }
                 thisClass.eventEmitter.emit("change", thisClass.selectedKeys);
             });
         }
     }
 
-    private registerEventToDonut(margin: BlockMargin, blockSize: Size, options: PolarOptionsModel, donutSettings: DonutChartSettings): void {
+    private registerEventToDonut(
+        margin: BlockMargin,
+        blockSize: Size,
+        options: PolarOptionsModel,
+        donutSettings: DonutChartSettings
+    ): void {
         const arcItems = Donut.getAllArcGroups(this.block);
         const thisClass = this;
 
-        arcItems.on('click', function (e: CustomEvent<SelectDetails>, dataRow) {
+        arcItems.on("click", function (e: CustomEvent<SelectDetails>, dataRow) {
             const multySelect = thisClass.getMultySelectParam(e);
             const keyValue = dataRow.data[options.data.keyField.name];
             const appended = thisClass.processKey(multySelect, keyValue);
-            SelectHighlighter.clickPolarHandler(multySelect, appended, select(this), thisClass.getSelectedKeys(), margin, blockSize, thisClass.block, options, arcItems, donutSettings);
+            SelectHighlighter.clickPolarHandler(
+                multySelect,
+                appended,
+                select(this),
+                thisClass.getSelectedKeys(),
+                margin,
+                blockSize,
+                thisClass.block,
+                options,
+                arcItems,
+                donutSettings
+            );
 
             if (thisClass.callback) {
-                thisClass.callback(Helper.getRowsByKeys(thisClass.selectedKeys, options.data.keyField.name, thisClass.fullDataset));
+                thisClass.callback(
+                    Helper.getRowsByKeys(thisClass.selectedKeys, options.data.keyField.name, thisClass.fullDataset)
+                );
             }
             thisClass.eventEmitter.emit("change", thisClass.selectedKeys);
         });
@@ -166,7 +228,9 @@ export class FilterEventManager {
     private getMultySelectParam(e: CustomEvent<SelectDetails>): boolean {
         const isMultyButtonToggle = this.getMultyParamByEvent(e);
         return isMultyButtonToggle === undefined
-            ? (e.detail.multySelect === undefined ? false : e.detail.multySelect)
+            ? e.detail.multySelect === undefined
+                ? false
+                : e.detail.multySelect
             : isMultyButtonToggle;
     }
 }

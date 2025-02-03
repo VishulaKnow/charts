@@ -8,12 +8,16 @@ export class DonutModel {
     private thicknessService = new DonutThicknessService();
     private aggregatorService = new DonutAggregatorService();
 
-    getSettings(settingsFromConfig: DonutOptionsCanvas, chartOptions: PolarChart, rawDataRows: MdtChartsDataRow[]): DonutChartSettings {
+    getSettings(
+        settingsFromConfig: DonutOptionsCanvas,
+        chartOptions: PolarChart,
+        rawDataRows: MdtChartsDataRow[]
+    ): DonutChartSettings {
         return {
             padAngle: settingsFromConfig.padAngle,
             thickness: this.getThicknessOptions(settingsFromConfig.thickness),
             aggregator: this.getAggregatorOptions(settingsFromConfig, chartOptions, rawDataRows)
-        }
+        };
     }
 
     private getThicknessOptions(settingsFromConfig: MdtChartsDonutThicknessOptions): DonutThicknessOptions {
@@ -21,17 +25,21 @@ export class DonutModel {
             unit: this.thicknessService.getUnit(settingsFromConfig),
             max: this.thicknessService.valueToNumber(settingsFromConfig.max),
             min: this.thicknessService.valueToNumber(settingsFromConfig.min),
-            value: this.thicknessService.valueToNumber(settingsFromConfig.value),
-        }
+            value: this.thicknessService.valueToNumber(settingsFromConfig.value)
+        };
     }
 
-    private getAggregatorOptions(settingsFromConfig: DonutOptionsCanvas, chartOptions: PolarChart, rawDataRows: MdtChartsDataRow[]): DonutAggregatorModel {
+    private getAggregatorOptions(
+        settingsFromConfig: DonutOptionsCanvas,
+        chartOptions: PolarChart,
+        rawDataRows: MdtChartsDataRow[]
+    ): DonutAggregatorModel {
         return {
             margin: settingsFromConfig.aggregatorPad,
             content: this.aggregatorService.getContent(chartOptions.aggregator, {
                 rows: rawDataRows,
                 valueFieldName: chartOptions.data.valueField.name
             })
-        }
+        };
     }
 }

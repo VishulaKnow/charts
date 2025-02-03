@@ -3,8 +3,8 @@ import { BoundingRect } from "../../../engine/features/valueLabelsCollision/valu
 import { Size, ValueLabelsPositionMode } from "../../../config/config";
 
 interface ValueLabelAlignment {
-    dominantBaseline: ValueLabelDominantBaseline
-    textAnchor: ValueLabelAnchor
+    dominantBaseline: ValueLabelDominantBaseline;
+    textAnchor: ValueLabelAnchor;
 }
 
 export const OFFSET_SIZE_PX = 10;
@@ -23,9 +23,9 @@ export class ValueLabelCoordinateCalculator {
 
     getValueLabelY(scaledValue: number) {
         switch (this.keyAxisOrient) {
-            case 'bottom':
+            case "bottom":
                 return scaledValue - this.offsetSizePx + this.margin.top;
-            case 'top':
+            case "top":
                 return scaledValue + this.offsetSizePx + this.margin.top;
             default:
                 return scaledValue + this.margin.top;
@@ -34,9 +34,9 @@ export class ValueLabelCoordinateCalculator {
 
     getValueLabelX(scaledValue: number) {
         switch (this.keyAxisOrient) {
-            case 'right':
+            case "right":
                 return scaledValue - this.offsetSizePx + this.margin.left;
-            case 'left':
+            case "left":
                 return scaledValue + this.offsetSizePx + this.margin.left;
             default:
                 return scaledValue + this.margin.left;
@@ -44,17 +44,20 @@ export class ValueLabelCoordinateCalculator {
     }
 }
 
-export function calculateValueLabelAlignment(keyAxisOrient: Orient, positionMode?: ValueLabelsPositionMode): ValueLabelAlignment {
+export function calculateValueLabelAlignment(
+    keyAxisOrient: Orient,
+    positionMode?: ValueLabelsPositionMode
+): ValueLabelAlignment {
     if (!positionMode || positionMode === "after") {
         switch (keyAxisOrient) {
-            case 'top':
-                return { dominantBaseline: "hanging", textAnchor: "middle" }
+            case "top":
+                return { dominantBaseline: "hanging", textAnchor: "middle" };
             case "bottom":
-                return { dominantBaseline: "auto", textAnchor: "middle" }
+                return { dominantBaseline: "auto", textAnchor: "middle" };
             case "left":
-                return { dominantBaseline: "middle", textAnchor: "start" }
+                return { dominantBaseline: "middle", textAnchor: "start" };
             case "right":
-                return { dominantBaseline: "middle", textAnchor: "end" }
+                return { dominantBaseline: "middle", textAnchor: "end" };
         }
     } else {
         return { dominantBaseline: "middle", textAnchor: "middle" };

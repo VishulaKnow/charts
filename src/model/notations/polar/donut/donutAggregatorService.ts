@@ -9,31 +9,35 @@ export interface AggregatorServiceDataOptions {
 }
 
 export class DonutAggregatorService {
-    getContent(aggregatorOptions: MdtChartsDonutAggregator, dataOptions: AggregatorServiceDataOptions): DonutAggregatorContent {
+    getContent(
+        aggregatorOptions: MdtChartsDonutAggregator,
+        dataOptions: AggregatorServiceDataOptions
+    ): DonutAggregatorContent {
         if (!aggregatorOptions?.content || !dataOptions.rows) return this.generateDefaultContent(dataOptions);
 
         const content = aggregatorOptions.content({ data: dataOptions.rows });
 
-        if (!content || (!this.doesValueExist(content.value) && !content.title)) return this.generateDefaultContent(dataOptions);
+        if (!content || (!this.doesValueExist(content.value) && !content.title))
+            return this.generateDefaultContent(dataOptions);
 
         if (this.doesValueExist(content.value) && content.title) {
             return {
                 title: content.title,
                 value: content.value
-            }
+            };
         }
 
         if (!content.title && this.doesValueExist(content.value))
             return {
                 value: content.value,
                 title: AGGREGATOR_DEFAULT_TITLE
-            }
+            };
 
         if (!this.doesValueExist(content.value) && content.title) {
             return {
                 value: this.getDefaultValue(dataOptions),
                 title: content.title
-            }
+            };
         }
     }
 
@@ -45,7 +49,7 @@ export class DonutAggregatorService {
         return {
             title: AGGREGATOR_DEFAULT_TITLE,
             value: dataOptions.rows ? this.getDefaultValue(dataOptions) : 0
-        }
+        };
     }
 
     private getDefaultValue(dataOptions: AggregatorServiceDataOptions) {

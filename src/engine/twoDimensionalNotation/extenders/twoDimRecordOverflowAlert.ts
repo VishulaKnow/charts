@@ -1,6 +1,11 @@
 import { ChartOrientation } from "../../../config/config";
 import { Block } from "../../block/block";
-import { AlertBlockPositionAttrs, RecordOverflowAlertCore, RecordOverflowAlertOptions, RecordOverflowAlertText } from "../../features/recordOverflowAlert/recordOverflowAlertCore";
+import {
+    AlertBlockPositionAttrs,
+    RecordOverflowAlertCore,
+    RecordOverflowAlertOptions,
+    RecordOverflowAlertText
+} from "../../features/recordOverflowAlert/recordOverflowAlertCore";
 
 interface TwoDimRecordOverflowAlertOptions {
     hidedRecordsAmount: number;
@@ -21,24 +26,24 @@ class TwoDimRecordOverflowAlertClass {
             hidedRecordsAmount: options.hidedRecordsAmount,
             text: this.getText(options.chartOrientation),
             positionAttrs: this.getPositionAttrs()
-        }
+        };
     }
 
     private getText(chartOrientation: ChartOrientation): RecordOverflowAlertText {
-        const isHorizontal = chartOrientation === 'horizontal';
+        const isHorizontal = chartOrientation === "horizontal";
         return {
-            one: isHorizontal ? 'строка' : 'столбец',
-            twoToFour: isHorizontal ? 'строки' : 'столбца',
-            tenToTwenty: isHorizontal ? 'строк' : 'столбцов',
-            other: isHorizontal ? 'строк' : 'столбцов'
-        }
+            one: isHorizontal ? "строка" : "столбец",
+            twoToFour: isHorizontal ? "строки" : "столбца",
+            tenToTwenty: isHorizontal ? "строк" : "столбцов",
+            other: isHorizontal ? "строк" : "столбцов"
+        };
     }
 
     private getPositionAttrs(): AlertBlockPositionAttrs {
         return {
-            right: '0px',
-            top: '0px'
-        }
+            right: "0px",
+            top: "0px"
+        };
     }
 }
 

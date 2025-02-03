@@ -1,10 +1,10 @@
-import { Block } from './block/block';
-import { ValueFormatter } from './valueFormatter';
-import { ContentManager } from './contentManager/contentManager';
-import { Model, OptionsModel } from '../model/model';
-import { FilterCallback, FilterEventManager } from './filterManager/filterEventManager';
-import { Helper } from './helpers/helper';
-import { MdtChartsDataSource } from '../config/config';
+import { Block } from "./block/block";
+import { ValueFormatter } from "./valueFormatter";
+import { ContentManager } from "./contentManager/contentManager";
+import { Model, OptionsModel } from "../model/model";
+import { FilterCallback, FilterEventManager } from "./filterManager/filterEventManager";
+import { Helper } from "./helpers/helper";
+import { MdtChartsDataSource } from "../config/config";
 
 export class Engine {
     public block: Block;
@@ -21,7 +21,13 @@ export class Engine {
     public render(model: Model, data: MdtChartsDataSource, parentElement: HTMLElement): void {
         this.data = data;
         this.setFilterEventManager(model?.options);
-        this.block = new Block(model.blockCanvas.cssClass, parentElement, this.chartId, this.filterEventManager, model.transitions);
+        this.block = new Block(
+            model.blockCanvas.cssClass,
+            parentElement,
+            this.chartId,
+            this.filterEventManager,
+            model.transitions
+        );
         this.filterEventManager?.setBlock(this.block);
         this.block.renderWrapper(model.blockCanvas.size);
 
@@ -59,7 +65,7 @@ export class Engine {
     }
 
     public clearSelection(model: Model): void {
-        this.contentManager.clearSelection(this, model)
+        this.contentManager.clearSelection(this, model);
     }
 
     public updateColors(model: Model): void {
@@ -75,8 +81,20 @@ export class Engine {
         if (this.initializeSelected instanceof Array && this.initializeSelected.length > 0)
             highlightIds = [...this.initializeSelected];
         if (options?.data?.dataSource)
-            this.filterEventManager = new FilterEventManager(this.filterCallback, this.data[options.data.dataSource], options.selectable, options.data.keyField.name, highlightIds);
+            this.filterEventManager = new FilterEventManager(
+                this.filterCallback,
+                this.data[options.data.dataSource],
+                options.selectable,
+                options.data.keyField.name,
+                highlightIds
+            );
         else
-            this.filterEventManager = new FilterEventManager(this.filterCallback, [], options?.selectable, options?.data?.keyField?.name, highlightIds);
+            this.filterEventManager = new FilterEventManager(
+                this.filterCallback,
+                [],
+                options?.selectable,
+                options?.data?.keyField?.name,
+                highlightIds
+            );
     }
 }

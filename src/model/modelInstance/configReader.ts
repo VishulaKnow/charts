@@ -10,7 +10,8 @@ import {
     NumberAxisOptions,
     NumberSecondaryAxisOptions,
     TwoDimensionalChartType,
-    TwoDimensionalValueGroup, ValueLabelsFormatter
+    TwoDimensionalValueGroup,
+    ValueLabelsFormatter
 } from "../../config/config";
 import { DesignerConfig } from "../../designer/designerConfig";
 import { DataRepositoryModel } from "../../model/modelInstance/dataModel/dataRepository";
@@ -36,27 +37,37 @@ export class TwoDimConfigReader implements BaseConfigReader {
 
     getValueFields(): MdtChartsField[] {
         const fields: MdtChartsField[] = [];
-        this.options.charts.forEach(chart => {
+        this.options.charts.forEach((chart) => {
             fields.push(...chart.data.valueFields);
         });
         return fields;
     }
 
     getBiggestValueAndDecremented(repository: DataRepositoryModel) {
-        return this.calculateBiggestValueAndDecremented(repository, this.options.axis.value.domain, this.getFieldsBySegments("main"));
+        return this.calculateBiggestValueAndDecremented(
+            repository,
+            this.options.axis.value.domain,
+            this.getFieldsBySegments("main")
+        );
     }
 
     getBiggestValueAndDecrementedSecondary(repository: DataRepositoryModel) {
-        return this.calculateBiggestValueAndDecremented(repository, this.options.axis.valueSecondary.domain, this.getFieldsBySegments("secondary"));
+        return this.calculateBiggestValueAndDecremented(
+            repository,
+            this.options.axis.valueSecondary.domain,
+            this.getFieldsBySegments("secondary")
+        );
     }
 
     getFieldsBySegments(valueGroup: TwoDimensionalValueGroup): MdtChartsFieldName[][] {
         const segments: MdtChartsFieldName[][] = [];
-        const valueGroupCharts: MdtChartsTwoDimensionalChart[] = this.options.charts.filter(chart => (chart.data.valueGroup ?? "main") === valueGroup);
+        const valueGroupCharts: MdtChartsTwoDimensionalChart[] = this.options.charts.filter(
+            (chart) => (chart.data.valueGroup ?? "main") === valueGroup
+        );
 
-        valueGroupCharts.forEach(chart => {
-            if (!chart.isSegmented) segments.push(...chart.data.valueFields.map(vf => [vf.name]));
-            else segments.push(...[chart.data.valueFields.map(vf => vf.name)])
+        valueGroupCharts.forEach((chart) => {
+            if (!chart.isSegmented) segments.push(...chart.data.valueFields.map((vf) => [vf.name]));
+            else segments.push(...[chart.data.valueFields.map((vf) => vf.name)]);
         });
 
         return segments;
@@ -72,8 +83,8 @@ export class TwoDimConfigReader implements BaseConfigReader {
 
     getLegendItemInfo() {
         const info: { text: string; chartType: TwoDimensionalChartType }[] = [];
-        this.options.charts.forEach(c => {
-            c.data.valueFields.forEach(vf => {
+        this.options.charts.forEach((c) => {
+            c.data.valueFields.forEach((vf) => {
                 info.push({ text: vf.title ?? vf.name, chartType: c.type });
             });
         });
@@ -81,25 +92,22 @@ export class TwoDimConfigReader implements BaseConfigReader {
     }
 
     containsSecondaryAxis(): boolean {
-        return !!this.options.axis.valueSecondary && this.options.charts.some(chart => chart.data.valueGroup === 'secondary')
+        return (
+            !!this.options.axis.valueSecondary &&
+            this.options.charts.some((chart) => chart.data.valueGroup === "secondary")
+        );
     }
 
     getValueLabelFormatterForChart(chartIndex: number): ValueLabelsFormatter {
         const chart = this.options.charts[chartIndex];
         const axis = this.options.axis;
 
-        if (chart.valueLabels?.format)
-            return chart.valueLabels.format
+        if (chart.valueLabels?.format) return chart.valueLabels.format;
 
         if (chart.data.valueGroup === "secondary") {
-            if (axis.valueSecondary.labels?.format)
-                return axis.valueSecondary.labels.format
-
-            else if (axis.value.labels?.format)
-                return axis.value.labels.format
-
-        } else if (axis.value.labels?.format)
-            return axis.value.labels.format
+            if (axis.valueSecondary.labels?.format) return axis.valueSecondary.labels.format;
+            else if (axis.value.labels?.format) return axis.value.labels.format;
+        } else if (axis.value.labels?.format) return axis.value.labels.format;
 
         const valueFieldFormat = chart.data.valueFields[0].format;
         return (v) => this.designerConfig.dataFormat.formatters(v, { type: valueFieldFormat });
@@ -111,11 +119,11 @@ export class TwoDimConfigReader implements BaseConfigReader {
     }
 
     areValueLabelsOn(): boolean {
-        return this.options.charts.some(chart => chart.valueLabels?.on);
+        return this.options.charts.some((chart) => chart.valueLabels?.on);
     }
 
     areValueLabelsNeedIncreaseMargin(): boolean {
-        return !this.options.charts.every(chart => chart.valueLabels?.position?.mode === "center");
+        return !this.options.charts.every((chart) => chart.valueLabels?.position?.mode === "center");
     }
 
     getValueLabelsStyleModel(): ValueLabelsStyleModel {
@@ -123,11 +131,15 @@ export class TwoDimConfigReader implements BaseConfigReader {
             fontSize: this.options.valueLabels?.style?.fontSize ?? 10,
             color: this.options.valueLabels?.style?.color ?? "rgba(68, 68, 68, 0.5)",
             cssClassName: this.options.valueLabels?.style?.cssClassName
-        }
+        };
     }
 
-    private calculateBiggestValueAndDecremented(repository: DataRepositoryModel, domain: AxisNumberDomain, fields: MdtChartsFieldName[][]): number[] {
-        const resolvedDomain = getResolvedDomain(domain, repository.getRawRows())
+    private calculateBiggestValueAndDecremented(
+        repository: DataRepositoryModel,
+        domain: AxisNumberDomain,
+        fields: MdtChartsFieldName[][]
+    ): number[] {
+        const resolvedDomain = getResolvedDomain(domain, repository.getRawRows());
 
         if (resolvedDomain && resolvedDomain.end !== -1) {
             return [resolvedDomain.end, resolvedDomain.end - 1];

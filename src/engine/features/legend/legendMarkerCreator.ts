@@ -1,5 +1,9 @@
 import { BaseType, Selection } from "d3-selection";
-import { ChartLegendModel, TwoDimensionalChartLegendBarModel, TwoDimensionalChartLegendLineModel } from "../../../model/model";
+import {
+    ChartLegendModel,
+    TwoDimensionalChartLegendBarModel,
+    TwoDimensionalChartLegendLineModel
+} from "../../../model/model";
 import { Legend } from "./legend";
 import { HatchPatternDef } from "../../block/defs/hatchPattern";
 import { applyLineDash } from "../../twoDimensionalNotation/line/lineHelper";
@@ -24,12 +28,15 @@ export class LegendMarkerCreator {
 }
 
 export interface MarkerCreator {
-    renderMarker(selection: MarkerParentSelection, color: string): Selection<BaseType, ChartLegendModel, BaseType, unknown>;
+    renderMarker(
+        selection: MarkerParentSelection,
+        color: string
+    ): Selection<BaseType, ChartLegendModel, BaseType, unknown>;
     updateColors(selection: MarkerParentSelection, color: string): void;
 }
 
 interface MakerCreatorCustomOptions {
-    default?: { cssClass: string; }
+    default?: { cssClass: string };
 }
 
 export function getMarkerCreator(options: ChartLegendModel, customOptions?: MakerCreatorCustomOptions): MarkerCreator {
@@ -39,22 +46,23 @@ export function getMarkerCreator(options: ChartLegendModel, customOptions?: Make
 }
 
 class DefaultMarkerCreator implements MarkerCreator {
-    constructor(private cssClass = Legend.markerCircle) { }
+    constructor(private cssClass = Legend.markerCircle) {}
 
     renderMarker(selection: MarkerParentSelection, color: string) {
-        return selection.append('span').style('background-color', color).classed(this.cssClass, true);
+        return selection.append("span").style("background-color", color).classed(this.cssClass, true);
     }
 
     updateColors(selection: MarkerParentSelection, color: string): void {
-        selection.select(`.${this.cssClass}`).style('background-color', color);
+        selection.select(`.${this.cssClass}`).style("background-color", color);
     }
 }
 
 abstract class SvgMarkerCreator {
     protected renderSvg(selection: MarkerParentSelection) {
-        return selection.append('svg')
+        return selection
+            .append("svg")
             .style("display", "inline-block")
-            .style("height", '8px')
+            .style("height", "8px")
             .classed(Legend.markerClass, true);
     }
 }
@@ -67,23 +75,23 @@ class BarMarkerCreator extends SvgMarkerCreator implements MarkerCreator {
     renderMarker(selection: MarkerParentSelection, color: string) {
         const svg = this.renderSvg(selection).style("width", this.options.width);
         const bars = svg
-            .append('rect')
-            .attr('x', 0)
-            .attr('y', 0)
-            .attr('height', this.options.width)
-            .attr('width', this.options.width)
-            .style('fill', color)
-            .style('clip-path', getClipPathValue(this.options.borderRadius));
+            .append("rect")
+            .attr("x", 0)
+            .attr("y", 0)
+            .attr("height", this.options.width)
+            .attr("width", this.options.width)
+            .style("fill", color)
+            .style("clip-path", getClipPathValue(this.options.borderRadius));
 
         if (this.options.hatch.on) {
-            bars.style('mask', HatchPatternDef.getMaskValue());
+            bars.style("mask", HatchPatternDef.getMaskValue());
         }
 
         return bars;
     }
 
     updateColors(selection: MarkerParentSelection, color: string): void {
-        selection.select('svg rect').style('fill', color);
+        selection.select("svg rect").style("fill", color);
     }
 }
 
@@ -95,15 +103,15 @@ class LineMarkerCreator extends SvgMarkerCreator implements MarkerCreator {
     renderMarker(selection: MarkerParentSelection, color: string) {
         const svg = this.renderSvg(selection).style("width", this.options.length);
         const line = svg
-            .append('line')
-            .style('stroke', 'red')
+            .append("line")
+            .style("stroke", "red")
             .classed("line", true)
-            .attr('x1', 0)
-            .attr('x2', this.options.length)
-            .attr('y1', 5)
-            .attr('y2', 5)
-            .style('stroke', color)
-            .style('stroke-width', this.options.strokeWidth);
+            .attr("x1", 0)
+            .attr("x2", this.options.length)
+            .attr("y1", 5)
+            .attr("y2", 5)
+            .style("stroke", color)
+            .style("stroke-width", this.options.strokeWidth);
 
         if (this.options.dashedStyles.on) {
             applyLineDash(line, this.options.dashedStyles.dashSize, this.options.dashedStyles.gapSize);
@@ -113,6 +121,6 @@ class LineMarkerCreator extends SvgMarkerCreator implements MarkerCreator {
     }
 
     updateColors(selection: MarkerParentSelection, color: string): void {
-        selection.select('svg line').style('stroke', color);
+        selection.select("svg line").style("stroke", color);
     }
 }

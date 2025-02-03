@@ -58,7 +58,7 @@ export class CanvasModel implements CanvasMarginModel, CanvasSizesModel {
     }
 
     getBlockSize() {
-        return this.blockSize
+        return this.blockSize;
     }
 
     getChartBlockWidth() {

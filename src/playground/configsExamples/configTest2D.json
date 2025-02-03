@@ -1,104 +1,104 @@
 {
-	"canvas": {
-		"class": "svg-chart",
-		"size": {
-			"width": 800,
-			"height": 400
-		}
-	},
-	"options": {
-		"title": "Продажи по клиентам",
-		"type": "2d",
-		"isSegmented": false,
-		"axis": {
-			"key": {
-				"position": "end",
-				"ticks": {
-					"flag": false
-				},
-				"visibility": true
-			},
-			"value": {
-				"domain": {
-					"start": -1,
-					"end": -1
-				},
-				"position": "start",
-				"ticks": {
-					"flag": false
-				},
-				"visibility": true
-			}
-		},
-		"additionalElements": {
-			"gridLine": {
-				"flag": {
-					"value": true,
-					"key": false
-				}
-			}
-		},
-		"legend": {
-			"show": true
-		},
-		"orientation": "vertical",
-		"data": {
-			"dataSource": "dataSet",
-			"keyField": {
-				"name": "brand",
-				"format": "string"
-			}
-		},
-		"selectable": true,
-		"charts": [
-			{
-				"title": "Рост стоимости",
-				"type": "area",
-				"data": {
-					"valueFields": [
-						{
-							"name": "count",
-							"format": "integer",
-							"title": "Непрямые клиенты"
-						}
-					]
-				},
-				"areaStyles": {
-					"gradient": {
-						"on": true
-					},
-					"borderLine": {
-						"on": true
-					}
-				},
-				"tooltip": {
-					"show": true
-				},
-				"markers": {
-					"show": true
-				},
-				"embeddedLabels": "key"
-			},
-			{
-				"title": "Рост стоимости",
-				"type": "bar",
-				"data": {
-					"valueFields": [
-						{
-							"name": "price",
-							"format": "money",
-							"title": "Прямые клиенты"
-						}
-					]
-				},
-				"tooltip": {
-					"show": true
-				},
-				"markers": {
-					"show": true
-				},
-				"embeddedLabels": "key"
-			}
-		]
-	}
+    "canvas": {
+        "class": "svg-chart",
+        "size": {
+            "width": 800,
+            "height": 400
+        }
+    },
+    "options": {
+        "title": "Продажи по клиентам",
+        "type": "2d",
+        "isSegmented": false,
+        "axis": {
+            "key": {
+                "position": "end",
+                "ticks": {
+                    "flag": false
+                },
+                "visibility": true
+            },
+            "value": {
+                "domain": {
+                    "start": -1,
+                    "end": -1
+                },
+                "position": "start",
+                "ticks": {
+                    "flag": false
+                },
+                "visibility": true
+            }
+        },
+        "additionalElements": {
+            "gridLine": {
+                "flag": {
+                    "value": true,
+                    "key": false
+                }
+            }
+        },
+        "legend": {
+            "show": true
+        },
+        "orientation": "vertical",
+        "data": {
+            "dataSource": "dataSet",
+            "keyField": {
+                "name": "brand",
+                "format": "string"
+            }
+        },
+        "selectable": true,
+        "charts": [
+            {
+                "title": "Рост стоимости",
+                "type": "area",
+                "data": {
+                    "valueFields": [
+                        {
+                            "name": "count",
+                            "format": "integer",
+                            "title": "Непрямые клиенты"
+                        }
+                    ]
+                },
+                "areaStyles": {
+                    "gradient": {
+                        "on": true
+                    },
+                    "borderLine": {
+                        "on": true
+                    }
+                },
+                "tooltip": {
+                    "show": true
+                },
+                "markers": {
+                    "show": true
+                },
+                "embeddedLabels": "key"
+            },
+            {
+                "title": "Рост стоимости",
+                "type": "bar",
+                "data": {
+                    "valueFields": [
+                        {
+                            "name": "price",
+                            "format": "money",
+                            "title": "Прямые клиенты"
+                        }
+                    ]
+                },
+                "tooltip": {
+                    "show": true
+                },
+                "markers": {
+                    "show": true
+                },
+                "embeddedLabels": "key"
+            }
+        ]
+    }
 }

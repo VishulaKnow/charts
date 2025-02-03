@@ -23,7 +23,13 @@ export class Block {
     private parentElementSelection: Selection<BaseType, any, HTMLElement, any>;
     private wrapper: Selection<HTMLDivElement, any, HTMLElement, any>;
 
-    constructor(cssClass: string, parentElement: HTMLElement, blockId: number, filterEventManager: FilterEventManager, transitions: Transitions = null) {
+    constructor(
+        cssClass: string,
+        parentElement: HTMLElement,
+        blockId: number,
+        filterEventManager: FilterEventManager,
+        transitions: Transitions = null
+    ) {
         this.svg = new BlockSvg({
             svgCssClasses: cssClass,
             parentBlockId: blockId
@@ -41,11 +47,11 @@ export class Block {
 
     public renderWrapper(blockSize: Size): void {
         this.wrapper = this.parentElementSelection
-            .append('div')
-            .attr('class', this.wrapperCssClasses.join(' '))
-            .style('width', blockSize.width + 'px')
-            .style('height', blockSize.height + 'px')
-            .style('position', 'relative');
+            .append("div")
+            .attr("class", this.wrapperCssClasses.join(" "))
+            .style("width", blockSize.width + "px")
+            .style("height", blockSize.height + "px")
+            .style("position", "relative");
 
         this.svg.initParent(this.wrapper);
         this.html.initParent(this.wrapper);
@@ -68,20 +74,20 @@ export class Block {
 
     public removeMouseEvents(): void {
         //TODO: move this method in blockSvg
-        const tipBoxes = this.getSvg().selectAll(`.${TipBox.tipBoxClass}`)
-        tipBoxes.on('mousemove', null);
-        tipBoxes.on('mouseover', null);
-        tipBoxes.on('mouseleave', null);
-        tipBoxes.on('click', null);
+        const tipBoxes = this.getSvg().selectAll(`.${TipBox.tipBoxClass}`);
+        tipBoxes.on("mousemove", null);
+        tipBoxes.on("mouseover", null);
+        tipBoxes.on("mouseleave", null);
+        tipBoxes.on("click", null);
 
         const arcItems = Donut.getAllArcGroups(this);
-        arcItems.on('mouseover', null);
-        arcItems.on('mouseleave', null);
-        arcItems.on('mousemove', null);
-        arcItems.on('click', null);
+        arcItems.on("mouseover", null);
+        arcItems.on("mouseleave", null);
+        arcItems.on("mousemove", null);
+        arcItems.on("click", null);
     }
 
     public clearWrapper(): void {
-        this.getWrapper().selectAll('*').remove();
+        this.getWrapper().selectAll("*").remove();
     }
 }

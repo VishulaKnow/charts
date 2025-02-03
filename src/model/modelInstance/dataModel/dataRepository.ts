@@ -15,23 +15,23 @@ export class DataRepositoryModel {
     }
 
     getValuesByKeyField() {
-        return this.getRawRows().map(dataRow => dataRow[this.keyField.name]);
+        return this.getRawRows().map((dataRow) => dataRow[this.keyField.name]);
     }
 
     getBiggestValueAndDecremented(segmentedFields?: MdtChartsFieldName[][]): [number, number] {
         const values: number[] = [];
-        this.getRawRows().forEach(row => {
+        this.getRawRows().forEach((row) => {
             if (!segmentedFields) {
-                this.valueFields.forEach(vf => values.push(row[vf.name]));
+                this.valueFields.forEach((vf) => values.push(row[vf.name]));
                 return;
             }
-            segmentedFields.forEach(fields => {
+            segmentedFields.forEach((fields) => {
                 const valuesBySegment = fields.reduce<number>((acc, f) => acc + row[f], 0);
                 values.push(valuesBySegment);
-            })
+            });
         });
         const biggest = Math.max(...values);
-        const biggestDecremented = Math.abs(biggest) > 1 ? (biggest - 1) : (biggest - 0.1);
+        const biggestDecremented = Math.abs(biggest) > 1 ? biggest - 1 : biggest - 0.1;
         return [biggest, biggestDecremented];
     }
 

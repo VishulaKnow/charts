@@ -1,4 +1,4 @@
-import { Formatter } from '../designer/designerConfig';
+import { Formatter } from "../designer/designerConfig";
 
 export class ValueFormatter {
     private static format: Formatter;

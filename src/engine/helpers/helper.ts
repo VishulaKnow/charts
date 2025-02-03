@@ -2,7 +2,7 @@ import { MdtChartsDataRow, MdtChartsDataSource } from "../../config/config";
 
 export class Helper {
     public static getRowsByKeys(keys: string[], keyFieldName: string, dataSet: MdtChartsDataRow[]): MdtChartsDataRow[] {
-        return dataSet.filter(row => keys.findIndex(key => key === row[keyFieldName]) !== -1);
+        return dataSet.filter((row) => keys.findIndex((key) => key === row[keyFieldName]) !== -1);
     }
 
     public static getKeysByIds(ids: number[], keyFieldName: string, dataSet: MdtChartsDataRow[]): string[] {
@@ -10,19 +10,19 @@ export class Helper {
     }
 
     public static extractKeysFromRows(keyFieldName: string, dataSet: MdtChartsDataRow[]): string[] {
-        return dataSet.map(row => row[keyFieldName]);
+        return dataSet.map((row) => row[keyFieldName]);
     }
 
     public static getRowsByIds(ids: number[], dataSet: MdtChartsDataRow[]): MdtChartsDataRow[] {
-        return dataSet.filter(row => ids.findIndex(id => id === row.$id) !== -1);
+        return dataSet.filter((row) => ids.findIndex((id) => id === row.$id) !== -1);
     }
 
     public static getCssClassesLine(cssClasses: string[]): string {
-        return '.' + cssClasses.join('.');
+        return "." + cssClasses.join(".");
     }
 
     public static getCssClassesArray(cssClass: string): string[] {
-        return cssClass.split(' ');
+        return cssClass.split(" ");
     }
 
     public static getCssClassesWithElementIndex(cssClasses: string[], index: number): string[] {
@@ -35,10 +35,9 @@ export class Helper {
     }
 
     public static getTranslateNumbers(transformValue: string): [number, number] {
-        if (!transformValue)
-            return [0, 0];
+        if (!transformValue) return [0, 0];
 
-        const translateNumbers = transformValue.substring(10, transformValue.length - 1).split(', ');
+        const translateNumbers = transformValue.substring(10, transformValue.length - 1).split(", ");
         const translateX = parseFloat(translateNumbers[0]);
         const translateY = parseFloat(translateNumbers[1]);
 
@@ -50,23 +49,22 @@ export class Helper {
     }
 
     public static parseFormattedToNumber(value: string, rankSpliter: string): number {
-        return parseFloat(value.replace(rankSpliter, '.').split(/\s/).join(''));
+        return parseFloat(value.replace(rankSpliter, ".").split(/\s/).join(""));
     }
 
     public static calcDigitsAfterDot(value: number): number {
         const valueInString = value.toString();
-        const dotIndex = valueInString.lastIndexOf('.') === -1 ? valueInString.length : valueInString.lastIndexOf('.') + 1;
+        const dotIndex =
+            valueInString.lastIndexOf(".") === -1 ? valueInString.length : valueInString.lastIndexOf(".") + 1;
         return valueInString.substring(dotIndex).length;
     }
 
     public static checkDomainsEquality(oldDomain: string[], newDomain: string[]): boolean {
-        if (oldDomain.length !== newDomain.length)
-            return false;
+        if (oldDomain.length !== newDomain.length) return false;
 
         let isEqual = true;
         oldDomain.forEach((keyValue, index) => {
-            if (keyValue !== newDomain[index])
-                isEqual = false;
+            if (keyValue !== newDomain[index]) isEqual = false;
         });
         return isEqual;
     }
@@ -81,10 +79,10 @@ export class Helper {
 
     /**
      * Возвращает значение ключа в зависимости от того, обернуты ли данные
-     * @param row 
-     * @param keyFieldName 
-     * @param isSegmented 
-     * @returns 
+     * @param row
+     * @param keyFieldName
+     * @param isSegmented
+     * @returns
      */
     public static getKeyFieldValue(row: MdtChartsDataRow, keyFieldName: string, isSegmented: boolean): string {
         return isSegmented ? row.data[keyFieldName] : row[keyFieldName];
@@ -93,8 +91,19 @@ export class Helper {
     /**
      * Сравнивает старые и новые данные
      */
-    public static compareData(oldSource: MdtChartsDataSource, newSource: MdtChartsDataSource, sourceName: string): boolean {
-        if (!oldSource || !newSource || !sourceName || !oldSource[sourceName] || !newSource[sourceName] || oldSource[sourceName].length !== newSource[sourceName].length)
+    public static compareData(
+        oldSource: MdtChartsDataSource,
+        newSource: MdtChartsDataSource,
+        sourceName: string
+    ): boolean {
+        if (
+            !oldSource ||
+            !newSource ||
+            !sourceName ||
+            !oldSource[sourceName] ||
+            !newSource[sourceName] ||
+            oldSource[sourceName].length !== newSource[sourceName].length
+        )
             return false;
 
         const oldData = oldSource[sourceName];
@@ -103,8 +112,7 @@ export class Helper {
         let isEqual = true;
         oldData.forEach((row, i) => {
             for (let key in row) {
-                if (row[key] !== newData[i][key] && isEqual)
-                    isEqual = false;
+                if (row[key] !== newData[i][key] && isEqual) isEqual = false;
             }
         });
 

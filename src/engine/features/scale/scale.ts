@@ -1,6 +1,6 @@
-import { scaleBand, scaleLinear, scalePoint, scaleTime, ScaleBand, ScalePoint, ScaleLinear, ScaleTime } from 'd3-scale';
-import { AxisScale } from 'd3-axis'
-import { BarChartSettings, RangeModel, ScaleKeyModel, ScaleValueModel } from '../../../model/model';
+import { scaleBand, scaleLinear, scalePoint, scaleTime, ScaleBand, ScalePoint, ScaleLinear, ScaleTime } from "d3-scale";
+import { AxisScale } from "d3-axis";
+import { BarChartSettings, RangeModel, ScaleKeyModel, ScaleValueModel } from "../../../model/model";
 
 export interface Scales {
     key: AxisScale<any>;
@@ -12,29 +12,37 @@ export interface ScalesWithSecondary extends Scales {
 }
 
 export class Scale {
-    public static getScales(scaleKey: ScaleKeyModel, scaleValue: ScaleValueModel, bandSettings: BarChartSettings): Scales {
+    public static getScales(
+        scaleKey: ScaleKeyModel,
+        scaleValue: ScaleValueModel,
+        bandSettings: BarChartSettings
+    ): Scales {
         const scales: Scales = {
             key: null,
             value: null
-        }
+        };
 
-        if (scaleKey.type === 'band')
+        if (scaleKey.type === "band")
             scales.key = this.getScaleBand(scaleKey.domain, scaleKey.range, bandSettings, scaleKey.elementsAmount);
-        else if (scaleKey.type === 'point')
-            scales.key = this.getScalePoint(scaleKey.domain, scaleKey.range);
+        else if (scaleKey.type === "point") scales.key = this.getScalePoint(scaleKey.domain, scaleKey.range);
 
         scales.value = this.getScaleValue(scaleValue);
 
         return scales;
     }
 
-    public static getScalesWithSecondary(scaleKey: ScaleKeyModel, scaleValue: ScaleValueModel, scaleValueSecondary: ScaleValueModel, bandSettings: BarChartSettings): ScalesWithSecondary {
+    public static getScalesWithSecondary(
+        scaleKey: ScaleKeyModel,
+        scaleValue: ScaleValueModel,
+        scaleValueSecondary: ScaleValueModel,
+        bandSettings: BarChartSettings
+    ): ScalesWithSecondary {
         const scales = this.getScales(scaleKey, scaleValue, bandSettings);
 
         return {
             ...scales,
             ...(scaleValueSecondary && { valueSecondary: this.getScaleValue(scaleValueSecondary) })
-        }
+        };
     }
 
     public static getScaleValue(scaleValue: ScaleValueModel) {
@@ -62,10 +70,13 @@ export class Scale {
         return scale(value);
     }
 
-    private static getScaleBand(domain: string[], range: RangeModel, bandSettings: BarChartSettings, elementsInGroupAmount: number): ScaleBand<string> {
-        const scale = scaleBand()
-            .domain(domain)
-            .range([range.start, range.end]);
+    private static getScaleBand(
+        domain: string[],
+        range: RangeModel,
+        bandSettings: BarChartSettings,
+        elementsInGroupAmount: number
+    ): ScaleBand<string> {
+        const scale = scaleBand().domain(domain).range([range.start, range.end]);
 
         const bandSize = scale.bandwidth();
 
@@ -74,15 +85,25 @@ export class Scale {
             scale.paddingOuter(bandSettings.groupMinDistance / bandSize / 2);
         }
 
-        // Padding inner = 10. If bandwidth more than needed, paddingInner is increased to number less than 35 
+        // Padding inner = 10. If bandwidth more than needed, paddingInner is increased to number less than 35
         let paddingInner = bandSettings.groupMinDistance;
-        while (scale.bandwidth() > bandSettings.maxBarWidth * elementsInGroupAmount + bandSettings.barDistance * (elementsInGroupAmount - 1) && paddingInner < bandSettings.groupMaxDistance) {
+        while (
+            scale.bandwidth() >
+                bandSettings.maxBarWidth * elementsInGroupAmount +
+                    bandSettings.barDistance * (elementsInGroupAmount - 1) &&
+            paddingInner < bandSettings.groupMaxDistance
+        ) {
             scale.paddingInner(++paddingInner / bandSize);
         }
 
         // if bandwidth more than all bars widths in group + distance between it + distance between groups
         let paddingOuter = 1;
-        while (scale.step() > bandSettings.maxBarWidth * elementsInGroupAmount + bandSettings.groupMaxDistance + bandSettings.barDistance * (elementsInGroupAmount - 1)) {
+        while (
+            scale.step() >
+            bandSettings.maxBarWidth * elementsInGroupAmount +
+                bandSettings.groupMaxDistance +
+                bandSettings.barDistance * (elementsInGroupAmount - 1)
+        ) {
             scale.paddingOuter(++paddingOuter / bandSize);
         }
 
@@ -90,14 +111,10 @@ export class Scale {
     }
 
     private static getScaleLinear(domain: number[], range: RangeModel): ScaleLinear<number, number> {
-        return scaleLinear()
-            .domain(domain)
-            .range([range.start, range.end]);
+        return scaleLinear().domain(domain).range([range.start, range.end]);
     }
 
     private static getScalePoint(domain: string[], range: RangeModel): ScalePoint<string> {
-        return scalePoint()
-            .domain(domain)
-            .range([range.start, range.end]);
+        return scalePoint().domain(domain).range([range.start, range.end]);
     }
 }

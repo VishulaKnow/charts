@@ -10,13 +10,17 @@ interface LineLikeGeneratorDefinedMiddlewareOptions {
     dataRowGetter: (d: MdtChartsDataRow | Segment) => MdtChartsDataRow;
 }
 
-export interface Segment extends SeriesPoint<{ [p: string]: number }>, SegmentWithFieldName { }
+export interface Segment extends SeriesPoint<{ [p: string]: number }>, SegmentWithFieldName {}
 
 export class LineLikeGeneratorDefinedMiddleware implements LineLikeGeneratorMiddleware {
-    constructor(private readonly options: LineLikeGeneratorDefinedMiddlewareOptions) { }
+    constructor(private readonly options: LineLikeGeneratorDefinedMiddlewareOptions) {}
 
-    handle(generator: Line<MdtChartsDataRow> | Area<MdtChartsDataRow>): Line<MdtChartsDataRow> | Area<MdtChartsDataRow> {
-        generator.defined(d => this.options.definedFn(this.options.dataRowGetter(d), this.options.valueFieldNameGetter(d)));
+    handle(
+        generator: Line<MdtChartsDataRow> | Area<MdtChartsDataRow>
+    ): Line<MdtChartsDataRow> | Area<MdtChartsDataRow> {
+        generator.defined((d) =>
+            this.options.definedFn(this.options.dataRowGetter(d), this.options.valueFieldNameGetter(d))
+        );
         return generator;
     }
 }

@@ -1,8 +1,6 @@
 import { TitleBlockModel } from "../model";
 import { TitleConfigReader } from "../modelInstance/titleConfigReader";
 
-
-
 export class TitleModel {
     public static getTitleModel(titleConfig: TitleConfigReader): TitleBlockModel {
         const defaultPads = titleConfig.getFontSize();
@@ -16,6 +14,6 @@ export class TitleModel {
             },
             size: pad,
             pad: 0
-        }
+        };
     }
 }

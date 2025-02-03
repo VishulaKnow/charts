@@ -11,7 +11,7 @@ import { Area } from "./twoDimensionalNotation/area/area";
 import { Bar } from "./twoDimensionalNotation/bar/bar";
 import { Line } from "./twoDimensionalNotation/line/line";
 
-interface Durations extends Transitions { }
+interface Durations extends Transitions {}
 
 export class TransitionManager {
     /**
@@ -23,7 +23,7 @@ export class TransitionManager {
         higlightedScale: 200,
         markerHover: 50,
         elementFadeOut: 400
-    }
+    };
 
     private block: Block;
     /**
@@ -44,27 +44,28 @@ export class TransitionManager {
 
     constructor(block: Block, transitionsDurations: Transitions = null) {
         this.block = block;
-        if (transitionsDurations)
-            this.setDurations(transitionsDurations);
+        if (transitionsDurations) this.setDurations(transitionsDurations);
     }
 
     public interruptTransitions(): void {
-        this.transitionableElemClasses.forEach(elemClass => {
-            const elementsSelection = this.block
-                .getSvg()
-                .selectAll(`.${elemClass}`)
-                .interrupt();
+        this.transitionableElemClasses.forEach((elemClass) => {
+            const elementsSelection = this.block.getSvg().selectAll(`.${elemClass}`).interrupt();
 
-            elementsSelection.nodes().forEach(node => interrupt(node));
+            elementsSelection.nodes().forEach((node) => interrupt(node));
         });
-        this.block.getSvg().selectAll(`.${Axis.axesClass}`).selectAll('*').interrupt();
+        this.block.getSvg().selectAll(`.${Axis.axesClass}`).selectAll("*").interrupt();
     }
 
     private setDurations(durations: Transitions): void {
-        if (durations.chartUpdate !== undefined && durations.chartUpdate >= 0) this.durations.chartUpdate = durations.chartUpdate;
-        if (durations.higlightedScale !== undefined && durations.higlightedScale >= 0) this.durations.higlightedScale = durations.higlightedScale;
-        if (durations.elementFadeOut !== undefined && durations.elementFadeOut >= 0) this.durations.elementFadeOut = durations.elementFadeOut;
-        if (durations.markerHover !== undefined && durations.markerHover >= 0) this.durations.markerHover = durations.markerHover;
-        if (durations.tooltipSlide !== undefined && durations.tooltipSlide >= 0) this.durations.tooltipSlide = durations.tooltipSlide;
+        if (durations.chartUpdate !== undefined && durations.chartUpdate >= 0)
+            this.durations.chartUpdate = durations.chartUpdate;
+        if (durations.higlightedScale !== undefined && durations.higlightedScale >= 0)
+            this.durations.higlightedScale = durations.higlightedScale;
+        if (durations.elementFadeOut !== undefined && durations.elementFadeOut >= 0)
+            this.durations.elementFadeOut = durations.elementFadeOut;
+        if (durations.markerHover !== undefined && durations.markerHover >= 0)
+            this.durations.markerHover = durations.markerHover;
+        if (durations.tooltipSlide !== undefined && durations.tooltipSlide >= 0)
+            this.durations.tooltipSlide = durations.tooltipSlide;
     }
 }

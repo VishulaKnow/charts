@@ -7,7 +7,7 @@ export interface ResizingOptions {
     step?: number;
 }
 
-export const FontResizer = new class {
+export const FontResizer = new (class {
     setSize(el: HTMLElement, options: ResizingOptions) {
         const wrappedEl = new ResizedElement(el);
 
@@ -16,10 +16,10 @@ export const FontResizer = new class {
             elWrapper: new ResizedElement(options.elWrapper)
         });
     }
-}
+})();
 
 export class ResizedElement {
-    constructor(private el: HTMLElement) { }
+    constructor(private el: HTMLElement) {}
 
     setStyle(style: string, value: string) {
         this.el.style[style as any] = value;

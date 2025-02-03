@@ -1,5 +1,13 @@
 import { MdtChartsDataSource, Size } from "../../config/config";
-import { BlockMargin, Model, OptionsModelData, Orient, TwoDimChartElementsSettings, TwoDimensionalChartModel, TwoDimensionalOptionsModel } from "../../model/model";
+import {
+    BlockMargin,
+    Model,
+    OptionsModelData,
+    Orient,
+    TwoDimChartElementsSettings,
+    TwoDimensionalChartModel,
+    TwoDimensionalOptionsModel
+} from "../../model/model";
 import { Block } from "../block/block";
 import { ChartContentManager } from "../contentManager/contentManagerFactory";
 import { ElementHighlighter } from "../elementHighlighter/elementHighlighter";
@@ -23,7 +31,6 @@ import { LinearGradientDef } from "../../engine/block/defs/LinearGradientDef";
 import { CanvasDotChart } from "./dot/dotChart";
 import { FilterEventManager } from "../filterManager/filterEventManager";
 
-
 export class TwoDimensionalManager implements ChartContentManager {
     private canvasValueLabels?: CanvasValueLabels;
     private linearGradientDef?: LinearGradientDef;
@@ -32,24 +39,33 @@ export class TwoDimensionalManager implements ChartContentManager {
     public render(engine: Engine, model: Model<TwoDimensionalOptionsModel>): void {
         const options = model.options;
 
-        const scales = Scale.getScalesWithSecondary(options.scale.key,
+        const scales = Scale.getScalesWithSecondary(
+            options.scale.key,
             options.scale.value,
             options.scale.valueSecondary,
-            options.chartSettings.bar);
+            options.chartSettings.bar
+        );
         engine.block.scales = scales;
 
         engine.block.svg.render(model.blockCanvas.size);
 
         Axis.render(engine.block, scales, options.scale, options.axis, model.blockCanvas.size);
 
-        GridLine.render(engine.block, options.additionalElements.gridLine, options.axis, model.blockCanvas.size, model.chartBlock.margin, scales);
+        GridLine.render(
+            engine.block,
+            options.additionalElements.gridLine,
+            options.axis,
+            model.blockCanvas.size,
+            model.chartBlock.margin,
+            scales
+        );
 
         this.dotChart = new CanvasDotChart({
             elementAccessors: {
-                getBlock: () => engine.block,
+                getBlock: () => engine.block
             },
             canvas: {
-                keyAxisOrient: options.axis.key.orient,
+                keyAxisOrient: options.axis.key.orient
             },
             dataOptions: {
                 keyFieldName: options.data.keyField.name
@@ -59,7 +75,8 @@ export class TwoDimensionalManager implements ChartContentManager {
             }
         });
 
-        this.renderCharts(engine.block,
+        this.renderCharts(
+            engine.block,
             options.charts,
             scales,
             engine.data,
@@ -67,17 +84,20 @@ export class TwoDimensionalManager implements ChartContentManager {
             model.chartBlock.margin,
             options.axis.key.orient,
             options.chartSettings,
-            model.blockCanvas.size);
+            model.blockCanvas.size
+        );
 
         Axis.raiseKeyAxis(engine.block, options.axis.key);
 
-        engine.block.filterEventManager.registerEventFor2D(scales.key, model.chartBlock.margin, model.blockCanvas.size, options);
+        engine.block.filterEventManager.registerEventFor2D(
+            scales.key,
+            model.chartBlock.margin,
+            model.blockCanvas.size,
+            options
+        );
         engine.block.filterEventManager.event2DUpdate(options);
 
-        Title.render(engine.block,
-            options.title,
-            model.otherComponents.titleBlock,
-            model.blockCanvas.size);
+        Title.render(engine.block, options.title, model.otherComponents.titleBlock, model.blockCanvas.size);
 
         Legend.get().render(engine.block, engine.data, options, model);
 
@@ -89,15 +109,13 @@ export class TwoDimensionalManager implements ChartContentManager {
                 chartOrientation: options.orient
             });
 
-        engine.block.getSvg()
-            .on('click', (e: MouseEvent) => {
-                if (e.target === engine.block.getSvg().node())
-                    this.clearSelection(engine.block.filterEventManager, model);
-            });
+        engine.block.getSvg().on("click", (e: MouseEvent) => {
+            if (e.target === engine.block.getSvg().node()) this.clearSelection(engine.block.filterEventManager, model);
+        });
 
         this.canvasValueLabels = new CanvasValueLabels({
             elementAccessors: {
-                getBlock: () => engine.block,
+                getBlock: () => engine.block
             },
             data: {
                 keyFieldName: options.data.keyField.name
@@ -127,23 +145,28 @@ export class TwoDimensionalManager implements ChartContentManager {
 
         ElementHighlighter.remove2DChartsFullHighlighting(block, options.charts);
 
-        const scales = Scale.getScalesWithSecondary(options.scale.key,
+        const scales = Scale.getScalesWithSecondary(
+            options.scale.key,
             options.scale.value,
             options.scale.valueSecondary,
-            options.chartSettings.bar);
+            options.chartSettings.bar
+        );
 
         const keyDomainEquality = Helper.checkDomainsEquality(block.scales.key.domain(), scales.key.domain());
         block.scales = scales;
         Axis.update(block, scales, options.scale, options.axis, model.blockCanvas.size, keyDomainEquality);
 
-        GridLine.update(block,
+        GridLine.update(
+            block,
             options.additionalElements.gridLine,
             options.axis,
             model.blockCanvas.size,
             model.chartBlock.margin,
-            scales);
+            scales
+        );
 
-        const promises = this.updateCharts(block,
+        const promises = this.updateCharts(
+            block,
             options.charts,
             scales,
             data,
@@ -151,34 +174,37 @@ export class TwoDimensionalManager implements ChartContentManager {
             model.chartBlock.margin,
             options.axis.key.orient,
             model.blockCanvas.size,
-            options.chartSettings);
+            options.chartSettings
+        );
 
-        Promise.all(promises)
-            .then(() => {
-                block.filterEventManager.event2DUpdate(options);
-                block.filterEventManager.registerEventFor2D(scales.key, model.chartBlock.margin, model.blockCanvas.size, options);
-                Tooltip.render(block, model, data, model.otherComponents.tooltipBlock, scales);
-            });
+        Promise.all(promises).then(() => {
+            block.filterEventManager.event2DUpdate(options);
+            block.filterEventManager.registerEventFor2D(
+                scales.key,
+                model.chartBlock.margin,
+                model.blockCanvas.size,
+                options
+            );
+            Tooltip.render(block, model, data, model.otherComponents.tooltipBlock, scales);
+        });
 
         TwoDimRecordOverflowAlert.update(block, {
             hidedRecordsAmount: model.dataSettings.scope.hidedRecordsAmount,
             chartOrientation: options.orient
         });
 
-        if (this.canvasValueLabels)
-            this.canvasValueLabels.update(scales, options.charts, data, model.options.data);
+        if (this.canvasValueLabels) this.canvasValueLabels.update(scales, options.charts, data, model.options.data);
     }
 
     public updateColors(block: Block, model: Model<TwoDimensionalOptionsModel>): void {
         Legend.get().updateColors(block, model.options);
         this.linearGradientDef?.updateColors(block.svg.ensureDefsRendered(), model.options.defs.gradients);
 
-        model.options.charts.forEach(chart => {
-            if (chart.type === 'bar')
-                Bar.get().updateColors(block, chart);
-            else if (chart.type === 'line')
+        model.options.charts.forEach((chart) => {
+            if (chart.type === "bar") Bar.get().updateColors(block, chart);
+            else if (chart.type === "line")
                 Line.get({ staticSettings: model.options.chartSettings.lineLike }).updateColors(block, chart);
-            else if (chart.type === 'area')
+            else if (chart.type === "area")
                 Area.get({ staticSettings: model.options.chartSettings.lineLike }).updateColors(block, chart);
         });
     }
@@ -187,15 +213,29 @@ export class TwoDimensionalManager implements ChartContentManager {
         filterEventManager.clearKeysFor2D(model.options);
     }
 
-    private renderCharts(block: Block, charts: TwoDimensionalChartModel[], scales: ScalesWithSecondary, data: MdtChartsDataSource, dataOptions: OptionsModelData, margin: BlockMargin, keyAxisOrient: Orient, chartSettings: TwoDimChartElementsSettings, blockSize: Size) {
+    private renderCharts(
+        block: Block,
+        charts: TwoDimensionalChartModel[],
+        scales: ScalesWithSecondary,
+        data: MdtChartsDataSource,
+        dataOptions: OptionsModelData,
+        margin: BlockMargin,
+        keyAxisOrient: Orient,
+        chartSettings: TwoDimChartElementsSettings,
+        blockSize: Size
+    ) {
         block.svg.renderChartClipPath(margin, blockSize);
         block.svg.renderBarHatchPattern();
         block.svg.renderChartsBlock();
         charts.forEach((chart: TwoDimensionalChartModel) => {
-            const chartScales: Scales = { key: scales.key, value: chart.data.valueGroup === "secondary" ? scales.valueSecondary : scales.value };
+            const chartScales: Scales = {
+                key: scales.key,
+                value: chart.data.valueGroup === "secondary" ? scales.valueSecondary : scales.value
+            };
 
-            if (chart.type === 'bar')
-                Bar.get().render(block,
+            if (chart.type === "bar")
+                Bar.get().render(
+                    block,
                     chartScales,
                     data[dataOptions.dataSource],
                     dataOptions.keyField,
@@ -204,37 +244,57 @@ export class TwoDimensionalManager implements ChartContentManager {
                     chart,
                     blockSize,
                     chartSettings.bar,
-                    BarHelper.getBarsInGroupAmount(charts));
-            else if (chart.type === 'line')
-                Line.get({ staticSettings: chartSettings.lineLike }).render(block,
+                    BarHelper.getBarsInGroupAmount(charts)
+                );
+            else if (chart.type === "line")
+                Line.get({ staticSettings: chartSettings.lineLike }).render(
+                    block,
                     chartScales,
                     data[dataOptions.dataSource],
                     dataOptions.keyField,
                     margin,
                     keyAxisOrient,
-                    chart);
-            else if (chart.type === 'area')
-                Area.get({ staticSettings: chartSettings.lineLike }).render(block,
+                    chart
+                );
+            else if (chart.type === "area")
+                Area.get({ staticSettings: chartSettings.lineLike }).render(
+                    block,
                     chartScales,
                     data[dataOptions.dataSource],
                     dataOptions.keyField,
                     margin,
-                    keyAxisOrient, chart);
-            else if (chart.type === 'dot')
+                    keyAxisOrient,
+                    chart
+                );
+            else if (chart.type === "dot")
                 this.dotChart.render(chartScales, chart, data[dataOptions.dataSource], margin);
         });
         EmbeddedLabels.raiseGroups(block);
     }
 
-    private updateCharts(block: Block, charts: TwoDimensionalChartModel[], scales: ScalesWithSecondary, data: MdtChartsDataSource, dataOptions: OptionsModelData, margin: BlockMargin, keyAxisOrient: Orient, blockSize: Size, chartSettings: TwoDimChartElementsSettings): Promise<any>[] {
+    private updateCharts(
+        block: Block,
+        charts: TwoDimensionalChartModel[],
+        scales: ScalesWithSecondary,
+        data: MdtChartsDataSource,
+        dataOptions: OptionsModelData,
+        margin: BlockMargin,
+        keyAxisOrient: Orient,
+        blockSize: Size,
+        chartSettings: TwoDimChartElementsSettings
+    ): Promise<any>[] {
         block.svg.updateChartClipPath(margin, blockSize);
         let promises: Promise<any>[] = [];
         charts.forEach((chart: TwoDimensionalChartModel) => {
-            const chartScales: Scales = { key: scales.key, value: chart.data.valueGroup === "secondary" ? scales.valueSecondary : scales.value };
+            const chartScales: Scales = {
+                key: scales.key,
+                value: chart.data.valueGroup === "secondary" ? scales.valueSecondary : scales.value
+            };
 
             let proms: Promise<any>[];
-            if (chart.type === 'bar') {
-                proms = Bar.get().update(block,
+            if (chart.type === "bar") {
+                proms = Bar.get().update(
+                    block,
                     data[dataOptions.dataSource],
                     chartScales,
                     margin,
@@ -243,26 +303,29 @@ export class TwoDimensionalManager implements ChartContentManager {
                     blockSize,
                     BarHelper.getBarsInGroupAmount(charts),
                     dataOptions.keyField,
-                    chartSettings.bar);
-            } else if (chart.type === 'line') {
-                proms = Line.get({ staticSettings: chartSettings.lineLike }).update(block,
+                    chartSettings.bar
+                );
+            } else if (chart.type === "line") {
+                proms = Line.get({ staticSettings: chartSettings.lineLike }).update(
+                    block,
                     chartScales,
                     data[dataOptions.dataSource],
                     dataOptions.keyField,
                     margin,
                     keyAxisOrient,
-                    chart);
-            }
-            else if (chart.type === 'area') {
-                proms = Area.get({ staticSettings: chartSettings.lineLike }).update(block,
+                    chart
+                );
+            } else if (chart.type === "area") {
+                proms = Area.get({ staticSettings: chartSettings.lineLike }).update(
+                    block,
                     chartScales,
                     data[dataOptions.dataSource],
                     dataOptions.keyField,
                     margin,
                     chart,
-                    keyAxisOrient);
-            }
-            else if (chart.type === 'dot') {
+                    keyAxisOrient
+                );
+            } else if (chart.type === "dot") {
                 proms = this.dotChart.update(chartScales, data[dataOptions.dataSource], margin);
             }
             promises.push(...proms);

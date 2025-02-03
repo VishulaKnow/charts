@@ -6,7 +6,7 @@ export class LegendCanvasModelInstance {
     getModel(): ILegendModel {
         return {
             position: this.position
-        }
+        };
     }
 
     getPosition() {

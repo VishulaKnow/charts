@@ -23,7 +23,7 @@ export class DataStacker {
             const fieldStack: StackedDataRow[] = [];
 
             rawData.forEach((dataRow, drIndex) => {
-                const valueFromData = dataRow[vField]
+                const valueFromData = dataRow[vField];
 
                 const value0 = this.service.getValue0(stackedData, vfIndex, drIndex, valueFromData);
                 const value1 = this.service.getValue1(value0, valueFromData);
@@ -42,7 +42,6 @@ export class DataStacker {
         return stackedData;
     }
 }
-
 
 export function getStackedDataWithOwn(rawData: MdtChartsDataRow[], valueFields: string[]): StackedDataFull {
     const stacker = new DataStacker();

@@ -5,7 +5,10 @@ import { LegendItemsDirection } from "./legendCanvasModel";
 
 export class LegendModel {
     public static getBaseLegendBlockModel(canvasModel: CanvasModel, legendConfig: LegendBlockCanvas): LegendBlockModel {
-        const mt = 20, mb = 20, ml = 20, mr = 20;
+        const mt = 20,
+            mb = 20,
+            ml = 20,
+            mr = 20;
 
         return {
             coordinate: {
@@ -33,19 +36,29 @@ export class LegendModel {
             static: {
                 maxLinesAmount: legendConfig.static?.maxLinesAmount ?? 3
             }
-        }
+        };
     }
 
     public static getLegendItemClass(itemsPosition: LegendItemsDirection): string {
-        return itemsPosition === 'column' ? 'legend-item-row' : 'legend-item-inline';
+        return itemsPosition === "column" ? "legend-item-row" : "legend-item-inline";
     }
 
-    public static appendToGlobalMarginValuesLegendMargin(canvasModel: CanvasModel, position: Orient, legendBlockModel: LegendBlockModel): void {
+    public static appendToGlobalMarginValuesLegendMargin(
+        canvasModel: CanvasModel,
+        position: Orient,
+        legendBlockModel: LegendBlockModel
+    ): void {
         const legendCoordinate = legendBlockModel.coordinate;
 
-        if (position === 'left' || position === 'right')
-            canvasModel.increaseMarginSide(position, legendCoordinate[position].margin.left + legendCoordinate[position].margin.right);
+        if (position === "left" || position === "right")
+            canvasModel.increaseMarginSide(
+                position,
+                legendCoordinate[position].margin.left + legendCoordinate[position].margin.right
+            );
         else
-            canvasModel.increaseMarginSide(position, legendCoordinate[position].margin.top + legendCoordinate[position].margin.bottom)
+            canvasModel.increaseMarginSide(
+                position,
+                legendCoordinate[position].margin.top + legendCoordinate[position].margin.bottom
+            );
     }
 }

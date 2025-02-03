@@ -1,11 +1,11 @@
 import { MdtChartsTwoDimensionalChart } from "../../config/config";
 import { TwoDimensionalModel } from "../../model/notations/twoDimensionalModel";
 
-describe('check chart sorting in order: [area, bar, line]', () => {
-    test('charts must be sorted', () => {
+describe("check chart sorting in order: [area, bar, line]", () => {
+    test("charts must be sorted", () => {
         const charts: MdtChartsTwoDimensionalChart[] = [
             {
-                type: 'line',
+                type: "line",
                 markers: {
                     show: true
                 },
@@ -13,21 +13,21 @@ describe('check chart sorting in order: [area, bar, line]', () => {
                 data: {
                     valueFields: [
                         {
-                            name: 'count',
-                            format: 'integer',
-                            title: 'Количество автомобилей на душу населения'
+                            name: "count",
+                            format: "integer",
+                            title: "Количество автомобилей на душу населения"
                         },
                         {
-                            name: 'price',
-                            format: 'money',
-                            title: 'Количество автомобилей на душу населения'
+                            name: "price",
+                            format: "money",
+                            title: "Количество автомобилей на душу населения"
                         }
                     ]
                 },
-                embeddedLabels: 'none',
+                embeddedLabels: "none"
             },
             {
-                type: 'bar',
+                type: "bar",
                 markers: {
                     show: true
                 },
@@ -35,28 +35,28 @@ describe('check chart sorting in order: [area, bar, line]', () => {
                 data: {
                     valueFields: [
                         {
-                            name: 'price',
-                            format: 'money',
-                            title: 'Количество автомобилей на душу населения'
+                            name: "price",
+                            format: "money",
+                            title: "Количество автомобилей на душу населения"
                         },
                         {
-                            name: 'count',
-                            format: 'integer',
-                            title: 'Количество автомобилей на душу населения'
+                            name: "count",
+                            format: "integer",
+                            title: "Количество автомобилей на душу населения"
                         }
                     ]
                 },
-                embeddedLabels: 'none'
+                embeddedLabels: "none"
             }
         ];
         TwoDimensionalModel.sortCharts(charts);
-        expect(charts.map(ch => ch.type)).toEqual(['bar', 'line']);
+        expect(charts.map((ch) => ch.type)).toEqual(["bar", "line"]);
     });
 
-    test('charts must be sorted', () => {
+    test("charts must be sorted", () => {
         const charts: MdtChartsTwoDimensionalChart[] = [
             {
-                type: 'area',
+                type: "area",
                 markers: {
                     show: true
                 },
@@ -64,21 +64,21 @@ describe('check chart sorting in order: [area, bar, line]', () => {
                 data: {
                     valueFields: [
                         {
-                            name: 'count',
-                            format: 'integer',
-                            title: 'Количество автомобилей на душу населения'
+                            name: "count",
+                            format: "integer",
+                            title: "Количество автомобилей на душу населения"
                         },
                         {
-                            name: 'price',
-                            format: 'money',
-                            title: 'Количество автомобилей на душу населения'
+                            name: "price",
+                            format: "money",
+                            title: "Количество автомобилей на душу населения"
                         }
                     ]
                 },
-                embeddedLabels: 'none'
+                embeddedLabels: "none"
             },
             {
-                type: 'line',
+                type: "line",
                 markers: {
                     show: true
                 },
@@ -86,21 +86,21 @@ describe('check chart sorting in order: [area, bar, line]', () => {
                 data: {
                     valueFields: [
                         {
-                            name: 'price',
-                            format: 'money',
-                            title: 'Количество автомобилей на душу населения'
+                            name: "price",
+                            format: "money",
+                            title: "Количество автомобилей на душу населения"
                         },
                         {
-                            name: 'count',
-                            format: 'integer',
-                            title: 'Количество автомобилей на душу населения'
+                            name: "count",
+                            format: "integer",
+                            title: "Количество автомобилей на душу населения"
                         }
                     ]
                 },
-                embeddedLabels: 'none'
+                embeddedLabels: "none"
             },
             {
-                type: 'bar',
+                type: "bar",
                 markers: {
                     show: true
                 },
@@ -108,21 +108,21 @@ describe('check chart sorting in order: [area, bar, line]', () => {
                 data: {
                     valueFields: [
                         {
-                            name: 'price',
-                            format: 'money',
-                            title: 'Количество автомобилей на душу населения'
+                            name: "price",
+                            format: "money",
+                            title: "Количество автомобилей на душу населения"
                         },
                         {
-                            name: 'count',
-                            format: 'integer',
-                            title: 'Количество автомобилей на душу населения'
+                            name: "count",
+                            format: "integer",
+                            title: "Количество автомобилей на душу населения"
                         }
                     ]
                 },
-                embeddedLabels: 'none'
+                embeddedLabels: "none"
             },
             {
-                type: 'area',
+                type: "area",
                 markers: {
                     show: true
                 },
@@ -130,21 +130,21 @@ describe('check chart sorting in order: [area, bar, line]', () => {
                 data: {
                     valueFields: [
                         {
-                            name: 'price',
-                            format: 'money',
-                            title: 'Количество автомобилей на душу населения'
+                            name: "price",
+                            format: "money",
+                            title: "Количество автомобилей на душу населения"
                         },
                         {
-                            name: 'count',
-                            format: 'integer',
-                            title: 'Количество автомобилей на душу населения'
+                            name: "count",
+                            format: "integer",
+                            title: "Количество автомобилей на душу населения"
                         }
                     ]
                 },
-                embeddedLabels: 'none'
+                embeddedLabels: "none"
             }
         ];
         TwoDimensionalModel.sortCharts(charts);
-        expect(charts.map(ch => ch.type)).toEqual(['area', 'area', 'bar', 'line']);
+        expect(charts.map((ch) => ch.type)).toEqual(["area", "area", "bar", "line"]);
     });
 });

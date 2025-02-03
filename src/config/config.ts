@@ -1,19 +1,19 @@
 type DataType = string;
 export type MdtChartsIconElement = () => HTMLElement;
 
-export type AxisPosition = 'start' | 'end';
-export type ChartOrientation = 'vertical' | 'horizontal';
-export type ChartNotation = '2d' | 'polar' | 'interval';
-export type ChartType = 'bar' | 'line' | 'area' | 'donut' | 'gantt';
-export type TwoDimensionalChartType = 'line' | 'bar' | 'area' | 'dot';
-export type PolarChartType = 'donut';
-export type IntervalChartType = 'gantt';
-export type EmbeddedLabelType = 'none' | 'key' | 'value';
+export type AxisPosition = "start" | "end";
+export type ChartOrientation = "vertical" | "horizontal";
+export type ChartNotation = "2d" | "polar" | "interval";
+export type ChartType = "bar" | "line" | "area" | "donut" | "gantt";
+export type TwoDimensionalChartType = "line" | "bar" | "area" | "dot";
+export type PolarChartType = "donut";
+export type IntervalChartType = "gantt";
+export type EmbeddedLabelType = "none" | "key" | "value";
 export type ValueLabelsCollisionMode = "none" | "hide";
 export type TwoDimLegendPosition = "top" | "bottom";
 export type MdtChartsDataRow = {
-    [field: string]: any
-}
+    [field: string]: any;
+};
 
 export type MdtChartsColorName = string;
 export interface MdtChartsColorRangeItem {
@@ -32,7 +32,6 @@ export interface MdtChartsConfig {
     options: MdtChartsConfigOptions;
 }
 
-
 //====================================================== ChartBlockCanvas
 export interface ChartBlockCanvas {
     size: Size;
@@ -46,7 +45,6 @@ export interface NewSize {
     width?: number;
     height?: number;
 }
-
 
 //====================================================== Options
 interface BasicOptions {
@@ -62,7 +60,7 @@ interface GraphicNotationOptions extends BasicOptions {
 }
 
 export interface MdtChartsTwoDimensionalOptions extends GraphicNotationOptions {
-    type: '2d';
+    type: "2d";
     axis: TwoDimensionalAxis;
     additionalElements: AdditionalElements;
     charts: MdtChartsTwoDimensionalChart[];
@@ -71,18 +69,17 @@ export interface MdtChartsTwoDimensionalOptions extends GraphicNotationOptions {
 }
 
 export interface MdtChartsPolarOptions extends GraphicNotationOptions {
-    type: 'polar';
+    type: "polar";
     chart: PolarChart;
 }
 
 export interface MdtChartsIntervalOptions extends GraphicNotationOptions {
-    type: 'interval';
+    type: "interval";
     axis: IntervalAxis;
     chart: IntervalChart;
     additionalElements: AdditionalElements;
     orientation: ChartOrientation;
 }
-
 
 //====================================================== Options
 export interface Legend {
@@ -94,7 +91,7 @@ export interface MdtChartsTwoDimLegend extends Legend {
 }
 
 export interface TitleFunctionParams {
-    data: MdtChartsDataRow[]
+    data: MdtChartsDataRow[];
 }
 
 export interface TitleFunc {
@@ -135,8 +132,8 @@ export interface TwoDimValueField extends MdtChartsValueField {
 
 export interface TooltipOptions {
     html?: TooltipHtml;
-    aggregator?: TooltipAggregator
-    formatValue?: TooltipFormatValue
+    aggregator?: TooltipAggregator;
+    formatValue?: TooltipFormatValue;
 }
 
 export type TooltipHtml = (dataRow: MdtChartsDataRow) => string;
@@ -147,11 +144,13 @@ export interface TooltipAggregator {
 }
 
 export type TooltipAggregatorContent =
-    | { type: "plainText", textContent: string; }
-    | { type: "captionValue", caption: string; value: any; };
+    | { type: "plainText"; textContent: string }
+    | { type: "captionValue"; caption: string; value: any };
 
-export type TooltipFormatValue = (params: { rawValue: number | null | undefined; autoFormattedValue: string }) => string
-
+export type TooltipFormatValue = (params: {
+    rawValue: number | null | undefined;
+    autoFormattedValue: string;
+}) => string;
 
 //====================================================== TwoDimensionalOptions & IntervalOptions
 export interface AdditionalElements {
@@ -173,9 +172,8 @@ interface GridLineStyles {
 }
 
 interface GridLineStylesDash {
-    on?: boolean
+    on?: boolean;
 }
-
 
 //====================================================== TwoDimensionalOptions
 export interface TwoDimensionalAxis {
@@ -184,7 +182,7 @@ export interface TwoDimensionalAxis {
     valueSecondary?: NumberSecondaryAxisOptions;
 }
 
-export type NumberSecondaryAxisOptions = Omit<NumberAxisOptions, 'position'>;
+export type NumberSecondaryAxisOptions = Omit<NumberAxisOptions, "position">;
 
 export interface AxisOptions {
     visibility: boolean;
@@ -213,12 +211,12 @@ export interface NumberDomain {
 }
 
 export interface AxisDomainFunctionParams {
-    data: MdtChartsDataRow[]
+    data: MdtChartsDataRow[];
 }
 
 export type AxisDomainFunction = (params: AxisDomainFunctionParams) => NumberDomain;
 
-export type AxisNumberDomain = NumberDomain | AxisDomainFunction
+export type AxisNumberDomain = NumberDomain | AxisDomainFunction;
 
 export interface NumberAxisLabel {
     format: (v: number) => string;
@@ -249,7 +247,7 @@ export interface MdtChartsTwoDimensionalValueLabels {
 }
 
 export interface ValueLabelsCollision {
-    otherValueLabels: OtherValueLabels
+    otherValueLabels: OtherValueLabels;
 }
 
 export interface OtherValueLabels {
@@ -262,14 +260,13 @@ export interface ValueLabelsStyleOptions {
     color?: string;
 }
 
-
 //====================================================== IntervalOptions
 export interface IntervalAxis {
     key: DiscreteAxisOptions;
     value: DateAxisOptions;
 }
 
-interface DateAxisOptions extends AxisOptions { }
+interface DateAxisOptions extends AxisOptions {}
 
 //====================================================== Charts
 interface MdtChartsLineLikeChart {
@@ -359,7 +356,6 @@ export interface IntervalChart {
     data: IntervalChartData;
 }
 
-
 //====================================================== TwoDimensionalChart
 export interface TwoDimensionalChartData {
     valueFields: TwoDimValueField[];
@@ -378,7 +374,7 @@ export interface TwoDimensionalChartValueLabels {
 
 export type ValueLabelsFormatter = (value: number) => string;
 
-export type TwoDimensionalValueGroup = 'main' | 'secondary'
+export type TwoDimensionalValueGroup = "main" | "secondary";
 
 interface MarkersOptions {
     show: boolean;
@@ -388,7 +384,7 @@ interface MarkersOptions {
 export type MdtChartsColorField = string;
 export interface PolarChartData {
     valueField: MdtChartsValueField;
-    colorField?: MdtChartsColorField
+    colorField?: MdtChartsColorField;
 }
 
 export interface MdtChartsDonutAggregator {
@@ -403,7 +399,6 @@ export interface MdtChartsAggregatorContent {
     value?: string | number;
     title?: string;
 }
-
 
 //====================================================== IntervalChart
 interface IntervalChartData {

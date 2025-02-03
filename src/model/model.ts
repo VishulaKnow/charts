@@ -10,9 +10,16 @@ import {
     ShowTickFn,
     MdtChartsDataRow,
     TwoDimensionalValueGroup,
-    ValueLabelsCollisionMode,
+    ValueLabelsCollisionMode
 } from "../config/config";
-import { DataType, DonutOptionsCanvas, Formatter, StaticLegendBlockCanvas, TooltipSettings, Transitions } from "../designer/designerConfig";
+import {
+    DataType,
+    DonutOptionsCanvas,
+    Formatter,
+    StaticLegendBlockCanvas,
+    TooltipSettings,
+    Transitions
+} from "../designer/designerConfig";
 import { BoundingRect } from "../engine/features/valueLabelsCollision/valueLabelsCollision";
 
 type AxisType = "key" | "value";
@@ -26,8 +33,8 @@ export type DataOptions = {
     [option: string]: any;
 };
 export type UnitsFromConfig = "%" | "px";
-export type ValueLabelAnchor = "start" | "middle" | "end"
-export type ValueLabelDominantBaseline = "hanging" | "middle" | "auto"
+export type ValueLabelAnchor = "start" | "middle" | "end";
+export type ValueLabelDominantBaseline = "hanging" | "middle" | "auto";
 export type GradientId = string;
 
 export type OptionsModel = TwoDimensionalOptionsModel | PolarOptionsModel | IntervalOptionsModel;
@@ -110,7 +117,7 @@ export interface Field {
 
 export interface OptionsModelTitle {
     textContent: string;
-    fontSize: number
+    fontSize: number;
 }
 
 export interface OptionsModelGradients {
@@ -174,7 +181,7 @@ export interface AxisModelOptions {
 }
 
 export interface AxisBrowserTooltipModel {
-    format: (value: number | string) => string | number
+    format: (value: number | string) => string | number;
 }
 
 export interface AxisLineModel {
@@ -202,8 +209,9 @@ interface TickAmountModel {
     policy: TickAmountPolicy;
 }
 
-export type TickAmountPolicy = { type: "auto" }
-    | { type: "amount"; amount: number; }
+export type TickAmountPolicy =
+    | { type: "auto" }
+    | { type: "amount"; amount: number }
     | { type: "constant"; values: number[] };
 
 export interface AdditionalElementsOptions {
@@ -223,7 +231,7 @@ interface GridLineStyles {
 }
 
 interface GridLineStylesDash {
-    on: boolean
+    on: boolean;
 }
 
 export interface TwoDimChartElementsSettings {
@@ -309,14 +317,15 @@ export interface ValueLabelsChartBlock {
     bottom: ValueLabelsChartBlockSide;
 }
 
-export type ValueLabelsChartBlockSide = | {
-    mode: "shift";
-    hasCollision: (labelClientRect: BoundingRect) => boolean;
-    shiftCoordinate: (labelClientRect: BoundingRect) => void;
-} | {
-    mode: "none"
-}
-
+export type ValueLabelsChartBlockSide =
+    | {
+          mode: "shift";
+          hasCollision: (labelClientRect: BoundingRect) => boolean;
+          shiftCoordinate: (labelClientRect: BoundingRect) => void;
+      }
+    | {
+          mode: "none";
+      };
 
 //====================================================== PolarOptionsModel
 export interface DonutChartSettings extends Omit<DonutOptionsCanvas, "aggregatorPad" | "thickness"> {
@@ -368,7 +377,7 @@ export interface TwoDimensionalChartLegendBarModel {
     width: number;
 }
 
-export interface TwoDimensionalChartLegendLineModel extends Omit<TwoDimensionalLineLikeChartViewModel, 'renderForKey'> {
+export interface TwoDimensionalChartLegendLineModel extends Omit<TwoDimensionalLineLikeChartViewModel, "renderForKey"> {
     length: number;
 }
 
@@ -380,10 +389,10 @@ interface TwoDimensionalLineLikeChartModel {
 interface TwoDimensionalLineLikeChartViewModel {
     dashedStyles: LineLikeChartDashOptions;
     strokeWidth: number;
-    renderForKey: LineLikeChartRenderFn
+    renderForKey: LineLikeChartRenderFn;
 }
 
-export type LineLikeChartRenderFn = (dataRow: MdtChartsDataRow, valueFieldName: string) => boolean
+export type LineLikeChartRenderFn = (dataRow: MdtChartsDataRow, valueFieldName: string) => boolean;
 
 interface TwoDimensionalBarLikeChartModel {
     barViewOptions: TwoDimensionalBarLikeChartViewModel;
@@ -424,7 +433,13 @@ interface DotChartShapeOptions {
     width: number;
 }
 
-export interface TwoDimensionalChartModel extends ChartModel, TwoDimensionalLineLikeChartModel, TwoDimensionalBarLikeChartModel, TwoDimensionalAreaChartModel, DotChartModel, DotChartModel {
+export interface TwoDimensionalChartModel
+    extends ChartModel,
+        TwoDimensionalLineLikeChartModel,
+        TwoDimensionalBarLikeChartModel,
+        TwoDimensionalAreaChartModel,
+        DotChartModel,
+        DotChartModel {
     type: TwoDimensionalChartType;
     data: TwoDimensionalChartDataModel;
     index: number;
@@ -434,7 +449,8 @@ export interface TwoDimensionalChartModel extends ChartModel, TwoDimensionalLine
     valueLabels: TwoDimChartValueLabelsOptions;
 }
 
-export interface IntervalChartModel extends Omit<ChartModel, "legend"> { //TODO: remove
+export interface IntervalChartModel extends Omit<ChartModel, "legend"> {
+    //TODO: remove
     type: IntervalChartType;
     data: IntervalChartDataModel;
 }
@@ -457,7 +473,7 @@ export interface ValueField extends Field {
 
 export interface TwoDimChartValueLabelsOptions {
     show: boolean;
-    handleX: (scaledValue: number) => number
+    handleX: (scaledValue: number) => number;
     handleY: (scaledValue: number) => number;
     textAnchor: ValueLabelAnchor;
     dominantBaseline: ValueLabelDominantBaseline;
@@ -465,14 +481,14 @@ export interface TwoDimChartValueLabelsOptions {
     handleScaledValue: (dataRow: MdtChartsDataRow, datumField: string) => number;
 }
 
-export type ValueLabelsFormatter = (value: number) => string
+export type ValueLabelsFormatter = (value: number) => string;
 
 export interface MarkersOptions {
     show: MarkersOptionsShow;
     styles: MarkersStyleOptions;
 }
 
-export type MarkDotDatumItem = MdtChartsDataRow | { "1": any } & Array<number>
+export type MarkDotDatumItem = MdtChartsDataRow | ({ "1": any } & Array<number>);
 export type MarkersOptionsShow = (options: { row: MarkDotDatumItem; valueFieldName: string }) => boolean;
 
 export interface MarkersStyleOptions {
@@ -536,5 +552,5 @@ export interface LegendCoordinate {
     right: LegendCanvasCoordinate;
 }
 
-export interface TitleBlockModel extends ComponentBlockModel { }
-interface LegendCanvasCoordinate extends ComponentBlockModel { }
+export interface TitleBlockModel extends ComponentBlockModel {}
+interface LegendCanvasCoordinate extends ComponentBlockModel {}

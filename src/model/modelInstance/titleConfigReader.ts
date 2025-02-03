@@ -7,7 +7,7 @@ export class TitleConfigReader {
         return new TitleConfigReader(
             config,
             () => modelInstance.dataModel.repository.getRawRows(),
-            () => ModelHelper.getFontSizeCssValue('--chart-title-font-size', 16)
+            () => ModelHelper.getFontSizeCssValue("--chart-title-font-size", 16)
         );
     }
 
@@ -22,23 +22,23 @@ export class TitleConfigReader {
     }
 
     getFontSize(): number {
-        return typeof this.config === 'object'
+        return typeof this.config === "object"
             ? this.config.fontSize ?? this.defaultCssUnitReader()
             : this.defaultCssUnitReader();
     }
 
     private getResolvedTitle(): string {
         switch (typeof this.config) {
-            case 'string':
+            case "string":
                 return this.config;
             case "function":
-                return this.config({ data: this.dataGetter() })
+                return this.config({ data: this.dataGetter() });
             case "object":
-                return typeof this.config.text === 'function'
+                return typeof this.config.text === "function"
                     ? this.config.text({ data: this.dataGetter() })
                     : this.config.text;
             default:
-                return '';
+                return "";
         }
     }
 }

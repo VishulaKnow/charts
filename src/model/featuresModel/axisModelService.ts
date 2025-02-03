@@ -3,23 +3,26 @@ import { AxisLabelPosition, MdtChartsDataRow, MdtChartsShowAxisLabelRule, ShowTi
 export const showAllTicks: ShowTickFn = (d) => d;
 
 export class AxisModelService {
-    getKeyAxisLabelPosition(chartBlockWidth: number, scopedDataLength: number, positionFromConfig?: AxisLabelPosition): AxisLabelPosition {
+    getKeyAxisLabelPosition(
+        chartBlockWidth: number,
+        scopedDataLength: number,
+        positionFromConfig?: AxisLabelPosition
+    ): AxisLabelPosition {
         if (positionFromConfig === "rotated" || positionFromConfig === "straight") {
             return positionFromConfig;
         }
 
         const minBandSize = 50;
-        if (chartBlockWidth / scopedDataLength < minBandSize)
-            return 'rotated';
+        if (chartBlockWidth / scopedDataLength < minBandSize) return "rotated";
 
-        return 'straight';
+        return "straight";
     }
 }
 
 export class AxisModelTickCalculator {
     private readonly defaultTickSpace = 20;
 
-    constructor(private readonly dataRows: MdtChartsDataRow[], private readonly rule?: MdtChartsShowAxisLabelRule) { }
+    constructor(private readonly dataRows: MdtChartsDataRow[], private readonly rule?: MdtChartsShowAxisLabelRule) {}
 
     createFunctionCalculator(axisSize: number): ShowTickFn {
         if (this.rule?.showTickFn) return this.rule.showTickFn;
@@ -32,7 +35,7 @@ export class AxisModelTickCalculator {
 
         let divider = Math.ceil(this.dataRows.length / allowedKeysAmount);
         return (d, i) => {
-            return i % divider === 0 ? d : undefined
+            return i % divider === 0 ? d : undefined;
         };
     }
 }

@@ -1,4 +1,4 @@
-import { Selection } from 'd3-selection';
+import { Selection } from "d3-selection";
 
 export interface TooltipCoordinate {
     left: string;
@@ -8,7 +8,7 @@ export interface TooltipCoordinate {
 }
 
 export class NewTooltip {
-    static tooltipBlockClass = 'mdt-charts-tooltip-block';
+    static tooltipBlockClass = "mdt-charts-tooltip-block";
 
     private elSelection: Selection<HTMLElement, unknown, HTMLElement, any>;
 
@@ -22,9 +22,7 @@ export class NewTooltip {
     }
 
     render(wrapper: Selection<HTMLElement, unknown, HTMLElement, any>) {
-        this.elSelection = wrapper
-            .append('div')
-            .attr('class', NewTooltip.tooltipBlockClass);
+        this.elSelection = wrapper.append("div").attr("class", NewTooltip.tooltipBlockClass);
         return this.elSelection;
     }
 
@@ -34,9 +32,9 @@ export class NewTooltip {
 
     setCoordinate(coordinate: TooltipCoordinate) {
         this.elSelection
-            .style('right', coordinate.right)
-            .style('bottom', coordinate.bottom)
-            .style('left', coordinate.left)
-            .style('top', coordinate.top);
+            .style("right", coordinate.right)
+            .style("bottom", coordinate.bottom)
+            .style("left", coordinate.left)
+            .style("top", coordinate.top);
     }
 }

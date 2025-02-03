@@ -1,4 +1,4 @@
-import { Size } from "../../config/config"
+import { Size } from "../../config/config";
 
 export class ConfigValidatorClass {
     validateCanvasSize(size: Size) {

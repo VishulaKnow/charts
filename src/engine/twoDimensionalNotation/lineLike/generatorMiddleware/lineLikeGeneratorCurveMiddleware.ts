@@ -15,11 +15,13 @@ export class LineLikeGeneratorCurveMiddleware implements LineLikeGeneratorMiddle
         [LineCurveType.monotoneY]: curveMonotoneY,
         [LineCurveType.basis]: curveBasis,
         [LineCurveType.none]: undefined
-    }
+    };
 
-    constructor(private options: LineLikeGeneratorCurveMiddlewareOptions) { }
+    constructor(private options: LineLikeGeneratorCurveMiddlewareOptions) {}
 
-    handle(generator: Line<MdtChartsDataRow> | Area<MdtChartsDataRow>): Line<MdtChartsDataRow> | Area<MdtChartsDataRow> {
+    handle(
+        generator: Line<MdtChartsDataRow> | Area<MdtChartsDataRow>
+    ): Line<MdtChartsDataRow> | Area<MdtChartsDataRow> {
         if (this.options.curve != null) {
             const curve = this.curvies[this.options.curve];
             if (curve) generator.curve(curve);

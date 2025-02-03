@@ -2,8 +2,7 @@ import { Size } from "../../config/config";
 import { BlockMargin } from "../../model/model";
 import { BlockHelper } from "../../engine/block/blockHelper";
 
-
-describe('ClipPathAttributesTest', () => {
+describe("ClipPathAttributesTest", () => {
     let size: Size = {
         height: 500,
         width: 1000
@@ -15,7 +14,7 @@ describe('ClipPathAttributesTest', () => {
         top: 20
     };
 
-    test('should return CLipPathAttributes defined object', () => {
+    test("should return CLipPathAttributes defined object", () => {
         expect(BlockHelper.getClipPathAttributes(size, margin)).toEqual({
             x: 11,
             y: 11,

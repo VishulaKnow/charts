@@ -1,42 +1,45 @@
-import { MdtChartsConfig } from '../../config/config';
+import { MdtChartsConfig } from "../../config/config";
 
 const configCars: MdtChartsConfig = {
     canvas: {
-        class: 'outline',
+        class: "outline",
         size: {
             width: 800,
             height: 400
         }
     },
     options: {
-        type: '2d',
+        type: "2d",
         title: "Объем товародвижения по брендам",
         selectable: true,
         axis: {
             key: {
                 visibility: true,
-                position: 'end',
+                position: "end",
                 ticks: {
                     flag: false
-                },
+                }
                 // labels: {
                 //     position: "straight"
                 // }
             },
             value: {
                 visibility: true,
-                domain: params => {
+                domain: (params) => {
                     let maxNumber = 0;
-                    maxNumber = params.data.reduce((max, row) => row.price > max ? row.price : max, params.data[0].price)
+                    maxNumber = params.data.reduce(
+                        (max, row) => (row.price > max ? row.price : max),
+                        params.data[0].price
+                    );
 
-                    return { start: -1, end: -1 }
+                    return { start: -1, end: -1 };
                 },
-                position: 'start',
+                position: "start",
                 ticks: {
                     flag: false
                 },
                 labels: {
-                    format: (value) => nFormatter(value),
+                    format: (value) => nFormatter(value)
                 },
                 line: {
                     visible: false
@@ -51,7 +54,7 @@ const configCars: MdtChartsConfig = {
                     flag: false
                 },
                 labels: {
-                    format: (value) => nFormatter(value),
+                    format: (value) => nFormatter(value)
                 },
                 visibility: true,
                 line: {
@@ -71,12 +74,12 @@ const configCars: MdtChartsConfig = {
             show: true,
             position: "bottom"
         },
-        orientation: 'vertical',
+        orientation: "vertical",
         data: {
-            dataSource: 'dataSet',
+            dataSource: "dataSet",
             keyField: {
-                name: 'brand',
-                format: 'string'
+                name: "brand",
+                format: "string"
             }
         },
         valueLabels: {
@@ -98,26 +101,26 @@ const configCars: MdtChartsConfig = {
                         type: "captionValue",
                         caption: "Количество",
                         value: row.brand
-                    }
+                    };
                 },
                 position: "underValues"
-            },
+            }
         },
         charts: [
             {
                 isSegmented: true,
-                type: 'area',
+                type: "area",
                 data: {
                     valueFields: [
                         {
-                            name: 'price',
-                            format: 'money',
-                            title: 'Цена'
-                        },
+                            name: "price",
+                            format: "money",
+                            title: "Цена"
+                        }
                     ],
                     valueGroup: "main"
                 },
-                embeddedLabels: 'none',
+                embeddedLabels: "none",
                 markers: {
                     show: false
                 },
@@ -153,19 +156,19 @@ const configCars: MdtChartsConfig = {
             },
             {
                 isSegmented: false,
-                type: 'area',
+                type: "area",
                 data: {
                     valueFields: [
                         {
-                            name: 'count',
-                            format: 'money',
-                            title: 'Рубли',
+                            name: "count",
+                            format: "money",
+                            title: "Рубли",
                             color: "rgb(235, 80, 0)"
-                        },
+                        }
                     ],
                     valueGroup: "secondary"
                 },
-                embeddedLabels: 'none',
+                embeddedLabels: "none",
                 markers: {
                     show: false
                 },
@@ -190,11 +193,11 @@ const configCars: MdtChartsConfig = {
                     }
                 },
                 valueLabels: {
-                    on: true,
+                    on: true
                     // format: (value) => nFormatter(value),
                 }
-            },
-        ],
+            }
+        ]
     }
     // options: {
     //     type: 'polar',
@@ -228,11 +231,11 @@ const configCars: MdtChartsConfig = {
     //         }
     //     }
     // }
-}
+};
 
 function nFormatter(num: number, digits: number = 1) {
     function toFixed(num: number, fixed: number) {
-        var re = new RegExp('^-?\\d+(?:\.\\d{0,' + (fixed || -1) + '})?');
+        var re = new RegExp("^-?\\d+(?:.\\d{0," + (fixed || -1) + "})?");
         return num.toString().match(re)[0];
     }
 
@@ -249,10 +252,14 @@ function nFormatter(num: number, digits: number = 1) {
     ];
 
     const regexp = /\.0+$|(?<=\.[0-9]*[1-9])0+$/;
-    const item = lookup.reverse().find(item => num < 0 ? (num <= -item.value) : (num >= item.value));
-    const finalValue = item ? toFixed(num / item.value, digits).replace(regexp, "").concat(` ${item.symbol}`) : "0";
+    const item = lookup.reverse().find((item) => (num < 0 ? num <= -item.value : num >= item.value));
+    const finalValue = item
+        ? toFixed(num / item.value, digits)
+              .replace(regexp, "")
+              .concat(` ${item.symbol}`)
+        : "0";
 
     return finalValue.replace(".", ",");
-};
+}
 
 export default configCars;

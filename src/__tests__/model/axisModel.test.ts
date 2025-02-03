@@ -1,6 +1,20 @@
-import { DataOptions, MdtChartsDataSource, DiscreteAxisOptions, NumberAxisOptions, Size, MdtChartsTwoDimensionalChart, AxisLabelPosition, ShowTickFn, AxisLabelFormatter } from "../../config/config";
+import {
+    DataOptions,
+    MdtChartsDataSource,
+    DiscreteAxisOptions,
+    NumberAxisOptions,
+    Size,
+    MdtChartsTwoDimensionalChart,
+    AxisLabelPosition,
+    ShowTickFn,
+    AxisLabelFormatter
+} from "../../config/config";
 import { TooltipSettings } from "../../designer/designerConfig";
-import { AxisModel, MINIMAL_HORIZONTAL_STEP_SIZE, MINIMAL_VERTICAL_STEP_SIZE } from "../../model/featuresModel/axisModel";
+import {
+    AxisModel,
+    MINIMAL_HORIZONTAL_STEP_SIZE,
+    MINIMAL_VERTICAL_STEP_SIZE
+} from "../../model/featuresModel/axisModel";
 import { AxisModelService, showAllTicks } from "../../model/featuresModel/axisModelService";
 import { AxisModelOptions, BlockMargin } from "../../model/model";
 import { CanvasModel } from "../../model/modelInstance/canvasModel/canvasModel";
@@ -19,18 +33,21 @@ function getData(): MdtChartsDataSource {
             { "brand": "TOYOTA", "price": 120, "count": 20 }
         ]
     }`);
-    data = Object.assign(data, JSON.parse(`{
+    data = Object.assign(
+        data,
+        JSON.parse(`{
         "dataSet_poor": [
             { "brand": "BMW", "price": 120, "count": 12, "simple": 300 },
             { "brand": "LADA", "price": 50, "count": 10, "simple": 30 },
             { "brand": "MERCEDES", "price": 15, "count": 12, "simple": 500 }
         ]
-    }`));
+    }`)
+    );
 
     return data;
 }
 
-describe('get axes', () => {
+describe("get axes", () => {
     let charts: MdtChartsTwoDimensionalChart[];
     let data: MdtChartsDataSource;
     let discreteAxisOptions: DiscreteAxisOptions;
@@ -45,74 +62,80 @@ describe('get axes', () => {
         charts = [
             {
                 isSegmented: false,
-                type: 'line',
+                type: "line",
                 data: {
                     valueFields: [
                         {
-                            name: 'price',
-                            format: 'money',
-                            title: 'Количество автомобилей на душу населения'
+                            name: "price",
+                            format: "money",
+                            title: "Количество автомобилей на душу населения"
                         },
                         {
-                            name: 'count',
-                            format: 'integer',
-                            title: 'Количество автомобилей на душу населения'
+                            name: "count",
+                            format: "integer",
+                            title: "Количество автомобилей на душу населения"
                         }
                     ]
                 },
                 markers: {
                     show: true
                 },
-                embeddedLabels: 'key'
+                embeddedLabels: "key"
             },
             {
                 isSegmented: false,
-                type: 'bar',
+                type: "bar",
                 data: {
                     valueFields: [
                         {
-                            name: 'price',
-                            format: 'money',
-                            title: 'Количество автомобилей на душу населения'
+                            name: "price",
+                            format: "money",
+                            title: "Количество автомобилей на душу населения"
                         },
                         {
-                            name: 'count',
-                            format: 'integer',
-                            title: 'Количество автомобилей на душу населения'
+                            name: "count",
+                            format: "integer",
+                            title: "Количество автомобилей на душу населения"
                         }
                     ]
                 },
                 markers: {
                     show: true
                 },
-                embeddedLabels: 'key'
+                embeddedLabels: "key"
             }
         ];
-        discreteAxisOptions = { ticks: { flag: false }, position: 'end', visibility: true }
-        numberAxisOptions = { ...discreteAxisOptions, domain: { start: 0, end: 120 }, labels: null }
+        discreteAxisOptions = { ticks: { flag: false }, position: "end", visibility: true };
+        numberAxisOptions = { ...discreteAxisOptions, domain: { start: 0, end: 120 }, labels: null };
         data = getData();
-        dataOptions = { dataSource: "dataSet_poor", keyField: { name: 'brand', format: null } };
+        dataOptions = { dataSource: "dataSet_poor", keyField: { name: "brand", format: null } };
         margin = { top: 20, bottom: 20, left: 20, right: 20 };
         blockSize = { height: 500, width: 1000 };
         tooltipSettings = {
-            position: 'fixed'
-        }
-        defaultFormatter = () => 'value'
+            position: "fixed"
+        };
+        defaultFormatter = () => "value";
     });
 
-    test('getKeyAxis should return bottom key axis with straight labels', () => {
+    test("getKeyAxis should return bottom key axis with straight labels", () => {
         const canvasModel = new CanvasModel();
         canvasModel.initMargin(margin);
         canvasModel.initBlockSize(blockSize);
 
-        const result = AxisModel.getKeyAxis({ charts, orientation: "vertical", data: dataOptions, axis: { key: discreteAxisOptions } } as any, data, { maxSize: { main: 60 } }, canvasModel, tooltipSettings);
+        const result = AxisModel.getKeyAxis(
+            { charts, orientation: "vertical", data: dataOptions, axis: { key: discreteAxisOptions } } as any,
+            data,
+            { maxSize: { main: 60 } },
+            canvasModel,
+            tooltipSettings
+        );
         const expected: AxisModelOptions = {
             visibility: true,
             type: "key",
             cssClass: "key-axis",
             labels: {
                 maxSize: 60,
-                position: 'straight',
+                position: "straight",
                 visible: true,
                 defaultTooltip: true,
                 showTick: showAllTicks,
@@ -135,26 +158,32 @@ describe('get axes', () => {
             browserTooltip: {
                 format: expect.any(Function)
             }
-        }
+        };
 
         expect(result).toEqual(expected);
     });
 
-    test('getKeyAxis should return left key axis with straight labels', () => {
+    test("getKeyAxis should return left key axis with straight labels", () => {
         const canvasModel = new CanvasModel();
         canvasModel.initMargin(margin);
         canvasModel.initBlockSize(blockSize);
 
-        discreteAxisOptions.position = 'start';
-        tooltipSettings.position = 'followCursor';
-        const result = AxisModel.getKeyAxis({ charts, orientation: "horizontal", data: dataOptions, axis: { key: discreteAxisOptions } } as any, data, { maxSize: { main: 60 } }, canvasModel, tooltipSettings);
+        discreteAxisOptions.position = "start";
+        tooltipSettings.position = "followCursor";
+        const result = AxisModel.getKeyAxis(
+            { charts, orientation: "horizontal", data: dataOptions, axis: { key: discreteAxisOptions } } as any,
+            data,
+            { maxSize: { main: 60 } },
+            canvasModel,
+            tooltipSettings
+        );
         const expected: AxisModelOptions = {
             visibility: true,
             type: "key",
             cssClass: "key-axis",
             labels: {
                 maxSize: 60,
-                position: 'straight',
+                position: "straight",
                 visible: true,
                 defaultTooltip: false,
                 showTick: showAllTicks,
@@ -177,27 +206,33 @@ describe('get axes', () => {
             browserTooltip: {
                 format: expect.any(Function)
             }
-        }
+        };
         expect(result).toEqual(expected);
     });
 
-    test('getKeyAxis should return rule to show tick', () => {
+    test("getKeyAxis should return rule to show tick", () => {
         const canvasModel = new CanvasModel();
         canvasModel.initMargin(margin);
         canvasModel.initBlockSize({ height: 400, width: 140 });
         dataOptions.dataSource = "dataSet";
 
-        const result = AxisModel.getKeyAxis({ charts, orientation: "vertical", data: dataOptions, axis: { key: discreteAxisOptions } } as any, data, { maxSize: { main: 60 } }, canvasModel, tooltipSettings);
+        const result = AxisModel.getKeyAxis(
+            { charts, orientation: "vertical", data: dataOptions, axis: { key: discreteAxisOptions } } as any,
+            data,
+            { maxSize: { main: 60 } },
+            canvasModel,
+            tooltipSettings
+        );
         const expected: AxisModelOptions = {
             visibility: true,
             type: "key",
             cssClass: "key-axis",
             labels: {
                 maxSize: 0,
-                position: 'straight',
+                position: "straight",
                 visible: true,
                 defaultTooltip: true,
-                showTick: (d, i) => i % 2 === 0 ? d : undefined,
+                showTick: (d, i) => (i % 2 === 0 ? d : undefined),
                 linearTickStep: MINIMAL_HORIZONTAL_STEP_SIZE,
                 tickAmountSettings: {
                     policy: { type: "auto" }
@@ -217,7 +252,7 @@ describe('get axes', () => {
             browserTooltip: {
                 format: expect.any(Function)
             }
-        }
+        };
 
         const showTickExpected = expected.labels.showTick;
         const showTickResult = result.labels.showTick;
@@ -227,24 +262,30 @@ describe('get axes', () => {
         }
     });
 
-    test('getKeyAxis should use tick space from rule from config if it is set', () => {
+    test("getKeyAxis should use tick space from rule from config if it is set", () => {
         const canvasModel = new CanvasModel();
         canvasModel.initMargin(margin);
         canvasModel.initBlockSize({ height: 400, width: 140 });
         dataOptions.dataSource = "dataSet";
-        discreteAxisOptions.labels = { showRule: { spaceForOneLabel: 25 } }
+        discreteAxisOptions.labels = { showRule: { spaceForOneLabel: 25 } };
 
-        const result = AxisModel.getKeyAxis({ charts, orientation: "vertical", data: dataOptions, axis: { key: discreteAxisOptions } } as any, data, { maxSize: { main: 60 } }, canvasModel, tooltipSettings);
+        const result = AxisModel.getKeyAxis(
+            { charts, orientation: "vertical", data: dataOptions, axis: { key: discreteAxisOptions } } as any,
+            data,
+            { maxSize: { main: 60 } },
+            canvasModel,
+            tooltipSettings
+        );
         const expected: AxisModelOptions = {
             visibility: true,
             type: "key",
             cssClass: "key-axis",
             labels: {
                 maxSize: 0,
-                position: 'straight',
+                position: "straight",
                 visible: true,
                 defaultTooltip: true,
-                showTick: (d, i) => i % 3 === 0 ? d : undefined,
+                showTick: (d, i) => (i % 3 === 0 ? d : undefined),
                 linearTickStep: MINIMAL_HORIZONTAL_STEP_SIZE,
                 tickAmountSettings: {
                     policy: { type: "auto" }
@@ -264,7 +305,7 @@ describe('get axes', () => {
             browserTooltip: {
                 format: expect.any(Function)
             }
-        }
+        };
 
         const showTickExpected = expected.labels.showTick;
         const showTickResult = result.labels.showTick;
@@ -274,22 +315,28 @@ describe('get axes', () => {
         }
     });
 
-    test('getKeyAxis should return rule from config if it set', () => {
+    test("getKeyAxis should return rule from config if it set", () => {
         const canvasModel = new CanvasModel();
         canvasModel.initMargin(margin);
         canvasModel.initBlockSize({ height: 400, width: 140 });
         dataOptions.dataSource = "dataSet";
-        const showRule: ShowTickFn = (d, i) => i % 10 ? d : undefined;
-        discreteAxisOptions.labels = { showRule: { showTickFn: showRule } }
+        const showRule: ShowTickFn = (d, i) => (i % 10 ? d : undefined);
+        discreteAxisOptions.labels = { showRule: { showTickFn: showRule } };
 
-        const result = AxisModel.getKeyAxis({ charts, orientation: "vertical", data: dataOptions, axis: { key: discreteAxisOptions } } as any, data, { maxSize: { main: 60 } }, canvasModel, tooltipSettings);
+        const result = AxisModel.getKeyAxis(
+            { charts, orientation: "vertical", data: dataOptions, axis: { key: discreteAxisOptions } } as any,
+            data,
+            { maxSize: { main: 60 } },
+            canvasModel,
+            tooltipSettings
+        );
         const expected: AxisModelOptions = {
             visibility: true,
             type: "key",
             cssClass: "key-axis",
             labels: {
                 maxSize: 0,
-                position: 'straight',
+                position: "straight",
                 visible: true,
                 defaultTooltip: true,
                 showTick: showRule,
@@ -312,7 +359,7 @@ describe('get axes', () => {
             browserTooltip: {
                 format: expect.any(Function)
             }
-        }
+        };
 
         const showTickExpected = expected.labels.showTick;
         const showTickResult = result.labels.showTick;
@@ -320,20 +367,28 @@ describe('get axes', () => {
         expect(showTickExpected).toBe(showTickResult);
     });
 
-    test('getValueAxis should return left axis', () => {
+    test("getValueAxis should return left axis", () => {
         const canvasModel = new CanvasModel();
         canvasModel.initMargin(margin);
         canvasModel.initBlockSize(blockSize);
 
-        numberAxisOptions.position = 'start';
-        const result = AxisModel.getMainValueAxis(defaultFormatter, 'vertical', numberAxisOptions.position, numberAxisOptions, { maxSize: { main: 60 } }, canvasModel, { domain: [0, 120], range: { start: 0, end: 120 }, type: 'linear', formatter: () => 'value' });
+        numberAxisOptions.position = "start";
+        const result = AxisModel.getMainValueAxis(
+            defaultFormatter,
+            "vertical",
+            numberAxisOptions.position,
+            numberAxisOptions,
+            { maxSize: { main: 60 } },
+            canvasModel,
+            { domain: [0, 120], range: { start: 0, end: 120 }, type: "linear", formatter: () => "value" }
+        );
         const expected: AxisModelOptions = {
             visibility: true,
             type: "value",
             cssClass: "value-axis",
             labels: {
                 maxSize: 60,
-                position: 'straight',
+                position: "straight",
                 visible: true,
                 defaultTooltip: true,
                 showTick: showAllTicks,
@@ -356,23 +411,31 @@ describe('get axes', () => {
             browserTooltip: {
                 format: expect.any(Function)
             }
-        }
+        };
         expect(result).toEqual(expected);
     });
 
-    test('getValueAxis should return right axis', () => {
+    test("getValueAxis should return right axis", () => {
         const canvasModel = new CanvasModel();
         canvasModel.initMargin(margin);
         canvasModel.initBlockSize(blockSize);
 
-        const result = AxisModel.getMainValueAxis(defaultFormatter, 'vertical', 'start', numberAxisOptions, { maxSize: { main: 60 } }, canvasModel, { domain: [0, 120], range: { start: 0, end: 120 }, type: 'linear', formatter: () => 'value' });
+        const result = AxisModel.getMainValueAxis(
+            defaultFormatter,
+            "vertical",
+            "start",
+            numberAxisOptions,
+            { maxSize: { main: 60 } },
+            canvasModel,
+            { domain: [0, 120], range: { start: 0, end: 120 }, type: "linear", formatter: () => "value" }
+        );
         const expected: AxisModelOptions = {
             visibility: true,
             type: "value",
             cssClass: "value-axis",
             labels: {
                 maxSize: 60,
-                position: 'straight',
+                position: "straight",
                 visible: true,
                 defaultTooltip: true,
                 showTick: showAllTicks,
@@ -395,23 +458,31 @@ describe('get axes', () => {
             browserTooltip: {
                 format: expect.any(Function)
             }
-        }
+        };
         expect(result).toEqual(expected);
     });
 
-    test('getSecondaryValueAxis should return opposite axis', () => {
+    test("getSecondaryValueAxis should return opposite axis", () => {
         const canvasModel = new CanvasModel();
         canvasModel.initMargin(margin);
         canvasModel.initBlockSize(blockSize);
 
-        const result = AxisModel.getSecondaryValueAxis(defaultFormatter, 'vertical', 'start', numberAxisOptions, { maxSize: { main: 60 } }, canvasModel, { domain: [0, 120], range: { start: 0, end: 120 }, type: 'linear', formatter: () => 'value' });
+        const result = AxisModel.getSecondaryValueAxis(
+            defaultFormatter,
+            "vertical",
+            "start",
+            numberAxisOptions,
+            { maxSize: { main: 60 } },
+            canvasModel,
+            { domain: [0, 120], range: { start: 0, end: 120 }, type: "linear", formatter: () => "value" }
+        );
         const expected: AxisModelOptions = {
             visibility: true,
             type: "value",
             cssClass: "value-secondary-axis",
             labels: {
                 maxSize: 60,
-                position: 'straight',
+                position: "straight",
                 visible: true,
                 defaultTooltip: true,
                 showTick: showAllTicks,
@@ -434,16 +505,16 @@ describe('get axes', () => {
             browserTooltip: {
                 format: expect.any(Function)
             }
-        }
+        };
         expect(result).toEqual(expected);
     });
 });
 
-describe('AXisModelService', () => {
-    describe('getKeyAxisLabelPosition', () => {
+describe("AXisModelService", () => {
+    describe("getKeyAxisLabelPosition", () => {
         const service = new AxisModelService();
 
-        test('should return value from config if it exists and equal values from type', () => {
+        test("should return value from config if it exists and equal values from type", () => {
             let res = service.getKeyAxisLabelPosition(0, 0, "rotated");
             expect(res).toBe<AxisLabelPosition>("rotated");
 
@@ -464,7 +535,7 @@ describe('AXisModelService', () => {
             expect(res).toBe<AxisLabelPosition>("rotated"); // 1000 / 40 = 25
         });
 
-        test('should ignore value from config if it is not from type', () => {
+        test("should ignore value from config if it is not from type", () => {
             let res = service.getKeyAxisLabelPosition(1000, 40, "straight2" as any);
             expect(res).toBe<AxisLabelPosition>("rotated"); // 1000 / 40 = 25
 
@@ -474,54 +545,54 @@ describe('AXisModelService', () => {
     });
 });
 
-describe('get rounded value', () => {
-    test('getRoundValue should return correct seven-digit number', () => {
+describe("get rounded value", () => {
+    test("getRoundValue should return correct seven-digit number", () => {
         const inputNumber1 = 1204357;
         const inputNumber2 = 1604357;
 
-        const expectedNumber1 = AxisModel.getRoundValue(inputNumber1)
-        const expectedNumber2 = AxisModel.getRoundValue(inputNumber2)
+        const expectedNumber1 = AxisModel.getRoundValue(inputNumber1);
+        const expectedNumber2 = AxisModel.getRoundValue(inputNumber2);
 
-        expect(expectedNumber1).toEqual(1000000)
-        expect(expectedNumber2).toEqual(1500000)
+        expect(expectedNumber1).toEqual(1000000);
+        expect(expectedNumber2).toEqual(1500000);
     });
 
-    test('getRoundValue should return correct two-digit number', () => {
+    test("getRoundValue should return correct two-digit number", () => {
         const inputNumber = 34;
 
-        const expectedNumber = AxisModel.getRoundValue(inputNumber)
+        const expectedNumber = AxisModel.getRoundValue(inputNumber);
 
-        expect(expectedNumber).toEqual(30)
+        expect(expectedNumber).toEqual(30);
     });
 
-    test('getRoundValue should return correct one-digit number', () => {
+    test("getRoundValue should return correct one-digit number", () => {
         const inputNumber1 = 5;
         const inputNumber2 = 9;
 
-        const expectedNumber1 = AxisModel.getRoundValue(inputNumber1)
-        const expectedNumber2 = AxisModel.getRoundValue(inputNumber2)
+        const expectedNumber1 = AxisModel.getRoundValue(inputNumber1);
+        const expectedNumber2 = AxisModel.getRoundValue(inputNumber2);
 
-        expect(expectedNumber1).toEqual(5)
-        expect(expectedNumber2).toEqual(9)
+        expect(expectedNumber1).toEqual(5);
+        expect(expectedNumber2).toEqual(9);
     });
 
-    test('getRoundValue should return correct a negative number', () => {
+    test("getRoundValue should return correct a negative number", () => {
         const inputNumber = -16755;
 
-        const expectedNumber = AxisModel.getRoundValue(inputNumber)
+        const expectedNumber = AxisModel.getRoundValue(inputNumber);
 
-        expect(expectedNumber).toEqual(-15000)
+        expect(expectedNumber).toEqual(-15000);
     });
 
-    test('should handle size that less than 100', () => {
+    test("should handle size that less than 100", () => {
         const inputNumber = 15.65;
-        const expectedNumber = AxisModel.getRoundValue(inputNumber)
-        expect(expectedNumber).toEqual(10)
+        const expectedNumber = AxisModel.getRoundValue(inputNumber);
+        expect(expectedNumber).toEqual(10);
     });
 
-    test('should handle size that less than 100 (2)', () => {
+    test("should handle size that less than 100 (2)", () => {
         const inputNumber = 95.2;
-        const expectedNumber = AxisModel.getRoundValue(inputNumber)
-        expect(expectedNumber).toEqual(90)
+        const expectedNumber = AxisModel.getRoundValue(inputNumber);
+        expect(expectedNumber).toEqual(90);
     });
-})
+});

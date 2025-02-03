@@ -1,5 +1,5 @@
 export class ChartBlockVersion {
-    constructor(private readonly versionNumber: number) { }
+    constructor(private readonly versionNumber: number) {}
 
     getVersionNumber() {
         return this.versionNumber;

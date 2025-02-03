@@ -1,8 +1,8 @@
 import { MdtChartsColorRangeItem } from "../../config/config";
 import { ColorRangeManager, sortColorRange } from "./colorRange";
 
-describe('sortColorRange', () => {
-    test('should sort by values range without value should be in start', () => {
+describe("sortColorRange", () => {
+    test("should sort by values range without value should be in start", () => {
         const range: MdtChartsColorRangeItem[] = [
             {
                 value: 100,
@@ -34,7 +34,7 @@ describe('sortColorRange', () => {
         ]);
     });
 
-    test('should not change array if it is already sorted', () => {
+    test("should not change array if it is already sorted", () => {
         const range: MdtChartsColorRangeItem[] = [
             {
                 color: "red"
@@ -66,7 +66,7 @@ describe('sortColorRange', () => {
         ]);
     });
 
-    test('should not change position if equal ranges', () => {
+    test("should not change position if equal ranges", () => {
         const range: MdtChartsColorRangeItem[] = [
             {
                 value: 0,
@@ -78,7 +78,7 @@ describe('sortColorRange', () => {
             },
             {
                 color: "red"
-            },
+            }
         ];
 
         const res = sortColorRange(range);
@@ -94,11 +94,11 @@ describe('sortColorRange', () => {
             {
                 value: 0,
                 color: "green"
-            },
+            }
         ]);
     });
 
-    test('should not change position of items without value', () => {
+    test("should not change position of items without value", () => {
         const range: MdtChartsColorRangeItem[] = [
             {
                 color: "orange"
@@ -116,7 +116,7 @@ describe('sortColorRange', () => {
             },
             {
                 color: "red"
-            },
+            }
         ];
 
         const res = sortColorRange(range);
@@ -138,14 +138,14 @@ describe('sortColorRange', () => {
             {
                 value: 0,
                 color: "green"
-            },
+            }
         ]);
     });
 });
 
-describe('ColorRangeManager', () => {
-    describe('getColorByValue', () => {
-        test('should return by value', () => {
+describe("ColorRangeManager", () => {
+    describe("getColorByValue", () => {
+        test("should return by value", () => {
             const manager = new ColorRangeManager([
                 {
                     color: "red"
@@ -173,7 +173,7 @@ describe('ColorRangeManager', () => {
             expect(res).toBe("green");
         });
 
-        test('should return by value and find item by value', () => {
+        test("should return by value and find item by value", () => {
             const manager = new ColorRangeManager([
                 {
                     color: "red"
@@ -198,7 +198,7 @@ describe('ColorRangeManager', () => {
             expect(res).toBe("green");
         });
 
-        test('should work with unsorted ranges', () => {
+        test("should work with unsorted ranges", () => {
             const manager = new ColorRangeManager([
                 {
                     value: 100,
@@ -223,7 +223,7 @@ describe('ColorRangeManager', () => {
             expect(res).toBe("blue");
         });
 
-        test('should take last first item without values if range contains several items without items', () => {
+        test("should take last first item without values if range contains several items without items", () => {
             const manager = new ColorRangeManager([
                 {
                     value: 100,

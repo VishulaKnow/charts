@@ -12,7 +12,11 @@ export const MIN_DONUT_BLOCK_SIZE = 120;
 export class PolarModel {
     private static donutModel = new DonutModel();
 
-    public static getOptions(options: MdtChartsPolarOptions, designerConfig: DesignerConfig, modelInstance: ModelInstance): PolarOptionsModel {
+    public static getOptions(
+        options: MdtChartsPolarOptions,
+        designerConfig: DesignerConfig,
+        modelInstance: ModelInstance
+    ): PolarOptionsModel {
         const titleConfig = TitleConfigReader.create(options.title, modelInstance);
 
         return {
@@ -20,15 +24,23 @@ export class PolarModel {
             selectable: !!options.selectable,
             title: {
                 textContent: titleConfig.getTextContent(),
-                fontSize: titleConfig.getFontSize(),
+                fontSize: titleConfig.getFontSize()
             },
             data: { ...options.data },
-            charts: this.getChartsModel(options.chart, modelInstance.dataModel.repository.getScopedRows().length, designerConfig.chartStyle),
+            charts: this.getChartsModel(
+                options.chart,
+                modelInstance.dataModel.repository.getScopedRows().length,
+                designerConfig.chartStyle
+            ),
             legend: modelInstance.canvasModel.legendCanvas.getModel(),
             tooltip: options.tooltip,
-            chartCanvas: this.getDonutSettings(designerConfig.canvas.chartOptions.donut, options.chart, modelInstance.dataModel.repository.getRawRows()),
-            defs: { gradients: [] },
-        }
+            chartCanvas: this.getDonutSettings(
+                designerConfig.canvas.chartOptions.donut,
+                options.chart,
+                modelInstance.dataModel.repository.getRawRows()
+            ),
+            defs: { gradients: [] }
+        };
     }
 
     //TODO: type for returned value
@@ -38,29 +50,45 @@ export class PolarModel {
         const blockWidth = canvasModel.getBlockSize().width;
         const blockHeight = canvasModel.getBlockSize().height;
 
-        return canvasModel.getChartBlockWidth() < MIN_DONUT_BLOCK_SIZE + avgLegendWidth
-            && blockWidth * widthCoefficientWhenLegendShouldInBottom < blockHeight
-            ? 'bottom'
-            : 'right';
+        return canvasModel.getChartBlockWidth() < MIN_DONUT_BLOCK_SIZE + avgLegendWidth &&
+            blockWidth * widthCoefficientWhenLegendShouldInBottom < blockHeight
+            ? "bottom"
+            : "right";
     }
 
-    public static doesChartBlockHasEnoughWidthForContainsLegend(chartBlockWidth: number, legendWidth: number, legendCoordinate: LegendCoordinate) {
+    public static doesChartBlockHasEnoughWidthForContainsLegend(
+        chartBlockWidth: number,
+        legendWidth: number,
+        legendCoordinate: LegendCoordinate
+    ) {
         const rightLegendMargin = legendCoordinate.right.margin;
         return chartBlockWidth - legendWidth - rightLegendMargin.left - rightLegendMargin.right >= MIN_DONUT_BLOCK_SIZE;
     }
 
-    public static doesChartBlockHasEnoughHeightForContainsLegend(chartBlockHeight: number, legendCoordinate: LegendCoordinate) {
+    public static doesChartBlockHasEnoughHeightForContainsLegend(
+        chartBlockHeight: number,
+        legendCoordinate: LegendCoordinate
+    ) {
         const minHeightForLegend = 30;
         const bottomLegendMargin = legendCoordinate.bottom.margin;
-        const heightForLegend = chartBlockHeight - bottomLegendMargin.bottom - bottomLegendMargin.top - MIN_DONUT_BLOCK_SIZE;
+        const heightForLegend =
+            chartBlockHeight - bottomLegendMargin.bottom - bottomLegendMargin.top - MIN_DONUT_BLOCK_SIZE;
         return heightForLegend >= minHeightForLegend;
     }
 
-    private static getDonutSettings(settings: DonutOptionsCanvas, chartOptions: PolarChart, dataRows: MdtChartsDataRow[]): DonutChartSettings {
+    private static getDonutSettings(
+        settings: DonutOptionsCanvas,
+        chartOptions: PolarChart,
+        dataRows: MdtChartsDataRow[]
+    ): DonutChartSettings {
         return this.donutModel.getSettings(settings, chartOptions, dataRows);
     }
 
-    private static getChartsModel(chart: PolarChart, dataLength: number, chartStyleConfig: ChartStyleConfig): PolarChartModel[] {
+    private static getChartsModel(
+        chart: PolarChart,
+        dataLength: number,
+        chartStyleConfig: ChartStyleConfig
+    ): PolarChartModel[] {
         const chartsModel: PolarChartModel[] = [];
         chartsModel.push({
             type: chart.type,
@@ -73,7 +101,8 @@ export class PolarModel {
                 barViewOptions: {
                     hatch: { on: false },
                     borderRadius: { topLeft: 0, topRight: 0, bottomLeft: 0, bottomRight: 0 },
-                    width: 0 },
+                    width: 0
+                },
                 lineViewOptions: {
                     dashedStyles: { on: false, dashSize: 0, gapSize: 0 },
                     strokeWidth: 0,

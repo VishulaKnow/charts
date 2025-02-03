@@ -13,7 +13,10 @@ interface OtherComponentsModelDependencies {
 }
 
 export class OtherComponentsModel {
-    public static getOtherComponentsModel(dependencies: OtherComponentsModelDependencies, modelInstance: ModelInstance): OtherCommonComponents {
+    public static getOtherComponentsModel(
+        dependencies: OtherComponentsModelDependencies,
+        modelInstance: ModelInstance
+    ): OtherCommonComponents {
         const canvasModel = modelInstance.canvasModel;
 
         canvasModel.titleCanvas.init(TitleModel.getTitleModel(dependencies.titleConfig));
@@ -22,6 +25,6 @@ export class OtherComponentsModel {
             legendBlock: LegendModel.getBaseLegendBlockModel(canvasModel, dependencies.legendConfig),
             titleBlock: canvasModel.titleCanvas.getModel(),
             tooltipBlock: TooltipModel.getTooltipModel(dependencies.elementsOptions.tooltip)
-        }
+        };
     }
 }

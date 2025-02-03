@@ -27,9 +27,7 @@ export function sortColorRange(colorRange: MdtChartsColorRangeItem[]) {
     const range = [...colorRange];
     range.sort((a, b) => {
         if (a.value == null) return -1;
-        return a.value < b.value
-            ? -1
-            : (a.value == b.value ? 0 : 1);
+        return a.value < b.value ? -1 : a.value == b.value ? 0 : 1;
     });
     return range;
 }

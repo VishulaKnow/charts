@@ -10,18 +10,29 @@ export type LegendItemSelection = Selection<HTMLDivElement, ChartLegendEngineMod
 
 export class LegendDomHelper {
     public static setItemsTitles(items: LegendItemSelection): void {
-        items.attr('title', d => d.textContent);
+        items.attr("title", (d) => d.textContent);
     }
 
-    public static decreaseRowLabels(legendBlock: Selection<SVGForeignObjectElement, unknown, HTMLElement, any>, items: LegendItemSelection, staticLegend: StaticLegendBlockCanvas) {
+    public static decreaseRowLabels(
+        legendBlock: Selection<SVGForeignObjectElement, unknown, HTMLElement, any>,
+        items: LegendItemSelection,
+        staticLegend: StaticLegendBlockCanvas
+    ) {
         let itemsRightMargins = this.getItemsRightMargins(items);
         const itemConfig: LegendItemConfig[] = [];
         items.nodes().forEach((node, i) => {
-            itemConfig.push({ width: node.getBoundingClientRect().width, marginLeft: 0, marginRight: itemsRightMargins[i] });
+            itemConfig.push({
+                width: node.getBoundingClientRect().width,
+                marginLeft: 0,
+                marginRight: itemsRightMargins[i]
+            });
         });
         const newWidths = getNewLegendItemWidths({
             items: itemConfig,
-            wrapper: { maxRowsAmount: staticLegend.maxLinesAmount, width: legendBlock.node().getBoundingClientRect().width }
+            wrapper: {
+                maxRowsAmount: staticLegend.maxLinesAmount,
+                width: legendBlock.node().getBoundingClientRect().width
+            }
         });
         items.nodes().forEach((node, i) => {
             node.style.width = `${newWidths[i]}px`;
@@ -29,31 +40,35 @@ export class LegendDomHelper {
     }
 
     /** @deprecated */
-    public static cropRowLabels(legendBlock: Selection<SVGForeignObjectElement, unknown, HTMLElement, any>, items: LegendItemSelection): void {
+    public static cropRowLabels(
+        legendBlock: Selection<SVGForeignObjectElement, unknown, HTMLElement, any>,
+        items: LegendItemSelection
+    ): void {
         const maxWidth = legendBlock.node().getBoundingClientRect().width;
         let itemsLeftMargins = this.getItemsRightMargins(items);
-        let itemsWidth = this.getItemsWidth(items)
+        let itemsWidth = this.getItemsWidth(items);
         let sumOfItemsWidth = LegendHelper.getSumOfItemsWidths(itemsWidth, itemsLeftMargins);
-        const maxItemWidth = LegendHelper.getMaxItemWidth(legendBlock.attr('width'), itemsLeftMargins, 'row');
+        const maxItemWidth = LegendHelper.getMaxItemWidth(legendBlock.attr("width"), itemsLeftMargins, "row");
 
         let index = 0;
         let loopFlag = true; // if at least one label has no text, loop ends
         while (sumOfItemsWidth > maxWidth && loopFlag) {
-            items.nodes().forEach(node => {
+            items.nodes().forEach((node) => {
                 const textBlock = node.querySelector(`.${Legend.labelClass}`);
                 if (node.getBoundingClientRect().width > maxItemWidth && textBlock.textContent) {
-                    let labelText = index > 0
-                        ? textBlock.textContent.substr(0, textBlock.textContent.length - 3)
-                        : textBlock.textContent;
+                    let labelText =
+                        index > 0
+                            ? textBlock.textContent.substr(0, textBlock.textContent.length - 3)
+                            : textBlock.textContent;
 
                     labelText = labelText.substr(0, labelText.length - 1);
-                    textBlock.textContent = labelText + '...';
+                    textBlock.textContent = labelText + "...";
                     itemsLeftMargins = this.getItemsRightMargins(items);
-                    itemsWidth = this.getItemsWidth(items)
+                    itemsWidth = this.getItemsWidth(items);
                     sumOfItemsWidth = LegendHelper.getSumOfItemsWidths(itemsWidth, itemsLeftMargins);
 
                     if (labelText.length === 0) {
-                        textBlock.textContent = '';
+                        textBlock.textContent = "";
                         loopFlag = false;
                     }
                 }
@@ -63,10 +78,12 @@ export class LegendDomHelper {
     }
 
     private static getItemsRightMargins(items: LegendItemSelection): number[] {
-        return items.nodes().map(node => Helper.getPXValueFromString(DomHelper.getCssPropertyValue(node, 'margin-right')))
+        return items
+            .nodes()
+            .map((node) => Helper.getPXValueFromString(DomHelper.getCssPropertyValue(node, "margin-right")));
     }
 
     private static getItemsWidth(items: LegendItemSelection): number[] {
-        return items.nodes().map(node => node.getBoundingClientRect().width);
+        return items.nodes().map((node) => node.getBoundingClientRect().width);
     }
 }

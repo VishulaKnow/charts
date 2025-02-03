@@ -1,4 +1,4 @@
-import { DesignerConfig } from '../../designer/designerConfig'
+import { DesignerConfig } from "../../designer/designerConfig";
 
 const designerConfig: DesignerConfig = {
     canvas: {
@@ -50,34 +50,48 @@ const designerConfig: DesignerConfig = {
         }
     },
     chartStyle: {
-        baseColors: ['#209de3', '#ff3131', '#ffba00', '#20b078']
+        baseColors: ["#209de3", "#ff3131", "#ffba00", "#20b078"]
     },
     elementsOptions: {
         tooltip: {
-            position: 'followCursor'
+            position: "followCursor"
         }
     },
     dataFormat: {
-        formatters: (value: any, options: { type?: string; title?: string; empty?: string; } = {}) => {
+        formatters: (value: any, options: { type?: string; title?: string; empty?: string } = {}) => {
             var type = typeof value;
-            if ((value === undefined || value === null || value === "") && type != "boolean" && options.type != "boolean")
+            if (
+                (value === undefined || value === null || value === "") &&
+                type != "boolean" &&
+                options.type != "boolean"
+            )
                 return value;
             if (type == "boolean" || options.type == "boolean") {
                 return value.toString();
             }
             if (value instanceof Date) {
-                return value.getFullYear() + '-' + (value.getMonth() + 1) + '-' + value.getDate() + ' ' + value.getHours() + ':' + value.getMinutes()
+                return (
+                    value.getFullYear() +
+                    "-" +
+                    (value.getMonth() + 1) +
+                    "-" +
+                    value.getDate() +
+                    " " +
+                    value.getHours() +
+                    ":" +
+                    value.getMinutes()
+                );
             }
             if (options.type === "markdown") {
                 return value.toString();
             }
-            if ((options.type === "money" || options.type === "number")) {
-                return Intl.NumberFormat('ru-Ru', { minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(value);
+            if (options.type === "money" || options.type === "number") {
+                return Intl.NumberFormat("ru-Ru", { minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(value);
             }
 
             return value;
         }
     }
-}
+};
 
 export default designerConfig;

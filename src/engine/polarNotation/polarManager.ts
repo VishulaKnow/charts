@@ -1,4 +1,11 @@
-import { BlockMargin, DonutChartSettings, Model, PolarChartModel, PolarOptionsModel, TwoDimensionalOptionsModel } from "../../model/model";
+import {
+    BlockMargin,
+    DonutChartSettings,
+    Model,
+    PolarChartModel,
+    PolarOptionsModel,
+    TwoDimensionalOptionsModel
+} from "../../model/model";
 import { Block } from "../block/block";
 import { Engine } from "../engine";
 import { Legend } from "../features/legend/legend";
@@ -18,18 +25,17 @@ export class PolarManager implements ChartContentManager {
 
         engine.block.svg.render(model.blockCanvas.size);
 
-        this.renderCharts(engine.block,
+        this.renderCharts(
+            engine.block,
             options.charts,
             engine.data,
             options.data.dataSource,
             model.chartBlock.margin,
             model.blockCanvas.size,
-            options.chartCanvas);
+            options.chartCanvas
+        );
 
-        Title.render(engine.block,
-            options.title,
-            model.otherComponents.titleBlock,
-            model.blockCanvas.size);
+        Title.render(engine.block, options.title, model.otherComponents.titleBlock, model.blockCanvas.size);
 
         Legend.get().render(engine.block, engine.data, options, model);
         Tooltip.render(engine.block, model, engine.data, model.otherComponents.tooltipBlock);
@@ -42,11 +48,9 @@ export class PolarManager implements ChartContentManager {
                 legendPosition: model.options.legend.position
             });
 
-        engine.block.getSvg()
-            .on('click', (e: MouseEvent) => {
-                if (e.target === engine.block.getSvg().node())
-                    this.clearSelection(engine.block.filterEventManager, model);
-            });
+        engine.block.getSvg().on("click", (e: MouseEvent) => {
+            if (e.target === engine.block.getSvg().node()) this.clearSelection(engine.block.filterEventManager, model);
+        });
     }
 
     public updateData(block: Block, model: Model<PolarOptionsModel>, data: MdtChartsDataSource): void {
@@ -62,11 +66,18 @@ export class PolarManager implements ChartContentManager {
 
         const options = <PolarOptionsModel>model.options;
 
-        Donut.update(block, data[options.data.dataSource], model.chartBlock.margin, options.charts[0], model.blockCanvas.size, options.chartCanvas, options.data.keyField.name)
-            .then(() => {
-                Tooltip.render(block, model, data, model.otherComponents.tooltipBlock);
-                block.filterEventManager.setListenerPolar(model.chartBlock.margin, model.blockCanvas.size, options);
-            });
+        Donut.update(
+            block,
+            data[options.data.dataSource],
+            model.chartBlock.margin,
+            options.charts[0],
+            model.blockCanvas.size,
+            options.chartCanvas,
+            options.data.keyField.name
+        ).then(() => {
+            Tooltip.render(block, model, data, model.otherComponents.tooltipBlock);
+            block.filterEventManager.setListenerPolar(model.chartBlock.margin, model.blockCanvas.size, options);
+        });
 
         Aggregator.update(block, options.charts[0].data.valueField, options.chartCanvas.aggregator);
 
@@ -87,15 +98,17 @@ export class PolarManager implements ChartContentManager {
         filterEventManager.clearKeysForPolar(model.chartBlock.margin, model.blockCanvas.size, model.options);
     }
 
-    private renderCharts(block: Block, charts: PolarChartModel[], data: MdtChartsDataSource, dataSource: string, margin: BlockMargin, blockSize: Size, donutSettings: DonutChartSettings) {
+    private renderCharts(
+        block: Block,
+        charts: PolarChartModel[],
+        data: MdtChartsDataSource,
+        dataSource: string,
+        margin: BlockMargin,
+        blockSize: Size,
+        donutSettings: DonutChartSettings
+    ) {
         charts.forEach((chart: PolarChartModel) => {
-            if (chart.type === 'donut')
-                Donut.render(block,
-                    data[dataSource],
-                    margin,
-                    chart,
-                    blockSize,
-                    donutSettings);
+            if (chart.type === "donut") Donut.render(block, data[dataSource], margin, chart, blockSize, donutSettings);
         });
     }
 }

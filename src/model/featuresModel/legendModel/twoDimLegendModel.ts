@@ -8,23 +8,30 @@ import { LegendCanvasModel } from "./legendCanvasModel";
 import { LegendModel } from "./legendModel";
 
 export class TwoDimLegendModel {
-    constructor(private configReader: TwoDimConfigReader) { }
+    constructor(private configReader: TwoDimConfigReader) {}
 
-    recalcMarginWith2DLegend(modelInstance: ModelInstance, legendBlockModel: LegendBlockModel, legendOptions: MdtChartsTwoDimLegend): void {
+    recalcMarginWith2DLegend(
+        modelInstance: ModelInstance,
+        legendBlockModel: LegendBlockModel,
+        legendOptions: MdtChartsTwoDimLegend
+    ): void {
         const canvasModel = modelInstance.canvasModel;
 
         const legendPosition = this.getLegendModel(legendOptions).position;
         modelInstance.canvasModel.legendCanvas.setPosition(legendPosition);
 
-        if (legendPosition !== 'off') {
+        if (legendPosition !== "off") {
             const legendItemInfo = this.configReader.getLegendItemInfo();
             const legendSize = LegendCanvasModel.findElementsAmountByLegendSize(
-                legendItemInfo.map(i => ({
+                legendItemInfo.map((i) => ({
                     text: i.text,
-                    markerSize: { ...styledElementValues.defaultLegendMarkerSizes, widthPx: getWidthOfLegendMarkerByType(i.chartType) },
+                    markerSize: {
+                        ...styledElementValues.defaultLegendMarkerSizes,
+                        widthPx: getWidthOfLegendMarkerByType(i.chartType)
+                    },
                     wrapperSize: { marginRightPx: styledElementValues.legend.inlineItemWrapperMarginRightPx }
                 })),
-                'top',
+                "top",
                 modelInstance.canvasModel.getBlockSize().width,
                 legendBlockModel.static.maxLinesAmount * styledElementValues.legend.inlineLegendOneLineHeightPx
             ).size.height;
@@ -38,12 +45,10 @@ export class TwoDimLegendModel {
     }
 
     private getLegendModel(legendOptions: MdtChartsTwoDimLegend): ILegendModel {
-        const position: LegendPosition = legendOptions.show
-            ? legendOptions.position ?? "top"
-            : "off";
+        const position: LegendPosition = legendOptions.show ? legendOptions.position ?? "top" : "off";
 
         return {
             position
-        }
+        };
     }
 }

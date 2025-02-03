@@ -1,7 +1,7 @@
 import { ResizedElement } from "../../engine/helpers/fontResizer/fontResizer";
 import { resizeFont } from "../../engine/helpers/fontResizer/fontResizerService";
 
-describe('resizeFont', () => {
+describe("resizeFont", () => {
     const getMocks = () => {
         const elMock = new ResizedElement(null);
 
@@ -16,9 +16,9 @@ describe('resizeFont', () => {
         wrapperEl.setStyle = jest.fn();
 
         return { elMock, wrapperEl };
-    }
+    };
 
-    test('should exit without changes if element width is less than parent', () => {
+    test("should exit without changes if element width is less than parent", () => {
         const { elMock, wrapperEl } = getMocks();
 
         (elMock.getWidth as jest.Mock).mockReturnValueOnce(20);
@@ -29,7 +29,7 @@ describe('resizeFont', () => {
         expect(elMock.getSizeStyleInNum).not.toHaveBeenCalled();
     });
 
-    test('should decrease font size until element width is more than parent width', () => {
+    test("should decrease font size until element width is more than parent width", () => {
         const { elMock, wrapperEl } = getMocks();
 
         (elMock.getWidth as jest.Mock).mockReturnValueOnce(40);
@@ -51,7 +51,7 @@ describe('resizeFont', () => {
         expect(setStyleMock.mock.calls[1][1]).toBe("8px");
     });
 
-    test('should decrease font size until elements font size is more than minimal', () => {
+    test("should decrease font size until elements font size is more than minimal", () => {
         const { elMock, wrapperEl } = getMocks();
 
         (elMock.getWidth as jest.Mock).mockReturnValueOnce(40);

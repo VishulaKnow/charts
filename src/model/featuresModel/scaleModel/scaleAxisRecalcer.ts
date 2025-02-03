@@ -16,20 +16,24 @@ export interface ScaleValueCalculatedInfo {
  * Предназначен для получения нового scaleValue и уменьшения globalMargin, если ось ключей находится где-то внутри chartBlock, а не на его границе
  */
 export class ScaleAxisRecalcer {
-    constructor(private generateScaleLinear: () => ScaleValueModel) { }
+    constructor(private generateScaleLinear: () => ScaleValueModel) {}
 
     recalculateMargin(canvasModel: CanvasModel, chartOrientation: ChartOrientation, keyAxis: DiscreteAxisOptions) {
         const { scaleFn: scaleValueFn } = this.getScaleValue();
 
-        const coordinateOnChartBlock = (keyAxis.position === "start"
-            ? scaleValueFn(0)
-            : (chartOrientation === "vertical"
-                ? canvasModel.getChartBlockHeight()
-                : canvasModel.getChartBlockWidth()) - scaleValueFn(0));
+        const coordinateOnChartBlock =
+            keyAxis.position === "start"
+                ? scaleValueFn(0)
+                : (chartOrientation === "vertical"
+                      ? canvasModel.getChartBlockHeight()
+                      : canvasModel.getChartBlockWidth()) - scaleValueFn(0);
         const key = chartOrientation === "vertical" ? keyAxisLabelVerticalLog : keyAxisLabelHorizontalLog;
         const logInfo = canvasModel.marginService.getDataByKey(key);
         if (logInfo) {
-            canvasModel.decreaseMarginSide(logInfo.side, logInfo.byValue - coordinateOnChartBlock < 0 ? logInfo.byValue : coordinateOnChartBlock);
+            canvasModel.decreaseMarginSide(
+                logInfo.side,
+                logInfo.byValue - coordinateOnChartBlock < 0 ? logInfo.byValue : coordinateOnChartBlock
+            );
         }
     }
 
@@ -38,6 +42,6 @@ export class ScaleAxisRecalcer {
         return {
             scale,
             scaleFn: Scale.getScaleValue(scale)
-        }
+        };
     }
 }

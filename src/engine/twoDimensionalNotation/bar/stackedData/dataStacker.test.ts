@@ -2,106 +2,106 @@ import { MdtChartsDataRow } from "../../../../config/config";
 import { DataStacker, StackedDataFull } from "./dataStacker";
 import { DataStackerService } from "./dataStackerService";
 
-describe('DataStacker', () => {
+describe("DataStacker", () => {
     const stacker = new DataStacker();
 
-    describe('getStackedData', () => {
-        describe('for positive values', () => {
+    describe("getStackedData", () => {
+        describe("for positive values", () => {
             let dataRows: MdtChartsDataRow[] = [
                 { price: 12, count: 30 },
                 { price: 30, count: 12 },
                 { price: 0, count: 100 },
                 { price: 10, count: 0 }
-            ]
+            ];
             const valueFields = ["price", "count"];
 
-            test('should return right stack', () => {
+            test("should return right stack", () => {
                 const res = stacker.getStackedData(dataRows, valueFields);
                 expect(res).toEqual<StackedDataFull>([
                     [
                         { "0": 0, "1": 12, data: dataRows[0], fieldName: "price" },
                         { "0": 0, "1": 30, data: dataRows[1], fieldName: "price" },
                         { "0": 0, "1": 0, data: dataRows[2], fieldName: "price" },
-                        { "0": 0, "1": 10, data: dataRows[3], fieldName: "price" },
+                        { "0": 0, "1": 10, data: dataRows[3], fieldName: "price" }
                     ],
                     [
                         { "0": 12, "1": 42, data: dataRows[0], fieldName: "count" },
                         { "0": 30, "1": 42, data: dataRows[1], fieldName: "count" },
                         { "0": 0, "1": 100, data: dataRows[2], fieldName: "count" },
-                        { "0": 10, "1": 10, data: dataRows[3], fieldName: "count" },
+                        { "0": 10, "1": 10, data: dataRows[3], fieldName: "count" }
                     ]
-                ])
+                ]);
             });
         });
 
-        describe('for negative values', () => {
+        describe("for negative values", () => {
             let dataRows: MdtChartsDataRow[] = [
                 { price: -12, count: -30 },
                 { price: -30, count: -12 },
                 { price: 0, count: -100 },
                 { price: -10, count: 0 }
-            ]
+            ];
             const valueFields = ["price", "count"];
 
-            test('should return right stack', () => {
+            test("should return right stack", () => {
                 const res = stacker.getStackedData(dataRows, valueFields);
                 expect(res).toEqual<StackedDataFull>([
                     [
                         { "0": 0, "1": -12, data: dataRows[0], fieldName: "price" },
                         { "0": 0, "1": -30, data: dataRows[1], fieldName: "price" },
                         { "0": 0, "1": 0, data: dataRows[2], fieldName: "price" },
-                        { "0": 0, "1": -10, data: dataRows[3], fieldName: "price" },
+                        { "0": 0, "1": -10, data: dataRows[3], fieldName: "price" }
                     ],
                     [
                         { "0": -12, "1": -42, data: dataRows[0], fieldName: "count" },
                         { "0": -30, "1": -42, data: dataRows[1], fieldName: "count" },
                         { "0": 0, "1": -100, data: dataRows[2], fieldName: "count" },
-                        { "0": -10, "1": -10, data: dataRows[3], fieldName: "count" },
+                        { "0": -10, "1": -10, data: dataRows[3], fieldName: "count" }
                     ]
-                ])
+                ]);
             });
         });
     });
 });
 
-describe('DataStackerService', () => {
+describe("DataStackerService", () => {
     const service = new DataStackerService();
     let data: StackedDataFull = [
         [
             { "0": 0, "1": 42, data: {}, fieldName: "price" },
             { "0": 0, "1": -123, data: {}, fieldName: "price" }
         ]
-    ]
+    ];
 
-    describe('getLastValue', () => {
-        test('should return 0 if vfIndex is 0', () => {
+    describe("getLastValue", () => {
+        test("should return 0 if vfIndex is 0", () => {
             const res = service.getValue0(data, 0, 0, 0);
             expect(res).toBe(0);
         });
 
-        test('should return last positive values if positive value exists and need positive', () => {
+        test("should return last positive values if positive value exists and need positive", () => {
             const res = service.getValue0(data, 1, 0, 12);
             expect(res).toBe(42);
         });
 
-        test('should return 0 if positive value not exists and need positive', () => {
+        test("should return 0 if positive value not exists and need positive", () => {
             const res = service.getValue0(data, 1, 1, 12);
             expect(res).toBe(0);
         });
 
-        test('should return last negative value if negative value exists and need negative', () => {
+        test("should return last negative value if negative value exists and need negative", () => {
             const res = service.getValue0(data, 1, 1, -12);
             expect(res).toBe(-123);
         });
 
-        test('should return 0 if negative value not exists and need negative', () => {
+        test("should return 0 if negative value not exists and need negative", () => {
             const res = service.getValue0(data, 1, 0, -12);
             expect(res).toBe(0);
         });
     });
 
-    describe('getValue1', () => {
-        test('should return sum of value0 + value from data', () => {
+    describe("getValue1", () => {
+        test("should return sum of value0 + value from data", () => {
             let res = service.getValue1(0, 12);
             expect(res).toBe(12);
 
@@ -117,7 +117,7 @@ describe('DataStackerService', () => {
     });
 });
 
-describe('real example (positive only)', () => {
+describe("real example (positive only)", () => {
     const stacker = new DataStacker();
     const data = [
         {
@@ -184,7 +184,7 @@ describe('real example (positive only)', () => {
             color: "pink"
         }
     ];
-    const valueFields = ["price", "count"]
+    const valueFields = ["price", "count"];
     const stackedData = [
         [
             { "0": 0, "1": 100000, data: data[0], fieldName: "price" },
@@ -210,7 +210,7 @@ describe('real example (positive only)', () => {
         ]
     ];
 
-    test('check on real example', () => {
+    test("check on real example", () => {
         const res = stacker.getStackedData(data, valueFields);
         expect(res).toEqual(stackedData);
     });

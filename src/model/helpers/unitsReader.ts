@@ -9,7 +9,7 @@ export class UnitsReader {
     private getLastUnitFromString<T extends string = UnitsFromConfig>(value: string, units: T[]): T {
         let resultUnit: T = null;
 
-        units.forEach(unit => {
+        units.forEach((unit) => {
             if (value.endsWith(unit)) resultUnit = unit;
         });
 

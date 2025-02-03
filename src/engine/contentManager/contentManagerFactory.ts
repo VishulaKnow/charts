@@ -15,14 +15,14 @@ export interface ChartContentManager {
 
 interface Managers {
     [type: string]: {
-        new(): ChartContentManager
-    }
+        new (): ChartContentManager;
+    };
 }
 
 export class ContentManagerFactory {
     private managers: Managers = {
         "2d": TwoDimensionalManager,
-        "polar": PolarManager
+        polar: PolarManager
     };
 
     getManager(type: ChartNotation): ChartContentManager {

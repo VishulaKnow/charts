@@ -1,11 +1,15 @@
 import { MdtChartsDataRow, MdtChartsDonutAggregator } from "../../config/config";
 import { DonutAggregatorContent } from "../../model/model";
-import { AggregatorServiceDataOptions, AGGREGATOR_DEFAULT_TITLE, DonutAggregatorService } from "../../model/notations/polar/donut/donutAggregatorService";
+import {
+    AggregatorServiceDataOptions,
+    AGGREGATOR_DEFAULT_TITLE,
+    DonutAggregatorService
+} from "../../model/notations/polar/donut/donutAggregatorService";
 
-describe('DonutAggregatorService', () => {
+describe("DonutAggregatorService", () => {
     const service = new DonutAggregatorService();
 
-    describe('getContent', () => {
+    describe("getContent", () => {
         const getDataOptions = (): AggregatorServiceDataOptions => {
             return {
                 rows: [
@@ -13,18 +17,18 @@ describe('DonutAggregatorService', () => {
                     { key: "key2", value: 22 }
                 ],
                 valueFieldName: "value"
-            }
-        }
+            };
+        };
 
-        test('should return values from function if it is set', () => {
+        test("should return values from function if it is set", () => {
             const options: MdtChartsDonutAggregator = {
                 content: (model) => {
                     return {
                         title: "Sum",
                         value: model.data.reduce((acc, row) => acc + row.value, 0) + 10
-                    }
+                    };
                 }
-            }
+            };
 
             const res = service.getContent(options, getDataOptions());
             expect(res).toEqual<DonutAggregatorContent>({
@@ -33,14 +37,14 @@ describe('DonutAggregatorService', () => {
             });
         });
 
-        test('should set default title if fn result does not have title', () => {
+        test("should set default title if fn result does not have title", () => {
             const options: MdtChartsDonutAggregator = {
                 content: (model) => {
                     return {
                         value: model.data.reduce((acc, row) => acc + row.value, 0)
-                    }
+                    };
                 }
-            }
+            };
 
             const res = service.getContent(options, getDataOptions());
             expect(res).toEqual<DonutAggregatorContent>({
@@ -49,15 +53,15 @@ describe('DonutAggregatorService', () => {
             });
         });
 
-        test('should return sum of values if result does not have value', () => {
+        test("should return sum of values if result does not have value", () => {
             const options: MdtChartsDonutAggregator = {
                 content: (model) => {
                     return {
                         title: undefined,
                         value: undefined
-                    }
+                    };
                 }
-            }
+            };
 
             const res = service.getContent(options, getDataOptions());
             expect(res).toEqual<DonutAggregatorContent>({
@@ -66,7 +70,7 @@ describe('DonutAggregatorService', () => {
             });
         });
 
-        test('should return sum of values and default title if fn is not set', () => {
+        test("should return sum of values and default title if fn is not set", () => {
             let options: MdtChartsDonutAggregator = null;
             let res = service.getContent(options, getDataOptions());
             expect(res).toEqual<DonutAggregatorContent>({
@@ -82,15 +86,15 @@ describe('DonutAggregatorService', () => {
             });
         });
 
-        test('should return sum of values and custom title if result does not have value but has title', () => {
+        test("should return sum of values and custom title if result does not have value but has title", () => {
             const options: MdtChartsDonutAggregator = {
                 content: (model) => {
                     return {
                         title: "Custom title",
                         value: undefined
-                    }
+                    };
                 }
-            }
+            };
 
             const res = service.getContent(options, getDataOptions());
             expect(res).toEqual<DonutAggregatorContent>({
@@ -99,10 +103,10 @@ describe('DonutAggregatorService', () => {
             });
         });
 
-        test('should return default content if fn return falsy value', () => {
+        test("should return default content if fn return falsy value", () => {
             const options: MdtChartsDonutAggregator = {
                 content: (model) => null
-            }
+            };
 
             const res = service.getContent(options, getDataOptions());
             expect(res).toEqual<DonutAggregatorContent>({

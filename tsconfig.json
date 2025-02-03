@@ -7,8 +7,6 @@
         "jsx": "react",
         "allowJs": true,
         "strictNullChecks": false,
-        "types": [
-            "jest"
-        ]
+        "types": ["jest"]
     }
 }

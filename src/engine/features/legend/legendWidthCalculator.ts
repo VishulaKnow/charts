@@ -7,7 +7,7 @@ interface WidthCalculatorConfig {
 
 export function getNewLegendItemWidths(config: WidthCalculatorConfig): SizePx[] {
     const wrapper = new LegendWrapper(config.wrapper);
-    const collection = new LegendItemCollection(config.items.map(i => new LegendItem(i)));
+    const collection = new LegendItemCollection(config.items.map((i) => new LegendItem(i)));
 
     return getNewWidths(collection, wrapper);
 }
@@ -24,9 +24,7 @@ function getNewWidths(collection: LegendItemCollection, wrapper: LegendWrapper) 
     let avgExtra = extra / biggerThanAvg.length;
     biggerThanAvg.forEach((item, index) => {
         const avgDiff = item.getCurrentWidth() - avgWidth;
-        const decreaseBy = index === biggerThanAvg.length - 1
-            ? extra
-            : (avgDiff < avgExtra ? avgDiff : avgExtra);
+        const decreaseBy = index === biggerThanAvg.length - 1 ? extra : avgDiff < avgExtra ? avgDiff : avgExtra;
         item.decreaseBy(decreaseBy);
         extra -= decreaseBy;
         avgExtra = extra / (biggerThanAvg.length - index - 1);
@@ -75,7 +73,7 @@ interface LegendWrapperConfig {
 }
 
 class LegendWrapper {
-    constructor(private config: LegendWrapperConfig) { }
+    constructor(private config: LegendWrapperConfig) {}
 
     getMaxWidth() {
         return this.config.width * this.config.maxRowsAmount;
@@ -129,14 +127,14 @@ class LegendItem {
 }
 
 class LegendItemCollection {
-    constructor(public readonly items: LegendItem[]) { }
+    constructor(public readonly items: LegendItem[]) {}
 
     getTotalWidth() {
         return this.items.reduce((acc, item) => acc + item.getCurrentTotalWidth(), 0);
     }
 
     getActualWidths() {
-        return this.items.map(item => item.getCurrentWidth());
+        return this.items.map((item) => item.getCurrentWidth());
     }
 
     getTotalMarginSizes() {
@@ -149,7 +147,7 @@ class LegendItemCollection {
 
     getItemsWithWidthBiggerThan(thanWidth: SizePx) {
         return this.items
-            .filter(item => item.getCurrentWidth() > thanWidth)
+            .filter((item) => item.getCurrentWidth() > thanWidth)
             .sort((a, b) => a.getCurrentWidth() - b.getCurrentWidth());
     }
 
@@ -174,7 +172,7 @@ class LegendItemCollection {
     }
 
     resetItemsToOriginalWidth() {
-        this.items.forEach(item => item.resetWidthToOriginal());
+        this.items.forEach((item) => item.resetWidthToOriginal());
         return this;
     }
 }
