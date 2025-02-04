@@ -1,6 +1,5 @@
 import {
 	AxisLabelFormatter,
-	AxisNumberDomain,
 	MdtChartsConfig,
 	MdtChartsField,
 	MdtChartsFieldName,
@@ -14,8 +13,6 @@ import {
 	ValueLabelsFormatter
 } from "../../config/config";
 import { DesignerConfig } from "../../designer/designerConfig";
-import { DataRepositoryModel } from "../../model/modelInstance/dataModel/dataRepository";
-import { getResolvedDomain } from "../../model/featuresModel/scaleModel/scaleDomainService";
 import { ValueLabelsStyleModel } from "../model";
 
 interface BaseConfigReader {
@@ -41,22 +38,6 @@ export class TwoDimConfigReader implements BaseConfigReader {
 			fields.push(...chart.data.valueFields);
 		});
 		return fields;
-	}
-
-	getBiggestValueAndDecremented(repository: DataRepositoryModel) {
-		return this.calculateBiggestValueAndDecremented(
-			repository,
-			this.options.axis.value.domain,
-			this.getFieldsBySegments("main")
-		);
-	}
-
-	getBiggestValueAndDecrementedSecondary(repository: DataRepositoryModel) {
-		return this.calculateBiggestValueAndDecremented(
-			repository,
-			this.options.axis.valueSecondary.domain,
-			this.getFieldsBySegments("secondary")
-		);
 	}
 
 	getFieldsBySegments(valueGroup: TwoDimensionalValueGroup): MdtChartsFieldName[][] {
@@ -132,20 +113,6 @@ export class TwoDimConfigReader implements BaseConfigReader {
 			color: this.options.valueLabels?.style?.color ?? "rgba(68, 68, 68, 0.5)",
 			cssClassName: this.options.valueLabels?.style?.cssClassName
 		};
-	}
-
-	private calculateBiggestValueAndDecremented(
-		repository: DataRepositoryModel,
-		domain: AxisNumberDomain,
-		fields: MdtChartsFieldName[][]
-	): number[] {
-		const resolvedDomain = getResolvedDomain(domain, repository.getRawRows());
-
-		if (resolvedDomain && resolvedDomain.end !== -1) {
-			return [resolvedDomain.end, resolvedDomain.end - 1];
-		}
-
-		return repository.getBiggestValueAndDecremented(fields);
 	}
 
 	private calculateAxisLabelFormatter(axisValue: NumberAxisOptions | NumberSecondaryAxisOptions): AxisLabelFormatter {

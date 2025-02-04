@@ -100,7 +100,7 @@ export class TwoDimMarginModel {
 				modelInstance.dataModel.repository.getRawRows(),
 				this.configReader
 			);
-			labelsTexts = this.getValueAxisLabels(scaleModel, modelInstance).map((v) =>
+			labelsTexts = this.getValueAxisLabels(scaleModel).map((v) =>
 				this.configReader.getAxisLabelFormatter()(v).toString()
 			);
 		}
@@ -113,7 +113,7 @@ export class TwoDimMarginModel {
 			modelInstance.dataModel.repository.getRawRows(),
 			this.configReader
 		);
-		const labelsTexts = this.getValueAxisLabels(scaleModel, modelInstance).map((v) =>
+		const labelsTexts = this.getValueAxisLabels(scaleModel).map((v) =>
 			this.configReader.getSecondaryAxisLabelFormatter()(v).toString()
 		);
 
@@ -215,7 +215,7 @@ export class TwoDimMarginModel {
 		canvasModel.increaseMarginSide(axisMarginMapping[keyAxisOrient], valueLabelFontSize + OFFSET_SIZE_PX);
 	}
 
-	private getValueAxisLabels(scaleModel: ScaleValueModel, modelInstance: ModelInstance) {
+	private getValueAxisLabels(scaleModel: ScaleValueModel) {
 		const scale = Scale.getScaleValue(scaleModel);
 		const ticksPolicy = AxisModel.getTickAmountPolicy(
 			this.configReader.options.orientation,
@@ -223,10 +223,9 @@ export class TwoDimMarginModel {
 			scaleModel
 		);
 
-		let outputValues: number[];
+		let outputValues: number[] = [];
 		if (ticksPolicy.type === "constant") outputValues = ticksPolicy.values;
 		else if (ticksPolicy.type === "amount") outputValues = scale.ticks(ticksPolicy.amount);
-		else outputValues = this.configReader.getBiggestValueAndDecremented(modelInstance.dataModel.repository);
 
 		return outputValues;
 	}
