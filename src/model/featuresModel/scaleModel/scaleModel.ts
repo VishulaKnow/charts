@@ -46,7 +46,7 @@ export class ScaleModel {
 
 	getScaleSecondaryLinear(dataRows: MdtChartsDataRow[], configReader?: TwoDimConfigReader): ScaleValueModel {
 		return {
-			domain: getScaleLinearDomain(this.options.axis.value.domain, dataRows, this.options, "secondary"),
+			domain: getScaleLinearDomain(this.options.axis.valueSecondary.domain, dataRows, this.options, "secondary"),
 			range: {
 				start: 0,
 				end: getScaleValueRangePeek(this.options.orientation, this.canvasModel)
