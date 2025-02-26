@@ -46,7 +46,7 @@ export class ValueLabelsCollision {
 		let ValueLabelElementsReactInfo: ValueLabelElement[] = [];
 
 		valueLabels.each(function (_, index) {
-			const { height, width } = this.getBBox();
+			const { height, width } = this.getBoundingClientRect();
 			const x = +this.getAttribute("x");
 			const y = +this.getAttribute("y");
 

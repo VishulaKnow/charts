@@ -297,9 +297,13 @@ describe("shiftCoordinateXLeft", () => {
 	});
 
 	test("should shift X coordinate to the left by half label width and BORDER_OFFSET_SIZE_PX", () => {
-		shiftCoordinateXLeft(labelClientRect);
+		shiftCoordinateXLeft(
+			labelClientRect,
+			{ width: 130, height: 100 },
+			{ right: 10, left: 10, top: 10, bottom: 10 }
+		);
 
-		expect(labelClientRect.x).toEqual(83);
+		expect(labelClientRect.x).toEqual(103);
 	});
 });
 
@@ -307,13 +311,13 @@ describe("shiftCoordinateXRight", () => {
 	let labelClientRect: BoundingRect;
 
 	beforeEach(() => {
-		labelClientRect = { x: 100, y: 50, width: 30, height: 10 };
+		labelClientRect = { x: 10, y: 50, width: 30, height: 10 };
 	});
 
 	test("should shift X coordinate to the right by half label width and BORDER_OFFSET_SIZE_PX", () => {
-		shiftCoordinateXRight(labelClientRect);
+		shiftCoordinateXRight(labelClientRect, { left: 20, right: 20, top: 10, bottom: 10 });
 
-		expect(labelClientRect.x).toEqual(117);
+		expect(labelClientRect.x).toEqual(37);
 	});
 });
 

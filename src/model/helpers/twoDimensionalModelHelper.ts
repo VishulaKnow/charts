@@ -125,12 +125,12 @@ export class TwoDimensionalModelHelper {
 				left: {
 					mode: "shift",
 					hasCollision: blockSidesOptions.hasCollisionLeft,
-					shiftCoordinate: blockSidesOptions.shiftRight
+					shiftCoordinate: blockSidesOptions.shiftToRight
 				},
 				right: {
 					mode: "shift",
 					hasCollision: blockSidesOptions.hasCollisionRight,
-					shiftCoordinate: blockSidesOptions.shiftLeft
+					shiftCoordinate: blockSidesOptions.shiftToLeft
 				},
 				top: {
 					mode: "none"
@@ -174,10 +174,12 @@ export class TwoDimensionalModelHelper {
 		return {
 			hasCollisionLeft: (labelClientRect: BoundingRect) =>
 				hasCollisionLeftSide(labelClientRect, canvasModel.getMargin()),
-			shiftLeft: (labelClientRect: BoundingRect) => shiftCoordinateXLeft(labelClientRect),
+			shiftToLeft: (labelClientRect: BoundingRect) =>
+				shiftCoordinateXLeft(labelClientRect, canvasModel.getBlockSize(), canvasModel.getMargin()),
 			hasCollisionRight: (labelClientRect: BoundingRect) =>
 				hasCollisionRightSide(labelClientRect, canvasModel.getBlockSize(), canvasModel.getMargin()),
-			shiftRight: (labelClientRect: BoundingRect) => shiftCoordinateXRight(labelClientRect),
+			shiftToRight: (labelClientRect: BoundingRect) =>
+				shiftCoordinateXRight(labelClientRect, canvasModel.getMargin()),
 			hasCollisionTop: (labelClientRect: BoundingRect) =>
 				hasCollisionTopSide(labelClientRect, canvasModel.getMargin()),
 			shiftTop: (labelClientRect: BoundingRect) => shiftCoordinateYTop(labelClientRect),

@@ -81,12 +81,15 @@ export function hasCollisionBottomSide(labelClientRect: BoundingRect, blockSize:
 	return labelClientRect.y + labelClientRect.height / 2 >= blockSize.height - margin.bottom;
 }
 
-export function shiftCoordinateXLeft(labelClientRect: BoundingRect): void {
-	labelClientRect.x -= labelClientRect.width / 2 + BORDER_OFFSET_SIZE_PX;
+export function shiftCoordinateXLeft(labelClientRect: BoundingRect, blockSize: Size, margin: BlockMargin): void {
+	const blockRightSide = blockSize.width - margin.right;
+	const labelRightSide = labelClientRect.x + labelClientRect.width / 2;
+	labelClientRect.x -= labelRightSide - blockRightSide + BORDER_OFFSET_SIZE_PX;
 }
 
-export function shiftCoordinateXRight(labelClientRect: BoundingRect): void {
-	labelClientRect.x += labelClientRect.width / 2 + BORDER_OFFSET_SIZE_PX;
+export function shiftCoordinateXRight(labelClientRect: BoundingRect, margin: BlockMargin): void {
+	const labelLeftSide = labelClientRect.x - labelClientRect.width / 2;
+	labelClientRect.x += margin.left - labelLeftSide + BORDER_OFFSET_SIZE_PX;
 }
 
 export function shiftCoordinateYTop(labelClientRect: BoundingRect): void {
