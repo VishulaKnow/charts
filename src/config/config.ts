@@ -370,6 +370,11 @@ export interface TwoDimensionalChartValueLabels {
 		mode?: ValueLabelsPositionMode;
 	};
 	format?: ValueLabelsFormatter;
+	rotation?: ValueLabelsRotationOptions;
+}
+
+export interface ValueLabelsRotationOptions {
+	angle?: number;
 }
 
 export type ValueLabelsFormatter = (value: number) => string;

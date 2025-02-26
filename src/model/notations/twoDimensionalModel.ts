@@ -198,6 +198,11 @@ export class TwoDimensionalModel {
 				keyAxisOrient,
 				canvasModel.getMargin()
 			);
+			const valueLabelsAlignment = calculateValueLabelAlignment(
+				keyAxisOrient,
+				chart.valueLabels?.position?.mode,
+				chart.valueLabels?.rotation
+			);
 
 			chartsModel.push({
 				type: chart.type,
@@ -250,11 +255,10 @@ export class TwoDimensionalModel {
 						if (chart.isSegmented) return dataRow[datumField] - (dataRow[datumField] - dataRow["0"]) / 2;
 						else return dataRow[datumField] / 2;
 					},
-					textAnchor: calculateValueLabelAlignment(keyAxisOrient, chart.valueLabels?.position?.mode)
-						.textAnchor,
-					dominantBaseline: calculateValueLabelAlignment(keyAxisOrient, chart.valueLabels?.position?.mode)
-						.dominantBaseline,
-					format: configReader.getValueLabelFormatterForChart(index)
+					textAnchor: valueLabelsAlignment.textAnchor,
+					dominantBaseline: valueLabelsAlignment.dominantBaseline,
+					format: configReader.getValueLabelFormatterForChart(index),
+					rotation: chart.valueLabels?.rotation
 				},
 				areaViewOptions: getAreaViewOptions(chart, index, style, modelInstance.version.getVersionNumber()),
 				dotViewOptions: {

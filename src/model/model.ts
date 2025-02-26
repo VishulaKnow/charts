@@ -10,7 +10,8 @@ import {
 	ShowTickFn,
 	MdtChartsDataRow,
 	TwoDimensionalValueGroup,
-	ValueLabelsCollisionMode
+	ValueLabelsCollisionMode,
+	ValueLabelsRotationOptions
 } from "../config/config";
 import {
 	DataType,
@@ -479,6 +480,7 @@ export interface TwoDimChartValueLabelsOptions {
 	dominantBaseline: ValueLabelDominantBaseline;
 	format: ValueLabelsFormatter;
 	handleScaledValue: (dataRow: MdtChartsDataRow, datumField: string) => number;
+	rotation?: ValueLabelsRotationOptions;
 }
 
 export type ValueLabelsFormatter = (value: number) => string;

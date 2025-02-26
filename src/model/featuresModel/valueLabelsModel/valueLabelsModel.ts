@@ -1,6 +1,6 @@
 import { BlockMargin, Orient, ValueLabelAnchor, ValueLabelDominantBaseline } from "../../model";
 import { BoundingRect } from "../../../engine/features/valueLabelsCollision/valueLabelsCollision";
-import { Size, ValueLabelsPositionMode } from "../../../config/config";
+import { Size, ValueLabelsPositionMode, ValueLabelsRotationOptions } from "../../../config/config";
 
 interface ValueLabelAlignment {
 	dominantBaseline: ValueLabelDominantBaseline;
@@ -46,9 +46,10 @@ export class ValueLabelCoordinateCalculator {
 
 export function calculateValueLabelAlignment(
 	keyAxisOrient: Orient,
-	positionMode?: ValueLabelsPositionMode
+	positionMode?: ValueLabelsPositionMode,
+	rotation?: ValueLabelsRotationOptions
 ): ValueLabelAlignment {
-	if (!positionMode || positionMode === "after") {
+	if ((positionMode ?? "after") === "after" && !rotation?.angle) {
 		switch (keyAxisOrient) {
 			case "top":
 				return { dominantBaseline: "hanging", textAnchor: "middle" };

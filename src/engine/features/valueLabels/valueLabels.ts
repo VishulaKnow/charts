@@ -22,6 +22,7 @@ import { ValueLabelsCollision } from "../../../engine/features/valueLabelsCollis
 import { Pipeline } from "../../helpers/pipeline/Pipeline";
 import { getStackedData } from "../../twoDimensionalNotation/line/lineHelper";
 import { Segment } from "../../twoDimensionalNotation/lineLike/generatorMiddleware/lineLikeGeneratorDefineMiddleware";
+import { Transition } from "d3-transition";
 
 export interface ValueLabelsOptions {
 	elementAccessors: {
@@ -172,7 +173,7 @@ export class ChartValueLabels {
 		});
 	}
 
-	private getAllValueLabelsOfChart(vfIndex: number): Selection<BaseType, unknown, SVGGElement, unknown> {
+	private getAllValueLabelsOfChart(vfIndex: number): Selection<SVGTextElement, unknown, SVGGElement, unknown> {
 		const block = this.globalOptions.elementAccessors.getBlock().svg.getChartBlock();
 		return block.selectAll(
 			`.${ChartValueLabels.valueLabelClass}.${CLASSES.dataLabel}${Helper.getCssClassesLine(
@@ -182,7 +183,7 @@ export class ChartValueLabels {
 	}
 
 	private setAttrs(
-		valueLabels: Selection<SVGTextElement | BaseType, MdtChartsDataRow | Segment, BaseType, any>,
+		valueLabels: Selection<SVGTextElement, MdtChartsDataRow | Segment, BaseType, any>,
 		attrs: ValueLabelAttrs,
 		valueFieldName: string,
 		formatter: ValueLabelsFormatter,
@@ -192,21 +193,28 @@ export class ChartValueLabels {
 	) {
 		const animationName = "labels-updating";
 
-		valueLabels
+		let selection:
+			| Selection<SVGTextElement, MdtChartsDataRow | Segment, BaseType, any>
+			| Transition<SVGTextElement, MdtChartsDataRow | Segment, BaseType, any> = valueLabels
 			.text((d) => formatter(dataRowAccessor(d)[valueFieldName]))
 			.attr("dominant-baseline", attrs.dominantBaseline)
 			.attr("text-anchor", attrs.textAnchor);
 		if (animate) {
-			const transition = valueLabels
+			selection = selection
 				.interrupt(animationName)
 				.transition(animationName)
-				.duration(this.globalOptions.elementAccessors.getBlock().transitionManager.durations.chartUpdate)
-				.attr("x", (d) => attrs.x(d))
-				.attr("y", (d) => attrs.y(d));
-			if (onEndAnimation) transition.on("end", onEndAnimation);
-		} else {
-			valueLabels.attr("x", (d) => attrs.x(d)).attr("y", (d) => attrs.y(d));
+				.duration(this.globalOptions.elementAccessors.getBlock().transitionManager.durations.chartUpdate);
 		}
+		selection
+			.attr("x", (d) => attrs.x(d))
+			.attr("y", (d) => attrs.y(d))
+			.attr("transform", (d) =>
+				this.chart.valueLabels.rotation?.angle
+					? `rotate(${this.chart.valueLabels.rotation.angle}, ${attrs.x(d)}, ${attrs.y(d)})`
+					: null
+			);
+
+		if (animate && onEndAnimation) selection.on("end", onEndAnimation);
 	}
 
 	private setClasses(

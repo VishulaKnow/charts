@@ -184,6 +184,13 @@ describe("calculateValueLabelAlignment", () => {
 		expect(valueLabelAlignment.dominantBaseline).toEqual("middle");
 		expect(valueLabelAlignment.textAnchor).toEqual("middle");
 	});
+
+	test("should set all to middle, because rotation angle is set", () => {
+		const valueLabelAlignment = calculateValueLabelAlignment("right", undefined, { angle: 90 });
+
+		expect(valueLabelAlignment.dominantBaseline).toEqual("middle");
+		expect(valueLabelAlignment.textAnchor).toEqual("middle");
+	});
 });
 
 describe("hasCollisionLeftSide", () => {
