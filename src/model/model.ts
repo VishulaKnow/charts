@@ -481,6 +481,7 @@ export interface TwoDimChartValueLabelsOptions {
 	format: ValueLabelsFormatter;
 	handleScaledValue: (dataRow: MdtChartsDataRow, datumField: string) => number;
 	rotation?: ValueLabelsRotationOptions;
+	handleElement?: (elInfo: { element: SVGTextElement; value: number }) => void;
 }
 
 export type ValueLabelsFormatter = (value: number) => string;

@@ -214,7 +214,24 @@ export class ChartValueLabels {
 					: null
 			);
 
-		if (animate && onEndAnimation) selection.on("end", onEndAnimation);
+		const handleElements = () => {
+			if (this.chart.valueLabels.handleElement) {
+				const thisClass = this;
+				selection.each(function (d) {
+					thisClass.chart.valueLabels.handleElement({
+						element: this,
+						value: dataRowAccessor(d)[valueFieldName]
+					});
+				});
+			}
+		};
+
+		if (animate)
+			selection.on("end", () => {
+				onEndAnimation();
+				handleElements();
+			});
+		else handleElements();
 	}
 
 	private setClasses(
@@ -276,8 +293,7 @@ export class CanvasValueLabels {
 		});
 
 		Promise.all(chartsUpdatePromises).then(() => {
-			const newValueLabels = this.getAllValueLabels();
-			ValueLabelsCollision.resolveValueLabelsCollisions(newValueLabels, valueLabelsSettings);
+			ValueLabelsCollision.resolveValueLabelsCollisions(this.getAllValueLabels(), valueLabelsSettings);
 		});
 	}
 

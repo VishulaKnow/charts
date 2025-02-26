@@ -371,6 +371,7 @@ export interface TwoDimensionalChartValueLabels {
 	};
 	format?: ValueLabelsFormatter;
 	rotation?: ValueLabelsRotationOptions;
+	handleElement?: (elInfo: { element: SVGTextElement; value: number }) => void;
 }
 
 export interface ValueLabelsRotationOptions {

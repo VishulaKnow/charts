@@ -258,7 +258,8 @@ export class TwoDimensionalModel {
 					textAnchor: valueLabelsAlignment.textAnchor,
 					dominantBaseline: valueLabelsAlignment.dominantBaseline,
 					format: configReader.getValueLabelFormatterForChart(index),
-					rotation: chart.valueLabels?.rotation
+					rotation: chart.valueLabels?.rotation,
+					handleElement: chart.valueLabels?.handleElement
 				},
 				areaViewOptions: getAreaViewOptions(chart, index, style, modelInstance.version.getVersionNumber()),
 				dotViewOptions: {
