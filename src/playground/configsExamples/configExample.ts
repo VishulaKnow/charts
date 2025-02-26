@@ -109,13 +109,20 @@ const configCars: MdtChartsConfig = {
 		charts: [
 			{
 				isSegmented: true,
-				type: "area",
+				type: "bar",
 				data: {
 					valueFields: [
 						{
+							name: "count",
+							format: "money",
+							title: "Рубли"
+							// color: "rgb(235, 80, 0)"
+						},
+						{
 							name: "price",
 							format: "money",
-							title: "Цена"
+							title: "Рубли"
+							// color: "rgb(235, 80, 0)"
 						}
 					],
 					valueGroup: "main"
@@ -124,79 +131,88 @@ const configCars: MdtChartsConfig = {
 				markers: {
 					show: false
 				},
+				lineStyles: {
+					dash: {
+						on: true,
+						dashSize: 3,
+						gapSize: 3
+					}
+				},
+				barStyles: {
+					hatch: {
+						on: false
+					}
+				},
+				areaStyles: {
+					borderLine: {
+						on: true
+					},
+					gradient: {
+						on: true
+					}
+				},
 				valueLabels: {
-					on: false,
+					on: true,
 					position: {
 						mode: "center"
-					}
-				},
-				lineStyles: {
-					dash: {
-						on: true,
-						dashSize: 3,
-						gapSize: 3
-					}
-				},
-				areaStyles: {
-					gradient: {
-						on: true
 					},
-					borderLine: {
-						on: true
-					}
-				},
-				barStyles: {
-					hatch: {
-						on: false
+					rotation: {
+						// angle: -45
 					},
-					borderRadius: {
-						value: 0
-					}
-				}
-			},
-			{
-				isSegmented: false,
-				type: "area",
-				data: {
-					valueFields: [
-						{
-							name: "count",
-							format: "money",
-							title: "Рубли",
-							color: "rgb(235, 80, 0)"
-						}
-					],
-					valueGroup: "secondary"
-				},
-				embeddedLabels: "none",
-				markers: {
-					show: false
-				},
-				lineStyles: {
-					dash: {
-						on: true,
-						dashSize: 3,
-						gapSize: 3
-					}
-				},
-				barStyles: {
-					hatch: {
-						on: false
-					}
-				},
-				areaStyles: {
-					borderLine: {
-						on: true
+					handleElement: ({ element, value }) => {
+						if (value <= 10_000) element.style.display = "none";
+						else element.style.display = "block";
+
+						if (value <= 30_000) element.style.color = "rgb(150, 68, 68)";
+						else element.style.color = "rgb(68, 68, 68)";
 					},
-					gradient: {
-						on: true
-					}
-				},
-				valueLabels: {
-					on: true
-					// format: (value) => nFormatter(value),
+					format: (value) => nFormatter(value)
 				}
 			}
+			// {
+			// 	isSegmented: true,
+			// 	type: "area",
+			// 	data: {
+			// 		valueFields: [
+			// 			{
+			// 				name: "price",
+			// 				format: "money",
+			// 				title: "Цена"
+			// 			}
+			// 		],
+			// 		valueGroup: "main"
+			// 	},
+			// 	embeddedLabels: "none",
+			// 	markers: {
+			// 		show: false
+			// 	},
+			// 	valueLabels: {
+			// 		on: true
+			// 	},
+			// 	lineStyles: {
+			// 		dash: {
+			// 			on: true,
+			// 			dashSize: 3,
+			// 			gapSize: 3
+			// 		}
+			// 	},
+			// 	areaStyles: {
+			// 		gradient: {
+			// 			on: true
+			// 		},
+			// 		borderLine: {
+			// 			on: true
+			// 		}
+			// 	},
+			// 	barStyles: {
+			// 		hatch: {
+			// 			on: false
+			// 		},
+			// 		borderRadius: {
+			// 			value: 0
+			// 		}
+			// 	}
+			// }
 		]
 	}
 	// options: {
