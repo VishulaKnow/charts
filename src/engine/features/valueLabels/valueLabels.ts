@@ -72,6 +72,7 @@ export class ChartValueLabels {
 			const preparedData = getStackedData(data, this.chart);
 
 			preparedData.forEach((segment, segmentIndex) => {
+				if (!segment[0]) return;
 				this.renderByGroupIndex(scales, segmentIndex, segment, segment[0].fieldName, "1", (d) => d.data);
 			});
 		} else {
@@ -92,9 +93,9 @@ export class ChartValueLabels {
 					scales,
 					segmentIndex,
 					segment,
-					segment[0].fieldName,
 					"1",
-					(d) => d.data
+					(d) => d.data,
+					segment[0]?.fieldName
 				);
 				updatePromises.push(promise);
 			});
@@ -105,8 +106,8 @@ export class ChartValueLabels {
 					vfIndex,
 					newData,
 					valueField.name,
-					valueField.name,
-					(d) => d
+					(d) => d,
+					valueField.name
 				);
 				updatePromises.push(promise);
 			});
@@ -142,9 +143,9 @@ export class ChartValueLabels {
 		scales: Scales,
 		groupIndex: number,
 		data: MdtChartsDataRow[] | Segment[],
-		valueFieldName: string,
 		datumField: string,
-		dataRowAccessor: (d: MdtChartsDataRow | Segment) => MdtChartsDataRow
+		dataRowAccessor: (d: MdtChartsDataRow | Segment) => MdtChartsDataRow,
+		valueFieldName?: string
 	): Promise<void> {
 		return new Promise<void>((resolve) => {
 			const valueLabels = this.getAllValueLabelsOfChart(groupIndex).data(data);
@@ -157,6 +158,11 @@ export class ChartValueLabels {
 				datumField,
 				dataRowAccessor
 			);
+
+			if (!valueFieldName) {
+				resolve();
+				return;
+			}
 
 			let newValueLabels = valueLabels.enter().append("text");
 
