@@ -27,10 +27,7 @@ const configCars: MdtChartsConfig = {
 				visibility: true,
 				domain: (params) => {
 					let maxNumber = 0;
-					maxNumber = params.data.reduce(
-						(max, row) => (row.price > max ? row.price : max),
-						params.data[0].price
-					);
+					maxNumber = params.data.reduce((max, row) => (row.price > max ? row.price : max), 0);
 
 					return { start: -1, end: -1 };
 				},
