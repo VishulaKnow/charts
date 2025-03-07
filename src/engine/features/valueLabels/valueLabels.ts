@@ -283,9 +283,10 @@ export class CanvasValueLabels {
 		scales: ScalesWithSecondary,
 		charts: TwoDimensionalChartModel[],
 		data: MdtChartsDataSource,
-		dataOptions: OptionsModelData
+		dataOptions: OptionsModelData,
+		newCanvasOptions: TwoDimensionalValueLabels
 	) {
-		const valueLabelsSettings = this.options.canvas.valueLabels;
+		this.options.canvas.valueLabels = newCanvasOptions;
 
 		const chartsWithLabels: TwoDimensionalChartModel[] = charts.filter((chart) => chart.valueLabels?.show);
 		if (chartsWithLabels.length === 0) return;
@@ -299,7 +300,10 @@ export class CanvasValueLabels {
 		});
 
 		Promise.all(chartsUpdatePromises).then(() => {
-			ValueLabelsCollision.resolveValueLabelsCollisions(this.getAllValueLabels(), valueLabelsSettings);
+			ValueLabelsCollision.resolveValueLabelsCollisions(
+				this.getAllValueLabels(),
+				this.options.canvas.valueLabels
+			);
 		});
 	}
 

@@ -193,7 +193,8 @@ export class TwoDimensionalManager implements ChartContentManager {
 			chartOrientation: options.orient
 		});
 
-		if (this.canvasValueLabels) this.canvasValueLabels.update(scales, options.charts, data, model.options.data);
+		if (this.canvasValueLabels)
+			this.canvasValueLabels.update(scales, options.charts, data, model.options.data, options.valueLabels);
 	}
 
 	public updateColors(block: Block, model: Model<TwoDimensionalOptionsModel>): void {
