@@ -1,11 +1,11 @@
-import { RecordOverflowAlertOptions, RecordOverflowAlertPositionAttrs } from "../../../model/model";
+import { RecordOverflowAlertModel, RecordOverflowAlertPositionAttrs } from "../../../model/model";
 import { Block } from "../../block/block";
 import { Selection } from "d3-selection";
 
 class RecordOverflowAlertCoreClass {
 	private readonly blockClass = "record-overflow-alert";
 
-	public render(block: Block, options: RecordOverflowAlertOptions): void {
+	public render(block: Block, options: RecordOverflowAlertModel): void {
 		if (options.show) {
 			const alertBlock = block
 				.getWrapper()
@@ -17,7 +17,7 @@ class RecordOverflowAlertCoreClass {
 		}
 	}
 
-	public update(block: Block, options: RecordOverflowAlertOptions): void {
+	public update(block: Block, options: RecordOverflowAlertModel): void {
 		let alertBlock = block.getWrapper().select(`.${this.blockClass}`);
 
 		if (alertBlock.empty()) {

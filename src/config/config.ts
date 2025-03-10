@@ -52,6 +52,7 @@ interface GraphicNotationOptions {
 	title?: Title;
 	selectable: boolean;
 	tooltip?: TooltipOptions;
+	recordOverflowAlert?: RecordOverflowAlertOptions;
 }
 
 export interface MdtChartsTwoDimensionalOptions extends GraphicNotationOptions {
@@ -76,6 +77,23 @@ export interface Legend {
 export interface MdtChartsTwoDimLegend extends Legend {
 	position?: TwoDimLegendPosition;
 }
+
+export interface RecordOverflowAlertOptions {
+	textContent: RecordOverflowBlockTextContent;
+}
+
+export interface RecordOverflowVariationTextContent {
+	one: string;
+	twoToFour: string;
+	tenToTwenty: string;
+	other: string;
+}
+
+export interface RecordOverflowFunctionTextContent {
+	create: (overflowRecordsAmount: number) => string;
+}
+
+export type RecordOverflowBlockTextContent = RecordOverflowVariationTextContent | RecordOverflowFunctionTextContent;
 
 export interface TitleFunctionParams {
 	data: MdtChartsDataRow[];

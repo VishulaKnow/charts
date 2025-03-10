@@ -6,7 +6,10 @@ import { CanvasModel } from "../../modelInstance/canvasModel/canvasModel";
 import { ModelInstance } from "../../modelInstance/modelInstance";
 import { DonutModel } from "./donut/donutModel";
 import { TitleConfigReader } from "../../modelInstance/titleConfigReader";
-import { getTextVariationByNumber } from "../../featuresModel/recordOverflowModel/recordOverflowModel";
+import {
+	createRecordOverflowModel,
+	getTextVariationByNumber
+} from "../../featuresModel/recordOverflowModel/recordOverflowModel";
 
 export const MIN_DONUT_BLOCK_SIZE = 120;
 
@@ -41,26 +44,16 @@ export class PolarModel {
 				modelInstance.dataModel.repository.getRawRows()
 			),
 			defs: { gradients: [] },
-			recordOverflowAlert:
-				modelInstance.dataModel.getScope().hidedRecordsAmount === 0
-					? {
-							show: false
-					  }
-					: {
-							show: true,
-							positionAttrs: {
-								bottom: "0",
-								right: "0"
-							},
-							textContent: `+ ${
-								modelInstance.dataModel.getScope().hidedRecordsAmount
-							} ${getTextVariationByNumber(modelInstance.dataModel.getScope().hidedRecordsAmount, {
-								one: "категория",
-								twoToFour: "категории",
-								tenToTwenty: "категорий",
-								other: "категорий"
-							})}`
-					  }
+			recordOverflowAlert: createRecordOverflowModel(
+				modelInstance.dataModel.getScope().hidedRecordsAmount,
+				{
+					one: "категория",
+					twoToFour: "категории",
+					tenToTwenty: "категорий",
+					other: "категорий"
+				},
+				options.recordOverflowAlert
+			)
 		};
 	}
 
