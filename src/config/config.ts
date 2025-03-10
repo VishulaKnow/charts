@@ -3,11 +3,10 @@ export type MdtChartsIconElement = () => HTMLElement;
 
 export type AxisPosition = "start" | "end";
 export type ChartOrientation = "vertical" | "horizontal";
-export type ChartNotation = "2d" | "polar" | "interval";
+export type ChartNotation = "2d" | "polar";
 export type ChartType = "bar" | "line" | "area" | "donut" | "gantt";
 export type TwoDimensionalChartType = "line" | "bar" | "area" | "dot";
 export type PolarChartType = "donut";
-export type IntervalChartType = "gantt";
 export type EmbeddedLabelType = "none" | "key" | "value";
 export type ValueLabelsCollisionMode = "none" | "hide";
 export type TwoDimLegendPosition = "top" | "bottom";
@@ -26,7 +25,7 @@ export interface MdtChartsDataSource {
 }
 export type AxisLabelPosition = "straight" | "rotated";
 
-export type MdtChartsConfigOptions = MdtChartsPolarOptions | MdtChartsTwoDimensionalOptions | MdtChartsIntervalOptions;
+export type MdtChartsConfigOptions = MdtChartsPolarOptions | MdtChartsTwoDimensionalOptions;
 export interface MdtChartsConfig {
 	canvas: ChartBlockCanvas;
 	options: MdtChartsConfigOptions;
@@ -71,14 +70,6 @@ export interface MdtChartsTwoDimensionalOptions extends GraphicNotationOptions {
 export interface MdtChartsPolarOptions extends GraphicNotationOptions {
 	type: "polar";
 	chart: PolarChart;
-}
-
-export interface MdtChartsIntervalOptions extends GraphicNotationOptions {
-	type: "interval";
-	axis: IntervalAxis;
-	chart: IntervalChart;
-	additionalElements: AdditionalElements;
-	orientation: ChartOrientation;
 }
 
 //====================================================== Options
@@ -152,7 +143,7 @@ export type TooltipFormatValue = (params: {
 	autoFormattedValue: string;
 }) => string;
 
-//====================================================== TwoDimensionalOptions & IntervalOptions
+//====================================================== TwoDimensionalOptions
 export interface AdditionalElements {
 	gridLine: GridLineOptions;
 }
@@ -260,14 +251,6 @@ export interface ValueLabelsStyleOptions {
 	color?: string;
 }
 
-//====================================================== IntervalOptions
-export interface IntervalAxis {
-	key: DiscreteAxisOptions;
-	value: DateAxisOptions;
-}
-
-interface DateAxisOptions extends AxisOptions {}
-
 //====================================================== Charts
 interface MdtChartsLineLikeChart {
 	markers: MarkersOptions;
@@ -351,11 +334,6 @@ export interface PolarChart {
 	aggregator?: MdtChartsDonutAggregator;
 }
 
-export interface IntervalChart {
-	type: IntervalChartType;
-	data: IntervalChartData;
-}
-
 //====================================================== TwoDimensionalChart
 export interface TwoDimensionalChartData {
 	valueFields: TwoDimValueField[];
@@ -404,10 +382,4 @@ export interface MdtChartsAggregatorModel {
 export interface MdtChartsAggregatorContent {
 	value?: string | number;
 	title?: string;
-}
-
-//====================================================== IntervalChart
-interface IntervalChartData {
-	valueField1: MdtChartsValueField;
-	valueField2: MdtChartsValueField;
 }

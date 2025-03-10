@@ -113,13 +113,11 @@ const configCars: MdtChartsConfig = {
 							name: "count",
 							format: "money",
 							title: "Рубли"
-							// color: "rgb(235, 80, 0)"
 						},
 						{
 							name: "price",
 							format: "money",
 							title: "Рубли"
-							// color: "rgb(235, 80, 0)"
 						}
 					],
 					valueGroup: "main"

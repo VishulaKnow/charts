@@ -1,7 +1,6 @@
 import {
 	ChartOrientation,
 	MdtChartsColorField,
-	IntervalChartType,
 	PolarChartType,
 	Size,
 	TooltipOptions,
@@ -38,7 +37,7 @@ export type ValueLabelAnchor = "start" | "middle" | "end";
 export type ValueLabelDominantBaseline = "hanging" | "middle" | "auto";
 export type GradientId = string;
 
-export type OptionsModel = TwoDimensionalOptionsModel | PolarOptionsModel | IntervalOptionsModel;
+export type OptionsModel = TwoDimensionalOptionsModel | PolarOptionsModel;
 
 export interface Model<O = OptionsModel> {
 	blockCanvas: BlockCanvas;
@@ -91,15 +90,6 @@ export interface PolarOptionsModel extends GraphicNotationOptionsModel {
 	charts: PolarChartModel[];
 	chartCanvas: DonutChartSettings;
 }
-export interface IntervalOptionsModel extends GraphicNotationOptionsModel {
-	type: "interval";
-	scale: IScaleModel;
-	axis: IAxisModel;
-	charts: IntervalChartModel[];
-	additionalElements: AdditionalElementsOptions;
-	orient: ChartOrientation;
-	chartSettings: TwoDimChartElementsSettings;
-}
 
 //====================================================== Options Model Common
 export interface ILegendModel {
@@ -141,7 +131,7 @@ export interface GradientDef {
 	}[];
 }
 
-//====================================================== TwoDimensionalOptionsModel & IntervalOptionsModel
+//====================================================== TwoDimensionalOptionsModel
 export interface IScaleModel {
 	key: ScaleKeyModel;
 	value: ScaleValueModel;
@@ -450,12 +440,6 @@ export interface TwoDimensionalChartModel
 	valueLabels: TwoDimChartValueLabelsOptions;
 }
 
-export interface IntervalChartModel extends Omit<ChartModel, "legend"> {
-	//TODO: remove
-	type: IntervalChartType;
-	data: IntervalChartDataModel;
-}
-
 export interface PolarChartModel extends ChartModel {
 	type: PolarChartType;
 	data: PolarChartDataModel;
@@ -506,12 +490,6 @@ interface MarkerStyle {
 interface MarkersBaseSizeOptions {
 	radius: number;
 	borderSize: string;
-}
-
-//====================================================== IntervalChartModel
-interface IntervalChartDataModel {
-	valueField1: ValueField;
-	valueField2: ValueField;
 }
 
 //====================================================== PolarChartModel

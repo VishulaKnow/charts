@@ -148,8 +148,7 @@ export class LegendHelper {
 	private static getLegendClassByChartNotation(chartNotation: ChartNotation): string {
 		const legendClasses: Record<ChartNotation, string> = {
 			"2d": Legend.label2DClass,
-			polar: Legend.labelPolarClass,
-			interval: Legend.labelIntervalClass
+			polar: Legend.labelPolarClass
 		};
 
 		return `${Legend.labelClass} ${legendClasses[chartNotation]}`;

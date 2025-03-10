@@ -1,11 +1,8 @@
-import { Engine } from "../engine/engine";
-import { assembleModel, getPreparedData } from "../model/modelBuilder";
 import {
 	ChartNotation,
 	MdtChartsConfig,
 	MdtChartsDataRow,
 	MdtChartsDataSource,
-	MdtChartsIntervalOptions,
 	MdtChartsPolarOptions,
 	MdtChartsTwoDimensionalChart,
 	MdtChartsTwoDimensionalOptions,
@@ -96,10 +93,6 @@ class Listeners {
 			(document.querySelector(".block-2d") as HTMLElement).style.display = "none";
 			(document.querySelector(".block-polar") as HTMLElement).style.display = "block";
 			(document.querySelector(".block-axis") as HTMLElement).style.display = "none";
-		} else if (notationType === "interval") {
-			(document.querySelector(".block-polar") as HTMLElement).style.display = "none";
-			(document.querySelector(".block-2d") as HTMLElement).style.display = "none";
-			(document.querySelector(".block-axis") as HTMLElement).style.display = "block";
 		}
 	}
 
@@ -119,7 +112,7 @@ class Listeners {
 		return data;
 	}
 
-	private getDataConfig(notationType: "2d" | "polar" | "interval"): any {
+	private getDataConfig(notationType: "2d" | "polar"): any {
 		if (notationType === "2d") {
 			return {
 				valueFields: [
@@ -135,17 +128,6 @@ class Listeners {
 					}
 				]
 			};
-		} else if (notationType === "interval") {
-			return {
-				valueField1: {
-					name: "start",
-					format: "date"
-				},
-				valueField2: {
-					name: "end",
-					format: "date"
-				}
-			};
 		} else if (notationType === "polar") {
 			return {
 				valueField: {
@@ -157,7 +139,7 @@ class Listeners {
 		}
 	}
 
-	private changeConfigOptions(notationType: "2d" | "polar" | "interval"): void {
+	private changeConfigOptions(notationType: "2d" | "polar"): void {
 		if (notationType === "2d") {
 			const options: MdtChartsTwoDimensionalOptions = {
 				title: this.config.options.title,
@@ -233,51 +215,6 @@ class Listeners {
 				chart: {
 					data: this.getDataConfig(notationType),
 					type: "donut"
-				},
-				tooltip: this.config.options.tooltip
-			};
-			this.config.options = options;
-		} else if (notationType === "interval") {
-			const options: MdtChartsIntervalOptions = {
-				title: this.config.options.title,
-				legend: this.config.options.legend,
-				selectable: this.config.options.selectable,
-				data: {
-					dataSource: "dataSet_gantt",
-					keyField: {
-						format: "string",
-						name: "task"
-					}
-				},
-				orientation: ListenersHelper.getInputValue("#chart-orient") as "horizontal" | "vertical",
-				type: notationType,
-				chart: {
-					data: this.getDataConfig(notationType),
-					type: "gantt"
-				},
-				axis: {
-					key: {
-						visibility: true,
-						position: ListenersHelper.getInputValue("#key-axis-orient") as "start" | "end",
-						ticks: {
-							flag: false
-						}
-					},
-					value: {
-						visibility: true,
-						position: ListenersHelper.getInputValue("#value-axis-orient") as "start" | "end",
-						ticks: {
-							flag: false
-						}
-					}
-				},
-				additionalElements: {
-					gridLine: {
-						flag: {
-							value: true,
-							key: false
-						}
-					}
 				},
 				tooltip: this.config.options.tooltip
 			};
@@ -536,55 +473,55 @@ class Listeners {
 		const thisClass = this;
 		const config = this.config;
 		document.querySelector("#chart-orient").addEventListener("change", function () {
-			if (config.options.type === "2d" || config.options.type === "interval") {
+			if (config.options.type === "2d") {
 				config.options.orientation = this.value;
 				thisClass.updateFull();
 			}
 		});
 		document.querySelector("#key-axis-orient").addEventListener("change", function () {
-			if (config.options.type === "2d" || config.options.type === "interval") {
+			if (config.options.type === "2d") {
 				config.options.axis.key.position = this.value;
 				thisClass.updateFull();
 			}
 		});
 		document.querySelector("#key-axis-visibility").addEventListener("change", function () {
-			if (config.options.type === "2d" || config.options.type === "interval") {
+			if (config.options.type === "2d") {
 				config.options.axis.key.visibility = this.checked;
 				thisClass.updateFull();
 			}
 		});
 		document.querySelector("#value-axis-orient").addEventListener("change", function () {
-			if (config.options.type === "2d" || config.options.type === "interval") {
+			if (config.options.type === "2d") {
 				config.options.axis.value.position = this.value;
 				thisClass.updateFull();
 			}
 		});
 		document.querySelector("#value-axis-visibility").addEventListener("change", function () {
-			if (config.options.type === "2d" || config.options.type === "interval") {
+			if (config.options.type === "2d") {
 				config.options.axis.value.visibility = this.checked;
 				thisClass.updateFull();
 			}
 		});
 		document.querySelector("#config-key-grid").addEventListener("change", function () {
-			if (config.options.type === "2d" || config.options.type === "interval") {
+			if (config.options.type === "2d") {
 				config.options.additionalElements.gridLine.flag.key = this.checked;
 				thisClass.updateFull();
 			}
 		});
 		document.querySelector("#config-value-grid").addEventListener("change", function () {
-			if (config.options.type === "2d" || config.options.type === "interval") {
+			if (config.options.type === "2d") {
 				config.options.additionalElements.gridLine.flag.value = this.checked;
 				thisClass.updateFull();
 			}
 		});
 		document.querySelector("#config-tick-key").addEventListener("change", function () {
-			if (config.options.type === "2d" || config.options.type === "interval") {
+			if (config.options.type === "2d") {
 				config.options.axis.key.ticks.flag = this.checked;
 				thisClass.updateFull();
 			}
 		});
 		document.querySelector("#config-tick-value").addEventListener("change", function () {
-			if (config.options.type === "2d" || config.options.type === "interval") {
+			if (config.options.type === "2d") {
 				config.options.axis.value.ticks.flag = this.checked;
 				thisClass.updateFull();
 			}
@@ -662,7 +599,6 @@ import "../style/fonts.css";
 import "../style/charts-main.css";
 import config from "./configsExamples/configExample";
 import designerConfig from "./configsExamples/designerConfigExample";
-import { Model } from "../model/model";
 import { Chart } from "../main";
 
 const data = require("./assets/dataSet.json");

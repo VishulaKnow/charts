@@ -22,7 +22,7 @@ interface BaseConfigReader {
 export function getConfigReader(config: MdtChartsConfig, designerConfig: DesignerConfig): BaseConfigReader {
 	if (config.options.type === "2d") return new TwoDimConfigReader(config, designerConfig);
 	if (config.options.type === "polar") return new PolarConfigReader(config);
-	throw new Error(`Config reader for type "${config.options.type}" not exists`);
+	throw new Error(`Config reader for type "${(config.options as any).type}" not exists`);
 }
 
 export class TwoDimConfigReader implements BaseConfigReader {
