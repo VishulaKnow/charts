@@ -46,16 +46,12 @@ export interface NewSize {
 }
 
 //====================================================== Options
-interface BasicOptions {
-	tooltip?: TooltipOptions;
-	data: MdtChartsBasicDataOptions;
-}
-
-interface GraphicNotationOptions extends BasicOptions {
+interface GraphicNotationOptions {
 	data: DataOptions;
 	legend: MdtChartsTwoDimLegend;
 	title?: Title;
 	selectable: boolean;
+	tooltip?: TooltipOptions;
 }
 
 export interface MdtChartsTwoDimensionalOptions extends GraphicNotationOptions {
