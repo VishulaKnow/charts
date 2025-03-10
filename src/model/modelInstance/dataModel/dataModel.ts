@@ -2,7 +2,7 @@ import { DataOptions } from "../../../config/config";
 import { DataScope } from "../../model";
 import { DataRepositoryModel } from "./dataRepository";
 
-export const DEFAULT_MAX_RECORDS_AMOUNT = 50;
+export const DEFAULT_MAX_RECORDS_AMOUNT = 100;
 
 export class DataModelInstance {
 	readonly repository: DataRepositoryModel;

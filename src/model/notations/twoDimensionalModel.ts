@@ -37,6 +37,7 @@ import {
 import { CanvasModel } from "../modelInstance/canvasModel/canvasModel";
 import { TwoDimensionalModelHelper } from "../helpers/twoDimensionalModelHelper";
 import { TitleConfigReader } from "../modelInstance/titleConfigReader";
+import { getTextVariationByNumber } from "../featuresModel/recordOverflowModel/recordOverflowModel";
 
 export class TwoDimensionalModel {
 	public static getOptions(
@@ -85,6 +86,7 @@ export class TwoDimensionalModel {
 		);
 
 		const titleConfig = TitleConfigReader.create(options.title, modelInstance);
+		const isHorizontal = options.orientation === "horizontal";
 
 		return {
 			legend: canvasModel.legendCanvas.getModel(),
@@ -141,7 +143,27 @@ export class TwoDimensionalModel {
 					options.orientation,
 					modelInstance.version.getVersionNumber()
 				)
-			}
+			},
+			recordOverflowAlert:
+				modelInstance.dataModel.getScope().hidedRecordsAmount === 0
+					? {
+							show: false
+					  }
+					: {
+							show: true,
+							positionAttrs: {
+								bottom: "0",
+								right: "0"
+							},
+							textContent: `+ ${
+								modelInstance.dataModel.getScope().hidedRecordsAmount
+							} ${getTextVariationByNumber(modelInstance.dataModel.getScope().hidedRecordsAmount, {
+								one: isHorizontal ? "строка" : "столбец",
+								twoToFour: isHorizontal ? "строки" : "столбца",
+								tenToTwenty: isHorizontal ? "строк" : "столбцов",
+								other: isHorizontal ? "строк" : "столбцов"
+							})}`
+					  }
 		};
 	}
 

@@ -24,12 +24,12 @@ import { Helper } from "../helpers/helper";
 import { Area } from "./area/area";
 import { Bar } from "./bar/bar";
 import { BarHelper } from "./bar/barHelper";
-import { TwoDimRecordOverflowAlert } from "./extenders/twoDimRecordOverflowAlert";
 import { Line } from "./line/line";
 import { CanvasValueLabels } from "../../engine/features/valueLabels/valueLabels";
 import { LinearGradientDef } from "../../engine/block/defs/LinearGradientDef";
 import { CanvasDotChart } from "./dot/dotChart";
 import { FilterEventManager } from "../filterManager/filterEventManager";
+import { RecordOverflowAlertCore } from "../features/recordOverflowAlert/recordOverflowAlertCore";
 
 export class TwoDimensionalManager implements ChartContentManager {
 	private canvasValueLabels?: CanvasValueLabels;
@@ -104,10 +104,7 @@ export class TwoDimensionalManager implements ChartContentManager {
 		Tooltip.render(engine.block, model, engine.data, model.otherComponents.tooltipBlock, scales);
 
 		if (model.dataSettings.scope.hidedRecordsAmount !== 0)
-			TwoDimRecordOverflowAlert.render(engine.block, {
-				hidedRecordsAmount: model.dataSettings.scope.hidedRecordsAmount,
-				chartOrientation: options.orient
-			});
+			RecordOverflowAlertCore.render(engine.block, options.recordOverflowAlert);
 
 		engine.block.getSvg().on("click", (e: MouseEvent) => {
 			if (e.target === engine.block.getSvg().node()) this.clearSelection(engine.block.filterEventManager, model);
@@ -188,10 +185,7 @@ export class TwoDimensionalManager implements ChartContentManager {
 			Tooltip.render(block, model, data, model.otherComponents.tooltipBlock, scales);
 		});
 
-		TwoDimRecordOverflowAlert.update(block, {
-			hidedRecordsAmount: model.dataSettings.scope.hidedRecordsAmount,
-			chartOrientation: options.orient
-		});
+		RecordOverflowAlertCore.update(block, options.recordOverflowAlert);
 
 		if (this.canvasValueLabels)
 			this.canvasValueLabels.update(scales, options.charts, data, model.options.data, options.valueLabels);

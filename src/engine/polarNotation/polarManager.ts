@@ -1,11 +1,4 @@
-import {
-	BlockMargin,
-	DonutChartSettings,
-	Model,
-	PolarChartModel,
-	PolarOptionsModel,
-	TwoDimensionalOptionsModel
-} from "../../model/model";
+import { BlockMargin, DonutChartSettings, Model, PolarChartModel, PolarOptionsModel } from "../../model/model";
 import { Block } from "../block/block";
 import { Engine } from "../engine";
 import { Legend } from "../features/legend/legend";
@@ -15,9 +8,9 @@ import { Tooltip } from "../features/tolltip/tooltip";
 import { Aggregator } from "../features/aggregator/aggregator";
 import { Donut } from "./donut/donut";
 import { MdtChartsDataSource, Size } from "../../config/config";
-import { PolarRecordOverflowAlert } from "./extenders/polarRecordOverflowAlert";
 import { ChartContentManager } from "../contentManager/contentManagerFactory";
 import { FilterEventManager } from "../filterManager/filterEventManager";
+import { RecordOverflowAlertCore } from "../features/recordOverflowAlert/recordOverflowAlertCore";
 
 export class PolarManager implements ChartContentManager {
 	public render(engine: Engine, model: Model<PolarOptionsModel>) {
@@ -43,10 +36,7 @@ export class PolarManager implements ChartContentManager {
 		engine.block.filterEventManager.setListenerPolar(model.chartBlock.margin, model.blockCanvas.size, options);
 
 		if (model.dataSettings.scope.hidedRecordsAmount !== 0)
-			PolarRecordOverflowAlert.render(engine.block, {
-				hidedRecordsAmount: model.dataSettings.scope.hidedRecordsAmount,
-				legendPosition: model.options.legend.position
-			});
+			RecordOverflowAlertCore.render(engine.block, options.recordOverflowAlert);
 
 		engine.block.getSvg().on("click", (e: MouseEvent) => {
 			if (e.target === engine.block.getSvg().node()) this.clearSelection(engine.block.filterEventManager, model);
@@ -83,10 +73,7 @@ export class PolarManager implements ChartContentManager {
 
 		Legend.get().update(block, data, model);
 
-		PolarRecordOverflowAlert.update(block, {
-			hidedRecordsAmount: model.dataSettings.scope.hidedRecordsAmount,
-			legendPosition: model.options.legend.position
-		});
+		RecordOverflowAlertCore.update(block, options.recordOverflowAlert);
 	}
 
 	public updateColors(block: Block, model: Model<PolarOptionsModel>): void {

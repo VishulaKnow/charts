@@ -74,6 +74,7 @@ interface GraphicNotationOptionsModel extends BasicOptionsModel {
 	title: OptionsModelTitle;
 	selectable: boolean;
 	defs: OptionsModelGradients;
+	recordOverflowAlert: RecordOverflowAlertOptions;
 }
 export interface TwoDimensionalOptionsModel extends GraphicNotationOptionsModel {
 	type: "2d";
@@ -535,3 +536,20 @@ export interface LegendCoordinate {
 
 export interface TitleBlockModel extends ComponentBlockModel {}
 interface LegendCanvasCoordinate extends ComponentBlockModel {}
+
+export type RecordOverflowAlertOptions =
+	| {
+			show: false;
+	  }
+	| {
+			show: true;
+			textContent: string;
+			positionAttrs: RecordOverflowAlertPositionAttrs;
+	  };
+
+export interface RecordOverflowAlertPositionAttrs {
+	top?: string;
+	bottom?: string;
+	right?: string;
+	left?: string;
+}
