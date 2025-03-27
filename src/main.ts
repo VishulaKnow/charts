@@ -6,6 +6,11 @@ import { Model } from "./model/model";
 import { assembleModel, getPreparedData } from "./model/modelBuilder";
 import { PublicOptionsService } from "./optionsServices/publicOptionsService";
 
+interface ChartClearSelectionPublicOptions {
+	/** @default true */
+	fireEvent?: boolean;
+}
+
 export interface IChart {
 	/**
 	 * Рендер графика
@@ -34,7 +39,7 @@ export interface IChart {
 	/**
 	 * Сброс выделения ключей
 	 */
-	clearSelection(): void;
+	clearSelection(options?: ChartClearSelectionPublicOptions): void;
 }
 
 export class Chart implements IChart {
@@ -132,8 +137,8 @@ export class Chart implements IChart {
 		this.engine.updateColors(this.model);
 	}
 
-	public clearSelection(): void {
-		this.engine.clearSelection(this.model);
+	public clearSelection(options?: ChartClearSelectionPublicOptions): void {
+		this.engine.clearSelection(this.model, { firePublicEvent: options?.fireEvent });
 	}
 
 	private registerResizeEvent(): void {

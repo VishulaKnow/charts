@@ -2,7 +2,7 @@ import { Block } from "./block/block";
 import { ValueFormatter } from "./valueFormatter";
 import { ContentManager } from "./contentManager/contentManager";
 import { Model, OptionsModel } from "../model/model";
-import { FilterCallback, FilterEventManager } from "./filterManager/filterEventManager";
+import { ChartClearSelectionOptions, FilterCallback, FilterEventManager } from "./filterManager/filterEventManager";
 import { Helper } from "./helpers/helper";
 import { MdtChartsDataSource } from "../config/config";
 
@@ -64,8 +64,8 @@ export class Engine {
 		}
 	}
 
-	public clearSelection(model: Model): void {
-		this.contentManager.clearSelection(this, model);
+	public clearSelection(model: Model, options?: ChartClearSelectionOptions): void {
+		this.contentManager.clearSelection(this, model, options);
 	}
 
 	public updateColors(model: Model): void {

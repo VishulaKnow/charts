@@ -28,7 +28,7 @@ import { Line } from "./line/line";
 import { CanvasValueLabels } from "../../engine/features/valueLabels/valueLabels";
 import { LinearGradientDef } from "../../engine/block/defs/LinearGradientDef";
 import { CanvasDotChart } from "./dot/dotChart";
-import { FilterEventManager } from "../filterManager/filterEventManager";
+import { ChartClearSelectionOptions, FilterEventManager } from "../filterManager/filterEventManager";
 import { RecordOverflowAlertCore } from "../features/recordOverflowAlert/recordOverflowAlertCore";
 
 export class TwoDimensionalManager implements ChartContentManager {
@@ -204,8 +204,12 @@ export class TwoDimensionalManager implements ChartContentManager {
 		});
 	}
 
-	public clearSelection(filterEventManager: FilterEventManager, model: Model<TwoDimensionalOptionsModel>): void {
-		filterEventManager.clearKeysFor2D(model.options);
+	public clearSelection(
+		filterEventManager: FilterEventManager,
+		model: Model<TwoDimensionalOptionsModel>,
+		options?: ChartClearSelectionOptions
+	): void {
+		filterEventManager.clearKeysFor2D(model.options, options);
 	}
 
 	private renderCharts(

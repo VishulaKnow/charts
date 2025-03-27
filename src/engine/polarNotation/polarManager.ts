@@ -9,7 +9,7 @@ import { Aggregator } from "../features/aggregator/aggregator";
 import { Donut } from "./donut/donut";
 import { MdtChartsDataSource, Size } from "../../config/config";
 import { ChartContentManager } from "../contentManager/contentManagerFactory";
-import { FilterEventManager } from "../filterManager/filterEventManager";
+import { ChartClearSelectionOptions, FilterEventManager } from "../filterManager/filterEventManager";
 import { RecordOverflowAlertCore } from "../features/recordOverflowAlert/recordOverflowAlertCore";
 
 export class PolarManager implements ChartContentManager {
@@ -81,8 +81,12 @@ export class PolarManager implements ChartContentManager {
 		Donut.updateColors(block, (<PolarOptionsModel>model.options).charts[0]);
 	}
 
-	public clearSelection(filterEventManager: FilterEventManager, model: Model<PolarOptionsModel>): void {
-		filterEventManager.clearKeysForPolar(model.chartBlock.margin, model.blockCanvas.size, model.options);
+	public clearSelection(
+		filterEventManager: FilterEventManager,
+		model: Model<PolarOptionsModel>,
+		options?: ChartClearSelectionOptions
+	): void {
+		filterEventManager.clearKeysForPolar(model.chartBlock.margin, model.blockCanvas.size, model.options, options);
 	}
 
 	private renderCharts(

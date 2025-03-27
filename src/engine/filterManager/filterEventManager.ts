@@ -21,6 +21,11 @@ interface FilterEventMap {
 	change: string[];
 }
 
+export interface ChartClearSelectionOptions {
+	/** @default true */
+	firePublicEvent?: boolean;
+}
+
 export class FilterEventManager {
 	private filterable: boolean;
 	private block: Block;
@@ -56,16 +61,24 @@ export class FilterEventManager {
 		return this.selectedKeys.findIndex((key) => key === keyValue) !== -1;
 	}
 
-	public clearKeysFor2D(options: TwoDimensionalOptionsModel): void {
+	public clearKeysFor2D(
+		options: TwoDimensionalOptionsModel,
+		clearSelectionOptions?: ChartClearSelectionOptions
+	): void {
 		this.selectedKeys = [];
-		if (this.callback) this.callback([]);
+		if ((clearSelectionOptions?.firePublicEvent ?? true) && this.callback) this.callback([]);
 		this.eventEmitter.emit("change", this.selectedKeys);
 		SelectHighlighter.clear2D(this.block, options);
 	}
 
-	public clearKeysForPolar(margin: BlockMargin, blockSize: Size, options: PolarOptionsModel): void {
+	public clearKeysForPolar(
+		margin: BlockMargin,
+		blockSize: Size,
+		options: PolarOptionsModel,
+		clearSelectionOptions?: ChartClearSelectionOptions
+	): void {
 		this.selectedKeys = [];
-		if (this.callback) this.callback([]);
+		if ((clearSelectionOptions?.firePublicEvent ?? true) && this.callback) this.callback([]);
 		this.eventEmitter.emit("change", this.selectedKeys);
 		SelectHighlighter.clearPolar(
 			margin,

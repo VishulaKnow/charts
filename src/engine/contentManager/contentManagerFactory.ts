@@ -4,13 +4,13 @@ import { Block } from "../block/block";
 import { Engine } from "../engine";
 import { PolarManager } from "../polarNotation/polarManager";
 import { TwoDimensionalManager } from "../twoDimensionalNotation/twoDimensionalManager";
-import { FilterEventManager } from "../filterManager/filterEventManager";
+import { ChartClearSelectionOptions, FilterEventManager } from "../filterManager/filterEventManager";
 
 export interface ChartContentManager {
 	render(engine: Engine, model: Model): void;
 	updateData(block: Block, model: Model, newData: MdtChartsDataSource): void;
 	updateColors(block: Block, model: Model): void;
-	clearSelection(filterEventManager: FilterEventManager, model: Model): void;
+	clearSelection(filterEventManager: FilterEventManager, model: Model, options?: ChartClearSelectionOptions): void;
 }
 
 interface Managers {

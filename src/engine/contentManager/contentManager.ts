@@ -3,6 +3,7 @@ import { Engine } from "../engine";
 import { Block } from "../block/block";
 import { MdtChartsDataSource } from "../../config/config";
 import { ChartContentManager, getChartContentManager } from "./contentManagerFactory";
+import { ChartClearSelectionOptions } from "../filterManager/filterEventManager";
 
 export class ContentManager {
 	private manager: ChartContentManager;
@@ -23,7 +24,7 @@ export class ContentManager {
 		this.manager.updateColors(engine.block, model);
 	}
 
-	public clearSelection(engine: Engine, model: Model): void {
-		this.manager.clearSelection(engine.block.filterEventManager, model);
+	public clearSelection(engine: Engine, model: Model, options?: ChartClearSelectionOptions): void {
+		this.manager.clearSelection(engine.block.filterEventManager, model, options);
 	}
 }
