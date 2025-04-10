@@ -363,8 +363,14 @@ export interface TwoDimensionalChartValueLabels {
 	};
 	format?: ValueLabelsFormatter;
 	rotation?: ValueLabelsRotationOptions;
-	handleElement?: (elInfo: { element: SVGTextElement; value: number }) => void;
+	handleElement?: ValueLabelsHandleElement;
 }
+
+export type ValueLabelsHandleElement = (elInfo: {
+	element: SVGTextElement;
+	value: number;
+	dataRow: MdtChartsDataRow;
+}) => void;
 
 export interface ValueLabelsRotationOptions {
 	angle?: number;

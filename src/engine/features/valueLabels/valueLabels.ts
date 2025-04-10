@@ -226,7 +226,8 @@ export class ChartValueLabels {
 				selection.each(function (d) {
 					thisClass.chart.valueLabels.handleElement({
 						element: this,
-						value: dataRowAccessor(d)[valueFieldName]
+						value: dataRowAccessor(d)[valueFieldName],
+						dataRow: dataRowAccessor(d)
 					});
 				});
 			}

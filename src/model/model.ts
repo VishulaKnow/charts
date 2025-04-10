@@ -10,7 +10,8 @@ import {
 	MdtChartsDataRow,
 	TwoDimensionalValueGroup,
 	ValueLabelsCollisionMode,
-	ValueLabelsRotationOptions
+	ValueLabelsRotationOptions,
+	ValueLabelsHandleElement
 } from "../config/config";
 import {
 	DataType,
@@ -466,7 +467,7 @@ export interface TwoDimChartValueLabelsOptions {
 	format: ValueLabelsFormatter;
 	handleScaledValue: (dataRow: MdtChartsDataRow, datumField: string) => number;
 	rotation?: ValueLabelsRotationOptions;
-	handleElement?: (elInfo: { element: SVGTextElement; value: number }) => void;
+	handleElement?: ValueLabelsHandleElement;
 }
 
 export type ValueLabelsFormatter = (value: number) => string;
