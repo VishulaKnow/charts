@@ -37,10 +37,7 @@ import {
 import { CanvasModel } from "../modelInstance/canvasModel/canvasModel";
 import { TwoDimensionalModelHelper } from "../helpers/twoDimensionalModelHelper";
 import { TitleConfigReader } from "../modelInstance/titleConfigReader";
-import {
-	createRecordOverflowModel,
-	getTextVariationByNumber
-} from "../featuresModel/recordOverflowModel/recordOverflowModel";
+import { createRecordOverflowModel } from "../featuresModel/recordOverflowModel/recordOverflowModel";
 
 export class TwoDimensionalModel {
 	public static getOptions(
@@ -155,6 +152,7 @@ export class TwoDimensionalModel {
 					tenToTwenty: isHorizontal ? "строк" : "столбцов",
 					other: isHorizontal ? "строк" : "столбцов"
 				},
+				{ positionAttrs: { top: "0", right: "0" } },
 				options.recordOverflowAlert
 			)
 		};

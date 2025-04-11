@@ -3,7 +3,7 @@ import {
 	RecordOverflowFunctionTextContent,
 	RecordOverflowVariationTextContent
 } from "../../../config/config";
-import { RecordOverflowAlertModel } from "../../model";
+import { RecordOverflowAlertModel, RecordOverflowAlertPositionAttrs } from "../../model";
 
 export function getTextVariationByNumber(
 	hidedRecordsAmount: number,
@@ -16,9 +16,14 @@ export function getTextVariationByNumber(
 	return textVariation.other;
 }
 
+interface RecordOverflowBlockCanvasOptions {
+	positionAttrs: RecordOverflowAlertPositionAttrs;
+}
+
 export function createRecordOverflowModel(
 	hiddenRecordsAmount: number,
 	defaultTextVariation: RecordOverflowVariationTextContent,
+	canvasOptions: RecordOverflowBlockCanvasOptions,
 	options?: RecordOverflowAlertOptions
 ): RecordOverflowAlertModel {
 	let textContent: string;
@@ -37,10 +42,7 @@ export function createRecordOverflowModel(
 		? { show: false }
 		: {
 				show: true,
-				positionAttrs: {
-					bottom: "0",
-					right: "0"
-				},
+				positionAttrs: canvasOptions.positionAttrs,
 				textContent
 		  };
 }

@@ -52,6 +52,7 @@ export class PolarModel {
 					tenToTwenty: "категорий",
 					other: "категорий"
 				},
+				{ positionAttrs: { bottom: "0", right: "0" } },
 				options.recordOverflowAlert
 			)
 		};
