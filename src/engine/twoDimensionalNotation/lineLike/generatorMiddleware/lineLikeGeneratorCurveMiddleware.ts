@@ -1,9 +1,8 @@
 import { CurveFactory } from "d3-shape";
-
 import { Area, curveBasis, curveMonotoneX, curveMonotoneY, Line } from "d3-shape";
 import { LineCurveType } from "../../../../model/model";
 import { LineLikeGeneratorMiddleware } from "./lineLikeGeneratorMiddleware";
-import { MdtChartsDataRow } from "../../../../main";
+import { MdtChartsDataRow } from "../../../../config/config";
 
 interface LineLikeGeneratorCurveMiddlewareOptions {
 	curve?: LineCurveType;

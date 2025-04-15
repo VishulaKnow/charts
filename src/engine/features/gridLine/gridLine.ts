@@ -1,12 +1,5 @@
 import { Size } from "../../../config/config";
-import {
-	AdditionalElementsOptions,
-	AxisModelOptions,
-	BlockMargin,
-	GridLineFlag,
-	GridLineOptions,
-	IAxisModel
-} from "../../../model/model";
+import { AxisModelOptions, BlockMargin, GridLineOptions, IAxisModel } from "../../../model/model";
 import { Block } from "../../block/block";
 import { Scales } from "../scale/scale";
 import { GridLineAttributes, GridLineHelper } from "./gidLineHelper";

@@ -17,8 +17,6 @@ import { TwoDimensionalModel } from "../notations/twoDimensionalModel";
 import { AxisLabelCanvas, TooltipSettings } from "../../designer/designerConfig";
 import { CanvasModel } from "../modelInstance/canvasModel/canvasModel";
 import { AxisModelService, AxisModelTickCalculator, showAllTicks } from "./axisModelService";
-import { ScaleValueCalculatedInfo } from "./scaleModel/scaleAxisRecalcer";
-import { max, min } from "d3-array";
 
 export interface LabelSize {
 	width: number;
@@ -272,8 +270,8 @@ export class AxisModel {
 		if (Math.floor(axisLength / linearTickStep) > 2) {
 			tickAmountPolicy = { type: "amount", amount: Math.floor(axisLength / linearTickStep) };
 		} else {
-			const roundedMaxValue = this.getRoundValue(max(scaleInfo.domain));
-			tickAmountPolicy = { type: "constant", values: [min(scaleInfo.domain), roundedMaxValue] };
+			const roundedMaxValue = this.getRoundValue(Math.max(...scaleInfo.domain));
+			tickAmountPolicy = { type: "constant", values: [Math.min(...scaleInfo.domain), roundedMaxValue] };
 		}
 
 		return tickAmountPolicy;

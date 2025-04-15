@@ -1,4 +1,4 @@
-import { LegendBlockCanvas } from "../../../main";
+import { LegendBlockCanvas } from "../../../designer/designerConfig";
 import { LegendBlockModel, Orient } from "../../model";
 import { CanvasModel } from "../../modelInstance/canvasModel/canvasModel";
 import { LegendItemsDirection } from "./legendCanvasModel";
