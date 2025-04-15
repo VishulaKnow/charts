@@ -4,10 +4,11 @@ import { interpolate } from "d3-interpolate";
 import { BlockMargin, DonutChartSettings, PolarChartModel } from "../../../model/model";
 import { Block } from "../../block/block";
 import { Aggregator } from "../../features/aggregator/aggregator";
-import { DonutHelper } from "./DonutHelper";
+import { DonutHelper } from "./donutHelper";
 import { DomSelectionHelper } from "../../helpers/domSelectionHelper";
 import { MdtChartsDataRow, Size } from "../../../config/config";
 import { ColorReader } from "../../colorReader/colorReader";
+import { DonutThicknessCalculator } from "../../../model/notations/polar/donut/donutThicknessService";
 
 export interface Translate {
 	x: number;
@@ -33,7 +34,7 @@ export class Donut {
 		settings: DonutChartSettings
 	): void {
 		const outerRadius = DonutHelper.getOuterRadius(margin, blockSize);
-		const thickness = DonutHelper.getThickness(settings, blockSize, margin);
+		const thickness = DonutThicknessCalculator.getThickness(settings, blockSize, margin);
 		const innerRadius = DonutHelper.getInnerRadius(outerRadius, thickness);
 
 		const arcGenerator = DonutHelper.getArcGenerator(outerRadius, innerRadius);
@@ -64,7 +65,7 @@ export class Donut {
 		keyField: string
 	): Promise<any> {
 		const outerRadius = DonutHelper.getOuterRadius(margin, blockSize);
-		const thickness = DonutHelper.getThickness(donutSettings, blockSize, margin);
+		const thickness = DonutThicknessCalculator.getThickness(donutSettings, blockSize, margin);
 		const innerRadius = DonutHelper.getInnerRadius(outerRadius, thickness);
 
 		const arcGenerator = DonutHelper.getArcGenerator(outerRadius, innerRadius);

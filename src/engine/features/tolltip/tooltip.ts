@@ -27,6 +27,7 @@ import { TooltipSettings } from "../../../designer/designerConfig";
 import { DomSelectionHelper } from "../../helpers/domSelectionHelper";
 import { NewTooltip } from "./newTooltip/newTooltip";
 import { MarkDot } from "../../../engine/features/markDots/markDot";
+import { DonutThicknessCalculator } from "../../../model/notations/polar/donut/donutThicknessService";
 
 interface DonutOverDetails {
 	pointer: [number, number];
@@ -96,7 +97,7 @@ export class Tooltip {
 					data,
 					model.blockCanvas.size,
 					model.chartBlock.margin,
-					DonutHelper.getThickness(
+					DonutThicknessCalculator.getThickness(
 						model.options.chartCanvas,
 						model.blockCanvas.size,
 						model.chartBlock.margin

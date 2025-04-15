@@ -6,9 +6,9 @@ import { Block } from "../block/block";
 import { Legend } from "../features/legend/legend";
 import { DomSelectionHelper, SelectionCondition } from "../helpers/domSelectionHelper";
 import { Donut } from "../polarNotation/donut/donut";
-import { DonutHelper } from "../polarNotation/donut/DonutHelper";
 import { ElementHighlighter } from "./elementHighlighter";
 import { MarkDot } from "../../engine/features/markDots/markDot";
+import { DonutThicknessCalculator } from "../../model/notations/polar/donut/donutThicknessService";
 
 export class SelectHighlighter {
 	public static click2DHandler(
@@ -103,7 +103,7 @@ export class SelectHighlighter {
 		arcItems: Selection<SVGGElement, PieArcDatum<MdtChartsDataRow>, SVGGElement, unknown>,
 		donutSettings: DonutChartSettings
 	): void {
-		const donutThickness = DonutHelper.getThickness(donutSettings, blockSize, margin);
+		const donutThickness = DonutThicknessCalculator.getThickness(donutSettings, blockSize, margin);
 		if (!appendKey) {
 			ElementHighlighter.toggleDonutHighlightState(
 				selectedSegment,
@@ -202,7 +202,7 @@ export class SelectHighlighter {
 		arcItems: Selection<SVGGElement, PieArcDatum<MdtChartsDataRow>, SVGGElement, unknown>,
 		donutSettings: DonutChartSettings
 	): void {
-		const donutThickness = DonutHelper.getThickness(donutSettings, blockSize, margin);
+		const donutThickness = DonutThicknessCalculator.getThickness(donutSettings, blockSize, margin);
 		ElementHighlighter.toggleDonutHighlightState(
 			arcItems,
 			margin,
