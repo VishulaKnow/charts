@@ -127,11 +127,12 @@ export class LegendHelper {
 	): LegendContentRenderingOptions {
 		const itemsDirection: LegendItemsDirection = this.service.getLegendItemsDirection(legendPosition);
 		const legendLabelClass = this.getLegendClassByChartNotation(chartNotation);
+		const centeredCssClass = "legend-block-centered";
 
 		return {
 			wrapperClasses: [
 				Legend.legendBlockClass,
-				chartNotation === "2d" ? "legend-block-centered" : "",
+				chartNotation === "2d" ? centeredCssClass : itemsDirection === "column" ? centeredCssClass : "",
 				this.service.getWrapperClassByItemsDirection(itemsDirection),
 				this.service.getWrapperClassByWrappingItems(legendPosition, chartNotation)
 			],
