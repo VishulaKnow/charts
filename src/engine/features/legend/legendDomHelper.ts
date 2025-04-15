@@ -5,6 +5,7 @@ import { Legend } from "./legend";
 import { ChartLegendEngineModel, LegendHelper } from "./legendHelper";
 import { LegendItemConfig, getNewLegendItemWidths } from "./legendWidthCalculator";
 import { StaticLegendBlockCanvas } from "../../../designer/designerConfig";
+import { getCssPropertyValue } from "../../../model/domUtils/cssUtils";
 
 export type LegendItemSelection = Selection<HTMLDivElement, ChartLegendEngineModel, BaseType, unknown>;
 
@@ -78,9 +79,7 @@ export class LegendDomHelper {
 	}
 
 	private static getItemsRightMargins(items: LegendItemSelection): number[] {
-		return items
-			.nodes()
-			.map((node) => Helper.getPXValueFromString(DomSelectionHelper.getCssPropertyValue(node, "margin-right")));
+		return items.nodes().map((node) => Helper.getPXValueFromString(getCssPropertyValue(node, "margin-right")));
 	}
 
 	private static getItemsWidth(items: LegendItemSelection): number[] {

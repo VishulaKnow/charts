@@ -27,10 +27,6 @@ export class DomSelectionHelper {
 		else return Bar.get().getAllBarsForChart(block, chart.cssClasses);
 	}
 
-	public static getCssPropertyValue(node: Element, propertyName: string): string {
-		return window.getComputedStyle(node).getPropertyValue(propertyName);
-	}
-
 	public static getSelectionNumericAttr(
 		selection: Selection<BaseType, unknown, BaseType, unknown>,
 		attrName: string

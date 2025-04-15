@@ -1,4 +1,5 @@
 import { DomSelectionHelper } from "../../engine/helpers/domHelper";
+import { getCssPropertyValue } from "../domUtils/cssUtils";
 
 export class ModelHelper {
 	private static readonly defaultBaseFontSize = 13;
@@ -10,7 +11,7 @@ export class ModelHelper {
 	}
 
 	public static getFontSizeCssValue(propertyName: string, defaultValue: number): number {
-		const value = parseInt(DomSelectionHelper.getCssPropertyValue(document.documentElement, propertyName));
+		const value = parseInt(getCssPropertyValue(document.documentElement, propertyName));
 		return isNaN(value) ? defaultValue : value;
 	}
 
