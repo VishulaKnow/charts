@@ -2,7 +2,7 @@ import { BarAttrs, EmbeddedLabelPosition, EmbeddedLabelsHelper, LabelAttrs } fro
 import { BaseType, Selection } from "d3-selection";
 import { BlockMargin } from "../../../model/model";
 import { Transition } from "d3-transition";
-import { DomSelectionHelper } from "../../helpers/domHelper";
+import { DomSelectionHelper } from "../../helpers/domSelectionHelper";
 import { MdtChartsDataRow, Size } from "../../../config/config";
 
 export class EmbeddedLabelsDomHelper {

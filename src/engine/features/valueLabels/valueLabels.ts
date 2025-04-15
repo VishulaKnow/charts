@@ -16,7 +16,7 @@ import { Scales, ScalesWithSecondary } from "../../../engine/features/scale/scal
 import { ValueLabelsAttrsProvider } from "../../../engine/features/valueLabels/valueLabelsHelper";
 import { Helper } from "../../../engine/helpers/helper";
 import { BaseType, select, Selection } from "d3-selection";
-import { DomSelectionHelper } from "../../helpers/domHelper";
+import { DomSelectionHelper } from "../../helpers/domSelectionHelper";
 import { CLASSES } from "../../../model/modelBuilder";
 import { ValueLabelsCollision } from "../../../engine/features/valueLabelsCollision/valueLabelsCollision";
 import { Pipeline } from "../../helpers/pipeline/Pipeline";

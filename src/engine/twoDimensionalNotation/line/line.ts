@@ -5,7 +5,7 @@ import { Scales } from "../../features/scale/scale";
 import { Block } from "../../block/block";
 import { MarkDot } from "../../features/markDots/markDot";
 import { getStackedData, LineGeneratorFactory, onLineChartInit } from "./lineHelper";
-import { DomSelectionHelper } from "../../helpers/domHelper";
+import { DomSelectionHelper } from "../../helpers/domSelectionHelper";
 import { Helper } from "../../helpers/helper";
 import { MdtChartsDataRow } from "../../../config/config";
 import { Transition } from "d3-transition";

@@ -1,4 +1,4 @@
-import { DomSelectionHelper } from "../../engine/helpers/domHelper";
+import { DomSelectionHelper } from "../../engine/helpers/domSelectionHelper";
 import { getCssPropertyValue } from "../domUtils/cssUtils";
 
 export class ModelHelper {

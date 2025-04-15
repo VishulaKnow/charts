@@ -1,5 +1,5 @@
 import { BaseType, Selection } from "d3-selection";
-import { DomSelectionHelper } from "../../helpers/domHelper";
+import { DomSelectionHelper } from "../../helpers/domSelectionHelper";
 import { Helper } from "../../helpers/helper";
 import { Legend } from "./legend";
 import { ChartLegendEngineModel, LegendHelper } from "./legendHelper";

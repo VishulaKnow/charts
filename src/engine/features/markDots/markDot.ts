@@ -9,7 +9,7 @@ import {
 	TwoDimensionalChartModel
 } from "../../../model/model";
 import { Block } from "../../block/block";
-import { DomSelectionHelper } from "../../helpers/domHelper";
+import { DomSelectionHelper } from "../../helpers/domSelectionHelper";
 import { Helper } from "../../helpers/helper";
 import { NamesHelper } from "../../helpers/namesHelper";
 import { Scales } from "../scale/scale";

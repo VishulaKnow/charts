@@ -3,7 +3,7 @@ import { MdtChartsDataSource, Size } from "../../../config/config";
 import { LegendBlockModel, Model, Orient, PolarOptionsModel, TwoDimensionalOptionsModel } from "../../../model/model";
 import { Block } from "../../block/block";
 import { ColorReader } from "../../colorReader/colorReader";
-import { SelectionCondition } from "../../helpers/domHelper";
+import { SelectionCondition } from "../../helpers/domSelectionHelper";
 import { LegendDomHelper, LegendItemSelection } from "./legendDomHelper";
 import { LegendEventsManager } from "./legendEventsManager";
 import { ChartLegendEngineModel, LegendCoordinate, LegendHelper } from "./legendHelper";

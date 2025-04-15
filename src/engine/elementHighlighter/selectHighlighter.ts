@@ -4,7 +4,7 @@ import { MdtChartsDataRow, Size } from "../../config/config";
 import { BlockMargin, DonutChartSettings, PolarOptionsModel, TwoDimensionalOptionsModel } from "../../model/model";
 import { Block } from "../block/block";
 import { Legend } from "../features/legend/legend";
-import { DomSelectionHelper, SelectionCondition } from "../helpers/domHelper";
+import { DomSelectionHelper, SelectionCondition } from "../helpers/domSelectionHelper";
 import { Donut } from "../polarNotation/donut/donut";
 import { DonutHelper } from "../polarNotation/donut/DonutHelper";
 import { ElementHighlighter } from "./elementHighlighter";

@@ -5,7 +5,7 @@ import { BlockMargin, DonutChartSettings, PolarChartModel } from "../../../model
 import { Block } from "../../block/block";
 import { Aggregator } from "../../features/aggregator/aggregator";
 import { DonutHelper } from "./DonutHelper";
-import { DomSelectionHelper } from "../../helpers/domHelper";
+import { DomSelectionHelper } from "../../helpers/domSelectionHelper";
 import { MdtChartsDataRow, Size } from "../../../config/config";
 import { ColorReader } from "../../colorReader/colorReader";
 

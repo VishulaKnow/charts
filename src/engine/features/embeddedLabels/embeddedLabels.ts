@@ -2,7 +2,7 @@ import { BaseType, select, Selection } from "d3-selection";
 import { MdtChartsDataRow, Size } from "../../../config/config";
 import { BlockMargin, EmbeddedLabelTypeModel, Field, Orient } from "../../../model/model";
 import { Block } from "../../block/block";
-import { DomSelectionHelper } from "../../helpers/domHelper";
+import { DomSelectionHelper } from "../../helpers/domSelectionHelper";
 import { Helper } from "../../helpers/helper";
 import { BarAttrsHelper } from "../../twoDimensionalNotation/bar/barHelper";
 import { ValueFormatter } from "../../valueFormatter";

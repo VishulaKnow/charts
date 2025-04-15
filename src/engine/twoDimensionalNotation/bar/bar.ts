@@ -7,7 +7,7 @@ import { EmbeddedLabelsHelper } from "../../features/embeddedLabels/embeddedLabe
 import { BarAttrsHelper, BarHelper, GroupBarsSegment, onBarChartInit } from "./barHelper";
 import { sum } from "d3-array";
 import { Transition } from "d3-transition";
-import { DomSelectionHelper } from "../../helpers/domHelper";
+import { DomSelectionHelper } from "../../helpers/domSelectionHelper";
 import { Helper } from "../../helpers/helper";
 import { MdtChartsDataRow, Size } from "../../../config/config";
 import { getStackedDataWithOwn } from "./stackedData/dataStacker";

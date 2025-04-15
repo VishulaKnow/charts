@@ -2,7 +2,7 @@ import { Selection } from "d3-selection";
 import { Size } from "../../../config/config";
 import { OptionsModelTitle, TitleBlockModel } from "../../../model/model";
 import { Block } from "../../block/block";
-import { DomSelectionHelper } from "../../helpers/domHelper";
+import { DomSelectionHelper } from "../../helpers/domSelectionHelper";
 
 interface TitleAttributes {
 	x: number;

@@ -2,7 +2,7 @@ import { MdtChartsDataRow, MdtChartsValueField } from "../../../config/config";
 import { BarChartSettings, BlockMargin, Orient, TwoDimensionalChartModel } from "../../../model/model";
 import { Block } from "../../block/block";
 import { Scale, Scales } from "../../features/scale/scale";
-import { DomSelectionHelper } from "../../helpers/domHelper";
+import { DomSelectionHelper } from "../../helpers/domSelectionHelper";
 import { Helper } from "../../helpers/helper";
 import { NamesHelper } from "../../helpers/namesHelper";
 import { BarHelper, DotChartSettingsStore } from "../bar/barHelper";

@@ -24,7 +24,7 @@ import { TipBoxHelper } from "../tipBox/tipBoxHelper";
 import { Helper } from "../../helpers/helper";
 import { TooltipHelper } from "./tooltipHelper";
 import { TooltipSettings } from "../../../designer/designerConfig";
-import { DomSelectionHelper } from "../../helpers/domHelper";
+import { DomSelectionHelper } from "../../helpers/domSelectionHelper";
 import { NewTooltip } from "./newTooltip/newTooltip";
 import { MarkDot } from "../../../engine/features/markDots/markDot";
 

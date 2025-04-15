@@ -4,7 +4,7 @@ import { BlockMargin, MarkersStyleOptions, TwoDimensionalChartModel } from "../.
 import { Block } from "../block/block";
 import { easeLinear } from "d3-ease";
 import { interrupt, Transition } from "d3-transition";
-import { DomSelectionHelper, SelectionCondition } from "../helpers/domHelper";
+import { DomSelectionHelper, SelectionCondition } from "../helpers/domSelectionHelper";
 import { MdtChartsDataRow, Size } from "../../config/config";
 import { Donut } from "../polarNotation/donut/donut";
 import { MarkDot } from "../features/markDots/markDot";
