@@ -4,7 +4,6 @@ import { ChartStyle, TwoDimensionalChartModel } from "../../model/model";
 import { Block } from "../block/block";
 import { MarkDot } from "../features/markDots/markDot";
 import { Bar } from "../twoDimensionalNotation/bar/bar";
-import { getGradientId } from "../../model/notations/twoDimensional/styles";
 
 type StyleColorType = "fill" | "stroke";
 
@@ -13,7 +12,7 @@ export enum SelectionCondition {
 	Exclude
 }
 
-export class DomHelper {
+export class DomSelectionHelper {
 	public static setCssClasses(elem: Selection<BaseType, unknown, any, unknown>, cssClasses: string[]): void {
 		cssClasses.forEach((cssClass) => {
 			elem.classed(cssClass, true);

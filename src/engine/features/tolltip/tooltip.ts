@@ -24,7 +24,7 @@ import { TipBoxHelper } from "../tipBox/tipBoxHelper";
 import { Helper } from "../../helpers/helper";
 import { TooltipHelper } from "./tooltipHelper";
 import { TooltipSettings } from "../../../designer/designerConfig";
-import { DomHelper } from "../../helpers/domHelper";
+import { DomSelectionHelper } from "../../helpers/domHelper";
 import { NewTooltip } from "./newTooltip/newTooltip";
 import { MarkDot } from "../../../engine/features/markDots/markDot";
 
@@ -247,9 +247,9 @@ export class Tooltip {
 
 				if (args.type === "2d") {
 					args.charts.forEach((chart) => {
-						const elements = DomHelper.get2DChartElements(block, chart);
+						const elements = DomSelectionHelper.get2DChartElements(block, chart);
 						if (!block.filterEventManager.isSelected(currentKey)) {
-							const oldElements = DomHelper.getChartElementsByKeys(
+							const oldElements = DomSelectionHelper.getChartElementsByKeys(
 								elements,
 								chart.isSegmented,
 								args.dataOptions.keyField.name,
@@ -268,7 +268,7 @@ export class Tooltip {
 							}
 						}
 
-						const selectedElements = DomHelper.getChartElementsByKeys(
+						const selectedElements = DomSelectionHelper.getChartElementsByKeys(
 							elements,
 							chart.isSegmented,
 							args.dataOptions.keyField.name,

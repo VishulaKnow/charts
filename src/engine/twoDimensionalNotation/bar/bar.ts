@@ -7,7 +7,7 @@ import { EmbeddedLabelsHelper } from "../../features/embeddedLabels/embeddedLabe
 import { BarAttrsHelper, BarHelper, GroupBarsSegment, onBarChartInit } from "./barHelper";
 import { sum } from "d3-array";
 import { Transition } from "d3-transition";
-import { DomHelper } from "../../helpers/domHelper";
+import { DomSelectionHelper } from "../../helpers/domHelper";
 import { Helper } from "../../helpers/helper";
 import { MdtChartsDataRow, Size } from "../../../config/config";
 import { getStackedDataWithOwn } from "./stackedData/dataStacker";
@@ -124,7 +124,7 @@ export class Bar {
 						Helper.getCssClassesWithElementIndex(chart.cssClasses, index)
 					)}`
 				);
-			DomHelper.setChartStyle(bars, chart.style, index, "fill");
+			DomSelectionHelper.setChartStyle(bars, chart.style, index, "fill");
 		});
 	}
 
@@ -176,8 +176,8 @@ export class Bar {
 
 			this.fillBarAttrs(bars, barAttrs);
 
-			DomHelper.setCssClasses(bars, Helper.getCssClassesWithElementIndex(chart.cssClasses, index));
-			DomHelper.setChartStyle(bars, chart.style, index, "fill");
+			DomSelectionHelper.setCssClasses(bars, Helper.getCssClassesWithElementIndex(chart.cssClasses, index));
+			DomSelectionHelper.setChartStyle(bars, chart.style, index, "fill");
 
 			this.setInitialAttrsInfo(bars, keyAxisOrient, barSettings);
 
@@ -247,8 +247,8 @@ export class Bar {
 
 		this.setInitialAttrsInfo(bars, keyAxisOrient, barSettings);
 
-		DomHelper.setCssClasses(groups, chart.cssClasses);
-		DomHelper.setCssClasses(bars, chart.cssClasses); // Для обозначения принадлежности бара к конкретному чарту
+		DomSelectionHelper.setCssClasses(groups, chart.cssClasses);
+		DomSelectionHelper.setCssClasses(bars, chart.cssClasses); // Для обозначения принадлежности бара к конкретному чарту
 
 		const thisClass = this;
 		groups.each(function (d, i) {
@@ -256,7 +256,7 @@ export class Bar {
 				`rect${Helper.getCssClassesLine(chart.cssClasses)}`
 			);
 
-			DomHelper.setCssClasses(barsInGroup, Helper.getCssClassesWithElementIndex(chart.cssClasses, i)); // Для обозначения принадлежности бара к конкретной части стака
+			DomSelectionHelper.setCssClasses(barsInGroup, Helper.getCssClassesWithElementIndex(chart.cssClasses, i)); // Для обозначения принадлежности бара к конкретной части стака
 			thisClass.createSegmentGroupBarsPipeline.execute(barsInGroup, { segmentIndex: i, chart });
 			thisClass.setSegmentColor(
 				select(this).selectAll(Helper.getCssClassesLine(chart.cssClasses)),
@@ -336,8 +336,8 @@ export class Bar {
 
 			this.setInitialAttrsInfo(newBars, keyAxisOrient, barSettings);
 
-			DomHelper.setCssClasses(newBars, Helper.getCssClassesWithElementIndex(chart.cssClasses, index));
-			DomHelper.setChartStyle(newBars, chart.style, index, "fill");
+			DomSelectionHelper.setCssClasses(newBars, Helper.getCssClassesWithElementIndex(chart.cssClasses, index));
+			DomSelectionHelper.setChartStyle(newBars, chart.style, index, "fill");
 
 			if (chart.embeddedLabels !== "none") {
 				EmbeddedLabels.removeUnused(block, chart.cssClasses, index, indexesOfRemoved);
@@ -451,7 +451,7 @@ export class Bar {
 
 		this.setInitialAttrsInfo(newBars, keyAxisOrient, barSettings);
 
-		DomHelper.setCssClasses(newBars, chart.cssClasses);
+		DomSelectionHelper.setCssClasses(newBars, chart.cssClasses);
 
 		const thisClass = this;
 		groups.each(function (d, i) {
@@ -459,7 +459,7 @@ export class Bar {
 				`rect${Helper.getCssClassesLine(chart.cssClasses)}`
 			);
 
-			DomHelper.setCssClasses(barsInGroup, Helper.getCssClassesWithElementIndex(chart.cssClasses, i)); // Для обозначения принадлежности бара к конкретной части стака
+			DomSelectionHelper.setCssClasses(barsInGroup, Helper.getCssClassesWithElementIndex(chart.cssClasses, i)); // Для обозначения принадлежности бара к конкретной части стака
 			thisClass.createSegmentGroupBarsPipeline.execute(barsInGroup, { segmentIndex: i, chart });
 			thisClass.setSegmentColor(
 				select(this).selectAll(Helper.getCssClassesLine(chart.cssClasses)),
@@ -519,15 +519,15 @@ export class Bar {
 		barSettings: BarChartSettings
 	): void {
 		bars.each(function () {
-			const width = DomHelper.getSelectionNumericAttr(select(this), "width");
-			const height = DomHelper.getSelectionNumericAttr(select(this), "height");
+			const width = DomSelectionHelper.getSelectionNumericAttr(select(this), "width");
+			const height = DomSelectionHelper.getSelectionNumericAttr(select(this), "height");
 			const orient = keyAxisOrient === "left" || keyAxisOrient === "right" ? "horizontal" : "vertical";
 			let scaleSize = 0.06 * (orient === "vertical" ? width : height);
 			scaleSize = scaleSize > barSettings.barDistance / 2 ? barSettings.barDistance / 2 : scaleSize;
 
 			(this as RectElemWithAttrs).attrs = {
-				x: DomHelper.getSelectionNumericAttr(select(this), "x"),
-				y: DomHelper.getSelectionNumericAttr(select(this), "y"),
+				x: DomSelectionHelper.getSelectionNumericAttr(select(this), "x"),
+				y: DomSelectionHelper.getSelectionNumericAttr(select(this), "y"),
 				width,
 				height,
 				orient,

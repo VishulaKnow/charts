@@ -2,7 +2,7 @@ import { BaseType, select, Selection } from "d3-selection";
 import { MdtChartsDataRow, Size } from "../../../config/config";
 import { BlockMargin, EmbeddedLabelTypeModel, Field, Orient } from "../../../model/model";
 import { Block } from "../../block/block";
-import { DomHelper } from "../../helpers/domHelper";
+import { DomSelectionHelper } from "../../helpers/domHelper";
 import { Helper } from "../../helpers/helper";
 import { BarAttrsHelper } from "../../twoDimensionalNotation/bar/barHelper";
 import { ValueFormatter } from "../../valueFormatter";
@@ -30,7 +30,7 @@ export class EmbeddedLabels {
 		cssClasses: string[]
 	): void {
 		const labelsGroup = this.renderGroup(block, Helper.getCssClassesWithElementIndex(cssClasses, index));
-		DomHelper.setCssClasses(labelsGroup, Helper.getCssClassesWithElementIndex(cssClasses, index));
+		DomSelectionHelper.setCssClasses(labelsGroup, Helper.getCssClassesWithElementIndex(cssClasses, index));
 
 		bars.each((dataRow) => {
 			this.renderLabel(labelsGroup, barAttrsHelper, dataRow, field, type, keyAxisOrient, blockSize, margin);

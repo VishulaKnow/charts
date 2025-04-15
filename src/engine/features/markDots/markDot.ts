@@ -9,7 +9,7 @@ import {
 	TwoDimensionalChartModel
 } from "../../../model/model";
 import { Block } from "../../block/block";
-import { DomHelper } from "../../helpers/domHelper";
+import { DomSelectionHelper } from "../../helpers/domHelper";
 import { Helper } from "../../helpers/helper";
 import { NamesHelper } from "../../helpers/namesHelper";
 import { Scales } from "../scale/scale";
@@ -114,7 +114,7 @@ export class MarkDot {
 			.selectAll(
 				`.${this.markerDotClass}${Helper.getCssClassesLine(chart.cssClasses)}.chart-element-${valueFieldIndex}`
 			);
-		DomHelper.setChartElementColor(dots, chart.style.elementColors, valueFieldIndex, "stroke");
+		DomSelectionHelper.setChartElementColor(dots, chart.style.elementColors, valueFieldIndex, "stroke");
 	}
 
 	public static getMarkDotForChart(
@@ -150,8 +150,8 @@ export class MarkDot {
 		vfIndex: number,
 		elementColors: string[]
 	): void {
-		DomHelper.setCssClasses(dots, Helper.getCssClassesWithElementIndex(cssClasses, vfIndex));
-		DomHelper.setChartElementColor(dots, elementColors, vfIndex, "stroke");
+		DomSelectionHelper.setCssClasses(dots, Helper.getCssClassesWithElementIndex(cssClasses, vfIndex));
+		DomSelectionHelper.setChartElementColor(dots, elementColors, vfIndex, "stroke");
 	}
 
 	private static setAttrs(

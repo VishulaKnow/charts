@@ -4,7 +4,7 @@ import { BlockMargin, MarkersStyleOptions, TwoDimensionalChartModel } from "../.
 import { Block } from "../block/block";
 import { easeLinear } from "d3-ease";
 import { interrupt, Transition } from "d3-transition";
-import { DomHelper, SelectionCondition } from "../helpers/domHelper";
+import { DomSelectionHelper, SelectionCondition } from "../helpers/domHelper";
 import { MdtChartsDataRow, Size } from "../../config/config";
 import { Donut } from "../polarNotation/donut/donut";
 import { MarkDot } from "../features/markDots/markDot";
@@ -154,7 +154,7 @@ export class ElementHighlighter {
 		blockSize: Size,
 		donutThickness: number
 	): void {
-		const segments = DomHelper.getChartElementsByKeys(
+		const segments = DomSelectionHelper.getChartElementsByKeys(
 			arcSegments,
 			true,
 			keyFieldName,
@@ -166,18 +166,18 @@ export class ElementHighlighter {
 
 	public static setInactiveFor2D(block: Block, keyFieldName: string, charts: TwoDimensionalChartModel[]): void {
 		charts.forEach((chart) => {
-			const elems = DomHelper.get2DChartElements(block, chart);
+			const elems = DomSelectionHelper.get2DChartElements(block, chart);
 			if (block.filterEventManager.getSelectedKeys().length === 0) {
 				this.toggleActivityStyle(elems, true);
 			} else {
-				const unselectedElems = DomHelper.getChartElementsByKeys(
+				const unselectedElems = DomSelectionHelper.getChartElementsByKeys(
 					elems,
 					chart.isSegmented,
 					keyFieldName,
 					block.filterEventManager.getSelectedKeys(),
 					SelectionCondition.Exclude
 				);
-				const selectedElems = DomHelper.getChartElementsByKeys(
+				const selectedElems = DomSelectionHelper.getChartElementsByKeys(
 					elems,
 					chart.isSegmented,
 					keyFieldName,
@@ -195,7 +195,7 @@ export class ElementHighlighter {
 		transitionDuration: number = 0
 	): void {
 		charts.forEach((chart) => {
-			const elems = DomHelper.get2DChartElements(block, chart);
+			const elems = DomSelectionHelper.get2DChartElements(block, chart);
 
 			if (chart.type !== "bar") MarkDot.tryMakeMarkDotVisible(elems, chart.markersOptions, false);
 			this.toggle2DElements(elems, false, chart, transitionDuration);
@@ -210,8 +210,8 @@ export class ElementHighlighter {
 		transitionDuration: number
 	): void {
 		charts.forEach((chart) => {
-			const elems = DomHelper.get2DChartElements(block, chart);
-			const selectedElems = DomHelper.getChartElementsByKeys(
+			const elems = DomSelectionHelper.get2DChartElements(block, chart);
+			const selectedElems = DomSelectionHelper.getChartElementsByKeys(
 				elems,
 				chart.isSegmented,
 				keyFieldName,

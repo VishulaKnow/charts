@@ -1,5 +1,5 @@
 import { BaseType, Selection } from "d3-selection";
-import { DomHelper } from "../../helpers/domHelper";
+import { DomSelectionHelper } from "../../helpers/domHelper";
 import { Helper } from "../../helpers/helper";
 import { Legend } from "./legend";
 import { ChartLegendEngineModel, LegendHelper } from "./legendHelper";
@@ -80,7 +80,7 @@ export class LegendDomHelper {
 	private static getItemsRightMargins(items: LegendItemSelection): number[] {
 		return items
 			.nodes()
-			.map((node) => Helper.getPXValueFromString(DomHelper.getCssPropertyValue(node, "margin-right")));
+			.map((node) => Helper.getPXValueFromString(DomSelectionHelper.getCssPropertyValue(node, "margin-right")));
 	}
 
 	private static getItemsWidth(items: LegendItemSelection): number[] {

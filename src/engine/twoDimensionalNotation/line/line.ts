@@ -5,7 +5,7 @@ import { Scales } from "../../features/scale/scale";
 import { Block } from "../../block/block";
 import { MarkDot } from "../../features/markDots/markDot";
 import { getStackedData, LineGeneratorFactory, onLineChartInit } from "./lineHelper";
-import { DomHelper } from "../../helpers/domHelper";
+import { DomSelectionHelper } from "../../helpers/domHelper";
 import { Helper } from "../../helpers/helper";
 import { MdtChartsDataRow } from "../../../config/config";
 import { Transition } from "d3-transition";
@@ -69,7 +69,7 @@ export class Line {
 				.select(
 					`.${this.lineChartClass}${Helper.getCssClassesLine(chart.cssClasses)}.chart-element-${valueIndex}`
 				);
-			DomHelper.setChartStyle(path, chart.style, valueIndex, "stroke");
+			DomSelectionHelper.setChartStyle(path, chart.style, valueIndex, "stroke");
 			MarkDot.updateColors(block, chart, valueIndex);
 		});
 	}
@@ -105,8 +105,8 @@ export class Line {
 
 			path = this.creatingPipeline.execute(path, chart);
 
-			DomHelper.setCssClasses(path, Helper.getCssClassesWithElementIndex(chart.cssClasses, valueIndex));
-			DomHelper.setChartStyle(path, chart.style, valueIndex, "stroke");
+			DomSelectionHelper.setCssClasses(path, Helper.getCssClassesWithElementIndex(chart.cssClasses, valueIndex));
+			DomSelectionHelper.setChartStyle(path, chart.style, valueIndex, "stroke");
 
 			MarkDot.render(
 				block,
@@ -150,7 +150,7 @@ export class Line {
 		lineBuilder.setSegmentColor(lines, chart.style.elementColors);
 
 		lines.each(function (_, i) {
-			DomHelper.setCssClasses(select(this), Helper.getCssClassesWithElementIndex(chart.cssClasses, i));
+			DomSelectionHelper.setCssClasses(select(this), Helper.getCssClassesWithElementIndex(chart.cssClasses, i));
 		});
 
 		stackedData.forEach((dataset, stackIndex) => {

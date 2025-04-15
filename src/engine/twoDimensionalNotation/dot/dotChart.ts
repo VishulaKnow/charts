@@ -2,7 +2,7 @@ import { MdtChartsDataRow, MdtChartsValueField } from "../../../config/config";
 import { BarChartSettings, BlockMargin, Orient, TwoDimensionalChartModel } from "../../../model/model";
 import { Block } from "../../block/block";
 import { Scale, Scales } from "../../features/scale/scale";
-import { DomHelper } from "../../helpers/domHelper";
+import { DomSelectionHelper } from "../../helpers/domHelper";
 import { Helper } from "../../helpers/helper";
 import { NamesHelper } from "../../helpers/namesHelper";
 import { BarHelper, DotChartSettingsStore } from "../bar/barHelper";
@@ -66,8 +66,11 @@ export class CanvasDotChart {
 			.attr("x2", (d) => attrs.x2(d))
 			.attr("y2", (d) => attrs.y2(d));
 
-		DomHelper.setCssClasses(elements, Helper.getCssClassesWithElementIndex(chart.cssClasses, valueFieldIndex));
-		DomHelper.setChartStyle(elements, chart.style, valueFieldIndex, "stroke");
+		DomSelectionHelper.setCssClasses(
+			elements,
+			Helper.getCssClassesWithElementIndex(chart.cssClasses, valueFieldIndex)
+		);
+		DomSelectionHelper.setChartStyle(elements, chart.style, valueFieldIndex, "stroke");
 
 		this.renderedChart = chart;
 	}
@@ -105,11 +108,11 @@ export class CanvasDotChart {
 			.attr("x2", (d) => attrs.x2(d))
 			.attr("y2", (d) => attrs.y2(d));
 
-		DomHelper.setCssClasses(
+		DomSelectionHelper.setCssClasses(
 			newElements,
 			Helper.getCssClassesWithElementIndex(this.renderedChart.cssClasses, valueFieldIndex)
 		);
-		DomHelper.setChartStyle(newElements, this.renderedChart.style, valueFieldIndex, "stroke");
+		DomSelectionHelper.setChartStyle(newElements, this.renderedChart.style, valueFieldIndex, "stroke");
 
 		return [
 			new Promise((resolve) => {

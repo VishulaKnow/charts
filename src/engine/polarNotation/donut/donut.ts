@@ -5,7 +5,7 @@ import { BlockMargin, DonutChartSettings, PolarChartModel } from "../../../model
 import { Block } from "../../block/block";
 import { Aggregator } from "../../features/aggregator/aggregator";
 import { DonutHelper } from "./DonutHelper";
-import { DomHelper } from "../../helpers/domHelper";
+import { DomSelectionHelper } from "../../helpers/domHelper";
 import { MdtChartsDataRow, Size } from "../../../config/config";
 import { ColorReader } from "../../colorReader/colorReader";
 
@@ -176,7 +176,7 @@ export class Donut {
 				(this as any)._currentData = d;
 			}); // _currentData используется для получения текущих данных внутри функции обновления.
 
-		DomHelper.setCssClasses(arcs, chart.cssClasses);
+		DomSelectionHelper.setCssClasses(arcs, chart.cssClasses);
 		this.setElementsColor(items, chart);
 	}
 

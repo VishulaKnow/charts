@@ -2,7 +2,7 @@ import { Selection } from "d3-selection";
 import { Size } from "../../../config/config";
 import { OptionsModelTitle, TitleBlockModel } from "../../../model/model";
 import { Block } from "../../block/block";
-import { DomHelper } from "../../helpers/domHelper";
+import { DomSelectionHelper } from "../../helpers/domHelper";
 
 interface TitleAttributes {
 	x: number;
@@ -46,7 +46,7 @@ export class Title {
 			.text(title.textContent)
 			.style("font-size", `${title.fontSize}px`);
 
-		DomHelper.cropSvgLabels(titleBlock, attributes.maxWidth);
+		DomSelectionHelper.cropSvgLabels(titleBlock, attributes.maxWidth);
 	}
 
 	private static getTitleAttributes(blockSize: Size, titleBlockModel: TitleBlockModel): TitleAttributes {

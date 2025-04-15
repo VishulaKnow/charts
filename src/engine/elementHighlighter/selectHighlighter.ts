@@ -4,7 +4,7 @@ import { MdtChartsDataRow, Size } from "../../config/config";
 import { BlockMargin, DonutChartSettings, PolarOptionsModel, TwoDimensionalOptionsModel } from "../../model/model";
 import { Block } from "../block/block";
 import { Legend } from "../features/legend/legend";
-import { DomHelper, SelectionCondition } from "../helpers/domHelper";
+import { DomSelectionHelper, SelectionCondition } from "../helpers/domHelper";
 import { Donut } from "../polarNotation/donut/donut";
 import { DonutHelper } from "../polarNotation/donut/DonutHelper";
 import { ElementHighlighter } from "./elementHighlighter";
@@ -20,13 +20,13 @@ export class SelectHighlighter {
 		options: TwoDimensionalOptionsModel
 	): void {
 		options.charts.forEach((chart) => {
-			const selectedElements = DomHelper.getChartElementsByKeys(
-				DomHelper.get2DChartElements(block, chart),
+			const selectedElements = DomSelectionHelper.getChartElementsByKeys(
+				DomSelectionHelper.get2DChartElements(block, chart),
 				chart.isSegmented,
 				options.data.keyField.name,
 				[keyValue]
 			);
-			const elements = DomHelper.get2DChartElements(block, chart);
+			const elements = DomSelectionHelper.get2DChartElements(block, chart);
 			if (!appendKey) {
 				ElementHighlighter.toggle2DElements(
 					selectedElements,
@@ -54,7 +54,7 @@ export class SelectHighlighter {
 				);
 				ElementHighlighter.toggleActivityStyle(selectedElements, true);
 				ElementHighlighter.toggleActivityStyle(
-					DomHelper.getChartElementsByKeys(
+					DomSelectionHelper.getChartElementsByKeys(
 						elements,
 						chart.isSegmented,
 						options.data.keyField.name,
@@ -65,7 +65,7 @@ export class SelectHighlighter {
 				);
 			} else {
 				ElementHighlighter.toggle2DElements(
-					DomHelper.getChartElementsByKeys(
+					DomSelectionHelper.getChartElementsByKeys(
 						elements,
 						chart.isSegmented,
 						options.data.keyField.name,
@@ -153,7 +153,7 @@ export class SelectHighlighter {
 
 			ElementHighlighter.toggleActivityStyle(selectedSegment, true);
 			ElementHighlighter.toggleActivityStyle(
-				DomHelper.getChartElementsByKeys(
+				DomSelectionHelper.getChartElementsByKeys(
 					Donut.getAllArcGroups(block),
 					true,
 					options.data.keyField.name,
@@ -187,7 +187,7 @@ export class SelectHighlighter {
 
 	public static clear2D(block: Block, options: TwoDimensionalOptionsModel): void {
 		options.charts.forEach((chart) => {
-			const elements = DomHelper.get2DChartElements(block, chart);
+			const elements = DomSelectionHelper.get2DChartElements(block, chart);
 			ElementHighlighter.toggle2DElements(elements, false, chart, block.transitionManager.durations.markerHover);
 			ElementHighlighter.toggleActivityStyle(elements, true);
 			if (chart.type !== "bar") MarkDot.tryMakeMarkDotVisible(elements, chart.markersOptions, false);

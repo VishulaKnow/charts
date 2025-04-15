@@ -3,7 +3,7 @@ import { AxisScale, Axis as IAxis } from "d3-axis";
 import { ScaleBand } from "d3-scale";
 import { AxisModelOptions, Orient, ScaleKeyModel, ScaleValueModel } from "../../../model/model";
 import { Block } from "../../block/block";
-import { DomHelper } from "../../helpers/domHelper";
+import { DomSelectionHelper } from "../../helpers/domHelper";
 import { Helper } from "../../helpers/helper";
 import { Size } from "../../../config/config";
 import {
@@ -68,7 +68,7 @@ export class AxisLabelHelper {
 			maxLabelSize = axisOptions.labels.maxSize;
 		else maxLabelSize = ((scale as ScaleBand<string>).step?.() ?? Infinity) - 4;
 
-		DomHelper.cropSvgLabels(axisTextBlocks, maxLabelSize);
+		DomSelectionHelper.cropSvgLabels(axisTextBlocks, maxLabelSize);
 		if (
 			axisOptions.labels.position === "straight" &&
 			(axisOptions.orient === "top" || axisOptions.orient === "bottom")
@@ -133,7 +133,7 @@ export class AxisLabelHelper {
 				"transform",
 				`translate(${this.getTranslateNumber(maxLabelSize, lastLabel, marginRight)}, 0)`
 			);
-			if (crop) DomHelper.cropSvgLabels(lastLabel, maxLabelSize / 2 + marginRight);
+			if (crop) DomSelectionHelper.cropSvgLabels(lastLabel, maxLabelSize / 2 + marginRight);
 		}
 	}
 
@@ -157,7 +157,7 @@ export class AxisLabelHelper {
 		if (axisOptions.translate.translateX - firstLabel.node().getBBox().width / 2 < 0) {
 			firstLabel.attr("text-anchor", "start");
 			firstLabel.attr("transform", `translate(${-axisOptions.translate.translateX}, 0)`);
-			DomHelper.cropSvgLabels(firstLabel, maxLabelSize / 2 + axisElementTranslate);
+			DomSelectionHelper.cropSvgLabels(firstLabel, maxLabelSize / 2 + axisElementTranslate);
 		}
 	}
 

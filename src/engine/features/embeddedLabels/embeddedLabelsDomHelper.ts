@@ -2,7 +2,7 @@ import { BarAttrs, EmbeddedLabelPosition, EmbeddedLabelsHelper, LabelAttrs } fro
 import { BaseType, Selection } from "d3-selection";
 import { BlockMargin } from "../../../model/model";
 import { Transition } from "d3-transition";
-import { DomHelper } from "../../helpers/domHelper";
+import { DomSelectionHelper } from "../../helpers/domHelper";
 import { MdtChartsDataRow, Size } from "../../../config/config";
 
 export class EmbeddedLabelsDomHelper {
@@ -41,6 +41,6 @@ export class EmbeddedLabelsDomHelper {
 		if (labelUnserveFlag) labelTextSpace = blockSize.width - margin.left - margin.right;
 		else labelTextSpace = EmbeddedLabelsHelper.getSpaceSizeForType(position, barAttrs.width, margin, blockSize);
 
-		DomHelper.cropSvgLabels(labelBlock, labelTextSpace);
+		DomSelectionHelper.cropSvgLabels(labelBlock, labelTextSpace);
 	}
 }

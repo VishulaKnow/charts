@@ -12,7 +12,7 @@ import { Scales } from "../../features/scale/scale";
 import { Block } from "../../block/block";
 import { MarkDot } from "../../features/markDots/markDot";
 import { AreaGeneratorFactory } from "./areaHelper";
-import { DomHelper } from "../../helpers/domHelper";
+import { DomSelectionHelper } from "../../helpers/domHelper";
 import { Helper } from "../../helpers/helper";
 import { MdtChartsDataRow } from "../../../config/config";
 import { Transition } from "d3-transition";
@@ -81,7 +81,12 @@ export class Area {
 						chart.cssClasses
 					)}.chart-element-${valueIndex}`
 				);
-				DomHelper.setChartElementColor(borderLinePath, chart.style.elementColors, valueIndex, "stroke");
+				DomSelectionHelper.setChartElementColor(
+					borderLinePath,
+					chart.style.elementColors,
+					valueIndex,
+					"stroke"
+				);
 			}
 
 			MarkDot.updateColors(block, chart, valueIndex);
@@ -249,7 +254,7 @@ export class Area {
 	): void {
 		if (chart.areaViewOptions.fill.type === "gradient") {
 			path.style("fill", `url(#${chart.areaViewOptions.fill.ids[valueIndex]})`);
-		} else DomHelper.setChartStyle(path, chart.style, valueIndex, "fill");
+		} else DomSelectionHelper.setChartStyle(path, chart.style, valueIndex, "fill");
 	}
 
 	private createAreaGeneratorFactory(
@@ -303,7 +308,7 @@ export class Area {
 			.style("clip-path", `url(#${block.svg.getClipPathId()})`)
 			.style("pointer-events", "none");
 
-		DomHelper.setCssClasses(path, Helper.getCssClassesWithElementIndex(chart.cssClasses, valueIndex));
+		DomSelectionHelper.setCssClasses(path, Helper.getCssClassesWithElementIndex(chart.cssClasses, valueIndex));
 		this.setChartFillStyle(chart, path, valueIndex);
 	}
 
@@ -326,8 +331,8 @@ export class Area {
 			.style("clip-path", `url(#${block.svg.getClipPathId()})`)
 			.style("pointer-events", "none");
 
-		DomHelper.setCssClasses(linePath, Helper.getCssClassesWithElementIndex(chart.cssClasses, valueIndex));
-		DomHelper.setChartStyle(linePath, chart.areaViewOptions.borderLine.colorStyle, valueIndex, "stroke");
+		DomSelectionHelper.setCssClasses(linePath, Helper.getCssClassesWithElementIndex(chart.cssClasses, valueIndex));
+		DomSelectionHelper.setChartStyle(linePath, chart.areaViewOptions.borderLine.colorStyle, valueIndex, "stroke");
 	}
 
 	private renderAreaSegmented(
@@ -360,7 +365,7 @@ export class Area {
 		const thisClass = this;
 		areas.each(function (_, i) {
 			thisClass.setChartFillStyle(chart, select(this), i);
-			DomHelper.setCssClasses(select(this), Helper.getCssClassesWithElementIndex(chart.cssClasses, i));
+			DomSelectionHelper.setCssClasses(select(this), Helper.getCssClassesWithElementIndex(chart.cssClasses, i));
 		});
 
 		stackedData.forEach((dataset, index) => {
@@ -389,7 +394,7 @@ export class Area {
 		lineBuilder.setSegmentColor(lines, chart.style.elementColors);
 
 		lines.each(function (_, i) {
-			DomHelper.setCssClasses(select(this), Helper.getCssClassesWithElementIndex(chart.cssClasses, i));
+			DomSelectionHelper.setCssClasses(select(this), Helper.getCssClassesWithElementIndex(chart.cssClasses, i));
 		});
 	}
 
