@@ -12,7 +12,7 @@ import { RectElemWithAttrs } from "../twoDimensionalNotation/bar/bar";
 import { Helper } from "../helpers/helper";
 import * as chroma from "chroma-js";
 import { NamesHelper } from "../helpers/namesHelper";
-import { DonutHelper } from "../polarNotation/donut/DonutHelper";
+import { DonutHelper } from "../polarNotation/donut/donutHelper";
 
 export class ElementHighlighter {
 	private static inactiveElemClass = NamesHelper.getClassName("opacity-inactive");

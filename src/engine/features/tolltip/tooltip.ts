@@ -18,7 +18,7 @@ import { ChartOrientation, MdtChartsDataRow, MdtChartsDataSource, Size, TooltipO
 import { Scales } from "../scale/scale";
 import { TooltipComponentsManager } from "./tooltipComponentsManager";
 import { ElementHighlighter } from "../../elementHighlighter/elementHighlighter";
-import { DonutHelper } from "../../polarNotation/donut/DonutHelper";
+import { DonutHelper } from "../../polarNotation/donut/donutHelper";
 import { TipBox } from "../tipBox/tipBox";
 import { TipBoxHelper } from "../tipBox/tipBoxHelper";
 import { Helper } from "../../helpers/helper";
