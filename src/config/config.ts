@@ -144,7 +144,7 @@ export interface TooltipOptions {
 export type TooltipHtml = (dataRow: MdtChartsDataRow) => string;
 
 export interface TooltipAggregator {
-	content: (options: { row: MdtChartsDataRow }) => TooltipAggregatorContent;
+	content: (options: { row: MdtChartsDataRow }) => TooltipAggregatorContent | TooltipAggregatorContent[];
 	position?: "underKey" | "underValues";
 }
 

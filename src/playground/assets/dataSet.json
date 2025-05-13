@@ -5,7 +5,7 @@
 			"brand": "BMW",
 			"price": 109000,
 			"price2": 120000,
-			"count": 100000,
+			"count": 10000,
 			"color": "red"
 		},
 		{
@@ -13,7 +13,7 @@
 			"brand": "LADA",
 			"price": 12000,
 			"price2": 20000,
-			"count": 10000,
+			"count": 1000,
 			"color": "green"
 		},
 		{
@@ -21,7 +21,7 @@
 			"brand": "MERCEDES",
 			"price": 15000,
 			"price2": 17000,
-			"count": 12000,
+			"count": 1200,
 			"color": "blue"
 		},
 		{
@@ -29,7 +29,7 @@
 			"brand": "AUDI",
 			"price": 2000,
 			"price2": 20000,
-			"count": 5000,
+			"count": 500,
 			"color": "yellow"
 		},
 		{
@@ -37,7 +37,7 @@
 			"brand": "VOLKSWAGEN",
 			"price": 115000,
 			"price2": 135000,
-			"count": 60000,
+			"count": 6000,
 			"color": "cyan"
 		},
 		{
@@ -45,7 +45,7 @@
 			"brand": "DODGE",
 			"price": 90000,
 			"price2": 110000,
-			"count": 40000,
+			"count": 4000,
 			"color": "red"
 		},
 		{
@@ -53,7 +53,7 @@
 			"brand": "SAAB",
 			"price": 114000,
 			"price2": 110000,
-			"count": 110000,
+			"count": 11000,
 			"color": "orange"
 		},
 		{
@@ -61,7 +61,7 @@
 			"brand": "HONDA",
 			"price": 20000,
 			"price2": 22000,
-			"count": 20000,
+			"count": 2000,
 			"color": "brown"
 		},
 		{
@@ -69,7 +69,7 @@
 			"brand": "TOYOTA",
 			"price": 18000,
 			"price2": 12000,
-			"count": 150000,
+			"count": 15000,
 			"color": "pink"
 		},
 		{
@@ -77,7 +77,7 @@
 			"brand": "LEXUS",
 			"price": 20000,
 			"price2": 22000,
-			"count": 150000,
+			"count": 15000,
 			"color": "pink"
 		}
 	],

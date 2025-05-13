@@ -26,14 +26,23 @@ export interface TooltipLineAttributes {
 	y2: number;
 }
 
-interface ChartDataRow {
+interface TooltipFieldInfo {
 	field: ValueField;
 	markColor?: string;
 	markerCreator?: MarkerCreator;
 }
 
-interface TooltipItem extends Omit<ChartDataRow, "field"> {
+interface TooltipItem extends Omit<TooltipFieldInfo, "field"> {
 	tooltipHtml: string;
+}
+
+interface TooltipDataRow {
+	caption: string;
+	value: number;
+	formattedValue: string;
+	dataRow: MdtChartsDataRow;
+
+	fieldInfo: TooltipFieldInfo;
 }
 
 export const ARROW_SIZE = 20;
@@ -55,7 +64,7 @@ export class TooltipDomHelper {
 		keyValue: string,
 		tooltipOptions?: TooltipOptions
 	): void {
-		const chartDataRows: ChartDataRow[] = [];
+		const chartDataRows: TooltipFieldInfo[] = [];
 
 		charts.forEach((chart) => {
 			chart.data.valueFields.forEach((field, index) => {
@@ -78,7 +87,7 @@ export class TooltipDomHelper {
 		markColor: string,
 		tooltipOptions?: TooltipOptions
 	): void {
-		const chartDataRows: ChartDataRow[] = [
+		const chartDataRows: TooltipFieldInfo[] = [
 			{
 				field: chart.data.valueField,
 				markColor,
@@ -143,25 +152,6 @@ export class TooltipDomHelper {
 			.html(tooltipHtml);
 	}
 
-	private static getTooltipItemHtml(
-		row: MdtChartsDataRow,
-		valueField: MdtChartsValueField,
-		tooltipOptions: TooltipOptions
-	): string {
-		const formattedValueByDefault = ValueFormatter.formatField(valueField.format, row[valueField.name]);
-
-		const formattedValue = tooltipOptions?.formatValue
-			? tooltipOptions.formatValue({
-					rawValue: row[valueField.name],
-					autoFormattedValue: formattedValueByDefault
-			  })
-			: formattedValueByDefault;
-
-		const text = this.getTooltipContentItemHtml(valueField.title, formattedValue);
-
-		return text;
-	}
-
 	private static getTooltipContentItemHtml(fieldTitle: string, fieldValue: string): string {
 		return `<span class="tooltip-field-title">${fieldTitle}</span>
                 <span class="tooltip-field-value">${fieldValue}</span>`;
@@ -202,46 +192,74 @@ export class TooltipDomHelper {
 		tooltipItems: TooltipItem[]
 	): void {
 		if (tooltipOptions?.aggregator) {
-			const aggregatorContent = tooltipOptions.aggregator.content({ row: data });
-			const aggregatorHtml =
-				aggregatorContent.type === "plainText"
-					? aggregatorContent.textContent
-					: this.getTooltipContentItemHtml(aggregatorContent.caption, aggregatorContent.value);
-			const tooltipAggregatorItem: TooltipItem = {
-				markColor: undefined,
-				tooltipHtml: aggregatorHtml,
-				markerCreator: undefined
-			};
+			const contentResult = tooltipOptions.aggregator.content({ row: data });
+			const aggregatorContent = Array.isArray(contentResult) ? contentResult : [contentResult];
 
-			if (tooltipOptions.aggregator.position === "underValues") tooltipItems.push(tooltipAggregatorItem);
-			else tooltipItems.unshift(tooltipAggregatorItem);
+			const tooltipAggregatorItem = aggregatorContent.map<TooltipItem>((content) => {
+				return {
+					markColor: undefined,
+					tooltipHtml:
+						content.type === "plainText"
+							? content.textContent
+							: this.getTooltipContentItemHtml(content.caption, content.value),
+					markerCreator: undefined
+				};
+			});
+
+			if (tooltipOptions.aggregator.position === "underValues") tooltipItems.push(...tooltipAggregatorItem);
+			else tooltipItems.unshift(...tooltipAggregatorItem);
 		}
 	}
 
 	private static fillCharts(
 		contentBlock: Selection<HTMLElement, unknown, BaseType, unknown>,
-		chartDataRows: ChartDataRow[],
+		tooltipFieldsInfo: TooltipFieldInfo[],
 		data: MdtChartsDataSource,
 		dataOptions: OptionsModelData,
 		keyValue: string,
 		tooltipOptions?: TooltipOptions
 	): void {
-		const row = data[dataOptions.dataSource].find((d) => d[dataOptions.keyField.name] === keyValue);
-
 		contentBlock.html("");
+
 		if (!tooltipOptions?.html) {
+			const dataRow = data[dataOptions.dataSource].find((d) => d[dataOptions.keyField.name] === keyValue);
+
+			const tooltipRows: TooltipDataRow[] = [];
+
+			tooltipFieldsInfo.forEach((tooltipFieldInfo) => {
+				const formattedValueByDefault = ValueFormatter.formatField(
+					tooltipFieldInfo.field.format,
+					dataRow[tooltipFieldInfo.field.name]
+				);
+
+				const formattedValue = tooltipOptions?.formatValue
+					? tooltipOptions.formatValue({
+							rawValue: dataRow[tooltipFieldInfo.field.name],
+							autoFormattedValue: formattedValueByDefault
+					  })
+					: formattedValueByDefault;
+
+				tooltipRows.push({
+					caption: tooltipFieldInfo.field.title,
+					value: dataRow[tooltipFieldInfo.field.name],
+					dataRow,
+					formattedValue,
+					fieldInfo: tooltipFieldInfo
+				});
+			});
+
 			const tooltipItems: TooltipItem[] = [];
 
 			this.renderHead(contentBlock, keyValue);
-			chartDataRows.forEach((dataRow) => {
-				const html = this.getTooltipItemHtml(row, dataRow.field, tooltipOptions);
+			tooltipRows.forEach((tooltipRow) => {
+				const html = this.getTooltipContentItemHtml(tooltipRow.caption, tooltipRow.formattedValue);
 				tooltipItems.push({
-					markColor: dataRow.markColor,
+					markColor: tooltipRow.fieldInfo.markColor,
 					tooltipHtml: html,
-					markerCreator: dataRow.markerCreator
+					markerCreator: tooltipRow.fieldInfo.markerCreator
 				});
 			});
-			this.addAggregatorTooltipItem(tooltipOptions, row, tooltipItems);
+			this.addAggregatorTooltipItem(tooltipOptions, dataRow, tooltipItems);
 			tooltipItems.forEach((item) => {
 				this.fillValuesContent(contentBlock, item);
 			});
