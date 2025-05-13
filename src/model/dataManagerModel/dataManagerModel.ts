@@ -9,7 +9,7 @@ import {
 	TwoDimensionalChartType
 } from "../../config/config";
 import { BarOptionsCanvas, DesignerConfig, LegendBlockCanvas } from "../../designer/designerConfig";
-import { AxisModel } from "../featuresModel/axisModel";
+import { AxisModel } from "../featuresModel/axis/axisModel";
 import { LegendCanvasModel, LegendItemContentOptions } from "../featuresModel/legendModel/legendCanvasModel";
 import { DataScope, LegendBlockModel } from "../model";
 import { ModelHelper } from "../helpers/modelHelper";

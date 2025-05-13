@@ -14,8 +14,8 @@ import {
 	AxisModel,
 	MINIMAL_HORIZONTAL_STEP_SIZE,
 	MINIMAL_VERTICAL_STEP_SIZE
-} from "../../model/featuresModel/axisModel";
-import { AxisModelService, showAllTicks } from "../../model/featuresModel/axisModelService";
+} from "../../model/featuresModel/axis/axisModel";
+import { AxisModelService, showAllTicks } from "../../model/featuresModel/axis/axisModelService";
 import { AxisModelOptions, BlockMargin } from "../../model/model";
 import { CanvasModel } from "../../model/modelInstance/canvasModel/canvasModel";
 

@@ -1,4 +1,4 @@
-import { AxisLabelPosition, MdtChartsDataRow, MdtChartsShowAxisLabelRule, ShowTickFn } from "../../config/config";
+import { AxisLabelPosition, MdtChartsDataRow, MdtChartsShowAxisLabelRule, ShowTickFn } from "../../../config/config";
 
 export const showAllTicks: ShowTickFn = (d) => d;
 

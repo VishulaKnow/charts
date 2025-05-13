@@ -8,14 +8,14 @@ import {
 	DiscreteAxisOptions,
 	NumberSecondaryAxisOptions,
 	AxisLabelFormatter
-} from "../../config/config";
-import { AxisModelOptions, Orient, ScaleValueModel, TickAmountPolicy, TranslateModel } from "../model";
-import { ModelHelper } from "../helpers/modelHelper";
-import { AxisType } from "../modelBuilder";
-import { DataManagerModel } from "../dataManagerModel/dataManagerModel";
-import { TwoDimensionalModel } from "../notations/twoDimensionalModel";
-import { AxisLabelCanvas, TooltipSettings } from "../../designer/designerConfig";
-import { CanvasModel } from "../modelInstance/canvasModel/canvasModel";
+} from "../../../config/config";
+import { AxisModelOptions, Orient, ScaleValueModel, TickAmountPolicy, TranslateModel } from "../../model";
+import { ModelHelper } from "../../helpers/modelHelper";
+import { AxisType } from "../../modelBuilder";
+import { DataManagerModel } from "../../dataManagerModel/dataManagerModel";
+import { TwoDimensionalModel } from "../../notations/twoDimensionalModel";
+import { AxisLabelCanvas, TooltipSettings } from "../../../designer/designerConfig";
+import { CanvasModel } from "../../modelInstance/canvasModel/canvasModel";
 import { AxisModelService, AxisModelTickCalculator, showAllTicks } from "./axisModelService";
 
 export interface LabelSize {

@@ -7,7 +7,7 @@ import {
 import { ChartOptionsCanvas, DesignerConfig } from "../../designer/designerConfig";
 import { ChartStyleModelService } from "../chartStyleModel/chartStyleModel";
 import { TwoDimensionalChartStyleModel } from "../chartStyleModel/twoDimensionalChartStyleModel";
-import { AxisModel } from "../featuresModel/axisModel";
+import { AxisModel } from "../featuresModel/axis/axisModel";
 import { ScaleAxisRecalcer } from "../featuresModel/scaleModel/scaleAxisRecalcer";
 import { ScaleModel } from "../featuresModel/scaleModel/scaleModel";
 import {

@@ -1,5 +1,5 @@
 import { DesignerConfig } from "../../../designer/designerConfig";
-import { AxisModel, LABEL_ELEMENT_HEIGHT_PX, LabelSize } from "../../featuresModel/axisModel";
+import { AxisModel, LABEL_ELEMENT_HEIGHT_PX, LabelSize } from "../../featuresModel/axis/axisModel";
 import { TwoDimLegendModel } from "../../featuresModel/legendModel/twoDimLegendModel";
 import { keyAxisLabelHorizontalLog, keyAxisLabelVerticalLog } from "../../featuresModel/scaleModel/scaleAxisRecalcer";
 import { Orient, OtherCommonComponents, ScaleValueModel } from "../../model";
