@@ -1,7 +1,7 @@
 import { ChartNotation, MdtChartsDataRow, MdtChartsDataSource, Size } from "../../../config/config";
 import { LegendItemsDirection } from "../../../model/featuresModel/legendModel/legendCanvasModel";
 import {
-	ChartLegendModel,
+	ChartLegendMarkerModel,
 	LegendBlockModel,
 	LegendPosition,
 	Orient,
@@ -19,7 +19,7 @@ export interface LegendCoordinate {
 	width: number;
 }
 
-export interface ChartLegendEngineModel extends ChartLegendModel {
+export interface ChartLegendEngineModel extends ChartLegendMarkerModel {
 	textContent: string;
 }
 

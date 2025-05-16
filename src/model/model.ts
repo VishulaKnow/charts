@@ -353,7 +353,7 @@ export interface ChartStyle {
 	opacity: number;
 }
 
-export interface ChartLegendModel {
+export interface ChartLegendMarkerModel {
 	markerShape: LegendMarkerShape;
 	barViewOptions: TwoDimensionalChartLegendBarModel;
 	lineViewOptions: TwoDimensionalChartLegendLineModel;
@@ -435,14 +435,14 @@ export interface TwoDimensionalChartModel
 	index: number;
 	embeddedLabels: EmbeddedLabelTypeModel;
 	isSegmented: boolean;
-	legend: ChartLegendModel;
+	legend: ChartLegendMarkerModel;
 	valueLabels: TwoDimChartValueLabelsOptions;
 }
 
 export interface PolarChartModel extends ChartModel {
 	type: PolarChartType;
 	data: PolarChartDataModel;
-	legend: ChartLegendModel;
+	legend: ChartLegendMarkerModel;
 }
 
 //====================================================== TwoDimensionalChartModel

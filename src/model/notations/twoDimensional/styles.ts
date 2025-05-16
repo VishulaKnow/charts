@@ -4,7 +4,7 @@ import {
 	AreaViewFill,
 	BarBorderRadius,
 	BarLikeChartBorderRadius,
-	ChartLegendModel,
+	ChartLegendMarkerModel,
 	ChartStyle,
 	GradientId,
 	LegendMarkerShape,
@@ -126,7 +126,7 @@ export function getSegmentedRadiusValues(
 	else return radiusConfigs.middle;
 }
 
-export function getLegendMarkerOptions(chart: MdtChartsTwoDimensionalChart): ChartLegendModel {
+export function getLegendMarkerOptions(chart: MdtChartsTwoDimensionalChart): ChartLegendMarkerModel {
 	const shapeByType: Record<TwoDimensionalChartType, LegendMarkerShape> = {
 		area: "line",
 		bar: "bar",

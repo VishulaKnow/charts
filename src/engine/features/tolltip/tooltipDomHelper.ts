@@ -7,7 +7,7 @@ import {
 	MdtChartsDataRow
 } from "../../../config/config";
 import {
-	ChartLegendModel,
+	ChartLegendMarkerModel,
 	OptionsModelData,
 	PolarChartModel,
 	TwoDimensionalChartModel,
@@ -182,7 +182,7 @@ export class TooltipDomHelper {
 		contentBlock.selectAll(`.${this.textItemClass}`).style("white-space", "pre-wrap");
 	}
 
-	private static getMarkerCreator(options: ChartLegendModel): MarkerCreator {
+	private static getMarkerCreator(options: ChartLegendMarkerModel): MarkerCreator {
 		return getMarkerCreator(options, { default: { cssClass: TooltipDomHelper.tooltipLegendDefaultMarker } });
 	}
 

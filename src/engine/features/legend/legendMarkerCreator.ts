@@ -1,6 +1,6 @@
 import { BaseType, Selection } from "d3-selection";
 import {
-	ChartLegendModel,
+	ChartLegendMarkerModel,
 	TwoDimensionalChartLegendBarModel,
 	TwoDimensionalChartLegendLineModel
 } from "../../../model/model";
@@ -9,7 +9,7 @@ import { HatchPatternDef } from "../../block/defs/hatchPattern";
 import { applyLineDash } from "../../twoDimensionalNotation/line/lineHelper";
 import { getClipPathValue } from "../../../engine/twoDimensionalNotation/bar/barHelper";
 
-interface MarkerCreationOptions extends ChartLegendModel {
+interface MarkerCreationOptions extends ChartLegendMarkerModel {
 	color: string;
 }
 
@@ -31,7 +31,7 @@ export interface MarkerCreator {
 	renderMarker(
 		selection: MarkerParentSelection,
 		color: string
-	): Selection<BaseType, ChartLegendModel, BaseType, unknown>;
+	): Selection<BaseType, ChartLegendMarkerModel, BaseType, unknown>;
 	updateColors(selection: MarkerParentSelection, color: string): void;
 }
 
@@ -39,7 +39,10 @@ interface MakerCreatorCustomOptions {
 	default?: { cssClass: string };
 }
 
-export function getMarkerCreator(options: ChartLegendModel, customOptions?: MakerCreatorCustomOptions): MarkerCreator {
+export function getMarkerCreator(
+	options: ChartLegendMarkerModel,
+	customOptions?: MakerCreatorCustomOptions
+): MarkerCreator {
 	if (options.markerShape === "bar") return new BarMarkerCreator(options.barViewOptions);
 	if (options.markerShape === "line") return new LineMarkerCreator(options.lineViewOptions);
 	return new DefaultMarkerCreator(customOptions?.default?.cssClass);
