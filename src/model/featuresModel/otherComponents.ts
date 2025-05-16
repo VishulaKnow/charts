@@ -2,7 +2,7 @@ import { LegendModel } from "./legendModel/legendModel";
 import { OtherCommonComponents } from "../model";
 import { TitleModel } from "./titleModel";
 import { ElementsOptions, LegendBlockCanvas } from "../../designer/designerConfig";
-import { TooltipCanvasModel } from "./tooltipModel/tooltipModel";
+import { TooltipCanvasModel } from "./tooltipModel/tooltipCanvasModel";
 import { ModelInstance } from "../modelInstance/modelInstance";
 import { TitleConfigReader } from "../modelInstance/titleConfigReader";
 

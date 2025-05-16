@@ -66,6 +66,38 @@ export interface BlockMargin {
 }
 
 //====================================================== Options
+
+export interface TooltipBasicModel {
+	renderContent: (dataRow: MdtChartsDataRow, keyFieldValue: string) => TooltipContent;
+}
+
+export interface TooltipMarkerModel extends ChartLegendMarkerModel {
+	color: string;
+}
+
+export type TooltipContent =
+	| {
+			type: "html";
+			htmlContent: string;
+	  }
+	| TooltipContentWithRows;
+
+export interface TooltipContentWithRows {
+	type: "rows";
+	rows: TooltipContentRow[];
+}
+
+export interface TooltipContentRow {
+	marker?: TooltipMarkerModel;
+	textContent: {
+		caption: string;
+		value?: string | number;
+	};
+	wrapper?: {
+		cssClassName?: string;
+	};
+}
+
 interface BasicOptionsModel {
 	tooltip: TooltipOptions;
 }
