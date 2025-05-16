@@ -1,4 +1,9 @@
+import { MdtChartsDataRow } from "../../../config/config";
 import { TooltipContent } from "../../model";
+import {
+	PolarInitialRowsProvider,
+	PolarInitialRowsProviderOptions
+} from "./contentByNotations/polarInitialRowsProvider";
 import { TooltipContentInitialRowsProvider } from "./contentByNotations/tooltipContentInitialRowsProvider";
 import {
 	TwoDimInitialRowsProvider,
@@ -6,29 +11,30 @@ import {
 } from "./contentByNotations/twoDimInitialRowsProvider";
 import { TooltipContentGeneratorOptions, TwoDimTooltipContentGenerator } from "./tooltipContentModel";
 
+const datasource: MdtChartsDataRow[] = [
+	{
+		$id: 1,
+		brand: "BMW",
+		price: 109000,
+		count: 10000
+	},
+	{
+		$id: 2,
+		brand: "LADA",
+		price: 12000,
+		count: 1000
+	},
+	{
+		$id: 3,
+		brand: "MERCEDES",
+		price: 15000,
+		count: 1200
+	}
+];
 const createInitialOptions = (
 	initialRowsProvider: TooltipContentInitialRowsProvider
 ): TooltipContentGeneratorOptions => ({
-	datasource: [
-		{
-			$id: 1,
-			brand: "BMW",
-			price: 109000,
-			count: 10000
-		},
-		{
-			$id: 2,
-			brand: "LADA",
-			price: 12000,
-			count: 1000
-		},
-		{
-			$id: 3,
-			brand: "MERCEDES",
-			price: 15000,
-			count: 1200
-		}
-	],
+	datasource,
 	publicOptions: {},
 	keyFieldName: "brand",
 	valueGlobalFormatter: (value) => value.toString(),
@@ -84,6 +90,17 @@ const getTwoDimInitialRowsProviderOptions = (): TwoDimInitialRowsProviderOptions
 	]
 });
 
+const getPolarInitialRowsProviderOptions = (): PolarInitialRowsProviderOptions => ({
+	datasource,
+	chartColors: ["red", "blue", "green"],
+	valueField: {
+		name: "price",
+		title: "Price",
+		format: "money"
+	},
+	keyFieldName: "brand"
+});
+
 describe("TwoDimTooltipContentGenerator", () => {
 	it("should render defined html if it is defined in public options", () => {
 		const options = createInitialOptions(new TwoDimInitialRowsProvider(getTwoDimInitialRowsProviderOptions()));
@@ -97,628 +114,709 @@ describe("TwoDimTooltipContentGenerator", () => {
 		});
 	});
 
-	it("should generate content rows by value fields by default", () => {
-		const generator = new TwoDimTooltipContentGenerator(
-			createInitialOptions(new TwoDimInitialRowsProvider(getTwoDimInitialRowsProviderOptions()))
-		);
-		const content = generator.generateContent("BMW");
+	describe("for 2d notation", () => {
+		it("should generate content rows by value fields by default", () => {
+			const generator = new TwoDimTooltipContentGenerator(
+				createInitialOptions(new TwoDimInitialRowsProvider(getTwoDimInitialRowsProviderOptions()))
+			);
+			const content = generator.generateContent("BMW");
 
-		expect(content).toEqual(<TooltipContent>{
-			type: "rows",
-			rows: [
-				{
-					textContent: {
-						caption: "BMW"
-					},
-					wrapper: {
-						cssClassName: "tooltip-head"
-					}
-				},
-				{
-					textContent: {
-						caption: "Price",
-						value: "109000"
-					},
-					marker: {
-						color: "green",
-						markerShape: "bar",
-						barViewOptions: {
-							borderRadius: {
-								topLeft: 0,
-								topRight: 0,
-								bottomLeft: 0,
-								bottomRight: 0
-							},
-							width: 10,
-							hatch: {
-								on: false
-							}
+			expect(content).toEqual(<TooltipContent>{
+				type: "rows",
+				rows: [
+					{
+						textContent: {
+							caption: "BMW"
 						},
-						lineViewOptions: {
-							length: 10,
-							strokeWidth: 0,
-							dashedStyles: {
-								on: true,
-								dashSize: 1,
-								gapSize: 1
+						wrapper: {
+							cssClassName: "tooltip-head"
+						}
+					},
+					{
+						textContent: {
+							caption: "Price",
+							value: "109000"
+						},
+						marker: {
+							color: "green",
+							markerShape: "bar",
+							barViewOptions: {
+								borderRadius: {
+									topLeft: 0,
+									topRight: 0,
+									bottomLeft: 0,
+									bottomRight: 0
+								},
+								width: 10,
+								hatch: {
+									on: false
+								}
+							},
+							lineViewOptions: {
+								length: 10,
+								strokeWidth: 0,
+								dashedStyles: {
+									on: true,
+									dashSize: 1,
+									gapSize: 1
+								}
+							}
+						}
+					},
+					{
+						textContent: {
+							caption: "Count",
+							value: "10000"
+						},
+						marker: {
+							color: "blue",
+							markerShape: "bar",
+							barViewOptions: {
+								borderRadius: {
+									topLeft: 0,
+									topRight: 0,
+									bottomLeft: 0,
+									bottomRight: 0
+								},
+								width: 10,
+								hatch: {
+									on: false
+								}
+							},
+							lineViewOptions: {
+								length: 10,
+								strokeWidth: 0,
+								dashedStyles: {
+									on: true,
+									dashSize: 1,
+									gapSize: 1
+								}
 							}
 						}
 					}
+				]
+			});
+		});
+
+		it("should handle rows for multiple charts", () => {
+			const initialRowsProviderOptions = getTwoDimInitialRowsProviderOptions();
+
+			initialRowsProviderOptions.chartsInfo.push({
+				data: {
+					valueFields: [{ name: "price", title: "Price2", format: "money" }]
 				},
-				{
-					textContent: {
-						caption: "Count",
-						value: "10000"
-					},
-					marker: {
-						color: "blue",
-						markerShape: "bar",
-						barViewOptions: {
-							borderRadius: {
-								topLeft: 0,
-								topRight: 0,
-								bottomLeft: 0,
-								bottomRight: 0
-							},
-							width: 10,
-							hatch: {
-								on: false
-							}
+				style: {
+					opacity: 0,
+					elementColors: ["red", "yellow"]
+				},
+				legend: {
+					markerShape: "line",
+					barViewOptions: {
+						borderRadius: {
+							topLeft: 0,
+							topRight: 0,
+							bottomLeft: 0,
+							bottomRight: 0
 						},
-						lineViewOptions: {
-							length: 10,
-							strokeWidth: 0,
-							dashedStyles: {
-								on: true,
-								dashSize: 1,
-								gapSize: 1
-							}
+						width: 10,
+						hatch: {
+							on: false
+						}
+					},
+					lineViewOptions: {
+						length: 10,
+						strokeWidth: 2,
+						dashedStyles: {
+							on: true,
+							dashSize: 10,
+							gapSize: 2
 						}
 					}
 				}
-			]
+			});
+			const generator = new TwoDimTooltipContentGenerator(
+				createInitialOptions(new TwoDimInitialRowsProvider(initialRowsProviderOptions))
+			);
+			const content = generator.generateContent("LADA");
+
+			expect(content).toEqual(<TooltipContent>{
+				type: "rows",
+				rows: [
+					{
+						textContent: {
+							caption: "LADA"
+						},
+						wrapper: {
+							cssClassName: "tooltip-head"
+						}
+					},
+					{
+						textContent: {
+							caption: "Price",
+							value: "12000"
+						},
+						marker: {
+							color: "green",
+							markerShape: "bar",
+							barViewOptions: {
+								borderRadius: {
+									topLeft: 0,
+									topRight: 0,
+									bottomLeft: 0,
+									bottomRight: 0
+								},
+								width: 10,
+								hatch: {
+									on: false
+								}
+							},
+							lineViewOptions: {
+								length: 10,
+								strokeWidth: 0,
+								dashedStyles: {
+									on: true,
+									dashSize: 1,
+									gapSize: 1
+								}
+							}
+						}
+					},
+					{
+						textContent: {
+							caption: "Count",
+							value: "1000"
+						},
+						marker: {
+							color: "blue",
+							markerShape: "bar",
+							barViewOptions: {
+								borderRadius: {
+									topLeft: 0,
+									topRight: 0,
+									bottomLeft: 0,
+									bottomRight: 0
+								},
+								width: 10,
+								hatch: {
+									on: false
+								}
+							},
+							lineViewOptions: {
+								length: 10,
+								strokeWidth: 0,
+								dashedStyles: {
+									on: true,
+									dashSize: 1,
+									gapSize: 1
+								}
+							}
+						}
+					},
+					{
+						textContent: {
+							caption: "Price2",
+							value: "12000"
+						},
+						marker: {
+							color: "red",
+							markerShape: "line",
+							barViewOptions: {
+								borderRadius: {
+									topLeft: 0,
+									topRight: 0,
+									bottomLeft: 0,
+									bottomRight: 0
+								},
+								width: 10,
+								hatch: {
+									on: false
+								}
+							},
+							lineViewOptions: {
+								length: 10,
+								strokeWidth: 2,
+								dashedStyles: {
+									on: true,
+									dashSize: 10,
+									gapSize: 2
+								}
+							}
+						}
+					}
+				]
+			});
 		});
-	});
 
-	it("should handle rows for multiple charts", () => {
-		const initialRowsProviderOptions = getTwoDimInitialRowsProviderOptions();
+		it("should accept formatter from public options if it is defined", () => {
+			const options = createInitialOptions(new TwoDimInitialRowsProvider(getTwoDimInitialRowsProviderOptions()));
+			options.publicOptions.formatValue = ({ rawValue }) => `$${rawValue}`;
 
-		initialRowsProviderOptions.chartsInfo.push({
-			data: {
-				valueFields: [{ name: "price", title: "Price2", format: "money" }]
-			},
-			style: {
-				opacity: 0,
-				elementColors: ["red", "yellow"]
-			},
-			legend: {
-				markerShape: "line",
-				barViewOptions: {
-					borderRadius: {
-						topLeft: 0,
-						topRight: 0,
-						bottomLeft: 0,
-						bottomRight: 0
+			const generator = new TwoDimTooltipContentGenerator(options);
+			const content = generator.generateContent("BMW");
+
+			expect(content).toEqual(<TooltipContent>{
+				type: "rows",
+				rows: [
+					{
+						textContent: {
+							caption: "BMW"
+						},
+						wrapper: {
+							cssClassName: "tooltip-head"
+						}
 					},
-					width: 10,
-					hatch: {
-						on: false
+					{
+						textContent: {
+							caption: "Price",
+							value: "$109000"
+						},
+						marker: {
+							color: "green",
+							markerShape: "bar",
+							barViewOptions: {
+								borderRadius: {
+									topLeft: 0,
+									topRight: 0,
+									bottomLeft: 0,
+									bottomRight: 0
+								},
+								width: 10,
+								hatch: {
+									on: false
+								}
+							},
+							lineViewOptions: {
+								length: 10,
+								strokeWidth: 0,
+								dashedStyles: {
+									on: true,
+									dashSize: 1,
+									gapSize: 1
+								}
+							}
+						}
+					},
+					{
+						textContent: {
+							caption: "Count",
+							value: "$10000"
+						},
+						marker: {
+							color: "blue",
+							markerShape: "bar",
+							barViewOptions: {
+								borderRadius: {
+									topLeft: 0,
+									topRight: 0,
+									bottomLeft: 0,
+									bottomRight: 0
+								},
+								width: 10,
+								hatch: {
+									on: false
+								}
+							},
+							lineViewOptions: {
+								length: 10,
+								strokeWidth: 0,
+								dashedStyles: {
+									on: true,
+									dashSize: 1,
+									gapSize: 1
+								}
+							}
+						}
 					}
-				},
-				lineViewOptions: {
-					length: 10,
-					strokeWidth: 2,
-					dashedStyles: {
-						on: true,
-						dashSize: 10,
-						gapSize: 2
-					}
-				}
-			}
+				]
+			});
 		});
-		const generator = new TwoDimTooltipContentGenerator(
-			createInitialOptions(new TwoDimInitialRowsProvider(initialRowsProviderOptions))
-		);
-		const content = generator.generateContent("LADA");
 
-		expect(content).toEqual(<TooltipContent>{
-			type: "rows",
-			rows: [
-				{
-					textContent: {
-						caption: "LADA"
+		it("should put aggregator content under values if it is defined in public options", () => {
+			const options = createInitialOptions(new TwoDimInitialRowsProvider(getTwoDimInitialRowsProviderOptions()));
+			options.publicOptions.aggregator = {
+				content: () => [
+					{
+						type: "captionValue",
+						caption: "Total",
+						value: 100000
 					},
-					wrapper: {
-						cssClassName: "tooltip-head"
-					}
-				},
-				{
-					textContent: {
-						caption: "Price",
-						value: "12000"
-					},
-					marker: {
-						color: "green",
-						markerShape: "bar",
-						barViewOptions: {
-							borderRadius: {
-								topLeft: 0,
-								topRight: 0,
-								bottomLeft: 0,
-								bottomRight: 0
-							},
-							width: 10,
-							hatch: {
-								on: false
-							}
+					{ type: "plainText", textContent: "Data is not official" }
+				],
+				position: "underValues"
+			};
+			const generator = new TwoDimTooltipContentGenerator(options);
+
+			const content = generator.generateContent("BMW");
+
+			expect(content).toEqual(<TooltipContent>{
+				type: "rows",
+				rows: [
+					{
+						textContent: {
+							caption: "BMW"
 						},
-						lineViewOptions: {
-							length: 10,
-							strokeWidth: 0,
-							dashedStyles: {
-								on: true,
-								dashSize: 1,
-								gapSize: 1
+						wrapper: {
+							cssClassName: "tooltip-head"
+						}
+					},
+					{
+						textContent: {
+							caption: "Price",
+							value: "109000"
+						},
+						marker: {
+							color: "green",
+							markerShape: "bar",
+							barViewOptions: {
+								borderRadius: {
+									topLeft: 0,
+									topRight: 0,
+									bottomLeft: 0,
+									bottomRight: 0
+								},
+								width: 10,
+								hatch: {
+									on: false
+								}
+							},
+							lineViewOptions: {
+								length: 10,
+								strokeWidth: 0,
+								dashedStyles: {
+									on: true,
+									dashSize: 1,
+									gapSize: 1
+								}
 							}
 						}
-					}
-				},
-				{
-					textContent: {
-						caption: "Count",
-						value: "1000"
 					},
-					marker: {
-						color: "blue",
-						markerShape: "bar",
-						barViewOptions: {
-							borderRadius: {
-								topLeft: 0,
-								topRight: 0,
-								bottomLeft: 0,
-								bottomRight: 0
-							},
-							width: 10,
-							hatch: {
-								on: false
-							}
+					{
+						textContent: {
+							caption: "Count",
+							value: "10000"
 						},
-						lineViewOptions: {
-							length: 10,
-							strokeWidth: 0,
-							dashedStyles: {
-								on: true,
-								dashSize: 1,
-								gapSize: 1
+						marker: {
+							color: "blue",
+							markerShape: "bar",
+							barViewOptions: {
+								borderRadius: {
+									topLeft: 0,
+									topRight: 0,
+									bottomLeft: 0,
+									bottomRight: 0
+								},
+								width: 10,
+								hatch: {
+									on: false
+								}
+							},
+							lineViewOptions: {
+								length: 10,
+								strokeWidth: 0,
+								dashedStyles: {
+									on: true,
+									dashSize: 1,
+									gapSize: 1
+								}
 							}
 						}
-					}
-				},
-				{
-					textContent: {
-						caption: "Price2",
-						value: "12000"
 					},
-					marker: {
-						color: "red",
-						markerShape: "line",
-						barViewOptions: {
-							borderRadius: {
-								topLeft: 0,
-								topRight: 0,
-								bottomLeft: 0,
-								bottomRight: 0
-							},
-							width: 10,
-							hatch: {
-								on: false
-							}
-						},
-						lineViewOptions: {
-							length: 10,
-							strokeWidth: 2,
-							dashedStyles: {
-								on: true,
-								dashSize: 10,
-								gapSize: 2
-							}
+					{
+						textContent: {
+							caption: "Total",
+							value: 100000
+						}
+					},
+					{
+						textContent: {
+							caption: "Data is not official",
+							value: undefined
 						}
 					}
-				}
-			]
+				]
+			});
 		});
-	});
 
-	it("should accept formatter from public options if it is defined", () => {
-		const options = createInitialOptions(new TwoDimInitialRowsProvider(getTwoDimInitialRowsProviderOptions()));
-		options.publicOptions.formatValue = ({ rawValue }) => `$${rawValue}`;
-
-		const generator = new TwoDimTooltipContentGenerator(options);
-		const content = generator.generateContent("BMW");
-
-		expect(content).toEqual(<TooltipContent>{
-			type: "rows",
-			rows: [
-				{
-					textContent: {
-						caption: "BMW"
+		it("should put aggregator content under key if it is defined in public options", () => {
+			const options = createInitialOptions(new TwoDimInitialRowsProvider(getTwoDimInitialRowsProviderOptions()));
+			options.publicOptions.aggregator = {
+				content: () => [
+					{
+						type: "captionValue",
+						caption: "Total",
+						value: 100000
 					},
-					wrapper: {
-						cssClassName: "tooltip-head"
-					}
-				},
-				{
-					textContent: {
-						caption: "Price",
-						value: "$109000"
-					},
-					marker: {
-						color: "green",
-						markerShape: "bar",
-						barViewOptions: {
-							borderRadius: {
-								topLeft: 0,
-								topRight: 0,
-								bottomLeft: 0,
-								bottomRight: 0
-							},
-							width: 10,
-							hatch: {
-								on: false
-							}
+					{ type: "plainText", textContent: "Data is not official" }
+				],
+				position: "underKey"
+			};
+			const generator = new TwoDimTooltipContentGenerator(options);
+
+			const content = generator.generateContent("BMW");
+
+			expect(content).toEqual(<TooltipContent>{
+				type: "rows",
+				rows: [
+					{
+						textContent: {
+							caption: "BMW"
 						},
-						lineViewOptions: {
-							length: 10,
-							strokeWidth: 0,
-							dashedStyles: {
-								on: true,
-								dashSize: 1,
-								gapSize: 1
+						wrapper: {
+							cssClassName: "tooltip-head"
+						}
+					},
+					{
+						textContent: {
+							caption: "Total",
+							value: 100000
+						}
+					},
+					{
+						textContent: {
+							caption: "Data is not official",
+							value: undefined
+						}
+					},
+					{
+						textContent: {
+							caption: "Price",
+							value: "109000"
+						},
+						marker: {
+							color: "green",
+							markerShape: "bar",
+							barViewOptions: {
+								borderRadius: {
+									topLeft: 0,
+									topRight: 0,
+									bottomLeft: 0,
+									bottomRight: 0
+								},
+								width: 10,
+								hatch: {
+									on: false
+								}
+							},
+							lineViewOptions: {
+								length: 10,
+								strokeWidth: 0,
+								dashedStyles: {
+									on: true,
+									dashSize: 1,
+									gapSize: 1
+								}
+							}
+						}
+					},
+					{
+						textContent: {
+							caption: "Count",
+							value: "10000"
+						},
+						marker: {
+							color: "blue",
+							markerShape: "bar",
+							barViewOptions: {
+								borderRadius: {
+									topLeft: 0,
+									topRight: 0,
+									bottomLeft: 0,
+									bottomRight: 0
+								},
+								width: 10,
+								hatch: {
+									on: false
+								}
+							},
+							lineViewOptions: {
+								length: 10,
+								strokeWidth: 0,
+								dashedStyles: {
+									on: true,
+									dashSize: 1,
+									gapSize: 1
+								}
 							}
 						}
 					}
-				},
-				{
-					textContent: {
-						caption: "Count",
-						value: "$10000"
-					},
-					marker: {
-						color: "blue",
-						markerShape: "bar",
-						barViewOptions: {
-							borderRadius: {
-								topLeft: 0,
-								topRight: 0,
-								bottomLeft: 0,
-								bottomRight: 0
-							},
-							width: 10,
-							hatch: {
-								on: false
-							}
-						},
-						lineViewOptions: {
-							length: 10,
-							strokeWidth: 0,
-							dashedStyles: {
-								on: true,
-								dashSize: 1,
-								gapSize: 1
-							}
-						}
-					}
-				}
-			]
+				]
+			});
 		});
-	});
 
-	it("should put aggregator content under values if it is defined in public options", () => {
-		const options = createInitialOptions(new TwoDimInitialRowsProvider(getTwoDimInitialRowsProviderOptions()));
-		options.publicOptions.aggregator = {
-			content: () => [
-				{
+		it("should handle aggregator when it provided as one value instead of array", () => {
+			const options = createInitialOptions(new TwoDimInitialRowsProvider(getTwoDimInitialRowsProviderOptions()));
+			options.publicOptions.aggregator = {
+				content: () => ({
 					type: "captionValue",
 					caption: "Total",
 					value: 100000
-				},
-				{ type: "plainText", textContent: "Data is not official" }
-			],
-			position: "underValues"
-		};
-		const generator = new TwoDimTooltipContentGenerator(options);
+				}),
+				position: "underKey"
+			};
+			const generator = new TwoDimTooltipContentGenerator(options);
 
-		const content = generator.generateContent("BMW");
+			const content = generator.generateContent("BMW");
 
-		expect(content).toEqual(<TooltipContent>{
-			type: "rows",
-			rows: [
-				{
-					textContent: {
-						caption: "BMW"
-					},
-					wrapper: {
-						cssClassName: "tooltip-head"
-					}
-				},
-				{
-					textContent: {
-						caption: "Price",
-						value: "109000"
-					},
-					marker: {
-						color: "green",
-						markerShape: "bar",
-						barViewOptions: {
-							borderRadius: {
-								topLeft: 0,
-								topRight: 0,
-								bottomLeft: 0,
-								bottomRight: 0
-							},
-							width: 10,
-							hatch: {
-								on: false
-							}
+			expect(content).toEqual(<TooltipContent>{
+				type: "rows",
+				rows: [
+					{
+						textContent: {
+							caption: "BMW"
 						},
-						lineViewOptions: {
-							length: 10,
-							strokeWidth: 0,
-							dashedStyles: {
-								on: true,
-								dashSize: 1,
-								gapSize: 1
+						wrapper: {
+							cssClassName: "tooltip-head"
+						}
+					},
+					{
+						textContent: {
+							caption: "Total",
+							value: 100000
+						}
+					},
+					{
+						textContent: {
+							caption: "Price",
+							value: "109000"
+						},
+						marker: {
+							color: "green",
+							markerShape: "bar",
+							barViewOptions: {
+								borderRadius: {
+									topLeft: 0,
+									topRight: 0,
+									bottomLeft: 0,
+									bottomRight: 0
+								},
+								width: 10,
+								hatch: {
+									on: false
+								}
+							},
+							lineViewOptions: {
+								length: 10,
+								strokeWidth: 0,
+								dashedStyles: {
+									on: true,
+									dashSize: 1,
+									gapSize: 1
+								}
+							}
+						}
+					},
+					{
+						textContent: {
+							caption: "Count",
+							value: "10000"
+						},
+						marker: {
+							color: "blue",
+							markerShape: "bar",
+							barViewOptions: {
+								borderRadius: {
+									topLeft: 0,
+									topRight: 0,
+									bottomLeft: 0,
+									bottomRight: 0
+								},
+								width: 10,
+								hatch: {
+									on: false
+								}
+							},
+							lineViewOptions: {
+								length: 10,
+								strokeWidth: 0,
+								dashedStyles: {
+									on: true,
+									dashSize: 1,
+									gapSize: 1
+								}
 							}
 						}
 					}
-				},
-				{
-					textContent: {
-						caption: "Count",
-						value: "10000"
-					},
-					marker: {
-						color: "blue",
-						markerShape: "bar",
-						barViewOptions: {
-							borderRadius: {
-								topLeft: 0,
-								topRight: 0,
-								bottomLeft: 0,
-								bottomRight: 0
-							},
-							width: 10,
-							hatch: {
-								on: false
-							}
-						},
-						lineViewOptions: {
-							length: 10,
-							strokeWidth: 0,
-							dashedStyles: {
-								on: true,
-								dashSize: 1,
-								gapSize: 1
-							}
-						}
-					}
-				},
-				{
-					textContent: {
-						caption: "Total",
-						value: 100000
-					}
-				},
-				{
-					textContent: {
-						caption: "Data is not official",
-						value: undefined
-					}
-				}
-			]
+				]
+			});
 		});
 	});
 
-	it("should put aggregator content under key if it is defined in public options", () => {
-		const options = createInitialOptions(new TwoDimInitialRowsProvider(getTwoDimInitialRowsProviderOptions()));
-		options.publicOptions.aggregator = {
-			content: () => [
-				{
-					type: "captionValue",
-					caption: "Total",
-					value: 100000
-				},
-				{ type: "plainText", textContent: "Data is not official" }
-			],
-			position: "underKey"
-		};
-		const generator = new TwoDimTooltipContentGenerator(options);
+	describe("for polar notation", () => {
+		it("should set color for marker by data row index", () => {
+			const generator = new TwoDimTooltipContentGenerator(
+				createInitialOptions(new PolarInitialRowsProvider(getPolarInitialRowsProviderOptions()))
+			);
+			const content = generator.generateContent("BMW");
 
-		const content = generator.generateContent("BMW");
-
-		expect(content).toEqual(<TooltipContent>{
-			type: "rows",
-			rows: [
-				{
-					textContent: {
-						caption: "BMW"
-					},
-					wrapper: {
-						cssClassName: "tooltip-head"
-					}
-				},
-				{
-					textContent: {
-						caption: "Total",
-						value: 100000
-					}
-				},
-				{
-					textContent: {
-						caption: "Data is not official",
-						value: undefined
-					}
-				},
-				{
-					textContent: {
-						caption: "Price",
-						value: "109000"
-					},
-					marker: {
-						color: "green",
-						markerShape: "bar",
-						barViewOptions: {
-							borderRadius: {
-								topLeft: 0,
-								topRight: 0,
-								bottomLeft: 0,
-								bottomRight: 0
-							},
-							width: 10,
-							hatch: {
-								on: false
-							}
+			expect(content).toEqual(<TooltipContent>{
+				type: "rows",
+				rows: [
+					{
+						textContent: {
+							caption: "BMW"
 						},
-						lineViewOptions: {
-							length: 10,
-							strokeWidth: 0,
-							dashedStyles: {
-								on: true,
-								dashSize: 1,
-								gapSize: 1
+						wrapper: {
+							cssClassName: "tooltip-head"
+						}
+					},
+					{
+						textContent: {
+							caption: "Price",
+							value: "109000"
+						},
+						marker: {
+							color: "red",
+							markerShape: "default",
+							barViewOptions: {
+								hatch: { on: false },
+								borderRadius: { topLeft: 0, topRight: 0, bottomLeft: 0, bottomRight: 0 },
+								width: 0
+							},
+							lineViewOptions: {
+								dashedStyles: { on: false, dashSize: 0, gapSize: 0 },
+								strokeWidth: 0,
+								length: 0
 							}
 						}
 					}
-				},
-				{
-					textContent: {
-						caption: "Count",
-						value: "10000"
-					},
-					marker: {
-						color: "blue",
-						markerShape: "bar",
-						barViewOptions: {
-							borderRadius: {
-								topLeft: 0,
-								topRight: 0,
-								bottomLeft: 0,
-								bottomRight: 0
-							},
-							width: 10,
-							hatch: {
-								on: false
-							}
+				]
+			});
+
+			const content2 = generator.generateContent("MERCEDES");
+
+			expect(content2).toEqual(<TooltipContent>{
+				type: "rows",
+				rows: [
+					{
+						textContent: {
+							caption: "MERCEDES"
 						},
-						lineViewOptions: {
-							length: 10,
-							strokeWidth: 0,
-							dashedStyles: {
-								on: true,
-								dashSize: 1,
-								gapSize: 1
+						wrapper: {
+							cssClassName: "tooltip-head"
+						}
+					},
+					{
+						textContent: {
+							caption: "Price",
+							value: "15000"
+						},
+						marker: {
+							color: "green",
+							markerShape: "default",
+							barViewOptions: {
+								hatch: { on: false },
+								borderRadius: { topLeft: 0, topRight: 0, bottomLeft: 0, bottomRight: 0 },
+								width: 0
+							},
+							lineViewOptions: {
+								dashedStyles: { on: false, dashSize: 0, gapSize: 0 },
+								strokeWidth: 0,
+								length: 0
 							}
 						}
 					}
-				}
-			]
-		});
-	});
-
-	it("should handle aggregator when it provided as one value instead of array", () => {
-		const options = createInitialOptions(new TwoDimInitialRowsProvider(getTwoDimInitialRowsProviderOptions()));
-		options.publicOptions.aggregator = {
-			content: () => ({
-				type: "captionValue",
-				caption: "Total",
-				value: 100000
-			}),
-			position: "underKey"
-		};
-		const generator = new TwoDimTooltipContentGenerator(options);
-
-		const content = generator.generateContent("BMW");
-
-		expect(content).toEqual(<TooltipContent>{
-			type: "rows",
-			rows: [
-				{
-					textContent: {
-						caption: "BMW"
-					},
-					wrapper: {
-						cssClassName: "tooltip-head"
-					}
-				},
-				{
-					textContent: {
-						caption: "Total",
-						value: 100000
-					}
-				},
-				{
-					textContent: {
-						caption: "Price",
-						value: "109000"
-					},
-					marker: {
-						color: "green",
-						markerShape: "bar",
-						barViewOptions: {
-							borderRadius: {
-								topLeft: 0,
-								topRight: 0,
-								bottomLeft: 0,
-								bottomRight: 0
-							},
-							width: 10,
-							hatch: {
-								on: false
-							}
-						},
-						lineViewOptions: {
-							length: 10,
-							strokeWidth: 0,
-							dashedStyles: {
-								on: true,
-								dashSize: 1,
-								gapSize: 1
-							}
-						}
-					}
-				},
-				{
-					textContent: {
-						caption: "Count",
-						value: "10000"
-					},
-					marker: {
-						color: "blue",
-						markerShape: "bar",
-						barViewOptions: {
-							borderRadius: {
-								topLeft: 0,
-								topRight: 0,
-								bottomLeft: 0,
-								bottomRight: 0
-							},
-							width: 10,
-							hatch: {
-								on: false
-							}
-						},
-						lineViewOptions: {
-							length: 10,
-							strokeWidth: 0,
-							dashedStyles: {
-								on: true,
-								dashSize: 1,
-								gapSize: 1
-							}
-						}
-					}
-				}
-			]
+				]
+			});
 		});
 	});
 });

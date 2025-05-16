@@ -6,10 +6,8 @@ import { CanvasModel } from "../../modelInstance/canvasModel/canvasModel";
 import { ModelInstance } from "../../modelInstance/modelInstance";
 import { DonutModel } from "./donut/donutModel";
 import { TitleConfigReader } from "../../modelInstance/titleConfigReader";
-import {
-	createRecordOverflowModel,
-	getTextVariationByNumber
-} from "../../featuresModel/recordOverflowModel/recordOverflowModel";
+import { createRecordOverflowModel } from "../../featuresModel/recordOverflowModel/recordOverflowModel";
+import { POLAR_LEGEND_MARKER } from "./modelConstants/polarLegendMarker";
 
 export const MIN_DONUT_BLOCK_SIZE = 120;
 
@@ -110,19 +108,7 @@ export class PolarModel {
 			data: { ...chart.data },
 			cssClasses: ChartStyleModelService.getCssClasses(0),
 			style: ChartStyleModelService.getChartStyle(dataLength, chartStyleConfig),
-			legend: {
-				markerShape: "default",
-				barViewOptions: {
-					hatch: { on: false },
-					borderRadius: { topLeft: 0, topRight: 0, bottomLeft: 0, bottomRight: 0 },
-					width: 0
-				},
-				lineViewOptions: {
-					dashedStyles: { on: false, dashSize: 0, gapSize: 0 },
-					strokeWidth: 0,
-					length: 0
-				}
-			}
+			legend: POLAR_LEGEND_MARKER
 		});
 		return chartsModel;
 	}

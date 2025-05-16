@@ -1,3 +1,4 @@
+import { MdtChartsDataRow } from "../../../../config/config";
 import { TooltipMarkerModel, ValueField } from "../../../model";
 
 export interface TooltipContentInitialRow {
@@ -5,6 +6,11 @@ export interface TooltipContentInitialRow {
 	valueField: ValueField;
 }
 
+export interface TooltipContentInitialRowsProviderContext {
+	keyFieldValue: string;
+	currentDataRow: MdtChartsDataRow;
+}
+
 export interface TooltipContentInitialRowsProvider {
-	getInitialRows(): TooltipContentInitialRow[];
+	getInitialRows(context: TooltipContentInitialRowsProviderContext): TooltipContentInitialRow[];
 }

@@ -31,7 +31,7 @@ export class TwoDimTooltipContentGenerator {
 	private createRows(keyFieldValue: string, currentDataRow: MdtChartsDataRow): TooltipContentWithRows {
 		let contentRows: TooltipContentRow[] = [];
 
-		this.options.initialRowsProvider.getInitialRows().forEach((initialRow) => {
+		this.options.initialRowsProvider.getInitialRows({ keyFieldValue, currentDataRow }).forEach((initialRow) => {
 			const formattedValueByDefault = this.options.valueGlobalFormatter(
 				currentDataRow[initialRow.valueField.name],
 				{
