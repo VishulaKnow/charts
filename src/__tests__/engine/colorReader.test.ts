@@ -13,9 +13,6 @@ describe("Donut ColorReader", () => {
 					elementColors,
 					opacity: 1
 				},
-				tooltip: {
-					show: true
-				},
 				type: "donut",
 				data: {
 					valueField: {

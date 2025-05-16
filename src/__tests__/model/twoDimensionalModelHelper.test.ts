@@ -213,7 +213,6 @@ describe("getGradientDefs", () => {
 				type: "area",
 				isSegmented: false,
 				data: null,
-				tooltip: null,
 				cssClasses: null,
 				style: {
 					opacity: 1,
@@ -245,7 +244,6 @@ describe("getGradientDefs", () => {
 				type: "line",
 				isSegmented: false,
 				data: null,
-				tooltip: null,
 				cssClasses: null,
 				style: {
 					opacity: 1,

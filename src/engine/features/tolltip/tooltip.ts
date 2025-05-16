@@ -76,35 +76,31 @@ export class Tooltip {
 		scales?: Scales
 	): void {
 		TooltipComponentsManager.renderTooltipWrapper(block);
-		const withTooltipIndex = model.options.charts.findIndex(
-			(chart: TwoDimensionalChartModel | PolarChartModel) => chart.tooltip.show
-		);
-		if (withTooltipIndex !== -1) {
-			if (model.options.type === "2d") {
-				this.renderTooltipFor2DCharts(
-					block,
-					data,
+
+		if (model.options.type === "2d") {
+			this.renderTooltipFor2DCharts(
+				block,
+				data,
+				model.blockCanvas.size,
+				model.chartBlock.margin,
+				scales,
+				model.options,
+				tooltipOptions
+			);
+		} else if (model.options.type === "polar") {
+			this.renderTooltipForPolar(
+				block,
+				model.options,
+				data,
+				model.blockCanvas.size,
+				model.chartBlock.margin,
+				DonutThicknessCalculator.getThickness(
+					model.options.chartCanvas,
 					model.blockCanvas.size,
-					model.chartBlock.margin,
-					scales,
-					model.options,
-					tooltipOptions
-				);
-			} else if (model.options.type === "polar") {
-				this.renderTooltipForPolar(
-					block,
-					model.options,
-					data,
-					model.blockCanvas.size,
-					model.chartBlock.margin,
-					DonutThicknessCalculator.getThickness(
-						model.options.chartCanvas,
-						model.blockCanvas.size,
-						model.chartBlock.margin
-					),
-					model.otherComponents.tooltipBlock
-				);
-			}
+					model.chartBlock.margin
+				),
+				model.otherComponents.tooltipBlock
+			);
 		}
 	}
 
@@ -206,7 +202,7 @@ export class Tooltip {
 				if (args.type === "2d")
 					TooltipDomHelper.fillForMulti2DCharts(
 						tooltipContent,
-						args.charts.filter((ch) => ch.tooltip.show),
+						args.charts,
 						data,
 						args.dataOptions,
 						keyValue,

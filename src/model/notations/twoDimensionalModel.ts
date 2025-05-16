@@ -221,7 +221,6 @@ export class TwoDimensionalModel {
 				type: chart.type,
 				isSegmented: chart.isSegmented,
 				data: { ...chart.data },
-				tooltip: { show: true },
 				cssClasses: ChartStyleModelService.getCssClasses(index),
 				style,
 				embeddedLabels: this.getEmbeddedLabelType(chart, chartOrientation),

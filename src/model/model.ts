@@ -344,13 +344,10 @@ export interface DonutThicknessOptions {
 
 //====================================================== Charts
 interface ChartModel {
-	tooltip: TooltipModel;
 	cssClasses: string[];
 	style: ChartStyle;
 }
-interface TooltipModel {
-	show: boolean;
-}
+
 export interface ChartStyle {
 	elementColors: string[];
 	opacity: number;
