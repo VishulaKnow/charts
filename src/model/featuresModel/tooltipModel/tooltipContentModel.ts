@@ -28,16 +28,7 @@ export class TwoDimTooltipContentGenerator {
 	}
 
 	private createRows(keyFieldValue: string, currentDataRow: MdtChartsDataRow): TooltipContentWithRows {
-		const rows: TooltipContentRow[] = [
-			{
-				textContent: {
-					caption: keyFieldValue
-				},
-				wrapper: {
-					cssClassName: this.headWrapperCssClassName
-				}
-			}
-		];
+		let contentRows: TooltipContentRow[] = [];
 
 		this.options.chartsInfo.forEach((chart) => {
 			chart.data.valueFields.forEach((valueField, valueFieldIndex) => {
@@ -52,7 +43,7 @@ export class TwoDimTooltipContentGenerator {
 					  })
 					: formattedValueByDefault;
 
-				rows.push({
+				contentRows.push({
 					marker: {
 						color: chart.style.elementColors[valueFieldIndex % chart.style.elementColors.length],
 						markerShape: chart.legend.markerShape,
@@ -67,9 +58,40 @@ export class TwoDimTooltipContentGenerator {
 			});
 		});
 
+		if (this.options.publicOptions?.aggregator) {
+			const contentResult = this.options.publicOptions.aggregator.content({ row: currentDataRow });
+			const aggregatorContent = Array.isArray(contentResult) ? contentResult : [contentResult];
+
+			const tooltipAggregatorItem = aggregatorContent.map<TooltipContentRow>((content) => {
+				const caption = content.type === "plainText" ? content.textContent : content.caption;
+				const value = content.type === "plainText" ? undefined : content.value;
+
+				return {
+					textContent: {
+						caption,
+						value
+					}
+				};
+			});
+
+			if (this.options.publicOptions.aggregator.position === "underValues")
+				contentRows = contentRows.concat(tooltipAggregatorItem);
+			else contentRows = tooltipAggregatorItem.concat(contentRows);
+		}
+
+		const headerRow: TooltipContentRow = {
+			textContent: {
+				caption: keyFieldValue
+			},
+			wrapper: {
+				cssClassName: this.headWrapperCssClassName
+			}
+		};
+		contentRows.unshift(headerRow);
+
 		return {
 			type: "rows",
-			rows
+			rows: contentRows
 		};
 	}
 }

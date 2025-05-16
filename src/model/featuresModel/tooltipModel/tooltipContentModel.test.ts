@@ -74,6 +74,18 @@ const createInitialOptions = (): TooltipContentGeneratorOptions => ({
 });
 
 describe("TwoDimTooltipContentGenerator", () => {
+	it("should render defined html if it is defined in public options", () => {
+		const options = createInitialOptions();
+		options.publicOptions.html = (dataRow) => `<div>${dataRow.brand}</div>`;
+		const generator = new TwoDimTooltipContentGenerator(options);
+		const content = generator.generateContent("LADA");
+
+		expect(content).toEqual(<TooltipContent>{
+			type: "html",
+			htmlContent: "<div>LADA</div>"
+		});
+	});
+
 	it("should generate content rows by value fields by default", () => {
 		const generator = new TwoDimTooltipContentGenerator(createInitialOptions());
 		const content = generator.generateContent("BMW");
@@ -301,15 +313,299 @@ describe("TwoDimTooltipContentGenerator", () => {
 		});
 	});
 
-	it("should render defined html if it is defined in public options", () => {
+	it("should accept formatter from public options if it is defined", () => {
 		const options = createInitialOptions();
-		options.publicOptions.html = (dataRow) => `<div>${dataRow.brand}</div>`;
+		options.publicOptions.formatValue = ({ rawValue }) => `$${rawValue}`;
+
 		const generator = new TwoDimTooltipContentGenerator(options);
-		const content = generator.generateContent("LADA");
+		const content = generator.generateContent("BMW");
 
 		expect(content).toEqual(<TooltipContent>{
-			type: "html",
-			htmlContent: "<div>LADA</div>"
+			type: "rows",
+			rows: [
+				{
+					textContent: {
+						caption: "BMW"
+					},
+					wrapper: {
+						cssClassName: "tooltip-head"
+					}
+				},
+				{
+					textContent: {
+						caption: "Price",
+						value: "$109000"
+					},
+					marker: {
+						color: "green",
+						markerShape: "bar",
+						barViewOptions: {
+							borderRadius: {
+								topLeft: 0,
+								topRight: 0,
+								bottomLeft: 0,
+								bottomRight: 0
+							},
+							width: 10,
+							hatch: {
+								on: false
+							}
+						},
+						lineViewOptions: {
+							length: 10,
+							strokeWidth: 0,
+							dashedStyles: {
+								on: true,
+								dashSize: 1,
+								gapSize: 1
+							}
+						}
+					}
+				},
+				{
+					textContent: {
+						caption: "Count",
+						value: "$10000"
+					},
+					marker: {
+						color: "blue",
+						markerShape: "bar",
+						barViewOptions: {
+							borderRadius: {
+								topLeft: 0,
+								topRight: 0,
+								bottomLeft: 0,
+								bottomRight: 0
+							},
+							width: 10,
+							hatch: {
+								on: false
+							}
+						},
+						lineViewOptions: {
+							length: 10,
+							strokeWidth: 0,
+							dashedStyles: {
+								on: true,
+								dashSize: 1,
+								gapSize: 1
+							}
+						}
+					}
+				}
+			]
+		});
+	});
+
+	it("should put aggregator content under values if it is defined in public options", () => {
+		const options = createInitialOptions();
+		options.publicOptions.aggregator = {
+			content: () => [
+				{
+					type: "captionValue",
+					caption: "Total",
+					value: 100000
+				},
+				{ type: "plainText", textContent: "Data is not official" }
+			],
+			position: "underValues"
+		};
+		const generator = new TwoDimTooltipContentGenerator(options);
+
+		const content = generator.generateContent("BMW");
+
+		expect(content).toEqual(<TooltipContent>{
+			type: "rows",
+			rows: [
+				{
+					textContent: {
+						caption: "BMW"
+					},
+					wrapper: {
+						cssClassName: "tooltip-head"
+					}
+				},
+				{
+					textContent: {
+						caption: "Price",
+						value: "109000"
+					},
+					marker: {
+						color: "green",
+						markerShape: "bar",
+						barViewOptions: {
+							borderRadius: {
+								topLeft: 0,
+								topRight: 0,
+								bottomLeft: 0,
+								bottomRight: 0
+							},
+							width: 10,
+							hatch: {
+								on: false
+							}
+						},
+						lineViewOptions: {
+							length: 10,
+							strokeWidth: 0,
+							dashedStyles: {
+								on: true,
+								dashSize: 1,
+								gapSize: 1
+							}
+						}
+					}
+				},
+				{
+					textContent: {
+						caption: "Count",
+						value: "10000"
+					},
+					marker: {
+						color: "blue",
+						markerShape: "bar",
+						barViewOptions: {
+							borderRadius: {
+								topLeft: 0,
+								topRight: 0,
+								bottomLeft: 0,
+								bottomRight: 0
+							},
+							width: 10,
+							hatch: {
+								on: false
+							}
+						},
+						lineViewOptions: {
+							length: 10,
+							strokeWidth: 0,
+							dashedStyles: {
+								on: true,
+								dashSize: 1,
+								gapSize: 1
+							}
+						}
+					}
+				},
+				{
+					textContent: {
+						caption: "Total",
+						value: 100000
+					}
+				},
+				{
+					textContent: {
+						caption: "Data is not official",
+						value: undefined
+					}
+				}
+			]
+		});
+	});
+
+	it("should put aggregator content under key if it is defined in public options", () => {
+		const options = createInitialOptions();
+		options.publicOptions.aggregator = {
+			content: () => [
+				{
+					type: "captionValue",
+					caption: "Total",
+					value: 100000
+				},
+				{ type: "plainText", textContent: "Data is not official" }
+			],
+			position: "underKey"
+		};
+		const generator = new TwoDimTooltipContentGenerator(options);
+
+		const content = generator.generateContent("BMW");
+
+		expect(content).toEqual(<TooltipContent>{
+			type: "rows",
+			rows: [
+				{
+					textContent: {
+						caption: "BMW"
+					},
+					wrapper: {
+						cssClassName: "tooltip-head"
+					}
+				},
+				{
+					textContent: {
+						caption: "Total",
+						value: 100000
+					}
+				},
+				{
+					textContent: {
+						caption: "Data is not official",
+						value: undefined
+					}
+				},
+				{
+					textContent: {
+						caption: "Price",
+						value: "109000"
+					},
+					marker: {
+						color: "green",
+						markerShape: "bar",
+						barViewOptions: {
+							borderRadius: {
+								topLeft: 0,
+								topRight: 0,
+								bottomLeft: 0,
+								bottomRight: 0
+							},
+							width: 10,
+							hatch: {
+								on: false
+							}
+						},
+						lineViewOptions: {
+							length: 10,
+							strokeWidth: 0,
+							dashedStyles: {
+								on: true,
+								dashSize: 1,
+								gapSize: 1
+							}
+						}
+					}
+				},
+				{
+					textContent: {
+						caption: "Count",
+						value: "10000"
+					},
+					marker: {
+						color: "blue",
+						markerShape: "bar",
+						barViewOptions: {
+							borderRadius: {
+								topLeft: 0,
+								topRight: 0,
+								bottomLeft: 0,
+								bottomRight: 0
+							},
+							width: 10,
+							hatch: {
+								on: false
+							}
+						},
+						lineViewOptions: {
+							length: 10,
+							strokeWidth: 0,
+							dashedStyles: {
+								on: true,
+								dashSize: 1,
+								gapSize: 1
+							}
+						}
+					}
+				}
+			]
 		});
 	});
 });
