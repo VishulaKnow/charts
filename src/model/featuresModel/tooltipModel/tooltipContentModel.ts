@@ -1,10 +1,11 @@
 import { MdtChartsDataRow, TooltipOptions } from "../../../config/config";
 import { Formatter } from "../../../main";
 import { TooltipContent, TooltipContentRow, TooltipContentWithRows, TwoDimensionalChartModel } from "../../model";
+import { TooltipContentInitialRowsProvider } from "./contentByNotations/tooltipContentInitialRowsProvider";
 
 export interface TooltipContentGeneratorOptions {
 	datasource: MdtChartsDataRow[];
-	chartsInfo: Pick<TwoDimensionalChartModel, "data" | "style" | "legend">[];
+	initialRowsProvider: TooltipContentInitialRowsProvider;
 	publicOptions: TooltipOptions;
 	keyFieldName: string;
 	valueGlobalFormatter: Formatter;
@@ -30,31 +31,27 @@ export class TwoDimTooltipContentGenerator {
 	private createRows(keyFieldValue: string, currentDataRow: MdtChartsDataRow): TooltipContentWithRows {
 		let contentRows: TooltipContentRow[] = [];
 
-		this.options.chartsInfo.forEach((chart) => {
-			chart.data.valueFields.forEach((valueField, valueFieldIndex) => {
-				const formattedValueByDefault = this.options.valueGlobalFormatter(currentDataRow[valueField.name], {
-					type: valueField.format
-				});
+		this.options.initialRowsProvider.getInitialRows().forEach((initialRow) => {
+			const formattedValueByDefault = this.options.valueGlobalFormatter(
+				currentDataRow[initialRow.valueField.name],
+				{
+					type: initialRow.valueField.format
+				}
+			);
 
-				const formattedValue = this.options.publicOptions?.formatValue
-					? this.options.publicOptions.formatValue({
-							rawValue: currentDataRow[valueField.name],
-							autoFormattedValue: formattedValueByDefault
-					  })
-					: formattedValueByDefault;
+			const formattedValue = this.options.publicOptions?.formatValue
+				? this.options.publicOptions.formatValue({
+						rawValue: currentDataRow[initialRow.valueField.name],
+						autoFormattedValue: formattedValueByDefault
+				  })
+				: formattedValueByDefault;
 
-				contentRows.push({
-					marker: {
-						color: chart.style.elementColors[valueFieldIndex % chart.style.elementColors.length],
-						markerShape: chart.legend.markerShape,
-						barViewOptions: chart.legend.barViewOptions,
-						lineViewOptions: chart.legend.lineViewOptions
-					},
-					textContent: {
-						caption: valueField.title,
-						value: formattedValue
-					}
-				});
+			contentRows.push({
+				marker: initialRow.marker,
+				textContent: {
+					caption: initialRow.valueField.title,
+					value: formattedValue
+				}
 			});
 		});
 

@@ -68,7 +68,7 @@ export interface BlockMargin {
 //====================================================== Options
 
 export interface TooltipBasicModel {
-	renderContent: (keyFieldValue: string) => TooltipContent;
+	getContent: (keyFieldValue: string) => TooltipContent;
 }
 
 export interface TooltipMarkerModel extends ChartLegendMarkerModel {
