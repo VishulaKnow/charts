@@ -2,7 +2,7 @@ import { LegendModel } from "./legendModel/legendModel";
 import { OtherCommonComponents } from "../model";
 import { TitleModel } from "./titleModel";
 import { ElementsOptions, LegendBlockCanvas } from "../../designer/designerConfig";
-import { TooltipModel } from "./tooltipModel";
+import { TooltipCanvasModel } from "./tooltipModel/tooltipModel";
 import { ModelInstance } from "../modelInstance/modelInstance";
 import { TitleConfigReader } from "../modelInstance/titleConfigReader";
 
@@ -24,7 +24,7 @@ export class OtherComponentsModel {
 		return {
 			legendBlock: LegendModel.getBaseLegendBlockModel(canvasModel, dependencies.legendConfig),
 			titleBlock: canvasModel.titleCanvas.getModel(),
-			tooltipBlock: TooltipModel.getTooltipModel(dependencies.elementsOptions.tooltip)
+			tooltipBlock: TooltipCanvasModel.getCanvasModel(dependencies.elementsOptions.tooltip)
 		};
 	}
 }
