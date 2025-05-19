@@ -625,7 +625,7 @@ describe("TwoDimTooltipContentGenerator", () => {
 						},
 						marker: {
 							color: "red",
-							markerShape: "default"
+							markerShape: "circle"
 						}
 					}
 				]
@@ -651,7 +651,7 @@ describe("TwoDimTooltipContentGenerator", () => {
 						},
 						marker: {
 							color: "green",
-							markerShape: "default"
+							markerShape: "circle"
 						}
 					}
 				]
