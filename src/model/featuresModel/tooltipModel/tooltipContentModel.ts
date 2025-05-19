@@ -6,7 +6,7 @@ import { TooltipContentInitialRowsProvider } from "./contentByNotations/tooltipC
 export interface TooltipContentGeneratorOptions {
 	datasource: MdtChartsDataRow[];
 	initialRowsProvider: TooltipContentInitialRowsProvider;
-	publicOptions: TooltipOptions;
+	publicOptions?: TooltipOptions;
 	keyFieldName: string;
 	valueGlobalFormatter: Formatter;
 }
@@ -19,7 +19,7 @@ export class TwoDimTooltipContentGenerator {
 	generateContent(keyFieldValue: string): TooltipContent {
 		const currentDataRow = this.options.datasource.find((r) => r[this.options.keyFieldName] === keyFieldValue);
 
-		if (this.options.publicOptions.html)
+		if (this.options.publicOptions?.html)
 			return {
 				type: "html",
 				htmlContent: this.options.publicOptions.html(currentDataRow)

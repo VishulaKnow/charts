@@ -1,48 +1,14 @@
 import { Selection, BaseType } from "d3-selection";
-import {
-	MdtChartsDataSource,
-	TooltipHtml,
-	MdtChartsValueField,
-	TooltipOptions,
-	MdtChartsDataRow
-} from "../../../config/config";
-import {
-	ChartLegendMarkerModel,
-	OptionsModelData,
-	PolarChartModel,
-	TwoDimensionalChartModel,
-	ValueField
-} from "../../../model/model";
-import { ValueFormatter } from "../../valueFormatter";
+import { TooltipBasicModel } from "../../../model/model";
 import { TooltipHelper } from "./tooltipHelper";
 import { Size } from "../../../config/config";
-import { Helper } from "../../helpers/helper";
-import { MarkerCreator, getMarkerCreator } from "../legend/legendMarkerCreator";
+import { getMarkerCreator } from "../legend/legendMarkerCreator";
 
 export interface TooltipLineAttributes {
 	x1: number;
 	x2: number;
 	y1: number;
 	y2: number;
-}
-
-interface TooltipFieldInfo {
-	field: ValueField;
-	markColor?: string;
-	markerCreator?: MarkerCreator;
-}
-
-interface TooltipItem extends Omit<TooltipFieldInfo, "field"> {
-	tooltipHtml: string;
-}
-
-interface TooltipDataRow {
-	caption: string;
-	value: number;
-	formattedValue: string;
-	dataRow: MdtChartsDataRow;
-
-	fieldInfo: TooltipFieldInfo;
 }
 
 export const ARROW_SIZE = 20;
@@ -52,49 +18,49 @@ export const TOOLTIP_ARROW_PADDING_Y = 13;
 
 export class TooltipDomHelper {
 	private static readonly groupClass = "tooltip-group";
-	private static readonly headClass = "tooltip-head";
 	private static readonly textItemClass = "tooltip-text-item";
 	private static readonly tooltipLegendDefaultMarker = "tooltip-circle";
 
-	public static fillForMulti2DCharts(
+	public static fillContent(
 		contentBlock: Selection<HTMLElement, unknown, BaseType, unknown>,
-		charts: TwoDimensionalChartModel[],
-		data: MdtChartsDataSource,
-		dataOptions: OptionsModelData,
 		keyValue: string,
-		tooltipOptions?: TooltipOptions
+		tooltipOptions: TooltipBasicModel
 	): void {
-		const chartDataRows: TooltipFieldInfo[] = [];
+		const content = tooltipOptions.getContent(keyValue);
 
-		charts.forEach((chart) => {
-			chart.data.valueFields.forEach((field, index) => {
-				chartDataRows.push({
-					field,
-					markColor: chart.style.elementColors[index % chart.style.elementColors.length],
-					markerCreator: this.getMarkerCreator(chart.legend)
-				});
+		contentBlock.html("");
+
+		if (content.type === "html") {
+			contentBlock.html(content.htmlContent);
+			contentBlock.selectAll(`.${this.textItemClass}`).style("white-space", "pre-wrap");
+			contentBlock.selectAll(".tooltip-text-item").style("display", "block");
+		} else {
+			content.rows.forEach((row) => {
+				const group = contentBlock.append("div").attr("class", this.groupClass);
+
+				if (row.wrapper?.cssClassName) {
+					group.classed(row.wrapper.cssClassName, true);
+				}
+
+				if (row.marker) {
+					const colorBlock = group.append("div").attr("class", "tooltip-color");
+					getMarkerCreator(row.marker, {
+						default: { cssClass: TooltipDomHelper.tooltipLegendDefaultMarker }
+					}).renderMarker(colorBlock, row.marker.color);
+				}
+
+				const rowTextBlock = group
+					.append("div")
+					.attr("class", "tooltip-texts")
+					.append("div")
+					.attr("class", this.textItemClass);
+
+				rowTextBlock.append("span").attr("class", "tooltip-field-title").text(row.textContent.caption);
+
+				if (row.textContent.value)
+					rowTextBlock.append("span").attr("class", "tooltip-field-value").text(row.textContent.value);
 			});
-		});
-		this.fillCharts(contentBlock, chartDataRows, data, dataOptions, keyValue, tooltipOptions);
-	}
-
-	public static fillForPolarChart(
-		contentBlock: Selection<HTMLElement, unknown, BaseType, unknown>,
-		chart: PolarChartModel,
-		data: MdtChartsDataSource,
-		dataOptions: OptionsModelData,
-		keyValue: string,
-		markColor: string,
-		tooltipOptions?: TooltipOptions
-	): void {
-		const chartDataRows: TooltipFieldInfo[] = [
-			{
-				field: chart.data.valueField,
-				markColor,
-				markerCreator: this.getMarkerCreator(chart.legend)
-			}
-		];
-		this.fillCharts(contentBlock, chartDataRows, data, dataOptions, keyValue, tooltipOptions);
+		}
 	}
 
 	public static getRecalcedCoordinateByArrow(
@@ -129,142 +95,11 @@ export class TooltipDomHelper {
 		];
 	}
 
-	private static renderHead(contentBlock: Selection<BaseType, unknown, BaseType, unknown>, keyValue: string): void {
-		contentBlock.append("div").attr("class", `${this.groupClass} ${this.headClass}`).text(keyValue);
-	}
-
-	private static fillValuesContent(
-		contentBlock: Selection<BaseType, unknown, BaseType, unknown>,
-		{ markColor, tooltipHtml, markerCreator }: TooltipItem
-	): void {
-		const group = contentBlock.append("div").attr("class", this.groupClass);
-
-		if (markColor) {
-			const colorBlock = group.append("div").attr("class", "tooltip-color");
-			markerCreator?.renderMarker(colorBlock, markColor);
-		}
-
-		group
-			.append("div")
-			.attr("class", "tooltip-texts")
-			.append("div")
-			.attr("class", this.textItemClass)
-			.html(tooltipHtml);
-	}
-
-	private static getTooltipContentItemHtml(fieldTitle: string, fieldValue: string): string {
-		return `<span class="tooltip-field-title">${fieldTitle}</span>
-                <span class="tooltip-field-value">${fieldValue}</span>`;
-	}
-
 	private static setTooltipArrowCoordinate(
 		tooltipArrow: Selection<BaseType, unknown, HTMLElement, any>,
 		horizontalPad: number
 	): void {
 		if (horizontalPad !== 0) tooltipArrow.style("left", `${ARROW_DEFAULT_POSITION + Math.floor(horizontalPad)}px`);
 		else tooltipArrow.style("left", `${ARROW_DEFAULT_POSITION}px`);
-	}
-
-	private static fillContentByFunction(
-		contentBlock: Selection<HTMLElement, unknown, BaseType, unknown>,
-		data: MdtChartsDataSource,
-		dataOptions: OptionsModelData,
-		keyValue: string,
-		htmlHandler: TooltipHtml
-	): void {
-		const row = Helper.getRowsByKeys([keyValue], dataOptions.keyField.name, data[dataOptions.dataSource])[0];
-		contentBlock.html(htmlHandler(row));
-		this.setWhiteSpaceForTextBlocks(contentBlock);
-		contentBlock.selectAll(".tooltip-text-item").style("display", "block");
-	}
-
-	private static setWhiteSpaceForTextBlocks(contentBlock: Selection<HTMLElement, unknown, BaseType, unknown>): void {
-		contentBlock.selectAll(`.${this.textItemClass}`).style("white-space", "pre-wrap");
-	}
-
-	private static getMarkerCreator(options: ChartLegendMarkerModel): MarkerCreator {
-		return getMarkerCreator(options, { default: { cssClass: TooltipDomHelper.tooltipLegendDefaultMarker } });
-	}
-
-	private static addAggregatorTooltipItem(
-		tooltipOptions: TooltipOptions,
-		data: MdtChartsDataRow,
-		tooltipItems: TooltipItem[]
-	): void {
-		if (tooltipOptions?.aggregator) {
-			const contentResult = tooltipOptions.aggregator.content({ row: data });
-			const aggregatorContent = Array.isArray(contentResult) ? contentResult : [contentResult];
-
-			const tooltipAggregatorItem = aggregatorContent.map<TooltipItem>((content) => {
-				return {
-					markColor: undefined,
-					tooltipHtml:
-						content.type === "plainText"
-							? content.textContent
-							: this.getTooltipContentItemHtml(content.caption, content.value),
-					markerCreator: undefined
-				};
-			});
-
-			if (tooltipOptions.aggregator.position === "underValues") tooltipItems.push(...tooltipAggregatorItem);
-			else tooltipItems.unshift(...tooltipAggregatorItem);
-		}
-	}
-
-	private static fillCharts(
-		contentBlock: Selection<HTMLElement, unknown, BaseType, unknown>,
-		tooltipFieldsInfo: TooltipFieldInfo[],
-		data: MdtChartsDataSource,
-		dataOptions: OptionsModelData,
-		keyValue: string,
-		tooltipOptions?: TooltipOptions
-	): void {
-		contentBlock.html("");
-
-		if (!tooltipOptions?.html) {
-			const dataRow = data[dataOptions.dataSource].find((d) => d[dataOptions.keyField.name] === keyValue);
-
-			const tooltipRows: TooltipDataRow[] = [];
-
-			tooltipFieldsInfo.forEach((tooltipFieldInfo) => {
-				const formattedValueByDefault = ValueFormatter.formatField(
-					tooltipFieldInfo.field.format,
-					dataRow[tooltipFieldInfo.field.name]
-				);
-
-				const formattedValue = tooltipOptions?.formatValue
-					? tooltipOptions.formatValue({
-							rawValue: dataRow[tooltipFieldInfo.field.name],
-							autoFormattedValue: formattedValueByDefault
-					  })
-					: formattedValueByDefault;
-
-				tooltipRows.push({
-					caption: tooltipFieldInfo.field.title,
-					value: dataRow[tooltipFieldInfo.field.name],
-					dataRow,
-					formattedValue,
-					fieldInfo: tooltipFieldInfo
-				});
-			});
-
-			const tooltipItems: TooltipItem[] = [];
-
-			this.renderHead(contentBlock, keyValue);
-			tooltipRows.forEach((tooltipRow) => {
-				const html = this.getTooltipContentItemHtml(tooltipRow.caption, tooltipRow.formattedValue);
-				tooltipItems.push({
-					markColor: tooltipRow.fieldInfo.markColor,
-					tooltipHtml: html,
-					markerCreator: tooltipRow.fieldInfo.markerCreator
-				});
-			});
-			this.addAggregatorTooltipItem(tooltipOptions, dataRow, tooltipItems);
-			tooltipItems.forEach((item) => {
-				this.fillValuesContent(contentBlock, item);
-			});
-		} else {
-			this.fillContentByFunction(contentBlock, data, dataOptions, keyValue, tooltipOptions.html);
-		}
 	}
 }

@@ -8,6 +8,7 @@ import {
 	PolarChartModel,
 	PolarOptionsModel,
 	ScaleKeyModel,
+	TooltipBasicModel,
 	TwoDimensionalChartModel,
 	TwoDimensionalOptionsModel
 } from "../../../model/model";
@@ -53,7 +54,7 @@ interface LineTooltipParams {
 	dataOptions: OptionsModelData;
 	scaleKeyModel: ScaleKeyModel;
 	tooltipSettings: TooltipSettings;
-	tooltipOptions: TooltipOptions;
+	tooltipOptions: TooltipBasicModel;
 }
 
 interface LineTooltip2DParams extends LineTooltipParams {
@@ -71,7 +72,6 @@ export class Tooltip {
 	public static render(
 		block: Block,
 		model: Model<TwoDimensionalOptionsModel | PolarOptionsModel>,
-		data: MdtChartsDataSource,
 		tooltipOptions: TooltipSettings,
 		scales?: Scales
 	): void {
@@ -80,7 +80,6 @@ export class Tooltip {
 		if (model.options.type === "2d") {
 			this.renderTooltipFor2DCharts(
 				block,
-				data,
 				model.blockCanvas.size,
 				model.chartBlock.margin,
 				scales,
@@ -91,7 +90,6 @@ export class Tooltip {
 			this.renderTooltipForPolar(
 				block,
 				model.options,
-				data,
 				model.blockCanvas.size,
 				model.chartBlock.margin,
 				DonutThicknessCalculator.getThickness(
@@ -111,7 +109,6 @@ export class Tooltip {
 
 	private static renderTooltipFor2DCharts(
 		block: Block,
-		data: MdtChartsDataSource,
 		blockSize: Size,
 		margin: BlockMargin,
 		scales: Scales,
@@ -134,13 +131,12 @@ export class Tooltip {
 			tooltipOptions: options.tooltip
 		};
 
-		this.renderLineTooltip(block, data, tooltipParams);
+		this.renderLineTooltip(block, tooltipParams);
 	}
 
 	private static renderTooltipForPolar(
 		block: Block,
 		options: PolarOptionsModel,
-		data: MdtChartsDataSource,
 		blockSize: Size,
 		margin: BlockMargin,
 		chartThickness: number,
@@ -152,9 +148,7 @@ export class Tooltip {
 		this.renderTooltipForDonut(
 			block,
 			arcItems,
-			data,
 			options.data,
-			options.charts[0],
 			blockSize,
 			margin,
 			chartThickness,
@@ -164,7 +158,7 @@ export class Tooltip {
 		);
 	}
 
-	private static renderLineTooltip(block: Block, data: MdtChartsDataSource, args: LineTooltip2DParams): void {
+	private static renderLineTooltip(block: Block, args: LineTooltip2DParams): void {
 		const tooltipBlock = TooltipComponentsManager.renderTooltipBlock(block);
 		const tooltipContent = TooltipComponentsManager.renderTooltipContentBlock(tooltipBlock);
 		const tooltipLine = TooltipComponentsManager.renderTooltipLine(block);
@@ -199,15 +193,7 @@ export class Tooltip {
 
 			if (!currentKey || currentKey !== keyValue) {
 				TooltipComponentsManager.showComponent(tooltipBlock.getEl());
-				if (args.type === "2d")
-					TooltipDomHelper.fillForMulti2DCharts(
-						tooltipContent,
-						args.charts,
-						data,
-						args.dataOptions,
-						keyValue,
-						args.tooltipOptions
-					);
+				if (args.type === "2d") TooltipDomHelper.fillContent(tooltipContent, keyValue, args.tooltipOptions);
 
 				if (args.tooltipSettings.position === "fixed") {
 					const tooltipCoordinate = TooltipHelper.getTooltipFixedCoordinate(
@@ -308,14 +294,12 @@ export class Tooltip {
 	private static renderTooltipForDonut(
 		block: Block,
 		elements: Selection<SVGGElement, PieArcDatum<MdtChartsDataRow>, SVGGElement, unknown>,
-		data: MdtChartsDataSource,
 		dataOptions: OptionsModelData,
-		chart: PolarChartModel,
 		blockSize: Size,
 		margin: BlockMargin,
 		donutThickness: number,
 		tooltipSettings: TooltipSettings,
-		tooltipOptions: TooltipOptions,
+		tooltipOptions: TooltipBasicModel,
 		translate: TooltipTranslate
 	): void {
 		const tooltipBlock = TooltipComponentsManager.renderTooltipBlock(block);
@@ -340,15 +324,7 @@ export class Tooltip {
 
 		elements.on("mouseover", function (e, dataRow: PieArcDatum<MdtChartsDataRow>) {
 			TooltipComponentsManager.showComponent(tooltipBlock.getEl());
-			TooltipDomHelper.fillForPolarChart(
-				tooltipContent,
-				chart,
-				data,
-				dataOptions,
-				dataRow.data[dataOptions.keyField.name],
-				select(this).select("path").style("fill"),
-				tooltipOptions
-			);
+			TooltipDomHelper.fillContent(tooltipContent, dataRow.data[dataOptions.keyField.name], tooltipOptions);
 
 			if (tooltipSettings.position === "fixed") {
 				const coordinatePointer = TooltipDomHelper.getRecalcedCoordinateByArrow(

@@ -31,7 +31,7 @@ export class PolarManager implements ChartContentManager {
 		Title.render(engine.block, options.title, model.otherComponents.titleBlock, model.blockCanvas.size);
 
 		Legend.get().render(engine.block, engine.data, options, model);
-		Tooltip.render(engine.block, model, engine.data, model.otherComponents.tooltipBlock);
+		Tooltip.render(engine.block, model, model.otherComponents.tooltipBlock);
 
 		engine.block.filterEventManager.setListenerPolar(model.chartBlock.margin, model.blockCanvas.size, options);
 
@@ -65,7 +65,7 @@ export class PolarManager implements ChartContentManager {
 			options.chartCanvas,
 			options.data.keyField.name
 		).then(() => {
-			Tooltip.render(block, model, data, model.otherComponents.tooltipBlock);
+			Tooltip.render(block, model, model.otherComponents.tooltipBlock);
 			block.filterEventManager.setListenerPolar(model.chartBlock.margin, model.blockCanvas.size, options);
 		});
 

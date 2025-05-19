@@ -8,6 +8,8 @@ import { DonutModel } from "./donut/donutModel";
 import { TitleConfigReader } from "../../modelInstance/titleConfigReader";
 import { createRecordOverflowModel } from "../../featuresModel/recordOverflowModel/recordOverflowModel";
 import { POLAR_LEGEND_MARKER } from "./modelConstants/polarLegendMarker";
+import { TwoDimTooltipContentGenerator } from "../../featuresModel/tooltipModel/tooltipContentModel";
+import { PolarInitialRowsProvider } from "../../featuresModel/tooltipModel/contentByNotations/polarInitialRowsProvider";
 
 export const MIN_DONUT_BLOCK_SIZE = 120;
 
@@ -21,6 +23,12 @@ export class PolarModel {
 	): PolarOptionsModel {
 		const titleConfig = TitleConfigReader.create(options.title, modelInstance);
 
+		const chart = this.getChartsModel(
+			options.chart,
+			modelInstance.dataModel.repository.getScopedRows().length,
+			designerConfig.chartStyle
+		);
+
 		return {
 			type: options.type,
 			selectable: !!options.selectable,
@@ -29,13 +37,26 @@ export class PolarModel {
 				fontSize: titleConfig.getFontSize()
 			},
 			data: { ...options.data },
-			charts: this.getChartsModel(
-				options.chart,
-				modelInstance.dataModel.repository.getScopedRows().length,
-				designerConfig.chartStyle
-			),
+			charts: [chart],
 			legend: modelInstance.canvasModel.legendCanvas.getModel(),
-			tooltip: options.tooltip,
+			tooltip: {
+				getContent: (keyFieldValue) => {
+					const generator = new TwoDimTooltipContentGenerator({
+						datasource: modelInstance.dataModel.repository.getRawRows(),
+						keyFieldName: options.data.keyField.name,
+						publicOptions: options.tooltip,
+						initialRowsProvider: new PolarInitialRowsProvider({
+							datasource: modelInstance.dataModel.repository.getRawRows(),
+							valueField: options.chart.data.valueField,
+							keyFieldName: options.data.keyField.name,
+							chartColors: chart.style.elementColors
+						}),
+						valueGlobalFormatter: designerConfig.dataFormat.formatters
+					});
+
+					return generator.generateContent(keyFieldValue);
+				}
+			},
 			chartCanvas: this.getDonutSettings(
 				designerConfig.canvas.chartOptions.donut,
 				options.chart,
@@ -101,15 +122,13 @@ export class PolarModel {
 		chart: PolarChart,
 		dataLength: number,
 		chartStyleConfig: ChartStyleConfig
-	): PolarChartModel[] {
-		const chartsModel: PolarChartModel[] = [];
-		chartsModel.push({
+	): PolarChartModel {
+		return {
 			type: chart.type,
 			data: { ...chart.data },
 			cssClasses: ChartStyleModelService.getCssClasses(0),
 			style: ChartStyleModelService.getChartStyle(dataLength, chartStyleConfig),
 			legend: POLAR_LEGEND_MARKER
-		});
-		return chartsModel;
+		};
 	}
 }

@@ -38,6 +38,8 @@ import { CanvasModel } from "../modelInstance/canvasModel/canvasModel";
 import { TwoDimensionalModelHelper } from "../helpers/twoDimensionalModelHelper";
 import { TitleConfigReader } from "../modelInstance/titleConfigReader";
 import { createRecordOverflowModel } from "../featuresModel/recordOverflowModel/recordOverflowModel";
+import { TwoDimTooltipContentGenerator } from "../featuresModel/tooltipModel/tooltipContentModel";
+import { TwoDimInitialRowsProvider } from "../featuresModel/tooltipModel/contentByNotations/twoDimInitialRowsProvider";
 
 export class TwoDimensionalModel {
 	public static getOptions(
@@ -128,7 +130,18 @@ export class TwoDimensionalModel {
 			data: { ...options.data },
 			charts,
 			additionalElements: this.getAdditionalElements(options),
-			tooltip: options.tooltip,
+			tooltip: {
+				getContent: (keyFieldValue) => {
+					const generator = new TwoDimTooltipContentGenerator({
+						datasource: modelInstance.dataModel.repository.getRawRows(),
+						keyFieldName: options.data.keyField.name,
+						publicOptions: options.tooltip,
+						initialRowsProvider: new TwoDimInitialRowsProvider({ chartsInfo: charts }),
+						valueGlobalFormatter: designerConfig.dataFormat.formatters
+					});
+					return generator.generateContent(keyFieldValue);
+				}
+			},
 			chartSettings: this.getChartsSettings(designerConfig.canvas.chartOptions, options.orientation),
 			valueLabels: TwoDimensionalModelHelper.getValueLabels(
 				options.valueLabels,

@@ -99,7 +99,7 @@ export interface TooltipContentRow {
 }
 
 interface BasicOptionsModel {
-	tooltip: TooltipOptions;
+	tooltip: TooltipBasicModel;
 }
 interface GraphicNotationOptionsModel extends BasicOptionsModel {
 	legend: ILegendModel;

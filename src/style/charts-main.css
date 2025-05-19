@@ -193,10 +193,10 @@
 .mdt-charts-tooltip-content .tooltip-text-item > span {
     display: block;
 }
-.mdt-charts-tooltip-content .tooltip-text-item > span:first-of-type {
+.mdt-charts-tooltip-content .tooltip-text-item .tooltip-field-title {
     flex: 1;
 }
-.mdt-charts-tooltip-content .tooltip-text-item > span:last-of-type {
+.mdt-charts-tooltip-content .tooltip-text-item .tooltip-field-value {
     flex: 0;
 }
 .tooltip-field-value {

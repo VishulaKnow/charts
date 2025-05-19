@@ -101,7 +101,7 @@ export class TwoDimensionalManager implements ChartContentManager {
 
 		Legend.get().render(engine.block, engine.data, options, model);
 
-		Tooltip.render(engine.block, model, engine.data, model.otherComponents.tooltipBlock, scales);
+		Tooltip.render(engine.block, model, model.otherComponents.tooltipBlock, scales);
 
 		if (model.dataSettings.scope.hidedRecordsAmount !== 0)
 			RecordOverflowAlertCore.render(engine.block, options.recordOverflowAlert);
@@ -182,7 +182,7 @@ export class TwoDimensionalManager implements ChartContentManager {
 				model.blockCanvas.size,
 				options
 			);
-			Tooltip.render(block, model, data, model.otherComponents.tooltipBlock, scales);
+			Tooltip.render(block, model, model.otherComponents.tooltipBlock, scales);
 		});
 
 		RecordOverflowAlertCore.update(block, options.recordOverflowAlert);
