@@ -57,15 +57,6 @@ const getTwoDimInitialRowsProviderOptions = (): TwoDimInitialRowsProviderOptions
 					hatch: {
 						on: false
 					}
-				},
-				lineViewOptions: {
-					length: 10,
-					strokeWidth: 0,
-					dashedStyles: {
-						on: true,
-						dashSize: 1,
-						gapSize: 1
-					}
 				}
 			},
 			style: {
@@ -151,15 +142,6 @@ describe("TwoDimTooltipContentGenerator", () => {
 								hatch: {
 									on: false
 								}
-							},
-							lineViewOptions: {
-								length: 10,
-								strokeWidth: 0,
-								dashedStyles: {
-									on: true,
-									dashSize: 1,
-									gapSize: 1
-								}
 							}
 						}
 					},
@@ -182,15 +164,6 @@ describe("TwoDimTooltipContentGenerator", () => {
 								hatch: {
 									on: false
 								}
-							},
-							lineViewOptions: {
-								length: 10,
-								strokeWidth: 0,
-								dashedStyles: {
-									on: true,
-									dashSize: 1,
-									gapSize: 1
-								}
 							}
 						}
 					}
@@ -211,18 +184,6 @@ describe("TwoDimTooltipContentGenerator", () => {
 				},
 				legend: {
 					markerShape: "line",
-					barViewOptions: {
-						borderRadius: {
-							topLeft: 0,
-							topRight: 0,
-							bottomLeft: 0,
-							bottomRight: 0
-						},
-						width: 10,
-						hatch: {
-							on: false
-						}
-					},
 					lineViewOptions: {
 						length: 10,
 						strokeWidth: 2,
@@ -269,15 +230,6 @@ describe("TwoDimTooltipContentGenerator", () => {
 								hatch: {
 									on: false
 								}
-							},
-							lineViewOptions: {
-								length: 10,
-								strokeWidth: 0,
-								dashedStyles: {
-									on: true,
-									dashSize: 1,
-									gapSize: 1
-								}
 							}
 						}
 					},
@@ -300,15 +252,6 @@ describe("TwoDimTooltipContentGenerator", () => {
 								hatch: {
 									on: false
 								}
-							},
-							lineViewOptions: {
-								length: 10,
-								strokeWidth: 0,
-								dashedStyles: {
-									on: true,
-									dashSize: 1,
-									gapSize: 1
-								}
 							}
 						}
 					},
@@ -320,18 +263,6 @@ describe("TwoDimTooltipContentGenerator", () => {
 						marker: {
 							color: "red",
 							markerShape: "line",
-							barViewOptions: {
-								borderRadius: {
-									topLeft: 0,
-									topRight: 0,
-									bottomLeft: 0,
-									bottomRight: 0
-								},
-								width: 10,
-								hatch: {
-									on: false
-								}
-							},
 							lineViewOptions: {
 								length: 10,
 								strokeWidth: 2,
@@ -384,15 +315,6 @@ describe("TwoDimTooltipContentGenerator", () => {
 								hatch: {
 									on: false
 								}
-							},
-							lineViewOptions: {
-								length: 10,
-								strokeWidth: 0,
-								dashedStyles: {
-									on: true,
-									dashSize: 1,
-									gapSize: 1
-								}
 							}
 						}
 					},
@@ -414,15 +336,6 @@ describe("TwoDimTooltipContentGenerator", () => {
 								width: 10,
 								hatch: {
 									on: false
-								}
-							},
-							lineViewOptions: {
-								length: 10,
-								strokeWidth: 0,
-								dashedStyles: {
-									on: true,
-									dashSize: 1,
-									gapSize: 1
 								}
 							}
 						}
@@ -478,15 +391,6 @@ describe("TwoDimTooltipContentGenerator", () => {
 								hatch: {
 									on: false
 								}
-							},
-							lineViewOptions: {
-								length: 10,
-								strokeWidth: 0,
-								dashedStyles: {
-									on: true,
-									dashSize: 1,
-									gapSize: 1
-								}
 							}
 						}
 					},
@@ -508,15 +412,6 @@ describe("TwoDimTooltipContentGenerator", () => {
 								width: 10,
 								hatch: {
 									on: false
-								}
-							},
-							lineViewOptions: {
-								length: 10,
-								strokeWidth: 0,
-								dashedStyles: {
-									on: true,
-									dashSize: 1,
-									gapSize: 1
 								}
 							}
 						}
@@ -596,15 +491,6 @@ describe("TwoDimTooltipContentGenerator", () => {
 								hatch: {
 									on: false
 								}
-							},
-							lineViewOptions: {
-								length: 10,
-								strokeWidth: 0,
-								dashedStyles: {
-									on: true,
-									dashSize: 1,
-									gapSize: 1
-								}
 							}
 						}
 					},
@@ -626,15 +512,6 @@ describe("TwoDimTooltipContentGenerator", () => {
 								width: 10,
 								hatch: {
 									on: false
-								}
-							},
-							lineViewOptions: {
-								length: 10,
-								strokeWidth: 0,
-								dashedStyles: {
-									on: true,
-									dashSize: 1,
-									gapSize: 1
 								}
 							}
 						}
@@ -693,15 +570,6 @@ describe("TwoDimTooltipContentGenerator", () => {
 								hatch: {
 									on: false
 								}
-							},
-							lineViewOptions: {
-								length: 10,
-								strokeWidth: 0,
-								dashedStyles: {
-									on: true,
-									dashSize: 1,
-									gapSize: 1
-								}
 							}
 						}
 					},
@@ -723,15 +591,6 @@ describe("TwoDimTooltipContentGenerator", () => {
 								width: 10,
 								hatch: {
 									on: false
-								}
-							},
-							lineViewOptions: {
-								length: 10,
-								strokeWidth: 0,
-								dashedStyles: {
-									on: true,
-									dashSize: 1,
-									gapSize: 1
 								}
 							}
 						}
@@ -766,17 +625,7 @@ describe("TwoDimTooltipContentGenerator", () => {
 						},
 						marker: {
 							color: "red",
-							markerShape: "default",
-							barViewOptions: {
-								hatch: { on: false },
-								borderRadius: { topLeft: 0, topRight: 0, bottomLeft: 0, bottomRight: 0 },
-								width: 0
-							},
-							lineViewOptions: {
-								dashedStyles: { on: false, dashSize: 0, gapSize: 0 },
-								strokeWidth: 0,
-								length: 0
-							}
+							markerShape: "default"
 						}
 					}
 				]
@@ -802,17 +651,7 @@ describe("TwoDimTooltipContentGenerator", () => {
 						},
 						marker: {
 							color: "green",
-							markerShape: "default",
-							barViewOptions: {
-								hatch: { on: false },
-								borderRadius: { topLeft: 0, topRight: 0, bottomLeft: 0, bottomRight: 0 },
-								width: 0
-							},
-							lineViewOptions: {
-								dashedStyles: { on: false, dashSize: 0, gapSize: 0 },
-								strokeWidth: 0,
-								length: 0
-							}
+							markerShape: "default"
 						}
 					}
 				]

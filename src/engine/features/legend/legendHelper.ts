@@ -19,9 +19,9 @@ export interface LegendCoordinate {
 	width: number;
 }
 
-export interface ChartLegendEngineModel extends ChartLegendMarkerModel {
+export type ChartLegendEngineModel = ChartLegendMarkerModel & {
 	textContent: string;
-}
+};
 
 export class LegendHelper {
 	static service = new LegendHelperService();

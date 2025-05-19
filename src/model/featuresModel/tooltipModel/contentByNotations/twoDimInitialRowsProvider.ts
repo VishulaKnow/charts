@@ -16,9 +16,7 @@ export class TwoDimInitialRowsProvider implements TooltipContentInitialRowsProvi
 				initialRows.push({
 					marker: {
 						color: chart.style.elementColors[valueFieldIndex % chart.style.elementColors.length],
-						markerShape: chart.legend.markerShape,
-						barViewOptions: chart.legend.barViewOptions,
-						lineViewOptions: chart.legend.lineViewOptions
+						...chart.legend
 					},
 					valueField
 				});

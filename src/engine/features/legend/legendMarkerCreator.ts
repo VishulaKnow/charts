@@ -9,9 +9,9 @@ import { HatchPatternDef } from "../../block/defs/hatchPattern";
 import { applyLineDash } from "../../twoDimensionalNotation/line/lineHelper";
 import { getClipPathValue } from "../../../engine/twoDimensionalNotation/bar/barHelper";
 
-interface MarkerCreationOptions extends ChartLegendMarkerModel {
+type MarkerCreationOptions = ChartLegendMarkerModel & {
 	color: string;
-}
+};
 
 type MarkerParentSelection = Selection<BaseType, any, BaseType, any>;
 
@@ -45,10 +45,10 @@ export function getMarkerCreator(
 ): MarkerCreator {
 	if (options.markerShape === "bar") return new BarMarkerCreator(options.barViewOptions);
 	if (options.markerShape === "line") return new LineMarkerCreator(options.lineViewOptions);
-	return new DefaultMarkerCreator(customOptions?.default?.cssClass);
+	return new CircleMarkerCreator(customOptions?.default?.cssClass);
 }
 
-class DefaultMarkerCreator implements MarkerCreator {
+class CircleMarkerCreator implements MarkerCreator {
 	constructor(private cssClass = Legend.markerCircle) {}
 
 	renderMarker(selection: MarkerParentSelection, color: string) {

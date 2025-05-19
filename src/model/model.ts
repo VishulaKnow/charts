@@ -71,9 +71,9 @@ export interface TooltipBasicModel {
 	getContent: (keyFieldValue: string) => TooltipContent;
 }
 
-export interface TooltipMarkerModel extends ChartLegendMarkerModel {
+export type TooltipMarkerModel = ChartLegendMarkerModel & {
 	color: string;
-}
+};
 
 export type TooltipContent =
 	| {
@@ -385,13 +385,15 @@ export interface ChartStyle {
 	opacity: number;
 }
 
-export interface ChartLegendMarkerModel {
-	markerShape: LegendMarkerShape;
-	barViewOptions: TwoDimensionalChartLegendBarModel;
-	lineViewOptions: TwoDimensionalChartLegendLineModel;
-}
+export type ChartLegendMarkerModel =
+	| { markerShape: "circle" }
+	| { markerShape: "bar"; barViewOptions: TwoDimensionalChartLegendBarModel }
+	| {
+			markerShape: "line";
+			lineViewOptions: TwoDimensionalChartLegendLineModel;
+	  };
 
-export type LegendMarkerShape = "default" | "bar" | "line";
+export type LegendMarkerShape = ChartLegendMarkerModel["markerShape"];
 
 export interface TwoDimensionalChartLegendBarModel {
 	hatch: BarLikeChartHatchOptions;

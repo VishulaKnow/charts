@@ -31,13 +31,23 @@ export class TwoDimTooltipContentGenerator {
 	private createRows(keyFieldValue: string, currentDataRow: MdtChartsDataRow): TooltipContentWithRows {
 		let contentRows: TooltipContentRow[] = [];
 
-		this.options.initialRowsProvider.getInitialRows({ keyFieldValue, currentDataRow }).forEach((initialRow) => {
-			const formattedValueByDefault = this.options.valueGlobalFormatter(
-				currentDataRow[initialRow.valueField.name],
-				{
-					type: initialRow.valueField.format
-				}
-			);
+		const initialRows = this.options.initialRowsProvider
+			.getInitialRows({ keyFieldValue, currentDataRow })
+			.map((initialRow) => {
+				return {
+					marker: initialRow.marker,
+					textContent: {
+						caption: initialRow.valueField.title,
+						value: currentDataRow[initialRow.valueField.name]
+					},
+					valueField: initialRow.valueField
+				};
+			});
+
+		initialRows.forEach((initialRow) => {
+			const formattedValueByDefault = this.options.valueGlobalFormatter(initialRow.textContent.value, {
+				type: initialRow.valueField.format
+			});
 
 			const formattedValue = this.options.publicOptions?.formatValue
 				? this.options.publicOptions.formatValue({
@@ -49,7 +59,7 @@ export class TwoDimTooltipContentGenerator {
 			contentRows.push({
 				marker: initialRow.marker,
 				textContent: {
-					caption: initialRow.valueField.title,
+					caption: initialRow.textContent.caption,
 					value: formattedValue
 				}
 			});
