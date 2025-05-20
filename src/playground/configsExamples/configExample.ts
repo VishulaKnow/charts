@@ -106,7 +106,8 @@ const configCars: MdtChartsConfig = {
 				position: "underValues"
 			},
 			rows: {
-				filterPredicate: (row) => row.textContent.value !== undefined
+				filterPredicate: (row) => row.textContent.value !== undefined,
+				sortCompareFn: (aRow, bRow) => aRow.textContent.value - bRow.textContent.value
 			}
 		},
 		charts: [

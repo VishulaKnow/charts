@@ -626,6 +626,7 @@ describe("TwoDimTooltipContentGenerator", () => {
 							cssClassName: "tooltip-head"
 						}
 					},
+
 					{
 						textContent: {
 							caption: "Count",
@@ -633,6 +634,75 @@ describe("TwoDimTooltipContentGenerator", () => {
 						},
 						marker: {
 							color: "blue",
+							markerShape: "bar",
+							barViewOptions: {
+								borderRadius: {
+									topLeft: 0,
+									topRight: 0,
+									bottomLeft: 0,
+									bottomRight: 0
+								},
+								width: 10,
+								hatch: {
+									on: false
+								}
+							}
+						}
+					}
+				]
+			});
+		});
+
+		it("should sort rows by compare function if it is defined in public options", () => {
+			const options = createInitialOptions(new TwoDimInitialRowsProvider(getTwoDimInitialRowsProviderOptions()));
+			options.publicOptions = {
+				rows: {
+					sortCompareFn: (aRow, bRow) => aRow.textContent.value - bRow.textContent.value
+				}
+			};
+			const generator = new TwoDimTooltipContentGenerator(options);
+			const content = generator.generateContent("BMW");
+
+			expect(content).toEqual(<TooltipContent>{
+				type: "rows",
+				rows: [
+					{
+						textContent: {
+							caption: "BMW"
+						},
+						wrapper: {
+							cssClassName: "tooltip-head"
+						}
+					},
+					{
+						textContent: {
+							caption: "Count",
+							value: "10000"
+						},
+						marker: {
+							color: "blue",
+							markerShape: "bar",
+							barViewOptions: {
+								borderRadius: {
+									topLeft: 0,
+									topRight: 0,
+									bottomLeft: 0,
+									bottomRight: 0
+								},
+								width: 10,
+								hatch: {
+									on: false
+								}
+							}
+						}
+					},
+					{
+						textContent: {
+							caption: "Price",
+							value: "109000"
+						},
+						marker: {
+							color: "green",
 							markerShape: "bar",
 							barViewOptions: {
 								borderRadius: {

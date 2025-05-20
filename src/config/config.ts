@@ -141,6 +141,7 @@ export interface TooltipOptions {
 	formatValue?: TooltipFormatValue;
 	rows?: {
 		filterPredicate?: (row: TooltipPublicDataRow) => boolean;
+		sortCompareFn?: (aRow: TooltipPublicDataRow, bRow: TooltipPublicDataRow) => number;
 	};
 }
 

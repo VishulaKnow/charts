@@ -57,6 +57,9 @@ export class TwoDimTooltipContentGenerator {
 			? initialRows.filter((row) => this.options.publicOptions.rows.filterPredicate(row))
 			: initialRows;
 
+		if (this.options.publicOptions?.rows?.sortCompareFn)
+			initialRows.sort(this.options.publicOptions.rows.sortCompareFn);
+
 		initialRows.forEach((initialRow) => {
 			const formattedValueByDefault = this.options.valueGlobalFormatter(initialRow.textContent.value, {
 				type: initialRow.valueField.format
