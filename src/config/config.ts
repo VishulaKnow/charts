@@ -139,6 +139,9 @@ export interface TooltipOptions {
 	html?: TooltipHtml;
 	aggregator?: TooltipAggregator;
 	formatValue?: TooltipFormatValue;
+	rows?: {
+		filterPredicate?: (row: TooltipPublicDataRow) => boolean;
+	};
 }
 
 export type TooltipHtml = (dataRow: MdtChartsDataRow) => string;
@@ -156,6 +159,14 @@ export type TooltipFormatValue = (params: {
 	rawValue: number | null | undefined;
 	autoFormattedValue: string;
 }) => string;
+
+export interface TooltipPublicDataRow {
+	textContent: {
+		caption: string;
+		value?: number;
+	};
+	valueField: MdtChartsValueField;
+}
 
 //====================================================== TwoDimensionalOptions
 export interface AdditionalElements {

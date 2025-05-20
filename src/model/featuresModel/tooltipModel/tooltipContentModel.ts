@@ -1,6 +1,6 @@
 import { MdtChartsDataRow, TooltipOptions } from "../../../config/config";
 import { Formatter } from "../../../main";
-import { TooltipContent, TooltipContentRow, TooltipContentWithRows, TwoDimensionalChartModel } from "../../model";
+import { TooltipContent, TooltipContentRow, TooltipContentWithRows, TooltipMarkerModel, ValueField } from "../../model";
 import { TooltipContentInitialRowsProvider } from "./contentByNotations/tooltipContentInitialRowsProvider";
 
 export interface TooltipContentGeneratorOptions {
@@ -9,6 +9,15 @@ export interface TooltipContentGeneratorOptions {
 	publicOptions?: TooltipOptions;
 	keyFieldName: string;
 	valueGlobalFormatter: Formatter;
+}
+
+interface TooltipInitialRow {
+	marker?: TooltipMarkerModel;
+	textContent: {
+		caption: string;
+		value: number;
+	};
+	valueField: ValueField;
 }
 
 export class TwoDimTooltipContentGenerator {
@@ -31,9 +40,9 @@ export class TwoDimTooltipContentGenerator {
 	private createRows(keyFieldValue: string, currentDataRow: MdtChartsDataRow): TooltipContentWithRows {
 		let contentRows: TooltipContentRow[] = [];
 
-		const initialRows = this.options.initialRowsProvider
+		let initialRows = this.options.initialRowsProvider
 			.getInitialRows({ keyFieldValue, currentDataRow })
-			.map((initialRow) => {
+			.map<TooltipInitialRow>((initialRow) => {
 				return {
 					marker: initialRow.marker,
 					textContent: {
@@ -43,6 +52,10 @@ export class TwoDimTooltipContentGenerator {
 					valueField: initialRow.valueField
 				};
 			});
+
+		initialRows = this.options.publicOptions?.rows?.filterPredicate
+			? initialRows.filter((row) => this.options.publicOptions.rows.filterPredicate(row))
+			: initialRows;
 
 		initialRows.forEach((initialRow) => {
 			const formattedValueByDefault = this.options.valueGlobalFormatter(initialRow.textContent.value, {

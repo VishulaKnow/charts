@@ -11,7 +11,7 @@ import {
 } from "./contentByNotations/twoDimInitialRowsProvider";
 import { TooltipContentGeneratorOptions, TwoDimTooltipContentGenerator } from "./tooltipContentModel";
 
-const datasource: MdtChartsDataRow[] = [
+const createDatasource: () => MdtChartsDataRow[] = () => [
 	{
 		$id: 1,
 		brand: "BMW",
@@ -34,8 +34,7 @@ const datasource: MdtChartsDataRow[] = [
 const createInitialOptions = (
 	initialRowsProvider: TooltipContentInitialRowsProvider
 ): TooltipContentGeneratorOptions => ({
-	datasource,
-	publicOptions: {},
+	datasource: createDatasource(),
 	keyFieldName: "brand",
 	valueGlobalFormatter: (value) => value.toString(),
 	initialRowsProvider
@@ -82,7 +81,7 @@ const getTwoDimInitialRowsProviderOptions = (): TwoDimInitialRowsProviderOptions
 });
 
 const getPolarInitialRowsProviderOptions = (): PolarInitialRowsProviderOptions => ({
-	datasource,
+	datasource: createDatasource(),
 	chartColors: ["red", "blue", "green"],
 	valueField: {
 		name: "price",
@@ -95,7 +94,7 @@ const getPolarInitialRowsProviderOptions = (): PolarInitialRowsProviderOptions =
 describe("TwoDimTooltipContentGenerator", () => {
 	it("should render defined html if it is defined in public options", () => {
 		const options = createInitialOptions(new TwoDimInitialRowsProvider(getTwoDimInitialRowsProviderOptions()));
-		options.publicOptions.html = (dataRow) => `<div>${dataRow.brand}</div>`;
+		options.publicOptions = { html: (dataRow) => `<div>${dataRow.brand}</div>` };
 		const generator = new TwoDimTooltipContentGenerator(options);
 		const content = generator.generateContent("LADA");
 
@@ -280,7 +279,7 @@ describe("TwoDimTooltipContentGenerator", () => {
 
 		it("should accept formatter from public options if it is defined", () => {
 			const options = createInitialOptions(new TwoDimInitialRowsProvider(getTwoDimInitialRowsProviderOptions()));
-			options.publicOptions.formatValue = ({ rawValue }) => `$${rawValue}`;
+			options.publicOptions = { formatValue: ({ rawValue }) => `$${rawValue}` };
 
 			const generator = new TwoDimTooltipContentGenerator(options);
 			const content = generator.generateContent("BMW");
@@ -346,16 +345,18 @@ describe("TwoDimTooltipContentGenerator", () => {
 
 		it("should put aggregator content under values if it is defined in public options", () => {
 			const options = createInitialOptions(new TwoDimInitialRowsProvider(getTwoDimInitialRowsProviderOptions()));
-			options.publicOptions.aggregator = {
-				content: () => [
-					{
-						type: "captionValue",
-						caption: "Total",
-						value: 100000
-					},
-					{ type: "plainText", textContent: "Data is not official" }
-				],
-				position: "underValues"
+			options.publicOptions = {
+				aggregator: {
+					content: () => [
+						{
+							type: "captionValue",
+							caption: "Total",
+							value: 100000
+						},
+						{ type: "plainText", textContent: "Data is not official" }
+					],
+					position: "underValues"
+				}
 			};
 			const generator = new TwoDimTooltipContentGenerator(options);
 
@@ -434,16 +435,18 @@ describe("TwoDimTooltipContentGenerator", () => {
 
 		it("should put aggregator content under key if it is defined in public options", () => {
 			const options = createInitialOptions(new TwoDimInitialRowsProvider(getTwoDimInitialRowsProviderOptions()));
-			options.publicOptions.aggregator = {
-				content: () => [
-					{
-						type: "captionValue",
-						caption: "Total",
-						value: 100000
-					},
-					{ type: "plainText", textContent: "Data is not official" }
-				],
-				position: "underKey"
+			options.publicOptions = {
+				aggregator: {
+					content: () => [
+						{
+							type: "captionValue",
+							caption: "Total",
+							value: 100000
+						},
+						{ type: "plainText", textContent: "Data is not official" }
+					],
+					position: "underKey"
+				}
 			};
 			const generator = new TwoDimTooltipContentGenerator(options);
 
@@ -522,13 +525,15 @@ describe("TwoDimTooltipContentGenerator", () => {
 
 		it("should handle aggregator when it provided as one value instead of array", () => {
 			const options = createInitialOptions(new TwoDimInitialRowsProvider(getTwoDimInitialRowsProviderOptions()));
-			options.publicOptions.aggregator = {
-				content: () => ({
-					type: "captionValue",
-					caption: "Total",
-					value: 100000
-				}),
-				position: "underKey"
+			options.publicOptions = {
+				aggregator: {
+					content: () => ({
+						type: "captionValue",
+						caption: "Total",
+						value: 100000
+					}),
+					position: "underKey"
+				}
 			};
 			const generator = new TwoDimTooltipContentGenerator(options);
 
@@ -571,6 +576,54 @@ describe("TwoDimTooltipContentGenerator", () => {
 									on: false
 								}
 							}
+						}
+					},
+					{
+						textContent: {
+							caption: "Count",
+							value: "10000"
+						},
+						marker: {
+							color: "blue",
+							markerShape: "bar",
+							barViewOptions: {
+								borderRadius: {
+									topLeft: 0,
+									topRight: 0,
+									bottomLeft: 0,
+									bottomRight: 0
+								},
+								width: 10,
+								hatch: {
+									on: false
+								}
+							}
+						}
+					}
+				]
+			});
+		});
+
+		it("should filter rows by predicate if it is defined in public options", () => {
+			const options = createInitialOptions(new TwoDimInitialRowsProvider(getTwoDimInitialRowsProviderOptions()));
+			options.datasource[0].price = undefined;
+			options.publicOptions = {
+				rows: {
+					filterPredicate: (row) => row.textContent.value !== undefined
+				}
+			};
+			const generator = new TwoDimTooltipContentGenerator(options);
+			const content = generator.generateContent("BMW");
+
+			expect(content).toEqual(<TooltipContent>{
+				type: "rows",
+				rows: [
+					{
+						textContent: {
+							caption: "BMW"
+						},
+						wrapper: {
+							cssClassName: "tooltip-head"
 						}
 					},
 					{

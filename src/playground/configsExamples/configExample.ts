@@ -104,6 +104,9 @@ const configCars: MdtChartsConfig = {
 					];
 				},
 				position: "underValues"
+			},
+			rows: {
+				filterPredicate: (row) => row.textContent.value !== undefined
 			}
 		},
 		charts: [
