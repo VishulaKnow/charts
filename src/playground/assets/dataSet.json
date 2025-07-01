@@ -13,7 +13,7 @@
 			"brand": "LADA",
 			"price": 12000,
 			"price2": 20000,
-			"count": 100000,
+			"count": 10000,
 			"color": "green"
 		},
 		{
@@ -21,6 +21,7 @@
 			"brand": "MERCEDES",
 			"price": 15000,
 			"price2": 17000,
+			"count": 10000,
 			"color": "blue"
 		},
 		{

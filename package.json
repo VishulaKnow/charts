@@ -4,9 +4,8 @@
 	"description": "",
 	"main": "lib/main.js",
 	"scripts": {
-		"dev": "npx webpack --mode development",
+		"dev": "npx webpack --mode development --watch",
 		"build": "npx webpack --mode production",
-		"watch": "npx webpack --mode development --watch",
 		"test": "jest",
 		"build-lib": "shx rm -rf lib && npm run build-ts && npm run build-style",
 		"build-ts": "npx tsc -p tsconfig.production.json",

@@ -1,24 +1,39 @@
 import { BlockMargin, Orient, ValueLabelAnchor, ValueLabelDominantBaseline } from "../../model";
 import { BoundingRect } from "../../../engine/features/valueLabelsCollision/valueLabelsCollision";
-import { Size, ValueLabelsPositionMode, ValueLabelsRotationOptions } from "../../../config/config";
+import {
+	MdtChartsDataRow,
+	Size,
+	ValueLabelsPositionMode,
+	ValueLabelsPositionOptions,
+	ValueLabelsRotationOptions
+} from "../../../config/config";
 
 interface ValueLabelAlignment {
 	dominantBaseline: ValueLabelDominantBaseline;
 	textAnchor: ValueLabelAnchor;
 }
 
-export const OFFSET_SIZE_PX = 10;
+export const VALUE_LABEL_OFFSET_ABS_SIZE_PX = 10;
 export const BORDER_OFFSET_SIZE_PX = 2;
 
 export class ValueLabelCoordinateCalculator {
 	private readonly offsetSizePx: number;
 
 	constructor(
-		positionMode: ValueLabelsPositionMode | undefined,
+		positionOptions: ValueLabelsPositionOptions | undefined,
 		private readonly keyAxisOrient: Orient,
 		private readonly margin: BlockMargin
 	) {
-		this.offsetSizePx = positionMode === "center" ? 0 : OFFSET_SIZE_PX;
+		let offsetAbsSize = VALUE_LABEL_OFFSET_ABS_SIZE_PX;
+		if (
+			(positionOptions?.mode === "beforeHead" || positionOptions?.mode === "afterHead") &&
+			positionOptions?.offsetSize
+		)
+			offsetAbsSize = positionOptions?.offsetSize;
+
+		if (!positionOptions?.mode || positionOptions.mode === "afterHead") this.offsetSizePx = offsetAbsSize;
+		else if (positionOptions.mode === "beforeHead") this.offsetSizePx = -offsetAbsSize;
+		else this.offsetSizePx = 0;
 	}
 
 	getValueLabelY(scaledValue: number) {
@@ -49,7 +64,9 @@ export function calculateValueLabelAlignment(
 	positionMode?: ValueLabelsPositionMode,
 	rotation?: ValueLabelsRotationOptions
 ): ValueLabelAlignment {
-	if ((positionMode ?? "after") === "after" && !rotation?.angle) {
+	if (rotation?.angle) return { dominantBaseline: "middle", textAnchor: "middle" };
+
+	if (!positionMode || positionMode === "afterHead") {
 		switch (keyAxisOrient) {
 			case "top":
 				return { dominantBaseline: "hanging", textAnchor: "middle" };
@@ -60,9 +77,34 @@ export function calculateValueLabelAlignment(
 			case "right":
 				return { dominantBaseline: "middle", textAnchor: "end" };
 		}
-	} else {
-		return { dominantBaseline: "middle", textAnchor: "middle" };
+	} else if (positionMode === "beforeHead") {
+		switch (keyAxisOrient) {
+			case "top":
+				return { dominantBaseline: "auto", textAnchor: "middle" };
+			case "bottom":
+				return { dominantBaseline: "hanging", textAnchor: "middle" };
+			case "left":
+				return { dominantBaseline: "middle", textAnchor: "end" };
+			case "right":
+				return { dominantBaseline: "middle", textAnchor: "start" };
+		}
 	}
+
+	return { dominantBaseline: "middle", textAnchor: "middle" };
+}
+
+export function handleScaledValue(
+	dataRow: MdtChartsDataRow,
+	datumField: string,
+	isSegmented: boolean,
+	positionMode?: ValueLabelsPositionMode
+): number {
+	if (!positionMode || positionMode === "afterHead" || positionMode === "beforeHead") return dataRow[datumField];
+	if (positionMode === "center") {
+		if (isSegmented) return dataRow[datumField] - (dataRow[datumField] - dataRow["0"]) / 2;
+		else return dataRow[datumField] / 2;
+	}
+	throw new Error("Invalid position mode");
 }
 
 export function hasCollisionLeftSide(labelClientRect: BoundingRect, margin: BlockMargin): boolean {

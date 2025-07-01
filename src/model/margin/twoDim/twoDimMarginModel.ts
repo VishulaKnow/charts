@@ -9,7 +9,7 @@ import { TwoDimConfigReader } from "../../modelInstance/configReader";
 import { ModelInstance } from "../../modelInstance/modelInstance";
 import { TwoDimensionalModel } from "../../notations/twoDimensionalModel";
 import { ChartOrientation } from "../../../config/config";
-import { OFFSET_SIZE_PX } from "../../featuresModel/valueLabelsModel/valueLabelsModel";
+import { VALUE_LABEL_OFFSET_ABS_SIZE_PX } from "../../featuresModel/valueLabelsModel/valueLabelsModel";
 import { ScaleModel } from "../../featuresModel/scaleModel/scaleModel";
 import { Scale } from "../../../engine/features/scale/scale";
 
@@ -212,7 +212,10 @@ export class TwoDimMarginModel {
 			bottom: "top"
 		};
 
-		canvasModel.increaseMarginSide(axisMarginMapping[keyAxisOrient], valueLabelFontSize + OFFSET_SIZE_PX);
+		canvasModel.increaseMarginSide(
+			axisMarginMapping[keyAxisOrient],
+			valueLabelFontSize + VALUE_LABEL_OFFSET_ABS_SIZE_PX
+		);
 	}
 
 	private getValueAxisLabels(scaleModel: ScaleValueModel) {

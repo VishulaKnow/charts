@@ -32,6 +32,7 @@ import {
 import { DataRepositoryModel } from "../modelInstance/dataModel/dataRepository";
 import {
 	calculateValueLabelAlignment,
+	handleScaledValue,
 	ValueLabelCoordinateCalculator
 } from "../../model/featuresModel/valueLabelsModel/valueLabelsModel";
 import { CanvasModel } from "../modelInstance/canvasModel/canvasModel";
@@ -220,7 +221,7 @@ export class TwoDimensionalModel {
 			const style = styleModel.getChartStyle(chart, index);
 
 			const valueLabelsCoordinateCalculator = new ValueLabelCoordinateCalculator(
-				chart.valueLabels?.position?.mode,
+				chart.valueLabels?.position,
 				keyAxisOrient,
 				canvasModel.getMargin()
 			);
@@ -275,10 +276,12 @@ export class TwoDimensionalModel {
 					handleX: (scaledValue) => valueLabelsCoordinateCalculator.getValueLabelX(scaledValue),
 					handleY: (scaledValue) => valueLabelsCoordinateCalculator.getValueLabelY(scaledValue),
 					handleScaledValue: (dataRow, datumField) => {
-						if (!chart.valueLabels?.position?.mode || chart.valueLabels?.position?.mode === "after")
-							return dataRow[datumField];
-						if (chart.isSegmented) return dataRow[datumField] - (dataRow[datumField] - dataRow["0"]) / 2;
-						else return dataRow[datumField] / 2;
+						return handleScaledValue(
+							dataRow,
+							datumField,
+							chart.isSegmented,
+							chart.valueLabels?.position?.mode
+						);
 					},
 					textAnchor: valueLabelsAlignment.textAnchor,
 					dominantBaseline: valueLabelsAlignment.dominantBaseline,
