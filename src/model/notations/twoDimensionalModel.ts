@@ -287,7 +287,8 @@ export class TwoDimensionalModel {
 					dominantBaseline: valueLabelsAlignment.dominantBaseline,
 					format: configReader.getValueLabelFormatterForChart(index),
 					rotation: chart.valueLabels?.rotation,
-					handleElement: chart.valueLabels?.handleElement
+					handleElement: chart.valueLabels?.handleElement,
+					forFields: chart.valueLabels?.renderForFields ?? chart.data.valueFields.map((field) => field.name)
 				},
 				areaViewOptions: getAreaViewOptions(chart, index, style, modelInstance.version.getVersionNumber()),
 				dotViewOptions: {

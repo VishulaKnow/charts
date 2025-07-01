@@ -367,7 +367,11 @@ export interface TwoDimensionalChartData {
 }
 
 export type ValueLabelsPositionOptions =
-	| { mode: "afterHead" | "beforeHead"; offsetSize?: number }
+	| {
+			mode: "afterHead" | "beforeHead";
+			/** @default 10 */
+			offsetSize?: number;
+	  }
 	| { mode?: "center" };
 
 export type ValueLabelsPositionMode = ValueLabelsPositionOptions["mode"];
@@ -378,6 +382,7 @@ export interface TwoDimensionalChartValueLabels {
 	format?: ValueLabelsFormatter;
 	rotation?: ValueLabelsRotationOptions;
 	handleElement?: ValueLabelsHandleElement;
+	renderForFields?: MdtChartsFieldName[];
 }
 
 export type ValueLabelsHandleElement = (elInfo: {

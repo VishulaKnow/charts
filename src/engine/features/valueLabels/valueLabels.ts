@@ -71,14 +71,18 @@ export class ChartValueLabels {
 		if (this.chart.isSegmented) {
 			const preparedData = getStackedData(data, this.chart);
 
-			preparedData.forEach((segment, segmentIndex) => {
-				if (!segment[0]) return;
-				this.renderByGroupIndex(scales, segmentIndex, segment, segment[0].fieldName, "1", (d) => d.data);
-			});
+			preparedData
+				.filter((segment) => this.options.forFields.includes(segment[0]?.fieldName))
+				.forEach((segment, segmentIndex) => {
+					if (!segment[0]) return;
+					this.renderByGroupIndex(scales, segmentIndex, segment, segment[0].fieldName, "1", (d) => d.data);
+				});
 		} else {
-			this.chart.data.valueFields.forEach((valueField, vfIndex) => {
-				this.renderByGroupIndex(scales, vfIndex, data, valueField.name, valueField.name, (d) => d);
-			});
+			this.chart.data.valueFields
+				.filter((field) => this.options.forFields.includes(field.name))
+				.forEach((valueField, vfIndex) => {
+					this.renderByGroupIndex(scales, vfIndex, data, valueField.name, valueField.name, (d) => d);
+				});
 		}
 	}
 
@@ -88,29 +92,33 @@ export class ChartValueLabels {
 
 		if (this.chart.isSegmented) {
 			const preparedData = getStackedData(newData, this.chart);
-			preparedData.forEach((segment, segmentIndex) => {
-				const promise = this.updateByGroupIndex(
-					scales,
-					segmentIndex,
-					segment,
-					"1",
-					(d) => d.data,
-					segment[0]?.fieldName
-				);
-				updatePromises.push(promise);
-			});
+			preparedData
+				.filter((segment) => this.options.forFields.includes(segment[0]?.fieldName))
+				.forEach((segment, segmentIndex) => {
+					const promise = this.updateByGroupIndex(
+						scales,
+						segmentIndex,
+						segment,
+						"1",
+						(d) => d.data,
+						segment[0]?.fieldName
+					);
+					updatePromises.push(promise);
+				});
 		} else {
-			this.chart.data.valueFields.forEach((valueField, vfIndex) => {
-				const promise = this.updateByGroupIndex(
-					scales,
-					vfIndex,
-					newData,
-					valueField.name,
-					(d) => d,
-					valueField.name
-				);
-				updatePromises.push(promise);
-			});
+			this.chart.data.valueFields
+				.filter((field) => this.options.forFields.includes(field.name))
+				.forEach((valueField, vfIndex) => {
+					const promise = this.updateByGroupIndex(
+						scales,
+						vfIndex,
+						newData,
+						valueField.name,
+						(d) => d,
+						valueField.name
+					);
+					updatePromises.push(promise);
+				});
 		}
 
 		return Promise.all(updatePromises);

@@ -11,7 +11,8 @@ import {
 	TwoDimensionalValueGroup,
 	ValueLabelsCollisionMode,
 	ValueLabelsRotationOptions,
-	ValueLabelsHandleElement
+	ValueLabelsHandleElement,
+	MdtChartsFieldName
 } from "../config/config";
 import {
 	DataType,
@@ -494,6 +495,7 @@ export interface TwoDimChartValueLabelsOptions {
 	handleX: (scaledValue: number) => number;
 	handleY: (scaledValue: number) => number;
 	textAnchor: ValueLabelAnchor;
+	forFields: MdtChartsFieldName[];
 	dominantBaseline: ValueLabelDominantBaseline;
 	format: ValueLabelsFormatter;
 	handleScaledValue: (dataRow: MdtChartsDataRow, datumField: string) => number;
