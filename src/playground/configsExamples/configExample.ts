@@ -25,13 +25,11 @@ const configCars: MdtChartsConfig = {
 			},
 			value: {
 				visibility: true,
-				domain: (params) => {
-					let maxNumber = 0;
-					maxNumber = params.data.reduce((max, row) => (row.price > max ? row.price : max), 0);
-
-					return { start: -1, end: -1 };
-				},
 				position: "start",
+				domain: {
+					start: -1,
+					end: -1
+				},
 				ticks: {
 					flag: false
 				},
@@ -111,15 +109,68 @@ const configCars: MdtChartsConfig = {
 			}
 		},
 		charts: [
+			// {
+			// 	isSegmented: false,
+			// 	type: "bar",
+			// 	data: {
+			// 		valueFields: [
+			// 			{
+			// 				name: "price",
+			// 				format: "money",
+			// 				title: "Стоимость"
+			// 			}
+			// 		],
+			// 		valueGroup: "main"
+			// 	},
+			// 	embeddedLabels: "none",
+			// 	markers: {
+			// 		show: false
+			// 	},
+			// 	lineStyles: {
+			// 		dash: {
+			// 			on: true,
+			// 			dashSize: 3,
+			// 			gapSize: 3
+			// 		}
+			// 	},
+			// 	barStyles: {
+			// 		hatch: {
+			// 			on: false
+			// 		}
+			// 	},
+			// 	areaStyles: {
+			// 		borderLine: {
+			// 			on: true
+			// 		},
+			// 		gradient: {
+			// 			on: true
+			// 		}
+			// 	},
+			// 	valueLabels: {
+			// 		on: false,
+			// 		position: {
+			// 			mode: "center"
+			// 		},
+			// 		rotation: {
+			// 			// angle: -45
+			// 		},
+			// 		format: (value) => nFormatter(value)
+			// 	}
+			// },
 			{
-				isSegmented: false,
+				isSegmented: true,
 				type: "bar",
 				data: {
 					valueFields: [
 						{
+							name: "count",
+							format: "money",
+							title: "Количество"
+						},
+						{
 							name: "price",
 							format: "money",
-							title: "Стоимость"
+							title: "Прайс"
 						}
 					],
 					valueGroup: "main"
@@ -128,56 +179,13 @@ const configCars: MdtChartsConfig = {
 				markers: {
 					show: false
 				},
-				lineStyles: {
-					dash: {
-						on: true,
-						dashSize: 3,
-						gapSize: 3
-					}
-				},
-				barStyles: {
-					hatch: {
-						on: false
-					}
-				},
-				areaStyles: {
-					borderLine: {
-						on: true
-					},
-					gradient: {
-						on: true
-					}
-				},
 				valueLabels: {
-					on: false,
+					on: true,
 					position: {
-						mode: "center"
+						mode: "beforeHead",
+						offsetSize: 5
 					},
-					rotation: {
-						// angle: -45
-					},
-					format: (value) => nFormatter(value)
-				}
-			},
-			{
-				isSegmented: true,
-				type: "area",
-				data: {
-					valueFields: [
-						{
-							name: "count",
-							format: "money",
-							title: "Количество"
-						}
-					],
-					valueGroup: "secondary"
-				},
-				embeddedLabels: "none",
-				markers: {
-					show: false
-				},
-				valueLabels: {
-					on: true
+					renderForFields: ["price"]
 				},
 				lineStyles: {
 					dash: {

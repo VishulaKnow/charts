@@ -8,10 +8,10 @@ import {
 	TwoDimensionalValueLabels,
 	ValueLabelAnchor,
 	ValueLabelDominantBaseline,
-	ValueLabelsFormatter,
+	ValueLabelsInnerContentSetter,
 	ValueLabelsStyleModel
 } from "../../../model/model";
-import { ChartOrientation, MdtChartsDataRow, MdtChartsDataSource } from "../../../config/config";
+import { MdtChartsDataRow, MdtChartsDataSource } from "../../../config/config";
 import { Scales, ScalesWithSecondary } from "../../../engine/features/scale/scale";
 import { ValueLabelsAttrsProvider } from "../../../engine/features/valueLabels/valueLabelsHelper";
 import { Helper } from "../../../engine/helpers/helper";
@@ -143,7 +143,7 @@ export class ChartValueLabels {
 			dataRowAccessor
 		);
 
-		this.setAttrs(valueLabels, attrs, valueFieldName, this.options.format, dataRowAccessor);
+		this.setAttrs(valueLabels, attrs, valueFieldName, this.options.setContent, dataRowAccessor);
 		this.setClasses(valueLabels, this.chart.cssClasses, groupIndex);
 	}
 
@@ -180,10 +180,10 @@ export class ChartValueLabels {
 				valueLabels as Selection<SVGTextElement, MdtChartsDataRow, SVGGElement, unknown>
 			);
 
-			this.setAttrs(newValueLabels, attrs, valueFieldName, this.options.format, dataRowAccessor);
+			this.setAttrs(newValueLabels, attrs, valueFieldName, this.options.setContent, dataRowAccessor);
 			this.setClasses(mergedValueLabels, this.chart.cssClasses, groupIndex);
 
-			this.setAttrs(valueLabels, attrs, valueFieldName, this.options.format, dataRowAccessor, true, resolve);
+			this.setAttrs(valueLabels, attrs, valueFieldName, this.options.setContent, dataRowAccessor, true, resolve);
 		});
 	}
 
@@ -200,7 +200,7 @@ export class ChartValueLabels {
 		valueLabels: Selection<SVGTextElement, MdtChartsDataRow | Segment, BaseType, any>,
 		attrs: ValueLabelAttrs,
 		valueFieldName: string,
-		formatter: ValueLabelsFormatter,
+		setContent: ValueLabelsInnerContentSetter,
 		dataRowAccessor: (d: MdtChartsDataRow | Segment) => MdtChartsDataRow,
 		animate: boolean = false,
 		onEndAnimation?: () => void
@@ -210,15 +210,17 @@ export class ChartValueLabels {
 		let selection:
 			| Selection<SVGTextElement, MdtChartsDataRow | Segment, BaseType, any>
 			| Transition<SVGTextElement, MdtChartsDataRow | Segment, BaseType, any> = valueLabels
-			.text((d) => formatter(dataRowAccessor(d)[valueFieldName]))
+			.text((d) => setContent({ dataRow: dataRowAccessor(d), fieldName: valueFieldName }).textContent)
 			.attr("dominant-baseline", attrs.dominantBaseline)
 			.attr("text-anchor", attrs.textAnchor);
+
 		if (animate) {
 			selection = selection
 				.interrupt(animationName)
 				.transition(animationName)
 				.duration(this.globalOptions.elementAccessors.getBlock().transitionManager.durations.chartUpdate);
 		}
+
 		selection
 			.attr("x", (d) => attrs.x(d))
 			.attr("y", (d) => attrs.y(d))

@@ -285,10 +285,17 @@ export class TwoDimensionalModel {
 					},
 					textAnchor: valueLabelsAlignment.textAnchor,
 					dominantBaseline: valueLabelsAlignment.dominantBaseline,
-					format: configReader.getValueLabelFormatterForChart(index),
 					rotation: chart.valueLabels?.rotation,
 					handleElement: chart.valueLabels?.handleElement,
-					forFields: chart.valueLabels?.renderForFields ?? chart.data.valueFields.map((field) => field.name)
+					forFields: chart.valueLabels?.renderForFields ?? chart.data.valueFields.map((field) => field.name),
+					setContent: ({ dataRow, fieldName }) => {
+						if (chart.valueLabels?.setContent)
+							return chart.valueLabels.setContent({
+								dataRow,
+								field: chart.data.valueFields.find((field) => field.name === fieldName)
+							});
+						return { textContent: configReader.getValueLabelFormatterForChart(index)(dataRow[fieldName]) };
+					}
 				},
 				areaViewOptions: getAreaViewOptions(chart, index, style, modelInstance.version.getVersionNumber()),
 				dotViewOptions: {

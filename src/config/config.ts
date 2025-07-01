@@ -376,6 +376,13 @@ export type ValueLabelsPositionOptions =
 
 export type ValueLabelsPositionMode = ValueLabelsPositionOptions["mode"];
 
+export interface ValueLabelsContentSetterOptions {
+	dataRow: MdtChartsDataRow;
+	field: MdtChartsValueField;
+}
+
+export type ValueLabelsContentSetter = (options: ValueLabelsContentSetterOptions) => { textContent: string | number };
+
 export interface TwoDimensionalChartValueLabels {
 	on: boolean;
 	position?: ValueLabelsPositionOptions;
@@ -383,6 +390,7 @@ export interface TwoDimensionalChartValueLabels {
 	rotation?: ValueLabelsRotationOptions;
 	handleElement?: ValueLabelsHandleElement;
 	renderForFields?: MdtChartsFieldName[];
+	setContent?: ValueLabelsContentSetter;
 }
 
 export type ValueLabelsHandleElement = (elInfo: {

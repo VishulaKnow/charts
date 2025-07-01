@@ -12,7 +12,8 @@ import {
 	ValueLabelsCollisionMode,
 	ValueLabelsRotationOptions,
 	ValueLabelsHandleElement,
-	MdtChartsFieldName
+	MdtChartsFieldName,
+	ValueLabelsContentSetter
 } from "../config/config";
 import {
 	DataType,
@@ -490,6 +491,15 @@ export interface ValueField extends Field {
 	title: string;
 }
 
+export interface ValueLabelsInnerContentSetterOptions {
+	dataRow: MdtChartsDataRow;
+	fieldName: MdtChartsFieldName;
+}
+
+export type ValueLabelsInnerContentSetter = (options: ValueLabelsInnerContentSetterOptions) => {
+	textContent: string | number;
+};
+
 export interface TwoDimChartValueLabelsOptions {
 	show: boolean;
 	handleX: (scaledValue: number) => number;
@@ -497,7 +507,7 @@ export interface TwoDimChartValueLabelsOptions {
 	textAnchor: ValueLabelAnchor;
 	forFields: MdtChartsFieldName[];
 	dominantBaseline: ValueLabelDominantBaseline;
-	format: ValueLabelsFormatter;
+	setContent: ValueLabelsInnerContentSetter;
 	handleScaledValue: (dataRow: MdtChartsDataRow, datumField: string) => number;
 	rotation?: ValueLabelsRotationOptions;
 	handleElement?: ValueLabelsHandleElement;
