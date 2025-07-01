@@ -210,9 +210,22 @@ export class ChartValueLabels {
 		let selection:
 			| Selection<SVGTextElement, MdtChartsDataRow | Segment, BaseType, any>
 			| Transition<SVGTextElement, MdtChartsDataRow | Segment, BaseType, any> = valueLabels
-			.text((d) => setContent({ dataRow: dataRowAccessor(d), fieldName: valueFieldName }).textContent)
 			.attr("dominant-baseline", attrs.dominantBaseline)
 			.attr("text-anchor", attrs.textAnchor);
+
+		selection.each(function (d) {
+			select(this).selectAll("tspan").remove();
+			const content = setContent({ dataRow: dataRowAccessor(d), fieldName: valueFieldName });
+			content.rows.forEach((row, rowIndex) => {
+				const tspan = document.createElementNS("http://www.w3.org/2000/svg", "tspan");
+				// Pass empty string to count this element for correct working of dy
+				// https://stackoverflow.com/questions/34078357/empty-tspan-not-rendered-dy-value-ignored
+				tspan.textContent = row.toString() || " ";
+				if (rowIndex !== 0) tspan.setAttribute("dy", `1em`);
+				tspan.setAttribute("x", attrs.x(d).toString());
+				this.appendChild(tspan);
+			});
+		});
 
 		if (animate) {
 			selection = selection

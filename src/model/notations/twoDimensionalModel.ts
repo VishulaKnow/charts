@@ -289,12 +289,14 @@ export class TwoDimensionalModel {
 					handleElement: chart.valueLabels?.handleElement,
 					forFields: chart.valueLabels?.renderForFields ?? chart.data.valueFields.map((field) => field.name),
 					setContent: ({ dataRow, fieldName }) => {
-						if (chart.valueLabels?.setContent)
-							return chart.valueLabels.setContent({
+						if (chart.valueLabels?.setContent) {
+							const content = chart.valueLabels.setContent({
 								dataRow,
 								field: chart.data.valueFields.find((field) => field.name === fieldName)
 							});
-						return { textContent: configReader.getValueLabelFormatterForChart(index)(dataRow[fieldName]) };
+							return { rows: content.textContent.toString().split("\n") };
+						}
+						return { rows: [configReader.getValueLabelFormatterForChart(index)(dataRow[fieldName])] };
 					}
 				},
 				areaViewOptions: getAreaViewOptions(chart, index, style, modelInstance.version.getVersionNumber()),

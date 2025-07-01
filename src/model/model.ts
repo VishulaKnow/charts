@@ -497,7 +497,7 @@ export interface ValueLabelsInnerContentSetterOptions {
 }
 
 export type ValueLabelsInnerContentSetter = (options: ValueLabelsInnerContentSetterOptions) => {
-	textContent: string | number;
+	rows: (string | number)[];
 };
 
 export interface TwoDimChartValueLabelsOptions {
