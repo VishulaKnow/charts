@@ -104,7 +104,9 @@ export class TwoDimConfigReader implements BaseConfigReader {
 	}
 
 	areValueLabelsNeedIncreaseMargin(): boolean {
-		return !this.options.charts.every((chart) => chart.valueLabels?.position?.mode === "center");
+		return this.options.charts.some(
+			(chart) => !chart.valueLabels?.position?.mode || chart.valueLabels?.position?.mode === "afterHead"
+		);
 	}
 
 	getValueLabelsStyleModel(): ValueLabelsStyleModel {
