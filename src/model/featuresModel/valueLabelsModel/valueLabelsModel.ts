@@ -27,7 +27,7 @@ export class ValueLabelCoordinateCalculator {
 		let offsetAbsSize = VALUE_LABEL_OFFSET_ABS_SIZE_PX;
 		if (
 			(positionOptions?.mode === "beforeHead" || positionOptions?.mode === "afterHead") &&
-			positionOptions?.offsetSize
+			positionOptions?.offsetSize != null
 		)
 			offsetAbsSize = positionOptions?.offsetSize;
 
