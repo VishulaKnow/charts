@@ -1,4 +1,4 @@
-import { scaleBand, scaleLinear, scalePoint, scaleTime, ScaleBand, ScalePoint, ScaleLinear, ScaleTime } from "d3-scale";
+import { scaleBand, scaleLinear, scalePoint, ScaleBand, ScalePoint, ScaleLinear } from "d3-scale";
 import { AxisScale } from "d3-axis";
 import { BarChartSettings, RangeModel, ScaleKeyModel, ScaleValueModel } from "../../../model/model";
 
@@ -110,8 +110,10 @@ export class Scale {
 		return scale;
 	}
 
-	private static getScaleLinear(domain: number[], range: RangeModel): ScaleLinear<number, number> {
-		return scaleLinear().domain(domain).range([range.start, range.end]);
+	private static getScaleLinear(domain: number[], range: RangeModel): ScaleLinear<number, number, number> {
+		const scale = scaleLinear().domain(domain).range([range.start, range.end]);
+		scale.unknown(scale(0));
+		return scale;
 	}
 
 	private static getScalePoint(domain: string[], range: RangeModel): ScalePoint<string> {

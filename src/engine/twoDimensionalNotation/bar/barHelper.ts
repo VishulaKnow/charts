@@ -209,7 +209,7 @@ export class BarHelper {
 	private static setSegmentedBarAttrsByValue(
 		attrs: BarAttrsHelper,
 		keyAxisOrient: Orient,
-		scaleValue: AxisScale<any>,
+		scaleValue: AxisScale<number>,
 		margin: BlockMargin
 	): void {
 		if (keyAxisOrient === "top") {
