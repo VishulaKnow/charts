@@ -278,6 +278,10 @@ export class TwoDimensionalModel {
 				index,
 				valueLabels: {
 					enabled: chart.valueLabels?.on ?? false,
+					showLabel: ({ row, valueFieldName }) => {
+						const value = (row as any)[valueFieldName];
+						return value != null && !Number.isNaN(value);
+					},
 					handleX: (scaledValue) => valueLabelsCoordinateCalculator.getValueLabelX(scaledValue),
 					handleY: (scaledValue) => valueLabelsCoordinateCalculator.getValueLabelY(scaledValue),
 					handleScaledValue: (dataRow, datumField) => {

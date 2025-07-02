@@ -291,3 +291,7 @@
 .mdt-charts-value-label {
     letter-spacing: -0.4px;
 }
+
+.mdt-charts-value-label-hidden {
+    display: none;
+}

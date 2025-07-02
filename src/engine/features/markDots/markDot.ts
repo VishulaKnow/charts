@@ -5,7 +5,7 @@ import {
 	BlockMargin,
 	MarkersOptions,
 	MarkersStyleOptions,
-	MarkersVisibilityFnOptions,
+	MarkersLikeElementsVisibilityFnOptions,
 	Orient,
 	TwoDimensionalChartModel
 } from "../../../model/model";
@@ -129,7 +129,7 @@ export class MarkDot {
 		elems.each(function (datum) {
 			let visibility = turnOnIfCan;
 
-			const checkOptions: MarkersVisibilityFnOptions = {
+			const checkOptions: MarkersLikeElementsVisibilityFnOptions = {
 				row: datum,
 				valueFieldName: (datum as MarkDotDataItem).$mdtChartsMetadata?.valueFieldName
 			};

@@ -6,7 +6,7 @@ import {
 } from "../../config/config";
 import {
 	GradientDef,
-	MarkDotDatumItem,
+	MarkerLikeElementDatumItem,
 	Orient,
 	TwoDimensionalChartModel,
 	TwoDimensionalValueLabels,
@@ -32,7 +32,7 @@ export class TwoDimensionalModelHelper {
 		chart: MdtChartsTwoDimensionalChart,
 		dataRows: MdtChartsDataRow[],
 		valueFieldName: string,
-		currentRow: MarkDotDatumItem,
+		currentRow: MarkerLikeElementDatumItem,
 		keyFieldName: string
 	): boolean {
 		if (chart.markers.show || dataRows.length === 1) return true;

@@ -502,6 +502,7 @@ export type ValueLabelsInnerContentSetter = (options: ValueLabelsInnerContentSet
 
 export interface TwoDimChartValueLabelsOptions {
 	enabled: boolean;
+	showLabel: MarkerLikeElementVisibilityFn;
 	handleX: (scaledValue: number) => number;
 	handleY: (scaledValue: number) => number;
 	textAnchor: ValueLabelAnchor;
@@ -516,18 +517,18 @@ export interface TwoDimChartValueLabelsOptions {
 export type ValueLabelsFormatter = (value: number) => string;
 
 export interface MarkersOptions {
-	shouldForceShow: MarkersVisibilityFn;
-	shouldForceHide: MarkersVisibilityFn;
+	shouldForceShow: MarkerLikeElementVisibilityFn;
+	shouldForceHide: MarkerLikeElementVisibilityFn;
 	styles: MarkersStyleOptions;
 }
 
-export type MarkDotDatumItem = MdtChartsDataRow | ({ "1": any } & Array<number>);
+export type MarkerLikeElementDatumItem = MdtChartsDataRow | ({ "1": any } & Array<number>);
 
-export interface MarkersVisibilityFnOptions {
-	row: MarkDotDatumItem;
+export interface MarkersLikeElementsVisibilityFnOptions {
+	row: MarkerLikeElementDatumItem;
 	valueFieldName: string;
 }
-export type MarkersVisibilityFn = (options: MarkersVisibilityFnOptions) => boolean;
+export type MarkerLikeElementVisibilityFn = (options: MarkersLikeElementsVisibilityFnOptions) => boolean;
 
 export interface MarkersStyleOptions {
 	highlighted: MarkerStyle;

@@ -46,7 +46,8 @@ export interface ValueLabelAttrs {
 }
 
 export class ChartValueLabels {
-	public static readonly valueLabelClass = NamesHelper.getClassName("value-label");
+	static readonly valueLabelClass = NamesHelper.getClassName("value-label");
+	static readonly valueLabelHiddenClass = NamesHelper.getClassName("value-label-hidden");
 
 	private readonly renderPipeline = new Pipeline<
 		Selection<SVGTextElement, MdtChartsDataRow | Segment, SVGGElement, unknown>,
@@ -143,7 +144,7 @@ export class ChartValueLabels {
 			dataRowAccessor
 		);
 
-		this.setAttrs(valueLabels, attrs, valueFieldName, this.options.setContent, dataRowAccessor);
+		this.setAttrs(valueLabels, attrs, valueFieldName, dataRowAccessor);
 		this.setClasses(valueLabels, this.chart.cssClasses, groupIndex);
 	}
 
@@ -180,10 +181,10 @@ export class ChartValueLabels {
 				valueLabels as Selection<SVGTextElement, MdtChartsDataRow, SVGGElement, unknown>
 			);
 
-			this.setAttrs(newValueLabels, attrs, valueFieldName, this.options.setContent, dataRowAccessor);
+			this.setAttrs(newValueLabels, attrs, valueFieldName, dataRowAccessor);
 			this.setClasses(mergedValueLabels, this.chart.cssClasses, groupIndex);
 
-			this.setAttrs(valueLabels, attrs, valueFieldName, this.options.setContent, dataRowAccessor, true, resolve);
+			this.setAttrs(valueLabels, attrs, valueFieldName, dataRowAccessor, true, resolve);
 		});
 	}
 
@@ -200,7 +201,6 @@ export class ChartValueLabels {
 		valueLabels: Selection<SVGTextElement, MdtChartsDataRow | Segment, BaseType, any>,
 		attrs: ValueLabelAttrs,
 		valueFieldName: string,
-		setContent: ValueLabelsInnerContentSetter,
 		dataRowAccessor: (d: MdtChartsDataRow | Segment) => MdtChartsDataRow,
 		animate: boolean = false,
 		onEndAnimation?: () => void
@@ -213,18 +213,23 @@ export class ChartValueLabels {
 			.attr("dominant-baseline", attrs.dominantBaseline)
 			.attr("text-anchor", attrs.textAnchor);
 
+		const thisClass = this;
 		selection.each(function (d) {
 			select(this).selectAll("tspan").remove();
-			const content = setContent({ dataRow: dataRowAccessor(d), fieldName: valueFieldName });
+			const content = thisClass.options.setContent({ dataRow: dataRowAccessor(d), fieldName: valueFieldName });
 			content.rows.forEach((row, rowIndex) => {
 				const tspan = document.createElementNS("http://www.w3.org/2000/svg", "tspan");
-				// Pass empty string to count this element for correct working of dy
+				// Pass an empty string so this element is counted, ensuring correct `dy` attribute behavior
 				// https://stackoverflow.com/questions/34078357/empty-tspan-not-rendered-dy-value-ignored
 				tspan.textContent = row.toString() || " ";
 				if (rowIndex !== 0) tspan.setAttribute("dy", `1em`);
 				tspan.setAttribute("x", attrs.x(d).toString());
 				this.appendChild(tspan);
 			});
+		});
+
+		selection.classed(ChartValueLabels.valueLabelHiddenClass, (d) => {
+			return !this.options.showLabel({ row: dataRowAccessor(d), valueFieldName });
 		});
 
 		if (animate) {

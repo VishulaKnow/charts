@@ -5,7 +5,11 @@ import {
 	MdtChartsTwoDimensionalChart,
 	MdtChartsTwoDimensionalValueLabels
 } from "../../config/config";
-import { MarkDotDatumItem, TwoDimensionalChartLegendLineModel, TwoDimensionalChartModel } from "../../model/model";
+import {
+	MarkerLikeElementDatumItem,
+	TwoDimensionalChartLegendLineModel,
+	TwoDimensionalChartModel
+} from "../../model/model";
 import {
 	getLegendMarkerOptions,
 	getLineViewOptions,
@@ -21,7 +25,7 @@ describe("shouldMarkerShow", () => {
 	let chart: MdtChartsTwoDimensionalChart;
 	let dataRows: MdtChartsDataRow[];
 	let valueFieldName: string;
-	let currentRow: MarkDotDatumItem;
+	let currentRow: MarkerLikeElementDatumItem;
 	let keyFieldName: string;
 
 	beforeEach(() => {
