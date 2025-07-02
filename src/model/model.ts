@@ -516,7 +516,7 @@ export interface TwoDimChartValueLabelsOptions {
 export type ValueLabelsFormatter = (value: number) => string;
 
 export interface MarkersOptions {
-	show: MarkersOptionsShow;
+	forceShow: MarkersOptionsShow;
 	styles: MarkersStyleOptions;
 }
 

@@ -81,7 +81,7 @@ export class MarkDot {
 		dots.exit().remove();
 
 		dots.each(function (datum) {
-			if (chart.markersOptions.show({ row: datum, valueFieldName })) {
+			if (chart.markersOptions.forceShow({ row: datum, valueFieldName })) {
 				MarkDot.toggleMarkDotVisible(select(this), true);
 			}
 		});
@@ -131,7 +131,7 @@ export class MarkDot {
 	): void {
 		elems.each(function (datum) {
 			if (
-				!markersOptions.show({
+				!markersOptions.forceShow({
 					row: datum,
 					valueFieldName: (datum as MarkDotDataItem).$mdtChartsMetadata?.valueFieldName
 				})

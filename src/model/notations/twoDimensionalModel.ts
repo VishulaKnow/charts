@@ -239,14 +239,15 @@ export class TwoDimensionalModel {
 				style,
 				embeddedLabels: this.getEmbeddedLabelType(chart, chartOrientation),
 				markersOptions: {
-					show: ({ row, valueFieldName }) =>
-						TwoDimensionalModelHelper.shouldMarkerShow(
+					forceShow: ({ row, valueFieldName }) => {
+						return TwoDimensionalModelHelper.forceMarkerShow(
 							chart,
 							dataModelRep.getRawRows(),
 							valueFieldName,
 							row,
 							keyFieldName
-						),
+						);
+					},
 					styles: {
 						highlighted: {
 							size: {

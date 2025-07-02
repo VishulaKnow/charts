@@ -130,7 +130,7 @@ describe("shouldMarkerShow", () => {
 
 	test("should return false, because currentRow is the first one but nextRow has value", () => {
 		currentRow = dataRows[0];
-		const res = TwoDimensionalModelHelper.shouldMarkerShow(
+		const res = TwoDimensionalModelHelper.forceMarkerShow(
 			chart,
 			dataRows,
 			valueFieldName,
@@ -143,7 +143,7 @@ describe("shouldMarkerShow", () => {
 	test("should return true, because currentRow is the first one and nextRow with the value null", () => {
 		dataRows[1][valueFieldName] = null;
 		currentRow = dataRows[0];
-		const res = TwoDimensionalModelHelper.shouldMarkerShow(
+		const res = TwoDimensionalModelHelper.forceMarkerShow(
 			chart,
 			dataRows,
 			valueFieldName,
@@ -155,7 +155,7 @@ describe("shouldMarkerShow", () => {
 
 	test("should return true, because currentRow is the last one and previousRow with the value null", () => {
 		currentRow = dataRows[dataRows.length - 1];
-		const res = TwoDimensionalModelHelper.shouldMarkerShow(
+		const res = TwoDimensionalModelHelper.forceMarkerShow(
 			chart,
 			dataRows,
 			valueFieldName,
@@ -167,7 +167,7 @@ describe("shouldMarkerShow", () => {
 
 	test("should return true, because currentRow has neighborsRows with the value null", () => {
 		currentRow = dataRows[4];
-		const res = TwoDimensionalModelHelper.shouldMarkerShow(
+		const res = TwoDimensionalModelHelper.forceMarkerShow(
 			chart,
 			dataRows,
 			valueFieldName,
@@ -180,7 +180,7 @@ describe("shouldMarkerShow", () => {
 	test("should return true, because dataRows has only one row", () => {
 		dataRows = [dataRows[0]];
 		currentRow = dataRows[0];
-		const res = TwoDimensionalModelHelper.shouldMarkerShow(
+		const res = TwoDimensionalModelHelper.forceMarkerShow(
 			chart,
 			dataRows,
 			valueFieldName,
@@ -193,7 +193,7 @@ describe("shouldMarkerShow", () => {
 	test("should return false, because there is no such row in dataRows ", () => {
 		currentRow = { ...dataRows[0] };
 		currentRow[keyFieldName] = "someKeyField";
-		const res = TwoDimensionalModelHelper.shouldMarkerShow(
+		const res = TwoDimensionalModelHelper.forceMarkerShow(
 			chart,
 			dataRows,
 			valueFieldName,

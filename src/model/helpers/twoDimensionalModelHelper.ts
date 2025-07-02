@@ -28,7 +28,7 @@ import {
 } from "../featuresModel/valueLabelsModel/valueLabelsModel";
 
 export class TwoDimensionalModelHelper {
-	public static shouldMarkerShow(
+	public static forceMarkerShow(
 		chart: MdtChartsTwoDimensionalChart,
 		dataRows: MdtChartsDataRow[],
 		valueFieldName: string,
