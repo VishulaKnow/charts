@@ -293,5 +293,5 @@
 }
 
 .mdt-charts-value-label-hidden {
-    display: none;
+    display: none !important;
 }
