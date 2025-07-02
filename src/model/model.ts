@@ -516,12 +516,18 @@ export interface TwoDimChartValueLabelsOptions {
 export type ValueLabelsFormatter = (value: number) => string;
 
 export interface MarkersOptions {
-	forceShow: MarkersOptionsShow;
+	shouldForceShow: MarkersVisibilityFn;
+	shouldForceHide: MarkersVisibilityFn;
 	styles: MarkersStyleOptions;
 }
 
 export type MarkDotDatumItem = MdtChartsDataRow | ({ "1": any } & Array<number>);
-export type MarkersOptionsShow = (options: { row: MarkDotDatumItem; valueFieldName: string }) => boolean;
+
+export interface MarkersVisibilityFnOptions {
+	row: MarkDotDatumItem;
+	valueFieldName: string;
+}
+export type MarkersVisibilityFn = (options: MarkersVisibilityFnOptions) => boolean;
 
 export interface MarkersStyleOptions {
 	highlighted: MarkerStyle;

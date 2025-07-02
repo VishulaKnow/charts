@@ -239,7 +239,7 @@ export class TwoDimensionalModel {
 				style,
 				embeddedLabels: this.getEmbeddedLabelType(chart, chartOrientation),
 				markersOptions: {
-					forceShow: ({ row, valueFieldName }) => {
+					shouldForceShow: ({ row, valueFieldName }) => {
 						return TwoDimensionalModelHelper.forceMarkerShow(
 							chart,
 							dataModelRep.getRawRows(),
@@ -247,6 +247,10 @@ export class TwoDimensionalModel {
 							row,
 							keyFieldName
 						);
+					},
+					shouldForceHide: ({ row, valueFieldName }) => {
+						const value = (row as any)[valueFieldName];
+						return value == null || Number.isNaN(value);
 					},
 					styles: {
 						highlighted: {

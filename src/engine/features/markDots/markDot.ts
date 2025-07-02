@@ -5,6 +5,7 @@ import {
 	BlockMargin,
 	MarkersOptions,
 	MarkersStyleOptions,
+	MarkersVisibilityFnOptions,
 	Orient,
 	TwoDimensionalChartModel
 } from "../../../model/model";
@@ -60,7 +61,7 @@ export class MarkDot {
 		this.setAttrs(block, dots, attrs, chart.markersOptions.styles);
 
 		this.setClassesAndStyle(dots, chart.cssClasses, vfIndex, chart.style.elementColors);
-		MarkDot.tryMakeMarkDotVisible(dots, chart.markersOptions, false);
+		MarkDot.handleMarkDotVisibility(dots, chart.markersOptions, false);
 	}
 
 	public static update(
@@ -80,11 +81,7 @@ export class MarkDot {
 			.data(newData.map<MarkDotDataItem>((row) => ({ ...row, $mdtChartsMetadata: { valueFieldName } })));
 		dots.exit().remove();
 
-		dots.each(function (datum) {
-			if (chart.markersOptions.forceShow({ row: datum, valueFieldName })) {
-				MarkDot.toggleMarkDotVisible(select(this), true);
-			}
-		});
+		MarkDot.handleMarkDotVisibility(dots, chart.markersOptions);
 
 		const attrs = MarkDotHelper.getDotAttrs(
 			keyAxisOrient,
@@ -98,7 +95,7 @@ export class MarkDot {
 		this.setAttrs(block, newDots, attrs, chart.markersOptions.styles);
 
 		this.setClassesAndStyle(newDots, chart.cssClasses, vfIndex, chart.style.elementColors);
-		MarkDot.tryMakeMarkDotVisible(newDots, chart.markersOptions, false);
+		MarkDot.handleMarkDotVisibility(newDots, chart.markersOptions, false);
 
 		const animationName = "data-updating";
 		dots.interrupt(animationName)
@@ -124,19 +121,24 @@ export class MarkDot {
 		return block.getSvg().selectAll(`.${MarkDot.markerDotClass}${Helper.getCssClassesLine(chartCssClasses)}`);
 	}
 
-	public static tryMakeMarkDotVisible(
+	public static handleMarkDotVisibility(
 		elems: Selection<BaseType, MdtChartsDataRow, BaseType, unknown>,
 		markersOptions: MarkersOptions,
-		turnOnIfCan: boolean
+		turnOnIfCan?: boolean
 	): void {
 		elems.each(function (datum) {
 			let visibility = turnOnIfCan;
-			const shouldBeAlwaysVisible = markersOptions.forceShow({
+
+			const checkOptions: MarkersVisibilityFnOptions = {
 				row: datum,
 				valueFieldName: (datum as MarkDotDataItem).$mdtChartsMetadata?.valueFieldName
-			});
-			if (shouldBeAlwaysVisible) visibility = true;
-			MarkDot.toggleMarkDotVisible(select(this), visibility);
+			};
+
+			if (markersOptions.shouldForceShow(checkOptions)) visibility = true;
+
+			if (markersOptions.shouldForceHide(checkOptions)) visibility = false;
+
+			if (visibility != null) MarkDot.toggleMarkDotVisible(select(this), visibility);
 		});
 	}
 

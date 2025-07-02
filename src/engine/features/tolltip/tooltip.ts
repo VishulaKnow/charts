@@ -239,7 +239,7 @@ export class Tooltip {
 								[currentKey]
 							);
 							if (chart.type !== "bar")
-								MarkDot.tryMakeMarkDotVisible(oldElements, chart.markersOptions, false);
+								MarkDot.handleMarkDotVisibility(oldElements, chart.markersOptions, false);
 							ElementHighlighter.toggle2DElements(
 								oldElements,
 								false,
@@ -258,7 +258,7 @@ export class Tooltip {
 							[keyValue]
 						);
 						if (chart.type !== "bar")
-							MarkDot.tryMakeMarkDotVisible(selectedElements, chart.markersOptions, true);
+							MarkDot.handleMarkDotVisibility(selectedElements, chart.markersOptions, true);
 						ElementHighlighter.toggleActivityStyle(selectedElements, true);
 						if (
 							block.filterEventManager.getSelectedKeys().length === 0 ||

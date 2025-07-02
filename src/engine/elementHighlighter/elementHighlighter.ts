@@ -197,7 +197,7 @@ export class ElementHighlighter {
 		charts.forEach((chart) => {
 			const elems = DomSelectionHelper.get2DChartElements(block, chart);
 
-			if (chart.type !== "bar") MarkDot.tryMakeMarkDotVisible(elems, chart.markersOptions, false);
+			if (chart.type !== "bar") MarkDot.handleMarkDotVisibility(elems, chart.markersOptions, false);
 			this.toggle2DElements(elems, false, chart, transitionDuration);
 			this.toggleActivityStyle(elems, true);
 		});
@@ -219,7 +219,7 @@ export class ElementHighlighter {
 				SelectionCondition.Exclude
 			);
 
-			if (chart.type !== "bar") MarkDot.tryMakeMarkDotVisible(selectedElems, chart.markersOptions, false);
+			if (chart.type !== "bar") MarkDot.handleMarkDotVisibility(selectedElems, chart.markersOptions, false);
 			this.toggle2DElements(selectedElems, false, chart, transitionDuration);
 			if (block.filterEventManager.getSelectedKeys().length > 0) this.toggleActivityStyle(selectedElems, false);
 		});

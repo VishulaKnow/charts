@@ -34,13 +34,14 @@ export class SelectHighlighter {
 					chart,
 					block.transitionManager.durations.markerHover
 				);
-				if (chart.type !== "bar") MarkDot.tryMakeMarkDotVisible(selectedElements, chart.markersOptions, false);
+				if (chart.type !== "bar")
+					MarkDot.handleMarkDotVisibility(selectedElements, chart.markersOptions, false);
 
 				if (selectedKeys.length > 0) {
 					ElementHighlighter.toggleActivityStyle(selectedElements, false);
 				} else {
 					ElementHighlighter.toggleActivityStyle(elements, true);
-					if (chart.type !== "bar") MarkDot.tryMakeMarkDotVisible(elements, chart.markersOptions, false);
+					if (chart.type !== "bar") MarkDot.handleMarkDotVisibility(elements, chart.markersOptions, false);
 				}
 				return;
 			}
@@ -77,7 +78,7 @@ export class SelectHighlighter {
 					block.transitionManager.durations.markerHover
 				);
 				ElementHighlighter.toggleActivityStyle(elements, false);
-				if (chart.type !== "bar") MarkDot.tryMakeMarkDotVisible(elements, chart.markersOptions, false);
+				if (chart.type !== "bar") MarkDot.handleMarkDotVisibility(elements, chart.markersOptions, false);
 
 				ElementHighlighter.toggleActivityStyle(selectedElements, true);
 				ElementHighlighter.toggle2DElements(
@@ -87,7 +88,7 @@ export class SelectHighlighter {
 					block.transitionManager.durations.markerHover
 				);
 			}
-			if (chart.type !== "bar") MarkDot.tryMakeMarkDotVisible(selectedElements, chart.markersOptions, true);
+			if (chart.type !== "bar") MarkDot.handleMarkDotVisibility(selectedElements, chart.markersOptions, true);
 		});
 	}
 
@@ -190,7 +191,7 @@ export class SelectHighlighter {
 			const elements = DomSelectionHelper.get2DChartElements(block, chart);
 			ElementHighlighter.toggle2DElements(elements, false, chart, block.transitionManager.durations.markerHover);
 			ElementHighlighter.toggleActivityStyle(elements, true);
-			if (chart.type !== "bar") MarkDot.tryMakeMarkDotVisible(elements, chart.markersOptions, false);
+			if (chart.type !== "bar") MarkDot.handleMarkDotVisibility(elements, chart.markersOptions, false);
 		});
 	}
 
