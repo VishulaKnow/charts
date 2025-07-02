@@ -1,5 +1,12 @@
 import { AxisScale } from "d3-axis";
-import { AxisModelOptions, IAxisModel, IScaleModel, ScaleKeyModel, ScaleValueModel } from "../../../model/model";
+import {
+	AxisModelOptions,
+	DiscreteAxisLabelModel,
+	IAxisModel,
+	IScaleModel,
+	ScaleKeyModel,
+	ScaleValueModel
+} from "../../../model/model";
 import { Block } from "../../block/block";
 import { Scale, ScalesWithSecondary } from "../scale/scale";
 import { NamesHelper } from "../../helpers/namesHelper";
@@ -78,7 +85,13 @@ export class Axis {
 
 		if (axisOptions.type === "value" && scaleOptions.type === "linear")
 			AxisHelper.setValueAxisLabelsSettings(axisGenerator, scaleOptions, axisOptions.labels);
-		else axisGenerator.tickFormat(axisOptions.labels.showTick);
+		else
+			axisGenerator.tickFormat((d, i) => {
+				const shouldBeShown = axisOptions.labels.showTick(d, i);
+				return shouldBeShown
+					? (axisOptions.labels as DiscreteAxisLabelModel).format({ key: d, dataRow: {} })
+					: undefined;
+			});
 
 		const axisElement = block
 			.getSvg()
@@ -159,7 +172,7 @@ export class Axis {
 			if (axisOptions.orient === "bottom") axisGenerator.tickPadding(-4);
 			else if (axisOptions.orient === "top") axisGenerator.tickPadding(-6);
 		}
-		axisGenerator.tickFormat(axisOptions.labels.showTick);
+		axisGenerator.tickFormat((d, i) => (axisOptions.labels.showTick(d, i) ? d : undefined));
 
 		const axisElement = block.getSvg().select<SVGGElement>(`g.${axisOptions.cssClass}`);
 

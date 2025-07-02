@@ -16,7 +16,7 @@ import {
 	MINIMAL_VERTICAL_STEP_SIZE
 } from "../../model/featuresModel/axis/axisModel";
 import { AxisModelService, showAllTicks } from "../../model/featuresModel/axis/axisModelService";
-import { AxisModelOptions, BlockMargin } from "../../model/model";
+import { AxisModelOptions, BlockMargin, DiscreteAxisModelOptions } from "../../model/model";
 import { CanvasModel } from "../../model/modelInstance/canvasModel/canvasModel";
 
 function getData(): MdtChartsDataSource {
@@ -129,7 +129,7 @@ describe("get axes", () => {
 			canvasModel,
 			tooltipSettings
 		);
-		const expected: AxisModelOptions = {
+		const expected: DiscreteAxisModelOptions = {
 			visibility: true,
 			type: "key",
 			cssClass: "key-axis",
@@ -142,7 +142,8 @@ describe("get axes", () => {
 				linearTickStep: MINIMAL_HORIZONTAL_STEP_SIZE,
 				tickAmountSettings: {
 					policy: { type: "auto" }
-				}
+				},
+				format: expect.any(Function)
 			},
 			orient: "bottom",
 			ticks: {
@@ -177,7 +178,7 @@ describe("get axes", () => {
 			canvasModel,
 			tooltipSettings
 		);
-		const expected: AxisModelOptions = {
+		const expected: DiscreteAxisModelOptions = {
 			visibility: true,
 			type: "key",
 			cssClass: "key-axis",
@@ -190,7 +191,8 @@ describe("get axes", () => {
 				linearTickStep: MINIMAL_HORIZONTAL_STEP_SIZE,
 				tickAmountSettings: {
 					policy: { type: "auto" }
-				}
+				},
+				format: expect.any(Function)
 			},
 			orient: "left",
 			ticks: {
@@ -232,7 +234,7 @@ describe("get axes", () => {
 				position: "straight",
 				visible: true,
 				defaultTooltip: true,
-				showTick: (d, i) => (i % 2 === 0 ? d : undefined),
+				showTick: (d, i) => (i % 2 === 0 ? true : false),
 				linearTickStep: MINIMAL_HORIZONTAL_STEP_SIZE,
 				tickAmountSettings: {
 					policy: { type: "auto" }
@@ -285,7 +287,7 @@ describe("get axes", () => {
 				position: "straight",
 				visible: true,
 				defaultTooltip: true,
-				showTick: (d, i) => (i % 3 === 0 ? d : undefined),
+				showTick: (d, i) => (i % 3 === 0 ? true : false),
 				linearTickStep: MINIMAL_HORIZONTAL_STEP_SIZE,
 				tickAmountSettings: {
 					policy: { type: "auto" }
@@ -320,7 +322,7 @@ describe("get axes", () => {
 		canvasModel.initMargin(margin);
 		canvasModel.initBlockSize({ height: 400, width: 140 });
 		dataOptions.dataSource = "dataSet";
-		const showRule: ShowTickFn = (d, i) => (i % 10 ? d : undefined);
+		const showRule: ShowTickFn = (d, i) => (i % 10 ? true : false);
 		discreteAxisOptions.labels = { showRule: { showTickFn: showRule } };
 
 		const result = AxisModel.getKeyAxis(

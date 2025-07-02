@@ -13,7 +13,8 @@ import {
 	ValueLabelsRotationOptions,
 	ValueLabelsHandleElement,
 	MdtChartsFieldName,
-	ValueLabelsContentSetter
+	ValueLabelsContentSetter,
+	DiscreteAxisLabelFormatter
 } from "../config/config";
 import {
 	DataType,
@@ -207,6 +208,10 @@ export interface AxisModelOptions {
 	browserTooltip: AxisBrowserTooltipModel;
 }
 
+export interface DiscreteAxisModelOptions extends AxisModelOptions {
+	labels: DiscreteAxisLabelModel;
+}
+
 export interface AxisBrowserTooltipModel {
 	format: (value: number | string) => string | number;
 }
@@ -230,6 +235,10 @@ export interface AxisLabelModel {
 	showTick: ShowTickFn;
 	linearTickStep: number;
 	tickAmountSettings: TickAmountModel;
+}
+
+export interface DiscreteAxisLabelModel extends AxisLabelModel {
+	format: DiscreteAxisLabelFormatter;
 }
 
 interface TickAmountModel {

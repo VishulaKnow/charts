@@ -22,9 +22,7 @@ export class AxisHelper {
 		if (labelsOptions.tickAmountSettings.policy.type === "constant")
 			axisGenerator.tickValues(labelsOptions.tickAmountSettings.policy.values);
 
-		if (scaleOptions.type === "linear") {
-			this.setNumTickFormat(axisGenerator, scaleOptions.formatter);
-		}
+		this.setNumTickFormat(axisGenerator, scaleOptions.formatter);
 	}
 
 	public static getBaseAxisGenerator(axisOptions: AxisModelOptions, scale: AxisScale<any>): IAxis<any> {

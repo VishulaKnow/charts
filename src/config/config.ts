@@ -251,7 +251,9 @@ export interface MdtChartsDiscreteAxisLabel {
 	showRule?: MdtChartsShowAxisLabelRule;
 }
 
-export type ShowTickFn = (dataKey: string, index: number) => string | undefined;
+export type DiscreteAxisLabelFormatter = (options: { key: string; dataRow: MdtChartsDataRow }) => string;
+
+export type ShowTickFn = (dataKey: string, index: number) => boolean;
 
 export interface MdtChartsShowAxisLabelRule {
 	spaceForOneLabel?: number;

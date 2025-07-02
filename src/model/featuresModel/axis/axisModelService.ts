@@ -1,6 +1,6 @@
 import { AxisLabelPosition, MdtChartsDataRow, MdtChartsShowAxisLabelRule, ShowTickFn } from "../../../config/config";
 
-export const showAllTicks: ShowTickFn = (d) => d;
+export const showAllTicks: ShowTickFn = () => true;
 
 export class AxisModelService {
 	getKeyAxisLabelPosition(
@@ -35,7 +35,7 @@ export class AxisModelTickCalculator {
 
 		let divider = Math.ceil(this.dataRows.length / allowedKeysAmount);
 		return (d, i) => {
-			return i % divider === 0 ? d : undefined;
+			return i % divider === 0;
 		};
 	}
 }

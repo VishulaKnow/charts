@@ -9,7 +9,14 @@ import {
 	NumberSecondaryAxisOptions,
 	AxisLabelFormatter
 } from "../../../config/config";
-import { AxisModelOptions, Orient, ScaleValueModel, TickAmountPolicy, TranslateModel } from "../../model";
+import {
+	AxisModelOptions,
+	DiscreteAxisModelOptions,
+	Orient,
+	ScaleValueModel,
+	TickAmountPolicy,
+	TranslateModel
+} from "../../model";
 import { ModelHelper } from "../../helpers/modelHelper";
 import { AxisType } from "../../modelBuilder";
 import { DataManagerModel } from "../../dataManagerModel/dataManagerModel";
@@ -40,7 +47,7 @@ export class AxisModel {
 		canvasModel: CanvasModel,
 		tooltipSettings: TooltipSettings,
 		getZeroCoordinate?: () => number
-	): AxisModelOptions {
+	): DiscreteAxisModelOptions {
 		const { charts, orientation, data: dataOptions } = options;
 		const axisConfig = options.axis.key;
 
@@ -78,7 +85,8 @@ export class AxisModel {
 				linearTickStep: MINIMAL_HORIZONTAL_STEP_SIZE,
 				tickAmountSettings: {
 					policy: { type: "auto" }
-				}
+				},
+				format: (options) => options.key
 			},
 			visibility: axisConfig.visibility,
 			line: {
