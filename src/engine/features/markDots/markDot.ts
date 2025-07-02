@@ -130,18 +130,18 @@ export class MarkDot {
 		turnOnIfCan: boolean
 	): void {
 		elems.each(function (datum) {
-			if (
-				!markersOptions.forceShow({
-					row: datum,
-					valueFieldName: (datum as MarkDotDataItem).$mdtChartsMetadata?.valueFieldName
-				})
-			)
-				MarkDot.toggleMarkDotVisible(select(this), turnOnIfCan);
+			let visibility = turnOnIfCan;
+			const shouldBeAlwaysVisible = markersOptions.forceShow({
+				row: datum,
+				valueFieldName: (datum as MarkDotDataItem).$mdtChartsMetadata?.valueFieldName
+			});
+			if (shouldBeAlwaysVisible) visibility = true;
+			MarkDot.toggleMarkDotVisible(select(this), visibility);
 		});
 	}
 
-	private static toggleMarkDotVisible(markDots: Selection<BaseType, any, BaseType, any>, isHighlight: boolean) {
-		markDots.classed(MarkDot.hiddenDotClass, !isHighlight);
+	private static toggleMarkDotVisible(markDots: Selection<BaseType, any, BaseType, any>, isVisible: boolean) {
+		markDots.classed(MarkDot.hiddenDotClass, !isVisible);
 	}
 
 	private static setClassesAndStyle(

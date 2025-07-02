@@ -48,11 +48,11 @@ export class TwoDimensionalModelHelper {
 		const nextRow = dataRows[rowIndex + 1];
 
 		const hasNullNeighborsRows =
-			!isFirst && !isLast && previousRow?.[valueFieldName] === null && nextRow?.[valueFieldName] === null;
+			!isFirst && !isLast && previousRow?.[valueFieldName] == null && nextRow?.[valueFieldName] == null;
 
 		return (
-			(isFirst && nextRow?.[valueFieldName] === null) ||
-			(isLast && previousRow?.[valueFieldName] === null) ||
+			(isFirst && nextRow?.[valueFieldName] == null) ||
+			(isLast && previousRow?.[valueFieldName] == null) ||
 			hasNullNeighborsRows
 		);
 	}

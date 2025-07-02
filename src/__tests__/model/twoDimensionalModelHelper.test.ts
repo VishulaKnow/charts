@@ -153,7 +153,33 @@ describe("shouldMarkerShow", () => {
 		expect(res).toBeTruthy();
 	});
 
+	test("should return true, because currentRow is the first one and nextRow with the value undefined", () => {
+		dataRows[1][valueFieldName] = undefined;
+		currentRow = dataRows[0];
+		const res = TwoDimensionalModelHelper.forceMarkerShow(
+			chart,
+			dataRows,
+			valueFieldName,
+			currentRow,
+			keyFieldName
+		);
+		expect(res).toBeTruthy();
+	});
+
 	test("should return true, because currentRow is the last one and previousRow with the value null", () => {
+		currentRow = dataRows[dataRows.length - 1];
+		const res = TwoDimensionalModelHelper.forceMarkerShow(
+			chart,
+			dataRows,
+			valueFieldName,
+			currentRow,
+			keyFieldName
+		);
+		expect(res).toBeTruthy();
+	});
+
+	test("should return true, because currentRow is the last one and previousRow with the value undefined", () => {
+		dataRows[dataRows.length - 2][valueFieldName] = undefined;
 		currentRow = dataRows[dataRows.length - 1];
 		const res = TwoDimensionalModelHelper.forceMarkerShow(
 			chart,
@@ -167,6 +193,20 @@ describe("shouldMarkerShow", () => {
 
 	test("should return true, because currentRow has neighborsRows with the value null", () => {
 		currentRow = dataRows[4];
+		const res = TwoDimensionalModelHelper.forceMarkerShow(
+			chart,
+			dataRows,
+			valueFieldName,
+			currentRow,
+			keyFieldName
+		);
+		expect(res).toBeTruthy();
+	});
+
+	test("should return true, because currentRow has neighborsRows with the value undefined", () => {
+		dataRows[3][valueFieldName] = undefined;
+		currentRow = dataRows[4];
+		dataRows[5][valueFieldName] = undefined;
 		const res = TwoDimensionalModelHelper.forceMarkerShow(
 			chart,
 			dataRows,
