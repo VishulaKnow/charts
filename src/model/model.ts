@@ -238,8 +238,10 @@ export interface AxisLabelModel {
 }
 
 export interface DiscreteAxisLabelModel extends AxisLabelModel {
-	format: DiscreteAxisLabelFormatter;
+	format: DiscreteAxisLabelFormatterModel;
 }
+
+export type DiscreteAxisLabelFormatterModel = (options: { key: string }) => string;
 
 interface TickAmountModel {
 	policy: TickAmountPolicy;

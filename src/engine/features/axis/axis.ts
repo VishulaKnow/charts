@@ -85,13 +85,7 @@ export class Axis {
 
 		if (axisOptions.type === "value" && scaleOptions.type === "linear")
 			AxisHelper.setValueAxisLabelsSettings(axisGenerator, scaleOptions, axisOptions.labels);
-		else
-			axisGenerator.tickFormat((d, i) => {
-				const shouldBeShown = axisOptions.labels.showTick(d, i);
-				return shouldBeShown
-					? (axisOptions.labels as DiscreteAxisLabelModel).format({ key: d, dataRow: {} })
-					: undefined;
-			});
+		else axisGenerator.tickFormat((d, i) => this.getKeyAxisTickFormat(d, i, axisOptions));
 
 		const axisElement = block
 			.getSvg()
@@ -172,7 +166,7 @@ export class Axis {
 			if (axisOptions.orient === "bottom") axisGenerator.tickPadding(-4);
 			else if (axisOptions.orient === "top") axisGenerator.tickPadding(-6);
 		}
-		axisGenerator.tickFormat((d, i) => (axisOptions.labels.showTick(d, i) ? d : undefined));
+		axisGenerator.tickFormat((d, i) => this.getKeyAxisTickFormat(d, i, axisOptions));
 
 		const axisElement = block.getSvg().select<SVGGElement>(`g.${axisOptions.cssClass}`);
 
@@ -249,5 +243,14 @@ export class Axis {
 				const isActive = selectedKeys.includes(data);
 				select(this).classed("mdt-charts-opacity-inactive", !isActive);
 			});
+	}
+
+	private static getKeyAxisTickFormat(
+		datumKey: string,
+		index: number,
+		axisOptions: AxisModelOptions
+	): string | undefined {
+		const shouldBeShown = axisOptions.labels.showTick(datumKey, index);
+		return shouldBeShown ? (axisOptions.labels as DiscreteAxisLabelModel).format({ key: datumKey }) : undefined;
 	}
 }

@@ -249,6 +249,7 @@ export interface DiscreteAxisOptions extends AxisOptions {
 export interface MdtChartsDiscreteAxisLabel {
 	position?: AxisLabelPosition;
 	showRule?: MdtChartsShowAxisLabelRule;
+	format?: DiscreteAxisLabelFormatter;
 }
 
 export type DiscreteAxisLabelFormatter = (options: { key: string; dataRow: MdtChartsDataRow }) => string;
