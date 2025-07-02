@@ -277,7 +277,7 @@ export class TwoDimensionalModel {
 				legend: getLegendMarkerOptions(chart),
 				index,
 				valueLabels: {
-					show: chart.valueLabels?.on ?? false,
+					enabled: chart.valueLabels?.on ?? false,
 					handleX: (scaledValue) => valueLabelsCoordinateCalculator.getValueLabelX(scaledValue),
 					handleY: (scaledValue) => valueLabelsCoordinateCalculator.getValueLabelY(scaledValue),
 					handleScaledValue: (dataRow, datumField) => {

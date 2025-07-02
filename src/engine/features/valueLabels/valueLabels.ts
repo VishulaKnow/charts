@@ -288,7 +288,7 @@ export class CanvasValueLabels {
 	) {
 		const valueLabelsSettings = this.options.canvas.valueLabels;
 
-		const chartsWithLabels: TwoDimensionalChartModel[] = charts.filter((chart) => chart.valueLabels?.show);
+		const chartsWithLabels: TwoDimensionalChartModel[] = charts.filter((chart) => chart.valueLabels?.enabled);
 		if (chartsWithLabels.length === 0) return;
 
 		chartsWithLabels.forEach((chart) => {
@@ -312,7 +312,7 @@ export class CanvasValueLabels {
 	) {
 		this.options.canvas.valueLabels = newCanvasOptions;
 
-		const chartsWithLabels: TwoDimensionalChartModel[] = charts.filter((chart) => chart.valueLabels?.show);
+		const chartsWithLabels: TwoDimensionalChartModel[] = charts.filter((chart) => chart.valueLabels?.enabled);
 		if (chartsWithLabels.length === 0) return;
 
 		if (this.options.canvas.valueLabels.collision.otherValueLables.mode === "hide")

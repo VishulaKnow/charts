@@ -501,7 +501,7 @@ export type ValueLabelsInnerContentSetter = (options: ValueLabelsInnerContentSet
 };
 
 export interface TwoDimChartValueLabelsOptions {
-	show: boolean;
+	enabled: boolean;
 	handleX: (scaledValue: number) => number;
 	handleY: (scaledValue: number) => number;
 	textAnchor: ValueLabelAnchor;
