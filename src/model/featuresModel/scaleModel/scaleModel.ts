@@ -8,7 +8,7 @@ import {
 import { CanvasModel } from "../../modelInstance/canvasModel/canvasModel";
 import { getElementsAmountForScale, getScaleKeyRangePeek, getScaleValueRangePeek } from "./scaleModelServices";
 import { getScaleLinearDomain } from "./scaleDomainService";
-import { TwoDimConfigReader } from "../../modelInstance/configReader";
+import { TwoDimConfigReader } from "../../modelInstance/configReader/twoDimConfigReader.ts/twoDimConfigReader";
 
 export enum ScaleType {
 	Key,

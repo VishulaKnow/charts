@@ -18,7 +18,7 @@ import {
 	TwoDimChartElementsSettings,
 	Orient
 } from "../model";
-import { TwoDimConfigReader } from "../modelInstance/configReader";
+import { TwoDimConfigReader } from "../modelInstance/configReader/twoDimConfigReader.ts/twoDimConfigReader";
 import { ModelInstance } from "../modelInstance/modelInstance";
 import {
 	calculateBarIndexes,

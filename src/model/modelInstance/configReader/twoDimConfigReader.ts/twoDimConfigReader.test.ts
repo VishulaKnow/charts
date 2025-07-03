@@ -1,7 +1,12 @@
-import { TwoDimConfigReader } from "./configReader";
-import { DataRepositoryModel } from "../../model/modelInstance/dataModel/dataRepository";
-import { MdtChartsConfig, MdtChartsDataRow, MdtChartsTwoDimensionalOptions, NumberDomain } from "../../config/config";
-import { DesignerConfig, Formatter } from "../../designer/designerConfig";
+import { TwoDimConfigReader } from "./twoDimConfigReader";
+import { DataRepositoryModel } from "../../dataModel/dataRepository";
+import {
+	MdtChartsConfig,
+	MdtChartsDataRow,
+	MdtChartsTwoDimensionalOptions,
+	NumberDomain
+} from "../../../../config/config";
+import { DesignerConfig, Formatter } from "../../../../designer/designerConfig";
 
 describe("getFieldsBySegments", () => {
 	let reader: TwoDimConfigReader;

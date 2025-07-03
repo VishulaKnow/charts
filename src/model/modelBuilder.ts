@@ -8,7 +8,7 @@ import { DesignerConfig, Transitions } from "../designer/designerConfig";
 import { OtherComponentsModel } from "./featuresModel/otherComponents";
 import { ConfigValidator } from "./configsValidator/configValidator";
 import { ModelInstance } from "./modelInstance/modelInstance";
-import { TwoDimConfigReader } from "./modelInstance/configReader";
+import { TwoDimConfigReader } from "./modelInstance/configReader/twoDimConfigReader.ts/twoDimConfigReader";
 import { TitleConfigReader } from "./modelInstance/titleConfigReader";
 
 export enum AxisType {

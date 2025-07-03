@@ -11,19 +11,10 @@ import {
 	TwoDimensionalChartType,
 	TwoDimensionalValueGroup,
 	ValueLabelsFormatter
-} from "../../config/config";
-import { DesignerConfig } from "../../designer/designerConfig";
-import { ValueLabelsStyleModel } from "../model";
-
-interface BaseConfigReader {
-	getValueFields(): MdtChartsField[];
-}
-
-export function getConfigReader(config: MdtChartsConfig, designerConfig: DesignerConfig): BaseConfigReader {
-	if (config.options.type === "2d") return new TwoDimConfigReader(config, designerConfig);
-	if (config.options.type === "polar") return new PolarConfigReader(config);
-	throw new Error(`Config reader for type "${(config.options as any).type}" not exists`);
-}
+} from "../../../../config/config";
+import { DesignerConfig } from "../../../../designer/designerConfig";
+import { ValueLabelsStyleModel } from "../../../model";
+import { BaseConfigReader } from "../baseConfigReader";
 
 export class TwoDimConfigReader implements BaseConfigReader {
 	readonly options: MdtChartsTwoDimensionalOptions;
@@ -59,6 +50,7 @@ export class TwoDimConfigReader implements BaseConfigReader {
 	}
 
 	getSecondaryAxisLabelFormatter(): AxisLabelFormatter {
+		if (!this.options.axis.valueSecondary) throw new Error("Secondary axis is not defined");
 		return this.calculateAxisLabelFormatter(this.options.axis.valueSecondary);
 	}
 
@@ -86,7 +78,7 @@ export class TwoDimConfigReader implements BaseConfigReader {
 		if (chart.valueLabels?.format) return chart.valueLabels.format;
 
 		if (chart.data.valueGroup === "secondary") {
-			if (axis.valueSecondary.labels?.format) return axis.valueSecondary.labels.format;
+			if (axis.valueSecondary?.labels?.format) return axis.valueSecondary.labels.format;
 			else if (axis.value.labels?.format) return axis.value.labels.format;
 		} else if (axis.value.labels?.format) return axis.value.labels.format;
 
@@ -120,17 +112,5 @@ export class TwoDimConfigReader implements BaseConfigReader {
 	private calculateAxisLabelFormatter(axisValue: NumberAxisOptions | NumberSecondaryAxisOptions): AxisLabelFormatter {
 		if (axisValue.labels?.format) return axisValue.labels?.format;
 		return this.calculateDefaultAxisLabelFormatter();
-	}
-}
-
-export class PolarConfigReader implements BaseConfigReader {
-	private options: MdtChartsPolarOptions;
-
-	constructor(config: MdtChartsConfig) {
-		this.options = config.options as MdtChartsPolarOptions;
-	}
-
-	getValueFields(): MdtChartsField[] {
-		return [this.options.chart.data.valueField];
 	}
 }
