@@ -3,7 +3,6 @@ import {
 	MdtChartsConfig,
 	MdtChartsField,
 	MdtChartsFieldName,
-	MdtChartsPolarOptions,
 	MdtChartsTwoDimensionalChart,
 	MdtChartsTwoDimensionalOptions,
 	NumberAxisOptions,
@@ -15,12 +14,20 @@ import {
 import { DesignerConfig } from "../../../../designer/designerConfig";
 import { ValueLabelsStyleModel } from "../../../model";
 import { BaseConfigReader } from "../baseConfigReader";
+import { GroupingConfigReader } from "./groupingConfigReader/groupingConfigReader";
 
 export class TwoDimConfigReader implements BaseConfigReader {
 	readonly options: MdtChartsTwoDimensionalOptions;
 
+	readonly grouping: GroupingConfigReader;
+
 	constructor(config: MdtChartsConfig, private designerConfig: DesignerConfig) {
 		this.options = config.options as MdtChartsTwoDimensionalOptions;
+		this.grouping = new GroupingConfigReader(
+			this.options.axis.key,
+			this.options.orientation,
+			this.options.grouping
+		);
 	}
 
 	getValueFields(): MdtChartsField[] {

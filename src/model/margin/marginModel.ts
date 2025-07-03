@@ -1,4 +1,4 @@
-import { MdtChartsConfig, MdtChartsDataSource, MdtChartsTwoDimensionalOptions } from "../../config/config";
+import { MdtChartsConfig } from "../../config/config";
 import { DesignerConfig } from "../../designer/designerConfig";
 import { OtherCommonComponents } from "../model";
 import { ModelInstance } from "../modelInstance/modelInstance";

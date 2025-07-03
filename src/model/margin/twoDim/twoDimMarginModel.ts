@@ -56,6 +56,15 @@ export class TwoDimMarginModel {
 		) {
 			this.recalcVerticalMarginWithValueLabelsOn(canvasModel);
 		}
+
+		const groupingSlices = this.configReader.grouping.getSlicesByOrients();
+		groupingSlices.forEach((slice) => {
+			//TODO: handle for horizontal orientation
+			canvasModel.increaseMarginSide(
+				slice.orient,
+				slice.amount * (labelSize.height + AXIS_HORIZONTAL_LABEL_PADDING)
+			);
+		});
 	}
 
 	public recalcMarginByVerticalAxisLabel(modelInstance: ModelInstance): void {

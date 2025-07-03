@@ -12,16 +12,25 @@ const configCars: MdtChartsConfig = {
 		type: "2d",
 		title: "Объем товародвижения по брендам",
 		selectable: true,
+		grouping: {
+			items: [
+				{
+					data: {
+						field: { name: "year", format: "string" }
+					}
+				}
+			]
+		},
 		axis: {
 			key: {
 				visibility: true,
 				position: "end",
 				ticks: {
 					flag: false
+				},
+				labels: {
+					format: (options) => options.key + "2"
 				}
-				// labels: {
-				// position: "straight"
-				// }
 			},
 			value: {
 				visibility: true,

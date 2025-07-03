@@ -1,11 +1,5 @@
 import { TwoDimConfigReader } from "./twoDimConfigReader";
-import { DataRepositoryModel } from "../../dataModel/dataRepository";
-import {
-	MdtChartsConfig,
-	MdtChartsDataRow,
-	MdtChartsTwoDimensionalOptions,
-	NumberDomain
-} from "../../../../config/config";
+import { MdtChartsConfig, MdtChartsTwoDimensionalOptions } from "../../../../config/config";
 import { DesignerConfig, Formatter } from "../../../../designer/designerConfig";
 
 describe("getFieldsBySegments", () => {
@@ -45,8 +39,13 @@ describe("getFieldsBySegments", () => {
 							valueGroup: "main"
 						}
 					}
-				]
-			} as any
+				],
+				axis: {
+					key: {
+						position: "start"
+					}
+				}
+			}
 		};
 		reader = new TwoDimConfigReader(config, null);
 	});

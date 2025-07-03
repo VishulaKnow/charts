@@ -62,6 +62,7 @@ export interface MdtChartsTwoDimensionalOptions extends GraphicNotationOptions {
 	charts: MdtChartsTwoDimensionalChart[];
 	orientation: ChartOrientation;
 	valueLabels?: MdtChartsTwoDimensionalValueLabels;
+	grouping?: TwoDimGroupingOptions;
 }
 
 export interface MdtChartsPolarOptions extends GraphicNotationOptions {
@@ -277,6 +278,23 @@ export interface ValueLabelsStyleOptions {
 	cssClassName?: string;
 	fontSize?: number;
 	color?: string;
+}
+
+export interface TwoDimGroupingOptions {
+	items: TwoDimGroupingItem[];
+}
+
+interface TwoDimGroupingItem {
+	data: TwoDimGroupingItemData;
+	labels?: TwoDimGroupingItemLabels;
+}
+
+interface TwoDimGroupingItemData {
+	field: MdtChartsField;
+}
+
+interface TwoDimGroupingItemLabels {
+	position?: ItemPositionByOrientation;
 }
 
 //====================================================== Charts
