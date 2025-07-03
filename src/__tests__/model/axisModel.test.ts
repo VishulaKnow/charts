@@ -369,6 +369,66 @@ describe("get axes", () => {
 		expect(showTickExpected).toBe(showTickResult);
 	});
 
+	test("format function from config should be called with key if it is set", () => {
+		const canvasModel = new CanvasModel();
+		canvasModel.initMargin(margin);
+		canvasModel.initBlockSize({ height: 400, width: 140 });
+		discreteAxisOptions.labels = { format: (op) => op.key + "2" };
+
+		const result = AxisModel.getKeyAxis(
+			{ charts, orientation: "vertical", data: dataOptions, axis: { key: discreteAxisOptions } } as any,
+			data,
+			{ maxSize: { main: 60 } },
+			canvasModel,
+			tooltipSettings
+		);
+
+		const label = result.labels.format({ key: "BMW" });
+		expect(label).toBe("BMW2");
+	});
+
+	test("format function from config should be called with dataRow if it is found", () => {
+		const canvasModel = new CanvasModel();
+		canvasModel.initMargin(margin);
+		canvasModel.initBlockSize({ height: 400, width: 140 });
+		const formatFn = jest.fn();
+		discreteAxisOptions.labels = { format: formatFn };
+
+		const result = AxisModel.getKeyAxis(
+			{ charts, orientation: "vertical", data: dataOptions, axis: { key: discreteAxisOptions } } as any,
+			data,
+			{ maxSize: { main: 60 } },
+			canvasModel,
+			tooltipSettings
+		);
+
+		result.labels.format({ key: "BMW" });
+		expect(formatFn).toHaveBeenCalledWith({
+			key: "BMW",
+			dataRow: { brand: "BMW", price: 120, count: 12, simple: 300 }
+		});
+	});
+
+	test("format function from config should'n be called if dataRow unexpectedly not found", () => {
+		const canvasModel = new CanvasModel();
+		canvasModel.initMargin(margin);
+		canvasModel.initBlockSize({ height: 400, width: 140 });
+		const formatFn = jest.fn();
+		discreteAxisOptions.labels = { format: formatFn };
+
+		const result = AxisModel.getKeyAxis(
+			{ charts, orientation: "vertical", data: dataOptions, axis: { key: discreteAxisOptions } } as any,
+			data,
+			{ maxSize: { main: 60 } },
+			canvasModel,
+			tooltipSettings
+		);
+
+		const resultLabel = result.labels.format({ key: "Not found key" });
+		expect(resultLabel).toBe("Not found key");
+		expect(formatFn).not.toHaveBeenCalled();
+	});
+
 	test("getValueAxis should return left axis", () => {
 		const canvasModel = new CanvasModel();
 		canvasModel.initMargin(margin);

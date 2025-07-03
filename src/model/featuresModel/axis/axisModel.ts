@@ -86,7 +86,14 @@ export class AxisModel {
 				tickAmountSettings: {
 					policy: { type: "auto" }
 				},
-				format: (options) => options.key
+				format: (options) => {
+					const dataRow = data[dataOptions.dataSource].find(
+						(d) => d[dataOptions.keyField.name] === options.key
+					);
+					if (dataRow && axisConfig.labels?.format)
+						return axisConfig.labels.format({ key: options.key, dataRow });
+					return options.key;
+				}
 			},
 			visibility: axisConfig.visibility,
 			line: {
