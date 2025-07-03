@@ -26,7 +26,7 @@ export class TwoDimTooltipContentGenerator {
 	constructor(private readonly options: TooltipContentGeneratorOptions) {}
 
 	generateContent(keyFieldValue: string): TooltipContent {
-		const currentDataRow = this.options.datasource.find((r) => r[this.options.keyFieldName] === keyFieldValue);
+		const currentDataRow = this.options.datasource.find((r) => r[this.options.keyFieldName] === keyFieldValue)!;
 
 		if (this.options.publicOptions?.html)
 			return {
@@ -53,9 +53,8 @@ export class TwoDimTooltipContentGenerator {
 				};
 			});
 
-		initialRows = this.options.publicOptions?.rows?.filterPredicate
-			? initialRows.filter((row) => this.options.publicOptions.rows.filterPredicate(row))
-			: initialRows;
+		const filterPredicate = this.options.publicOptions?.rows?.filterPredicate;
+		if (filterPredicate) initialRows = initialRows.filter((row) => filterPredicate(row));
 
 		if (this.options.publicOptions?.rows?.sortCompareFn)
 			initialRows.sort(this.options.publicOptions.rows.sortCompareFn);

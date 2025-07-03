@@ -1,5 +1,5 @@
 import {
-	AxisPosition,
+	ItemPositionByOrientation,
 	ChartOrientation,
 	MdtChartsDataSource,
 	NumberAxisOptions,
@@ -108,7 +108,7 @@ export class AxisModel {
 	public static getMainValueAxis(
 		defaultFormatter: AxisLabelFormatter,
 		orient: ChartOrientation,
-		position: AxisPosition,
+		position: ItemPositionByOrientation,
 		axisConfig: NumberAxisOptions,
 		labelConfig: AxisLabelCanvas,
 		canvasModel: CanvasModel,
@@ -129,7 +129,7 @@ export class AxisModel {
 	public static getSecondaryValueAxis(
 		defaultFormatter: AxisLabelFormatter,
 		orient: ChartOrientation,
-		mainAxisPosition: AxisPosition,
+		mainAxisPosition: ItemPositionByOrientation,
 		axisConfig: NumberSecondaryAxisOptions,
 		labelConfig: AxisLabelCanvas,
 		canvasModel: CanvasModel,
@@ -150,7 +150,7 @@ export class AxisModel {
 	private static getValueAxis(
 		defaultFormatter: AxisLabelFormatter,
 		orient: ChartOrientation,
-		position: AxisPosition,
+		position: ItemPositionByOrientation,
 		cssClass: string,
 		axisConfig: NumberAxisOptions | NumberSecondaryAxisOptions,
 		labelConfig: AxisLabelCanvas,
@@ -198,7 +198,7 @@ export class AxisModel {
 	public static getAxisOrient(
 		axisType: AxisType,
 		chartOrientation: ChartOrientation,
-		axisPosition: AxisPosition
+		axisPosition: ItemPositionByOrientation
 	): Orient {
 		if (chartOrientation === "vertical") {
 			if (axisPosition === "start") return axisType === AxisType.Key ? "top" : "left";
@@ -211,7 +211,7 @@ export class AxisModel {
 	public static getAxisTranslateX(
 		axisType: AxisType,
 		chartOrientation: ChartOrientation,
-		axisPosition: AxisPosition,
+		axisPosition: ItemPositionByOrientation,
 		canvasModel: CanvasModel
 	): number {
 		const orient = AxisModel.getAxisOrient(axisType, chartOrientation, axisPosition);
@@ -223,7 +223,7 @@ export class AxisModel {
 	public static getAxisTranslateY(
 		axisType: AxisType,
 		chartOrientation: ChartOrientation,
-		axisPosition: AxisPosition,
+		axisPosition: ItemPositionByOrientation,
 		canvasModel: CanvasModel
 	): number {
 		const orient = AxisModel.getAxisOrient(axisType, chartOrientation, axisPosition);
@@ -294,7 +294,7 @@ export class AxisModel {
 
 	private static getKeyAxisTranslateModel(
 		chartOrientation: ChartOrientation,
-		axisPosition: AxisPosition,
+		axisPosition: ItemPositionByOrientation,
 		canvasModel: CanvasModel,
 		getZeroCoordinate?: () => number
 	) {

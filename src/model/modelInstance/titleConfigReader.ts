@@ -3,7 +3,7 @@ import { MdtChartsDataRow, Title } from "../../config/config";
 import { ModelHelper } from "../helpers/modelHelper";
 
 export class TitleConfigReader {
-	static create(config: Title, modelInstance: ModelInstance) {
+	static create(config: Title | undefined, modelInstance: ModelInstance) {
 		return new TitleConfigReader(
 			config,
 			() => modelInstance.dataModel.repository.getRawRows(),
@@ -12,7 +12,7 @@ export class TitleConfigReader {
 	}
 
 	constructor(
-		private readonly config: Title,
+		private readonly config: Title | undefined,
 		private readonly dataGetter: () => MdtChartsDataRow[],
 		private readonly defaultCssUnitReader: () => number
 	) {}

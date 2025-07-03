@@ -8,7 +8,7 @@ import { ChartOptionsCanvas, DesignerConfig } from "../../designer/designerConfi
 import { ChartStyleModelService } from "../chartStyleModel/chartStyleModel";
 import { TwoDimensionalChartStyleModel } from "../chartStyleModel/twoDimensionalChartStyleModel";
 import { AxisModel } from "../featuresModel/axis/axisModel";
-import { ScaleAxisRecalcer } from "../featuresModel/scaleModel/scaleAxisRecalcer";
+import { ScaleAxisRecalcer, ScaleValueCalculatedInfo } from "../featuresModel/scaleModel/scaleAxisRecalcer";
 import { ScaleModel } from "../featuresModel/scaleModel/scaleModel";
 import {
 	TwoDimensionalOptionsModel,
@@ -58,7 +58,7 @@ export class TwoDimensionalModel {
 		scaleMarginRecalcer.recalculateMargin(canvasModel, options.orientation, options.axis.key);
 		const scaleValueInfo = scaleMarginRecalcer.getScaleValue();
 
-		let secondaryScaleValueInfo;
+		let secondaryScaleValueInfo: ScaleValueCalculatedInfo | undefined;
 		if (configReader.containsSecondaryAxis()) {
 			const secondaryScaleMarginRecalcer = new ScaleAxisRecalcer(() =>
 				scaleModel.getScaleSecondaryLinear(modelInstance.dataModel.repository.getScopedRows(), configReader)
@@ -102,7 +102,7 @@ export class TwoDimensionalModel {
 			scale: {
 				key: scaleModel.getScaleKey(modelInstance.dataModel.getAllowableKeys()),
 				value: scaleValueInfo.scale,
-				...(configReader.containsSecondaryAxis() && { valueSecondary: secondaryScaleValueInfo.scale })
+				...(configReader.containsSecondaryAxis() && { valueSecondary: secondaryScaleValueInfo!.scale })
 			},
 			axis: {
 				key: keyAxis,
@@ -120,10 +120,10 @@ export class TwoDimensionalModel {
 						configReader.calculateDefaultAxisLabelFormatter(),
 						options.orientation,
 						options.axis.value.position,
-						options.axis.valueSecondary,
+						options.axis.valueSecondary!,
 						designerConfig.canvas.axisLabel,
 						canvasModel,
-						secondaryScaleValueInfo.scale
+						secondaryScaleValueInfo!.scale
 					)
 				})
 			},
@@ -301,7 +301,7 @@ export class TwoDimensionalModel {
 						if (chart.valueLabels?.setContent) {
 							const content = chart.valueLabels.setContent({
 								dataRow,
-								field: chart.data.valueFields.find((field) => field.name === fieldName)
+								field: chart.data.valueFields.find((field) => field.name === fieldName)!
 							});
 							return { rows: content.textContent.toString().split("\n") };
 						}

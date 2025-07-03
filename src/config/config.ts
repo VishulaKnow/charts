@@ -1,7 +1,7 @@
 type DataType = string;
 export type MdtChartsIconElement = () => HTMLElement;
 
-export type AxisPosition = "start" | "end";
+export type ItemPositionByOrientation = "start" | "end";
 export type ChartOrientation = "vertical" | "horizontal";
 export type ChartNotation = "2d" | "polar";
 export type ChartType = "bar" | "line" | "area" | "donut" | "gantt";
@@ -192,7 +192,6 @@ interface GridLineStylesDash {
 	on?: boolean;
 }
 
-//====================================================== TwoDimensionalOptions
 export interface TwoDimensionalAxis {
 	key: DiscreteAxisOptions;
 	value: NumberAxisOptions;
@@ -203,7 +202,7 @@ export type NumberSecondaryAxisOptions = Omit<NumberAxisOptions, "position">;
 
 export interface AxisOptions {
 	visibility: boolean;
-	position: AxisPosition;
+	position: ItemPositionByOrientation;
 	ticks: AxisTicks;
 	line?: AxisLineOptions;
 }

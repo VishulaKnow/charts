@@ -195,7 +195,7 @@ export class TwoDimMarginModel {
 			horizontal: labelSize.height + AXIS_HORIZONTAL_LABEL_PADDING
 		};
 
-		if (this.configReader.options.axis.valueSecondary.visibility) {
+		if (this.configReader.options.axis.valueSecondary?.visibility) {
 			canvasModel.increaseMarginSide(secondaryOrient, sizeMap[this.configReader.options.orientation]);
 		}
 	}
@@ -213,7 +213,7 @@ export class TwoDimMarginModel {
 		};
 
 		canvasModel.increaseMarginSide(
-			axisMarginMapping[keyAxisOrient],
+			axisMarginMapping[keyAxisOrient]!,
 			valueLabelFontSize + VALUE_LABEL_OFFSET_ABS_SIZE_PX
 		);
 	}

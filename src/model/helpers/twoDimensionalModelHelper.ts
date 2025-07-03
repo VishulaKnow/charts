@@ -113,7 +113,7 @@ export class TwoDimensionalModelHelper {
 	}
 
 	public static getValueLabels(
-		valueLabels: MdtChartsTwoDimensionalValueLabels,
+		valueLabels: MdtChartsTwoDimensionalValueLabels | undefined,
 		canvasModel: CanvasModel,
 		chartOrientation: ChartOrientation,
 		styleModel: ValueLabelsStyleModel

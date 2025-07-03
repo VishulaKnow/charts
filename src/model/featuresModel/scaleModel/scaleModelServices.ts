@@ -21,8 +21,8 @@ export function getElementsAmountForScale(bandLikeCharts: MdtChartsTwoDimensiona
 		if (chart.type === "dot") barAmounts[chart.type] = 1;
 
 		if (chart.type === "bar") {
-			if (chart.isSegmented) barAmounts[chart.type] += 1;
-			else barAmounts[chart.type] += chart.data.valueFields.length;
+			if (chart.isSegmented) barAmounts[chart.type]! += 1;
+			else barAmounts[chart.type]! += chart.data.valueFields.length;
 		}
 	});
 

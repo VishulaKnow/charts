@@ -13,7 +13,7 @@ export class EventEmitter<E = Record<string, Record<string, any>>> {
 		this.events[code] = this.events[code]?.filter((cur) => cur != listener);
 	}
 
-	emit<T extends keyof E>(code: T, args?: E[T]) {
+	emit<T extends keyof E>(code: T, args: E[T]) {
 		(this.events[code] || []).forEach((callback) => {
 			callback(args);
 		});
