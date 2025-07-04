@@ -8,10 +8,7 @@ import { TwoDimConfigReader } from "../modelInstance/configReader/twoDimConfigRe
 
 export class MarginModel {
 	//TODO: ensure
-	private twoDimModel = new TwoDimMarginModel(
-		this.designerConfig,
-		new TwoDimConfigReader(this.config, this.designerConfig)
-	);
+	private twoDimModel: TwoDimMarginModel | undefined;
 
 	constructor(private designerConfig: DesignerConfig, private config: MdtChartsConfig) {}
 
@@ -21,12 +18,16 @@ export class MarginModel {
 		this.recalcMarginByTitle(canvasModel);
 
 		if (this.config.options.type === "2d") {
+			this.twoDimModel = new TwoDimMarginModel(
+				this.designerConfig,
+				new TwoDimConfigReader(this.config, this.designerConfig)
+			);
 			this.twoDimModel.recalcMargin(otherComponents, modelInstance);
 		}
 	}
 
 	public recalcMarginByVerticalAxisLabel(modelInstance: ModelInstance): void {
-		this.twoDimModel.recalcMarginByVerticalAxisLabel(modelInstance);
+		this.twoDimModel?.recalcMarginByVerticalAxisLabel(modelInstance);
 	}
 
 	private recalcMarginByTitle(canvasModel: CanvasModel): void {

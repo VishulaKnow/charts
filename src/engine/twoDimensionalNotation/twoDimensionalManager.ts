@@ -30,11 +30,13 @@ import { LinearGradientDef } from "../../engine/block/defs/LinearGradientDef";
 import { CanvasDotChart } from "./dot/dotChart";
 import { ChartClearSelectionOptions, FilterEventManager } from "../filterManager/filterEventManager";
 import { RecordOverflowAlertCore } from "../features/recordOverflowAlert/recordOverflowAlertCore";
+import { GroupAxisLabels } from "../features/groupLabels/groupLabels";
 
 export class TwoDimensionalManager implements ChartContentManager {
 	private canvasValueLabels?: CanvasValueLabels;
 	private linearGradientDef?: LinearGradientDef;
 	private dotChart: CanvasDotChart;
+	private groupLabels: GroupAxisLabels;
 
 	public render(engine: Engine, model: Model<TwoDimensionalOptionsModel>): void {
 		const options = model.options;
@@ -74,6 +76,13 @@ export class TwoDimensionalManager implements ChartContentManager {
 				settings: options.chartSettings.bar
 			}
 		});
+
+		this.groupLabels = new GroupAxisLabels({
+			elementAccessors: {
+				getBlock: () => engine.block
+			}
+		});
+		this.groupLabels.render(options.grouping);
 
 		this.renderCharts(
 			engine.block,

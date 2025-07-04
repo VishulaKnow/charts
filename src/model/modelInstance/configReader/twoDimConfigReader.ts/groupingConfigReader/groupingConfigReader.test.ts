@@ -79,7 +79,7 @@ describe("GroupingConfigReader", () => {
 				}
 			);
 			const values = reader.getPreparedOptions([{ field: "value1" }, { field: "value2" }, { field: "value1" }]);
-			expect(values).toEqual([{ domain: ["value1", "value2"], orient: "right" }]);
+			expect(values).toEqual([{ domain: ["value1", "value2"], orient: "right", sideIndex: 0 }]);
 		});
 
 		it("should return values for grouping with multiple items", () => {
@@ -89,18 +89,20 @@ describe("GroupingConfigReader", () => {
 				{
 					items: [
 						{ data: { field: { name: "field", format: "string" } } },
+						{ data: { field: { name: "field3", format: "string" } }, labels: { position: "end" } },
 						{ data: { field: { name: "field2", format: "string" } }, labels: { position: "start" } }
 					]
 				}
 			);
 			const values = reader.getPreparedOptions([
-				{ field: "value1", field2: "value3" },
-				{ field: "value1", field2: "value2" },
-				{ field: "value2", field2: "value2" }
+				{ field: "value1", field2: "value3", field3: "value2" },
+				{ field: "value1", field2: "value2", field3: "value2" },
+				{ field: "value2", field2: "value2", field3: "value2" }
 			]);
 			expect(values).toEqual([
-				{ domain: ["value1", "value2"], orient: "bottom" },
-				{ domain: ["value3", "value2"], orient: "top" }
+				{ domain: ["value1", "value2"], orient: "bottom", sideIndex: 0 },
+				{ domain: ["value2"], orient: "bottom", sideIndex: 1 },
+				{ domain: ["value3", "value2"], orient: "top", sideIndex: 0 }
 			]);
 		});
 	});

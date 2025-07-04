@@ -43,6 +43,7 @@ import { TitleConfigReader } from "../modelInstance/titleConfigReader";
 import { createRecordOverflowModel } from "../featuresModel/recordOverflowModel/recordOverflowModel";
 import { TwoDimTooltipContentGenerator } from "../featuresModel/tooltipModel/tooltipContentModel";
 import { TwoDimInitialRowsProvider } from "../featuresModel/tooltipModel/contentByNotations/twoDimInitialRowsProvider";
+import { GroupingLabelsCoordinateHandlers } from "../featuresModel/groupingLabels/groupingLabelsCoordinateHandlers";
 
 export class TwoDimensionalModel {
 	public static getOptions(
@@ -100,14 +101,22 @@ export class TwoDimensionalModel {
 				fontSize: titleConfig.getFontSize()
 			},
 			grouping: {
-				enabled: false,
+				enabled: configReader.grouping.isEnabled(),
 				items: configReader.grouping
 					.getPreparedOptions(modelInstance.dataModel.repository.getScopedRows())
 					.map<TwoDimGroupingItemModel>((prepared) => {
+						const coordinateHandler = new GroupingLabelsCoordinateHandlers(
+							canvasModel,
+							prepared.orient,
+							prepared.sideIndex
+						);
 						return {
 							//TODO: always should be band scale
 							scale: scaleModel.getScaleKey(prepared.domain) as ScaleBandModel,
-							orient: prepared.orient
+							orient: prepared.orient,
+							coordinate: {
+								handleCoordinate: (coordinate) => coordinateHandler.handleCoordinate(coordinate)
+							}
 						};
 					})
 			},

@@ -388,9 +388,17 @@ export interface TwoDimGroupingModel {
 	items: TwoDimGroupingItemModel[];
 }
 
+export interface GroupingLabelCoordinate {
+	x: number;
+	y: number;
+}
+
 export interface TwoDimGroupingItemModel {
 	scale: ScaleBandModel;
 	orient: Orient;
+	coordinate: {
+		handleCoordinate: (coordinate: GroupingLabelCoordinate) => GroupingLabelCoordinate;
+	};
 }
 
 //====================================================== PolarOptionsModel

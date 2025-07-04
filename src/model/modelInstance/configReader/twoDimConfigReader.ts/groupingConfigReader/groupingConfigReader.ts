@@ -15,9 +15,9 @@ export class GroupingConfigReader {
 		private readonly groupingOptions?: TwoDimGroupingOptions
 	) {}
 
-	// isEnabled(): boolean {
-	// 	return Boolean(this.groupingOptions) && this.groupingOptions!.items.length > 0;
-	// }
+	isEnabled(): boolean {
+		return Boolean(this.groupingOptions) && this.groupingOptions!.items.length > 0;
+	}
 
 	getSlicesByOrients(): { orient: Orient; amount: number }[] {
 		const slices: { orient: Orient; amount: number }[] = [];
@@ -67,8 +67,13 @@ export class GroupingConfigReader {
 		return slices;
 	}
 
-	getPreparedOptions(scopedDatasourceRows: MdtChartsDataRow[]): { domain: string[]; orient: Orient }[] {
-		const groupingItemsValues: { domain: string[]; orient: Orient }[] = [];
+	getPreparedOptions(
+		scopedDatasourceRows: MdtChartsDataRow[]
+	): { domain: string[]; orient: Orient; sideIndex: number }[] {
+		const groupingItemsValues: { domain: string[]; orient: Orient; sideIndex: number }[] = [];
+
+		let keyAxisSideIndex = 0;
+		let oppositeKeyAxisSideIndex = 0;
 
 		for (const item of this.groupingOptions?.items ?? []) {
 			let orient: Orient;
@@ -76,8 +81,12 @@ export class GroupingConfigReader {
 			if (this.chartOrientation === "vertical") orient = labelsPosition === "start" ? "top" : "bottom";
 			else orient = labelsPosition === "start" ? "left" : "right";
 
+			let sideIndex: number;
+			if (labelsPosition === "start") sideIndex = keyAxisSideIndex++;
+			else sideIndex = oppositeKeyAxisSideIndex++;
+
 			const values = new Set(scopedDatasourceRows.map((row) => row[item.data.field.name]));
-			groupingItemsValues.push({ domain: Array.from(values), orient });
+			groupingItemsValues.push({ domain: Array.from(values), orient, sideIndex });
 		}
 
 		return groupingItemsValues;
