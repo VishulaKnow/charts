@@ -178,20 +178,23 @@ export interface BaseScaleKeyModel {
 	range: RangeModel;
 }
 
-export type ScaleKeyModel = BaseScaleKeyModel & (ScaleBandModel | ScalePointModel);
+export type ScaleKeyModel = ScaleBandModel | ScalePointModel;
 
-export interface ScaleBandModel {
+export interface ScaleBandModel extends BaseScaleKeyModel {
 	type: "band";
-	sizes: {
-		paddingOuter: number;
-		paddingInner: number;
-		bandSize: number;
-		recalculatedStepSize: number;
-	};
+	sizes: ScaleBandModelSizeParams;
+	/** @deprecated Use sizes instead */
 	elementsAmount: number;
 }
 
-export interface ScalePointModel {
+export interface ScaleBandModelSizeParams {
+	paddingOuter: number;
+	paddingInner: number;
+	bandSize: number;
+	recalculatedStepSize: number;
+}
+
+export interface ScalePointModel extends BaseScaleKeyModel {
 	type: "point";
 }
 
@@ -385,8 +388,9 @@ export interface TwoDimGroupingModel {
 	items: TwoDimGroupingItemModel[];
 }
 
-interface TwoDimGroupingItemModel {
-	scale: ScaleKeyModel;
+export interface TwoDimGroupingItemModel {
+	scale: ScaleBandModel;
+	orient: Orient;
 }
 
 //====================================================== PolarOptionsModel

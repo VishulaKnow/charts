@@ -16,7 +16,9 @@ import {
 	EmbeddedLabelTypeModel,
 	AdditionalElementsOptions,
 	TwoDimChartElementsSettings,
-	Orient
+	Orient,
+	TwoDimGroupingItemModel,
+	ScaleBandModel
 } from "../model";
 import { TwoDimConfigReader } from "../modelInstance/configReader/twoDimConfigReader.ts/twoDimConfigReader";
 import { ModelInstance } from "../modelInstance/modelInstance";
@@ -99,7 +101,15 @@ export class TwoDimensionalModel {
 			},
 			grouping: {
 				enabled: false,
-				items: []
+				items: configReader.grouping
+					.getPreparedOptions(modelInstance.dataModel.repository.getScopedRows())
+					.map<TwoDimGroupingItemModel>((prepared) => {
+						return {
+							//TODO: always should be band scale
+							scale: scaleModel.getScaleKey(prepared.domain) as ScaleBandModel,
+							orient: prepared.orient
+						};
+					})
 			},
 			selectable: !!options.selectable,
 			orient: options.orientation,

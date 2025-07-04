@@ -1,4 +1,11 @@
-import { ChartOrientation, DiscreteAxisOptions, TwoDimGroupingOptions } from "../../../../../config/config";
+import {
+	AxisLabelPosition,
+	ChartOrientation,
+	DiscreteAxisOptions,
+	ItemPositionByOrientation,
+	MdtChartsDataRow,
+	TwoDimGroupingOptions
+} from "../../../../../config/config";
 import { Orient } from "../../../../model";
 
 export class GroupingConfigReader {
@@ -17,11 +24,11 @@ export class GroupingConfigReader {
 
 		const slicesAmountFromKeyAxisSide =
 			this.groupingOptions?.items.filter(
-				(item) => !item.labels?.position || item.labels.position === this.keyAxisOptions.position
+				(item) => this.getLabelPosition(item.labels?.position) === this.keyAxisOptions.position
 			).length ?? 0;
 		const slicesAmountOppositeToKeyAxisSide =
 			this.groupingOptions?.items.filter(
-				(item) => item.labels?.position && item.labels.position !== this.keyAxisOptions.position
+				(item) => this.getLabelPosition(item.labels?.position) !== this.keyAxisOptions.position
 			).length ?? 0;
 
 		const pushIfAmountIsNotZero = (orient: Orient, amount: number) => {
@@ -58,5 +65,25 @@ export class GroupingConfigReader {
 			);
 		}
 		return slices;
+	}
+
+	getPreparedOptions(scopedDatasourceRows: MdtChartsDataRow[]): { domain: string[]; orient: Orient }[] {
+		const groupingItemsValues: { domain: string[]; orient: Orient }[] = [];
+
+		for (const item of this.groupingOptions?.items ?? []) {
+			let orient: Orient;
+			const labelsPosition = item.labels?.position ?? this.keyAxisOptions.position;
+			if (this.chartOrientation === "vertical") orient = labelsPosition === "start" ? "top" : "bottom";
+			else orient = labelsPosition === "start" ? "left" : "right";
+
+			const values = new Set(scopedDatasourceRows.map((row) => row[item.data.field.name]));
+			groupingItemsValues.push({ domain: Array.from(values), orient });
+		}
+
+		return groupingItemsValues;
+	}
+
+	private getLabelPosition(labelsPosition?: ItemPositionByOrientation): ItemPositionByOrientation {
+		return labelsPosition ?? this.keyAxisOptions.position;
 	}
 }

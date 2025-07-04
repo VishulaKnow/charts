@@ -1,6 +1,6 @@
 import { scaleBand, scaleLinear, scalePoint, ScaleBand, ScalePoint, ScaleLinear } from "d3-scale";
 import { AxisScale } from "d3-axis";
-import { BarChartSettings, RangeModel, ScaleKeyModel, ScaleValueModel } from "../../../model/model";
+import { BarChartSettings, RangeModel, ScaleBandModel, ScaleKeyModel, ScaleValueModel } from "../../../model/model";
 
 export interface Scales {
 	key: AxisScale<any>;
@@ -24,11 +24,7 @@ export class Scale {
 
 		if (scaleKey.type === "band")
 			// scales.key = this.getScaleBand(scaleKey.domain, scaleKey.range, bandSettings, scaleKey.elementsAmount);
-			scales.key = scaleBand()
-				.domain(scaleKey.domain)
-				.range([scaleKey.range.start, scaleKey.range.end])
-				.paddingInner(scaleKey.sizes.paddingInner / scaleKey.sizes.bandSize)
-				.paddingOuter(scaleKey.sizes.paddingOuter / scaleKey.sizes.recalculatedStepSize);
+			scales.key = this.getScaleBandNew(scaleKey);
 		else if (scaleKey.type === "point") scales.key = this.getScalePoint(scaleKey.domain, scaleKey.range);
 
 		scales.value = this.getScaleValue(scaleValue);
@@ -75,6 +71,15 @@ export class Scale {
 		return scale(value);
 	}
 
+	static getScaleBandNew(scaleKey: ScaleBandModel) {
+		return scaleBand()
+			.domain(scaleKey.domain)
+			.range([scaleKey.range.start, scaleKey.range.end])
+			.paddingInner(scaleKey.sizes.paddingInner / scaleKey.sizes.bandSize)
+			.paddingOuter(scaleKey.sizes.paddingOuter / scaleKey.sizes.recalculatedStepSize);
+	}
+
+	//TODO: remove after tests of new way to create scale band
 	private static getScaleBand(
 		domain: string[],
 		range: RangeModel,

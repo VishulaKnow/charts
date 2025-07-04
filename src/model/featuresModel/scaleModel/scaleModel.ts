@@ -1,4 +1,11 @@
-import { BaseScaleKeyModel, ScaleKeyModel, ScaleKeyType, ScaleValueModel } from "../../model";
+import {
+	BaseScaleKeyModel,
+	RangeModel,
+	ScaleBandModelSizeParams,
+	ScaleKeyModel,
+	ScaleKeyType,
+	ScaleValueModel
+} from "../../model";
 import {
 	MdtChartsTwoDimensionalChart,
 	MdtChartsTwoDimensionalOptions,
@@ -23,11 +30,11 @@ export class ScaleModel {
 		private readonly barCanvas: BarOptionsCanvas
 	) {}
 
-	getScaleKey(allowableKeys: string[]): ScaleKeyModel {
+	getScaleKey(domainValues: string[]): ScaleKeyModel {
 		const bandLikeCharts = this.getChartsByTypes(this.options.charts, ["bar", "dot"]);
 
 		const baseModel: BaseScaleKeyModel = {
-			domain: allowableKeys,
+			domain: domainValues,
 			range: {
 				start: 0,
 				end: getScaleKeyRangePeek(this.options.orientation, this.canvasModel)
@@ -46,51 +53,11 @@ export class ScaleModel {
 		if (type === "band") {
 			const elementsInGroupAmount = getElementsAmountForScale(bandLikeCharts);
 
-			const paddings = {
-				outer: 0,
-				inner: 0
-			};
-
-			const getStepSize = () =>
-				(Math.abs(baseModel.range.end - baseModel.range.start) + paddings.inner - 2 * paddings.outer) /
-				baseModel.domain.length;
-			const getBandSize = () => getStepSize() - paddings.inner;
-
-			const initialBandSize = getBandSize();
-
-			if (this.barCanvas.groupMinDistance < initialBandSize) {
-				paddings.inner = this.barCanvas.groupMinDistance;
-				paddings.outer = this.barCanvas.groupMinDistance / 2;
-			}
-			while (
-				getBandSize() >
-					this.barCanvas.maxBarWidth * elementsInGroupAmount +
-						this.barCanvas.barDistance * (elementsInGroupAmount - 1) &&
-				paddings.inner < this.barCanvas.groupMaxDistance
-			) {
-				paddings.inner++;
-			}
-
-			paddings.outer = 1;
-			while (
-				getStepSize() >
-				this.barCanvas.maxBarWidth * elementsInGroupAmount +
-					this.barCanvas.groupMaxDistance +
-					this.barCanvas.barDistance * (elementsInGroupAmount - 1)
-			) {
-				paddings.outer += 1;
-			}
-
 			return {
 				...baseModel,
 				type: "band",
 				elementsAmount: elementsInGroupAmount,
-				sizes: {
-					paddingInner: paddings.inner,
-					paddingOuter: paddings.outer,
-					bandSize: initialBandSize,
-					recalculatedStepSize: getStepSize()
-				}
+				sizes: this.getBandScaleSizeParams(baseModel.domain, baseModel.range, elementsInGroupAmount)
 			};
 		}
 
@@ -118,6 +85,56 @@ export class ScaleModel {
 			},
 			type: "linear",
 			formatter: configReader?.getSecondaryAxisLabelFormatter() ?? null
+		};
+	}
+
+	private getBandScaleSizeParams(
+		domainValues: string[],
+		range: RangeModel,
+		elementsInGroupAmount: number
+	): ScaleBandModelSizeParams {
+		const paddings = {
+			outer: 0,
+			inner: 0
+		};
+
+		const getStepSize = () =>
+			(Math.abs(range.end - range.start) + paddings.inner - 2 * paddings.outer) / domainValues.length;
+		const getBandSize = () => getStepSize() - paddings.inner;
+
+		const initialBandSize = getBandSize();
+
+		if (this.barCanvas.groupMinDistance < initialBandSize) {
+			paddings.inner = this.barCanvas.groupMinDistance;
+			paddings.outer = this.barCanvas.groupMinDistance / 2;
+		}
+
+		//TODO: calculate without loop
+		while (
+			getBandSize() >
+				this.barCanvas.maxBarWidth * elementsInGroupAmount +
+					this.barCanvas.barDistance * (elementsInGroupAmount - 1) &&
+			paddings.inner < this.barCanvas.groupMaxDistance
+		) {
+			paddings.inner++;
+		}
+
+		paddings.outer = 1;
+		//TODO: calculate without loop
+		while (
+			getStepSize() >
+			this.barCanvas.maxBarWidth * elementsInGroupAmount +
+				this.barCanvas.groupMaxDistance +
+				this.barCanvas.barDistance * (elementsInGroupAmount - 1)
+		) {
+			paddings.outer += 1;
+		}
+
+		return {
+			paddingInner: paddings.inner,
+			paddingOuter: paddings.outer,
+			bandSize: initialBandSize,
+			recalculatedStepSize: getStepSize()
 		};
 	}
 

@@ -59,4 +59,49 @@ describe("GroupingConfigReader", () => {
 			expect(slices).toEqual([]);
 		});
 	});
+
+	describe("readGroupingItemsValues", () => {
+		it("should return empty array if grouping is disabled", () => {
+			const reader = new GroupingConfigReader(
+				{ visibility: true, ticks: { flag: true }, position: "end" },
+				"horizontal"
+			);
+			const values = reader.getPreparedOptions([]);
+			expect(values).toEqual([]);
+		});
+
+		it("should return values for grouping items", () => {
+			const reader = new GroupingConfigReader(
+				{ visibility: true, ticks: { flag: true }, position: "end" },
+				"horizontal",
+				{
+					items: [{ data: { field: { name: "field", format: "string" } } }]
+				}
+			);
+			const values = reader.getPreparedOptions([{ field: "value1" }, { field: "value2" }, { field: "value1" }]);
+			expect(values).toEqual([{ domain: ["value1", "value2"], orient: "right" }]);
+		});
+
+		it("should return values for grouping with multiple items", () => {
+			const reader = new GroupingConfigReader(
+				{ visibility: true, ticks: { flag: true }, position: "end" },
+				"vertical",
+				{
+					items: [
+						{ data: { field: { name: "field", format: "string" } } },
+						{ data: { field: { name: "field2", format: "string" } }, labels: { position: "start" } }
+					]
+				}
+			);
+			const values = reader.getPreparedOptions([
+				{ field: "value1", field2: "value3" },
+				{ field: "value1", field2: "value2" },
+				{ field: "value2", field2: "value2" }
+			]);
+			expect(values).toEqual([
+				{ domain: ["value1", "value2"], orient: "bottom" },
+				{ domain: ["value3", "value2"], orient: "top" }
+			]);
+		});
+	});
 });
