@@ -51,7 +51,7 @@ export class TwoDimensionalModel {
 		const options = configReader.options;
 		const canvasModel = modelInstance.canvasModel;
 
-		const scaleModel = new ScaleModel(options, canvasModel);
+		const scaleModel = new ScaleModel(options, canvasModel, designerConfig.canvas.chartOptions.bar);
 		const scaleMarginRecalcer = new ScaleAxisRecalcer(() =>
 			scaleModel.getScaleLinear(modelInstance.dataModel.repository.getScopedRows(), configReader)
 		);
@@ -96,6 +96,10 @@ export class TwoDimensionalModel {
 			title: {
 				textContent: titleConfig.getTextContent(),
 				fontSize: titleConfig.getFontSize()
+			},
+			grouping: {
+				enabled: false,
+				items: []
 			},
 			selectable: !!options.selectable,
 			orient: options.orientation,

@@ -23,7 +23,12 @@ export class Scale {
 		};
 
 		if (scaleKey.type === "band")
-			scales.key = this.getScaleBand(scaleKey.domain, scaleKey.range, bandSettings, scaleKey.elementsAmount);
+			// scales.key = this.getScaleBand(scaleKey.domain, scaleKey.range, bandSettings, scaleKey.elementsAmount);
+			scales.key = scaleBand()
+				.domain(scaleKey.domain)
+				.range([scaleKey.range.start, scaleKey.range.end])
+				.paddingInner(scaleKey.sizes.paddingInner / scaleKey.sizes.bandSize)
+				.paddingOuter(scaleKey.sizes.paddingOuter / scaleKey.sizes.recalculatedStepSize);
 		else if (scaleKey.type === "point") scales.key = this.getScalePoint(scaleKey.domain, scaleKey.range);
 
 		scales.value = this.getScaleValue(scaleValue);

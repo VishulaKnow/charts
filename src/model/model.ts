@@ -3,7 +3,6 @@ import {
 	MdtChartsColorField,
 	PolarChartType,
 	Size,
-	TooltipOptions,
 	TwoDimensionalChartType,
 	AxisLabelPosition,
 	ShowTickFn,
@@ -12,9 +11,7 @@ import {
 	ValueLabelsCollisionMode,
 	ValueLabelsRotationOptions,
 	ValueLabelsHandleElement,
-	MdtChartsFieldName,
-	ValueLabelsContentSetter,
-	DiscreteAxisLabelFormatter
+	MdtChartsFieldName
 } from "../config/config";
 import {
 	DataType,
@@ -29,7 +26,7 @@ import { BoundingRect } from "../engine/features/valueLabelsCollision/valueLabel
 type AxisType = "key" | "value";
 
 export type Orient = "top" | "bottom" | "left" | "right";
-export type ScaleKeyType = "band" | "point";
+export type ScaleKeyType = (ScaleBandModel | ScalePointModel)["type"];
 export type ScaleValueType = "linear";
 export type LegendPosition = "off" | "top" | "bottom" | "left" | "right";
 export type EmbeddedLabelTypeModel = "none" | "key" | "value";
@@ -121,6 +118,7 @@ export interface TwoDimensionalOptionsModel extends GraphicNotationOptionsModel 
 	orient: ChartOrientation;
 	chartSettings: TwoDimChartElementsSettings;
 	valueLabels: TwoDimensionalValueLabels;
+	grouping: TwoDimGroupingModel;
 }
 export interface PolarOptionsModel extends GraphicNotationOptionsModel {
 	type: "polar";
@@ -174,12 +172,29 @@ export interface IScaleModel {
 	value: ScaleValueModel;
 	valueSecondary?: ScaleValueModel;
 }
-export interface ScaleKeyModel {
+
+export interface BaseScaleKeyModel {
 	domain: any[];
 	range: RangeModel;
-	type: ScaleKeyType;
+}
+
+export type ScaleKeyModel = BaseScaleKeyModel & (ScaleBandModel | ScalePointModel);
+
+export interface ScaleBandModel {
+	type: "band";
+	sizes: {
+		paddingOuter: number;
+		paddingInner: number;
+		bandSize: number;
+		recalculatedStepSize: number;
+	};
 	elementsAmount: number;
 }
+
+export interface ScalePointModel {
+	type: "point";
+}
+
 export interface ScaleValueModel {
 	domain: any[];
 	range: RangeModel;
@@ -365,6 +380,15 @@ export type ValueLabelsChartBlockSide =
 			mode: "none";
 	  };
 
+export interface TwoDimGroupingModel {
+	enabled: boolean;
+	items: TwoDimGroupingItemModel[];
+}
+
+interface TwoDimGroupingItemModel {
+	scale: ScaleKeyModel;
+}
+
 //====================================================== PolarOptionsModel
 export interface DonutChartSettings extends Omit<DonutOptionsCanvas, "aggregatorPad" | "thickness"> {
 	aggregator: DonutAggregatorModel;
@@ -475,7 +499,6 @@ export interface TwoDimensionalChartModel
 		TwoDimensionalLineLikeChartModel,
 		TwoDimensionalBarLikeChartModel,
 		TwoDimensionalAreaChartModel,
-		DotChartModel,
 		DotChartModel {
 	type: TwoDimensionalChartType;
 	data: TwoDimensionalChartDataModel;

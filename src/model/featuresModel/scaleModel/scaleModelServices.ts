@@ -14,11 +14,11 @@ export function getScaleValueRangePeek(chartOrientation: string, canvasModel: Ca
 export function getElementsAmountForScale(bandLikeCharts: MdtChartsTwoDimensionalChart[]) {
 	if (bandLikeCharts.length === 0) return 1;
 
-	let barAmounts: Partial<Record<TwoDimensionalChartType, number>> = {};
+	let barAmounts: Partial<Record<TwoDimensionalChartType, number>> = {
+		dot: 1
+	};
 	bandLikeCharts.forEach((chart) => {
 		if (!barAmounts[chart.type]) barAmounts[chart.type] = 0;
-
-		if (chart.type === "dot") barAmounts[chart.type] = 1;
 
 		if (chart.type === "bar") {
 			if (chart.isSegmented) barAmounts[chart.type]! += 1;

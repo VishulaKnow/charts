@@ -105,10 +105,11 @@ export class TwoDimMarginModel {
 		if (keyAxisOrient === "left" || keyAxisOrient === "right") {
 			labelsTexts = modelInstance.dataModel.repository.getValuesByKeyField();
 		} else {
-			const scaleModel = new ScaleModel(this.configReader.options, modelInstance.canvasModel).getScaleLinear(
-				modelInstance.dataModel.repository.getRawRows(),
-				this.configReader
-			);
+			const scaleModel = new ScaleModel(
+				this.configReader.options,
+				modelInstance.canvasModel,
+				this.designerConfig.canvas.chartOptions.bar
+			).getScaleLinear(modelInstance.dataModel.repository.getRawRows(), this.configReader);
 			labelsTexts = this.getValueAxisLabels(scaleModel).map((v) =>
 				this.configReader.getAxisLabelFormatter()(v).toString()
 			);
@@ -118,10 +119,11 @@ export class TwoDimMarginModel {
 	}
 
 	private getMaxLabelSizeSecondary(modelInstance: ModelInstance): LabelSize {
-		const scaleModel = new ScaleModel(this.configReader.options, modelInstance.canvasModel).getScaleSecondaryLinear(
-			modelInstance.dataModel.repository.getRawRows(),
-			this.configReader
-		);
+		const scaleModel = new ScaleModel(
+			this.configReader.options,
+			modelInstance.canvasModel,
+			this.designerConfig.canvas.chartOptions.bar
+		).getScaleSecondaryLinear(modelInstance.dataModel.repository.getRawRows(), this.configReader);
 		const labelsTexts = this.getValueAxisLabels(scaleModel).map((v) =>
 			this.configReader.getSecondaryAxisLabelFormatter()(v).toString()
 		);

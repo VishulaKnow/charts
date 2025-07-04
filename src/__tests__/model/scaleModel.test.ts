@@ -554,7 +554,13 @@ describe("get scales tests", () => {
 		canvasModel.initMargin({ bottom: 20, left: 20, right: 20, top: 20 });
 		canvasModel.initBlockSize({ height: 500, width: 1000 });
 
-		scaleModel = new ScaleModel(options, canvasModel);
+		scaleModel = new ScaleModel(options, canvasModel, {
+			minBarWidth: 3,
+			maxBarWidth: 30,
+			groupMinDistance: 6,
+			barDistance: 2,
+			groupMaxDistance: 35
+		});
 	});
 
 	test("get scale key band", () => {
@@ -566,7 +572,13 @@ describe("get scales tests", () => {
 				end: 960
 			},
 			type: "band",
-			elementsAmount: 2
+			elementsAmount: 2,
+			sizes: {
+				paddingInner: 35,
+				paddingOuter: 352,
+				bandSize: 320,
+				recalculatedStepSize: 97 // 97 * 3 - 35 + 352 * 2 = 960
+			}
 		});
 	});
 
@@ -579,8 +591,7 @@ describe("get scales tests", () => {
 				start: 0,
 				end: 960
 			},
-			type: "point",
-			elementsAmount: 1
+			type: "point"
 		});
 	});
 
@@ -596,7 +607,13 @@ describe("get scales tests", () => {
 				end: 960
 			},
 			type: "band",
-			elementsAmount: 1
+			elementsAmount: 1,
+			sizes: {
+				paddingInner: 35,
+				paddingOuter: 400,
+				bandSize: 320,
+				recalculatedStepSize: 65 // 97 * 3 - 35 + 400 * 2 = 960
+			}
 		});
 	});
 

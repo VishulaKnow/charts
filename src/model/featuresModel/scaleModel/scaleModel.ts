@@ -1,4 +1,4 @@
-import { ScaleKeyModel, ScaleKeyType, ScaleValueModel } from "../../model";
+import { BaseScaleKeyModel, ScaleKeyModel, ScaleKeyType, ScaleValueModel } from "../../model";
 import {
 	MdtChartsTwoDimensionalChart,
 	MdtChartsTwoDimensionalOptions,
@@ -9,6 +9,7 @@ import { CanvasModel } from "../../modelInstance/canvasModel/canvasModel";
 import { getElementsAmountForScale, getScaleKeyRangePeek, getScaleValueRangePeek } from "./scaleModelServices";
 import { getScaleLinearDomain } from "./scaleDomainService";
 import { TwoDimConfigReader } from "../../modelInstance/configReader/twoDimConfigReader.ts/twoDimConfigReader";
+import { BarOptionsCanvas } from "../../../designer/designerConfig";
 
 export enum ScaleType {
 	Key,
@@ -16,20 +17,84 @@ export enum ScaleType {
 }
 
 export class ScaleModel {
-	constructor(private readonly options: MdtChartsTwoDimensionalOptions, private readonly canvasModel: CanvasModel) {}
+	constructor(
+		private readonly options: MdtChartsTwoDimensionalOptions,
+		private readonly canvasModel: CanvasModel,
+		private readonly barCanvas: BarOptionsCanvas
+	) {}
 
 	getScaleKey(allowableKeys: string[]): ScaleKeyModel {
 		const bandLikeCharts = this.getChartsByTypes(this.options.charts, ["bar", "dot"]);
 
-		return {
+		const baseModel: BaseScaleKeyModel = {
 			domain: allowableKeys,
 			range: {
 				start: 0,
 				end: getScaleKeyRangePeek(this.options.orientation, this.canvasModel)
-			},
-			type: this.getScaleKeyType(this.options.charts),
-			elementsAmount: getElementsAmountForScale(bandLikeCharts)
+			}
 		};
+
+		const type = this.getScaleKeyType(this.options.charts);
+
+		if (type === "point") {
+			return {
+				...baseModel,
+				type: "point"
+			};
+		}
+
+		if (type === "band") {
+			const elementsInGroupAmount = getElementsAmountForScale(bandLikeCharts);
+
+			const paddings = {
+				outer: 0,
+				inner: 0
+			};
+
+			const getStepSize = () =>
+				(Math.abs(baseModel.range.end - baseModel.range.start) + paddings.inner - 2 * paddings.outer) /
+				baseModel.domain.length;
+			const getBandSize = () => getStepSize() - paddings.inner;
+
+			const initialBandSize = getBandSize();
+
+			if (this.barCanvas.groupMinDistance < initialBandSize) {
+				paddings.inner = this.barCanvas.groupMinDistance;
+				paddings.outer = this.barCanvas.groupMinDistance / 2;
+			}
+			while (
+				getBandSize() >
+					this.barCanvas.maxBarWidth * elementsInGroupAmount +
+						this.barCanvas.barDistance * (elementsInGroupAmount - 1) &&
+				paddings.inner < this.barCanvas.groupMaxDistance
+			) {
+				paddings.inner++;
+			}
+
+			paddings.outer = 1;
+			while (
+				getStepSize() >
+				this.barCanvas.maxBarWidth * elementsInGroupAmount +
+					this.barCanvas.groupMaxDistance +
+					this.barCanvas.barDistance * (elementsInGroupAmount - 1)
+			) {
+				paddings.outer += 1;
+			}
+
+			return {
+				...baseModel,
+				type: "band",
+				elementsAmount: elementsInGroupAmount,
+				sizes: {
+					paddingInner: paddings.inner,
+					paddingOuter: paddings.outer,
+					bandSize: initialBandSize,
+					recalculatedStepSize: getStepSize()
+				}
+			};
+		}
+
+		throw new Error("Unknown scale key type");
 	}
 
 	getScaleLinear(dataRows: MdtChartsDataRow[], configReader?: TwoDimConfigReader): ScaleValueModel {
