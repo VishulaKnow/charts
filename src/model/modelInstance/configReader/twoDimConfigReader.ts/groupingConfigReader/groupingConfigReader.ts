@@ -1,9 +1,9 @@
 import {
-	AxisLabelPosition,
 	ChartOrientation,
 	DiscreteAxisOptions,
 	ItemPositionByOrientation,
 	MdtChartsDataRow,
+	MdtChartsField,
 	TwoDimGroupingOptions
 } from "../../../../../config/config";
 import { Orient } from "../../../../model";
@@ -67,10 +67,13 @@ export class GroupingConfigReader {
 		return slices;
 	}
 
-	getPreparedOptions(
-		scopedDatasourceRows: MdtChartsDataRow[]
-	): { domain: string[]; orient: Orient; sideIndex: number }[] {
-		const groupingItemsValues: { domain: string[]; orient: Orient; sideIndex: number }[] = [];
+	getPreparedOptions(scopedDatasourceRows: MdtChartsDataRow[]) {
+		const groupingItemsValues: {
+			domain: string[];
+			orient: Orient;
+			sideIndex: number;
+			field: MdtChartsField;
+		}[] = [];
 
 		let keyAxisSideIndex = 0;
 		let oppositeKeyAxisSideIndex = 0;
@@ -86,7 +89,7 @@ export class GroupingConfigReader {
 			else sideIndex = oppositeKeyAxisSideIndex++;
 
 			const values = new Set(scopedDatasourceRows.map((row) => row[item.data.field.name]));
-			groupingItemsValues.push({ domain: Array.from(values), orient, sideIndex });
+			groupingItemsValues.push({ domain: Array.from(values), orient, sideIndex, field: item.data.field });
 		}
 
 		return groupingItemsValues;

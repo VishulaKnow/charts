@@ -1,4 +1,4 @@
-import { BlockMargin, Orient, ValueLabelAnchor, ValueLabelDominantBaseline } from "../../model";
+import { BlockMargin, Orient, TextAnchor, ValueLabelDominantBaseline } from "../../model";
 import { BoundingRect } from "../../../engine/features/valueLabelsCollision/valueLabelsCollision";
 import {
 	MdtChartsDataRow,
@@ -10,7 +10,7 @@ import {
 
 interface ValueLabelAlignment {
 	dominantBaseline: ValueLabelDominantBaseline;
-	textAnchor: ValueLabelAnchor;
+	textAnchor: TextAnchor;
 }
 
 export const VALUE_LABEL_OFFSET_ABS_SIZE_PX = 10;

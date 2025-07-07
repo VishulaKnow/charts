@@ -11,6 +11,7 @@ export interface ScalesWithSecondary extends Scales {
 	valueSecondary: AxisScale<any>;
 }
 
+//TODO: incapulate in model
 export class Scale {
 	public static getScales(
 		scaleKey: ScaleKeyModel,

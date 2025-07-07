@@ -43,7 +43,8 @@ import { TitleConfigReader } from "../modelInstance/titleConfigReader";
 import { createRecordOverflowModel } from "../featuresModel/recordOverflowModel/recordOverflowModel";
 import { TwoDimTooltipContentGenerator } from "../featuresModel/tooltipModel/tooltipContentModel";
 import { TwoDimInitialRowsProvider } from "../featuresModel/tooltipModel/contentByNotations/twoDimInitialRowsProvider";
-import { GroupingLabelsCoordinateHandlers } from "../featuresModel/groupingLabels/groupingLabelsCoordinateHandlers";
+import { GroupingLabelsCoordinateHandler } from "../featuresModel/groupingLabels/groupingLabelsCoordinateHandlers";
+import { GroupingLabelsCoordinateScaler } from "../featuresModel/groupingLabels/groupingLabelsScaler";
 
 export class TwoDimensionalModel {
 	public static getOptions(
@@ -92,6 +93,7 @@ export class TwoDimensionalModel {
 		);
 
 		const titleConfig = TitleConfigReader.create(options.title, modelInstance);
+		const keyScale = scaleModel.getScaleKey(modelInstance.dataModel.getAllowableKeys());
 		const isHorizontal = options.orientation === "horizontal";
 
 		return {
@@ -105,17 +107,24 @@ export class TwoDimensionalModel {
 				items: configReader.grouping
 					.getPreparedOptions(modelInstance.dataModel.repository.getScopedRows())
 					.map<TwoDimGroupingItemModel>((prepared) => {
-						const coordinateHandler = new GroupingLabelsCoordinateHandlers(
+						const scaler = new GroupingLabelsCoordinateScaler({
+							dataRows: modelInstance.dataModel.repository.getScopedRows(),
+							field: prepared.field,
+							keyAxisOuterPadding: keyScale.type === "band" ? keyScale.sizes.paddingOuter : 0,
+							range: keyScale.range
+						});
+						const coordinateHandler = new GroupingLabelsCoordinateHandler(
 							canvasModel,
 							prepared.orient,
 							prepared.sideIndex
 						);
 						return {
-							//TODO: always should be band scale
-							scale: scaleModel.getScaleKey(prepared.domain) as ScaleBandModel,
 							orient: prepared.orient,
+							domain: prepared.domain,
+							textAnchor: "middle",
 							coordinate: {
-								handleCoordinate: (coordinate) => coordinateHandler.handleCoordinate(coordinate)
+								handleX: (groupKey) => coordinateHandler.handleX(scaler.scaleForKey(groupKey)),
+								handleY: (groupKey) => coordinateHandler.handleY(scaler.scaleForKey(groupKey))
 							}
 						};
 					})
@@ -123,7 +132,7 @@ export class TwoDimensionalModel {
 			selectable: !!options.selectable,
 			orient: options.orientation,
 			scale: {
-				key: scaleModel.getScaleKey(modelInstance.dataModel.getAllowableKeys()),
+				key: keyScale,
 				value: scaleValueInfo.scale,
 				...(configReader.containsSecondaryAxis() && { valueSecondary: secondaryScaleValueInfo!.scale })
 			},

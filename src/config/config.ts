@@ -123,8 +123,11 @@ export interface DataOptions {
 
 export type MdtChartsFieldName = string;
 
-export interface MdtChartsField {
+export interface MdtChartsBaseField {
 	name: MdtChartsFieldName;
+}
+
+export interface MdtChartsField extends MdtChartsBaseField {
 	format: DataType;
 }
 
