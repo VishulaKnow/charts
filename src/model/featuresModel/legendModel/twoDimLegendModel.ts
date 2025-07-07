@@ -37,10 +37,12 @@ export class TwoDimLegendModel {
 			).size.height;
 
 			if (legendSize !== 0) {
-				const legendTotalMargin =
-					legendSize + LegendModel.getLegendTotalMargin(legendPosition, legendBlockModel);
-				canvasModel.increaseMarginSide(legendPosition, legendTotalMargin);
+				const legendTotalMargin = LegendModel.getLegendTotalMargin(legendPosition, legendBlockModel);
 				modelInstance.canvasModel.legendCanvas.initSizeAndPad(legendSize, legendTotalMargin);
+				canvasModel.increaseMarginSide(
+					legendPosition,
+					modelInstance.canvasModel.legendCanvas.getAllNeededSpace()
+				);
 			}
 
 			legendBlockModel.coordinate[legendPosition].size = legendSize;
