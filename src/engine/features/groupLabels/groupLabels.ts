@@ -27,6 +27,7 @@ export class GroupAxisLabels {
 				.attr("x", (d) => item.coordinate.handleX(d))
 				.attr("y", (d) => item.coordinate.handleY(d))
 				.attr("text-anchor", item.textAnchor)
+				.attr("dominant-baseline", item.dominantBaseline)
 				.classed("data-label", true);
 		});
 	}

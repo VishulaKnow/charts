@@ -57,14 +57,10 @@ export class TwoDimMarginModel {
 			this.recalcVerticalMarginWithValueLabelsOn(canvasModel);
 		}
 
-		const groupingSlices = this.configReader.grouping.getSlicesByOrients();
-		groupingSlices.forEach((slice) => {
-			//TODO: handle for horizontal orientation
-			canvasModel.increaseMarginSide(
-				slice.orient,
-				slice.amount * (labelSize.height + AXIS_HORIZONTAL_LABEL_PADDING)
-			);
-		});
+		const groupingSlices = this.configReader.grouping.getSlicesSizesByOrients(
+			modelInstance.dataModel.repository.getRawRows()
+		);
+		groupingSlices.forEach((slice) => canvasModel.increaseMarginSide(slice.orient, slice.size));
 	}
 
 	public recalcMarginByVerticalAxisLabel(modelInstance: ModelInstance): void {

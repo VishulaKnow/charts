@@ -35,7 +35,7 @@ export type DataOptions = {
 };
 export type UnitsFromConfig = "%" | "px";
 export type TextAnchor = "start" | "middle" | "end";
-export type ValueLabelDominantBaseline = "hanging" | "middle" | "auto";
+export type DominantBaseline = "hanging" | "middle" | "auto";
 export type GradientId = string;
 
 export type OptionsModel = TwoDimensionalOptionsModel | PolarOptionsModel;
@@ -399,6 +399,7 @@ export interface TwoDimGroupingItemModel {
 	domain: GroupingLabelKey[];
 	orient: Orient;
 	textAnchor: TextAnchor;
+	dominantBaseline: DominantBaseline;
 	coordinate: {
 		handleX: (key: GroupingLabelKey) => number;
 		handleY: (key: GroupingLabelKey) => number;
@@ -557,7 +558,7 @@ export interface TwoDimChartValueLabelsOptions {
 	handleY: (scaledValue: number) => number;
 	textAnchor: TextAnchor;
 	forFields: MdtChartsFieldName[];
-	dominantBaseline: ValueLabelDominantBaseline;
+	dominantBaseline: DominantBaseline;
 	setContent: ValueLabelsInnerContentSetter;
 	handleScaledValue: (dataRow: MdtChartsDataRow, datumField: string) => number;
 	rotation?: ValueLabelsRotationOptions;

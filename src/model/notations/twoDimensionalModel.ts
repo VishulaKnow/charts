@@ -124,7 +124,8 @@ export class TwoDimensionalModel {
 						return {
 							orient: prepared.orient,
 							domain: prepared.domain,
-							textAnchor: "middle",
+							textAnchor: prepared.textAnchor,
+							dominantBaseline: prepared.dominantBaseline,
 							coordinate: {
 								handleX: (groupKey) => coordinateHandler.handleX(scaler.scaleForKey(groupKey)),
 								handleY: (groupKey) => coordinateHandler.handleY(scaler.scaleForKey(groupKey))

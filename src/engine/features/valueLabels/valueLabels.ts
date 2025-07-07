@@ -7,7 +7,7 @@ import {
 	TwoDimensionalChartModel,
 	TwoDimensionalValueLabels,
 	TextAnchor,
-	ValueLabelDominantBaseline,
+	DominantBaseline,
 	ValueLabelsInnerContentSetter,
 	ValueLabelsStyleModel
 } from "../../../model/model";
@@ -42,7 +42,7 @@ export interface ValueLabelAttrs {
 	x: (data: MdtChartsDataRow) => number;
 	y: (data: MdtChartsDataRow) => number;
 	textAnchor: TextAnchor;
-	dominantBaseline: ValueLabelDominantBaseline;
+	dominantBaseline: DominantBaseline;
 }
 
 export class ChartValueLabels {

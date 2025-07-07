@@ -287,7 +287,7 @@ export interface TwoDimGroupingOptions {
 	items: TwoDimGroupingItem[];
 }
 
-interface TwoDimGroupingItem {
+export interface TwoDimGroupingItem {
 	data: TwoDimGroupingItemData;
 	labels?: TwoDimGroupingItemLabels;
 }
