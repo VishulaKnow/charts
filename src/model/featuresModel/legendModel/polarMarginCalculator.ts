@@ -33,7 +33,10 @@ export class LegendPolarMarginCalculator {
 	) {
 		if (legendSize !== 0) {
 			canvasModel.increaseMarginSide(legendPosition, legendSize);
-			LegendModel.appendToGlobalMarginValuesLegendMargin(canvasModel, legendPosition, legendBlockModel);
+			canvasModel.increaseMarginSide(
+				legendPosition,
+				LegendModel.getLegendTotalMargin(legendPosition, legendBlockModel)
+			);
 		}
 
 		legendBlockModel.coordinate[legendPosition].size = legendSize;

@@ -1,6 +1,5 @@
 import { LegendModel } from "./legendModel/legendModel";
 import { OtherCommonComponents } from "../model";
-import { TitleModel } from "./titleModel";
 import { ElementsOptions, LegendBlockCanvas } from "../../designer/designerConfig";
 import { TooltipCanvasModel } from "./tooltipModel/tooltipCanvasModel";
 import { ModelInstance } from "../modelInstance/modelInstance";
@@ -19,7 +18,7 @@ export class OtherComponentsModel {
 	): OtherCommonComponents {
 		const canvasModel = modelInstance.canvasModel;
 
-		canvasModel.titleCanvas.init(TitleModel.getTitleModel(dependencies.titleConfig));
+		canvasModel.titleCanvas.init(dependencies.titleConfig);
 
 		return {
 			legendBlock: LegendModel.getBaseLegendBlockModel(canvasModel, dependencies.legendConfig),

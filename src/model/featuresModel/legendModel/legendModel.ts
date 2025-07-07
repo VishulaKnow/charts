@@ -7,8 +7,7 @@ export class LegendModel {
 	public static getBaseLegendBlockModel(canvasModel: CanvasModel, legendConfig: LegendBlockCanvas): LegendBlockModel {
 		const mt = 20,
 			mb = 20,
-			ml = 20,
-			mr = 20;
+			ml = 20;
 
 		return {
 			coordinate: {
@@ -43,22 +42,11 @@ export class LegendModel {
 		return itemsPosition === "column" ? "legend-item-row" : "legend-item-inline";
 	}
 
-	public static appendToGlobalMarginValuesLegendMargin(
-		canvasModel: CanvasModel,
-		position: Orient,
-		legendBlockModel: LegendBlockModel
-	): void {
+	static getLegendTotalMargin(position: Orient, legendBlockModel: LegendBlockModel) {
 		const legendCoordinate = legendBlockModel.coordinate;
 
 		if (position === "left" || position === "right")
-			canvasModel.increaseMarginSide(
-				position,
-				legendCoordinate[position].margin.left + legendCoordinate[position].margin.right
-			);
-		else
-			canvasModel.increaseMarginSide(
-				position,
-				legendCoordinate[position].margin.top + legendCoordinate[position].margin.bottom
-			);
+			return legendCoordinate[position].margin.left + legendCoordinate[position].margin.right;
+		else return legendCoordinate[position].margin.top + legendCoordinate[position].margin.bottom;
 	}
 }

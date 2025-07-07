@@ -6,6 +6,7 @@ interface GroupingLabelsCoordinateScalerOptions {
 	dataRows: MdtChartsDataRow[];
 	field: MdtChartsBaseField;
 	keyAxisOuterPadding: number;
+	keyAxisInnerPadding: number;
 	range: RangeModel;
 }
 
@@ -31,9 +32,21 @@ export class GroupingLabelsCoordinateScaler {
 		const coordinates: number[] = [];
 		let previousTotalShares = 0;
 
-		for (const rowsAmount of domainWithRowsCount.values()) {
+		const rowsCounts = Array.from(domainWithRowsCount.values());
+		for (let rowIndex = 0; rowIndex < rowsCounts.length; rowIndex++) {
+			const rowsAmount = rowsCounts[rowIndex];
+
+			let changeByInnerPadding = 0;
+			if (rowsCounts.length > 1) {
+				if (rowIndex === 0) changeByInnerPadding = -this.options.keyAxisInnerPadding / 2;
+				if (rowIndex === rowsCounts.length - 1) changeByInnerPadding = this.options.keyAxisInnerPadding / 2;
+			}
+
 			const centerOfDomainItem =
-				previousTotalShares * oneShareSize + (rowsAmount * oneShareSize) / 2 + this.options.keyAxisOuterPadding;
+				previousTotalShares * oneShareSize +
+				(rowsAmount * oneShareSize) / 2 +
+				this.options.keyAxisOuterPadding +
+				changeByInnerPadding;
 			coordinates.push(centerOfDomainItem);
 			previousTotalShares += rowsAmount;
 		}

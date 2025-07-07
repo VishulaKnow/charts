@@ -35,10 +35,13 @@ export class TwoDimLegendModel {
 				modelInstance.canvasModel.getBlockSize().width,
 				legendBlockModel.static.maxLinesAmount * styledElementValues.legend.inlineLegendOneLineHeightPx
 			).size.height;
-			canvasModel.increaseMarginSide(legendPosition, legendSize);
 
-			if (legendSize !== 0)
-				LegendModel.appendToGlobalMarginValuesLegendMargin(canvasModel, legendPosition, legendBlockModel);
+			if (legendSize !== 0) {
+				const legendTotalMargin =
+					legendSize + LegendModel.getLegendTotalMargin(legendPosition, legendBlockModel);
+				canvasModel.increaseMarginSide(legendPosition, legendTotalMargin);
+				modelInstance.canvasModel.legendCanvas.initSizeAndPad(legendSize, legendTotalMargin);
+			}
 
 			legendBlockModel.coordinate[legendPosition].size = legendSize;
 		}

@@ -17,8 +17,7 @@ import {
 	AdditionalElementsOptions,
 	TwoDimChartElementsSettings,
 	Orient,
-	TwoDimGroupingItemModel,
-	ScaleBandModel
+	TwoDimGroupingItemModel
 } from "../model";
 import { TwoDimConfigReader } from "../modelInstance/configReader/twoDimConfigReader.ts/twoDimConfigReader";
 import { ModelInstance } from "../modelInstance/modelInstance";
@@ -111,13 +110,17 @@ export class TwoDimensionalModel {
 							dataRows: modelInstance.dataModel.repository.getScopedRows(),
 							field: prepared.field,
 							keyAxisOuterPadding: keyScale.type === "band" ? keyScale.sizes.paddingOuter : 0,
+							keyAxisInnerPadding: keyScale.type === "band" ? keyScale.sizes.paddingInner : 0,
 							range: keyScale.range
 						});
-						const coordinateHandler = new GroupingLabelsCoordinateHandler(
-							canvasModel,
-							prepared.orient,
-							prepared.sideIndex
-						);
+						const coordinateHandler = new GroupingLabelsCoordinateHandler(canvasModel, {
+							orient: prepared.orient,
+							sideIndex: prepared.sideIndex,
+							otherComponentSizes: {
+								titleTotalNeededSpace: canvasModel.titleCanvas.getAllNeededSpace(),
+								legendTotalNeededSpace: canvasModel.legendCanvas.getAllNeededSpace()
+							}
+						});
 						return {
 							orient: prepared.orient,
 							domain: prepared.domain,

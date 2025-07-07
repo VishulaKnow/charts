@@ -8,13 +8,27 @@ describe("GroupingLabelsCoordinateHandlers", () => {
 
 	describe("handleX", () => {
 		it("should return x coordinate with added left margin for top orient", () => {
-			const coordinateHandler = new GroupingLabelsCoordinateHandler(canvasModel, "top", 0);
+			const coordinateHandler = new GroupingLabelsCoordinateHandler(canvasModel, {
+				orient: "top",
+				sideIndex: 0,
+				otherComponentSizes: {
+					titleTotalNeededSpace: 20,
+					legendTotalNeededSpace: 30
+				}
+			});
 			const coordinate = coordinateHandler.handleX(100);
 			expect(coordinate).toEqual(110);
 		});
 
 		it("should return x coordinate with added left margin for bottom orient", () => {
-			const coordinateHandler = new GroupingLabelsCoordinateHandler(canvasModel, "bottom", 0);
+			const coordinateHandler = new GroupingLabelsCoordinateHandler(canvasModel, {
+				orient: "bottom",
+				sideIndex: 0,
+				otherComponentSizes: {
+					titleTotalNeededSpace: 20,
+					legendTotalNeededSpace: 30
+				}
+			});
 			const coordinate = coordinateHandler.handleX(100);
 			expect(coordinate).toEqual(110);
 		});
@@ -22,15 +36,29 @@ describe("GroupingLabelsCoordinateHandlers", () => {
 
 	describe("handleY", () => {
 		it("should return static y coordinate for top orient", () => {
-			const coordinateHandler = new GroupingLabelsCoordinateHandler(canvasModel, "top", 0);
+			const coordinateHandler = new GroupingLabelsCoordinateHandler(canvasModel, {
+				orient: "top",
+				sideIndex: 0,
+				otherComponentSizes: {
+					titleTotalNeededSpace: 20,
+					legendTotalNeededSpace: 30
+				}
+			});
 			const coordinate = coordinateHandler.handleY(100);
 			expect(coordinate).toEqual(20);
 		});
 
 		it("should return static y coordinate for bottom orient", () => {
-			const coordinateHandler = new GroupingLabelsCoordinateHandler(canvasModel, "bottom", 0);
+			const coordinateHandler = new GroupingLabelsCoordinateHandler(canvasModel, {
+				orient: "bottom",
+				sideIndex: 0,
+				otherComponentSizes: {
+					titleTotalNeededSpace: 20,
+					legendTotalNeededSpace: 30
+				}
+			});
 			const coordinate = coordinateHandler.handleY(100);
-			expect(coordinate).toEqual(380);
+			expect(coordinate).toEqual(370);
 		});
 	});
 });

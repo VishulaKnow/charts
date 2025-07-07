@@ -6,6 +6,7 @@ describe("GroupingLabelsCoordinateScaler", () => {
 			dataRows: [{ brand: "brand1" }],
 			field: { name: "brand" },
 			keyAxisOuterPadding: 20,
+			keyAxisInnerPadding: 10,
 			range: { start: 0, end: 100 }
 		});
 		expect(scaler.scaleForKey("brand1")).toBe(50);
@@ -22,9 +23,33 @@ describe("GroupingLabelsCoordinateScaler", () => {
 			],
 			field: { name: "brand" },
 			keyAxisOuterPadding: 0,
+			keyAxisInnerPadding: 10,
 			range: { start: 0, end: 100 }
 		});
-		expect(scaler.scaleForKey("brand1")).toBe(20);
-		expect(scaler.scaleForKey("brand2")).toBe(70);
+		expect(scaler.scaleForKey("brand1")).toBe(15);
+		expect(scaler.scaleForKey("brand2")).toBe(75);
+	});
+
+	it("shouldn't change coordinate by inner padding for rows that is not first or last", () => {
+		const scaler = new GroupingLabelsCoordinateScaler({
+			dataRows: [
+				{ brand: "brand1" },
+				{ brand: "brand1" },
+				{ brand: "brand1" },
+				{ brand: "brand2" },
+				{ brand: "brand2" },
+				{ brand: "brand2" },
+				{ brand: "brand3" },
+				{ brand: "brand3" },
+				{ brand: "brand3" }
+			],
+			field: { name: "brand" },
+			keyAxisOuterPadding: 5,
+			keyAxisInnerPadding: 10,
+			range: { start: 0, end: 100 }
+		});
+		expect(scaler.scaleForKey("brand1")).toBe(15);
+		expect(scaler.scaleForKey("brand2")).toBe(50);
+		expect(scaler.scaleForKey("brand3")).toBe(85);
 	});
 });

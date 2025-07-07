@@ -7,7 +7,7 @@
 			"price2": 120000,
 			"count": 10000,
 			"color": "red",
-			"year": 2024
+			"year": 2023
 		},
 		{
 			"$id": 2,
@@ -88,7 +88,7 @@
 			"price2": 22000,
 			"count": 15000,
 			"color": "pink",
-			"year": 2026
+			"year": 2027
 		}
 	],
 	"dataSet-months": [

@@ -68,6 +68,7 @@ function getOptions(
 	} else if (config.options.type === "polar") {
 		return PolarModel.getOptions(config.options, designerConfig, modelInstance);
 	}
+	throw new Error("Unknown chart type");
 }
 
 function getDataSettings(dataScope: DataScope, designerConfig: DesignerConfig): DataSettings {
@@ -83,7 +84,7 @@ function getDataFormat(designerConfig: DesignerConfig): DataFormat {
 	};
 }
 
-function getTransitions(designerConfig: DesignerConfig): Transitions {
+function getTransitions(designerConfig: DesignerConfig): Transitions | undefined {
 	return designerConfig.transitions;
 }
 
