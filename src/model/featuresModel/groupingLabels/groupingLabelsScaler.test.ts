@@ -26,8 +26,8 @@ describe("GroupingLabelsCoordinateScaler", () => {
 			keyAxisInnerPadding: 10,
 			range: { start: 0, end: 100 }
 		});
-		expect(scaler.scaleForKey("brand1")).toBe(15);
-		expect(scaler.scaleForKey("brand2")).toBe(75);
+		expect(scaler.scaleForKey("brand1")).toBe(17);
+		expect(scaler.scaleForKey("brand2")).toBe(72);
 	});
 
 	it("shouldn't change coordinate by inner padding for rows that is not first or last", () => {
@@ -44,12 +44,12 @@ describe("GroupingLabelsCoordinateScaler", () => {
 				{ brand: "brand3" }
 			],
 			field: { name: "brand" },
-			keyAxisOuterPadding: 5,
-			keyAxisInnerPadding: 10,
-			range: { start: 0, end: 100 }
+			keyAxisOuterPadding: 10,
+			keyAxisInnerPadding: 5,
+			range: { start: 0, end: 105 }
 		});
-		expect(scaler.scaleForKey("brand1")).toBe(15);
-		expect(scaler.scaleForKey("brand2")).toBe(50);
-		expect(scaler.scaleForKey("brand3")).toBe(85);
+		expect(scaler.scaleForKey("brand1")).toBe(22.5);
+		expect(scaler.scaleForKey("brand2")).toBe(52.5);
+		expect(scaler.scaleForKey("brand3")).toBe(82.5);
 	});
 });
