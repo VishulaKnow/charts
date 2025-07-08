@@ -25,7 +25,9 @@ export class GroupingLabelsCoordinateScaler {
 		});
 
 		const rangeOfKeyAxis =
-			Math.abs(this.options.range.end - this.options.range.start) - this.options.keyAxisOuterPadding * 2;
+			Math.abs(this.options.range.end - this.options.range.start) -
+			this.options.keyAxisOuterPadding * 2 -
+			this.options.keyAxisInnerPadding * (this.options.dataRows.length - 1);
 		const totalShares = Array.from(domainWithRowsCount.values()).reduce((acc, curr) => acc + curr, 0);
 		const oneShareSize = rangeOfKeyAxis / totalShares;
 
@@ -36,17 +38,12 @@ export class GroupingLabelsCoordinateScaler {
 		for (let rowIndex = 0; rowIndex < rowsCounts.length; rowIndex++) {
 			const rowsAmount = rowsCounts[rowIndex];
 
-			let changeByInnerPadding = 0;
-			if (rowsCounts.length > 1) {
-				if (rowIndex === 0) changeByInnerPadding = -this.options.keyAxisInnerPadding / 2;
-				if (rowIndex === rowsCounts.length - 1) changeByInnerPadding = this.options.keyAxisInnerPadding / 2;
-			}
+			let previousShift = previousTotalShares * (oneShareSize + this.options.keyAxisInnerPadding);
 
 			const centerOfDomainItem =
-				previousTotalShares * oneShareSize +
-				(rowsAmount * oneShareSize) / 2 +
-				this.options.keyAxisOuterPadding +
-				changeByInnerPadding;
+				previousShift +
+				(rowsAmount * oneShareSize + (rowsAmount - 1) * this.options.keyAxisInnerPadding) / 2 +
+				this.options.keyAxisOuterPadding;
 			coordinates.push(centerOfDomainItem);
 			previousTotalShares += rowsAmount;
 		}

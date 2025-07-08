@@ -18,7 +18,6 @@ export class GroupingLabelsCoordinateHandler {
 		private readonly canvasModel: CanvasModel,
 		private readonly options: GroupingLabelsCoordinateHandlerOptions
 	) {
-		//TODO: padding should be got from other components
 		if (this.options.orient === "top")
 			this.staticCoordinate =
 				options.otherComponentSizes.titleTotalNeededSpace + this.verticalLabelSize * this.options.sideIndex;
@@ -27,6 +26,7 @@ export class GroupingLabelsCoordinateHandler {
 				this.canvasModel.getBlockSize().height -
 				options.otherComponentSizes.legendTotalNeededSpace -
 				this.verticalLabelSize * this.options.sideIndex;
+		//TODO: padding should be got from other components
 		if (this.options.orient === "left") this.staticCoordinate = 20 * this.options.sideIndex;
 		if (this.options.orient === "right")
 			this.staticCoordinate = this.canvasModel.getBlockSize().width - 20 * this.options.sideIndex;

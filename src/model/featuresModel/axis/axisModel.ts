@@ -33,7 +33,7 @@ export interface LabelSize {
 export const MINIMAL_VERTICAL_STEP_SIZE = 60;
 export const MINIMAL_HORIZONTAL_STEP_SIZE = 100;
 
-export const LABEL_ELEMENT_HEIGHT_PX = 17;
+export const LABEL_ELEMENT_HEIGHT_PX = 14;
 
 const DEFAULT_AXIS_LINE_VISIBLE = true;
 

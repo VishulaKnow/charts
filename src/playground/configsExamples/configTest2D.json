@@ -53,6 +53,26 @@
 		"charts": [
 			{
 				"title": "Рост стоимости",
+				"type": "bar",
+				"data": {
+					"valueFields": [
+						{
+							"name": "price",
+							"format": "money",
+							"title": "Прямые клиенты"
+						}
+					]
+				},
+				"tooltip": {
+					"show": true
+				},
+				"markers": {
+					"show": true
+				},
+				"embeddedLabels": "key"
+			},
+			{
+				"title": "Рост стоимости",
 				"type": "area",
 				"data": {
 					"valueFields": [
@@ -70,26 +90,6 @@
 					"borderLine": {
 						"on": true
 					}
-				},
-				"tooltip": {
-					"show": true
-				},
-				"markers": {
-					"show": true
-				},
-				"embeddedLabels": "key"
-			},
-			{
-				"title": "Рост стоимости",
-				"type": "bar",
-				"data": {
-					"valueFields": [
-						{
-							"name": "price",
-							"format": "money",
-							"title": "Прямые клиенты"
-						}
-					]
 				},
 				"tooltip": {
 					"show": true
