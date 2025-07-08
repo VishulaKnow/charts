@@ -16,7 +16,7 @@ const configCars: MdtChartsConfig = {
 			items: [
 				{
 					data: {
-						field: { name: "year", format: "string" }
+						field: { name: "year" }
 					}
 				}
 			]

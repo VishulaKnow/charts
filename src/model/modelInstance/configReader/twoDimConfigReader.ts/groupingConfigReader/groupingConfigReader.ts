@@ -2,6 +2,7 @@ import {
 	ChartOrientation,
 	DiscreteAxisOptions,
 	ItemPositionByOrientation,
+	MdtChartsBaseField,
 	MdtChartsDataRow,
 	MdtChartsField,
 	TwoDimGroupingItem,
@@ -91,7 +92,7 @@ export class GroupingConfigReader {
 			domain: string[];
 			orient: Orient;
 			sideIndex: number;
-			field: MdtChartsField;
+			field: MdtChartsBaseField;
 			textAnchor: TextAnchor;
 			dominantBaseline: DominantBaseline;
 		}[] = [];

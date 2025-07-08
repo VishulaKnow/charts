@@ -293,7 +293,7 @@ export interface TwoDimGroupingItem {
 }
 
 interface TwoDimGroupingItemData {
-	field: MdtChartsField;
+	field: MdtChartsBaseField;
 }
 
 interface TwoDimGroupingItemLabels {

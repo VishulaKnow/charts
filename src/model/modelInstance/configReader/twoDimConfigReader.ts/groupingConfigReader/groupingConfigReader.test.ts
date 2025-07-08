@@ -8,8 +8,8 @@ describe("GroupingConfigReader", () => {
 				"vertical",
 				{
 					items: [
-						{ labels: { position: "start" }, data: { field: { name: "field", format: "string" } } },
-						{ data: { field: { name: "field2", format: "string" } } }
+						{ labels: { position: "start" }, data: { field: { name: "field" } } },
+						{ data: { field: { name: "field2" } } }
 					]
 				}
 			);
@@ -22,7 +22,7 @@ describe("GroupingConfigReader", () => {
 			const reader = new GroupingConfigReader(
 				{ visibility: true, ticks: { flag: true }, position: "end" },
 				"vertical",
-				{ items: [{ labels: { position: "end" }, data: { field: { name: "field", format: "string" } } }] }
+				{ items: [{ labels: { position: "end" }, data: { field: { name: "field" } } }] }
 			);
 
 			const slices = reader.getSlicesByOrients();
@@ -35,9 +35,9 @@ describe("GroupingConfigReader", () => {
 				"horizontal",
 				{
 					items: [
-						{ labels: { position: "start" }, data: { field: { name: "field", format: "string" } } },
-						{ data: { field: { name: "field2", format: "string" } } },
-						{ labels: { position: "end" }, data: { field: { name: "field3", format: "string" } } }
+						{ labels: { position: "start" }, data: { field: { name: "field" } } },
+						{ data: { field: { name: "field2" } } },
+						{ labels: { position: "end" }, data: { field: { name: "field3" } } }
 					]
 				}
 			);
@@ -75,7 +75,7 @@ describe("GroupingConfigReader", () => {
 				{ visibility: true, ticks: { flag: true }, position: "end" },
 				"horizontal",
 				{
-					items: [{ data: { field: { name: "field", format: "string" } } }]
+					items: [{ data: { field: { name: "field" } } }]
 				}
 			);
 			const values = reader.getPreparedOptions([{ field: "value1" }, { field: "value2" }, { field: "value1" }]);
@@ -84,7 +84,7 @@ describe("GroupingConfigReader", () => {
 					domain: ["value1", "value2"],
 					orient: "right",
 					sideIndex: 0,
-					field: { name: "field", format: "string" },
+					field: { name: "field" },
 					textAnchor: "end",
 					dominantBaseline: "middle"
 				}
@@ -97,9 +97,9 @@ describe("GroupingConfigReader", () => {
 				"vertical",
 				{
 					items: [
-						{ data: { field: { name: "field", format: "string" } } },
-						{ data: { field: { name: "field3", format: "string" } }, labels: { position: "end" } },
-						{ data: { field: { name: "field2", format: "string" } }, labels: { position: "start" } }
+						{ data: { field: { name: "field" } } },
+						{ data: { field: { name: "field3" } }, labels: { position: "end" } },
+						{ data: { field: { name: "field2" } }, labels: { position: "start" } }
 					]
 				}
 			);
@@ -113,7 +113,7 @@ describe("GroupingConfigReader", () => {
 					domain: ["value1", "value2"],
 					orient: "bottom",
 					sideIndex: 0,
-					field: { name: "field", format: "string" },
+					field: { name: "field" },
 					textAnchor: "middle",
 					dominantBaseline: "auto"
 				},
@@ -121,7 +121,7 @@ describe("GroupingConfigReader", () => {
 					domain: ["value2"],
 					orient: "bottom",
 					sideIndex: 1,
-					field: { name: "field3", format: "string" },
+					field: { name: "field3" },
 					textAnchor: "middle",
 					dominantBaseline: "auto"
 				},
@@ -129,7 +129,7 @@ describe("GroupingConfigReader", () => {
 					domain: ["value3", "value2"],
 					orient: "top",
 					sideIndex: 0,
-					field: { name: "field2", format: "string" },
+					field: { name: "field2" },
 					textAnchor: "middle",
 					dominantBaseline: "hanging"
 				}
