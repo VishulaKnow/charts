@@ -18,7 +18,7 @@ export class LegendModel {
 				},
 				bottom: {
 					size: 0,
-					margin: { top: 2, bottom: 0, left: 0, right: 0 },
+					margin: { top: 7, bottom: 0, left: 0, right: 0 },
 					pad: 0
 				},
 				right: {
