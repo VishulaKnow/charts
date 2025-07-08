@@ -249,7 +249,7 @@ export class AxisModel {
 		const longestLabelLength = labelTexts.length
 			? Math.max(...labelTexts.map((t) => ModelHelper.getStringScore(t?.toString() ?? "")))
 			: 0;
-		const longestLabelWidth = ONE_UPPER_SYMBOL_WIDTH_PX * longestLabelLength;
+		const longestLabelWidth = Math.round(ONE_UPPER_SYMBOL_WIDTH_PX * longestLabelLength);
 		return {
 			height: LABEL_ELEMENT_HEIGHT_PX,
 			width: longestLabelWidth > labelMaxWidth ? labelMaxWidth : longestLabelWidth
