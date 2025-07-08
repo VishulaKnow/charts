@@ -5,23 +5,23 @@ import { ModelInstance } from "../modelInstance/modelInstance";
 import { CanvasModel } from "../modelInstance/canvasModel/canvasModel";
 import { TwoDimMarginModel } from "./twoDim/twoDimMarginModel";
 import { TwoDimConfigReader } from "../modelInstance/configReader/twoDimConfigReader.ts/twoDimConfigReader";
+import { BaseConfigReader, getConfigReader } from "../modelInstance/configReader/baseConfigReader";
 
 export class MarginModel {
-	//TODO: ensure
 	private twoDimModel: TwoDimMarginModel | undefined;
+	private readonly configReader: BaseConfigReader;
 
-	constructor(private designerConfig: DesignerConfig, private config: MdtChartsConfig) {}
+	constructor(private readonly designerConfig: DesignerConfig, private readonly config: MdtChartsConfig) {
+		this.configReader = getConfigReader(this.config, this.designerConfig);
+	}
 
 	public initMargin(otherComponents: OtherCommonComponents, modelInstance: ModelInstance): void {
 		const canvasModel = modelInstance.canvasModel;
-		canvasModel.initMargin({ ...this.designerConfig.canvas.chartBlockMargin });
+		canvasModel.initMargin(this.configReader.getChartBlockMargin());
 		this.recalcMarginByTitle(canvasModel);
 
 		if (this.config.options.type === "2d") {
-			this.twoDimModel = new TwoDimMarginModel(
-				this.designerConfig,
-				new TwoDimConfigReader(this.config, this.designerConfig)
-			);
+			this.twoDimModel = new TwoDimMarginModel(this.designerConfig, this.configReader as TwoDimConfigReader);
 			this.twoDimModel.recalcMargin(otherComponents, modelInstance);
 		}
 	}

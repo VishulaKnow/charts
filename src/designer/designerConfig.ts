@@ -17,7 +17,7 @@ export interface DesignerConfig {
 // ========================================================================================= Canvas
 interface Canvas {
 	axisLabel: AxisLabelCanvas;
-	chartBlockMargin: BlockMargin;
+	chartBlockMargin?: BlockMargin;
 	legendBlock: LegendBlockCanvas;
 	chartOptions: ChartOptionsCanvas;
 	markers?: MarkerCanvas;

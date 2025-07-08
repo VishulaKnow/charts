@@ -12,7 +12,7 @@ import {
 	ValueLabelsFormatter
 } from "../../../../config/config";
 import { DesignerConfig } from "../../../../designer/designerConfig";
-import { ValueLabelsStyleModel } from "../../../model";
+import { BlockMargin, ValueLabelsStyleModel } from "../../../model";
 import { BaseConfigReader } from "../baseConfigReader";
 import { GroupingConfigReader } from "./groupingConfigReader/groupingConfigReader";
 
@@ -28,6 +28,19 @@ export class TwoDimConfigReader implements BaseConfigReader {
 			this.options.orientation,
 			this.options.grouping
 		);
+	}
+
+	getChartBlockMargin(): BlockMargin {
+		const defaultBlockMargin: BlockMargin = {
+			top: 5,
+			bottom: 0,
+			left: 0,
+			right: 0
+		};
+		return {
+			...defaultBlockMargin,
+			...this.designerConfig.canvas.chartBlockMargin
+		};
 	}
 
 	getValueFields(): MdtChartsField[] {

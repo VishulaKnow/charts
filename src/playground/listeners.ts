@@ -40,7 +40,7 @@ class ListenersHelper {
 		return (document.querySelector(selector) as HTMLInputElement)?.value;
 	}
 	static setInputValue(selector: string, value: any): void {
-		(document.querySelector(selector) as HTMLInputElement).value = value.toString();
+		(document.querySelector(selector) as HTMLInputElement).value = value?.toString() ?? "";
 	}
 	static setCheckboxValue(selector: string, value: boolean): void {
 		(document.querySelector(selector) as HTMLInputElement).checked = value;
@@ -278,23 +278,31 @@ class Listeners {
 			thisClass.updateFull();
 		});
 		document.querySelector("#chart-block-margin-top").addEventListener("input", function () {
-			thisClass.designerConfig.canvas.chartBlockMargin.top =
-				parseFloat(ListenersHelper.getInputValue("#chart-block-margin-top")) || 0;
+			thisClass.designerConfig.canvas.chartBlockMargin = {
+				...thisClass.designerConfig.canvas.chartBlockMargin,
+				top: parseFloat(ListenersHelper.getInputValue("#chart-block-margin-top")) || 0
+			};
 			thisClass.updateFull();
 		});
 		document.querySelector("#chart-block-margin-bottom").addEventListener("input", function () {
-			thisClass.designerConfig.canvas.chartBlockMargin.bottom =
-				parseFloat(ListenersHelper.getInputValue("#chart-block-margin-bottom")) || 0;
+			thisClass.designerConfig.canvas.chartBlockMargin = {
+				...thisClass.designerConfig.canvas.chartBlockMargin,
+				bottom: parseFloat(ListenersHelper.getInputValue("#chart-block-margin-bottom")) || 0
+			};
 			thisClass.updateFull();
 		});
 		document.querySelector("#chart-block-margin-left").addEventListener("input", function () {
-			thisClass.designerConfig.canvas.chartBlockMargin.left =
-				parseFloat(ListenersHelper.getInputValue("#chart-block-margin-left")) || 0;
+			thisClass.designerConfig.canvas.chartBlockMargin = {
+				...thisClass.designerConfig.canvas.chartBlockMargin,
+				left: parseFloat(ListenersHelper.getInputValue("#chart-block-margin-left")) || 0
+			};
 			thisClass.updateFull();
 		});
 		document.querySelector("#chart-block-margin-right").addEventListener("input", function () {
-			thisClass.designerConfig.canvas.chartBlockMargin.right =
-				parseFloat(ListenersHelper.getInputValue("#chart-block-margin-right")) || 0;
+			thisClass.designerConfig.canvas.chartBlockMargin = {
+				...thisClass.designerConfig.canvas.chartBlockMargin,
+				right: parseFloat(ListenersHelper.getInputValue("#chart-block-margin-right")) || 0
+			};
 			thisClass.updateFull();
 		});
 
@@ -543,10 +551,10 @@ class Listeners {
 			config.options.data.dataSource.includes("large") ? "large" : "normal"
 		);
 		ListenersHelper.setInputValue("#axis-label-width", designerConfig.canvas.axisLabel.maxSize.main);
-		ListenersHelper.setInputValue("#chart-block-margin-top", designerConfig.canvas.chartBlockMargin.top);
-		ListenersHelper.setInputValue("#chart-block-margin-bottom", designerConfig.canvas.chartBlockMargin.bottom);
-		ListenersHelper.setInputValue("#chart-block-margin-left", designerConfig.canvas.chartBlockMargin.left);
-		ListenersHelper.setInputValue("#chart-block-margin-right", designerConfig.canvas.chartBlockMargin.right);
+		ListenersHelper.setInputValue("#chart-block-margin-top", designerConfig.canvas.chartBlockMargin?.top);
+		ListenersHelper.setInputValue("#chart-block-margin-bottom", designerConfig.canvas.chartBlockMargin?.bottom);
+		ListenersHelper.setInputValue("#chart-block-margin-left", designerConfig.canvas.chartBlockMargin?.left);
+		ListenersHelper.setInputValue("#chart-block-margin-right", designerConfig.canvas.chartBlockMargin?.right);
 		ListenersHelper.setInputValue(
 			"#min-bar-group-distance",
 			designerConfig.canvas.chartOptions.bar.groupMinDistance

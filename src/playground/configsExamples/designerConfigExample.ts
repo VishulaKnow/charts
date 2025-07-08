@@ -7,12 +7,12 @@ const designerConfig: DesignerConfig = {
 				main: 80
 			}
 		},
-		chartBlockMargin: {
-			top: 5,
-			bottom: 5,
-			left: 5,
-			right: 6
-		},
+		// chartBlockMargin: {
+		// 	top: 20,
+		// 	bottom: 20,
+		// 	left: 20,
+		// 	right: 200
+		// },
 		legendBlock: {
 			maxWidth: 200,
 			static: {
