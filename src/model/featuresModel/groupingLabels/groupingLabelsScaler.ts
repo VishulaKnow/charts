@@ -5,15 +5,33 @@ import { GroupingLabelKey, RangeModel } from "../../model";
 interface GroupingLabelsCoordinateScalerOptions {
 	dataRows: MdtChartsDataRow[];
 	field: MdtChartsBaseField;
-	keyAxisOuterPadding: number;
-	keyAxisInnerPadding: number;
+	keyScaleInfo: KeyScaleInfoForGroupingLabelsScaler;
 	range: RangeModel;
 }
+
+export type KeyScaleInfoForGroupingLabelsScaler =
+	| {
+			type: "band";
+			keyAxisOuterPadding: number;
+			keyAxisInnerPadding: number;
+	  }
+	| { type: "point" };
 
 export class GroupingLabelsCoordinateScaler {
 	private readonly scaleFn: (key: GroupingLabelKey) => number;
 
 	constructor(private readonly options: GroupingLabelsCoordinateScalerOptions) {
+		let keyAxisInnerPadding = 0;
+		let keyAxisOuterPadding = 0;
+		if (this.options.keyScaleInfo.type === "band") {
+			keyAxisInnerPadding = this.options.keyScaleInfo.keyAxisInnerPadding;
+			keyAxisOuterPadding = this.options.keyScaleInfo.keyAxisOuterPadding;
+		} else {
+			keyAxisInnerPadding =
+				(this.options.range.end - this.options.range.start) / (this.options.dataRows.length - 1);
+			keyAxisOuterPadding = 0;
+		}
+
 		const domainWithRowsCount: Map<GroupingLabelKey, number> = new Map();
 
 		this.options.dataRows.forEach((row) => {
@@ -26,8 +44,8 @@ export class GroupingLabelsCoordinateScaler {
 
 		const rangeOfKeyAxis =
 			Math.abs(this.options.range.end - this.options.range.start) -
-			this.options.keyAxisOuterPadding * 2 -
-			this.options.keyAxisInnerPadding * (this.options.dataRows.length - 1);
+			keyAxisOuterPadding * 2 -
+			keyAxisInnerPadding * (this.options.dataRows.length - 1);
 		const totalShares = Array.from(domainWithRowsCount.values()).reduce((acc, curr) => acc + curr, 0);
 		const oneShareSize = rangeOfKeyAxis / totalShares;
 
@@ -38,12 +56,12 @@ export class GroupingLabelsCoordinateScaler {
 		for (let rowIndex = 0; rowIndex < rowsCounts.length; rowIndex++) {
 			const rowsAmount = rowsCounts[rowIndex];
 
-			let previousShift = previousTotalShares * (oneShareSize + this.options.keyAxisInnerPadding);
+			let previousShift = previousTotalShares * (oneShareSize + keyAxisInnerPadding);
 
 			const centerOfDomainItem =
 				previousShift +
-				(rowsAmount * oneShareSize + (rowsAmount - 1) * this.options.keyAxisInnerPadding) / 2 +
-				this.options.keyAxisOuterPadding;
+				(rowsAmount * oneShareSize + (rowsAmount - 1) * keyAxisInnerPadding) / 2 +
+				keyAxisOuterPadding;
 			coordinates.push(centerOfDomainItem);
 			previousTotalShares += rowsAmount;
 		}

@@ -43,7 +43,10 @@ import { createRecordOverflowModel } from "../featuresModel/recordOverflowModel/
 import { TwoDimTooltipContentGenerator } from "../featuresModel/tooltipModel/tooltipContentModel";
 import { TwoDimInitialRowsProvider } from "../featuresModel/tooltipModel/contentByNotations/twoDimInitialRowsProvider";
 import { GroupingLabelsCoordinateHandler } from "../featuresModel/groupingLabels/groupingLabelsCoordinateHandlers";
-import { GroupingLabelsCoordinateScaler } from "../featuresModel/groupingLabels/groupingLabelsScaler";
+import {
+	GroupingLabelsCoordinateScaler,
+	KeyScaleInfoForGroupingLabelsScaler
+} from "../featuresModel/groupingLabels/groupingLabelsScaler";
 
 export class TwoDimensionalModel {
 	public static getOptions(
@@ -106,11 +109,20 @@ export class TwoDimensionalModel {
 				items: configReader.grouping
 					.getPreparedOptions(modelInstance.dataModel.repository.getScopedRows())
 					.map<TwoDimGroupingItemModel>((prepared) => {
+						let keyScaleInfo: KeyScaleInfoForGroupingLabelsScaler;
+						if (keyScale.type === "band") {
+							keyScaleInfo = {
+								type: keyScale.type,
+								keyAxisOuterPadding: keyScale.sizes.paddingOuter,
+								keyAxisInnerPadding: keyScale.sizes.paddingInner
+							};
+						} else {
+							keyScaleInfo = { type: "point" };
+						}
 						const scaler = new GroupingLabelsCoordinateScaler({
 							dataRows: modelInstance.dataModel.repository.getScopedRows(),
 							field: prepared.field,
-							keyAxisOuterPadding: keyScale.type === "band" ? keyScale.sizes.paddingOuter : 0,
-							keyAxisInnerPadding: keyScale.type === "band" ? keyScale.sizes.paddingInner : 0,
+							keyScaleInfo,
 							range: keyScale.range
 						});
 						const coordinateHandler = new GroupingLabelsCoordinateHandler(canvasModel, {
