@@ -205,8 +205,6 @@ export class ChartValueLabels {
 		animate: boolean = false,
 		onEndAnimation?: () => void
 	) {
-		const animationName = "labels-updating";
-
 		let selection:
 			| Selection<SVGTextElement, MdtChartsDataRow | Segment, BaseType, any>
 			| Transition<SVGTextElement, MdtChartsDataRow | Segment, BaseType, any> = valueLabels
@@ -232,6 +230,7 @@ export class ChartValueLabels {
 			return !this.options.showLabel({ row: dataRowAccessor(d), valueFieldName });
 		});
 
+		const animationName = "labels-updating";
 		if (animate) {
 			selection = selection
 				.interrupt(animationName)

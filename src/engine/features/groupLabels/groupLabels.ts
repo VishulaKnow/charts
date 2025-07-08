@@ -1,5 +1,8 @@
-import { TwoDimGroupingModel } from "../../../model/model";
+import { Transition } from "d3-transition";
+import { GroupingLabelKey, TwoDimGroupingItemModel, TwoDimGroupingModel } from "../../../model/model";
 import { Block } from "../../block/block";
+import { Pipeline } from "../../helpers/pipeline/Pipeline";
+import { BaseType, Selection } from "d3-selection";
 
 interface GroupAxisLabelsOptions {
 	elementAccessors: {
@@ -8,27 +11,81 @@ interface GroupAxisLabelsOptions {
 }
 
 export class GroupAxisLabels {
-	constructor(private readonly options: GroupAxisLabelsOptions) {}
+	private readonly renderPipeline = new Pipeline<
+		Selection<SVGTextElement, GroupingLabelKey, SVGGElement, unknown>,
+		{ item: TwoDimGroupingItemModel }
+	>();
+
+	private groupsForLabels: Selection<SVGGElement, unknown, BaseType, unknown>[] = [];
+
+	constructor(private readonly options: GroupAxisLabelsOptions) {
+		this.renderPipeline.push((groupLabels, { item }) => {
+			return this.setAttrs(groupLabels.classed("group-label data-label", true), item);
+		});
+	}
 
 	render(model: TwoDimGroupingModel) {
 		if (!model.enabled) return;
 
 		model.items.forEach((item, index) => {
-			const block = this.options.elementAccessors.getBlock();
-			const group = block.getSvg().append("g").attr("class", `group-labels-${index}`);
+			const group = this.options.elementAccessors
+				.getBlock()
+				.getSvg()
+				.append("g")
+				.attr(`data-group-labels-index`, index);
 
-			group
+			this.groupsForLabels.push(group);
+
+			const labels = group
 				.selectAll("text")
 				.data(item.domain)
 				.enter()
 				.append("text")
-				.attr("class", "group-label")
-				.text((d) => d)
-				.attr("x", (d) => item.coordinate.handleX(d))
-				.attr("y", (d) => item.coordinate.handleY(d))
-				.attr("text-anchor", item.textAnchor)
-				.attr("dominant-baseline", item.dominantBaseline)
-				.classed("data-label", true);
+				.text((d) => d);
+			this.renderPipeline.execute(labels, { item });
 		});
+	}
+
+	update(model: TwoDimGroupingModel) {
+		if (!model.enabled) return;
+
+		model.items.forEach((item, index) => {
+			const group = this.groupsForLabels[index];
+			if (!group) return;
+
+			const existedLabels = group
+				.selectAll<SVGTextElement, GroupingLabelKey>("text")
+				.data(item.domain)
+				.text((d) => d);
+
+			existedLabels.exit().remove();
+
+			const newLabels = existedLabels
+				.enter()
+				.append("text")
+				.text((d) => d);
+			this.renderPipeline.execute(newLabels, { item });
+
+			const animationName = "group-labels-updating";
+			this.setAttrs(
+				existedLabels
+					.interrupt(animationName)
+					.transition(animationName)
+					.duration(this.options.elementAccessors.getBlock().transitionManager.durations.chartUpdate),
+				item
+			);
+		});
+	}
+
+	private setAttrs<
+		S extends
+			| Selection<SVGTextElement, GroupingLabelKey, SVGGElement, unknown>
+			| Transition<SVGTextElement, GroupingLabelKey, SVGGElement, unknown>
+	>(groupLabels: S, item: TwoDimGroupingItemModel): S {
+		return groupLabels
+			.attr("x", (d) => item.coordinate.handleX(d))
+			.attr("y", (d) => item.coordinate.handleY(d))
+			.attr("text-anchor", item.textAnchor)
+			.attr("dominant-baseline", item.dominantBaseline) as S;
 	}
 }

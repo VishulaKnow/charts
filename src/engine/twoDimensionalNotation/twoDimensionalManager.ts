@@ -171,6 +171,8 @@ export class TwoDimensionalManager implements ChartContentManager {
 			scales
 		);
 
+		this.groupLabels.update(options.grouping);
+
 		const promises = this.updateCharts(
 			block,
 			options.charts,
