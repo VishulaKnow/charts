@@ -244,10 +244,10 @@ export class AxisModel {
 		);
 	}
 
-	public static getLabelSize(labelMaxWidth: number, labelTexts: string[]): LabelSize {
+	public static getLabelSize(labelMaxWidth: number, labelTexts: (string | number)[]): LabelSize {
 		const ONE_UPPER_SYMBOL_WIDTH_PX = 8;
 		const longestLabelLength = labelTexts.length
-			? Math.max(...labelTexts.map((t) => ModelHelper.getStringScore(t)))
+			? Math.max(...labelTexts.map((t) => ModelHelper.getStringScore(t?.toString() ?? "")))
 			: 0;
 		const longestLabelWidth = ONE_UPPER_SYMBOL_WIDTH_PX * longestLabelLength;
 		return {
