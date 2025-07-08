@@ -1,5 +1,5 @@
-import { Orient } from "../../model";
-import { CanvasModel } from "../../modelInstance/canvasModel/canvasModel";
+import { Orient } from "../../../model";
+import { CanvasModel } from "../../../modelInstance/canvasModel/canvasModel";
 
 interface GroupingLabelsCoordinateHandlerOptions {
 	orient: Orient;

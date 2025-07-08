@@ -42,11 +42,11 @@ import { TitleConfigReader } from "../modelInstance/titleConfigReader";
 import { createRecordOverflowModel } from "../featuresModel/recordOverflowModel/recordOverflowModel";
 import { TwoDimTooltipContentGenerator } from "../featuresModel/tooltipModel/tooltipContentModel";
 import { TwoDimInitialRowsProvider } from "../featuresModel/tooltipModel/contentByNotations/twoDimInitialRowsProvider";
-import { GroupingLabelsCoordinateHandler } from "../featuresModel/groupingLabels/groupingLabelsCoordinateHandlers";
+import { GroupingLabelsCoordinateHandler } from "../featuresModel/grouping/groupingLabels/groupingLabelsCoordinateHandlers";
 import {
 	GroupingLabelsCoordinateScaler,
 	KeyScaleInfoForGroupingLabelsScaler
-} from "../featuresModel/groupingLabels/groupingLabelsScaler";
+} from "../featuresModel/grouping/groupingLabels/groupingLabelsScaler";
 
 export class TwoDimensionalModel {
 	public static getOptions(

@@ -1,6 +1,6 @@
 import { scaleOrdinal } from "d3-scale";
-import { MdtChartsBaseField, MdtChartsDataRow } from "../../../config/config";
-import { GroupingLabelKey, RangeModel } from "../../model";
+import { MdtChartsBaseField, MdtChartsDataRow } from "../../../../config/config";
+import { GroupingLabelKey, RangeModel } from "../../../model";
 
 interface GroupingLabelsCoordinateScalerOptions {
 	dataRows: MdtChartsDataRow[];

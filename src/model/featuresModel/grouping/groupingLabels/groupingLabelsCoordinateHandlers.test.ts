@@ -1,4 +1,4 @@
-import { CanvasModel } from "../../modelInstance/canvasModel/canvasModel";
+import { CanvasModel } from "../../../modelInstance/canvasModel/canvasModel";
 import { GroupingLabelsCoordinateHandler } from "./groupingLabelsCoordinateHandlers";
 
 describe("GroupingLabelsCoordinateHandlers", () => {

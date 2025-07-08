@@ -85,4 +85,18 @@ describe("GroupingLabelsCoordinateScaler", () => {
 		expect(scaler.scaleForKey("brand2")).toBe(50);
 		expect(scaler.scaleForKey("brand3")).toBe(87.5);
 	});
+
+	it("should set coordinates correctly for edge points of point scale", () => {
+		const scaler = new GroupingLabelsCoordinateScaler({
+			dataRows: [{ brand: "brand1" }, { brand: "brand2" }, { brand: "brand2" }, { brand: "brand3" }],
+			field: { name: "brand" },
+			keyScaleInfo: {
+				type: "point"
+			},
+			range: { start: 0, end: 100 }
+		});
+		expect(scaler.scaleForKey("brand1")).toBe(0);
+		expect(scaler.scaleForKey("brand2")).toBe(50);
+		expect(scaler.scaleForKey("brand3")).toBe(100);
+	});
 });
