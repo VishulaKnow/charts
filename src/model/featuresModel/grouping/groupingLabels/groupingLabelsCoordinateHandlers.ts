@@ -1,5 +1,6 @@
 import { Orient } from "../../../model";
 import { CanvasModel } from "../../../modelInstance/canvasModel/canvasModel";
+import { GroupingItemSize } from "../../../modelInstance/configReader/twoDimConfigReader.ts/groupingConfigReader/groupingConfigReader";
 
 interface GroupingLabelsCoordinateHandlerOptions {
 	orient: Orient;
@@ -8,28 +9,34 @@ interface GroupingLabelsCoordinateHandlerOptions {
 		titleTotalNeededSpace: number;
 		legendTotalNeededSpace: number;
 	};
+	groupingItemSizes: GroupingItemSize[];
 }
 
 export class GroupingLabelsCoordinateHandler {
 	private readonly staticCoordinate: number;
-	private readonly verticalLabelSize = 20;
 
 	constructor(
 		private readonly canvasModel: CanvasModel,
 		private readonly options: GroupingLabelsCoordinateHandlerOptions
 	) {
+		const slicesSizesByCurrentOrient = this.options.groupingItemSizes.filter(
+			(item) => item.orient === this.options.orient
+		);
+		const prevSlicesSizes = slicesSizesByCurrentOrient
+			.slice(0, this.options.sideIndex)
+			.reduce((acc, item) => acc + item.size, 0);
+
 		if (this.options.orient === "top")
 			this.staticCoordinate =
-				options.otherComponentSizes.titleTotalNeededSpace + this.verticalLabelSize * this.options.sideIndex;
+				options.otherComponentSizes.titleTotalNeededSpace + prevSlicesSizes * this.options.sideIndex;
 		if (this.options.orient === "bottom")
 			this.staticCoordinate =
 				this.canvasModel.getBlockSize().height -
 				options.otherComponentSizes.legendTotalNeededSpace -
-				this.verticalLabelSize * this.options.sideIndex;
-		//TODO: padding should be got from other components
-		if (this.options.orient === "left") this.staticCoordinate = 20 * this.options.sideIndex;
+				prevSlicesSizes * this.options.sideIndex;
+		if (this.options.orient === "left") this.staticCoordinate = prevSlicesSizes * this.options.sideIndex;
 		if (this.options.orient === "right")
-			this.staticCoordinate = this.canvasModel.getBlockSize().width - 20 * this.options.sideIndex;
+			this.staticCoordinate = this.canvasModel.getBlockSize().width - prevSlicesSizes * this.options.sideIndex;
 	}
 
 	handleX(scaledCoordinate: number) {

@@ -106,6 +106,7 @@ export class TwoDimensionalModel {
 			},
 			grouping: {
 				enabled: configReader.grouping.isEnabled(),
+				edgeLines: [],
 				items: configReader.grouping
 					.getPreparedOptions(modelInstance.dataModel.repository.getScopedRows())
 					.map<TwoDimGroupingItemModel>((prepared) => {
@@ -130,7 +131,10 @@ export class TwoDimensionalModel {
 							otherComponentSizes: {
 								titleTotalNeededSpace: canvasModel.titleCanvas.getAllNeededSpace(),
 								legendTotalNeededSpace: canvasModel.legendCanvas.getAllNeededSpace()
-							}
+							},
+							groupingItemSizes: configReader.grouping.getSlicesSizesByOrients(
+								modelInstance.dataModel.repository.getScopedRows()
+							)
 						});
 
 						return {
@@ -142,7 +146,8 @@ export class TwoDimensionalModel {
 									handleX: (groupKey) => coordinateHandler.handleX(scaler.scaleForKey(groupKey)),
 									handleY: (groupKey) => coordinateHandler.handleY(scaler.scaleForKey(groupKey))
 								}
-							}
+							},
+							splitLines: []
 						};
 					})
 			},

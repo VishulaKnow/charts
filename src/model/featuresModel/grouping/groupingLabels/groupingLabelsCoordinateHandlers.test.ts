@@ -14,7 +14,8 @@ describe("GroupingLabelsCoordinateHandlers", () => {
 				otherComponentSizes: {
 					titleTotalNeededSpace: 20,
 					legendTotalNeededSpace: 30
-				}
+				},
+				groupingItemSizes: [{ orient: "top", size: 20 }]
 			});
 			const coordinate = coordinateHandler.handleX(100);
 			expect(coordinate).toEqual(110);
@@ -27,10 +28,47 @@ describe("GroupingLabelsCoordinateHandlers", () => {
 				otherComponentSizes: {
 					titleTotalNeededSpace: 20,
 					legendTotalNeededSpace: 30
-				}
+				},
+				groupingItemSizes: [{ orient: "bottom", size: 20 }]
 			});
 			const coordinate = coordinateHandler.handleX(100);
 			expect(coordinate).toEqual(110);
+		});
+
+		it("should handle x coordinate for multiple slices for left orient", () => {
+			const coordinateHandler = new GroupingLabelsCoordinateHandler(canvasModel, {
+				orient: "left",
+				sideIndex: 1,
+				otherComponentSizes: {
+					titleTotalNeededSpace: 20,
+					legendTotalNeededSpace: 30
+				},
+				groupingItemSizes: [
+					{ orient: "left", size: 15 },
+					{ orient: "right", size: 10 },
+					{ orient: "left", size: 20 }
+				]
+			});
+			const coordinate = coordinateHandler.handleX(100);
+			expect(coordinate).toEqual(15);
+		});
+
+		it("should handle x coordinate for multiple slices for bottom orient", () => {
+			const coordinateHandler = new GroupingLabelsCoordinateHandler(canvasModel, {
+				orient: "right",
+				sideIndex: 1,
+				otherComponentSizes: {
+					titleTotalNeededSpace: 20,
+					legendTotalNeededSpace: 30
+				},
+				groupingItemSizes: [
+					{ orient: "right", size: 15 },
+					{ orient: "left", size: 10 },
+					{ orient: "right", size: 20 }
+				]
+			});
+			const coordinate = coordinateHandler.handleX(100);
+			expect(coordinate).toEqual(785);
 		});
 	});
 
@@ -42,7 +80,8 @@ describe("GroupingLabelsCoordinateHandlers", () => {
 				otherComponentSizes: {
 					titleTotalNeededSpace: 20,
 					legendTotalNeededSpace: 30
-				}
+				},
+				groupingItemSizes: [{ orient: "top", size: 20 }]
 			});
 			const coordinate = coordinateHandler.handleY(100);
 			expect(coordinate).toEqual(20);
@@ -55,10 +94,30 @@ describe("GroupingLabelsCoordinateHandlers", () => {
 				otherComponentSizes: {
 					titleTotalNeededSpace: 20,
 					legendTotalNeededSpace: 30
-				}
+				},
+				groupingItemSizes: [{ orient: "bottom", size: 20 }]
 			});
 			const coordinate = coordinateHandler.handleY(100);
 			expect(coordinate).toEqual(370);
+		});
+
+		it("should handle y coordinate for multiple slices", () => {
+			const coordinateHandler = new GroupingLabelsCoordinateHandler(canvasModel, {
+				orient: "bottom",
+				sideIndex: 1,
+				otherComponentSizes: {
+					titleTotalNeededSpace: 20,
+					legendTotalNeededSpace: 30
+				},
+				groupingItemSizes: [
+					{ orient: "top", size: 10 },
+					{ orient: "bottom", size: 20 },
+					{ orient: "top", size: 10 },
+					{ orient: "bottom", size: 20 }
+				]
+			});
+			const coordinate = coordinateHandler.handleY(100);
+			expect(coordinate).toEqual(350);
 		});
 	});
 });

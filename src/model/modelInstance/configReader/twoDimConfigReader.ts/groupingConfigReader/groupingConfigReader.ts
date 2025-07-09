@@ -11,6 +11,11 @@ import {
 import { AxisModel } from "../../../../featuresModel/axis/axisModel";
 import { DominantBaseline, Orient, TextAnchor } from "../../../../model";
 
+export interface GroupingItemSize {
+	orient: Orient;
+	size: number;
+}
+
 export class GroupingConfigReader {
 	private readonly maxLabelSize = 60;
 
@@ -25,7 +30,7 @@ export class GroupingConfigReader {
 	}
 
 	getSlicesSizesByOrients(dataRows: MdtChartsDataRow[]) {
-		const slices: { orient: Orient; size: number }[] = [];
+		const slices: GroupingItemSize[] = [];
 
 		this.groupingOptions?.items.forEach((item) => {
 			const labelsTexts = this.getLabelValuesForItem(item, dataRows);

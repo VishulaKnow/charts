@@ -7,7 +7,8 @@
 			"price2": 120000,
 			"count": 10000,
 			"color": "red",
-			"year": 2024
+			"year": 2004,
+			"decade": "2000s"
 		},
 		{
 			"$id": 2,
@@ -16,7 +17,8 @@
 			"price2": 20000,
 			"count": 10000,
 			"color": "green",
-			"year": 2024
+			"year": 2004,
+			"decade": "2000s"
 		},
 		{
 			"$id": 3,
@@ -25,7 +27,8 @@
 			"price2": 17000,
 			"count": 10000,
 			"color": "blue",
-			"year": 2024
+			"year": 2004,
+			"decade": "2000s"
 		},
 		{
 			"$id": 4,
@@ -34,7 +37,8 @@
 			"price2": 20000,
 			"count": 500,
 			"color": "yellow",
-			"year": 2025
+			"year": 2005,
+			"decade": "2000s"
 		},
 		{
 			"$id": 5,
@@ -43,7 +47,8 @@
 			"price2": 135000,
 			"count": 6000,
 			"color": "cyan",
-			"year": 2025
+			"year": 2005,
+			"decade": "2000s"
 		},
 		{
 			"$id": 6,
@@ -52,7 +57,8 @@
 			"price2": 110000,
 			"count": 4000,
 			"color": "red",
-			"year": 2025
+			"year": 2005,
+			"decade": "2000s"
 		},
 		{
 			"$id": 7,
@@ -61,7 +67,8 @@
 			"price2": 110000,
 			"count": 11000,
 			"color": "orange",
-			"year": 2025
+			"year": 2005,
+			"decade": "2000s"
 		},
 		{
 			"$id": 8,
@@ -70,7 +77,8 @@
 			"price2": 22000,
 			"count": 2000,
 			"color": "brown",
-			"year": 2026
+			"year": 2026,
+			"decade": "2020s"
 		},
 		{
 			"$id": 9,
@@ -79,7 +87,8 @@
 			"price2": 12000,
 			"count": 15000,
 			"color": "pink",
-			"year": 2026
+			"year": 2026,
+			"decade": "2020s"
 		},
 		{
 			"$id": 9,
@@ -88,7 +97,8 @@
 			"price2": 22000,
 			"count": 15000,
 			"color": "pink",
-			"year": 2027
+			"year": 2027,
+			"decade": "2020s"
 		}
 	],
 	"dataSet-months": [
