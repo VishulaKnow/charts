@@ -1,7 +1,7 @@
 import { GroupingConfigReader } from "./groupingConfigReader";
 
 describe("GroupingConfigReader", () => {
-	describe("getSlicesByOrients", () => {
+	describe("getSlicesSizesByOrients", () => {
 		it("should return slices for axis position side if position is start or empty", () => {
 			const reader = new GroupingConfigReader(
 				{ visibility: true, ticks: { flag: true }, position: "start" },
@@ -14,8 +14,11 @@ describe("GroupingConfigReader", () => {
 				}
 			);
 
-			const slices = reader.getSlicesByOrients();
-			expect(slices).toEqual([{ orient: "top", amount: 2 }]);
+			const slices = reader.getSlicesSizesByOrients([{ field: "value1" }, { field: "value2" }]);
+			expect(slices).toEqual([
+				{ orient: "top", size: 14 },
+				{ orient: "top", size: 14 }
+			]);
 		});
 
 		it("should return slices for axis position side if position is end", () => {
@@ -25,8 +28,8 @@ describe("GroupingConfigReader", () => {
 				{ items: [{ labels: { position: "end" }, data: { field: { name: "field" } } }] }
 			);
 
-			const slices = reader.getSlicesByOrients();
-			expect(slices).toEqual([{ orient: "bottom", amount: 1 }]);
+			const slices = reader.getSlicesSizesByOrients([{ field: "value1" }]);
+			expect(slices).toEqual([{ orient: "bottom", size: 14 }]);
 		});
 
 		it("should return slices for axis position side if position is start and orientation is horizontal", () => {
@@ -42,10 +45,11 @@ describe("GroupingConfigReader", () => {
 				}
 			);
 
-			const slices = reader.getSlicesByOrients();
+			const slices = reader.getSlicesSizesByOrients([{ field: "v1", field2: "value2", field3: "value3" }]);
 			expect(slices).toEqual([
-				{ orient: "left", amount: 2 },
-				{ orient: "right", amount: 1 }
+				{ orient: "left", size: 15 },
+				{ orient: "left", size: 47 },
+				{ orient: "right", size: 47 }
 			]);
 		});
 
@@ -55,7 +59,7 @@ describe("GroupingConfigReader", () => {
 				"horizontal"
 			);
 
-			const slices = reader.getSlicesByOrients();
+			const slices = reader.getSlicesSizesByOrients([{ field: "value1" }]);
 			expect(slices).toEqual([]);
 		});
 	});

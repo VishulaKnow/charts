@@ -396,10 +396,10 @@ export interface GroupingLabelCoordinate {
 export type GroupingLabelKey = string | number;
 
 export interface TwoDimGroupingItemModel {
-	labels: TwoDimGroupingItemLabelsModel;
+	labels: GroupingItemLabelsModel;
 }
 
-export interface TwoDimGroupingItemLabelsModel {
+export interface GroupingItemLabelsModel {
 	domain: GroupingLabelKey[];
 	textAnchor: TextAnchor;
 	dominantBaseline: DominantBaseline;

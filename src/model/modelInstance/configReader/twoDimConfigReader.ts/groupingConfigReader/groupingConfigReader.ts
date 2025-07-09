@@ -21,55 +21,7 @@ export class GroupingConfigReader {
 	) {}
 
 	isEnabled(): boolean {
-		return Boolean(this.groupingOptions) && this.groupingOptions!.items.length > 0;
-	}
-
-	getSlicesByOrients() {
-		const slices: { orient: Orient; amount: number }[] = [];
-
-		const slicesAmountFromKeyAxisSide =
-			this.groupingOptions?.items.filter(
-				(item) => this.getLabelPosition(item.labels?.position) === this.keyAxisOptions.position
-			).length ?? 0;
-		const slicesAmountOppositeToKeyAxisSide =
-			this.groupingOptions?.items.filter(
-				(item) => this.getLabelPosition(item.labels?.position) !== this.keyAxisOptions.position
-			).length ?? 0;
-
-		const pushIfAmountIsNotZero = (orient: Orient, amount: number) => {
-			if (amount > 0) {
-				slices.push({ orient, amount });
-			}
-		};
-
-		if (this.chartOrientation === "vertical") {
-			pushIfAmountIsNotZero(
-				"top",
-				this.keyAxisOptions.position === "start"
-					? slicesAmountFromKeyAxisSide
-					: slicesAmountOppositeToKeyAxisSide
-			);
-			pushIfAmountIsNotZero(
-				"bottom",
-				this.keyAxisOptions.position === "start"
-					? slicesAmountOppositeToKeyAxisSide
-					: slicesAmountFromKeyAxisSide
-			);
-		} else {
-			pushIfAmountIsNotZero(
-				"left",
-				this.keyAxisOptions.position === "start"
-					? slicesAmountFromKeyAxisSide
-					: slicesAmountOppositeToKeyAxisSide
-			);
-			pushIfAmountIsNotZero(
-				"right",
-				this.keyAxisOptions.position === "start"
-					? slicesAmountOppositeToKeyAxisSide
-					: slicesAmountFromKeyAxisSide
-			);
-		}
-		return slices;
+		return !!this.groupingOptions && this.groupingOptions.items.length > 0;
 	}
 
 	getSlicesSizesByOrients(dataRows: MdtChartsDataRow[]) {
