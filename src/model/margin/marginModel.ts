@@ -4,7 +4,7 @@ import { OtherCommonComponents } from "../model";
 import { ModelInstance } from "../modelInstance/modelInstance";
 import { CanvasModel } from "../modelInstance/canvasModel/canvasModel";
 import { TwoDimMarginModel } from "./twoDim/twoDimMarginModel";
-import { TwoDimConfigReader } from "../modelInstance/configReader/twoDimConfigReader.ts/twoDimConfigReader";
+import { TwoDimConfigReader } from "../modelInstance/configReader/twoDimConfigReader/twoDimConfigReader";
 import { BaseConfigReader, getConfigReader } from "../modelInstance/configReader/baseConfigReader";
 
 export class MarginModel {

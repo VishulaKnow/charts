@@ -1,15 +1,11 @@
 import { Orient } from "../../../model";
 import { CanvasModel } from "../../../modelInstance/canvasModel/canvasModel";
-import { GroupingItemSize } from "../../../modelInstance/configReader/twoDimConfigReader.ts/groupingConfigReader/groupingConfigReader";
+import { GroupingStaticCoordinateCalculator } from "./staticCoordinateCalculator";
 
 interface GroupingLabelsCoordinateHandlerOptions {
 	orient: Orient;
 	sideIndex: number;
-	otherComponentSizes: {
-		titleTotalNeededSpace: number;
-		legendTotalNeededSpace: number;
-	};
-	groupingItemSizes: GroupingItemSize[];
+	staticCoordinateCalculator: GroupingStaticCoordinateCalculator;
 }
 
 export class GroupingLabelsCoordinateHandler {
@@ -19,24 +15,10 @@ export class GroupingLabelsCoordinateHandler {
 		private readonly canvasModel: CanvasModel,
 		private readonly options: GroupingLabelsCoordinateHandlerOptions
 	) {
-		const slicesSizesByCurrentOrient = this.options.groupingItemSizes.filter(
-			(item) => item.orient === this.options.orient
+		this.staticCoordinate = this.options.staticCoordinateCalculator.calculate(
+			this.options.orient,
+			this.options.sideIndex
 		);
-		const prevSlicesSizes = slicesSizesByCurrentOrient
-			.slice(0, this.options.sideIndex)
-			.reduce((acc, item) => acc + item.size, 0);
-
-		if (this.options.orient === "top")
-			this.staticCoordinate =
-				options.otherComponentSizes.titleTotalNeededSpace + prevSlicesSizes * this.options.sideIndex;
-		if (this.options.orient === "bottom")
-			this.staticCoordinate =
-				this.canvasModel.getBlockSize().height -
-				options.otherComponentSizes.legendTotalNeededSpace -
-				prevSlicesSizes * this.options.sideIndex;
-		if (this.options.orient === "left") this.staticCoordinate = prevSlicesSizes * this.options.sideIndex;
-		if (this.options.orient === "right")
-			this.staticCoordinate = this.canvasModel.getBlockSize().width - prevSlicesSizes * this.options.sideIndex;
 	}
 
 	handleX(scaledCoordinate: number) {

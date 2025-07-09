@@ -1,5 +1,6 @@
 import { CanvasModel } from "../../../modelInstance/canvasModel/canvasModel";
 import { GroupingLabelsCoordinateHandler } from "./groupingLabelsCoordinateHandlers";
+import { GroupingStaticCoordinateCalculator } from "./staticCoordinateCalculator";
 
 describe("GroupingLabelsCoordinateHandlers", () => {
 	const canvasModel = new CanvasModel();
@@ -11,11 +12,13 @@ describe("GroupingLabelsCoordinateHandlers", () => {
 			const coordinateHandler = new GroupingLabelsCoordinateHandler(canvasModel, {
 				orient: "top",
 				sideIndex: 0,
-				otherComponentSizes: {
-					titleTotalNeededSpace: 20,
-					legendTotalNeededSpace: 30
-				},
-				groupingItemSizes: [{ orient: "top", size: 20 }]
+				staticCoordinateCalculator: new GroupingStaticCoordinateCalculator(canvasModel, {
+					otherComponentSizes: {
+						titleTotalNeededSpace: 20,
+						legendTotalNeededSpace: 30
+					},
+					groupingItemSizes: [{ orient: "top", size: 20 }]
+				})
 			});
 			const coordinate = coordinateHandler.handleX(100);
 			expect(coordinate).toEqual(110);
@@ -25,11 +28,13 @@ describe("GroupingLabelsCoordinateHandlers", () => {
 			const coordinateHandler = new GroupingLabelsCoordinateHandler(canvasModel, {
 				orient: "bottom",
 				sideIndex: 0,
-				otherComponentSizes: {
-					titleTotalNeededSpace: 20,
-					legendTotalNeededSpace: 30
-				},
-				groupingItemSizes: [{ orient: "bottom", size: 20 }]
+				staticCoordinateCalculator: new GroupingStaticCoordinateCalculator(canvasModel, {
+					otherComponentSizes: {
+						titleTotalNeededSpace: 20,
+						legendTotalNeededSpace: 30
+					},
+					groupingItemSizes: [{ orient: "bottom", size: 20 }]
+				})
 			});
 			const coordinate = coordinateHandler.handleX(100);
 			expect(coordinate).toEqual(110);
@@ -39,15 +44,17 @@ describe("GroupingLabelsCoordinateHandlers", () => {
 			const coordinateHandler = new GroupingLabelsCoordinateHandler(canvasModel, {
 				orient: "left",
 				sideIndex: 1,
-				otherComponentSizes: {
-					titleTotalNeededSpace: 20,
-					legendTotalNeededSpace: 30
-				},
-				groupingItemSizes: [
-					{ orient: "left", size: 15 },
-					{ orient: "right", size: 10 },
-					{ orient: "left", size: 20 }
-				]
+				staticCoordinateCalculator: new GroupingStaticCoordinateCalculator(canvasModel, {
+					otherComponentSizes: {
+						titleTotalNeededSpace: 20,
+						legendTotalNeededSpace: 30
+					},
+					groupingItemSizes: [
+						{ orient: "left", size: 15 },
+						{ orient: "right", size: 10 },
+						{ orient: "left", size: 20 }
+					]
+				})
 			});
 			const coordinate = coordinateHandler.handleX(100);
 			expect(coordinate).toEqual(15);
@@ -57,15 +64,17 @@ describe("GroupingLabelsCoordinateHandlers", () => {
 			const coordinateHandler = new GroupingLabelsCoordinateHandler(canvasModel, {
 				orient: "right",
 				sideIndex: 1,
-				otherComponentSizes: {
-					titleTotalNeededSpace: 20,
-					legendTotalNeededSpace: 30
-				},
-				groupingItemSizes: [
-					{ orient: "right", size: 15 },
-					{ orient: "left", size: 10 },
-					{ orient: "right", size: 20 }
-				]
+				staticCoordinateCalculator: new GroupingStaticCoordinateCalculator(canvasModel, {
+					otherComponentSizes: {
+						titleTotalNeededSpace: 20,
+						legendTotalNeededSpace: 30
+					},
+					groupingItemSizes: [
+						{ orient: "right", size: 15 },
+						{ orient: "left", size: 10 },
+						{ orient: "right", size: 20 }
+					]
+				})
 			});
 			const coordinate = coordinateHandler.handleX(100);
 			expect(coordinate).toEqual(785);
@@ -77,11 +86,13 @@ describe("GroupingLabelsCoordinateHandlers", () => {
 			const coordinateHandler = new GroupingLabelsCoordinateHandler(canvasModel, {
 				orient: "top",
 				sideIndex: 0,
-				otherComponentSizes: {
-					titleTotalNeededSpace: 20,
-					legendTotalNeededSpace: 30
-				},
-				groupingItemSizes: [{ orient: "top", size: 20 }]
+				staticCoordinateCalculator: new GroupingStaticCoordinateCalculator(canvasModel, {
+					otherComponentSizes: {
+						titleTotalNeededSpace: 20,
+						legendTotalNeededSpace: 30
+					},
+					groupingItemSizes: [{ orient: "top", size: 20 }]
+				})
 			});
 			const coordinate = coordinateHandler.handleY(100);
 			expect(coordinate).toEqual(20);
@@ -91,11 +102,13 @@ describe("GroupingLabelsCoordinateHandlers", () => {
 			const coordinateHandler = new GroupingLabelsCoordinateHandler(canvasModel, {
 				orient: "bottom",
 				sideIndex: 0,
-				otherComponentSizes: {
-					titleTotalNeededSpace: 20,
-					legendTotalNeededSpace: 30
-				},
-				groupingItemSizes: [{ orient: "bottom", size: 20 }]
+				staticCoordinateCalculator: new GroupingStaticCoordinateCalculator(canvasModel, {
+					otherComponentSizes: {
+						titleTotalNeededSpace: 20,
+						legendTotalNeededSpace: 30
+					},
+					groupingItemSizes: [{ orient: "bottom", size: 20 }]
+				})
 			});
 			const coordinate = coordinateHandler.handleY(100);
 			expect(coordinate).toEqual(370);
@@ -105,16 +118,18 @@ describe("GroupingLabelsCoordinateHandlers", () => {
 			const coordinateHandler = new GroupingLabelsCoordinateHandler(canvasModel, {
 				orient: "bottom",
 				sideIndex: 1,
-				otherComponentSizes: {
-					titleTotalNeededSpace: 20,
-					legendTotalNeededSpace: 30
-				},
-				groupingItemSizes: [
-					{ orient: "top", size: 10 },
-					{ orient: "bottom", size: 20 },
-					{ orient: "top", size: 10 },
-					{ orient: "bottom", size: 20 }
-				]
+				staticCoordinateCalculator: new GroupingStaticCoordinateCalculator(canvasModel, {
+					otherComponentSizes: {
+						titleTotalNeededSpace: 20,
+						legendTotalNeededSpace: 30
+					},
+					groupingItemSizes: [
+						{ orient: "top", size: 10 },
+						{ orient: "bottom", size: 20 },
+						{ orient: "top", size: 10 },
+						{ orient: "bottom", size: 20 }
+					]
+				})
 			});
 			const coordinate = coordinateHandler.handleY(100);
 			expect(coordinate).toEqual(350);

@@ -140,4 +140,46 @@ describe("GroupingConfigReader", () => {
 			]);
 		});
 	});
+
+	describe("getUsingOrients", () => {
+		it("should return empty set if grouping is disabled", () => {
+			const reader = new GroupingConfigReader(
+				{ visibility: true, ticks: { flag: true }, position: "end" },
+				"horizontal"
+			);
+			const orients = reader.getUsingOrients();
+			expect(orients).toEqual(new Set());
+		});
+
+		it("should return one orient if all items have the same orient", () => {
+			const reader = new GroupingConfigReader(
+				{ visibility: true, ticks: { flag: true }, position: "end" },
+				"horizontal",
+				{
+					items: [
+						{ labels: { position: "end" }, data: { field: { name: "field" } } },
+						{ data: { field: { name: "field" } } }
+					]
+				}
+			);
+			const orients = reader.getUsingOrients();
+			expect(orients).toEqual(new Set(["right"]));
+		});
+
+		it("should return using orients without duplicates", () => {
+			const reader = new GroupingConfigReader(
+				{ visibility: true, ticks: { flag: true }, position: "end" },
+				"horizontal",
+				{
+					items: [
+						{ labels: { position: "start" }, data: { field: { name: "field" } } },
+						{ data: { field: { name: "field2" } }, labels: { position: "end" } },
+						{ data: { field: { name: "field3" } }, labels: { position: "end" } }
+					]
+				}
+			);
+			const orients = reader.getUsingOrients();
+			expect(orients).toEqual(new Set(["right", "left"]));
+		});
+	});
 });

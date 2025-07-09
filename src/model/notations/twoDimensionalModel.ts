@@ -19,7 +19,7 @@ import {
 	Orient,
 	TwoDimGroupingItemModel
 } from "../model";
-import { TwoDimConfigReader } from "../modelInstance/configReader/twoDimConfigReader.ts/twoDimConfigReader";
+import { TwoDimConfigReader } from "../modelInstance/configReader/twoDimConfigReader/twoDimConfigReader";
 import { ModelInstance } from "../modelInstance/modelInstance";
 import {
 	calculateBarIndexes,
@@ -47,6 +47,8 @@ import {
 	GroupingLabelsCoordinateScaler,
 	KeyScaleInfoForGroupingLabelsScaler
 } from "../featuresModel/grouping/groupingLabels/groupingLabelsScaler";
+import { GroupingStaticCoordinateCalculator } from "../featuresModel/grouping/groupingLabels/staticCoordinateCalculator";
+import { GroupingEdgeLinesGenerator } from "../featuresModel/grouping/groupingEdgeLines/groupingEdgeLinesGenerator";
 
 export class TwoDimensionalModel {
 	public static getOptions(
@@ -98,6 +100,21 @@ export class TwoDimensionalModel {
 		const keyScale = scaleModel.getScaleKey(modelInstance.dataModel.getAllowableKeys());
 		const isHorizontal = options.orientation === "horizontal";
 
+		const groupingStaticCoordinateCalculator = new GroupingStaticCoordinateCalculator(canvasModel, {
+			otherComponentSizes: {
+				titleTotalNeededSpace: canvasModel.titleCanvas.getAllNeededSpace(),
+				legendTotalNeededSpace: canvasModel.legendCanvas.getAllNeededSpace()
+			},
+			groupingItemSizes: configReader.grouping.getSlicesSizesByOrients(
+				modelInstance.dataModel.repository.getScopedRows()
+			)
+		});
+
+		const groupingEdgeLinesGenerator = new GroupingEdgeLinesGenerator(canvasModel, {
+			orients: configReader.grouping.getUsingOrients(),
+			staticCoordinateCalculator: groupingStaticCoordinateCalculator
+		});
+
 		return {
 			legend: canvasModel.legendCanvas.getModel(),
 			title: {
@@ -106,7 +123,7 @@ export class TwoDimensionalModel {
 			},
 			grouping: {
 				enabled: configReader.grouping.isEnabled(),
-				edgeLines: [],
+				edgeLines: groupingEdgeLinesGenerator.generate(),
 				items: configReader.grouping
 					.getPreparedOptions(modelInstance.dataModel.repository.getScopedRows())
 					.map<TwoDimGroupingItemModel>((prepared) => {
@@ -128,13 +145,7 @@ export class TwoDimensionalModel {
 						const coordinateHandler = new GroupingLabelsCoordinateHandler(canvasModel, {
 							orient: prepared.orient,
 							sideIndex: prepared.sideIndex,
-							otherComponentSizes: {
-								titleTotalNeededSpace: canvasModel.titleCanvas.getAllNeededSpace(),
-								legendTotalNeededSpace: canvasModel.legendCanvas.getAllNeededSpace()
-							},
-							groupingItemSizes: configReader.grouping.getSlicesSizesByOrients(
-								modelInstance.dataModel.repository.getScopedRows()
-							)
+							staticCoordinateCalculator: groupingStaticCoordinateCalculator
 						});
 
 						return {

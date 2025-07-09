@@ -386,6 +386,7 @@ export type ValueLabelsChartBlockSide =
 export interface TwoDimGroupingModel {
 	enabled: boolean;
 	items: TwoDimGroupingItemModel[];
+	edgeLines: GroupingSplitLineAttributes[];
 }
 
 export interface GroupingLabelCoordinate {
@@ -397,6 +398,7 @@ export type GroupingLabelKey = string | number;
 
 export interface TwoDimGroupingItemModel {
 	labels: GroupingItemLabelsModel;
+	splitLines: GroupingSplitLineAttributes[];
 }
 
 export interface GroupingItemLabelsModel {
@@ -407,6 +409,13 @@ export interface GroupingItemLabelsModel {
 		handleX: (key: GroupingLabelKey) => number;
 		handleY: (key: GroupingLabelKey) => number;
 	};
+}
+
+export interface GroupingSplitLineAttributes {
+	x1: number;
+	x2: number;
+	y1: number;
+	y2: number;
 }
 
 //====================================================== PolarOptionsModel

@@ -2,7 +2,7 @@ import { MdtChartsConfig, MdtChartsField } from "../../../config/config";
 import { DesignerConfig } from "../../../designer/designerConfig";
 import { BlockMargin } from "../../model";
 import { PolarConfigReader } from "./polarConfigReader/polarConfigReader";
-import { TwoDimConfigReader } from "./twoDimConfigReader.ts/twoDimConfigReader";
+import { TwoDimConfigReader } from "./twoDimConfigReader/twoDimConfigReader";
 
 export interface BaseConfigReader {
 	getValueFields(): MdtChartsField[];

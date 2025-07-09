@@ -5,7 +5,7 @@ import { keyAxisLabelHorizontalLog, keyAxisLabelVerticalLog } from "../../featur
 import { Orient, OtherCommonComponents, ScaleValueModel } from "../../model";
 import { AxisType } from "../../modelBuilder";
 import { CanvasModel } from "../../modelInstance/canvasModel/canvasModel";
-import { TwoDimConfigReader } from "../../modelInstance/configReader/twoDimConfigReader.ts/twoDimConfigReader";
+import { TwoDimConfigReader } from "../../modelInstance/configReader/twoDimConfigReader/twoDimConfigReader";
 import { ModelInstance } from "../../modelInstance/modelInstance";
 import { TwoDimensionalModel } from "../../notations/twoDimensionalModel";
 import { ChartOrientation } from "../../../config/config";
@@ -221,6 +221,7 @@ export class TwoDimMarginModel {
 
 		canvasModel.increaseMarginSide(
 			axisMarginMapping[keyAxisOrient]!,
+			//TODO: calculate according to offsetSize from config for each chart
 			valueLabelFontSize + VALUE_LABEL_OFFSET_ABS_SIZE_PX
 		);
 	}

@@ -1,7 +1,7 @@
 import { MdtChartsTwoDimLegend } from "../../../config/config";
 import { ILegendModel, LegendBlockModel, LegendPosition } from "../../model";
 import { styledElementValues } from "../../modelBuilder";
-import { TwoDimConfigReader } from "../../modelInstance/configReader/twoDimConfigReader.ts/twoDimConfigReader";
+import { TwoDimConfigReader } from "../../modelInstance/configReader/twoDimConfigReader/twoDimConfigReader";
 import { ModelInstance } from "../../modelInstance/modelInstance";
 import { getWidthOfLegendMarkerByType } from "../../notations/twoDimensional/styles";
 import { LegendCanvasModel } from "./legendCanvasModel";

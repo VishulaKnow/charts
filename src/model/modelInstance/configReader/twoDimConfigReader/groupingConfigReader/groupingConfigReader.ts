@@ -4,7 +4,6 @@ import {
 	ItemPositionByOrientation,
 	MdtChartsBaseField,
 	MdtChartsDataRow,
-	MdtChartsField,
 	TwoDimGroupingItem,
 	TwoDimGroupingOptions
 } from "../../../../../config/config";
@@ -27,6 +26,14 @@ export class GroupingConfigReader {
 
 	isEnabled(): boolean {
 		return !!this.groupingOptions && this.groupingOptions.items.length > 0;
+	}
+
+	getUsingOrients(): Set<Orient> {
+		const usingOrients = new Set<Orient>();
+		for (const item of this.groupingOptions?.items ?? []) {
+			usingOrients.add(this.getLabelOrient(item.labels?.position));
+		}
+		return usingOrients;
 	}
 
 	getSlicesSizesByOrients(dataRows: MdtChartsDataRow[]) {
