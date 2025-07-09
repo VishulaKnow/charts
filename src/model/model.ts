@@ -396,8 +396,11 @@ export interface GroupingLabelCoordinate {
 export type GroupingLabelKey = string | number;
 
 export interface TwoDimGroupingItemModel {
+	labels: TwoDimGroupingItemLabelsModel;
+}
+
+export interface TwoDimGroupingItemLabelsModel {
 	domain: GroupingLabelKey[];
-	orient: Orient;
 	textAnchor: TextAnchor;
 	dominantBaseline: DominantBaseline;
 	coordinate: {

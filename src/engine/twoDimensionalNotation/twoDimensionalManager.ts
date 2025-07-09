@@ -36,7 +36,7 @@ export class TwoDimensionalManager implements ChartContentManager {
 	private canvasValueLabels?: CanvasValueLabels;
 	private linearGradientDef?: LinearGradientDef;
 	private dotChart: CanvasDotChart;
-	private groupLabels: GroupAxisLabels;
+	private groupLabels?: GroupAxisLabels;
 
 	public render(engine: Engine, model: Model<TwoDimensionalOptionsModel>): void {
 		const options = model.options;
@@ -77,12 +77,14 @@ export class TwoDimensionalManager implements ChartContentManager {
 			}
 		});
 
-		this.groupLabels = new GroupAxisLabels({
-			elementAccessors: {
-				getBlock: () => engine.block
-			}
-		});
-		this.groupLabels.render(options.grouping);
+		if (options.grouping.enabled) {
+			this.groupLabels = new GroupAxisLabels({
+				elementAccessors: {
+					getBlock: () => engine.block
+				}
+			});
+			this.groupLabels.render(options.grouping.items.map((item) => item.labels));
+		}
 
 		this.renderCharts(
 			engine.block,
@@ -171,7 +173,7 @@ export class TwoDimensionalManager implements ChartContentManager {
 			scales
 		);
 
-		this.groupLabels.update(options.grouping);
+		if (options.grouping.enabled) this.groupLabels?.update(options.grouping.items.map((item) => item.labels));
 
 		const promises = this.updateCharts(
 			block,

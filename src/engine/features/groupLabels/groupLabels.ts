@@ -1,5 +1,10 @@
 import { Transition } from "d3-transition";
-import { GroupingLabelKey, TwoDimGroupingItemModel, TwoDimGroupingModel } from "../../../model/model";
+import {
+	GroupingLabelKey,
+	TwoDimGroupingItemLabelsModel,
+	TwoDimGroupingItemModel,
+	TwoDimGroupingModel
+} from "../../../model/model";
 import { Block } from "../../block/block";
 import { Pipeline } from "../../helpers/pipeline/Pipeline";
 import { BaseType, Selection } from "d3-selection";
@@ -13,7 +18,7 @@ interface GroupAxisLabelsOptions {
 export class GroupAxisLabels {
 	private readonly renderPipeline = new Pipeline<
 		Selection<SVGTextElement, GroupingLabelKey, SVGGElement, unknown>,
-		{ item: TwoDimGroupingItemModel }
+		{ item: TwoDimGroupingItemLabelsModel }
 	>();
 
 	private groupsForLabels: Selection<SVGGElement, unknown, BaseType, unknown>[] = [];
@@ -24,10 +29,8 @@ export class GroupAxisLabels {
 		});
 	}
 
-	render(model: TwoDimGroupingModel) {
-		if (!model.enabled) return;
-
-		model.items.forEach((item, index) => {
+	render(items: TwoDimGroupingItemLabelsModel[]) {
+		items.forEach((item, index) => {
 			const group = this.options.elementAccessors
 				.getBlock()
 				.getSvg()
@@ -46,10 +49,8 @@ export class GroupAxisLabels {
 		});
 	}
 
-	update(model: TwoDimGroupingModel) {
-		if (!model.enabled) return;
-
-		model.items.forEach((item, index) => {
+	update(items: TwoDimGroupingItemLabelsModel[]) {
+		items.forEach((item, index) => {
 			const group = this.groupsForLabels[index];
 			if (!group) return;
 
@@ -81,7 +82,7 @@ export class GroupAxisLabels {
 		S extends
 			| Selection<SVGTextElement, GroupingLabelKey, SVGGElement, unknown>
 			| Transition<SVGTextElement, GroupingLabelKey, SVGGElement, unknown>
-	>(groupLabels: S, item: TwoDimGroupingItemModel): S {
+	>(groupLabels: S, item: TwoDimGroupingItemLabelsModel): S {
 		return groupLabels
 			.attr("x", (d) => item.coordinate.handleX(d))
 			.attr("y", (d) => item.coordinate.handleY(d))

@@ -116,9 +116,8 @@ export class TwoDimensionalModel {
 								keyAxisOuterPadding: keyScale.sizes.paddingOuter,
 								keyAxisInnerPadding: keyScale.sizes.paddingInner
 							};
-						} else {
-							keyScaleInfo = { type: "point" };
-						}
+						} else keyScaleInfo = { type: "point" };
+
 						const scaler = new GroupingLabelsCoordinateScaler({
 							dataRows: modelInstance.dataModel.repository.getScopedRows(),
 							field: prepared.field,
@@ -133,14 +132,16 @@ export class TwoDimensionalModel {
 								legendTotalNeededSpace: canvasModel.legendCanvas.getAllNeededSpace()
 							}
 						});
+
 						return {
-							orient: prepared.orient,
-							domain: prepared.domain,
-							textAnchor: prepared.textAnchor,
-							dominantBaseline: prepared.dominantBaseline,
-							coordinate: {
-								handleX: (groupKey) => coordinateHandler.handleX(scaler.scaleForKey(groupKey)),
-								handleY: (groupKey) => coordinateHandler.handleY(scaler.scaleForKey(groupKey))
+							labels: {
+								domain: prepared.domain,
+								textAnchor: prepared.textAnchor,
+								dominantBaseline: prepared.dominantBaseline,
+								coordinate: {
+									handleX: (groupKey) => coordinateHandler.handleX(scaler.scaleForKey(groupKey)),
+									handleY: (groupKey) => coordinateHandler.handleY(scaler.scaleForKey(groupKey))
+								}
 							}
 						};
 					})
