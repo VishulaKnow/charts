@@ -31,12 +31,14 @@ import { CanvasDotChart } from "./dot/dotChart";
 import { ChartClearSelectionOptions, FilterEventManager } from "../filterManager/filterEventManager";
 import { RecordOverflowAlertCore } from "../features/recordOverflowAlert/recordOverflowAlertCore";
 import { GroupAxisLabels } from "../features/groupLabels/groupLabels";
+import { GroupLines } from "../features/groupLines/groupLines";
 
 export class TwoDimensionalManager implements ChartContentManager {
 	private canvasValueLabels?: CanvasValueLabels;
 	private linearGradientDef?: LinearGradientDef;
 	private dotChart: CanvasDotChart;
 	private groupLabels?: GroupAxisLabels;
+	private groupLines?: GroupLines;
 
 	public render(engine: Engine, model: Model<TwoDimensionalOptionsModel>): void {
 		const options = model.options;
@@ -84,6 +86,13 @@ export class TwoDimensionalManager implements ChartContentManager {
 				}
 			});
 			this.groupLabels.render(options.grouping.items.map((item) => item.labels));
+
+			this.groupLines = new GroupLines({
+				elementAccessors: {
+					getBlock: () => engine.block
+				}
+			});
+			this.groupLines.render(options.grouping.edgeLines);
 		}
 
 		this.renderCharts(
@@ -173,7 +182,10 @@ export class TwoDimensionalManager implements ChartContentManager {
 			scales
 		);
 
-		if (options.grouping.enabled) this.groupLabels?.update(options.grouping.items.map((item) => item.labels));
+		if (options.grouping.enabled) {
+			this.groupLabels?.update(options.grouping.items.map((item) => item.labels));
+			this.groupLines?.update(options.grouping.edgeLines);
+		}
 
 		const promises = this.updateCharts(
 			block,

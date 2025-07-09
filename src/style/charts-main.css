@@ -213,6 +213,11 @@
     stroke: rgba(231, 229, 228, 0.8);
 }
 
+/* Group lines */
+.group-lines line {
+    stroke: rgba(231, 229, 228, 0.8);
+}
+
 /* Aggregator */
 .aggregator-value, .aggregator-name {
     color: #000000;
