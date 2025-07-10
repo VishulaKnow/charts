@@ -91,6 +91,7 @@ export class GroupLines {
 			| Selection<SVGLineElement, GroupingSplitLineAttributes, SVGGElement, unknown>
 			| Transition<SVGLineElement, GroupingSplitLineAttributes, SVGGElement, unknown>
 	>(lines: S): S {
+		//TODO: make though render and update pipeline
 		return lines
 			.attr("x1", (d) => d.x1)
 			.attr("y1", (d) => d.y1)
