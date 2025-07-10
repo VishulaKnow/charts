@@ -49,6 +49,8 @@ import {
 } from "../featuresModel/grouping/groupingLabels/groupingLabelsScaler";
 import { GroupingStaticCoordinateCalculator } from "../featuresModel/grouping/groupingLabels/staticCoordinateCalculator";
 import { GroupingEdgeLinesGenerator } from "../featuresModel/grouping/groupingEdgeLines/groupingEdgeLinesGenerator";
+import { GroupingSplitLinesGenerator } from "../featuresModel/grouping/groupingSplitLines/groupingSplitLines";
+import { GroupingCanvasCalculator } from "../featuresModel/grouping/groupingCanvasCalculator/groupingCanvasCalculator";
 
 export class TwoDimensionalModel {
 	public static getOptions(
@@ -110,7 +112,8 @@ export class TwoDimensionalModel {
 			)
 		});
 
-		const groupingEdgeLinesGenerator = new GroupingEdgeLinesGenerator(canvasModel, {
+		const groupingEdgeLinesGenerator = new GroupingEdgeLinesGenerator({
+			canvasModel,
 			orients: configReader.grouping.getUsingOrients(),
 			staticCoordinateCalculator: groupingStaticCoordinateCalculator
 		});
@@ -136,16 +139,24 @@ export class TwoDimensionalModel {
 							};
 						} else keyScaleInfo = { type: "point" };
 
-						const scaler = new GroupingLabelsCoordinateScaler({
+						const groupingCanvasCalculator = new GroupingCanvasCalculator({
 							dataRows: modelInstance.dataModel.repository.getScopedRows(),
 							field: prepared.field,
 							keyScaleInfo,
 							range: keyScale.range
 						});
+						const scaler = new GroupingLabelsCoordinateScaler({ groupingCanvasCalculator });
 						const coordinateHandler = new GroupingLabelsCoordinateHandler(canvasModel, {
 							orient: prepared.orient,
 							sideIndex: prepared.sideIndex,
 							staticCoordinateCalculator: groupingStaticCoordinateCalculator
+						});
+						const splitLinesGenerator = new GroupingSplitLinesGenerator({
+							canvasModel,
+							orient: prepared.orient,
+							sideIndex: prepared.sideIndex,
+							staticCoordinateCalculator: groupingStaticCoordinateCalculator,
+							groupingCanvasCalculator
 						});
 
 						return {
@@ -158,7 +169,7 @@ export class TwoDimensionalModel {
 									handleY: (groupKey) => coordinateHandler.handleY(scaler.scaleForKey(groupKey))
 								}
 							},
-							splitLines: []
+							splitLines: splitLinesGenerator.generate()
 						};
 					})
 			},

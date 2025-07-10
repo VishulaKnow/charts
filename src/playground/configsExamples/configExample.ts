@@ -14,11 +14,11 @@ const configCars: MdtChartsConfig = {
 		selectable: true,
 		grouping: {
 			items: [
-				{
-					data: {
-						field: { name: "decade" }
-					}
-				},
+				// {
+				// 	data: {
+				// 		field: { name: "decade" }
+				// 	}
+				// },
 				{
 					data: {
 						field: { name: "year" }
@@ -34,7 +34,7 @@ const configCars: MdtChartsConfig = {
 					flag: false
 				},
 				labels: {
-					format: (options) => options.key + "2"
+					// format: (options) => options.key
 				}
 			},
 			value: {
@@ -111,6 +111,11 @@ const configCars: MdtChartsConfig = {
 							type: "captionValue",
 							caption: "Общая сумма",
 							value: nFormatter(row.price * row.count, 2)
+						},
+						{
+							type: "captionValue",
+							caption: "Год",
+							value: row.year
 						},
 						{ type: "plainText", textContent: "Данные не являются официальными" }
 					];

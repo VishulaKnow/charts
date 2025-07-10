@@ -16,7 +16,8 @@ describe("GroupingEdgeLinesGenerator", () => {
 				},
 				groupingItemSizes: [{ orient: "top", size: 10 }]
 			});
-			const groupingEdgeLinesGenerator = new GroupingEdgeLinesGenerator(canvasModel, {
+			const groupingEdgeLinesGenerator = new GroupingEdgeLinesGenerator({
+				canvasModel,
 				orients: new Set(["top"]),
 				staticCoordinateCalculator
 			});
@@ -36,7 +37,8 @@ describe("GroupingEdgeLinesGenerator", () => {
 				},
 				groupingItemSizes: [{ orient: "bottom", size: 10 }]
 			});
-			const groupingEdgeLinesGenerator = new GroupingEdgeLinesGenerator(canvasModel, {
+			const groupingEdgeLinesGenerator = new GroupingEdgeLinesGenerator({
+				canvasModel,
 				orients: new Set(["bottom"]),
 				staticCoordinateCalculator
 			});
@@ -56,7 +58,8 @@ describe("GroupingEdgeLinesGenerator", () => {
 				},
 				groupingItemSizes: [{ orient: "left", size: 10 }]
 			});
-			const groupingEdgeLinesGenerator = new GroupingEdgeLinesGenerator(canvasModel, {
+			const groupingEdgeLinesGenerator = new GroupingEdgeLinesGenerator({
+				canvasModel,
 				orients: new Set(["left"]),
 				staticCoordinateCalculator
 			});
@@ -76,7 +79,8 @@ describe("GroupingEdgeLinesGenerator", () => {
 				},
 				groupingItemSizes: [{ orient: "right", size: 10 }]
 			});
-			const groupingEdgeLinesGenerator = new GroupingEdgeLinesGenerator(canvasModel, {
+			const groupingEdgeLinesGenerator = new GroupingEdgeLinesGenerator({
+				canvasModel,
 				orients: new Set(["right"]),
 				staticCoordinateCalculator
 			});
@@ -99,7 +103,8 @@ describe("GroupingEdgeLinesGenerator", () => {
 					{ orient: "top", size: 10 }
 				]
 			});
-			const groupingEdgeLinesGenerator = new GroupingEdgeLinesGenerator(canvasModel, {
+			const groupingEdgeLinesGenerator = new GroupingEdgeLinesGenerator({
+				canvasModel,
 				orients: new Set(["bottom", "top"]),
 				staticCoordinateCalculator
 			});
@@ -126,7 +131,8 @@ describe("GroupingEdgeLinesGenerator", () => {
 					{ orient: "top", size: 10 }
 				]
 			});
-			const groupingEdgeLinesGenerator = new GroupingEdgeLinesGenerator(canvasModel, {
+			const groupingEdgeLinesGenerator = new GroupingEdgeLinesGenerator({
+				canvasModel,
 				orients: new Set(["bottom", "top"]),
 				staticCoordinateCalculator
 			});

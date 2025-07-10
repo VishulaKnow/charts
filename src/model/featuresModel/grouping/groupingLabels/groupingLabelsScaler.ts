@@ -1,12 +1,9 @@
 import { scaleOrdinal } from "d3-scale";
-import { MdtChartsBaseField, MdtChartsDataRow } from "../../../../config/config";
-import { GroupingLabelKey, RangeModel } from "../../../model";
+import { GroupingLabelKey } from "../../../model";
+import { GroupingCanvasCalculator } from "../groupingCanvasCalculator/groupingCanvasCalculator";
 
 interface GroupingLabelsCoordinateScalerOptions {
-	dataRows: MdtChartsDataRow[];
-	field: MdtChartsBaseField;
-	keyScaleInfo: KeyScaleInfoForGroupingLabelsScaler;
-	range: RangeModel;
+	groupingCanvasCalculator: GroupingCanvasCalculator;
 }
 
 export type KeyScaleInfoForGroupingLabelsScaler =
@@ -21,40 +18,14 @@ export class GroupingLabelsCoordinateScaler {
 	private readonly scaleFn: (key: GroupingLabelKey) => number;
 
 	constructor(private readonly options: GroupingLabelsCoordinateScalerOptions) {
-		let keyAxisInnerPadding = 0;
-		let keyAxisOuterPadding = 0;
-		if (this.options.keyScaleInfo.type === "band") {
-			keyAxisInnerPadding = this.options.keyScaleInfo.keyAxisInnerPadding;
-			keyAxisOuterPadding = this.options.keyScaleInfo.keyAxisOuterPadding;
-		} else {
-			keyAxisInnerPadding =
-				(this.options.range.end - this.options.range.start) / (this.options.dataRows.length - 1);
-			keyAxisOuterPadding = 0;
-		}
+		const { keyAxisInnerPadding, keyAxisOuterPadding, oneShareSize, rowsCountsPerGroups, groupDomain } =
+			this.options.groupingCanvasCalculator.calculate();
 
-		const domainWithRowsCount: Map<GroupingLabelKey, number> = new Map();
-
-		this.options.dataRows.forEach((row) => {
-			const key = row[this.options.field.name];
-			if (key) {
-				if (domainWithRowsCount.has(key)) domainWithRowsCount.set(key, domainWithRowsCount.get(key)! + 1);
-				else domainWithRowsCount.set(key, 1);
-			}
-		});
-
-		const rangeOfKeyAxis =
-			Math.abs(this.options.range.end - this.options.range.start) -
-			keyAxisOuterPadding * 2 -
-			keyAxisInnerPadding * (this.options.dataRows.length - 1);
-		const totalShares = Array.from(domainWithRowsCount.values()).reduce((acc, curr) => acc + curr, 0);
-		const oneShareSize = rangeOfKeyAxis / totalShares;
-
-		const coordinates: number[] = [];
 		let previousTotalShares = 0;
+		const coordinates: number[] = [];
 
-		const rowsCounts = Array.from(domainWithRowsCount.values());
-		for (let rowIndex = 0; rowIndex < rowsCounts.length; rowIndex++) {
-			const rowsAmount = rowsCounts[rowIndex];
+		for (let rowIndex = 0; rowIndex < rowsCountsPerGroups.length; rowIndex++) {
+			const rowsAmount = rowsCountsPerGroups[rowIndex];
 
 			let previousShift = previousTotalShares * (oneShareSize + keyAxisInnerPadding);
 
@@ -66,7 +37,7 @@ export class GroupingLabelsCoordinateScaler {
 			previousTotalShares += rowsAmount;
 		}
 
-		const d3Scale = scaleOrdinal(domainWithRowsCount.keys(), coordinates);
+		const d3Scale = scaleOrdinal(groupDomain, coordinates);
 		this.scaleFn = (key: GroupingLabelKey) => d3Scale(key);
 	}
 

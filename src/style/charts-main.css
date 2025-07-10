@@ -214,7 +214,8 @@
 }
 
 /* Group lines */
-.group-lines line {
+.group-edge-lines line, 
+.group-split-lines line {
     stroke: rgba(231, 229, 228, 0.8);
 }
 

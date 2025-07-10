@@ -92,7 +92,10 @@ export class TwoDimensionalManager implements ChartContentManager {
 					getBlock: () => engine.block
 				}
 			});
-			this.groupLines.render(options.grouping.edgeLines);
+			this.groupLines.render(
+				options.grouping.edgeLines,
+				options.grouping.items.map((item) => item.splitLines)
+			);
 		}
 
 		this.renderCharts(
