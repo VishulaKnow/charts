@@ -709,6 +709,8 @@ class DataUpdater {
 					$id: ListenersHelper.randInt(100, 5000000)
 				};
 				row[this.keyFieldName] = this.makeHASH(ListenersHelper.randInt(4, 10)).toUpperCase();
+				row.decade = "2030s";
+				row.year = "2033";
 				this.valueFieldNames.forEach((vField) => (row[vField] = ListenersHelper.randInt(0, 130_000)));
 				row[this.colorFieldName] = this.getRandomColor();
 				newData[this.dataSetName].push(row);

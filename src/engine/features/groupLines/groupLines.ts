@@ -1,4 +1,5 @@
-import { GroupingSplitLineAttributes } from "../../../model/model";
+import { Transition } from "d3-transition";
+import { GroupingLabelKey, GroupingSplitLineAttributes } from "../../../model/model";
 import { Block } from "../../block/block";
 import { Selection } from "d3-selection";
 
@@ -22,8 +23,9 @@ export class GroupLines {
 		this.renderSplitLines(splitLinesByItems);
 	}
 
-	update(edgeLines: GroupingSplitLineAttributes[]) {
+	update(edgeLines: GroupingSplitLineAttributes[], splitLinesByItems: GroupingSplitLineAttributes[][]) {
 		this.updateEdgeLines(edgeLines);
+		this.updateSplitLines(splitLinesByItems);
 	}
 
 	private renderEdgeLines(edgeLines: GroupingSplitLineAttributes[]) {
@@ -31,15 +33,9 @@ export class GroupLines {
 
 		this.edgeLinesGroup = block.getSvg().append("g").classed(this.edgeLinesGroupCssClass, true);
 
-		this.edgeLinesGroup
-			.selectAll("line")
-			.data(edgeLines)
-			.enter()
-			.append("line")
-			.attr("x1", (d) => d.x1)
-			.attr("y1", (d) => d.y1)
-			.attr("x2", (d) => d.x2)
-			.attr("y2", (d) => d.y2);
+		const lines = this.edgeLinesGroup.selectAll("line").data(edgeLines).enter().append("line");
+
+		this.setAttrs(lines);
 	}
 
 	private renderSplitLines(splitLinesByItems: GroupingSplitLineAttributes[][]) {
@@ -51,29 +47,54 @@ export class GroupLines {
 				.classed(this.splitLinesGroupCssClass, true);
 			this.splitLinesGroups.push(group);
 
-			group
-				.selectAll("line")
-				.data(splitLines)
-				.enter()
-				.append("line")
-				.attr("x1", (d) => d.x1)
-				.attr("y1", (d) => d.y1)
-				.attr("x2", (d) => d.x2)
-				.attr("y2", (d) => d.y2);
+			const lines = group.selectAll("line").data(splitLines).enter().append("line");
+
+			this.setAttrs(lines);
 		});
 	}
 
 	private updateEdgeLines(edgeLines: GroupingSplitLineAttributes[]) {
-		const animationName = "group-lines-animation";
-		this.edgeLinesGroup
-			.selectAll("line")
+		const animationName = "grouping-edge-lines-animation";
+		const lines = this.edgeLinesGroup
+			.selectAll<SVGLineElement, GroupingSplitLineAttributes>("line")
 			.data(edgeLines)
 			.interrupt(animationName)
 			.transition(animationName)
-			.duration(this.options.elementAccessors.getBlock().transitionManager.durations.chartUpdate)
+			.duration(this.options.elementAccessors.getBlock().transitionManager.durations.chartUpdate);
+
+		this.setAttrs(lines);
+	}
+
+	private updateSplitLines(splitLinesByItems: GroupingSplitLineAttributes[][]) {
+		splitLinesByItems.forEach((splitLines, index) => {
+			const existedLines = this.splitLinesGroups[index]
+				.selectAll<SVGLineElement, GroupingSplitLineAttributes>("line")
+				.data(splitLines);
+
+			existedLines.exit().remove();
+
+			const newLines = existedLines.enter().append("line");
+			this.setAttrs(newLines);
+
+			const animationName = "grouping-split-lines-animation";
+			this.setAttrs(
+				existedLines
+					.interrupt(animationName)
+					.transition(animationName)
+					.duration(this.options.elementAccessors.getBlock().transitionManager.durations.chartUpdate)
+			);
+		});
+	}
+
+	private setAttrs<
+		S extends
+			| Selection<SVGLineElement, GroupingSplitLineAttributes, SVGGElement, unknown>
+			| Transition<SVGLineElement, GroupingSplitLineAttributes, SVGGElement, unknown>
+	>(lines: S): S {
+		return lines
 			.attr("x1", (d) => d.x1)
 			.attr("y1", (d) => d.y1)
 			.attr("x2", (d) => d.x2)
-			.attr("y2", (d) => d.y2);
+			.attr("y2", (d) => d.y2) as S;
 	}
 }

@@ -187,7 +187,10 @@ export class TwoDimensionalManager implements ChartContentManager {
 
 		if (options.grouping.enabled) {
 			this.groupLabels?.update(options.grouping.items.map((item) => item.labels));
-			this.groupLines?.update(options.grouping.edgeLines);
+			this.groupLines?.update(
+				options.grouping.edgeLines,
+				options.grouping.items.map((item) => item.splitLines)
+			);
 		}
 
 		const promises = this.updateCharts(

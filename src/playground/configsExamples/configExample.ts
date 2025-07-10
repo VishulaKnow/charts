@@ -14,15 +14,16 @@ const configCars: MdtChartsConfig = {
 		selectable: true,
 		grouping: {
 			items: [
-				// {
-				// 	data: {
-				// 		field: { name: "decade" }
-				// 	}
-				// },
+				{
+					data: {
+						field: { name: "decade" }
+					}
+				},
 				{
 					data: {
 						field: { name: "year" }
 					}
+					// labels: { position: "start" }
 				}
 			]
 		},
