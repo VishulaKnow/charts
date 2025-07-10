@@ -34,8 +34,8 @@ export class TwoDimConfigReader implements BaseConfigReader {
 		const defaultBlockMargin: BlockMargin = {
 			top: 5,
 			bottom: 0,
-			left: 0,
-			right: 0
+			left: 5,
+			right: 5
 		};
 		return {
 			...defaultBlockMargin,
