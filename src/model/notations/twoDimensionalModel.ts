@@ -147,7 +147,8 @@ export class TwoDimensionalModel {
 							range: keyScale.range
 						});
 						const scaler = new GroupingLabelsCoordinateScaler({ groupingCanvasCalculator });
-						const coordinateHandler = new GroupingLabelsCoordinateHandler(canvasModel, {
+						const coordinateHandler = new GroupingLabelsCoordinateHandler({
+							canvasModel,
 							orient: prepared.orient,
 							sideIndex: prepared.sideIndex,
 							staticCoordinateCalculator: groupingStaticCoordinateCalculator

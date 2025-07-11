@@ -6,15 +6,13 @@ interface GroupingLabelsCoordinateHandlerOptions {
 	orient: Orient;
 	sideIndex: number;
 	staticCoordinateCalculator: GroupingStaticCoordinateCalculator;
+	canvasModel: CanvasModel;
 }
 
 export class GroupingLabelsCoordinateHandler {
 	private readonly staticCoordinate: number;
 
-	constructor(
-		private readonly canvasModel: CanvasModel,
-		private readonly options: GroupingLabelsCoordinateHandlerOptions
-	) {
+	constructor(private readonly options: GroupingLabelsCoordinateHandlerOptions) {
 		this.staticCoordinate = this.options.staticCoordinateCalculator.calculate(
 			this.options.orient,
 			this.options.sideIndex
@@ -24,7 +22,7 @@ export class GroupingLabelsCoordinateHandler {
 	handleX(scaledCoordinate: number) {
 		let x: number;
 		if (this.options.orient === "top" || this.options.orient === "bottom")
-			x = scaledCoordinate + this.canvasModel.getMarginSide("left");
+			x = scaledCoordinate + this.options.canvasModel.getMarginSide("left");
 		else x = this.staticCoordinate;
 		return x;
 	}
@@ -32,7 +30,7 @@ export class GroupingLabelsCoordinateHandler {
 	handleY(scaledCoordinate: number) {
 		let y: number;
 		if (this.options.orient === "left" || this.options.orient === "right")
-			y = scaledCoordinate + this.canvasModel.getMarginSide("top");
+			y = scaledCoordinate + this.options.canvasModel.getMarginSide("top");
 		else y = this.staticCoordinate;
 		return y;
 	}

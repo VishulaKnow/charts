@@ -9,7 +9,8 @@ describe("GroupingLabelsCoordinateHandlers", () => {
 
 	describe("handleX", () => {
 		it("should return x coordinate with added left margin for top orient", () => {
-			const coordinateHandler = new GroupingLabelsCoordinateHandler(canvasModel, {
+			const coordinateHandler = new GroupingLabelsCoordinateHandler({
+				canvasModel,
 				orient: "top",
 				sideIndex: 0,
 				staticCoordinateCalculator: new GroupingStaticCoordinateCalculator(canvasModel, {
@@ -25,7 +26,8 @@ describe("GroupingLabelsCoordinateHandlers", () => {
 		});
 
 		it("should return x coordinate with added left margin for bottom orient", () => {
-			const coordinateHandler = new GroupingLabelsCoordinateHandler(canvasModel, {
+			const coordinateHandler = new GroupingLabelsCoordinateHandler({
+				canvasModel,
 				orient: "bottom",
 				sideIndex: 0,
 				staticCoordinateCalculator: new GroupingStaticCoordinateCalculator(canvasModel, {
@@ -41,7 +43,8 @@ describe("GroupingLabelsCoordinateHandlers", () => {
 		});
 
 		it("should handle x coordinate for multiple slices for left orient", () => {
-			const coordinateHandler = new GroupingLabelsCoordinateHandler(canvasModel, {
+			const coordinateHandler = new GroupingLabelsCoordinateHandler({
+				canvasModel,
 				orient: "left",
 				sideIndex: 1,
 				staticCoordinateCalculator: new GroupingStaticCoordinateCalculator(canvasModel, {
@@ -61,7 +64,8 @@ describe("GroupingLabelsCoordinateHandlers", () => {
 		});
 
 		it("should handle x coordinate for multiple slices for bottom orient", () => {
-			const coordinateHandler = new GroupingLabelsCoordinateHandler(canvasModel, {
+			const coordinateHandler = new GroupingLabelsCoordinateHandler({
+				canvasModel,
 				orient: "right",
 				sideIndex: 1,
 				staticCoordinateCalculator: new GroupingStaticCoordinateCalculator(canvasModel, {
@@ -83,7 +87,8 @@ describe("GroupingLabelsCoordinateHandlers", () => {
 
 	describe("handleY", () => {
 		it("should return static y coordinate for top orient", () => {
-			const coordinateHandler = new GroupingLabelsCoordinateHandler(canvasModel, {
+			const coordinateHandler = new GroupingLabelsCoordinateHandler({
+				canvasModel,
 				orient: "top",
 				sideIndex: 0,
 				staticCoordinateCalculator: new GroupingStaticCoordinateCalculator(canvasModel, {
@@ -99,7 +104,8 @@ describe("GroupingLabelsCoordinateHandlers", () => {
 		});
 
 		it("should return static y coordinate for bottom orient", () => {
-			const coordinateHandler = new GroupingLabelsCoordinateHandler(canvasModel, {
+			const coordinateHandler = new GroupingLabelsCoordinateHandler({
+				canvasModel,
 				orient: "bottom",
 				sideIndex: 0,
 				staticCoordinateCalculator: new GroupingStaticCoordinateCalculator(canvasModel, {
@@ -115,7 +121,8 @@ describe("GroupingLabelsCoordinateHandlers", () => {
 		});
 
 		it("should handle y coordinate for multiple slices", () => {
-			const coordinateHandler = new GroupingLabelsCoordinateHandler(canvasModel, {
+			const coordinateHandler = new GroupingLabelsCoordinateHandler({
+				canvasModel,
 				orient: "bottom",
 				sideIndex: 1,
 				staticCoordinateCalculator: new GroupingStaticCoordinateCalculator(canvasModel, {
