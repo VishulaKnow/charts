@@ -26,6 +26,7 @@ interface BandLikeChartSettingsStore {
 
 export class DotChartSettingsStore implements BandLikeChartSettingsStore {
 	constructor(private readonly canvasConfig: { scaleBandWidth: number }) {}
+
 	getBandItemSize(): number {
 		return this.canvasConfig.scaleBandWidth;
 	}
@@ -35,7 +36,7 @@ export class DotChartSettingsStore implements BandLikeChartSettingsStore {
 	}
 }
 
-export class BarSettingsStore {
+export class BarSettingsStore implements BandLikeChartSettingsStore {
 	constructor(
 		private readonly modelSettings: BarChartSettings,
 		private readonly canvasConfig: { scaleBandWidth: number; barsAmount: number }
