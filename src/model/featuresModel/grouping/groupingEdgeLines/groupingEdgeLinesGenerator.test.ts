@@ -19,13 +19,14 @@ describe("GroupingEdgeLinesGenerator", () => {
 			const groupingEdgeLinesGenerator = new GroupingEdgeLinesGenerator({
 				canvasModel,
 				orients: new Set(["top"]),
-				staticCoordinateCalculator
+				staticCoordinateCalculator,
+				lineWidth: 1
 			});
 
 			const edgeLines = groupingEdgeLinesGenerator.generate();
 			expect(edgeLines).toEqual([
-				{ x1: 20, x2: 20, y1: 10, y2: 20 },
-				{ x1: 80, x2: 80, y1: 10, y2: 20 }
+				{ x1: 20.5, x2: 20.5, y1: 10, y2: 20 },
+				{ x1: 79.5, x2: 79.5, y1: 10, y2: 20 }
 			]);
 		});
 
@@ -40,13 +41,14 @@ describe("GroupingEdgeLinesGenerator", () => {
 			const groupingEdgeLinesGenerator = new GroupingEdgeLinesGenerator({
 				canvasModel,
 				orients: new Set(["bottom"]),
-				staticCoordinateCalculator
+				staticCoordinateCalculator,
+				lineWidth: 1
 			});
 
 			const edgeLines = groupingEdgeLinesGenerator.generate();
 			expect(edgeLines).toEqual([
-				{ x1: 20, x2: 20, y1: 80, y2: 90 },
-				{ x1: 80, x2: 80, y1: 80, y2: 90 }
+				{ x1: 20.5, x2: 20.5, y1: 80, y2: 90 },
+				{ x1: 79.5, x2: 79.5, y1: 80, y2: 90 }
 			]);
 		});
 
@@ -61,13 +63,14 @@ describe("GroupingEdgeLinesGenerator", () => {
 			const groupingEdgeLinesGenerator = new GroupingEdgeLinesGenerator({
 				canvasModel,
 				orients: new Set(["left"]),
-				staticCoordinateCalculator
+				staticCoordinateCalculator,
+				lineWidth: 1
 			});
 
 			const edgeLines = groupingEdgeLinesGenerator.generate();
 			expect(edgeLines).toEqual([
-				{ x1: 0, x2: 20, y1: 20, y2: 20 },
-				{ x1: 0, x2: 20, y1: 80, y2: 80 }
+				{ x1: 0, x2: 20, y1: 20.5, y2: 20.5 },
+				{ x1: 0, x2: 20, y1: 79.5, y2: 79.5 }
 			]);
 		});
 
@@ -82,13 +85,14 @@ describe("GroupingEdgeLinesGenerator", () => {
 			const groupingEdgeLinesGenerator = new GroupingEdgeLinesGenerator({
 				canvasModel,
 				orients: new Set(["right"]),
-				staticCoordinateCalculator
+				staticCoordinateCalculator,
+				lineWidth: 1
 			});
 
 			const edgeLines = groupingEdgeLinesGenerator.generate();
 			expect(edgeLines).toEqual([
-				{ x1: 80, x2: 100, y1: 20, y2: 20 },
-				{ x1: 80, x2: 100, y1: 80, y2: 80 }
+				{ x1: 80, x2: 100, y1: 20.5, y2: 20.5 },
+				{ x1: 80, x2: 100, y1: 79.5, y2: 79.5 }
 			]);
 		});
 
@@ -106,15 +110,16 @@ describe("GroupingEdgeLinesGenerator", () => {
 			const groupingEdgeLinesGenerator = new GroupingEdgeLinesGenerator({
 				canvasModel,
 				orients: new Set(["bottom", "top"]),
-				staticCoordinateCalculator
+				staticCoordinateCalculator,
+				lineWidth: 1
 			});
 
 			const edgeLines = groupingEdgeLinesGenerator.generate();
 			expect(edgeLines).toEqual([
-				{ x1: 20, x2: 20, y1: 80, y2: 90 },
-				{ x1: 80, x2: 80, y1: 80, y2: 90 },
-				{ x1: 20, x2: 20, y1: 10, y2: 20 },
-				{ x1: 80, x2: 80, y1: 10, y2: 20 }
+				{ x1: 20.5, x2: 20.5, y1: 80, y2: 90 },
+				{ x1: 79.5, x2: 79.5, y1: 80, y2: 90 },
+				{ x1: 20.5, x2: 20.5, y1: 10, y2: 20 },
+				{ x1: 79.5, x2: 79.5, y1: 10, y2: 20 }
 			]);
 		});
 
@@ -134,15 +139,16 @@ describe("GroupingEdgeLinesGenerator", () => {
 			const groupingEdgeLinesGenerator = new GroupingEdgeLinesGenerator({
 				canvasModel,
 				orients: new Set(["bottom", "top"]),
-				staticCoordinateCalculator
+				staticCoordinateCalculator,
+				lineWidth: 1
 			});
 
 			const edgeLines = groupingEdgeLinesGenerator.generate();
 			expect(edgeLines).toEqual([
-				{ x1: 20, x2: 20, y1: 80, y2: 90 },
-				{ x1: 80, x2: 80, y1: 80, y2: 90 },
-				{ x1: 20, x2: 20, y1: 10, y2: 20 },
-				{ x1: 80, x2: 80, y1: 10, y2: 20 }
+				{ x1: 20.5, x2: 20.5, y1: 80, y2: 90 },
+				{ x1: 79.5, x2: 79.5, y1: 80, y2: 90 },
+				{ x1: 20.5, x2: 20.5, y1: 10, y2: 20 },
+				{ x1: 79.5, x2: 79.5, y1: 10, y2: 20 }
 			]);
 		});
 	});

@@ -28,6 +28,10 @@ export class GroupingConfigReader {
 		return !!this.groupingOptions && this.groupingOptions.items.length > 0;
 	}
 
+	getLineWidth(): number {
+		return 1;
+	}
+
 	getUsingOrients(): Set<Orient> {
 		const usingOrients = new Set<Orient>();
 		for (const item of this.groupingOptions?.items ?? []) {

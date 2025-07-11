@@ -115,7 +115,8 @@ export class TwoDimensionalModel {
 		const groupingEdgeLinesGenerator = new GroupingEdgeLinesGenerator({
 			canvasModel,
 			orients: configReader.grouping.getUsingOrients(),
-			staticCoordinateCalculator: groupingStaticCoordinateCalculator
+			staticCoordinateCalculator: groupingStaticCoordinateCalculator,
+			lineWidth: configReader.grouping.getLineWidth()
 		});
 
 		return {

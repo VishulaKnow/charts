@@ -6,6 +6,7 @@ interface GroupingEdgeLinesGeneratorOptions {
 	orients: Iterable<Orient>;
 	staticCoordinateCalculator: GroupingStaticCoordinateCalculator;
 	canvasModel: CanvasModel;
+	lineWidth: number;
 }
 
 export class GroupingEdgeLinesGenerator {
@@ -22,8 +23,8 @@ export class GroupingEdgeLinesGenerator {
 				const rightX =
 					this.options.canvasModel.getBlockSize().width - this.options.canvasModel.getMarginSide("right");
 				edgeLines = edgeLines.concat([
-					{ x1: leftX, x2: leftX, y1, y2 },
-					{ x1: rightX, x2: rightX, y1, y2 }
+					{ x1: leftX + this.options.lineWidth / 2, x2: leftX + this.options.lineWidth / 2, y1, y2 },
+					{ x1: rightX - this.options.lineWidth / 2, x2: rightX - this.options.lineWidth / 2, y1, y2 }
 				]);
 			}
 
@@ -35,8 +36,8 @@ export class GroupingEdgeLinesGenerator {
 				const rightX =
 					this.options.canvasModel.getBlockSize().width - this.options.canvasModel.getMarginSide("right");
 				edgeLines = edgeLines.concat([
-					{ x1: leftX, x2: leftX, y1, y2 },
-					{ x1: rightX, x2: rightX, y1, y2 }
+					{ x1: leftX + this.options.lineWidth / 2, x2: leftX + this.options.lineWidth / 2, y1, y2 },
+					{ x1: rightX - this.options.lineWidth / 2, x2: rightX - this.options.lineWidth / 2, y1, y2 }
 				]);
 			}
 
@@ -47,8 +48,8 @@ export class GroupingEdgeLinesGenerator {
 				const bottomY =
 					this.options.canvasModel.getBlockSize().height - this.options.canvasModel.getMarginSide("bottom");
 				edgeLines = edgeLines.concat([
-					{ x1, x2, y1: topY, y2: topY },
-					{ x1, x2, y1: bottomY, y2: bottomY }
+					{ x1, x2, y1: topY + this.options.lineWidth / 2, y2: topY + this.options.lineWidth / 2 },
+					{ x1, x2, y1: bottomY - this.options.lineWidth / 2, y2: bottomY - this.options.lineWidth / 2 }
 				]);
 			}
 
@@ -60,8 +61,8 @@ export class GroupingEdgeLinesGenerator {
 				const bottomY =
 					this.options.canvasModel.getBlockSize().height - this.options.canvasModel.getMarginSide("bottom");
 				edgeLines = edgeLines.concat([
-					{ x1, x2, y1: topY, y2: topY },
-					{ x1, x2, y1: bottomY, y2: bottomY }
+					{ x1, x2, y1: topY + this.options.lineWidth / 2, y2: topY + this.options.lineWidth / 2 },
+					{ x1, x2, y1: bottomY - this.options.lineWidth / 2, y2: bottomY - this.options.lineWidth / 2 }
 				]);
 			}
 		}
