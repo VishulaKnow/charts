@@ -10,7 +10,8 @@ describe("GroupingSplitLinesGenerator", () => {
 
 	describe("generate", () => {
 		it("should set split line in the middle between two records in group (bottom)", () => {
-			const staticCoordinateCalculator = new GroupingStaticCoordinateCalculator(canvasModel, {
+			const staticCoordinateCalculator = new GroupingStaticCoordinateCalculator({
+				canvasModel,
 				otherComponentSizes: {
 					legendTotalNeededSpace: 10,
 					titleTotalNeededSpace: 10
@@ -36,7 +37,8 @@ describe("GroupingSplitLinesGenerator", () => {
 		});
 
 		it("should set split line in the middle between two records in group (with multiple records in the group) (bottom)", () => {
-			const staticCoordinateCalculator = new GroupingStaticCoordinateCalculator(canvasModel, {
+			const staticCoordinateCalculator = new GroupingStaticCoordinateCalculator({
+				canvasModel,
 				otherComponentSizes: {
 					legendTotalNeededSpace: 10,
 					titleTotalNeededSpace: 10
@@ -66,7 +68,8 @@ describe("GroupingSplitLinesGenerator", () => {
 		});
 
 		it("should set split line in the middle between two records in group (with multiple records in the group) (top)", () => {
-			const staticCoordinateCalculator = new GroupingStaticCoordinateCalculator(canvasModel, {
+			const staticCoordinateCalculator = new GroupingStaticCoordinateCalculator({
+				canvasModel,
 				otherComponentSizes: {
 					legendTotalNeededSpace: 10,
 					titleTotalNeededSpace: 10

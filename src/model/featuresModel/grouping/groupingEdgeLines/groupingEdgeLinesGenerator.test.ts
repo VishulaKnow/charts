@@ -9,7 +9,8 @@ describe("GroupingEdgeLinesGenerator", () => {
 
 	describe("generate", () => {
 		it("should return two edge lines for one group (top)", () => {
-			const staticCoordinateCalculator = new GroupingStaticCoordinateCalculator(canvasModel, {
+			const staticCoordinateCalculator = new GroupingStaticCoordinateCalculator({
+				canvasModel,
 				otherComponentSizes: {
 					legendTotalNeededSpace: 10,
 					titleTotalNeededSpace: 10
@@ -31,7 +32,8 @@ describe("GroupingEdgeLinesGenerator", () => {
 		});
 
 		it("should return two edge lines for one group (bottom)", () => {
-			const staticCoordinateCalculator = new GroupingStaticCoordinateCalculator(canvasModel, {
+			const staticCoordinateCalculator = new GroupingStaticCoordinateCalculator({
+				canvasModel,
 				otherComponentSizes: {
 					legendTotalNeededSpace: 10,
 					titleTotalNeededSpace: 10
@@ -53,7 +55,8 @@ describe("GroupingEdgeLinesGenerator", () => {
 		});
 
 		it("should return two edge lines for one group (left)", () => {
-			const staticCoordinateCalculator = new GroupingStaticCoordinateCalculator(canvasModel, {
+			const staticCoordinateCalculator = new GroupingStaticCoordinateCalculator({
+				canvasModel,
 				otherComponentSizes: {
 					legendTotalNeededSpace: 10,
 					titleTotalNeededSpace: 10
@@ -75,7 +78,8 @@ describe("GroupingEdgeLinesGenerator", () => {
 		});
 
 		it("should return two edge lines for one group (bottom)", () => {
-			const staticCoordinateCalculator = new GroupingStaticCoordinateCalculator(canvasModel, {
+			const staticCoordinateCalculator = new GroupingStaticCoordinateCalculator({
+				canvasModel,
 				otherComponentSizes: {
 					legendTotalNeededSpace: 10,
 					titleTotalNeededSpace: 10
@@ -97,7 +101,8 @@ describe("GroupingEdgeLinesGenerator", () => {
 		});
 
 		it("should return four edge lines for two groups", () => {
-			const staticCoordinateCalculator = new GroupingStaticCoordinateCalculator(canvasModel, {
+			const staticCoordinateCalculator = new GroupingStaticCoordinateCalculator({
+				canvasModel,
 				otherComponentSizes: {
 					legendTotalNeededSpace: 10,
 					titleTotalNeededSpace: 10
@@ -124,7 +129,8 @@ describe("GroupingEdgeLinesGenerator", () => {
 		});
 
 		it("should return four edge lines for more than two groups", () => {
-			const staticCoordinateCalculator = new GroupingStaticCoordinateCalculator(canvasModel, {
+			const staticCoordinateCalculator = new GroupingStaticCoordinateCalculator({
+				canvasModel,
 				otherComponentSizes: {
 					legendTotalNeededSpace: 10,
 					titleTotalNeededSpace: 10

@@ -102,7 +102,8 @@ export class TwoDimensionalModel {
 		const keyScale = scaleModel.getScaleKey(modelInstance.dataModel.getAllowableKeys());
 		const isHorizontal = options.orientation === "horizontal";
 
-		const groupingStaticCoordinateCalculator = new GroupingStaticCoordinateCalculator(canvasModel, {
+		const groupingStaticCoordinateCalculator = new GroupingStaticCoordinateCalculator({
+			canvasModel,
 			otherComponentSizes: {
 				titleTotalNeededSpace: canvasModel.titleCanvas.getAllNeededSpace(),
 				legendTotalNeededSpace: canvasModel.legendCanvas.getAllNeededSpace()

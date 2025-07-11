@@ -13,7 +13,8 @@ describe("GroupingLabelsCoordinateHandlers", () => {
 				canvasModel,
 				orient: "top",
 				sideIndex: 0,
-				staticCoordinateCalculator: new GroupingStaticCoordinateCalculator(canvasModel, {
+				staticCoordinateCalculator: new GroupingStaticCoordinateCalculator({
+					canvasModel,
 					otherComponentSizes: {
 						titleTotalNeededSpace: 20,
 						legendTotalNeededSpace: 30
@@ -30,7 +31,8 @@ describe("GroupingLabelsCoordinateHandlers", () => {
 				canvasModel,
 				orient: "bottom",
 				sideIndex: 0,
-				staticCoordinateCalculator: new GroupingStaticCoordinateCalculator(canvasModel, {
+				staticCoordinateCalculator: new GroupingStaticCoordinateCalculator({
+					canvasModel,
 					otherComponentSizes: {
 						titleTotalNeededSpace: 20,
 						legendTotalNeededSpace: 30
@@ -47,7 +49,8 @@ describe("GroupingLabelsCoordinateHandlers", () => {
 				canvasModel,
 				orient: "left",
 				sideIndex: 1,
-				staticCoordinateCalculator: new GroupingStaticCoordinateCalculator(canvasModel, {
+				staticCoordinateCalculator: new GroupingStaticCoordinateCalculator({
+					canvasModel,
 					otherComponentSizes: {
 						titleTotalNeededSpace: 20,
 						legendTotalNeededSpace: 30
@@ -68,7 +71,8 @@ describe("GroupingLabelsCoordinateHandlers", () => {
 				canvasModel,
 				orient: "right",
 				sideIndex: 1,
-				staticCoordinateCalculator: new GroupingStaticCoordinateCalculator(canvasModel, {
+				staticCoordinateCalculator: new GroupingStaticCoordinateCalculator({
+					canvasModel,
 					otherComponentSizes: {
 						titleTotalNeededSpace: 20,
 						legendTotalNeededSpace: 30
@@ -91,7 +95,8 @@ describe("GroupingLabelsCoordinateHandlers", () => {
 				canvasModel,
 				orient: "top",
 				sideIndex: 0,
-				staticCoordinateCalculator: new GroupingStaticCoordinateCalculator(canvasModel, {
+				staticCoordinateCalculator: new GroupingStaticCoordinateCalculator({
+					canvasModel,
 					otherComponentSizes: {
 						titleTotalNeededSpace: 20,
 						legendTotalNeededSpace: 30
@@ -108,7 +113,8 @@ describe("GroupingLabelsCoordinateHandlers", () => {
 				canvasModel,
 				orient: "bottom",
 				sideIndex: 0,
-				staticCoordinateCalculator: new GroupingStaticCoordinateCalculator(canvasModel, {
+				staticCoordinateCalculator: new GroupingStaticCoordinateCalculator({
+					canvasModel,
 					otherComponentSizes: {
 						titleTotalNeededSpace: 20,
 						legendTotalNeededSpace: 30
@@ -125,7 +131,8 @@ describe("GroupingLabelsCoordinateHandlers", () => {
 				canvasModel,
 				orient: "bottom",
 				sideIndex: 1,
-				staticCoordinateCalculator: new GroupingStaticCoordinateCalculator(canvasModel, {
+				staticCoordinateCalculator: new GroupingStaticCoordinateCalculator({
+					canvasModel,
 					otherComponentSizes: {
 						titleTotalNeededSpace: 20,
 						legendTotalNeededSpace: 30
