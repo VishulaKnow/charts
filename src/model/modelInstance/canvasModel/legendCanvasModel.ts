@@ -28,7 +28,7 @@ export class LegendCanvasModelInstance {
 	}
 
 	getAllNeededSpace() {
-		if (!this.sizeAndPadInited) throw new Error("LegendCanvasModel padding and size are not initialized");
+		if (!this.sizeAndPadInited) return 0;
 		return this.size + this.pad;
 	}
 }
