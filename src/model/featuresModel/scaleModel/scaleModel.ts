@@ -51,13 +51,14 @@ export class ScaleModel {
 		}
 
 		if (type === "band") {
-			const elementsInGroupAmount = getElementsAmountForScale(bandLikeCharts);
-
 			return {
 				...baseModel,
 				type: "band",
-				elementsAmount: elementsInGroupAmount,
-				sizes: this.getBandScaleSizeParams(baseModel.domain, baseModel.range, elementsInGroupAmount)
+				sizes: this.getBandScaleSizeParams(
+					baseModel.domain,
+					baseModel.range,
+					getElementsAmountForScale(bandLikeCharts)
+				)
 			};
 		}
 
@@ -102,9 +103,9 @@ export class ScaleModel {
 			(Math.abs(range.end - range.start) + paddings.inner - 2 * paddings.outer) / domainValues.length;
 		const getBandSize = () => getStepSize() - paddings.inner;
 
-		const initialBandSize = getBandSize();
+		const oneKeyTotalSpace = getBandSize();
 
-		if (this.barCanvas.groupMinDistance < initialBandSize) {
+		if (this.barCanvas.groupMinDistance < oneKeyTotalSpace) {
 			paddings.inner = this.barCanvas.groupMinDistance;
 			paddings.outer = this.barCanvas.groupMinDistance / 2;
 		}
@@ -133,7 +134,7 @@ export class ScaleModel {
 		return {
 			paddingInner: paddings.inner,
 			paddingOuter: paddings.outer,
-			bandSize: initialBandSize,
+			oneKeyTotalSpace,
 			recalculatedStepSize: getStepSize()
 		};
 	}

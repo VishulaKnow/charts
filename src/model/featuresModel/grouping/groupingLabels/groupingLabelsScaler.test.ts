@@ -1,18 +1,21 @@
-import { GroupingCanvasCalculator } from "../groupingCanvasCalculator/groupingCanvasCalculator";
+import { ScaleCanvasSizesCalculator } from "../../scaleModel/sizaCalculators/scaleCanvasSizesCalculator";
+import { GroupingDataAmountCalculator } from "../groupingDataAmountCalculator/groupingDataAmountCalculator";
 import { GroupingLabelsCoordinateScaler } from "./groupingLabelsScaler";
 
 describe("GroupingLabelsCoordinateScaler", () => {
 	it("should set center of range if there is only one row", () => {
 		const scaler = new GroupingLabelsCoordinateScaler({
-			groupingCanvasCalculator: new GroupingCanvasCalculator({
+			dataAmountCalculator: new GroupingDataAmountCalculator({
 				dataRows: [{ brand: "brand1" }],
-				field: { name: "brand" },
-				keyScaleInfo: {
+				field: { name: "brand" }
+			}),
+			sizesCalculator: new ScaleCanvasSizesCalculator({
+				keyScale: {
 					type: "band",
-					keyAxisOuterPadding: 20,
-					keyAxisInnerPadding: 10
-				},
-				range: { start: 0, end: 100 }
+					sizes: { paddingInner: 10, paddingOuter: 20, oneKeyTotalSpace: 100, recalculatedStepSize: 10 },
+					domain: ["brand1"],
+					range: { start: 0, end: 100 }
+				}
 			})
 		});
 		expect(scaler.scaleForKey("brand1")).toBe(50);
@@ -20,7 +23,7 @@ describe("GroupingLabelsCoordinateScaler", () => {
 
 	it("should set coordinates according to the number of rows of each item", () => {
 		const scaler = new GroupingLabelsCoordinateScaler({
-			groupingCanvasCalculator: new GroupingCanvasCalculator({
+			dataAmountCalculator: new GroupingDataAmountCalculator({
 				dataRows: [
 					{ brand: "brand1" },
 					{ brand: "brand1" },
@@ -28,13 +31,15 @@ describe("GroupingLabelsCoordinateScaler", () => {
 					{ brand: "brand2" },
 					{ brand: "brand2" }
 				],
-				field: { name: "brand" },
-				keyScaleInfo: {
+				field: { name: "brand" }
+			}),
+			sizesCalculator: new ScaleCanvasSizesCalculator({
+				keyScale: {
 					type: "band",
-					keyAxisOuterPadding: 0,
-					keyAxisInnerPadding: 10
-				},
-				range: { start: 0, end: 100 }
+					sizes: { paddingInner: 10, paddingOuter: 0, oneKeyTotalSpace: 100, recalculatedStepSize: 10 },
+					domain: ["1", "2", "3", "4", "5"],
+					range: { start: 0, end: 100 }
+				}
 			})
 		});
 		expect(scaler.scaleForKey("brand1")).toBe(17);
@@ -43,7 +48,7 @@ describe("GroupingLabelsCoordinateScaler", () => {
 
 	it("shouldn't change coordinate by inner padding for rows that is not first or last", () => {
 		const scaler = new GroupingLabelsCoordinateScaler({
-			groupingCanvasCalculator: new GroupingCanvasCalculator({
+			dataAmountCalculator: new GroupingDataAmountCalculator({
 				dataRows: [
 					{ brand: "brand1" },
 					{ brand: "brand1" },
@@ -55,13 +60,15 @@ describe("GroupingLabelsCoordinateScaler", () => {
 					{ brand: "brand3" },
 					{ brand: "brand3" }
 				],
-				field: { name: "brand" },
-				keyScaleInfo: {
+				field: { name: "brand" }
+			}),
+			sizesCalculator: new ScaleCanvasSizesCalculator({
+				keyScale: {
 					type: "band",
-					keyAxisOuterPadding: 10,
-					keyAxisInnerPadding: 5
-				},
-				range: { start: 0, end: 105 }
+					sizes: { paddingInner: 5, paddingOuter: 10, oneKeyTotalSpace: 100, recalculatedStepSize: 10 },
+					domain: ["1", "2", "3", "4", "5", "6", "7", "8", "9"],
+					range: { start: 0, end: 105 }
+				}
 			})
 		});
 		expect(scaler.scaleForKey("brand1")).toBe(22.5);
@@ -71,7 +78,7 @@ describe("GroupingLabelsCoordinateScaler", () => {
 
 	it("should set coordinates correctly for point scale", () => {
 		const scaler = new GroupingLabelsCoordinateScaler({
-			groupingCanvasCalculator: new GroupingCanvasCalculator({
+			dataAmountCalculator: new GroupingDataAmountCalculator({
 				dataRows: [
 					{ brand: "brand1" },
 					{ brand: "brand1" },
@@ -83,11 +90,14 @@ describe("GroupingLabelsCoordinateScaler", () => {
 					{ brand: "brand3" },
 					{ brand: "brand3" }
 				],
-				field: { name: "brand" },
-				keyScaleInfo: {
-					type: "point"
-				},
-				range: { start: 0, end: 100 }
+				field: { name: "brand" }
+			}),
+			sizesCalculator: new ScaleCanvasSizesCalculator({
+				keyScale: {
+					type: "point",
+					domain: ["1", "2", "3", "4", "5", "6", "7", "8", "9"],
+					range: { start: 0, end: 100 }
+				}
 			})
 		});
 		expect(scaler.scaleForKey("brand1")).toBe(12.5);
@@ -97,13 +107,16 @@ describe("GroupingLabelsCoordinateScaler", () => {
 
 	it("should set coordinates correctly for edge points of point scale", () => {
 		const scaler = new GroupingLabelsCoordinateScaler({
-			groupingCanvasCalculator: new GroupingCanvasCalculator({
+			dataAmountCalculator: new GroupingDataAmountCalculator({
 				dataRows: [{ brand: "brand1" }, { brand: "brand2" }, { brand: "brand2" }, { brand: "brand3" }],
-				field: { name: "brand" },
-				keyScaleInfo: {
-					type: "point"
-				},
-				range: { start: 0, end: 100 }
+				field: { name: "brand" }
+			}),
+			sizesCalculator: new ScaleCanvasSizesCalculator({
+				keyScale: {
+					type: "point",
+					domain: ["1", "2", "3", "4"],
+					range: { start: 0, end: 100 }
+				}
 			})
 		});
 		expect(scaler.scaleForKey("brand1")).toBe(0);

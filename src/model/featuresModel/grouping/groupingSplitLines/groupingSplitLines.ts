@@ -1,10 +1,12 @@
 import { GroupingSplitLineAttributes, Orient } from "../../../model";
 import { CanvasModel } from "../../../modelInstance/canvasModel/canvasModel";
-import { GroupingCanvasCalculator } from "../groupingCanvasCalculator/groupingCanvasCalculator";
+import { ScaleCanvasSizesCalculator } from "../../scaleModel/sizaCalculators/scaleCanvasSizesCalculator";
+import { GroupingDataAmountCalculator } from "../groupingDataAmountCalculator/groupingDataAmountCalculator";
 import { GroupingStaticCoordinateCalculator } from "../groupingLabels/staticCoordinateCalculator";
 
 interface GroupingSplitLinesGeneratorOptions {
-	groupingCanvasCalculator: GroupingCanvasCalculator;
+	dataAmountCalculator: GroupingDataAmountCalculator;
+	sizesCalculator: ScaleCanvasSizesCalculator;
 	orient: Orient;
 	sideIndex: number;
 	staticCoordinateCalculator: GroupingStaticCoordinateCalculator;
@@ -17,18 +19,15 @@ export class GroupingSplitLinesGenerator {
 	generate(): GroupingSplitLineAttributes[] {
 		let previousTotalShares = 0;
 		const coordinates: number[] = [];
-		const { keyAxisInnerPadding, keyAxisOuterPadding, oneShareSize, rowsCountsPerGroups } =
-			this.options.groupingCanvasCalculator.calculate();
+		const { innerPadding, outerPadding, oneKeyPureSize } = this.options.sizesCalculator.calculate();
+		const { rowsCountsPerGroups } = this.options.dataAmountCalculator.calculate();
 		for (let rowIndex = 0; rowIndex < rowsCountsPerGroups.length - 1; rowIndex++) {
 			const rowsAmount = rowsCountsPerGroups[rowIndex];
 
-			let previousShift = previousTotalShares * (oneShareSize + keyAxisInnerPadding);
+			let previousShift = previousTotalShares * (oneKeyPureSize + innerPadding);
 
 			const coordinate =
-				previousShift +
-				keyAxisOuterPadding +
-				rowsAmount * (oneShareSize + keyAxisInnerPadding) -
-				keyAxisInnerPadding / 2;
+				previousShift + outerPadding + rowsAmount * (oneKeyPureSize + innerPadding) - innerPadding / 2;
 			coordinates.push(coordinate);
 			previousTotalShares += rowsAmount;
 		}

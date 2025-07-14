@@ -572,11 +572,10 @@ describe("get scales tests", () => {
 				end: 960
 			},
 			type: "band",
-			elementsAmount: 2,
 			sizes: {
 				paddingInner: 35,
 				paddingOuter: 352,
-				bandSize: 320,
+				oneKeyTotalSpace: 320,
 				recalculatedStepSize: 97 // 97 * 3 - 35 + 352 * 2 = 960
 			}
 		});
@@ -607,11 +606,10 @@ describe("get scales tests", () => {
 				end: 960
 			},
 			type: "band",
-			elementsAmount: 1,
 			sizes: {
 				paddingInner: 35,
 				paddingOuter: 400,
-				bandSize: 320,
+				oneKeyTotalSpace: 320,
 				recalculatedStepSize: 65 // 97 * 3 - 35 + 400 * 2 = 960
 			}
 		});

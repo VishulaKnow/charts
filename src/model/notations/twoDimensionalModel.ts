@@ -43,14 +43,13 @@ import { createRecordOverflowModel } from "../featuresModel/recordOverflowModel/
 import { TwoDimTooltipContentGenerator } from "../featuresModel/tooltipModel/tooltipContentModel";
 import { TwoDimInitialRowsProvider } from "../featuresModel/tooltipModel/contentByNotations/twoDimInitialRowsProvider";
 import { GroupingLabelsCoordinateHandler } from "../featuresModel/grouping/groupingLabels/groupingLabelsCoordinateHandlers";
-import {
-	GroupingLabelsCoordinateScaler,
-	KeyScaleInfoForGroupingLabelsScaler
-} from "../featuresModel/grouping/groupingLabels/groupingLabelsScaler";
+import { GroupingLabelsCoordinateScaler } from "../featuresModel/grouping/groupingLabels/groupingLabelsScaler";
 import { GroupingStaticCoordinateCalculator } from "../featuresModel/grouping/groupingLabels/staticCoordinateCalculator";
 import { GroupingEdgeLinesGenerator } from "../featuresModel/grouping/groupingEdgeLines/groupingEdgeLinesGenerator";
 import { GroupingSplitLinesGenerator } from "../featuresModel/grouping/groupingSplitLines/groupingSplitLines";
-import { GroupingCanvasCalculator } from "../featuresModel/grouping/groupingCanvasCalculator/groupingCanvasCalculator";
+import { GroupingDataAmountCalculator } from "../featuresModel/grouping/groupingDataAmountCalculator/groupingDataAmountCalculator";
+import { ScaleCanvasSizesCalculator } from "../featuresModel/scaleModel/sizaCalculators/scaleCanvasSizesCalculator";
+import { KeyTotalSpaceCalculator } from "../featuresModel/scaleModel/sizaCalculators/keyTotalSpaceCalculator";
 
 export class TwoDimensionalModel {
 	public static getOptions(
@@ -120,8 +119,21 @@ export class TwoDimensionalModel {
 			lineWidth: configReader.grouping.getLineWidth()
 		});
 
+		const scaleSizesCalculator = new ScaleCanvasSizesCalculator({ keyScale });
+		const keyTotalSpaceCalculator = new KeyTotalSpaceCalculator({ scaleSizesCalculator });
+
 		return {
 			legend: canvasModel.legendCanvas.getModel(),
+			canvasEvents: {
+				drawCompleted: () => {
+					options.events?.drawComplete?.({
+						canvas: {
+							plotAreaMargin: canvasModel.getMargin(),
+							keyItems: keyTotalSpaceCalculator.calculate()
+						}
+					});
+				}
+			},
 			title: {
 				textContent: titleConfig.getTextContent(),
 				fontSize: titleConfig.getFontSize()
@@ -132,22 +144,14 @@ export class TwoDimensionalModel {
 				items: configReader.grouping
 					.getPreparedOptions(modelInstance.dataModel.repository.getScopedRows())
 					.map<TwoDimGroupingItemModel>((prepared) => {
-						let keyScaleInfo: KeyScaleInfoForGroupingLabelsScaler;
-						if (keyScale.type === "band") {
-							keyScaleInfo = {
-								type: keyScale.type,
-								keyAxisOuterPadding: keyScale.sizes.paddingOuter,
-								keyAxisInnerPadding: keyScale.sizes.paddingInner
-							};
-						} else keyScaleInfo = { type: "point" };
-
-						const groupingCanvasCalculator = new GroupingCanvasCalculator({
+						const groupingDataAmountCalculator = new GroupingDataAmountCalculator({
 							dataRows: modelInstance.dataModel.repository.getScopedRows(),
-							field: prepared.field,
-							keyScaleInfo,
-							range: keyScale.range
+							field: prepared.field
 						});
-						const scaler = new GroupingLabelsCoordinateScaler({ groupingCanvasCalculator });
+						const scaler = new GroupingLabelsCoordinateScaler({
+							dataAmountCalculator: groupingDataAmountCalculator,
+							sizesCalculator: scaleSizesCalculator
+						});
 						const coordinateHandler = new GroupingLabelsCoordinateHandler({
 							canvasModel,
 							orient: prepared.orient,
@@ -159,7 +163,8 @@ export class TwoDimensionalModel {
 							orient: prepared.orient,
 							sideIndex: prepared.sideIndex,
 							staticCoordinateCalculator: groupingStaticCoordinateCalculator,
-							groupingCanvasCalculator
+							dataAmountCalculator: groupingDataAmountCalculator,
+							sizesCalculator: scaleSizesCalculator
 						});
 
 						return {

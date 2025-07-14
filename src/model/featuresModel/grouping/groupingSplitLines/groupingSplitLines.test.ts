@@ -1,5 +1,6 @@
 import { CanvasModel } from "../../../modelInstance/canvasModel/canvasModel";
-import { GroupingCanvasCalculator } from "../groupingCanvasCalculator/groupingCanvasCalculator";
+import { ScaleCanvasSizesCalculator } from "../../scaleModel/sizaCalculators/scaleCanvasSizesCalculator";
+import { GroupingDataAmountCalculator } from "../groupingDataAmountCalculator/groupingDataAmountCalculator";
 import { GroupingStaticCoordinateCalculator } from "../groupingLabels/staticCoordinateCalculator";
 import { GroupingSplitLinesGenerator } from "./groupingSplitLines";
 
@@ -10,25 +11,29 @@ describe("GroupingSplitLinesGenerator", () => {
 
 	describe("generate", () => {
 		it("should set split line in the middle between two records in group (bottom)", () => {
-			const staticCoordinateCalculator = new GroupingStaticCoordinateCalculator({
-				canvasModel,
-				otherComponentSizes: {
-					legendTotalNeededSpace: 10,
-					titleTotalNeededSpace: 10
-				},
-				groupingItemSizes: [{ orient: "top", size: 10 }]
-			});
-
 			const groupingSplitLinesGenerator = new GroupingSplitLinesGenerator({
 				canvasModel,
-				staticCoordinateCalculator,
+				staticCoordinateCalculator: new GroupingStaticCoordinateCalculator({
+					canvasModel,
+					otherComponentSizes: {
+						legendTotalNeededSpace: 10,
+						titleTotalNeededSpace: 10
+					},
+					groupingItemSizes: [{ orient: "top", size: 10 }]
+				}),
 				orient: "bottom",
 				sideIndex: 0,
-				groupingCanvasCalculator: new GroupingCanvasCalculator({
+				dataAmountCalculator: new GroupingDataAmountCalculator({
 					dataRows: [{ brand: "brand1" }, { brand: "brand2" }],
-					field: { name: "brand" },
-					keyScaleInfo: { type: "band", keyAxisOuterPadding: 0, keyAxisInnerPadding: 10 },
-					range: { start: 0, end: 90 }
+					field: { name: "brand" }
+				}),
+				sizesCalculator: new ScaleCanvasSizesCalculator({
+					keyScale: {
+						type: "band",
+						sizes: { paddingInner: 10, paddingOuter: 0, oneKeyTotalSpace: 20, recalculatedStepSize: 10 },
+						domain: ["1", "2"],
+						range: { start: 0, end: 90 }
+					}
 				})
 			});
 
@@ -51,11 +56,17 @@ describe("GroupingSplitLinesGenerator", () => {
 				staticCoordinateCalculator,
 				orient: "bottom",
 				sideIndex: 0,
-				groupingCanvasCalculator: new GroupingCanvasCalculator({
+				dataAmountCalculator: new GroupingDataAmountCalculator({
 					dataRows: [{ brand: "brand1" }, { brand: "brand2" }, { brand: "brand3" }, { brand: "brand4" }],
-					field: { name: "brand" },
-					keyScaleInfo: { type: "band", keyAxisOuterPadding: 10, keyAxisInnerPadding: 10 },
-					range: { start: 0, end: 90 }
+					field: { name: "brand" }
+				}),
+				sizesCalculator: new ScaleCanvasSizesCalculator({
+					keyScale: {
+						type: "band",
+						sizes: { paddingInner: 10, paddingOuter: 10, oneKeyTotalSpace: 20, recalculatedStepSize: 10 },
+						domain: ["1", "2", "3", "4"],
+						range: { start: 0, end: 90 }
+					}
 				})
 			});
 
@@ -82,11 +93,17 @@ describe("GroupingSplitLinesGenerator", () => {
 				staticCoordinateCalculator,
 				orient: "top",
 				sideIndex: 0,
-				groupingCanvasCalculator: new GroupingCanvasCalculator({
+				dataAmountCalculator: new GroupingDataAmountCalculator({
 					dataRows: [{ brand: "brand1" }, { brand: "brand2" }, { brand: "brand3" }, { brand: "brand4" }],
-					field: { name: "brand" },
-					keyScaleInfo: { type: "band", keyAxisOuterPadding: 10, keyAxisInnerPadding: 10 },
-					range: { start: 0, end: 90 }
+					field: { name: "brand" }
+				}),
+				sizesCalculator: new ScaleCanvasSizesCalculator({
+					keyScale: {
+						type: "band",
+						sizes: { paddingInner: 10, paddingOuter: 10, oneKeyTotalSpace: 20, recalculatedStepSize: 10 },
+						domain: ["1", "2", "3", "4"],
+						range: { start: 0, end: 90 }
+					}
 				})
 			});
 

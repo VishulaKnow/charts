@@ -76,7 +76,7 @@ export class Scale {
 		return scaleBand()
 			.domain(scaleKey.domain)
 			.range([scaleKey.range.start, scaleKey.range.end])
-			.paddingInner(scaleKey.sizes.paddingInner / scaleKey.sizes.bandSize)
+			.paddingInner(scaleKey.sizes.paddingInner / scaleKey.sizes.oneKeyTotalSpace)
 			.paddingOuter(scaleKey.sizes.paddingOuter / scaleKey.sizes.recalculatedStepSize);
 	}
 

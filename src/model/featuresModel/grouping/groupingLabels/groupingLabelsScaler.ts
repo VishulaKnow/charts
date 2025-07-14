@@ -1,25 +1,19 @@
 import { scaleOrdinal } from "d3-scale";
 import { GroupingLabelKey } from "../../../model";
-import { GroupingCanvasCalculator } from "../groupingCanvasCalculator/groupingCanvasCalculator";
+import { GroupingDataAmountCalculator } from "../groupingDataAmountCalculator/groupingDataAmountCalculator";
+import { ScaleCanvasSizesCalculator } from "../../scaleModel/sizaCalculators/scaleCanvasSizesCalculator";
 
 interface GroupingLabelsCoordinateScalerOptions {
-	groupingCanvasCalculator: GroupingCanvasCalculator;
+	dataAmountCalculator: GroupingDataAmountCalculator;
+	sizesCalculator: ScaleCanvasSizesCalculator;
 }
-
-export type KeyScaleInfoForGroupingLabelsScaler =
-	| {
-			type: "band";
-			keyAxisOuterPadding: number;
-			keyAxisInnerPadding: number;
-	  }
-	| { type: "point" };
 
 export class GroupingLabelsCoordinateScaler {
 	private readonly scaleFn: (key: GroupingLabelKey) => number;
 
 	constructor(private readonly options: GroupingLabelsCoordinateScalerOptions) {
-		const { keyAxisInnerPadding, keyAxisOuterPadding, oneShareSize, rowsCountsPerGroups, groupDomain } =
-			this.options.groupingCanvasCalculator.calculate();
+		const { innerPadding, oneKeyPureSize, outerPadding } = this.options.sizesCalculator.calculate();
+		const { rowsCountsPerGroups, groupDomain } = this.options.dataAmountCalculator.calculate();
 
 		let previousTotalShares = 0;
 		const coordinates: number[] = [];
@@ -27,12 +21,10 @@ export class GroupingLabelsCoordinateScaler {
 		for (let rowIndex = 0; rowIndex < rowsCountsPerGroups.length; rowIndex++) {
 			const rowsAmount = rowsCountsPerGroups[rowIndex];
 
-			let previousShift = previousTotalShares * (oneShareSize + keyAxisInnerPadding);
+			let previousShift = previousTotalShares * (oneKeyPureSize + innerPadding);
 
 			const centerOfDomainItem =
-				previousShift +
-				(rowsAmount * oneShareSize + (rowsAmount - 1) * keyAxisInnerPadding) / 2 +
-				keyAxisOuterPadding;
+				previousShift + (rowsAmount * oneKeyPureSize + (rowsAmount - 1) * innerPadding) / 2 + outerPadding;
 			coordinates.push(centerOfDomainItem);
 			previousTotalShares += rowsAmount;
 		}

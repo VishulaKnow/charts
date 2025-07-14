@@ -11,7 +11,8 @@ import {
 	ValueLabelsCollisionMode,
 	ValueLabelsRotationOptions,
 	ValueLabelsHandleElement,
-	MdtChartsFieldName
+	MdtChartsFieldName,
+	BlockMargin as ConfigBlockMargin
 } from "../config/config";
 import {
 	DataType,
@@ -58,12 +59,7 @@ export interface BlockCanvas {
 export interface ChartBlockModel {
 	margin: BlockMargin;
 }
-export interface BlockMargin {
-	top: number;
-	bottom: number;
-	left: number;
-	right: number;
-}
+export type BlockMargin = ConfigBlockMargin;
 
 //====================================================== Options
 
@@ -119,6 +115,9 @@ export interface TwoDimensionalOptionsModel extends GraphicNotationOptionsModel 
 	chartSettings: TwoDimChartElementsSettings;
 	valueLabels: TwoDimensionalValueLabels;
 	grouping: TwoDimGroupingModel;
+	canvasEvents: {
+		drawCompleted: () => void;
+	};
 }
 export interface PolarOptionsModel extends GraphicNotationOptionsModel {
 	type: "polar";
@@ -183,14 +182,12 @@ export type ScaleKeyModel = ScaleBandModel | ScalePointModel;
 export interface ScaleBandModel extends BaseScaleKeyModel {
 	type: "band";
 	sizes: ScaleBandModelSizeParams;
-	/** @deprecated Use sizes instead */
-	elementsAmount: number;
 }
 
 export interface ScaleBandModelSizeParams {
 	paddingOuter: number;
 	paddingInner: number;
-	bandSize: number;
+	oneKeyTotalSpace: number;
 	recalculatedStepSize: number;
 }
 

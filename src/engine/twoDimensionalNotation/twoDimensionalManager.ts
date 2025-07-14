@@ -152,6 +152,8 @@ export class TwoDimensionalManager implements ChartContentManager {
 			this.linearGradientDef = new LinearGradientDef();
 			this.linearGradientDef.render(engine.block.svg.ensureDefsRendered(), options.defs.gradients);
 		}
+
+		model.options.canvasEvents.drawCompleted();
 	}
 
 	public updateData(block: Block, model: Model<TwoDimensionalOptionsModel>, data: MdtChartsDataSource) {
@@ -214,6 +216,7 @@ export class TwoDimensionalManager implements ChartContentManager {
 				options
 			);
 			Tooltip.render(block, model, model.otherComponents.tooltipBlock, scales);
+			model.options.canvasEvents.drawCompleted();
 		});
 
 		RecordOverflowAlertCore.update(block, options.recordOverflowAlert);

@@ -63,6 +63,29 @@ export interface MdtChartsTwoDimensionalOptions extends GraphicNotationOptions {
 	orientation: ChartOrientation;
 	valueLabels?: MdtChartsTwoDimensionalValueLabels;
 	grouping?: TwoDimGroupingOptions;
+	events?: TwoDimensionalEvents;
+}
+
+export interface BlockMargin {
+	top: number;
+	bottom: number;
+	left: number;
+	right: number;
+}
+
+interface TwoDimensionalEvents {
+	drawComplete?: (event: TwoDimensionalDrawCompleteEvent) => void;
+}
+
+interface TwoDimensionalDrawCompleteEvent {
+	canvas: {
+		keyItems: CanvasKeyItemOptions[];
+		plotAreaMargin: BlockMargin;
+	};
+}
+
+export interface CanvasKeyItemOptions {
+	totalSize: number;
 }
 
 export interface MdtChartsPolarOptions extends GraphicNotationOptions {
