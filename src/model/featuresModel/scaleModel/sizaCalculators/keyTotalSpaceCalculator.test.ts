@@ -18,5 +18,21 @@ describe("KeyTotalSpaceCalculator", () => {
 			const result = calculator.calculate();
 			expect(result).toEqual([{ totalSize: 35 }, { totalSize: 30 }, { totalSize: 35 }]);
 		});
+
+		it("should return whole width space if there is only one key", () => {
+			const calculator = new KeyTotalSpaceCalculator({
+				scaleSizesCalculator: new ScaleCanvasSizesCalculator({
+					keyScale: {
+						type: "band",
+						domain: ["a"],
+						range: { start: 0, end: 100 },
+						sizes: { paddingInner: 10, paddingOuter: 10, oneKeyTotalSpace: 20, recalculatedStepSize: 20 }
+					}
+				})
+			});
+
+			const result = calculator.calculate();
+			expect(result).toEqual([{ totalSize: 100 }]);
+		});
 	});
 });
