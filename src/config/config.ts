@@ -66,13 +66,6 @@ export interface MdtChartsTwoDimensionalOptions extends GraphicNotationOptions {
 	events?: TwoDimensionalEvents;
 }
 
-export interface BlockMargin {
-	top: number;
-	bottom: number;
-	left: number;
-	right: number;
-}
-
 interface TwoDimensionalEvents {
 	drawComplete?: (event: TwoDimensionalDrawCompleteEvent) => void;
 }
@@ -82,6 +75,13 @@ interface TwoDimensionalDrawCompleteEvent {
 		keyItems: CanvasKeyItemOptions[];
 		plotAreaMargin: BlockMargin;
 	};
+}
+
+export interface BlockMargin {
+	top: number;
+	bottom: number;
+	left: number;
+	right: number;
 }
 
 export interface CanvasKeyItemOptions {
