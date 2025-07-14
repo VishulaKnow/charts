@@ -16,7 +16,7 @@ export class BlockSvg {
 	private svgCssClasses: string;
 	private hatchPatternDef = new HatchPatternDef();
 
-	private readonly chartBlockClass = "chart-block";
+	private readonly chartBlockClass = "plot-area";
 	private readonly chartGroupClass = "chart-group";
 
 	constructor(options: BlockSvgOptions) {
