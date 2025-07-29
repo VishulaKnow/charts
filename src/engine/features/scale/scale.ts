@@ -80,47 +80,6 @@ export class Scale {
 			.paddingOuter(scaleKey.sizes.paddingOuter / scaleKey.sizes.recalculatedStepSize);
 	}
 
-	//TODO: remove after tests of new way to create scale band
-	private static getScaleBand(
-		domain: string[],
-		range: RangeModel,
-		bandSettings: BarChartSettings,
-		elementsInGroupAmount: number
-	): ScaleBand<string> {
-		const scale = scaleBand().domain(domain).range([range.start, range.end]);
-
-		const bandSize = scale.bandwidth();
-
-		if (bandSettings.groupMinDistance < bandSize) {
-			scale.paddingInner(bandSettings.groupMinDistance / bandSize);
-			scale.paddingOuter(bandSettings.groupMinDistance / bandSize / 2);
-		}
-
-		// Padding inner = 10. If bandwidth more than needed, paddingInner is increased to number less than 35
-		let paddingInner = bandSettings.groupMinDistance;
-		while (
-			scale.bandwidth() >
-				bandSettings.maxBarWidth * elementsInGroupAmount +
-					bandSettings.barDistance * (elementsInGroupAmount - 1) &&
-			paddingInner < bandSettings.groupMaxDistance
-		) {
-			scale.paddingInner(++paddingInner / bandSize);
-		}
-
-		// if bandwidth more than all bars widths in group + distance between it + distance between groups
-		let paddingOuter = 1;
-		while (
-			scale.step() >
-			bandSettings.maxBarWidth * elementsInGroupAmount +
-				bandSettings.groupMaxDistance +
-				bandSettings.barDistance * (elementsInGroupAmount - 1)
-		) {
-			scale.paddingOuter(++paddingOuter / bandSize);
-		}
-
-		return scale;
-	}
-
 	private static getScaleLinear(domain: number[], range: RangeModel): ScaleLinear<number, number, number> {
 		const scale = scaleLinear().domain(domain).range([range.start, range.end]);
 		scale.unknown(scale(0));
