@@ -17,13 +17,15 @@ import {
 	AdditionalElementsOptions,
 	TwoDimChartElementsSettings,
 	Orient,
-	TwoDimGroupingItemModel
+	TwoDimGroupingItemModel,
+	ScaleKeyModel
 } from "../model";
 import { TwoDimConfigReader } from "../modelInstance/configReader/twoDimConfigReader/twoDimConfigReader";
 import { ModelInstance } from "../modelInstance/modelInstance";
 import {
 	calculateBarIndexes,
 	getAreaViewOptions,
+	getBarsAmount,
 	getBarViewOptions,
 	getLegendMarkerOptions,
 	LINE_CHART_DEFAULT_WIDTH,
@@ -50,6 +52,7 @@ import { GroupingSplitLinesGenerator } from "../featuresModel/grouping/groupingS
 import { GroupingDataAmountCalculator } from "../featuresModel/grouping/groupingDataAmountCalculator/groupingDataAmountCalculator";
 import { ScaleCanvasSizesCalculator } from "../featuresModel/scaleModel/sizaCalculators/scaleCanvasSizesCalculator";
 import { KeyTotalSpaceCalculator } from "../featuresModel/scaleModel/sizaCalculators/keyTotalSpaceCalculator";
+import { createBandLikeChartSettingsStore } from "../featuresModel/bandLikeCharts/bandLikeChartSettings";
 
 export class TwoDimensionalModel {
 	public static getOptions(
@@ -85,6 +88,8 @@ export class TwoDimensionalModel {
 			() => scaleValueInfo.scaleFn(0)
 		);
 
+		const keyScale = scaleModel.getScaleKey(modelInstance.dataModel.getAllowableKeys());
+
 		const charts = this.getChartsModel(
 			options.charts,
 			configReader,
@@ -94,11 +99,11 @@ export class TwoDimensionalModel {
 			keyAxis.orient,
 			canvasModel,
 			options.data.keyField.name,
-			modelInstance
+			modelInstance,
+			keyScale
 		);
 
 		const titleConfig = TitleConfigReader.create(options.title, modelInstance);
-		const keyScale = scaleModel.getScaleKey(modelInstance.dataModel.getAllowableKeys());
 		const isHorizontal = options.orientation === "horizontal";
 
 		const groupingStaticCoordinateCalculator = new GroupingStaticCoordinateCalculator({
@@ -297,7 +302,8 @@ export class TwoDimensionalModel {
 		keyAxisOrient: Orient,
 		canvasModel: CanvasModel,
 		keyFieldName: string,
-		modelInstance: ModelInstance
+		modelInstance: ModelInstance,
+		keyScale: ScaleKeyModel
 	): TwoDimensionalChartModel[] {
 		const styleModel = new TwoDimensionalChartStyleModel(charts, designerConfig.chartStyle);
 		const chartsModel: TwoDimensionalChartModel[] = [];
@@ -356,6 +362,14 @@ export class TwoDimensionalModel {
 					strokeWidth: chart.lineStyles?.width ?? LINE_CHART_DEFAULT_WIDTH,
 					renderForKey: (dataRow, valueFieldName) =>
 						dataRow[valueFieldName] !== null && dataRow[valueFieldName] !== undefined
+				},
+				bandLikeViewOptions: {
+					settingsStore: createBandLikeChartSettingsStore(
+						chart.type,
+						designerConfig.canvas.chartOptions.bar,
+						getBarsAmount(charts),
+						keyScale
+					)
 				},
 				barViewOptions: getBarViewOptions(chart, keyAxisOrient, calculateBarIndexes(charts, chart, index)),
 				legend: getLegendMarkerOptions(chart),

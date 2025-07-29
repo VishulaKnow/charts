@@ -171,7 +171,8 @@ export class Bar {
 				field.name,
 				chart.barViewOptions.barIndexes[index],
 				sum(barsAmounts),
-				barSettings
+				barSettings,
+				chart.bandLikeViewOptions.settingsStore
 			);
 
 			this.fillBarAttrs(bars, barAttrs);
@@ -240,7 +241,8 @@ export class Bar {
 			keyField.name,
 			chart.barViewOptions.barIndexes[0],
 			sum(barsAmounts),
-			barSettings
+			barSettings,
+			chart.bandLikeViewOptions.settingsStore
 		);
 
 		this.fillBarAttrs(bars, barAttrs);
@@ -324,7 +326,8 @@ export class Bar {
 				valueField.name,
 				chart.barViewOptions.barIndexes[index],
 				sum(barsAmounts),
-				barSettings
+				barSettings,
+				chart.bandLikeViewOptions.settingsStore
 			);
 
 			const prom = this.fillBarAttrs(bars, barAttrs, block.transitionManager.durations.chartUpdate).then(() => {
@@ -440,7 +443,8 @@ export class Bar {
 			keyField.name,
 			chart.barViewOptions.barIndexes[0],
 			sum(barsAmounts),
-			barSettings
+			barSettings,
+			chart.bandLikeViewOptions.settingsStore
 		);
 
 		const prom = this.fillBarAttrs(bars, barAttrs, block.transitionManager.durations.chartUpdate).then(() => {

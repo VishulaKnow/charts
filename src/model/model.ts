@@ -189,6 +189,7 @@ export interface ScaleBandModelSizeParams {
 	paddingInner: number;
 	oneKeyTotalSpace: number;
 	recalculatedStepSize: number;
+	bandSize: number;
 }
 
 export interface ScalePointModel extends BaseScaleKeyModel {
@@ -485,6 +486,19 @@ interface TwoDimensionalBarLikeChartModel {
 	barViewOptions: TwoDimensionalBarLikeChartViewModel;
 }
 
+interface BandLikeChartModel {
+	bandLikeViewOptions: BandLikeChartViewModel;
+}
+
+export interface BandLikeChartViewModel {
+	settingsStore?: BandLikeChartSettingsStore;
+}
+
+export interface BandLikeChartSettingsStore {
+	getBandItemSize(): number;
+	getBandItemPad(bandItemIndex: number): number;
+}
+
 export interface TwoDimensionalBarLikeChartViewModel {
 	hatch: BarLikeChartHatchOptions;
 	borderRadius: BarLikeChartBorderRadius;
@@ -525,7 +539,8 @@ export interface TwoDimensionalChartModel
 		TwoDimensionalLineLikeChartModel,
 		TwoDimensionalBarLikeChartModel,
 		TwoDimensionalAreaChartModel,
-		DotChartModel {
+		DotChartModel,
+		BandLikeChartModel {
 	type: TwoDimensionalChartType;
 	data: TwoDimensionalChartDataModel;
 	index: number;

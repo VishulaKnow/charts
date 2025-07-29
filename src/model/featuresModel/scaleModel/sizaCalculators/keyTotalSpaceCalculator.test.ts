@@ -10,7 +10,13 @@ describe("KeyTotalSpaceCalculator", () => {
 						type: "band",
 						domain: ["a", "b", "c"],
 						range: { start: 0, end: 100 },
-						sizes: { paddingInner: 10, paddingOuter: 10, oneKeyTotalSpace: 20, recalculatedStepSize: 20 }
+						sizes: {
+							paddingInner: 10,
+							paddingOuter: 10,
+							oneKeyTotalSpace: 20,
+							recalculatedStepSize: 20,
+							bandSize: 10
+						}
 					}
 				})
 			});
@@ -26,7 +32,13 @@ describe("KeyTotalSpaceCalculator", () => {
 						type: "band",
 						domain: ["a"],
 						range: { start: 0, end: 100 },
-						sizes: { paddingInner: 10, paddingOuter: 10, oneKeyTotalSpace: 20, recalculatedStepSize: 20 }
+						sizes: {
+							paddingInner: 10,
+							paddingOuter: 10,
+							oneKeyTotalSpace: 20,
+							recalculatedStepSize: 20,
+							bandSize: 10
+						}
 					}
 				})
 			});

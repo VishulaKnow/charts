@@ -282,7 +282,8 @@ describe("getGradientDefs", () => {
 					}
 				},
 				dotViewOptions: null,
-				valueLabels: null
+				valueLabels: null,
+				bandLikeViewOptions: null
 			},
 			{
 				type: "line",
@@ -307,7 +308,8 @@ describe("getGradientDefs", () => {
 					}
 				},
 				dotViewOptions: null,
-				valueLabels: null
+				valueLabels: null,
+				bandLikeViewOptions: null
 			}
 		];
 	});

@@ -576,7 +576,8 @@ describe("get scales tests", () => {
 				paddingInner: 35,
 				paddingOuter: 352,
 				oneKeyTotalSpace: 320,
-				recalculatedStepSize: 97 // 97 * 3 - 35 + 352 * 2 = 960
+				recalculatedStepSize: 97, // 97 * 3 - 35 + 352 * 2 = 960
+				bandSize: 62 // stepSize - paddingInner
 			}
 		});
 	});
@@ -610,7 +611,8 @@ describe("get scales tests", () => {
 				paddingInner: 35,
 				paddingOuter: 400,
 				oneKeyTotalSpace: 320,
-				recalculatedStepSize: 65 // 97 * 3 - 35 + 400 * 2 = 960
+				recalculatedStepSize: 65, // 97 * 3 - 35 + 400 * 2 = 960
+				bandSize: 30 // stepSize - paddingInner
 			}
 		});
 	});

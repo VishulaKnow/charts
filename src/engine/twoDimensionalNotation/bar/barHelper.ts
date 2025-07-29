@@ -1,5 +1,12 @@
 import { AxisScale } from "d3-axis";
-import { BarBorderRadius, BarChartSettings, BlockMargin, Orient, TwoDimensionalChartModel } from "../../../model/model";
+import {
+	BandLikeChartSettingsStore,
+	BarBorderRadius,
+	BarChartSettings,
+	BlockMargin,
+	Orient,
+	TwoDimensionalChartModel
+} from "../../../model/model";
 import { Scale, Scales } from "../../features/scale/scale";
 import { Helper } from "../../helpers/helper";
 import { MdtChartsDataRow } from "../../../config/config";
@@ -19,49 +26,6 @@ export interface GroupBarsSegment {
 	chart: TwoDimensionalChartModel;
 }
 
-interface BandLikeChartSettingsStore {
-	getBandItemSize(): number;
-	getBandItemPad(bandItemIndex: number): number;
-}
-
-export class DotChartSettingsStore implements BandLikeChartSettingsStore {
-	constructor(private readonly canvasConfig: { scaleBandWidth: number }) {}
-
-	getBandItemSize(): number {
-		return this.canvasConfig.scaleBandWidth;
-	}
-
-	getBandItemPad(): number {
-		return 0;
-	}
-}
-
-export class BarSettingsStore implements BandLikeChartSettingsStore {
-	constructor(
-		private readonly modelSettings: BarChartSettings,
-		private readonly canvasConfig: { scaleBandWidth: number; barsAmount: number }
-	) {}
-
-	getBandItemSize() {
-		const barSize =
-			this.getBarStep() > this.modelSettings.maxBarWidth ? this.modelSettings.maxBarWidth : this.getBarStep();
-		return barSize;
-	}
-
-	getBandItemPad(barIndex: number) {
-		const barDiff = ((this.getBarStep() - this.getBandItemSize()) * this.canvasConfig.barsAmount) / 2; // if bar bigger than maxWidth, diff for x coordinate
-		const barPad = this.getBandItemSize() * barIndex + this.modelSettings.barDistance * barIndex + barDiff; // Отступ бара от края. Зависит от количества баров в одной группе и порядке текущего бара
-		return barPad;
-	}
-
-	private getBarStep() {
-		return (
-			(this.canvasConfig.scaleBandWidth - this.modelSettings.barDistance * (this.canvasConfig.barsAmount - 1)) /
-			this.canvasConfig.barsAmount
-		); // Space for one bar
-	}
-}
-
 export class BarHelper {
 	public static getGroupedBarAttrs(
 		keyAxisOrient: Orient,
@@ -71,7 +35,8 @@ export class BarHelper {
 		valueFieldName: string,
 		barIndex: number,
 		barsAmount: number,
-		barSettings: BarChartSettings
+		barSettings: BarChartSettings,
+		settingsStore: BandLikeChartSettingsStore
 	): BarAttrsHelper {
 		const attrs: BarAttrsHelper = {
 			x: null,
@@ -87,7 +52,7 @@ export class BarHelper {
 			margin,
 			keyField,
 			barIndex,
-			new BarSettingsStore(barSettings, { scaleBandWidth: Scale.getScaleBandWidth(scales.key), barsAmount }),
+			settingsStore, //new BarSettingsStore(barSettings, { scaleBandWidth: Scale.getScaleBandWidth(scales.key), barsAmount }),
 			false
 		);
 		this.setGroupedBarAttrsByValue(attrs, keyAxisOrient, margin, scales.value, valueFieldName);
@@ -102,7 +67,8 @@ export class BarHelper {
 		keyField: string,
 		barIndex: number,
 		barsAmount: number,
-		barSettings: BarChartSettings
+		barSettings: BarChartSettings,
+		settingsStore: BandLikeChartSettingsStore
 	): BarAttrsHelper {
 		const attrs: BarAttrsHelper = {
 			x: null,
@@ -118,7 +84,7 @@ export class BarHelper {
 			margin,
 			keyField,
 			barIndex,
-			new BarSettingsStore(barSettings, { scaleBandWidth: Scale.getScaleBandWidth(scales.key), barsAmount }),
+			settingsStore, //new BarSettingsStore(barSettings, { scaleBandWidth: Scale.getScaleBandWidth(scales.key), barsAmount }),
 			true
 		);
 		this.setSegmentedBarAttrsByValue(attrs, keyAxisOrient, scales.value, margin);

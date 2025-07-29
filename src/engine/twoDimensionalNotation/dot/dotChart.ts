@@ -1,11 +1,11 @@
 import { MdtChartsDataRow, MdtChartsValueField } from "../../../config/config";
 import { BarChartSettings, BlockMargin, Orient, TwoDimensionalChartModel } from "../../../model/model";
 import { Block } from "../../block/block";
-import { Scale, Scales } from "../../features/scale/scale";
+import { Scales } from "../../features/scale/scale";
 import { DomSelectionHelper } from "../../helpers/domSelectionHelper";
 import { Helper } from "../../helpers/helper";
 import { NamesHelper } from "../../helpers/namesHelper";
-import { BarHelper, DotChartSettingsStore } from "../bar/barHelper";
+import { BarHelper } from "../bar/barHelper";
 
 export interface CanvasDotChartOptions {
 	elementAccessors: {
@@ -142,7 +142,7 @@ export class CanvasDotChart {
 			y2: null
 		};
 
-		const settingsStore = new DotChartSettingsStore({ scaleBandWidth: Scale.getScaleBandWidth(scales.key) });
+		const settingsStore = chart.bandLikeViewOptions.settingsStore;
 
 		// TODO: refactor
 
@@ -150,7 +150,7 @@ export class CanvasDotChart {
 			const handleBase: (dataRow: MdtChartsDataRow) => number = (d) =>
 				scales.key(Helper.getKeyFieldValue(d, this.options.dataOptions.keyFieldName, false)) +
 				margin.left +
-				settingsStore.getBandItemPad();
+				settingsStore.getBandItemPad(0);
 
 			attrs.x1 = (d) => chart.dotViewOptions.shape.handleStartCoordinate(handleBase(d));
 			attrs.x2 = (d) =>
@@ -160,7 +160,7 @@ export class CanvasDotChart {
 			const handleBase: (dataRow: MdtChartsDataRow) => number = (d) =>
 				scales.key(Helper.getKeyFieldValue(d, this.options.dataOptions.keyFieldName, false)) +
 				margin.top +
-				settingsStore.getBandItemPad();
+				settingsStore.getBandItemPad(0);
 
 			attrs.y1 = (d) => chart.dotViewOptions.shape.handleStartCoordinate(handleBase(d));
 			attrs.y2 = (d) =>

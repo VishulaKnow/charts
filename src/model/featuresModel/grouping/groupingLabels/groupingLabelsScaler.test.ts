@@ -12,7 +12,13 @@ describe("GroupingLabelsCoordinateScaler", () => {
 			sizesCalculator: new ScaleCanvasSizesCalculator({
 				keyScale: {
 					type: "band",
-					sizes: { paddingInner: 10, paddingOuter: 20, oneKeyTotalSpace: 100, recalculatedStepSize: 10 },
+					sizes: {
+						paddingInner: 10,
+						paddingOuter: 20,
+						oneKeyTotalSpace: 100,
+						recalculatedStepSize: 10,
+						bandSize: 10
+					},
 					domain: ["brand1"],
 					range: { start: 0, end: 100 }
 				}
@@ -36,7 +42,13 @@ describe("GroupingLabelsCoordinateScaler", () => {
 			sizesCalculator: new ScaleCanvasSizesCalculator({
 				keyScale: {
 					type: "band",
-					sizes: { paddingInner: 10, paddingOuter: 0, oneKeyTotalSpace: 100, recalculatedStepSize: 10 },
+					sizes: {
+						paddingInner: 10,
+						paddingOuter: 0,
+						oneKeyTotalSpace: 100,
+						recalculatedStepSize: 10,
+						bandSize: 10
+					},
 					domain: ["1", "2", "3", "4", "5"],
 					range: { start: 0, end: 100 }
 				}
@@ -65,7 +77,13 @@ describe("GroupingLabelsCoordinateScaler", () => {
 			sizesCalculator: new ScaleCanvasSizesCalculator({
 				keyScale: {
 					type: "band",
-					sizes: { paddingInner: 5, paddingOuter: 10, oneKeyTotalSpace: 100, recalculatedStepSize: 10 },
+					sizes: {
+						paddingInner: 5,
+						paddingOuter: 10,
+						oneKeyTotalSpace: 100,
+						recalculatedStepSize: 10,
+						bandSize: 10
+					},
 					domain: ["1", "2", "3", "4", "5", "6", "7", "8", "9"],
 					range: { start: 0, end: 105 }
 				}

@@ -77,6 +77,10 @@ export function getBarViewOptions(
 	return { hatch, borderRadius, barIndexes };
 }
 
+export function getBarsAmount(allCharts: Pick<MdtChartsTwoDimensionalChart, "isSegmented" | "data" | "type">[]) {
+	return allCharts.reduce((acc, ch) => acc + (ch.isSegmented ? 1 : ch.data.valueFields.length), 0);
+}
+
 export function calculateBarIndexes(
 	allCharts: Pick<MdtChartsTwoDimensionalChart, "isSegmented" | "data" | "type">[],
 	currentChart: Pick<MdtChartsTwoDimensionalChart, "isSegmented" | "data" | "type">,
@@ -172,6 +176,7 @@ export function getWidthOfLegendMarkerByType(chartType: TwoDimensionalChartType)
 	if (chartType === "bar") return 8;
 	if (chartType === "line") return 24;
 	if (chartType === "area") return styledElementValues.defaultLegendMarkerSizes.widthPx;
+	throw new Error(`Got unknown chart type when getting width of legend marker: "${chartType}"`);
 }
 
 export function getAreaViewOptions(

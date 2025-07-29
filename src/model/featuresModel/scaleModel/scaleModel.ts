@@ -135,7 +135,8 @@ export class ScaleModel {
 			paddingInner: paddings.inner,
 			paddingOuter: paddings.outer,
 			oneKeyTotalSpace,
-			recalculatedStepSize: getStepSize()
+			recalculatedStepSize: getStepSize(),
+			bandSize: getBandSize()
 		};
 	}
 

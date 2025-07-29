@@ -30,7 +30,13 @@ describe("GroupingSplitLinesGenerator", () => {
 				sizesCalculator: new ScaleCanvasSizesCalculator({
 					keyScale: {
 						type: "band",
-						sizes: { paddingInner: 10, paddingOuter: 0, oneKeyTotalSpace: 20, recalculatedStepSize: 10 },
+						sizes: {
+							paddingInner: 10,
+							paddingOuter: 0,
+							oneKeyTotalSpace: 20,
+							recalculatedStepSize: 10,
+							bandSize: 10
+						},
 						domain: ["1", "2"],
 						range: { start: 0, end: 90 }
 					}
@@ -63,7 +69,13 @@ describe("GroupingSplitLinesGenerator", () => {
 				sizesCalculator: new ScaleCanvasSizesCalculator({
 					keyScale: {
 						type: "band",
-						sizes: { paddingInner: 10, paddingOuter: 10, oneKeyTotalSpace: 20, recalculatedStepSize: 10 },
+						sizes: {
+							paddingInner: 10,
+							paddingOuter: 10,
+							oneKeyTotalSpace: 20,
+							recalculatedStepSize: 10,
+							bandSize: 10
+						},
 						domain: ["1", "2", "3", "4"],
 						range: { start: 0, end: 90 }
 					}
@@ -100,7 +112,13 @@ describe("GroupingSplitLinesGenerator", () => {
 				sizesCalculator: new ScaleCanvasSizesCalculator({
 					keyScale: {
 						type: "band",
-						sizes: { paddingInner: 10, paddingOuter: 10, oneKeyTotalSpace: 20, recalculatedStepSize: 10 },
+						sizes: {
+							paddingInner: 10,
+							paddingOuter: 10,
+							oneKeyTotalSpace: 20,
+							recalculatedStepSize: 10,
+							bandSize: 10
+						},
 						domain: ["1", "2", "3", "4"],
 						range: { start: 0, end: 90 }
 					}
