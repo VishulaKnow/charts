@@ -5,7 +5,6 @@ import { Block } from "../../block/block";
 import { EmbeddedLabels } from "../../features/embeddedLabels/embeddedLabels";
 import { EmbeddedLabelsHelper } from "../../features/embeddedLabels/embeddedLabelsHelper";
 import { BarAttrsHelper, BarHelper, GroupBarsSegment, onBarChartInit } from "./barHelper";
-import { sum } from "d3-array";
 import { Transition } from "d3-transition";
 import { DomSelectionHelper } from "../../helpers/domSelectionHelper";
 import { Helper } from "../../helpers/helper";
@@ -53,24 +52,11 @@ export class Bar {
 		keyAxisOrient: Orient,
 		chart: TwoDimensionalChartModel,
 		blockSize: Size,
-		barSettings: BarChartSettings,
-		barsAmounts: number[]
+		barSettings: BarChartSettings
 	): void {
 		if (chart.isSegmented)
-			this.renderSegmented(block, scales, data, keyField, margin, keyAxisOrient, chart, barsAmounts, barSettings);
-		else
-			this.renderGrouped(
-				block,
-				scales,
-				data,
-				keyField,
-				margin,
-				keyAxisOrient,
-				chart,
-				barsAmounts,
-				blockSize,
-				barSettings
-			);
+			this.renderSegmented(block, scales, data, keyField, margin, keyAxisOrient, chart, barSettings);
+		else this.renderGrouped(block, scales, data, keyField, margin, keyAxisOrient, chart, blockSize, barSettings);
 	}
 
 	public update(
@@ -81,7 +67,6 @@ export class Bar {
 		keyAxisOrient: Orient,
 		chart: TwoDimensionalChartModel,
 		blockSize: Size,
-		barsAmounts: number[],
 		keyField: Field,
 		barSettings: BarChartSettings
 	): Promise<any>[] {
@@ -94,7 +79,6 @@ export class Bar {
 				margin,
 				keyAxisOrient,
 				chart,
-				barsAmounts,
 				keyField,
 				barSettings
 			);
@@ -107,7 +91,6 @@ export class Bar {
 				keyAxisOrient,
 				chart,
 				blockSize,
-				barsAmounts,
 				keyField,
 				barSettings
 			);
@@ -143,7 +126,6 @@ export class Bar {
 		margin: BlockMargin,
 		keyAxisOrient: Orient,
 		chart: TwoDimensionalChartModel,
-		barsAmounts: number[],
 		blockSize: Size,
 		barSettings: BarChartSettings
 	): void {
@@ -170,8 +152,6 @@ export class Bar {
 				keyField.name,
 				field.name,
 				chart.barViewOptions.barIndexes[index],
-				sum(barsAmounts),
-				barSettings,
 				chart.bandLikeViewOptions.settingsStore
 			);
 
@@ -206,7 +186,6 @@ export class Bar {
 		margin: BlockMargin,
 		keyAxisOrient: Orient,
 		chart: TwoDimensionalChartModel,
-		barsAmounts: number[],
 		barSettings: BarChartSettings
 	): void {
 		const stackedData = getStackedDataWithOwn(
@@ -240,8 +219,6 @@ export class Bar {
 			margin,
 			keyField.name,
 			chart.barViewOptions.barIndexes[0],
-			sum(barsAmounts),
-			barSettings,
 			chart.bandLikeViewOptions.settingsStore
 		);
 
@@ -276,7 +253,6 @@ export class Bar {
 		keyAxisOrient: Orient,
 		chart: TwoDimensionalChartModel,
 		blockSize: Size,
-		barsAmounts: number[],
 		keyField: Field,
 		barSettings: BarChartSettings
 	): Promise<any>[] {
@@ -325,8 +301,6 @@ export class Bar {
 				keyField.name,
 				valueField.name,
 				chart.barViewOptions.barIndexes[index],
-				sum(barsAmounts),
-				barSettings,
 				chart.bandLikeViewOptions.settingsStore
 			);
 
@@ -395,7 +369,6 @@ export class Bar {
 		margin: BlockMargin,
 		keyAxisOrient: Orient,
 		chart: TwoDimensionalChartModel,
-		barsAmounts: number[],
 		keyField: Field,
 		barSettings: BarChartSettings
 	): Promise<any>[] {
@@ -442,8 +415,6 @@ export class Bar {
 			margin,
 			keyField.name,
 			chart.barViewOptions.barIndexes[0],
-			sum(barsAmounts),
-			barSettings,
 			chart.bandLikeViewOptions.settingsStore
 		);
 

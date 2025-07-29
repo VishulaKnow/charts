@@ -276,8 +276,7 @@ export class TwoDimensionalManager implements ChartContentManager {
 					keyAxisOrient,
 					chart,
 					blockSize,
-					chartSettings.bar,
-					BarHelper.getBarsInGroupAmount(charts)
+					chartSettings.bar
 				);
 			else if (chart.type === "line")
 				Line.get({ staticSettings: chartSettings.lineLike }).render(
@@ -334,7 +333,6 @@ export class TwoDimensionalManager implements ChartContentManager {
 					keyAxisOrient,
 					chart,
 					blockSize,
-					BarHelper.getBarsInGroupAmount(charts),
 					dataOptions.keyField,
 					chartSettings.bar
 				);

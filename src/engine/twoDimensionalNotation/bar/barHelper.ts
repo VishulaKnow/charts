@@ -34,8 +34,6 @@ export class BarHelper {
 		keyField: string,
 		valueFieldName: string,
 		barIndex: number,
-		barsAmount: number,
-		barSettings: BarChartSettings,
 		settingsStore: BandLikeChartSettingsStore
 	): BarAttrsHelper {
 		const attrs: BarAttrsHelper = {
@@ -45,16 +43,7 @@ export class BarHelper {
 			height: null
 		};
 
-		this.setBarAttrsByKey(
-			attrs,
-			keyAxisOrient,
-			scales.key,
-			margin,
-			keyField,
-			barIndex,
-			settingsStore, //new BarSettingsStore(barSettings, { scaleBandWidth: Scale.getScaleBandWidth(scales.key), barsAmount }),
-			false
-		);
+		this.setBarAttrsByKey(attrs, keyAxisOrient, scales.key, margin, keyField, barIndex, settingsStore, false);
 		this.setGroupedBarAttrsByValue(attrs, keyAxisOrient, margin, scales.value, valueFieldName);
 
 		return attrs;
@@ -66,8 +55,6 @@ export class BarHelper {
 		margin: BlockMargin,
 		keyField: string,
 		barIndex: number,
-		barsAmount: number,
-		barSettings: BarChartSettings,
 		settingsStore: BandLikeChartSettingsStore
 	): BarAttrsHelper {
 		const attrs: BarAttrsHelper = {
@@ -77,29 +64,10 @@ export class BarHelper {
 			height: null
 		};
 
-		this.setBarAttrsByKey(
-			attrs,
-			keyAxisOrient,
-			scales.key,
-			margin,
-			keyField,
-			barIndex,
-			settingsStore, //new BarSettingsStore(barSettings, { scaleBandWidth: Scale.getScaleBandWidth(scales.key), barsAmount }),
-			true
-		);
+		this.setBarAttrsByKey(attrs, keyAxisOrient, scales.key, margin, keyField, barIndex, settingsStore, true);
 		this.setSegmentedBarAttrsByValue(attrs, keyAxisOrient, scales.value, margin);
 
 		return attrs;
-	}
-
-	public static getBarsInGroupAmount(charts: TwoDimensionalChartModel[]): number[] {
-		let amounts: number[] = [];
-		charts.forEach((chart) => {
-			if (chart.type === "bar" && chart.isSegmented)
-				amounts.push(1); // Сегментированный бар содержит все свои valueFields в одном баре
-			else if (chart.type === "bar") amounts.push(chart.data.valueFields.length);
-		});
-		return amounts;
 	}
 
 	static setBarAttrsByKey(

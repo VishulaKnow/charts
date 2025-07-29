@@ -78,7 +78,10 @@ export function getBarViewOptions(
 }
 
 export function getBarsAmount(allCharts: Pick<MdtChartsTwoDimensionalChart, "isSegmented" | "data" | "type">[]) {
-	return allCharts.reduce((acc, ch) => acc + (ch.isSegmented ? 1 : ch.data.valueFields.length), 0);
+	return allCharts.reduce((acc, ch) => {
+		if (ch.type === "bar") return acc + (ch.isSegmented ? 1 : ch.data.valueFields.length);
+		return acc;
+	}, 0);
 }
 
 export function calculateBarIndexes(
