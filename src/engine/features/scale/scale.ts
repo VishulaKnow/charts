@@ -65,7 +65,7 @@ export class Scale {
 		}
 	}
 
-	public static getScaledValue(scale: AxisScale<any>, value: any): number {
+	public static getScaledValueOnMiddleOfItem(scale: AxisScale<any>, value: any): number {
 		if ((scale as ScaleBand<string>).bandwidth && (scale as ScaleBand<string>).bandwidth() !== 0) {
 			return scale(value) + this.getScaleBandWidth(scale) / 2;
 		}

@@ -25,7 +25,7 @@ export class AreaGeneratorFactory {
 
 		if (keyAxisOrient === "bottom" || keyAxisOrient === "top") {
 			return generator.getVertical(
-				(d) => Scale.getScaledValue(scales.key, d[keyFieldName]) + margin.left,
+				(d) => Scale.getScaledValueOnMiddleOfItem(scales.key, d[keyFieldName]) + margin.left,
 				(d) => scales.value(0) + margin.top,
 				(d) => scales.value(d[valueFieldName]) + margin.top
 			);
@@ -34,7 +34,7 @@ export class AreaGeneratorFactory {
 			return generator.getHorizontal(
 				(d) => scales.value(0) + margin.left,
 				(d) => scales.value(d[valueFieldName]) + margin.left,
-				(d) => Scale.getScaledValue(scales.key, d[keyFieldName]) + margin.top
+				(d) => Scale.getScaledValueOnMiddleOfItem(scales.key, d[keyFieldName]) + margin.top
 			);
 		}
 	}
@@ -55,7 +55,7 @@ export class AreaGeneratorFactory {
 
 		if (keyAxisOrient === "bottom" || keyAxisOrient === "top") {
 			return generator.getVertical(
-				(d) => Scale.getScaledValue(scales.key, d.data[keyFieldName]) + margin.left,
+				(d) => Scale.getScaledValueOnMiddleOfItem(scales.key, d.data[keyFieldName]) + margin.left,
 				(d) => scales.value(d[0]) + margin.top,
 				(d) => scales.value(d[1]) + margin.top
 			);
@@ -65,7 +65,7 @@ export class AreaGeneratorFactory {
 			return generator.getHorizontal(
 				(d) => scales.value(d[0]) + margin.left,
 				(d) => scales.value(d[1]) + margin.left,
-				(d) => Scale.getScaledValue(scales.key, d.data[keyFieldName]) + margin.top
+				(d) => Scale.getScaledValueOnMiddleOfItem(scales.key, d.data[keyFieldName]) + margin.top
 			);
 		}
 	}

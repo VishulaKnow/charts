@@ -31,7 +31,7 @@ export class LineGeneratorFactory {
 
 		if (keyAxisOrient === "bottom" || keyAxisOrient === "top") {
 			return generator.get(
-				(d) => Scale.getScaledValue(scales.key, d[keyFieldName]) + margin.left,
+				(d) => Scale.getScaledValueOnMiddleOfItem(scales.key, d[keyFieldName]) + margin.left,
 				(d) => scales.value(d[valueFieldName]) + margin.top
 			);
 		}
@@ -39,7 +39,7 @@ export class LineGeneratorFactory {
 		if (keyAxisOrient === "left" || keyAxisOrient === "right") {
 			return generator.get(
 				(d) => scales.value(d[valueFieldName]) + margin.left,
-				(d) => Scale.getScaledValue(scales.key, d[keyFieldName]) + margin.top
+				(d) => Scale.getScaledValueOnMiddleOfItem(scales.key, d[keyFieldName]) + margin.top
 			);
 		}
 	}
@@ -60,7 +60,7 @@ export class LineGeneratorFactory {
 
 		if (keyAxisOrient === "bottom" || keyAxisOrient === "top") {
 			return generator.get(
-				(d) => Scale.getScaledValue(scales.key, d.data[keyFieldName]) + margin.left,
+				(d) => Scale.getScaledValueOnMiddleOfItem(scales.key, d.data[keyFieldName]) + margin.left,
 				(d) => scales.value(d[1]) + margin.top
 			);
 		}
@@ -68,7 +68,7 @@ export class LineGeneratorFactory {
 		if (keyAxisOrient === "left" || keyAxisOrient === "right") {
 			return generator.get(
 				(d) => scales.value(d[1]) + margin.left,
-				(d) => Scale.getScaledValue(scales.key, d.data[keyFieldName]) + margin.top
+				(d) => Scale.getScaledValueOnMiddleOfItem(scales.key, d.data[keyFieldName]) + margin.top
 			);
 		}
 	}

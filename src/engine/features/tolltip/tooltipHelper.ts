@@ -74,12 +74,14 @@ export class TooltipHelper {
 			left: null
 		};
 		if (keyAxisOrient === "bottom" || keyAxisOrient === "top") {
-			coordinate.left = Scale.getScaledValue(scaleKey, keyValue) + margin.left - tooltipBoundingRect.width / 2;
+			coordinate.left =
+				Scale.getScaledValueOnMiddleOfItem(scaleKey, keyValue) + margin.left - tooltipBoundingRect.width / 2;
 			if (keyAxisOrient === "bottom") coordinate.top = margin.top - 5 - tooltipBoundingRect.height;
 			else coordinate.top = blockBoundingRect.height - margin.bottom;
 		}
 		if (keyAxisOrient === "left" || keyAxisOrient === "right") {
-			coordinate.top = Scale.getScaledValue(scaleKey, keyValue) + margin.top - tooltipBoundingRect.height / 2;
+			coordinate.top =
+				Scale.getScaledValueOnMiddleOfItem(scaleKey, keyValue) + margin.top - tooltipBoundingRect.height / 2;
 			if (keyAxisOrient === "left") coordinate.left = blockBoundingRect.width - margin.right;
 			else coordinate.left = margin.left - tooltipBoundingRect.width;
 		}
@@ -128,15 +130,15 @@ export class TooltipHelper {
 		};
 
 		if (chartOrientation === "vertical") {
-			attributes.x1 = Math.ceil(Scale.getScaledValue(scaleKey, key) + margin.left) - 0.5;
-			attributes.x2 = Math.ceil(Scale.getScaledValue(scaleKey, key) + margin.left) - 0.5;
+			attributes.x1 = Math.ceil(Scale.getScaledValueOnMiddleOfItem(scaleKey, key) + margin.left) - 0.5;
+			attributes.x2 = Math.ceil(Scale.getScaledValueOnMiddleOfItem(scaleKey, key) + margin.left) - 0.5;
 			attributes.y1 = margin.top - this.convexsize;
 			attributes.y2 = blockSize.height - margin.bottom + this.convexsize * 2;
 		} else {
 			attributes.x1 = margin.left - this.convexsize;
 			attributes.x2 = blockSize.width - margin.right + this.convexsize * 2;
-			attributes.y1 = Scale.getScaledValue(scaleKey, key) + margin.top;
-			attributes.y2 = Scale.getScaledValue(scaleKey, key) + margin.top;
+			attributes.y1 = Scale.getScaledValueOnMiddleOfItem(scaleKey, key) + margin.top;
+			attributes.y2 = Scale.getScaledValueOnMiddleOfItem(scaleKey, key) + margin.top;
 		}
 
 		return attributes;

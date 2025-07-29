@@ -24,12 +24,12 @@ export class ValueLabelsAttrsProvider {
 			attrs.x = (d) => valueLabels.handleX(scales.value(valueLabels.handleScaledValue(d, datumField)));
 			attrs.y = (d) =>
 				valueLabels.handleY(
-					Scale.getScaledValue(scales.key, dataRowAccessor(d)[globalOptions.data.keyFieldName])
+					Scale.getScaledValueOnMiddleOfItem(scales.key, dataRowAccessor(d)[globalOptions.data.keyFieldName])
 				);
 		} else if (orient === "bottom" || orient === "top") {
 			attrs.x = (d) =>
 				valueLabels.handleX(
-					Scale.getScaledValue(scales.key, dataRowAccessor(d)[globalOptions.data.keyFieldName])
+					Scale.getScaledValueOnMiddleOfItem(scales.key, dataRowAccessor(d)[globalOptions.data.keyFieldName])
 				);
 			attrs.y = (d) => valueLabels.handleY(scales.value(valueLabels.handleScaledValue(d, datumField)));
 		}

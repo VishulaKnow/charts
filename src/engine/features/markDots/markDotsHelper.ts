@@ -17,10 +17,12 @@ export class MarkDotHelper {
 		if (keyAxisOrient === "left" || keyAxisOrient === "right") {
 			attrs.cx = (d) => scales.value(d[valueField]) + margin.left;
 			attrs.cy = (d) =>
-				Scale.getScaledValue(scales.key, Helper.getKeyFieldValue(d, keyField, isSegmented)) + margin.top;
+				Scale.getScaledValueOnMiddleOfItem(scales.key, Helper.getKeyFieldValue(d, keyField, isSegmented)) +
+				margin.top;
 		} else if (keyAxisOrient === "bottom" || keyAxisOrient === "top") {
 			attrs.cx = (d) =>
-				Scale.getScaledValue(scales.key, Helper.getKeyFieldValue(d, keyField, isSegmented)) + margin.left;
+				Scale.getScaledValueOnMiddleOfItem(scales.key, Helper.getKeyFieldValue(d, keyField, isSegmented)) +
+				margin.left;
 			attrs.cy = (d) => scales.value(d[valueField]) + margin.top;
 		}
 
