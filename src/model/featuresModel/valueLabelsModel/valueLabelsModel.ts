@@ -23,6 +23,7 @@ export class ValueLabelCoordinateCalculator {
 		positionOptions: ValueLabelsPositionOptions | undefined,
 		private readonly keyAxisOrient: Orient,
 		private readonly margin: BlockMargin,
+		private readonly isSegmented: boolean,
 		private readonly shiftCoordinateByKeyScale: (value: number, fieldIndex: number) => number
 	) {
 		let offsetAbsSize = VALUE_LABEL_OFFSET_ABS_SIZE_PX;
@@ -44,7 +45,10 @@ export class ValueLabelCoordinateCalculator {
 			case "top":
 				return scaledValue + this.offsetSizePx + this.margin.top;
 			default:
-				return this.shiftCoordinateByKeyScale(scaledValue + this.margin.top, fieldIndex);
+				return this.shiftCoordinateByKeyScale(
+					scaledValue + this.margin.top,
+					this.getOverrideFieldIndex(fieldIndex)
+				);
 		}
 	}
 
@@ -55,8 +59,15 @@ export class ValueLabelCoordinateCalculator {
 			case "left":
 				return scaledValue + this.offsetSizePx + this.margin.left;
 			default:
-				return this.shiftCoordinateByKeyScale(scaledValue + this.margin.left, fieldIndex);
+				return this.shiftCoordinateByKeyScale(
+					scaledValue + this.margin.left,
+					this.getOverrideFieldIndex(fieldIndex)
+				);
 		}
+	}
+
+	private getOverrideFieldIndex(fieldIndex: number) {
+		return this.isSegmented ? 0 : fieldIndex;
 	}
 }
 

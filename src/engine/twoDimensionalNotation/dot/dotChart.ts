@@ -154,7 +154,7 @@ export class CanvasDotChart {
 
 			attrs.x1 = (d) => chart.dotViewOptions.shape.handleStartCoordinate(handleBase(d));
 			attrs.x2 = (d) =>
-				chart.dotViewOptions.shape.handleEndCoordinate(handleBase(d) + settingsStore.getBandItemSize());
+				chart.dotViewOptions.shape.handleEndCoordinate(handleBase(d) + settingsStore.getBandSubItemSize());
 		}
 		if (this.options.canvas.keyAxisOrient === "left" || this.options.canvas.keyAxisOrient === "right") {
 			const handleBase: (dataRow: MdtChartsDataRow) => number = (d) =>
@@ -164,7 +164,7 @@ export class CanvasDotChart {
 
 			attrs.y1 = (d) => chart.dotViewOptions.shape.handleStartCoordinate(handleBase(d));
 			attrs.y2 = (d) =>
-				chart.dotViewOptions.shape.handleEndCoordinate(handleBase(d) + settingsStore.getBandItemSize());
+				chart.dotViewOptions.shape.handleEndCoordinate(handleBase(d) + settingsStore.getBandSubItemSize());
 		}
 
 		if (this.options.canvas.keyAxisOrient === "top") {

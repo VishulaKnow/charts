@@ -323,15 +323,16 @@ export class TwoDimensionalModel {
 				chart.valueLabels?.position,
 				keyAxisOrient,
 				canvasModel.getMargin(),
+				chart.isSegmented,
 				(value, fieldIndex) => {
-					const overrideFieldIndex = chart.isSegmented ? 0 : fieldIndex;
 					if (bandSettingsStore)
 						return (
 							value +
-							bandSettingsStore.getBandItemPad(globalBarsIndicesMap[overrideFieldIndex]) +
-							bandSettingsStore.getBandItemSize() / 2
+							bandSettingsStore.getBandItemPad(globalBarsIndicesMap[fieldIndex]) +
+							bandSettingsStore.getBandSubItemSize() / 2
 						);
-					return value;
+					const keyScalePadToMiddle = keyScale.type === "band" ? keyScale.sizes.bandSize / 2 : 0;
+					return value + keyScalePadToMiddle;
 				}
 			);
 			const valueLabelsAlignment = calculateValueLabelAlignment(

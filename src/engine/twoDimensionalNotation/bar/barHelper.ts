@@ -85,14 +85,14 @@ export class BarHelper {
 				scaleKey(Helper.getKeyFieldValue(d, keyField, isSegmented)) +
 				margin.left +
 				settingsStore.getBandItemPad(barIndex);
-			attrs.width = (d) => settingsStore.getBandItemSize();
+			attrs.width = (d) => settingsStore.getBandSubItemSize();
 		}
 		if (keyAxisOrient === "left" || keyAxisOrient === "right") {
 			attrs.y = (d) =>
 				scaleKey(Helper.getKeyFieldValue(d, keyField, isSegmented)) +
 				margin.top +
 				settingsStore.getBandItemPad(barIndex);
-			attrs.height = (d) => settingsStore.getBandItemSize();
+			attrs.height = (d) => settingsStore.getBandSubItemSize();
 		}
 	}
 

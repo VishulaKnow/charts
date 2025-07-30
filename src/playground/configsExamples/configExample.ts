@@ -27,11 +27,11 @@ const configCars: MdtChartsConfig = {
 				}
 			]
 		},
-		events: {
-			drawComplete: ({ canvas }) => {
-				console.log(canvas.keyItems, canvas.plotAreaMargin);
-			}
-		},
+		// events: {
+		// 	drawComplete: ({ canvas }) => {
+		// 		console.log(canvas.keyItems, canvas.plotAreaMargin);
+		// 	}
+		// },
 		axis: {
 			key: {
 				visibility: true,

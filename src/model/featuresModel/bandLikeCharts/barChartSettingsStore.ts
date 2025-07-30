@@ -6,7 +6,7 @@ export class BarSettingsStore implements BandLikeChartSettingsStore {
 		private readonly canvasConfig: { scaleBandWidth: number; oneKeyBarsAmount: number }
 	) {}
 
-	getBandItemSize() {
+	getBandSubItemSize() {
 		return (
 			(this.canvasConfig.scaleBandWidth -
 				this.modelSettings.barDistance * (this.canvasConfig.oneKeyBarsAmount - 1)) /
@@ -15,6 +15,6 @@ export class BarSettingsStore implements BandLikeChartSettingsStore {
 	}
 
 	getBandItemPad(barIndex: number) {
-		return this.getBandItemSize() * barIndex + this.modelSettings.barDistance * barIndex; // Отступ бара от края. Зависит от количества баров в одной группе и порядке текущего бара
+		return this.getBandSubItemSize() * barIndex + this.modelSettings.barDistance * barIndex; // Отступ бара от края. Зависит от количества баров в одной группе и порядке текущего бара
 	}
 }

@@ -495,7 +495,7 @@ export interface BandLikeChartViewModel {
 }
 
 export interface BandLikeChartSettingsStore {
-	getBandItemSize(): number;
+	getBandSubItemSize(): number;
 	getBandItemPad(bandItemIndex: number): number;
 }
 
