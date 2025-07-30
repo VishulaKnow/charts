@@ -22,7 +22,8 @@ export class ValueLabelCoordinateCalculator {
 	constructor(
 		positionOptions: ValueLabelsPositionOptions | undefined,
 		private readonly keyAxisOrient: Orient,
-		private readonly margin: BlockMargin
+		private readonly margin: BlockMargin,
+		private readonly shiftCoordinateByKeyScale: (value: number, fieldIndex: number) => number
 	) {
 		let offsetAbsSize = VALUE_LABEL_OFFSET_ABS_SIZE_PX;
 		if (
@@ -36,25 +37,25 @@ export class ValueLabelCoordinateCalculator {
 		else this.offsetSizePx = 0;
 	}
 
-	getValueLabelY(scaledValue: number) {
+	getValueLabelY(scaledValue: number, fieldIndex: number) {
 		switch (this.keyAxisOrient) {
 			case "bottom":
 				return scaledValue - this.offsetSizePx + this.margin.top;
 			case "top":
 				return scaledValue + this.offsetSizePx + this.margin.top;
 			default:
-				return scaledValue + this.margin.top;
+				return this.shiftCoordinateByKeyScale(scaledValue + this.margin.top, fieldIndex);
 		}
 	}
 
-	getValueLabelX(scaledValue: number) {
+	getValueLabelX(scaledValue: number, fieldIndex: number) {
 		switch (this.keyAxisOrient) {
 			case "right":
 				return scaledValue - this.offsetSizePx + this.margin.left;
 			case "left":
 				return scaledValue + this.offsetSizePx + this.margin.left;
 			default:
-				return scaledValue + this.margin.left;
+				return this.shiftCoordinateByKeyScale(scaledValue + this.margin.left, fieldIndex);
 		}
 	}
 }

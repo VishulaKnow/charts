@@ -310,10 +310,29 @@ export class TwoDimensionalModel {
 		charts.forEach((chart, index) => {
 			const style = styleModel.getChartStyle(chart, index);
 
+			const bandSettingsStore = createBandLikeChartSettingsStore(
+				chart.type,
+				designerConfig.canvas.chartOptions.bar,
+				getBarsAmount(charts),
+				keyScale
+			);
+
+			const globalBarsIndicesMap = calculateBarIndexes(charts, chart, index);
+
 			const valueLabelsCoordinateCalculator = new ValueLabelCoordinateCalculator(
 				chart.valueLabels?.position,
 				keyAxisOrient,
-				canvasModel.getMargin()
+				canvasModel.getMargin(),
+				(value, fieldIndex) => {
+					const overrideFieldIndex = chart.isSegmented ? 0 : fieldIndex;
+					if (bandSettingsStore)
+						return (
+							value +
+							bandSettingsStore.getBandItemPad(globalBarsIndicesMap[overrideFieldIndex]) +
+							bandSettingsStore.getBandItemSize() / 2
+						);
+					return value;
+				}
 			);
 			const valueLabelsAlignment = calculateValueLabelAlignment(
 				keyAxisOrient,
@@ -364,14 +383,9 @@ export class TwoDimensionalModel {
 						dataRow[valueFieldName] !== null && dataRow[valueFieldName] !== undefined
 				},
 				bandLikeViewOptions: {
-					settingsStore: createBandLikeChartSettingsStore(
-						chart.type,
-						designerConfig.canvas.chartOptions.bar,
-						getBarsAmount(charts),
-						keyScale
-					)
+					settingsStore: bandSettingsStore
 				},
-				barViewOptions: getBarViewOptions(chart, keyAxisOrient, calculateBarIndexes(charts, chart, index)),
+				barViewOptions: getBarViewOptions(chart, keyAxisOrient, globalBarsIndicesMap),
 				legend: getLegendMarkerOptions(chart),
 				index,
 				valueLabels: {
@@ -380,8 +394,10 @@ export class TwoDimensionalModel {
 						const value = (row as any)[valueFieldName];
 						return value != null && !Number.isNaN(value);
 					},
-					handleX: (scaledValue) => valueLabelsCoordinateCalculator.getValueLabelX(scaledValue),
-					handleY: (scaledValue) => valueLabelsCoordinateCalculator.getValueLabelY(scaledValue),
+					handleX: (scaledValue, fieldIndex) =>
+						valueLabelsCoordinateCalculator.getValueLabelX(scaledValue, fieldIndex),
+					handleY: (scaledValue, fieldIndex) =>
+						valueLabelsCoordinateCalculator.getValueLabelY(scaledValue, fieldIndex),
 					handleScaledValue: (dataRow, datumField) => {
 						return handleScaledValue(
 							dataRow,
@@ -410,8 +426,8 @@ export class TwoDimensionalModel {
 				dotViewOptions: {
 					shape: {
 						type: "line",
-						handleEndCoordinate: (v) => v + 2,
 						handleStartCoordinate: (v) => v - 2,
+						handleEndCoordinate: (v) => v + 2,
 						width: chart.dotLikeStyles?.shape?.width ?? LINE_CHART_DEFAULT_WIDTH
 					}
 				}

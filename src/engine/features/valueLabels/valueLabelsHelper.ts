@@ -10,7 +10,8 @@ export class ValueLabelsAttrsProvider {
 		valueLabels: TwoDimChartValueLabelsOptions,
 		scales: Scales,
 		datumField: string,
-		dataRowAccessor: (d: MdtChartsDataRow | Segment) => MdtChartsDataRow
+		dataRowAccessor: (d: MdtChartsDataRow | Segment) => MdtChartsDataRow,
+		fieldIndexInChart: number
 	) {
 		let attrs: ValueLabelAttrs = {
 			x: null,
@@ -21,17 +22,15 @@ export class ValueLabelsAttrsProvider {
 		const orient = globalOptions.canvas.keyAxisOrient;
 
 		if (orient === "left" || orient === "right") {
-			attrs.x = (d) => valueLabels.handleX(scales.value(valueLabels.handleScaledValue(d, datumField)));
+			attrs.x = (d) =>
+				valueLabels.handleX(scales.value(valueLabels.handleScaledValue(d, datumField)), fieldIndexInChart);
 			attrs.y = (d) =>
-				valueLabels.handleY(
-					Scale.getScaledValueOnMiddleOfItem(scales.key, dataRowAccessor(d)[globalOptions.data.keyFieldName])
-				);
+				valueLabels.handleY(scales.key(dataRowAccessor(d)[globalOptions.data.keyFieldName]), fieldIndexInChart);
 		} else if (orient === "bottom" || orient === "top") {
 			attrs.x = (d) =>
-				valueLabels.handleX(
-					Scale.getScaledValueOnMiddleOfItem(scales.key, dataRowAccessor(d)[globalOptions.data.keyFieldName])
-				);
-			attrs.y = (d) => valueLabels.handleY(scales.value(valueLabels.handleScaledValue(d, datumField)));
+				valueLabels.handleX(scales.key(dataRowAccessor(d)[globalOptions.data.keyFieldName]), fieldIndexInChart);
+			attrs.y = (d) =>
+				valueLabels.handleY(scales.value(valueLabels.handleScaledValue(d, datumField)), fieldIndexInChart);
 		}
 
 		return attrs;

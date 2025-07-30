@@ -6,11 +6,11 @@ import { DotChartSettingsStore } from "./dotChartSettingsStore";
 export function createBandLikeChartSettingsStore(
 	chartType: TwoDimensionalChartType,
 	modelSettings: BarChartSettings,
-	barsAmount: number,
+	oneKeyBarsAmount: number,
 	keyScale: ScaleKeyModel
 ): BandLikeChartSettingsStore | undefined {
 	const scaleBandWidth = keyScale.type === "band" ? keyScale.sizes.bandSize : 0;
-	if (chartType === "bar") return new BarSettingsStore(modelSettings, { barsAmount, scaleBandWidth });
+	if (chartType === "bar") return new BarSettingsStore(modelSettings, { oneKeyBarsAmount, scaleBandWidth });
 	if (chartType === "dot") return new DotChartSettingsStore({ scaleBandWidth });
 	return undefined;
 }

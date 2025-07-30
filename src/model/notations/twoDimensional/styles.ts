@@ -158,7 +158,7 @@ export function getLineViewOptions(chart: MdtChartsTwoDimensionalChart): TwoDime
 			return {
 				dashedStyles: { on: false, dashSize: 0, gapSize: 0 },
 				strokeWidth: chart.dotLikeStyles?.shape?.width ?? LINE_CHART_DEFAULT_WIDTH,
-				length: getWidthOfLegendMarkerByType("line")
+				length: getWidthOfLegendMarkerByType("dot")
 			};
 		case "area":
 			return {
@@ -179,6 +179,7 @@ export function getWidthOfLegendMarkerByType(chartType: TwoDimensionalChartType)
 	if (chartType === "bar") return 8;
 	if (chartType === "line") return 24;
 	if (chartType === "area") return styledElementValues.defaultLegendMarkerSizes.widthPx;
+	if (chartType === "dot") return 24;
 	throw new Error(`Got unknown chart type when getting width of legend marker: "${chartType}"`);
 }
 

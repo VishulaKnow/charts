@@ -30,16 +30,22 @@ describe("getValueLabelX", () => {
 	});
 
 	test("should offset valueLabel to the left, because orient is right and positionMode is undefined or afterHead", () => {
-		const calculatorForUndefinedPositionMode = new ValueLabelCoordinateCalculator(undefined, "right", margin);
-		const resultForUndefinedPositionMode = calculatorForUndefinedPositionMode.getValueLabelX(scaledValue);
+		const calculatorForUndefinedPositionMode = new ValueLabelCoordinateCalculator(
+			undefined,
+			"right",
+			margin,
+			(v) => v
+		);
+		const resultForUndefinedPositionMode = calculatorForUndefinedPositionMode.getValueLabelX(scaledValue, 0);
 		expect(resultForUndefinedPositionMode).toEqual(115);
 
 		const calculatorForAfterHeadPositionMode = new ValueLabelCoordinateCalculator(
 			{ mode: "afterHead" },
 			"right",
-			margin
+			margin,
+			(v) => v
 		);
-		const resultForAfterHeadPositionMode = calculatorForAfterHeadPositionMode.getValueLabelX(scaledValue);
+		const resultForAfterHeadPositionMode = calculatorForAfterHeadPositionMode.getValueLabelX(scaledValue, 0);
 		expect(resultForAfterHeadPositionMode).toEqual(115);
 	});
 
@@ -47,9 +53,10 @@ describe("getValueLabelX", () => {
 		const calculatorForBeforeHeadPositionMode = new ValueLabelCoordinateCalculator(
 			{ mode: "beforeHead" },
 			"right",
-			margin
+			margin,
+			(v) => v
 		);
-		const resultForBeforeHeadPositionMode = calculatorForBeforeHeadPositionMode.getValueLabelX(scaledValue);
+		const resultForBeforeHeadPositionMode = calculatorForBeforeHeadPositionMode.getValueLabelX(scaledValue, 0);
 		expect(resultForBeforeHeadPositionMode).toEqual(135);
 	});
 
@@ -57,17 +64,19 @@ describe("getValueLabelX", () => {
 		const calculatorForUndefinedPositionMode = new ValueLabelCoordinateCalculator(
 			{ mode: undefined },
 			"left",
-			margin
+			margin,
+			(v) => v
 		);
-		const resultForUndefinedPositionMode = calculatorForUndefinedPositionMode.getValueLabelX(scaledValue);
+		const resultForUndefinedPositionMode = calculatorForUndefinedPositionMode.getValueLabelX(scaledValue, 0);
 		expect(resultForUndefinedPositionMode).toEqual(135);
 
 		const calculatorForAfterHeadPositionMode = new ValueLabelCoordinateCalculator(
 			{ mode: "afterHead" },
 			"left",
-			margin
+			margin,
+			(v) => v
 		);
-		const resultForAfterHeadPositionMode = calculatorForAfterHeadPositionMode.getValueLabelX(scaledValue);
+		const resultForAfterHeadPositionMode = calculatorForAfterHeadPositionMode.getValueLabelX(scaledValue, 0);
 		expect(resultForAfterHeadPositionMode).toEqual(135);
 	});
 
@@ -75,9 +84,10 @@ describe("getValueLabelX", () => {
 		const calculatorForBeforeHeadPositionMode = new ValueLabelCoordinateCalculator(
 			{ mode: "beforeHead" },
 			"left",
-			margin
+			margin,
+			(v) => v
 		);
-		const resultForBeforeHeadPositionMode = calculatorForBeforeHeadPositionMode.getValueLabelX(scaledValue);
+		const resultForBeforeHeadPositionMode = calculatorForBeforeHeadPositionMode.getValueLabelX(scaledValue, 0);
 		expect(resultForBeforeHeadPositionMode).toEqual(115);
 	});
 
@@ -85,45 +95,48 @@ describe("getValueLabelX", () => {
 		const calculatorForUndefinedPositionMode = new ValueLabelCoordinateCalculator(
 			{ mode: undefined },
 			"top",
-			margin
+			margin,
+			(v) => v
 		);
-		const resultForUndefinedPositionMode = calculatorForUndefinedPositionMode.getValueLabelX(scaledValue);
+		const resultForUndefinedPositionMode = calculatorForUndefinedPositionMode.getValueLabelX(scaledValue, 0);
 		expect(resultForUndefinedPositionMode).toEqual(125);
 
 		const calculatorForAfterHeadPositionMode = new ValueLabelCoordinateCalculator(
 			{ mode: "afterHead" },
 			"top",
-			margin
+			margin,
+			(v) => v
 		);
-		const resultForAfterHeadPositionMode = calculatorForAfterHeadPositionMode.getValueLabelX(scaledValue);
+		const resultForAfterHeadPositionMode = calculatorForAfterHeadPositionMode.getValueLabelX(scaledValue, 0);
 		expect(resultForAfterHeadPositionMode).toEqual(125);
 
 		const calculatorForBeforeHeadPositionMode = new ValueLabelCoordinateCalculator(
 			{ mode: "beforeHead" },
 			"top",
-			margin
+			margin,
+			(v) => v
 		);
-		const resultForBeforeHeadPositionMode = calculatorForBeforeHeadPositionMode.getValueLabelX(scaledValue);
+		const resultForBeforeHeadPositionMode = calculatorForBeforeHeadPositionMode.getValueLabelX(scaledValue, 0);
 		expect(resultForBeforeHeadPositionMode).toEqual(125);
 	});
 
 	test("shouldnt change valueLabel by offset, because positionMode is center", () => {
-		const calculator = new ValueLabelCoordinateCalculator({ mode: "center" }, "right", margin);
-		const result = calculator.getValueLabelX(scaledValue);
+		const calculator = new ValueLabelCoordinateCalculator({ mode: "center" }, "right", margin, (v) => v);
+		const result = calculator.getValueLabelX(scaledValue, 0);
 
 		expect(result).toEqual(125);
 	});
 
 	test("shouldnt change valueLabel by offset, because positionMode is center", () => {
-		const calculator = new ValueLabelCoordinateCalculator({ mode: "center" }, "left", margin);
-		const result = calculator.getValueLabelX(scaledValue);
+		const calculator = new ValueLabelCoordinateCalculator({ mode: "center" }, "left", margin, (v) => v);
+		const result = calculator.getValueLabelX(scaledValue, 0);
 
 		expect(result).toEqual(125);
 	});
 
 	test("shouldnt change valueLabel by offset, because positionMode is center", () => {
-		const calculator = new ValueLabelCoordinateCalculator({ mode: "center" }, "bottom", margin);
-		const result = calculator.getValueLabelX(scaledValue);
+		const calculator = new ValueLabelCoordinateCalculator({ mode: "center" }, "bottom", margin, (v) => v);
+		const result = calculator.getValueLabelX(scaledValue, 0);
 
 		expect(result).toEqual(125);
 	});
@@ -147,17 +160,19 @@ describe("getValueLabelY", () => {
 		const calculatorForUndefinedPositionMode = new ValueLabelCoordinateCalculator(
 			{ mode: undefined },
 			"top",
-			margin
+			margin,
+			(v) => v
 		);
-		const resultForUndefinedPositionMode = calculatorForUndefinedPositionMode.getValueLabelY(scaledValue);
+		const resultForUndefinedPositionMode = calculatorForUndefinedPositionMode.getValueLabelY(scaledValue, 0);
 		expect(resultForUndefinedPositionMode).toEqual(125);
 
 		const calculatorForAfterHeadPositionMode = new ValueLabelCoordinateCalculator(
 			{ mode: "afterHead" },
 			"top",
-			margin
+			margin,
+			(v) => v
 		);
-		const resultForAfterHeadPositionMode = calculatorForAfterHeadPositionMode.getValueLabelY(scaledValue);
+		const resultForAfterHeadPositionMode = calculatorForAfterHeadPositionMode.getValueLabelY(scaledValue, 0);
 		expect(resultForAfterHeadPositionMode).toEqual(125);
 	});
 
@@ -165,9 +180,10 @@ describe("getValueLabelY", () => {
 		const calculatorForBeforeHeadPositionMode = new ValueLabelCoordinateCalculator(
 			{ mode: "beforeHead" },
 			"top",
-			margin
+			margin,
+			(v) => v
 		);
-		const resultForBeforeHeadPositionMode = calculatorForBeforeHeadPositionMode.getValueLabelY(scaledValue);
+		const resultForBeforeHeadPositionMode = calculatorForBeforeHeadPositionMode.getValueLabelY(scaledValue, 0);
 		expect(resultForBeforeHeadPositionMode).toEqual(105);
 	});
 
@@ -175,17 +191,19 @@ describe("getValueLabelY", () => {
 		const calculatorForUndefinedPositionMode = new ValueLabelCoordinateCalculator(
 			{ mode: undefined },
 			"bottom",
-			margin
+			margin,
+			(v) => v
 		);
-		const resultForUndefinedPositionMode = calculatorForUndefinedPositionMode.getValueLabelY(scaledValue);
+		const resultForUndefinedPositionMode = calculatorForUndefinedPositionMode.getValueLabelY(scaledValue, 0);
 		expect(resultForUndefinedPositionMode).toEqual(105);
 
 		const calculatorForAfterHeadPositionMode = new ValueLabelCoordinateCalculator(
 			{ mode: "afterHead" },
 			"bottom",
-			margin
+			margin,
+			(v) => v
 		);
-		const resultForAfterHeadPositionMode = calculatorForAfterHeadPositionMode.getValueLabelY(scaledValue);
+		const resultForAfterHeadPositionMode = calculatorForAfterHeadPositionMode.getValueLabelY(scaledValue, 0);
 		expect(resultForAfterHeadPositionMode).toEqual(105);
 	});
 
@@ -193,9 +211,10 @@ describe("getValueLabelY", () => {
 		const calculatorForBeforeHeadPositionMode = new ValueLabelCoordinateCalculator(
 			{ mode: "beforeHead" },
 			"bottom",
-			margin
+			margin,
+			(v) => v
 		);
-		const resultForBeforeHeadPositionMode = calculatorForBeforeHeadPositionMode.getValueLabelY(scaledValue);
+		const resultForBeforeHeadPositionMode = calculatorForBeforeHeadPositionMode.getValueLabelY(scaledValue, 0);
 		expect(resultForBeforeHeadPositionMode).toEqual(125);
 	});
 
@@ -203,45 +222,48 @@ describe("getValueLabelY", () => {
 		const calculatorForUndefinedPositionMode = new ValueLabelCoordinateCalculator(
 			{ mode: undefined },
 			"left",
-			margin
+			margin,
+			(v) => v
 		);
-		const resultForUndefinedPositionMode = calculatorForUndefinedPositionMode.getValueLabelY(scaledValue);
+		const resultForUndefinedPositionMode = calculatorForUndefinedPositionMode.getValueLabelY(scaledValue, 0);
 		expect(resultForUndefinedPositionMode).toEqual(115);
 
 		const calculatorForAfterHeadPositionMode = new ValueLabelCoordinateCalculator(
 			{ mode: "afterHead" },
 			"left",
-			margin
+			margin,
+			(v) => v
 		);
-		const resultForAfterHeadPositionMode = calculatorForAfterHeadPositionMode.getValueLabelY(scaledValue);
+		const resultForAfterHeadPositionMode = calculatorForAfterHeadPositionMode.getValueLabelY(scaledValue, 0);
 		expect(resultForAfterHeadPositionMode).toEqual(115);
 
 		const calculatorForBeforeHeadPositionMode = new ValueLabelCoordinateCalculator(
 			{ mode: "beforeHead" },
 			"left",
-			margin
+			margin,
+			(v) => v
 		);
-		const resultForBeforeHeadPositionMode = calculatorForBeforeHeadPositionMode.getValueLabelY(scaledValue);
+		const resultForBeforeHeadPositionMode = calculatorForBeforeHeadPositionMode.getValueLabelY(scaledValue, 0);
 		expect(resultForBeforeHeadPositionMode).toEqual(115);
 	});
 
 	test("shouldnt change valueLabel by offset, because positionMode is center", () => {
-		const calculator = new ValueLabelCoordinateCalculator({ mode: "center" }, "top", margin);
-		const result = calculator.getValueLabelY(scaledValue);
+		const calculator = new ValueLabelCoordinateCalculator({ mode: "center" }, "top", margin, (v) => v);
+		const result = calculator.getValueLabelY(scaledValue, 0);
 
 		expect(result).toEqual(115);
 	});
 
 	test("shouldnt change valueLabel by offset, because positionMode is center", () => {
-		const calculator = new ValueLabelCoordinateCalculator({ mode: "center" }, "bottom", margin);
-		const result = calculator.getValueLabelY(scaledValue);
+		const calculator = new ValueLabelCoordinateCalculator({ mode: "center" }, "bottom", margin, (v) => v);
+		const result = calculator.getValueLabelY(scaledValue, 0);
 
 		expect(result).toEqual(115);
 	});
 
 	test("shouldnt change valueLabel by offset, because positionMode is center", () => {
-		const calculator = new ValueLabelCoordinateCalculator({ mode: "center" }, "left", margin);
-		const result = calculator.getValueLabelY(scaledValue);
+		const calculator = new ValueLabelCoordinateCalculator({ mode: "center" }, "left", margin, (v) => v);
+		const result = calculator.getValueLabelY(scaledValue, 0);
 
 		expect(result).toEqual(115);
 	});

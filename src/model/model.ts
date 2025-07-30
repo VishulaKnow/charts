@@ -578,8 +578,8 @@ export type ValueLabelsInnerContentSetter = (options: ValueLabelsInnerContentSet
 export interface TwoDimChartValueLabelsOptions {
 	enabled: boolean;
 	showLabel: MarkerLikeElementVisibilityFn;
-	handleX: (scaledValue: number) => number;
-	handleY: (scaledValue: number) => number;
+	handleX: (scaledValue: number, fieldIndex: number) => number;
+	handleY: (scaledValue: number, fieldIndex: number) => number;
 	textAnchor: TextAnchor;
 	forFields: MdtChartsFieldName[];
 	dominantBaseline: DominantBaseline;

@@ -141,7 +141,8 @@ export class ChartValueLabels {
 			this.options,
 			scales,
 			datumField,
-			dataRowAccessor
+			dataRowAccessor,
+			groupIndex
 		);
 
 		this.setAttrs(valueLabels, attrs, valueFieldName, dataRowAccessor);
@@ -165,7 +166,8 @@ export class ChartValueLabels {
 				this.options,
 				scales,
 				datumField,
-				dataRowAccessor
+				dataRowAccessor,
+				groupIndex
 			);
 
 			if (!valueFieldName) {
