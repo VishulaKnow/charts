@@ -5,7 +5,8 @@ import {
 	Size,
 	ValueLabelsPositionMode,
 	ValueLabelsPositionOptions,
-	ValueLabelsRotationOptions
+	ValueLabelsRotationOptions,
+	ValueLabelsWithOffsetOptions
 } from "../../../config/config";
 
 interface ValueLabelAlignment {
@@ -28,12 +29,16 @@ export class ValueLabelCoordinateCalculator {
 	) {
 		let offsetAbsSize = VALUE_LABEL_OFFSET_ABS_SIZE_PX;
 		if (
-			(positionOptions?.mode === "beforeHead" || positionOptions?.mode === "afterHead") &&
-			positionOptions?.offsetSize != null
+			(!positionOptions?.mode ||
+				positionOptions?.mode === "beforeHead" ||
+				positionOptions?.mode === "afterHead" ||
+				positionOptions?.mode === "afterStart") &&
+			(positionOptions as ValueLabelsWithOffsetOptions)?.offsetSize != null
 		)
-			offsetAbsSize = positionOptions?.offsetSize;
+			offsetAbsSize = (positionOptions as ValueLabelsWithOffsetOptions).offsetSize!;
 
-		if (!positionOptions?.mode || positionOptions.mode === "afterHead") this.offsetSizePx = offsetAbsSize;
+		if (!positionOptions?.mode || positionOptions.mode === "afterHead" || positionOptions.mode === "afterStart")
+			this.offsetSizePx = offsetAbsSize;
 		else if (positionOptions.mode === "beforeHead") this.offsetSizePx = -offsetAbsSize;
 		else this.offsetSizePx = 0;
 	}
@@ -78,7 +83,7 @@ export function calculateValueLabelAlignment(
 ): ValueLabelAlignment {
 	if (rotation?.angle) return { dominantBaseline: "middle", textAnchor: "middle" };
 
-	if (!positionMode || positionMode === "afterHead") {
+	if (!positionMode || positionMode === "afterHead" || positionMode === "afterStart") {
 		switch (keyAxisOrient) {
 			case "top":
 				return { dominantBaseline: "hanging", textAnchor: "middle" };
@@ -114,7 +119,11 @@ export function handleValueBeforeScale(
 	if (!positionMode || positionMode === "afterHead" || positionMode === "beforeHead") return dataRow[datumField];
 	if (positionMode === "center") {
 		if (isSegmented) return dataRow[datumField] - (dataRow[datumField] - dataRow["0"]) / 2;
-		else return dataRow[datumField] / 2;
+		return dataRow[datumField] / 2;
+	}
+	if (positionMode === "afterStart") {
+		if (isSegmented) return dataRow["0"];
+		return 0;
 	}
 	throw new Error("Invalid position mode");
 }

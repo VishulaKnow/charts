@@ -412,12 +412,15 @@ export interface TwoDimensionalChartData {
 	valueGroup?: TwoDimensionalValueGroup;
 }
 
+export interface ValueLabelsWithOffsetOptions {
+	/** @default 10 */
+	offsetSize?: number;
+}
+
 export type ValueLabelsPositionOptions =
-	| {
-			mode: "afterHead" | "beforeHead";
-			/** @default 10 */
-			offsetSize?: number;
-	  }
+	| ({
+			mode?: "afterHead" | "beforeHead" | "afterStart";
+	  } & ValueLabelsWithOffsetOptions)
 	| { mode?: "center" };
 
 export type ValueLabelsPositionMode = ValueLabelsPositionOptions["mode"];

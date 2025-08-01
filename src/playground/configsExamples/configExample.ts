@@ -207,10 +207,10 @@ const configCars: MdtChartsConfig = {
 				valueLabels: {
 					on: true,
 					position: {
-						mode: "beforeHead",
+						mode: "afterStart",
 						offsetSize: 5
-					},
-					renderForFields: ["price"]
+					}
+					// renderForFields: ["price"]
 				},
 				lineStyles: {
 					dash: {
