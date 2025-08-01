@@ -584,7 +584,7 @@ export interface TwoDimChartValueLabelsOptions {
 	forFields: MdtChartsFieldName[];
 	dominantBaseline: DominantBaseline;
 	setContent: ValueLabelsInnerContentSetter;
-	handleScaledValue: (dataRow: MdtChartsDataRow, datumField: string) => number;
+	handleValueBeforeScale: (dataRow: MdtChartsDataRow, datumField: string) => number;
 	rotation?: ValueLabelsRotationOptions;
 	handleElement?: ValueLabelsHandleElement;
 }

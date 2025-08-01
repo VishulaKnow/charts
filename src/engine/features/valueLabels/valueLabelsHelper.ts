@@ -23,14 +23,14 @@ export class ValueLabelsAttrsProvider {
 
 		if (orient === "left" || orient === "right") {
 			attrs.x = (d) =>
-				valueLabels.handleX(scales.value(valueLabels.handleScaledValue(d, datumField)), fieldIndexInChart);
+				valueLabels.handleX(scales.value(valueLabels.handleValueBeforeScale(d, datumField)), fieldIndexInChart);
 			attrs.y = (d) =>
 				valueLabels.handleY(scales.key(dataRowAccessor(d)[globalOptions.data.keyFieldName]), fieldIndexInChart);
 		} else if (orient === "bottom" || orient === "top") {
 			attrs.x = (d) =>
 				valueLabels.handleX(scales.key(dataRowAccessor(d)[globalOptions.data.keyFieldName]), fieldIndexInChart);
 			attrs.y = (d) =>
-				valueLabels.handleY(scales.value(valueLabels.handleScaledValue(d, datumField)), fieldIndexInChart);
+				valueLabels.handleY(scales.value(valueLabels.handleValueBeforeScale(d, datumField)), fieldIndexInChart);
 		}
 
 		return attrs;

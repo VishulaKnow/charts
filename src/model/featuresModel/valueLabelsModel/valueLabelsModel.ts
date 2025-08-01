@@ -105,7 +105,7 @@ export function calculateValueLabelAlignment(
 	return { dominantBaseline: "middle", textAnchor: "middle" };
 }
 
-export function handleScaledValue(
+export function handleValueBeforeScale(
 	dataRow: MdtChartsDataRow,
 	datumField: string,
 	isSegmented: boolean,

@@ -1,6 +1,6 @@
 import {
 	calculateValueLabelAlignment,
-	handleScaledValue,
+	handleValueBeforeScale,
 	hasCollisionBottomSide,
 	hasCollisionLeftSide,
 	hasCollisionRightSide,
@@ -410,29 +410,29 @@ describe("calculateValueLabelAlignment", () => {
 	});
 });
 
-describe("handleScaledValue", () => {
+describe("handleValueBeforeScale", () => {
 	test("should return value, because position mode is not set", () => {
-		const result = handleScaledValue({ value: 100 }, "value", false, undefined);
+		const result = handleValueBeforeScale({ value: 100 }, "value", false, undefined);
 		expect(result).toEqual(100);
 	});
 
 	test("should return value, because position mode is afterHead", () => {
-		const result = handleScaledValue({ value: 100 }, "value", false, "afterHead");
+		const result = handleValueBeforeScale({ value: 100 }, "value", false, "afterHead");
 		expect(result).toEqual(100);
 	});
 
 	test("should return value, because position mode is beforeHead", () => {
-		const result = handleScaledValue({ value: 100 }, "value", false, "beforeHead");
+		const result = handleValueBeforeScale({ value: 100 }, "value", false, "beforeHead");
 		expect(result).toEqual(100);
 	});
 
 	test("should return half of value, because position mode is center", () => {
-		const result = handleScaledValue({ value: 100 }, "value", false, "center");
+		const result = handleValueBeforeScale({ value: 100 }, "value", false, "center");
 		expect(result).toEqual(50);
 	});
 
 	test("should return half of segment if chart is segmented", () => {
-		const result = handleScaledValue({ value: 100, "0": 50 }, "value", true, "center");
+		const result = handleValueBeforeScale({ value: 100, "0": 50 }, "value", true, "center");
 		expect(result).toEqual(75);
 	});
 });

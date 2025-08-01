@@ -35,7 +35,7 @@ import {
 import { DataRepositoryModel } from "../modelInstance/dataModel/dataRepository";
 import {
 	calculateValueLabelAlignment,
-	handleScaledValue,
+	handleValueBeforeScale,
 	ValueLabelCoordinateCalculator
 } from "../../model/featuresModel/valueLabelsModel/valueLabelsModel";
 import { CanvasModel } from "../modelInstance/canvasModel/canvasModel";
@@ -399,8 +399,8 @@ export class TwoDimensionalModel {
 						valueLabelsCoordinateCalculator.getValueLabelX(scaledValue, fieldIndex),
 					handleY: (scaledValue, fieldIndex) =>
 						valueLabelsCoordinateCalculator.getValueLabelY(scaledValue, fieldIndex),
-					handleScaledValue: (dataRow, datumField) => {
-						return handleScaledValue(
+					handleValueBeforeScale: (dataRow, datumField) => {
+						return handleValueBeforeScale(
 							dataRow,
 							datumField,
 							chart.isSegmented,
