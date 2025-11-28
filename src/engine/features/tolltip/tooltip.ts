@@ -309,10 +309,9 @@ export class Tooltip {
 			tooltipArrow = TooltipComponentsManager.renderTooltipArrow(tooltipBlock.getEl());
 
 		if (tooltipSettings.position === "followCursor") {
-			elements.on("mousemove", function (e: CustomEvent<DonutOverDetails>) {
-				const pointerCoordinate = !pointer(e, block.getSvg().node())[0]
-					? e.detail.pointer
-					: pointer(e, block.getSvg().node());
+			elements.on("mousemove", function (e: CustomEvent<DonutOverDetails> | MouseEvent) {
+				const pointerCoordinate =
+					e instanceof CustomEvent ? e.detail.pointer : pointer(e, block.getSvg().node());
 				const tooltipCoordinate = TooltipHelper.getTooltipCursorCoordinate(
 					pointerCoordinate,
 					block.getSvg().node().getBoundingClientRect(),
