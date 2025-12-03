@@ -8,7 +8,8 @@
 		"allowJs": true,
 		"types": ["jest"],
 		"declaration": true,
-		"moduleResolution": "Node"
+		"moduleResolution": "Node",
+		"allowSyntheticDefaultImports": true
 	},
 	"include": ["src"],
 	"exclude": ["node_modules", "**/__tests__/*", "src/playground/*", "**/*Example.ts", "**/*.test.ts"]

@@ -10,7 +10,7 @@ import { Donut } from "../polarNotation/donut/donut";
 import { MarkDot } from "../features/markDots/markDot";
 import { RectElemWithAttrs } from "../twoDimensionalNotation/bar/bar";
 import { Helper } from "../helpers/helper";
-import * as chroma from "chroma-js";
+import chroma from "chroma-js";
 import { NamesHelper } from "../helpers/namesHelper";
 import { DonutHelper } from "../polarNotation/donut/donutHelper";
 

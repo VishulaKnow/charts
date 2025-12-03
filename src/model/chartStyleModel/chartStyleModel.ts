@@ -1,4 +1,4 @@
-import * as chroma from "chroma-js";
+import chroma from "chroma-js";
 import { ChartStyleConfig } from "../../designer/designerConfig";
 import { ChartStyle } from "../model";
 

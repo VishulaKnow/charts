@@ -46,7 +46,7 @@
 		"webpack-cli": "^6.0.1"
 	},
 	"dependencies": {
-		"chroma-js": "^2.1.1",
+		"chroma-js": "^2.6.0",
 		"d3-array": "^3.2.4",
 		"d3-axis": "^3.0.0",
 		"d3-ease": "^3.0.1",
