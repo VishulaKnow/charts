@@ -49,7 +49,8 @@ export class PolarModel {
 							datasource: modelInstance.dataModel.repository.getRawRows(),
 							valueField: options.chart.data.valueField,
 							keyFieldName: options.data.keyField.name,
-							chartColors: chart.style.elementColors
+							chartColors: chart.style.elementColors,
+							colorField: options.chart.data.colorField
 						}),
 						valueGlobalFormatter: designerConfig.dataFormat.formatters
 					});

@@ -1,5 +1,5 @@
 import { MdtChartsDataRow } from "../../../config/config";
-import { TooltipContent } from "../../model";
+import { TooltipContent, TooltipContentWithRows } from "../../model";
 import {
 	PolarInitialRowsProvider,
 	PolarInitialRowsProviderOptions
@@ -16,19 +16,22 @@ const createDatasource: () => MdtChartsDataRow[] = () => [
 		$id: 1,
 		brand: "BMW",
 		price: 109000,
-		count: 10000
+		count: 10000,
+		color: "#aaa"
 	},
 	{
 		$id: 2,
 		brand: "LADA",
 		price: 12000,
-		count: 1000
+		count: 1000,
+		color: "#bbb"
 	},
 	{
 		$id: 3,
 		brand: "MERCEDES",
 		price: 15000,
-		count: 1200
+		count: 1200,
+		color: "#ccc"
 	}
 ];
 const createInitialOptions = (
@@ -779,6 +782,25 @@ describe("TwoDimTooltipContentGenerator", () => {
 					}
 				]
 			});
+		});
+
+		it("should set color for marker by color field if it is defined", () => {
+			const generator = new TwoDimTooltipContentGenerator(
+				createInitialOptions(
+					new PolarInitialRowsProvider({
+						...getPolarInitialRowsProviderOptions(),
+						colorField: "color"
+					})
+				)
+			);
+			const content = generator.generateContent("BMW");
+			expect((content as TooltipContentWithRows).rows[1].marker.color).toEqual("#aaa");
+
+			const content2 = generator.generateContent("LADA");
+			expect((content2 as TooltipContentWithRows).rows[1].marker.color).toEqual("#bbb");
+
+			const content3 = generator.generateContent("MERCEDES");
+			expect((content3 as TooltipContentWithRows).rows[1].marker.color).toEqual("#ccc");
 		});
 	});
 });

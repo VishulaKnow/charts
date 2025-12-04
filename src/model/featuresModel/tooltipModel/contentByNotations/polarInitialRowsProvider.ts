@@ -9,6 +9,7 @@ import {
 
 export interface PolarInitialRowsProviderOptions {
 	valueField: ValueField;
+	colorField?: string;
 	datasource: MdtChartsDataRow[];
 	chartColors: string[];
 	keyFieldName: string;
@@ -22,7 +23,11 @@ export class PolarInitialRowsProvider implements TooltipContentInitialRowsProvid
 			(row) => row[this.options.keyFieldName] === context.keyFieldValue
 		);
 
-		const markerColor = this.options.chartColors[indexOfCurrentDataRow];
+		let markerColor: string;
+		if (this.options.colorField) {
+			const currentDataRow = this.options.datasource[indexOfCurrentDataRow];
+			markerColor = currentDataRow[this.options.colorField];
+		} else markerColor = this.options.chartColors[indexOfCurrentDataRow];
 
 		return [
 			{
