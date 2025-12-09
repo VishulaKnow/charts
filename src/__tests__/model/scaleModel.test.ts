@@ -853,4 +853,20 @@ describe("getScaleLinearDomain", () => {
 		const res = getScaleLinearDomain(config.axis.value.domain, dataRow, config);
 		expect(res).toEqual([0, 20]);
 	});
+
+	test("should handle minmal domain value only from fields for secondary axis if option is set (when secondary minimal value is negative)", () => {
+		config.axis.key.position = "start";
+		dataRow[0].price = -100;
+
+		const res = getScaleLinearDomain(config.axis.value.domain, dataRow, config, "secondary");
+		expect(res).toEqual([-100, 120]);
+	});
+
+	test("should handle minmal domain value only from fields for secondary axis if option is set (when main minimal value is negative)", () => {
+		config.axis.key.position = "start";
+		dataRow[0].count = -100;
+
+		const res = getScaleLinearDomain(config.axis.value.domain, dataRow, config, "secondary");
+		expect(res).toEqual([0, 120]);
+	});
 });

@@ -27,7 +27,7 @@ export function getScaleLinearDomain(
 		return (chart.data.valueGroup ?? "main") === valueGroup;
 	});
 
-	if (resolvedConfigDomain.start === -1) domainPeekMin = calculator.getScaleMinValue(configOptions.charts, dataRows);
+	if (resolvedConfigDomain.start === -1) domainPeekMin = calculator.getScaleMinValue(charts, dataRows);
 	else domainPeekMin = resolvedConfigDomain.start;
 
 	if (resolvedConfigDomain.end === -1) domainPeekMax = calculator.getScaleMaxValue(charts, dataRows);
