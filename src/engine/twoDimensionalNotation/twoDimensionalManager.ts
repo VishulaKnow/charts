@@ -46,8 +46,7 @@ export class TwoDimensionalManager implements ChartContentManager {
 		const scales = Scale.getScalesWithSecondary(
 			options.scale.key,
 			options.scale.value,
-			options.scale.valueSecondary,
-			options.chartSettings.bar
+			options.scale.valueSecondary
 		);
 		engine.block.scales = scales;
 
@@ -170,8 +169,7 @@ export class TwoDimensionalManager implements ChartContentManager {
 		const scales = Scale.getScalesWithSecondary(
 			options.scale.key,
 			options.scale.value,
-			options.scale.valueSecondary,
-			options.chartSettings.bar
+			options.scale.valueSecondary
 		);
 
 		const keyDomainEquality = Helper.checkDomainsEquality(block.scales.key.domain(), scales.key.domain());

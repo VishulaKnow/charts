@@ -1,6 +1,6 @@
 import { scaleBand, scaleLinear, scalePoint, ScaleBand, ScalePoint, ScaleLinear } from "d3-scale";
 import { AxisScale } from "d3-axis";
-import { BarChartSettings, RangeModel, ScaleBandModel, ScaleKeyModel, ScaleValueModel } from "../../../model/model";
+import { RangeModel, ScaleBandModel, ScaleKeyModel, ScaleValueModel } from "../../../model/model";
 
 export interface Scales {
 	key: AxisScale<any>;
@@ -13,33 +13,12 @@ export interface ScalesWithSecondary extends Scales {
 
 //TODO: incapulate in model
 export class Scale {
-	public static getScales(
-		scaleKey: ScaleKeyModel,
-		scaleValue: ScaleValueModel,
-		bandSettings: BarChartSettings
-	): Scales {
-		const scales: Scales = {
-			key: null,
-			value: null
-		};
-
-		if (scaleKey.type === "band")
-			// scales.key = this.getScaleBand(scaleKey.domain, scaleKey.range, bandSettings, scaleKey.elementsAmount);
-			scales.key = this.getScaleBandNew(scaleKey);
-		else if (scaleKey.type === "point") scales.key = this.getScalePoint(scaleKey.domain, scaleKey.range);
-
-		scales.value = this.getScaleValue(scaleValue);
-
-		return scales;
-	}
-
 	public static getScalesWithSecondary(
 		scaleKey: ScaleKeyModel,
 		scaleValue: ScaleValueModel,
-		scaleValueSecondary: ScaleValueModel,
-		bandSettings: BarChartSettings
+		scaleValueSecondary: ScaleValueModel
 	): ScalesWithSecondary {
-		const scales = this.getScales(scaleKey, scaleValue, bandSettings);
+		const scales = this.getScales(scaleKey, scaleValue);
 
 		return {
 			...scales,
@@ -72,12 +51,26 @@ export class Scale {
 		return scale(value);
 	}
 
-	static getScaleBandNew(scaleKey: ScaleBandModel) {
+	static getScaleBand(scaleKey: ScaleBandModel) {
 		return scaleBand()
 			.domain(scaleKey.domain)
 			.range([scaleKey.range.start, scaleKey.range.end])
 			.paddingInner(scaleKey.sizes.paddingInner / scaleKey.sizes.oneKeyTotalSpace)
 			.paddingOuter(scaleKey.sizes.paddingOuter / scaleKey.sizes.recalculatedStepSize);
+	}
+
+	private static getScales(scaleKey: ScaleKeyModel, scaleValue: ScaleValueModel): Scales {
+		const scales: Scales = {
+			key: null,
+			value: null
+		};
+
+		if (scaleKey.type === "band") scales.key = this.getScaleBand(scaleKey);
+		else if (scaleKey.type === "point") scales.key = this.getScalePoint(scaleKey.domain, scaleKey.range);
+
+		scales.value = this.getScaleValue(scaleValue);
+
+		return scales;
 	}
 
 	private static getScaleLinear(domain: number[], range: RangeModel): ScaleLinear<number, number, number> {
