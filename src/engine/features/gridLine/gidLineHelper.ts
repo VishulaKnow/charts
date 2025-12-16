@@ -57,8 +57,10 @@ export class GridLineHelper {
 
 		const scaledStart = scaleValue(scaleValue.domain()[0]);
 		const scaledEnd = scaleValue(scaleValue.domain()[1]);
-		const minCoord = min([scaledStart, scaledEnd]) - scaleValue(0);
-		const maxCoord = max([scaledStart, scaledEnd]) - scaleValue(0);
+
+		const minScaledValue = scaleValue(Math.min(...scaleValue.domain()));
+		const minCoord = min([scaledStart, scaledEnd]) - minScaledValue;
+		const maxCoord = max([scaledStart, scaledEnd]) - minScaledValue;
 
 		if (axis.orient === "left" || axis.orient === "right") {
 			attributes.x1 = minCoord;
