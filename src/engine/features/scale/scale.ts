@@ -52,11 +52,19 @@ export class Scale {
 	}
 
 	static getScaleBand(scaleKey: ScaleBandModel) {
+		// Formulas from d3-scale source code: https://github.com/d3/d3-scale/blob/main/src/band.js
+		const paddingInner = 1 - scaleKey.sizes.bandSize / scaleKey.sizes.recalculatedStepSize;
+		const paddingOuter =
+			(Math.abs(scaleKey.range.end - scaleKey.range.start) / scaleKey.sizes.recalculatedStepSize -
+				scaleKey.domain.length +
+				paddingInner) /
+			2;
+
 		return scaleBand()
 			.domain(scaleKey.domain)
 			.range([scaleKey.range.start, scaleKey.range.end])
-			.paddingInner(scaleKey.sizes.paddingInner / scaleKey.sizes.oneKeyTotalSpace)
-			.paddingOuter(scaleKey.sizes.paddingOuter / scaleKey.sizes.recalculatedStepSize);
+			.paddingInner(paddingInner)
+			.paddingOuter(paddingOuter);
 	}
 
 	private static getScales(scaleKey: ScaleKeyModel, scaleValue: ScaleValueModel): Scales {

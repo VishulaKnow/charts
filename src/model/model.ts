@@ -187,7 +187,7 @@ export interface ScaleBandModel extends BaseScaleKeyModel {
 export interface ScaleBandModelSizeParams {
 	paddingOuter: number;
 	paddingInner: number;
-	oneKeyTotalSpace: number;
+	oneKeyTotalSpace: number; //TODO: field is unnecessary? remove it?
 	recalculatedStepSize: number;
 	bandSize: number;
 }
