@@ -442,7 +442,7 @@ describe("get axes", () => {
 			numberAxisOptions,
 			{ maxSize: { main: 60 } },
 			canvasModel,
-			{ domain: [0, 120], range: { start: 0, end: 120 }, type: "linear", formatter: () => "value" }
+			{ domain: [0, 120], rootValue: 0, range: { start: 0, end: 120 }, type: "linear", formatter: () => "value" }
 		);
 		const expected: AxisModelOptions = {
 			visibility: true,
@@ -489,7 +489,7 @@ describe("get axes", () => {
 			numberAxisOptions,
 			{ maxSize: { main: 60 } },
 			canvasModel,
-			{ domain: [0, 120], range: { start: 0, end: 120 }, type: "linear", formatter: () => "value" }
+			{ domain: [0, 120], rootValue: 0, range: { start: 0, end: 120 }, type: "linear", formatter: () => "value" }
 		);
 		const expected: AxisModelOptions = {
 			visibility: true,
@@ -536,7 +536,7 @@ describe("get axes", () => {
 			numberAxisOptions,
 			{ maxSize: { main: 60 } },
 			canvasModel,
-			{ domain: [0, 120], range: { start: 0, end: 120 }, type: "linear", formatter: () => "value" }
+			{ domain: [0, 120], range: { start: 0, end: 120 }, rootValue: 0, type: "linear", formatter: () => "value" }
 		);
 		const expected: AxisModelOptions = {
 			visibility: true,

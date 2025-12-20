@@ -19,14 +19,14 @@ export class ScaleAxisRecalcer {
 	constructor(private generateScaleLinear: () => ScaleValueModel) {}
 
 	recalculateMargin(canvasModel: CanvasModel, chartOrientation: ChartOrientation, keyAxis: DiscreteAxisOptions) {
-		const { scaleFn: scaleValueFn } = this.getScaleValue();
+		const { scaleFn: scaleValueFn, scale } = this.getScaleValue();
 
 		const coordinateOnChartBlock =
 			keyAxis.position === "start"
-				? scaleValueFn(0)
+				? scaleValueFn(scale.rootValue)
 				: (chartOrientation === "vertical"
 						? canvasModel.getChartBlockHeight()
-						: canvasModel.getChartBlockWidth()) - scaleValueFn(0);
+						: canvasModel.getChartBlockWidth()) - scaleValueFn(scale.rootValue);
 		const key = chartOrientation === "vertical" ? keyAxisLabelVerticalLog : keyAxisLabelHorizontalLog;
 		const logInfo = canvasModel.marginService.getDataByKey(key);
 		if (logInfo) {

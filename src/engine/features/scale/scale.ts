@@ -27,7 +27,7 @@ export class Scale {
 	}
 
 	public static getScaleValue(scaleValue: ScaleValueModel) {
-		return this.getScaleLinear(scaleValue.domain, scaleValue.range);
+		return this.getScaleLinear(scaleValue.domain, scaleValue.range, scaleValue.rootValue);
 	}
 
 	public static getScaleBandWidth(scale: AxisScale<any>): number {
@@ -81,9 +81,13 @@ export class Scale {
 		return scales;
 	}
 
-	private static getScaleLinear(domain: number[], range: RangeModel): ScaleLinear<number, number, number> {
+	private static getScaleLinear(
+		domain: number[],
+		range: RangeModel,
+		rootValue: number
+	): ScaleLinear<number, number, number> {
 		const scale = scaleLinear().domain(domain).range([range.start, range.end]);
-		scale.unknown(scale(0));
+		scale.unknown(scale(rootValue));
 		return scale;
 	}
 

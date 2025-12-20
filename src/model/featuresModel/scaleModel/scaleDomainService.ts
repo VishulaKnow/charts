@@ -15,7 +15,7 @@ export function getScaleLinearDomain(
 	dataRows: MdtChartsDataRow[],
 	configOptions: MdtChartsTwoDimensionalOptions,
 	valueGroup: TwoDimensionalValueGroup = "main"
-) {
+): { domain: [number, number]; rootValue: number } {
 	const calculator = new ScaleDomainCalculator();
 
 	let domainPeekMin: number;
@@ -33,8 +33,14 @@ export function getScaleLinearDomain(
 	if (resolvedConfigDomain.end === -1) domainPeekMax = calculator.getScaleMaxValue(charts, dataRows);
 	else domainPeekMax = resolvedConfigDomain.end;
 
-	if (configOptions.axis.key.position === "start") return [domainPeekMin, domainPeekMax];
-	return [domainPeekMax, domainPeekMin];
+	let rootValue = 0;
+	if (domainPeekMin === 0 || domainPeekMax === 0) rootValue = 0;
+	else if (domainPeekMin < 0 && domainPeekMax > 0) rootValue = 0;
+	else if (domainPeekMax > 0 && domainPeekMin > 0) rootValue = Math.min(domainPeekMin, domainPeekMax);
+	else if (domainPeekMin < 0 && domainPeekMax < 0) rootValue = Math.max(domainPeekMin, domainPeekMax);
+
+	if (configOptions.axis.key.position === "start") return { domain: [domainPeekMin, domainPeekMax], rootValue };
+	return { domain: [domainPeekMax, domainPeekMin], rootValue };
 }
 
 export class ScaleDomainCalculator {

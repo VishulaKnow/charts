@@ -621,6 +621,7 @@ describe("get scales tests", () => {
 		const result = scaleModel.getScaleLinear(data[dataSource]);
 		expect(result).toEqual({
 			domain: [0, 120],
+			rootValue: 0,
 			range: {
 				start: 0,
 				end: 460
@@ -812,12 +813,12 @@ describe("getScaleLinearDomain", () => {
 
 	test('should return array equals [120, 0] because valueGroup of first chart equals "secondary"', () => {
 		const res = getScaleLinearDomain(config.axis.value.domain, dataRow, config, "secondary");
-		expect(res).toEqual([120, 0]);
+		expect(res.domain).toEqual([120, 0]);
 	});
 
 	test('should return array equals [20, 0] because valueGroup of first chart equals "main"', () => {
 		const res = getScaleLinearDomain(config.axis.value.domain, dataRow, config);
-		expect(res).toEqual([20, 0]);
+		expect(res.domain).toEqual([20, 0]);
 	});
 
 	test("should return array equals [120, 0] because valueGroup does not exist in charts", () => {
@@ -826,7 +827,7 @@ describe("getScaleLinearDomain", () => {
 		});
 
 		const res = getScaleLinearDomain(config.axis.value.domain, dataRow, config);
-		expect(res).toEqual([120, 0]);
+		expect(res.domain).toEqual([120, 0]);
 	});
 
 	test("should return array equals [0, 0] because valueGroup does not exist in charts", () => {
@@ -835,7 +836,7 @@ describe("getScaleLinearDomain", () => {
 		});
 
 		const res = getScaleLinearDomain(config.axis.value.domain, dataRow, config, "secondary");
-		expect(res).toEqual([0, 0]);
+		expect(res.domain).toEqual([0, 0]);
 	});
 
 	test('should return array equals [120, 0] because valueGroup of every chart equals "main"', () => {
@@ -844,14 +845,14 @@ describe("getScaleLinearDomain", () => {
 		});
 
 		const res = getScaleLinearDomain(config.axis.value.domain, dataRow, config);
-		expect(res).toEqual([120, 0]);
+		expect(res.domain).toEqual([120, 0]);
 	});
 
 	test('should return array equals [0, 20] because position of axisKey equals "start"', () => {
 		config.axis.key.position = "start";
 
 		const res = getScaleLinearDomain(config.axis.value.domain, dataRow, config);
-		expect(res).toEqual([0, 20]);
+		expect(res.domain).toEqual([0, 20]);
 	});
 
 	test("should handle minmal domain value only from fields for secondary axis if option is set (when secondary minimal value is negative)", () => {
@@ -859,7 +860,7 @@ describe("getScaleLinearDomain", () => {
 		dataRow[0].price = -100;
 
 		const res = getScaleLinearDomain(config.axis.value.domain, dataRow, config, "secondary");
-		expect(res).toEqual([-100, 120]);
+		expect(res.domain).toEqual([-100, 120]);
 	});
 
 	test("should handle minmal domain value only from fields for secondary axis if option is set (when main minimal value is negative)", () => {
@@ -867,6 +868,35 @@ describe("getScaleLinearDomain", () => {
 		dataRow[0].count = -100;
 
 		const res = getScaleLinearDomain(config.axis.value.domain, dataRow, config, "secondary");
-		expect(res).toEqual([0, 120]);
+		expect(res.domain).toEqual([0, 120]);
+	});
+
+	test("should return rootValue equals 0 if 0 is in domain", () => {
+		let res = getScaleLinearDomain(config.axis.value.domain, dataRow, config);
+		expect(res.rootValue).toEqual(0);
+
+		config.axis.value.domain = { start: 0, end: 100 };
+		res = getScaleLinearDomain(config.axis.value.domain, dataRow, config);
+		expect(res.rootValue).toEqual(0);
+
+		config.axis.value.domain = { start: -100, end: 100 };
+		res = getScaleLinearDomain(config.axis.value.domain, dataRow, config);
+		expect(res.rootValue).toEqual(0);
+
+		config.axis.value.domain = { start: -100, end: 0 };
+		res = getScaleLinearDomain(config.axis.value.domain, dataRow, config);
+		expect(res.rootValue).toEqual(0);
+	});
+
+	test("should return rootValue equals minimal value if 0 is not in domain and all domain values are positive", () => {
+		config.axis.value.domain = { start: 10, end: 100 };
+		const res = getScaleLinearDomain(config.axis.value.domain, dataRow, config);
+		expect(res.rootValue).toEqual(10);
+	});
+
+	test("should return rootValue equals maximum value if 0 is not in domain and all domain values are negative", () => {
+		config.axis.value.domain = { start: -100, end: -10 };
+		const res = getScaleLinearDomain(config.axis.value.domain, dataRow, config);
+		expect(res.rootValue).toEqual(-10);
 	});
 });

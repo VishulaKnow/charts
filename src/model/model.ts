@@ -197,7 +197,8 @@ export interface ScalePointModel extends BaseScaleKeyModel {
 }
 
 export interface ScaleValueModel {
-	domain: any[];
+	domain: number[];
+	rootValue: number;
 	range: RangeModel;
 	type: ScaleValueType;
 	formatter: ((v: number) => string) | null;

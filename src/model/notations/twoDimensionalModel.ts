@@ -85,7 +85,7 @@ export class TwoDimensionalModel {
 			designerConfig.canvas.axisLabel,
 			canvasModel,
 			designerConfig.elementsOptions.tooltip,
-			() => scaleValueInfo.scaleFn(0)
+			() => scaleValueInfo.scaleFn(scaleValueInfo.scale.rootValue)
 		);
 
 		const keyScale = scaleModel.getScaleKey(modelInstance.dataModel.getAllowableKeys());
