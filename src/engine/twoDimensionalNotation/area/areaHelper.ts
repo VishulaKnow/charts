@@ -26,13 +26,13 @@ export class AreaGeneratorFactory {
 		if (keyAxisOrient === "bottom" || keyAxisOrient === "top") {
 			return generator.getVertical(
 				(d) => Scale.getScaledValueOnMiddleOfItem(scales.key, d[keyFieldName]) + margin.left,
-				(d) => scales.value(0) + margin.top,
+				(d) => scales.value(undefined) + margin.top, //TODO: need a clearer way to use rootValue
 				(d) => scales.value(d[valueFieldName]) + margin.top
 			);
 		}
 		if (keyAxisOrient === "left" || keyAxisOrient === "right") {
 			return generator.getHorizontal(
-				(d) => scales.value(0) + margin.left,
+				(d) => scales.value(undefined) + margin.left, //TODO: need a clearer way to use rootValue
 				(d) => scales.value(d[valueFieldName]) + margin.left,
 				(d) => Scale.getScaledValueOnMiddleOfItem(scales.key, d[keyFieldName]) + margin.top
 			);
