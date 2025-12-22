@@ -117,7 +117,7 @@ export class BarHelper {
 		scaleValue: AxisScale<any>,
 		valueFieldName: string
 	): (dataRow: MdtChartsDataRow) => number {
-		return (d) => Math.abs(scaleValue(d[valueFieldName]) - scaleValue(0));
+		return (d) => Math.abs(scaleValue(d[valueFieldName]) - scaleValue(undefined)); //TODO: need a clearer way to use rootValue
 	}
 
 	static setGroupedBandStartCoordinateAttr(
