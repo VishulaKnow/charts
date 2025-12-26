@@ -32,9 +32,17 @@ export class Aggregator {
 		this.renderText(block, innerRadius, aggregator, fontSize, translate);
 	}
 
-	public static update(block: Block, valueField: Field, settings: DonutAggregatorModel): void {
+	public static update(
+		block: Block,
+		valueField: Field,
+		settings: DonutAggregatorModel,
+		innerRadius: number,
+		translate: Translate
+	): void {
 		const aggregator = this.buildConfig(valueField, settings);
-		this.updateText(block, aggregator, typeof aggregator.value === "string");
+		const aggregatorObject = block.getSvg().select<SVGForeignObjectElement>(`.${this.aggregatorObjectClass}`);
+		this.updateText(block, aggregatorObject, aggregator, typeof aggregator.value === "string");
+		this.setAggregatorPosition(aggregatorObject, translate, innerRadius);
 	}
 
 	private static buildConfig(valueField: Field, settings: DonutAggregatorModel): AggregatorInfo {
@@ -86,9 +94,12 @@ export class Aggregator {
 		return ValueFormatter.formatField(format, value);
 	}
 
-	private static updateText(block: Block, newAggregator: AggregatorInfo, withoutAnimation?: boolean): void {
-		const aggregatorObject = block.getSvg().select<SVGForeignObjectElement>(`.${this.aggregatorObjectClass}`);
-
+	private static updateText(
+		block: Block,
+		aggregatorObject: Selection<SVGForeignObjectElement, unknown, HTMLElement, any>,
+		newAggregator: AggregatorInfo,
+		withoutAnimation?: boolean
+	): void {
 		const thisClass = this;
 		const valueBlock = block.getSvg().select<HTMLDivElement>(`.${this.aggregatorValueClass}`);
 
@@ -150,15 +161,25 @@ export class Aggregator {
 		innerRadius: number,
 		translate: Translate
 	): Selection<SVGForeignObjectElement, unknown, HTMLElement, any> {
-		return block
+		const aggregatorObject = block
 			.getSvg()
 			.append("foreignObject")
 			.attr("class", this.aggregatorObjectClass)
 			.attr("transform-origin", "center")
+			.style("pointer-events", `none`);
+		this.setAggregatorPosition(aggregatorObject, translate, innerRadius);
+		return aggregatorObject;
+	}
+
+	private static setAggregatorPosition(
+		aggregatorObject: Selection<SVGForeignObjectElement, unknown, HTMLElement, any>,
+		translate: Translate,
+		innerRadius: number
+	): void {
+		aggregatorObject
 			.attr("width", innerRadius * 2)
 			.attr("height", innerRadius * 2)
-			.attr("transform", `translate(${translate.x - innerRadius}, ${translate.y - innerRadius})`)
-			.style("pointer-events", `none`);
+			.attr("transform", `translate(${translate.x - innerRadius}, ${translate.y - innerRadius})`);
 	}
 
 	private static renderWrapper(

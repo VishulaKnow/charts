@@ -69,8 +69,6 @@ export class PolarManager implements ChartContentManager {
 			block.filterEventManager.setListenerPolar(model.chartBlock.margin, model.blockCanvas.size, options);
 		});
 
-		Aggregator.update(block, options.charts[0].data.valueField, options.chartCanvas.aggregator);
-
 		Legend.get().update(block, data, model);
 
 		RecordOverflowAlertCore.update(block, options.recordOverflowAlert);
@@ -99,7 +97,7 @@ export class PolarManager implements ChartContentManager {
 		donutSettings: DonutChartSettings
 	) {
 		charts.forEach((chart: PolarChartModel) => {
-			if (chart.type === "donut") Donut.render(block, data[dataSource], margin, chart, blockSize, donutSettings);
+			Donut.render(block, data[dataSource], margin, chart, blockSize, donutSettings);
 		});
 	}
 }

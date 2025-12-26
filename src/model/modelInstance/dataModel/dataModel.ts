@@ -14,7 +14,7 @@ export class DataModelInstance {
 		this.repository = new DataRepositoryModel();
 	}
 
-	initMaxRecordsAmount(amount: number) {
+	initMaxRecordsAmount(amount?: number) {
 		if (typeof amount === "number" && amount > 0) {
 			this.maxRecordsAmount = amount;
 		}

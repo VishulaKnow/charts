@@ -93,11 +93,20 @@ export class Donut {
 
 		const donutBlock = block.getSvg().select<SVGGElement>(`.${this.donutBlockClass}`);
 
+		const translateAttr = DonutHelper.getTranslate(margin, blockSize);
+
+		donutBlock
+			.attr("x", translateAttr.x)
+			.attr("y", translateAttr.y)
+			.attr("transform", `translate(${translateAttr.x}, ${translateAttr.y})`);
+
 		this.renderNewArcItems(arcGenerator, pieGenerator, donutBlock, dataNewZeroRows, chart);
 
 		const path = this.getAllArcGroups(block).data(pieGenerator(dataExtraZeroRows)).select<SVGPathElement>("path");
 		const items = this.getAllArcGroups(block).data(pieGenerator(data));
 		this.setElementsColor(this.getAllArcGroups(block), chart);
+
+		Aggregator.update(block, chart.data.valueField, donutSettings.aggregator, innerRadius, translateAttr);
 
 		return new Promise((resolve) => {
 			this.raiseClonesG(block);
