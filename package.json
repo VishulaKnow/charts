@@ -1,6 +1,6 @@
 {
 	"name": "mdt-charts",
-	"version": "1.38.6",
+	"version": "1.38.7",
 	"description": "",
 	"main": "lib/main.js",
 	"scripts": {
