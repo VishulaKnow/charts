@@ -98,11 +98,6 @@ const configCars: MdtChartsConfig = {
 			}
 		},
 		valueLabels: {
-			collision: {
-				otherValueLabels: {
-					mode: "none"
-				}
-			},
 			style: {
 				cssClassName: "value-labels-style",
 				fontSize: 12,

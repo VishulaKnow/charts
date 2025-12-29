@@ -162,7 +162,7 @@ export class TwoDimensionalModelHelper {
 		return {
 			collision: {
 				otherValueLables: valueLabels?.collision?.otherValueLabels ?? {
-					mode: "none"
+					mode: "hide"
 				},
 				chartBlock: chartBlockConfig[chartOrientation]
 			},
