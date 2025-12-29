@@ -37,7 +37,7 @@ export class FilterEventManager {
 		private callback: FilterCallback,
 		private fullDataset: MdtChartsDataRow[],
 		filtrable: boolean,
-		keyFieldName: string,
+		private readonly keyFieldName: string,
 		selectedIds: number[] = []
 	) {
 		this.selectedKeys = Helper.getKeysByIds(selectedIds, keyFieldName, fullDataset);
@@ -55,6 +55,14 @@ export class FilterEventManager {
 
 	public updateData(newDataset: MdtChartsDataRow[]): void {
 		this.fullDataset = newDataset;
+		const newSelectedKeys = this.selectedKeys.filter(
+			(key) => newDataset.findIndex((row) => row[this.keyFieldName] === key) !== -1
+		);
+		if (newSelectedKeys.length !== this.selectedKeys.length) {
+			this.selectedKeys = newSelectedKeys;
+			this.eventEmitter.emit("change", this.selectedKeys);
+			this.callback(Helper.getRowsByKeys(this.selectedKeys, this.keyFieldName, this.fullDataset));
+		}
 	}
 
 	public isSelected(keyValue: string): boolean {
