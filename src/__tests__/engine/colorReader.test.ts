@@ -1,12 +1,12 @@
 import { ColorReaderClass } from "../../engine/colorReader/colorReader";
 import { MdtChartsColorField, MdtChartsDataRow } from "../../config/config";
-import { PolarChartModel } from "../../model/model";
+import { DonutChartModel } from "../../model/model";
 
 describe("Donut ColorReader", () => {
 	describe("getColorForArc", () => {
 		const colorReader = new ColorReaderClass();
 
-		const getPolarChart = (colorField: MdtChartsColorField, elementColors?: string[]): PolarChartModel => {
+		const getPolarChart = (colorField: MdtChartsColorField, elementColors?: string[]): DonutChartModel => {
 			return {
 				cssClasses: [],
 				style: {

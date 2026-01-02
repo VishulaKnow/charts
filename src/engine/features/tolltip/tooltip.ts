@@ -5,7 +5,7 @@ import {
 	Model,
 	OptionsModelData,
 	Orient,
-	PolarChartModel,
+	DonutChartModel,
 	PolarOptionsModel,
 	ScaleKeyModel,
 	TooltipBasicModel,

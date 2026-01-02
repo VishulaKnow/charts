@@ -1,7 +1,7 @@
 import { Arc, Pie, PieArcDatum } from "d3-shape";
 import { Selection, BaseType } from "d3-selection";
 import { interpolate } from "d3-interpolate";
-import { BlockMargin, DonutChartSettings, PolarChartModel } from "../../../model/model";
+import { BlockMargin, DonutChartSettings, DonutChartModel } from "../../../model/model";
 import { Block } from "../../block/block";
 import { Aggregator } from "../../features/aggregator/aggregator";
 import { DonutHelper } from "./donutHelper";
@@ -29,7 +29,7 @@ export class Donut {
 		block: Block,
 		data: MdtChartsDataRow[],
 		margin: BlockMargin,
-		chart: PolarChartModel,
+		chart: DonutChartModel,
 		blockSize: Size,
 		settings: DonutChartSettings
 	): void {
@@ -59,7 +59,7 @@ export class Donut {
 		block: Block,
 		data: MdtChartsDataRow[],
 		margin: BlockMargin,
-		chart: PolarChartModel,
+		chart: DonutChartModel,
 		blockSize: Size,
 		donutSettings: DonutChartSettings,
 		keyField: string
@@ -127,7 +127,7 @@ export class Donut {
 		});
 	}
 
-	public static updateColors(block: Block, chart: PolarChartModel): void {
+	public static updateColors(block: Block, chart: DonutChartModel): void {
 		this.setElementsColor(this.getAllArcGroups(block), chart);
 	}
 
@@ -169,7 +169,7 @@ export class Donut {
 		pieGenerator: Pie<any, MdtChartsDataRow>,
 		donutBlock: Selection<SVGGElement, unknown, HTMLElement, any>,
 		data: MdtChartsDataRow[],
-		chart: PolarChartModel
+		chart: DonutChartModel
 	): void {
 		const items = donutBlock
 			.selectAll(`.${this.arcItemClass}`)
@@ -192,7 +192,7 @@ export class Donut {
 
 	private static setElementsColor(
 		arcItems: Selection<SVGGElement, PieArcDatum<MdtChartsDataRow>, BaseType, unknown>,
-		chart: PolarChartModel
+		chart: DonutChartModel
 	): void {
 		arcItems.select("path").style("fill", ({ data }, i) => ColorReader.getColorForArc(data, chart, i));
 	}

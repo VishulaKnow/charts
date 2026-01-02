@@ -1,19 +1,19 @@
 import { MdtChartsColorField, MdtChartsDataRow } from "../../config/config";
-import { PolarChartModel } from "../../model/model";
+import { DonutChartModel } from "../../model/model";
 
 export class ColorReaderClass {
-	getColorForArc(row: MdtChartsDataRow, chart: PolarChartModel, arcIndex: number) {
+	getColorForArc(row: MdtChartsDataRow, chart: DonutChartModel, arcIndex: number) {
 		if (chart.data.colorField) {
 			return this.getColorFromData(row, chart.data.colorField);
 		}
 		return this.getColorFromPalette(chart.style.elementColors, arcIndex);
 	}
 
-	getChartColorField(chart: PolarChartModel) {
+	getChartColorField(chart: DonutChartModel) {
 		return chart.data.colorField;
 	}
 
-	isNeedReadFromData(chart: PolarChartModel) {
+	isNeedReadFromData(chart: DonutChartModel) {
 		return !!this.getChartColorField(chart);
 	}
 

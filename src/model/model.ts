@@ -121,7 +121,7 @@ export interface TwoDimensionalOptionsModel extends GraphicNotationOptionsModel 
 }
 export interface PolarOptionsModel extends GraphicNotationOptionsModel {
 	type: "polar";
-	charts: PolarChartModel[];
+	charts: DonutChartModel[];
 	chartCanvas: DonutChartSettings;
 }
 
@@ -551,7 +551,7 @@ export interface TwoDimensionalChartModel
 	valueLabels: TwoDimChartValueLabelsOptions;
 }
 
-export interface PolarChartModel extends ChartModel {
+export interface DonutChartModel extends ChartModel {
 	type: PolarChartType;
 	data: PolarChartDataModel;
 	legend: ChartLegendMarkerModel;

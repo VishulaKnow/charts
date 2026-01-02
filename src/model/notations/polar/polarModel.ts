@@ -1,7 +1,7 @@
 import { PolarChart, MdtChartsPolarOptions, MdtChartsDataRow } from "../../../config/config";
 import { ChartStyleConfig, DesignerConfig, DonutOptionsCanvas } from "../../../designer/designerConfig";
 import { ChartStyleModelService } from "../../chartStyleModel/chartStyleModel";
-import { PolarOptionsModel, PolarChartModel, DonutChartSettings, LegendCoordinate } from "../../model";
+import { PolarOptionsModel, DonutChartModel, DonutChartSettings, LegendCoordinate } from "../../model";
 import { CanvasModel } from "../../modelInstance/canvasModel/canvasModel";
 import { ModelInstance } from "../../modelInstance/modelInstance";
 import { DonutModel } from "./donut/donutModel";
@@ -123,7 +123,7 @@ export class PolarModel {
 		chart: PolarChart,
 		dataLength: number,
 		chartStyleConfig: ChartStyleConfig
-	): PolarChartModel {
+	): DonutChartModel {
 		return {
 			type: chart.type,
 			data: { ...chart.data },

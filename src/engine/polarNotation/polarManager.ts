@@ -1,4 +1,4 @@
-import { BlockMargin, DonutChartSettings, Model, PolarChartModel, PolarOptionsModel } from "../../model/model";
+import { BlockMargin, DonutChartSettings, Model, DonutChartModel, PolarOptionsModel } from "../../model/model";
 import { Block } from "../block/block";
 import { Engine } from "../engine";
 import { Legend } from "../features/legend/legend";
@@ -89,14 +89,14 @@ export class PolarManager implements ChartContentManager {
 
 	private renderCharts(
 		block: Block,
-		charts: PolarChartModel[],
+		charts: DonutChartModel[],
 		data: MdtChartsDataSource,
 		dataSource: string,
 		margin: BlockMargin,
 		blockSize: Size,
 		donutSettings: DonutChartSettings
 	) {
-		charts.forEach((chart: PolarChartModel) => {
+		charts.forEach((chart: DonutChartModel) => {
 			Donut.render(block, data[dataSource], margin, chart, blockSize, donutSettings);
 		});
 	}
