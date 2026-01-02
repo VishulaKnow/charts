@@ -84,10 +84,6 @@ function getDataFormat(designerConfig: DesignerConfig): DataFormat {
 	};
 }
 
-function getTransitions(designerConfig: DesignerConfig): Transitions | undefined {
-	return designerConfig.transitions;
-}
-
 export function assembleModel(
 	config: MdtChartsConfig,
 	data: MdtChartsDataSource,
@@ -124,7 +120,6 @@ export function assembleModel(
 	const chartBlock = getChartBlockModel(modelInstance);
 	const options = getOptions(config, designerConfig, modelInstance);
 	const dataSettings = getDataSettings(modelInstance.dataModel.getScope(), designerConfig);
-	const transitions = getTransitions(designerConfig);
 
 	modelInstance.canvasModel.roundMargin();
 
@@ -134,7 +129,7 @@ export function assembleModel(
 		otherComponents,
 		options,
 		dataSettings,
-		transitions
+		transitions: designerConfig.transitions
 	};
 }
 

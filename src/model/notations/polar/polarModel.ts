@@ -1,7 +1,7 @@
-import { PolarChart, MdtChartsPolarOptions, MdtChartsDataRow } from "../../../config/config";
+import { PolarChart, MdtChartsPolarOptions, MdtChartsDataRow, Size } from "../../../config/config";
 import { ChartStyleConfig, DesignerConfig, DonutOptionsCanvas } from "../../../designer/designerConfig";
 import { ChartStyleModelService } from "../../chartStyleModel/chartStyleModel";
-import { PolarOptionsModel, DonutChartModel, DonutChartSettings, LegendCoordinate } from "../../model";
+import { PolarOptionsModel, DonutChartModel, DonutChartSettings, LegendCoordinate, BlockMargin } from "../../model";
 import { CanvasModel } from "../../modelInstance/canvasModel/canvasModel";
 import { ModelInstance } from "../../modelInstance/modelInstance";
 import { DonutModel } from "./donut/donutModel";
@@ -10,6 +10,7 @@ import { createRecordOverflowModel } from "../../featuresModel/recordOverflowMod
 import { POLAR_LEGEND_MARKER } from "./modelConstants/polarLegendMarker";
 import { TwoDimTooltipContentGenerator } from "../../featuresModel/tooltipModel/tooltipContentModel";
 import { PolarInitialRowsProvider } from "../../featuresModel/tooltipModel/contentByNotations/polarInitialRowsProvider";
+import { DonutThicknessCalculator } from "./donut/donutThicknessService";
 
 export const MIN_DONUT_BLOCK_SIZE = 120;
 
@@ -23,7 +24,16 @@ export class PolarModel {
 	): PolarOptionsModel {
 		const titleConfig = TitleConfigReader.create(options.title, modelInstance);
 
+		const donutSettings = this.getDonutSettings(
+			designerConfig.canvas.chartOptions.donut,
+			options.chart,
+			modelInstance.dataModel.repository.getRawRows()
+		);
+
 		const chart = this.getChartsModel(
+			donutSettings,
+			modelInstance.canvasModel.getBlockSize(),
+			modelInstance.canvasModel.getMargin(),
 			options.chart,
 			modelInstance.dataModel.repository.getScopedRows().length,
 			designerConfig.chartStyle
@@ -58,11 +68,7 @@ export class PolarModel {
 					return generator.generateContent(keyFieldValue);
 				}
 			},
-			chartCanvas: this.getDonutSettings(
-				designerConfig.canvas.chartOptions.donut,
-				options.chart,
-				modelInstance.dataModel.repository.getRawRows()
-			),
+			chartCanvas: donutSettings,
 			defs: { gradients: [] },
 			recordOverflowAlert: createRecordOverflowModel(
 				modelInstance.dataModel.getScope().hidedRecordsAmount,
@@ -120,16 +126,27 @@ export class PolarModel {
 	}
 
 	private static getChartsModel(
+		donutSettings: DonutChartSettings,
+		blockSize: Size,
+		margin: BlockMargin,
 		chart: PolarChart,
 		dataLength: number,
 		chartStyleConfig: ChartStyleConfig
 	): DonutChartModel {
+		const outerRadius = this.donutModel.getOuterRadius(margin, blockSize);
+		const thickness = DonutThicknessCalculator.getThickness(donutSettings, blockSize, margin);
 		return {
 			type: chart.type,
 			data: { ...chart.data },
 			cssClasses: ChartStyleModelService.getCssClasses(0),
 			style: ChartStyleModelService.getChartStyle(dataLength, chartStyleConfig),
-			legend: POLAR_LEGEND_MARKER
+			legend: POLAR_LEGEND_MARKER,
+			sizes: {
+				thickness: DonutThicknessCalculator.getThickness(donutSettings, blockSize, margin),
+				outerRadius,
+				innerRadius: this.donutModel.getInnerRadius(outerRadius, thickness),
+				translate: this.donutModel.getTranslate(margin, blockSize)
+			}
 		};
 	}
 }

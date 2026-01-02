@@ -435,7 +435,7 @@ export type DonutThicknessUnit = UnitsFromConfig;
 export interface DonutThicknessOptions {
 	min: number;
 	max: number;
-	value: number;
+	value?: number;
 	unit: DonutThicknessUnit;
 }
 
@@ -555,6 +555,19 @@ export interface DonutChartModel extends ChartModel {
 	type: PolarChartType;
 	data: PolarChartDataModel;
 	legend: ChartLegendMarkerModel;
+	sizes: DonutChartSizesModel;
+}
+
+export interface DonutChartSizesModel {
+	outerRadius: number;
+	innerRadius: number;
+	thickness: number;
+	translate: DonutChartTranslateModel;
+}
+
+export interface DonutChartTranslateModel {
+	x: number;
+	y: number;
 }
 
 //====================================================== TwoDimensionalChartModel

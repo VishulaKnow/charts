@@ -8,7 +8,6 @@ import { DonutHelper } from "./donutHelper";
 import { DomSelectionHelper } from "../../helpers/domSelectionHelper";
 import { MdtChartsDataRow, Size } from "../../../config/config";
 import { ColorReader } from "../../colorReader/colorReader";
-import { DonutThicknessCalculator } from "../../../model/notations/polar/donut/donutThicknessService";
 
 export interface Translate {
 	x: number;
@@ -28,28 +27,28 @@ export class Donut {
 	public static render(
 		block: Block,
 		data: MdtChartsDataRow[],
-		margin: BlockMargin,
 		chart: DonutChartModel,
-		blockSize: Size,
 		settings: DonutChartSettings
 	): void {
-		const outerRadius = DonutHelper.getOuterRadius(margin, blockSize);
-		const thickness = DonutThicknessCalculator.getThickness(settings, blockSize, margin);
-		const innerRadius = DonutHelper.getInnerRadius(outerRadius, thickness);
-
-		const arcGenerator = DonutHelper.getArcGenerator(outerRadius, innerRadius);
+		const arcGenerator = DonutHelper.getArcGenerator(chart.sizes.outerRadius, chart.sizes.innerRadius);
 		const pieGenerator = DonutHelper.getPieGenerator(chart.data.valueField.name, settings.padAngle);
 
-		const translateAttr = DonutHelper.getTranslate(margin, blockSize);
-		Aggregator.render(block, chart.data.valueField, innerRadius, translateAttr, thickness, settings.aggregator);
+		Aggregator.render(
+			block,
+			chart.data.valueField,
+			chart.sizes.innerRadius,
+			chart.sizes.translate,
+			chart.sizes.thickness,
+			settings.aggregator
+		);
 
 		const donutBlock = block
 			.getSvg()
 			.append("g")
 			.attr("class", this.donutBlockClass)
-			.attr("x", translateAttr.x)
-			.attr("y", translateAttr.y)
-			.attr("transform", `translate(${translateAttr.x}, ${translateAttr.y})`);
+			.attr("x", chart.sizes.translate.x)
+			.attr("y", chart.sizes.translate.y)
+			.attr("transform", `translate(${chart.sizes.translate.x}, ${chart.sizes.translate.y})`);
 
 		this.renderNewArcItems(arcGenerator, pieGenerator, donutBlock, data, chart);
 		this.renderClonesG(donutBlock);
@@ -58,17 +57,11 @@ export class Donut {
 	public static update(
 		block: Block,
 		data: MdtChartsDataRow[],
-		margin: BlockMargin,
 		chart: DonutChartModel,
-		blockSize: Size,
 		donutSettings: DonutChartSettings,
 		keyField: string
 	): Promise<any> {
-		const outerRadius = DonutHelper.getOuterRadius(margin, blockSize);
-		const thickness = DonutThicknessCalculator.getThickness(donutSettings, blockSize, margin);
-		const innerRadius = DonutHelper.getInnerRadius(outerRadius, thickness);
-
-		const arcGenerator = DonutHelper.getArcGenerator(outerRadius, innerRadius);
+		const arcGenerator = DonutHelper.getArcGenerator(chart.sizes.outerRadius, chart.sizes.innerRadius);
 		const pieGenerator = DonutHelper.getPieGenerator(chart.data.valueField.name, donutSettings.padAngle);
 
 		const oldData = block
@@ -93,12 +86,10 @@ export class Donut {
 
 		const donutBlock = block.getSvg().select<SVGGElement>(`.${this.donutBlockClass}`);
 
-		const translateAttr = DonutHelper.getTranslate(margin, blockSize);
-
 		donutBlock
-			.attr("x", translateAttr.x)
-			.attr("y", translateAttr.y)
-			.attr("transform", `translate(${translateAttr.x}, ${translateAttr.y})`);
+			.attr("x", chart.sizes.translate.x)
+			.attr("y", chart.sizes.translate.y)
+			.attr("transform", `translate(${chart.sizes.translate.x}, ${chart.sizes.translate.y})`);
 
 		this.renderNewArcItems(arcGenerator, pieGenerator, donutBlock, dataNewZeroRows, chart);
 
@@ -106,7 +97,13 @@ export class Donut {
 		const items = this.getAllArcGroups(block).data(pieGenerator(data));
 		this.setElementsColor(this.getAllArcGroups(block), chart);
 
-		Aggregator.update(block, chart.data.valueField, donutSettings.aggregator, innerRadius, translateAttr);
+		Aggregator.update(
+			block,
+			chart.data.valueField,
+			donutSettings.aggregator,
+			chart.sizes.innerRadius,
+			chart.sizes.translate
+		);
 
 		return new Promise((resolve) => {
 			this.raiseClonesG(block);

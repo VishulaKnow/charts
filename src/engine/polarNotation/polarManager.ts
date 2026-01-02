@@ -1,13 +1,12 @@
-import { BlockMargin, DonutChartSettings, Model, DonutChartModel, PolarOptionsModel } from "../../model/model";
+import { DonutChartSettings, Model, DonutChartModel, PolarOptionsModel } from "../../model/model";
 import { Block } from "../block/block";
 import { Engine } from "../engine";
 import { Legend } from "../features/legend/legend";
 import { Title } from "../features/title/title";
 import { ElementHighlighter } from "../elementHighlighter/elementHighlighter";
 import { Tooltip } from "../features/tolltip/tooltip";
-import { Aggregator } from "../features/aggregator/aggregator";
 import { Donut } from "./donut/donut";
-import { MdtChartsDataSource, Size } from "../../config/config";
+import { MdtChartsDataSource } from "../../config/config";
 import { ChartContentManager } from "../contentManager/contentManagerFactory";
 import { ChartClearSelectionOptions, FilterEventManager } from "../filterManager/filterEventManager";
 import { RecordOverflowAlertCore } from "../features/recordOverflowAlert/recordOverflowAlertCore";
@@ -18,15 +17,7 @@ export class PolarManager implements ChartContentManager {
 
 		engine.block.svg.render(model.blockCanvas.size);
 
-		this.renderCharts(
-			engine.block,
-			options.charts,
-			engine.data,
-			options.data.dataSource,
-			model.chartBlock.margin,
-			model.blockCanvas.size,
-			options.chartCanvas
-		);
+		this.renderCharts(engine.block, options.charts, engine.data, options.data.dataSource, options.chartCanvas);
 
 		Title.render(engine.block, options.title, model.otherComponents.titleBlock, model.blockCanvas.size);
 
@@ -59,9 +50,7 @@ export class PolarManager implements ChartContentManager {
 		Donut.update(
 			block,
 			data[options.data.dataSource],
-			model.chartBlock.margin,
 			options.charts[0],
-			model.blockCanvas.size,
 			options.chartCanvas,
 			options.data.keyField.name
 		).then(() => {
@@ -92,12 +81,10 @@ export class PolarManager implements ChartContentManager {
 		charts: DonutChartModel[],
 		data: MdtChartsDataSource,
 		dataSource: string,
-		margin: BlockMargin,
-		blockSize: Size,
 		donutSettings: DonutChartSettings
 	) {
 		charts.forEach((chart: DonutChartModel) => {
-			Donut.render(block, data[dataSource], margin, chart, blockSize, donutSettings);
+			Donut.render(block, data[dataSource], chart, donutSettings);
 		});
 	}
 }

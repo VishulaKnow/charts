@@ -8,6 +8,15 @@ describe("Donut ColorReader", () => {
 
 		const getPolarChart = (colorField: MdtChartsColorField, elementColors?: string[]): DonutChartModel => {
 			return {
+				sizes: {
+					thickness: 0,
+					outerRadius: 0,
+					innerRadius: 0,
+					translate: {
+						x: 0,
+						y: 0
+					}
+				},
 				cssClasses: [],
 				style: {
 					elementColors,

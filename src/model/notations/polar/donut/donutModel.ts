@@ -1,6 +1,12 @@
-import { MdtChartsDataRow, PolarChart } from "../../../../config/config";
+import { MdtChartsDataRow, PolarChart, Size } from "../../../../config/config";
 import { DonutOptionsCanvas, MdtChartsDonutThicknessOptions } from "../../../../designer/designerConfig";
-import { DonutAggregatorModel, DonutChartSettings, DonutThicknessOptions } from "../../../model";
+import {
+	BlockMargin,
+	DonutAggregatorModel,
+	DonutChartSettings,
+	DonutChartTranslateModel,
+	DonutThicknessOptions
+} from "../../../model";
 import { DonutAggregatorService } from "./donutAggregatorService";
 import { DonutThicknessService } from "./donutThicknessService";
 
@@ -20,12 +26,29 @@ export class DonutModel {
 		};
 	}
 
+	public getOuterRadius(margin: BlockMargin, blockSize: Size): number {
+		return (
+			Math.min(blockSize.width - margin.left - margin.right, blockSize.height - margin.top - margin.bottom) / 2
+		);
+	}
+
+	public getInnerRadius(outerRadius: number, thickness: number): number {
+		return outerRadius - thickness;
+	}
+
+	public getTranslate(margin: BlockMargin, blockSize: Size): DonutChartTranslateModel {
+		return {
+			x: (blockSize.width - margin.left - margin.right) / 2 + margin.left,
+			y: (blockSize.height - margin.top - margin.bottom) / 2 + margin.top
+		};
+	}
+
 	private getThicknessOptions(settingsFromConfig: MdtChartsDonutThicknessOptions): DonutThicknessOptions {
 		return {
 			unit: this.thicknessService.getUnit(settingsFromConfig),
 			max: this.thicknessService.valueToNumber(settingsFromConfig.max),
 			min: this.thicknessService.valueToNumber(settingsFromConfig.min),
-			value: this.thicknessService.valueToNumber(settingsFromConfig.value)
+			value: settingsFromConfig.value ? this.thicknessService.valueToNumber(settingsFromConfig.value) : undefined
 		};
 	}
 

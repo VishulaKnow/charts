@@ -27,21 +27,11 @@ export class DonutHelper {
 		return arc;
 	}
 
+	//TODO: duplication with model. Remove
 	public static getOuterRadius(margin: BlockMargin, blockSize: Size): number {
 		return (
 			Math.min(blockSize.width - margin.left - margin.right, blockSize.height - margin.top - margin.bottom) / 2
 		);
-	}
-
-	public static getInnerRadius(outerRadius: number, thickness: number): number {
-		return outerRadius - thickness;
-	}
-
-	public static getTranslate(margin: BlockMargin, blockSize: Size): Translate {
-		return {
-			x: (blockSize.width - margin.left - margin.right) / 2 + margin.left,
-			y: (blockSize.height - margin.top - margin.bottom) / 2 + margin.top
-		};
 	}
 
 	public static getArcGenerator(outerRadius: number, innerRadius: number): Arc<any, PieArcDatum<MdtChartsDataRow>> {

@@ -10,7 +10,7 @@ export interface AggregatorServiceDataOptions {
 
 export class DonutAggregatorService {
 	getContent(
-		aggregatorOptions: MdtChartsDonutAggregator,
+		aggregatorOptions: MdtChartsDonutAggregator | undefined,
 		dataOptions: AggregatorServiceDataOptions
 	): DonutAggregatorContent {
 		if (!aggregatorOptions?.content || !dataOptions.rows) return this.generateDefaultContent(dataOptions);
@@ -39,9 +39,11 @@ export class DonutAggregatorService {
 				title: content.title
 			};
 		}
+
+		throw new Error("Unexpected aggregator content options");
 	}
 
-	private doesValueExist(content: number | string) {
+	private doesValueExist(content: number | string | undefined): content is number | string {
 		return content != null;
 	}
 
