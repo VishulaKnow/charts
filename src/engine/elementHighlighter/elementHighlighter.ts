@@ -1,6 +1,6 @@
 import { Selection, BaseType, select } from "d3-selection";
 import { PieArcDatum } from "d3-shape";
-import { BlockMargin, MarkersStyleOptions, TwoDimensionalChartModel } from "../../model/model";
+import { BlockMargin, DonutChartSizesModel, MarkersStyleOptions, TwoDimensionalChartModel } from "../../model/model";
 import { Block } from "../block/block";
 import { easeLinear } from "d3-ease";
 import { interrupt, Transition } from "d3-transition";
@@ -49,9 +49,7 @@ export class ElementHighlighter {
 		block: Block,
 		keyFieldName: string,
 		selectedSegment: Selection<SVGGElement, PieArcDatum<MdtChartsDataRow>, BaseType, unknown>,
-		margin: BlockMargin,
-		blockSize: Size,
-		donutThickness: number
+		chartSizes: DonutChartSizesModel
 	): void {
 		const shadowClone = Donut.getAllArcShadows(block).filter(
 			(d: PieArcDatum<MdtChartsDataRow>) => d.data[keyFieldName] === selectedSegment.datum().data[keyFieldName]
@@ -59,9 +57,7 @@ export class ElementHighlighter {
 		this.removeFilter(shadowClone.select("path"));
 		this.toggleDonutHighlightState(
 			shadowClone,
-			margin,
-			blockSize,
-			donutThickness,
+			chartSizes,
 			block.transitionManager.durations.higlightedScale,
 			false
 		).then(() => shadowClone.remove());
@@ -85,45 +81,30 @@ export class ElementHighlighter {
 
 	public static renderArcCloneAndHighlight(
 		block: Block,
-		margin: BlockMargin,
 		arcSelection: Selection<SVGGElement, PieArcDatum<MdtChartsDataRow>, BaseType, unknown>,
-		blockSize: Size,
-		donutThickness: number
+		chartSizes: DonutChartSizesModel
 	): void {
 		const clone = this.makeArcClone(arcSelection, block);
 		const shadowClone = this.makeArcShadow(arcSelection, block);
 		this.toggleDonutHighlightState(
 			arcSelection,
-			margin,
-			blockSize,
-			donutThickness,
+			chartSizes,
 			block.transitionManager.durations.higlightedScale,
 			true
 		);
-		this.toggleDonutHighlightState(
-			clone,
-			margin,
-			blockSize,
-			donutThickness,
-			block.transitionManager.durations.higlightedScale,
-			true
-		);
+		this.toggleDonutHighlightState(clone, chartSizes, block.transitionManager.durations.higlightedScale, true);
 		this.toggleDonutHighlightState(
 			shadowClone,
-			margin,
-			blockSize,
-			donutThickness,
+			chartSizes,
 			block.transitionManager.durations.higlightedScale,
 			true
 		);
-		this.setShadowFilter(shadowClone.select("path"), donutThickness / 60);
+		this.setShadowFilter(shadowClone.select("path"), chartSizes.thickness / 60);
 	}
 
 	public static toggleDonutHighlightState(
 		segment: Selection<SVGGElement, PieArcDatum<MdtChartsDataRow>, BaseType, unknown>,
-		margin: BlockMargin,
-		blockSize: Size,
-		donutThickness: number,
+		chartSizes: DonutChartSizesModel,
 		transitionDuration: number,
 		on: boolean
 	): Promise<any> {
@@ -139,9 +120,9 @@ export class ElementHighlighter {
 				.on("end", () => resolve(""))
 				.ease(easeLinear)
 				.attr("d", (d, i) =>
-					DonutHelper.getArcGeneratorObject(blockSize, margin, donutThickness)
-						.outerRadius(DonutHelper.getOuterRadius(margin, blockSize) + scaleSize)
-						.innerRadius(DonutHelper.getOuterRadius(margin, blockSize) - donutThickness - scaleSize)(d, i)
+					DonutHelper.getArcGeneratorObject(chartSizes.outerRadius, chartSizes.thickness)
+						.outerRadius(chartSizes.outerRadius + scaleSize)
+						.innerRadius(chartSizes.innerRadius - scaleSize)(d, i)
 				);
 		});
 	}
@@ -150,9 +131,7 @@ export class ElementHighlighter {
 		arcSegments: Selection<SVGGElement, PieArcDatum<MdtChartsDataRow>, BaseType, unknown>,
 		keyFieldName: string,
 		keyValues: string[],
-		margin: BlockMargin,
-		blockSize: Size,
-		donutThickness: number
+		chartSizes: DonutChartSizesModel
 	): void {
 		const segments = DomSelectionHelper.getChartElementsByKeys(
 			arcSegments,
@@ -161,7 +140,7 @@ export class ElementHighlighter {
 			keyValues,
 			SelectionCondition.Exclude
 		);
-		this.toggleDonutHighlightState(segments, margin, blockSize, donutThickness, 0, false);
+		this.toggleDonutHighlightState(segments, chartSizes, 0, false);
 	}
 
 	public static setInactiveFor2D(block: Block, keyFieldName: string, charts: TwoDimensionalChartModel[]): void {

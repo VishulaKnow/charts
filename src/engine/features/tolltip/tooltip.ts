@@ -10,7 +10,8 @@ import {
 	ScaleKeyModel,
 	TooltipBasicModel,
 	TwoDimensionalChartModel,
-	TwoDimensionalOptionsModel
+	TwoDimensionalOptionsModel,
+	DonutChartSizesModel
 } from "../../../model/model";
 import { Block } from "../../block/block";
 import { TooltipDomHelper } from "./tooltipDomHelper";
@@ -92,11 +93,7 @@ export class Tooltip {
 				model.options,
 				model.blockCanvas.size,
 				model.chartBlock.margin,
-				DonutThicknessCalculator.getThickness(
-					model.options.chartCanvas,
-					model.blockCanvas.size,
-					model.chartBlock.margin
-				),
+				model.options.charts[0].sizes,
 				model.otherComponents.tooltipBlock
 			);
 		}
@@ -139,7 +136,7 @@ export class Tooltip {
 		options: PolarOptionsModel,
 		blockSize: Size,
 		margin: BlockMargin,
-		chartThickness: number,
+		chartSizes: DonutChartSizesModel,
 		tooltipOptions: TooltipSettings
 	): void {
 		const attrTransform = block.getSvg().select(`.${Donut.donutBlockClass}`).attr("transform");
@@ -151,7 +148,7 @@ export class Tooltip {
 			options.data,
 			blockSize,
 			margin,
-			chartThickness,
+			chartSizes,
 			tooltipOptions,
 			options.tooltip,
 			{ x: translateNums[0], y: translateNums[1] }
@@ -297,7 +294,7 @@ export class Tooltip {
 		dataOptions: OptionsModelData,
 		blockSize: Size,
 		margin: BlockMargin,
-		donutThickness: number,
+		chartSizes: DonutChartSizesModel,
 		tooltipSettings: TooltipSettings,
 		tooltipOptions: TooltipBasicModel,
 		translate: TooltipTranslate
@@ -327,7 +324,7 @@ export class Tooltip {
 
 			if (tooltipSettings.position === "fixed") {
 				const coordinatePointer = TooltipDomHelper.getRecalcedCoordinateByArrow(
-					DonutHelper.getArcCentroid(blockSize, margin, dataRow, donutThickness),
+					DonutHelper.getArcCentroid(chartSizes.outerRadius, dataRow, chartSizes.thickness),
 					tooltipBlock.getEl(),
 					blockSize,
 					tooltipArrow,
@@ -350,7 +347,7 @@ export class Tooltip {
 				(block.filterEventManager.getSelectedKeys().length === 0 ||
 					block.filterEventManager.isSelected(dataRow.data[dataOptions.keyField.name]))
 			) {
-				ElementHighlighter.renderArcCloneAndHighlight(block, margin, select(this), blockSize, donutThickness);
+				ElementHighlighter.renderArcCloneAndHighlight(block, select(this), chartSizes);
 			}
 		});
 
@@ -358,19 +355,10 @@ export class Tooltip {
 			TooltipComponentsManager.hideComponent(tooltipBlock.getEl());
 			if (!block.filterEventManager.isSelected(dataRow.data[dataOptions.keyField.name])) {
 				ElementHighlighter.removeCloneForElem(block, dataOptions.keyField.name, select(this));
-				ElementHighlighter.removeShadowClone(
-					block,
-					dataOptions.keyField.name,
-					select(this),
-					margin,
-					blockSize,
-					donutThickness
-				);
+				ElementHighlighter.removeShadowClone(block, dataOptions.keyField.name, select(this), chartSizes);
 				ElementHighlighter.toggleDonutHighlightState(
 					select(this),
-					margin,
-					blockSize,
-					donutThickness,
+					chartSizes,
 					block.transitionManager.durations.higlightedScale,
 					false
 				);

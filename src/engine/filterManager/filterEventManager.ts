@@ -79,23 +79,11 @@ export class FilterEventManager {
 		SelectHighlighter.clear2D(this.block, options);
 	}
 
-	public clearKeysForPolar(
-		margin: BlockMargin,
-		blockSize: Size,
-		options: PolarOptionsModel,
-		clearSelectionOptions?: ChartClearSelectionOptions
-	): void {
+	public clearKeysForPolar(options: PolarOptionsModel, clearSelectionOptions?: ChartClearSelectionOptions): void {
 		this.selectedKeys = [];
 		if ((clearSelectionOptions?.firePublicEvent ?? true) && this.callback) this.callback([]);
 		this.eventEmitter.emit("change", this.selectedKeys);
-		SelectHighlighter.clearPolar(
-			margin,
-			blockSize,
-			this.block,
-			options,
-			Donut.getAllArcGroups(this.block),
-			options.chartCanvas
-		);
+		SelectHighlighter.clearPolar(this.block, options, Donut.getAllArcGroups(this.block));
 	}
 
 	private setKey(key: string): void {
@@ -134,9 +122,9 @@ export class FilterEventManager {
 		}
 	}
 
-	public setListenerPolar(margin: BlockMargin, blockSize: Size, options: PolarOptionsModel): void {
+	public setListenerPolar(options: PolarOptionsModel): void {
 		if (this.filterable) {
-			this.registerEventToDonut(margin, blockSize, options, options.chartCanvas);
+			this.registerEventToDonut(options);
 			const selectedElems = Donut.getAllArcGroups(this.block).filter(
 				(d) => this.selectedKeys.findIndex((sid) => sid === d.data[options.data.keyField.name]) !== -1
 			);
@@ -207,12 +195,7 @@ export class FilterEventManager {
 		}
 	}
 
-	private registerEventToDonut(
-		margin: BlockMargin,
-		blockSize: Size,
-		options: PolarOptionsModel,
-		donutSettings: DonutChartSettings
-	): void {
+	private registerEventToDonut(options: PolarOptionsModel): void {
 		const arcItems = Donut.getAllArcGroups(this.block);
 		const thisClass = this;
 
@@ -225,12 +208,9 @@ export class FilterEventManager {
 				appended,
 				select(this),
 				thisClass.getSelectedKeys(),
-				margin,
-				blockSize,
 				thisClass.block,
 				options,
-				arcItems,
-				donutSettings
+				arcItems
 			);
 
 			if (thisClass.callback) {

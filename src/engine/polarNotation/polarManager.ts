@@ -24,7 +24,7 @@ export class PolarManager implements ChartContentManager {
 		Legend.get().render(engine.block, engine.data, options, model);
 		Tooltip.render(engine.block, model, model.otherComponents.tooltipBlock);
 
-		engine.block.filterEventManager.setListenerPolar(model.chartBlock.margin, model.blockCanvas.size, options);
+		engine.block.filterEventManager.setListenerPolar(options);
 
 		if (model.dataSettings.scope.hidedRecordsAmount !== 0)
 			RecordOverflowAlertCore.render(engine.block, options.recordOverflowAlert);
@@ -55,7 +55,7 @@ export class PolarManager implements ChartContentManager {
 			options.data.keyField.name
 		).then(() => {
 			Tooltip.render(block, model, model.otherComponents.tooltipBlock);
-			block.filterEventManager.setListenerPolar(model.chartBlock.margin, model.blockCanvas.size, options);
+			block.filterEventManager.setListenerPolar(options);
 		});
 
 		Legend.get().update(block, data, model);
@@ -73,7 +73,7 @@ export class PolarManager implements ChartContentManager {
 		model: Model<PolarOptionsModel>,
 		options?: ChartClearSelectionOptions
 	): void {
-		filterEventManager.clearKeysForPolar(model.chartBlock.margin, model.blockCanvas.size, model.options, options);
+		filterEventManager.clearKeysForPolar(model.options, options);
 	}
 
 	private renderCharts(

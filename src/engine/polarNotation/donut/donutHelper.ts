@@ -2,36 +2,23 @@ import { merge } from "d3-array";
 import { PieArcDatum, Arc, arc, Pie, pie } from "d3-shape";
 import { MdtChartsDataRow, Size, MdtChartsColorField } from "../../../config/config";
 import { BlockMargin } from "../../../model/model";
-import { Translate } from "./donut";
 
 export class DonutHelper {
 	public static getArcCentroid(
-		blockSize: Size,
-		margin: BlockMargin,
+		outerRadius: number,
 		dataItem: PieArcDatum<MdtChartsDataRow>,
 		donutThickness: number
 	): [number, number] {
-		const arc = this.getArcGeneratorObject(blockSize, margin, donutThickness);
-
+		const arc = this.getArcGeneratorObject(outerRadius, donutThickness);
 		return arc.centroid(dataItem);
 	}
 
 	public static getArcGeneratorObject(
-		blockSize: Size,
-		margin: BlockMargin,
+		outerRadius: number,
 		donutThickness: number
 	): Arc<any, PieArcDatum<MdtChartsDataRow>> {
-		const outerRadius = this.getOuterRadius(margin, blockSize);
 		const arc = this.getArcGenerator(outerRadius, outerRadius - donutThickness);
-
 		return arc;
-	}
-
-	//TODO: duplication with model. Remove
-	public static getOuterRadius(margin: BlockMargin, blockSize: Size): number {
-		return (
-			Math.min(blockSize.width - margin.left - margin.right, blockSize.height - margin.top - margin.bottom) / 2
-		);
 	}
 
 	public static getArcGenerator(outerRadius: number, innerRadius: number): Arc<any, PieArcDatum<MdtChartsDataRow>> {

@@ -97,20 +97,14 @@ export class SelectHighlighter {
 		appendKey: boolean,
 		selectedSegment: Selection<SVGGElement, PieArcDatum<MdtChartsDataRow>, BaseType, unknown>,
 		selectedKeys: string[],
-		margin: BlockMargin,
-		blockSize: Size,
 		block: Block,
 		options: PolarOptionsModel,
-		arcItems: Selection<SVGGElement, PieArcDatum<MdtChartsDataRow>, SVGGElement, unknown>,
-		donutSettings: DonutChartSettings
+		arcItems: Selection<SVGGElement, PieArcDatum<MdtChartsDataRow>, SVGGElement, unknown>
 	): void {
-		const donutThickness = DonutThicknessCalculator.getThickness(donutSettings, blockSize, margin);
 		if (!appendKey) {
 			ElementHighlighter.toggleDonutHighlightState(
 				selectedSegment,
-				margin,
-				blockSize,
-				donutThickness,
+				options.charts[0].sizes,
 				block.transitionManager.durations.higlightedScale,
 				false
 			);
@@ -119,9 +113,7 @@ export class SelectHighlighter {
 				block,
 				options.data.keyField.name,
 				selectedSegment,
-				margin,
-				blockSize,
-				donutThickness
+				options.charts[0].sizes
 			);
 
 			if (selectedKeys.length > 0) {
@@ -146,11 +138,9 @@ export class SelectHighlighter {
 				block,
 				options.data.keyField.name,
 				selectedSegment,
-				margin,
-				blockSize,
-				donutThickness
+				options.charts[0].sizes
 			);
-			ElementHighlighter.renderArcCloneAndHighlight(block, margin, selectedSegment, blockSize, donutThickness);
+			ElementHighlighter.renderArcCloneAndHighlight(block, selectedSegment, options.charts[0].sizes);
 
 			ElementHighlighter.toggleActivityStyle(selectedSegment, true);
 			ElementHighlighter.toggleActivityStyle(
@@ -168,15 +158,13 @@ export class SelectHighlighter {
 				arcItems,
 				options.data.keyField.name,
 				selectedKeys,
-				margin,
-				blockSize,
-				donutThickness
+				options.charts[0].sizes
 			);
 			ElementHighlighter.removeDonutArcClones(block);
 			ElementHighlighter.toggleActivityStyle(Donut.getAllArcGroups(block), false);
 
 			ElementHighlighter.toggleActivityStyle(selectedSegment, true);
-			ElementHighlighter.renderArcCloneAndHighlight(block, margin, selectedSegment, blockSize, donutThickness);
+			ElementHighlighter.renderArcCloneAndHighlight(block, selectedSegment, options.charts[0].sizes);
 		}
 
 		ElementHighlighter.toggleActivityStyle(
@@ -196,19 +184,13 @@ export class SelectHighlighter {
 	}
 
 	public static clearPolar(
-		margin: BlockMargin,
-		blockSize: Size,
 		block: Block,
 		options: PolarOptionsModel,
-		arcItems: Selection<SVGGElement, PieArcDatum<MdtChartsDataRow>, SVGGElement, unknown>,
-		donutSettings: DonutChartSettings
+		arcItems: Selection<SVGGElement, PieArcDatum<MdtChartsDataRow>, SVGGElement, unknown>
 	): void {
-		const donutThickness = DonutThicknessCalculator.getThickness(donutSettings, blockSize, margin);
 		ElementHighlighter.toggleDonutHighlightState(
 			arcItems,
-			margin,
-			blockSize,
-			donutThickness,
+			options.charts[0].sizes,
 			block.transitionManager.durations.higlightedScale,
 			false
 		);
@@ -218,9 +200,7 @@ export class SelectHighlighter {
 				block,
 				options.data.keyField.name,
 				select(this),
-				margin,
-				blockSize,
-				donutThickness
+				options.charts[0].sizes
 			);
 		});
 		ElementHighlighter.toggleActivityStyle(Donut.getAllArcGroups(block), true);

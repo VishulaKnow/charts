@@ -142,7 +142,7 @@ export class PolarModel {
 			style: ChartStyleModelService.getChartStyle(dataLength, chartStyleConfig),
 			legend: POLAR_LEGEND_MARKER,
 			sizes: {
-				thickness: DonutThicknessCalculator.getThickness(donutSettings, blockSize, margin),
+				thickness,
 				outerRadius,
 				innerRadius: this.donutModel.getInnerRadius(outerRadius, thickness),
 				translate: this.donutModel.getTranslate(margin, blockSize)
