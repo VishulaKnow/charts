@@ -4,12 +4,7 @@ export type MdtChartsIconElement = () => HTMLElement;
 export type ItemPositionByOrientation = "start" | "end";
 export type ChartOrientation = "vertical" | "horizontal";
 export type ChartNotation = "2d" | "polar";
-export type ChartType = "bar" | "line" | "area" | "donut" | "gantt";
 export type TwoDimensionalChartType = "line" | "bar" | "area" | "dot";
-export type PolarChartType = "donut";
-export type EmbeddedLabelType = "none" | "key" | "value";
-export type ValueLabelsCollisionMode = "none" | "hide";
-export type TwoDimLegendPosition = "top" | "bottom";
 export type MdtChartsDataRow = {
 	[field: string]: any;
 };
@@ -88,15 +83,21 @@ export interface CanvasKeyItemOptions {
 	totalSize: number;
 }
 
+type MdtChartsPolarChart = DonutChart;
+
+export type PolarChartType = MdtChartsPolarChart["type"];
+
 export interface MdtChartsPolarOptions extends GraphicNotationOptions {
 	type: "polar";
-	chart: PolarChart;
+	chart: MdtChartsPolarChart;
 }
 
 //====================================================== Options
 export interface Legend {
 	show: boolean;
 }
+
+export type TwoDimLegendPosition = "top" | "bottom";
 
 export interface MdtChartsTwoDimLegend extends Legend {
 	position?: TwoDimLegendPosition;
@@ -296,6 +297,8 @@ export interface ValueLabelsCollision {
 	otherValueLabels: OtherValueLabels;
 }
 
+export type ValueLabelsCollisionMode = "none" | "hide";
+
 export interface OtherValueLabels {
 	mode: ValueLabelsCollisionMode;
 }
@@ -357,6 +360,8 @@ export interface AreaStylesBorderLine {
 	on: boolean;
 }
 
+export type EmbeddedLabelType = "none" | "key" | "value";
+
 interface MdtChartsBarLikeChart {
 	barStyles?: MdtChartsBarLikeChartStyles;
 	embeddedLabels: EmbeddedLabelType;
@@ -400,8 +405,8 @@ export interface MdtChartsTwoDimensionalChart extends MdtChartsLineLikeChart, Md
 	valueLabels?: TwoDimensionalChartValueLabels;
 }
 
-export interface PolarChart {
-	type: PolarChartType;
+export interface DonutChart {
+	type: "donut";
 	data: PolarChartData;
 	aggregator?: MdtChartsDonutAggregator;
 }

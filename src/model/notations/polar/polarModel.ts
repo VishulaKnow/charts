@@ -1,4 +1,4 @@
-import { PolarChart, MdtChartsPolarOptions, MdtChartsDataRow, Size } from "../../../config/config";
+import { DonutChart, MdtChartsPolarOptions, MdtChartsDataRow, Size } from "../../../config/config";
 import { ChartStyleConfig, DesignerConfig, DonutOptionsCanvas } from "../../../designer/designerConfig";
 import { ChartStyleModelService } from "../../chartStyleModel/chartStyleModel";
 import { PolarOptionsModel, DonutChartModel, DonutChartSettings, LegendCoordinate, BlockMargin } from "../../model";
@@ -119,7 +119,7 @@ export class PolarModel {
 
 	private static getDonutSettings(
 		settings: DonutOptionsCanvas,
-		chartOptions: PolarChart,
+		chartOptions: DonutChart,
 		dataRows: MdtChartsDataRow[]
 	): DonutChartSettings {
 		return this.donutModel.getSettings(settings, chartOptions, dataRows);
@@ -129,7 +129,7 @@ export class PolarModel {
 		donutSettings: DonutChartSettings,
 		blockSize: Size,
 		margin: BlockMargin,
-		chart: PolarChart,
+		chart: DonutChart,
 		dataLength: number,
 		chartStyleConfig: ChartStyleConfig
 	): DonutChartModel {

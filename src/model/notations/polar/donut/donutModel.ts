@@ -1,4 +1,4 @@
-import { MdtChartsDataRow, PolarChart, Size } from "../../../../config/config";
+import { MdtChartsDataRow, DonutChart, Size } from "../../../../config/config";
 import { DonutOptionsCanvas, MdtChartsDonutThicknessOptions } from "../../../../designer/designerConfig";
 import {
 	BlockMargin,
@@ -16,7 +16,7 @@ export class DonutModel {
 
 	getSettings(
 		settingsFromConfig: DonutOptionsCanvas,
-		chartOptions: PolarChart,
+		chartOptions: DonutChart,
 		rawDataRows: MdtChartsDataRow[]
 	): DonutChartSettings {
 		return {
@@ -54,7 +54,7 @@ export class DonutModel {
 
 	private getAggregatorOptions(
 		settingsFromConfig: DonutOptionsCanvas,
-		chartOptions: PolarChart,
+		chartOptions: DonutChart,
 		rawDataRows: MdtChartsDataRow[]
 	): DonutAggregatorModel {
 		return {
