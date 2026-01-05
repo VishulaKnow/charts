@@ -38,9 +38,11 @@ export class DataManagerModel {
 		allowableKeys: string[],
 		config: MdtChartsConfig
 	): MdtChartsDataSource {
-		const scopedData = this.getScopedData(data, allowableKeys, config.options.data);
-
-		return scopedData;
+		let preparedData: MdtChartsDataSource;
+		if (config.options.type === "2d" || config.options.type === "polar")
+			preparedData = this.getScopedData(data, allowableKeys, config.options.data);
+		else preparedData = data;
+		return preparedData;
 	}
 
 	public static initDataScope(

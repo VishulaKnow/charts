@@ -133,7 +133,11 @@ export function assembleModel(
 	};
 }
 
-export function getPreparedData(model: Model, data: MdtChartsDataSource, config: MdtChartsConfig): MdtChartsDataSource {
+export function getPreparedData(
+	model: Model,
+	data: MdtChartsDataSource,
+	config: MdtChartsConfig
+): MdtChartsDataSource | null {
 	const isModelOrDataEmpty = !model || Object.keys(model).length === 0 || !data || Object.keys(data).length === 0;
 	if (isModelOrDataEmpty) return null;
 

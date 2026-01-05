@@ -196,7 +196,8 @@ class Listeners {
 						}
 					}
 				},
-				tooltip: this.config.options.tooltip
+				//TODO: fix
+				tooltip: (this.config.options as any).tooltip
 			};
 			this.config.options = options;
 		} else if (notationType === "polar") {
@@ -216,7 +217,7 @@ class Listeners {
 					data: this.getDataConfig(notationType),
 					type: "donut"
 				},
-				tooltip: this.config.options.tooltip
+				tooltip: (this.config.options as any).tooltip
 			};
 			this.config.options = options;
 		}

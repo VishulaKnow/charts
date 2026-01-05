@@ -1,9 +1,11 @@
+import { MdtChartsDonutThicknessOptions } from "../designer/designerConfig";
+
 type DataType = string;
 export type MdtChartsIconElement = () => HTMLElement;
 
 export type ItemPositionByOrientation = "start" | "end";
 export type ChartOrientation = "vertical" | "horizontal";
-export type ChartNotation = "2d" | "polar";
+export type ChartNotation = "2d" | "polar" | "sunburst";
 export type TwoDimensionalChartType = "line" | "bar" | "area" | "dot";
 export type MdtChartsDataRow = {
 	[field: string]: any;
@@ -20,7 +22,7 @@ export interface MdtChartsDataSource {
 }
 export type AxisLabelPosition = "straight" | "rotated";
 
-export type MdtChartsConfigOptions = MdtChartsPolarOptions | MdtChartsTwoDimensionalOptions;
+export type MdtChartsConfigOptions = MdtChartsPolarOptions | MdtChartsTwoDimensionalOptions | MdtChartsSunburstOptions;
 export interface MdtChartsConfig {
 	canvas: ChartBlockCanvas;
 	options: MdtChartsConfigOptions;
@@ -43,15 +45,15 @@ export interface NewSize {
 //====================================================== Options
 interface GraphicNotationOptions {
 	data: DataOptions;
-	legend: MdtChartsTwoDimLegend;
 	title?: Title;
-	selectable: boolean;
+	selectable?: boolean;
 	tooltip?: TooltipOptions;
 	recordOverflowAlert?: RecordOverflowAlertOptions;
 }
 
 export interface MdtChartsTwoDimensionalOptions extends GraphicNotationOptions {
 	type: "2d";
+	legend: MdtChartsTwoDimLegend;
 	axis: TwoDimensionalAxis;
 	additionalElements: AdditionalElements;
 	charts: MdtChartsTwoDimensionalChart[];
@@ -83,13 +85,34 @@ export interface CanvasKeyItemOptions {
 	totalSize: number;
 }
 
-type MdtChartsPolarChart = DonutChart;
-
-export type PolarChartType = MdtChartsPolarChart["type"];
+export type PolarChartType = DonutChart["type"];
 
 export interface MdtChartsPolarOptions extends GraphicNotationOptions {
 	type: "polar";
-	chart: MdtChartsPolarChart;
+	legend: Legend;
+	chart: DonutChart;
+}
+
+export interface MdtChartsSunburstOptions {
+	type: "sunburst";
+	title?: Title;
+	selectable?: boolean;
+	legend?: Legend;
+	aggregator?: MdtChartsDonutAggregator;
+	data: {
+		dataSource: string;
+		//TODO: multiple value fields for each slice?
+		valueField: MdtChartsValueField;
+	};
+	//TODO: rename?
+	slices: {
+		data: {
+			keyField: MdtChartsBaseField;
+		};
+		canvas: {
+			thickness: MdtChartsDonutThicknessOptions;
+		};
+	}[];
 }
 
 //====================================================== Options
