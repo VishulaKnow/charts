@@ -67,13 +67,17 @@ export class TwoDimMarginModel {
 		if (this.configReader.options.orientation === "vertical") {
 			const dataModel = modelInstance.dataModel;
 
+			const allowableKeys = dataModel.repository
+				.getScopedRows()
+				.map((d) => d[this.configReader.options.data.keyField.name]);
+
 			const axisLabelSize = AxisModel.getLabelSize(
 				this.designerConfig.canvas.axisLabel.maxSize.main,
-				dataModel.getAllowableKeys()
+				allowableKeys
 			);
 			const axisConfig = AxisModel.getKeyAxisLabelPosition(
 				modelInstance.canvasModel,
-				dataModel.getAllowableKeys().length,
+				allowableKeys.length,
 				this.configReader.options.axis.key
 			);
 

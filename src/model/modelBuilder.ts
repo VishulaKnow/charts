@@ -142,9 +142,7 @@ export function getPreparedData(
 	if (isModelOrDataEmpty) return null;
 
 	const preparedData: MdtChartsDataSource = {
-		[config.options.data.dataSource]: model.dataSettings.scope.getScopedRecords(
-			data[config.options.data.dataSource]
-		)
+		[config.options.data.dataSource]: model.dataSettings.scope.scopedRecords
 	};
 	return preparedData;
 }

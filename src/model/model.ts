@@ -646,8 +646,8 @@ export interface DataSettings {
 }
 export interface DataScope {
 	hiddenRecordsAmount: number;
-	allowableKeys: string[];
-	getScopedRecords: (originalRecords: MdtChartsDataRow[]) => MdtChartsDataRow[];
+	//TODO: there is a way to not use this param because in ModelInstance we have DataRepositoryModel and we can get scoped records from it
+	scopedRecords: MdtChartsDataRow[];
 }
 export interface DataFormat {
 	formatters: Formatter;

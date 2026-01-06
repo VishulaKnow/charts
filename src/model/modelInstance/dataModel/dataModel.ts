@@ -33,8 +33,4 @@ export class DataModelInstance {
 	getScope() {
 		return this.scope;
 	}
-
-	getAllowableKeys() {
-		return this.getScope().allowableKeys;
-	}
 }

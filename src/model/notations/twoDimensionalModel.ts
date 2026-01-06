@@ -88,7 +88,10 @@ export class TwoDimensionalModel {
 			() => scaleValueInfo.scaleFn(scaleValueInfo.scale.rootValue)
 		);
 
-		const keyScale = scaleModel.getScaleKey(modelInstance.dataModel.getAllowableKeys());
+		const allowableKeys = modelInstance.dataModel.repository
+			.getScopedRows()
+			.map((d) => d[options.data.keyField.name]);
+		const keyScale = scaleModel.getScaleKey(allowableKeys);
 
 		const charts = this.getChartsModel(
 			options.charts,

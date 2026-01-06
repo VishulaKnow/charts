@@ -57,9 +57,7 @@ export class DataManagerModel {
 
 	private static initScopedData(data: MdtChartsDataSource, modelInstance: ModelInstance, config: MdtChartsConfig) {
 		modelInstance.dataModel.repository.initScopedFullSource({
-			[config.options.data.dataSource]: modelInstance.dataModel
-				.getScope()
-				.getScopedRecords(data[config.options.data.dataSource])
+			[config.options.data.dataSource]: modelInstance.dataModel.getScope().scopedRecords
 		});
 	}
 
@@ -102,13 +100,9 @@ export class DataManagerModel {
 
 		modelInstance.dataModel.initScope({
 			hiddenRecordsAmount: limitParams.hiddenRecordsAmount,
-			allowableKeys: limitParams.allowableKeys,
-			getScopedRecords: (originalRecords: MdtChartsDataRow[]) => {
-				return originalRecords.filter(
-					(d) =>
-						limitParams.allowableKeys.findIndex((key) => key === d[configOptions.data.keyField.name]) !== -1
-				);
-			}
+			scopedRecords: data[configOptions.data.dataSource].filter(
+				(d) => limitParams.allowableKeys.findIndex((key) => key === d[configOptions.data.keyField.name]) !== -1
+			)
 		});
 	}
 
@@ -132,16 +126,11 @@ export class DataManagerModel {
 				modelInstance.dataModel.getMaxRecordsAmount()
 			);
 			modelInstance.dataModel.initScope({
-				allowableKeys: limitParams.allowableKeys,
 				hiddenRecordsAmount: limitParams.hiddenRecordsAmount,
-				getScopedRecords: (originalRecords: MdtChartsDataRow[]) => {
-					return originalRecords.filter(
-						(d) =>
-							limitParams.allowableKeys.findIndex(
-								(key) => key === d[configOptions.data.keyField.name]
-							) !== -1
-					);
-				}
+				scopedRecords: data[configOptions.data.dataSource].filter(
+					(d) =>
+						limitParams.allowableKeys.findIndex((key) => key === d[configOptions.data.keyField.name]) !== -1
+				)
 			});
 			return;
 		}
@@ -194,14 +183,10 @@ export class DataManagerModel {
 			modelInstance.dataModel.getMaxRecordsAmount()
 		);
 		modelInstance.dataModel.initScope({
-			allowableKeys: limitParams.allowableKeys,
 			hiddenRecordsAmount: limitParams.hiddenRecordsAmount,
-			getScopedRecords: (originalRecords: MdtChartsDataRow[]) => {
-				return originalRecords.filter(
-					(d) =>
-						limitParams.allowableKeys.findIndex((key) => key === d[configOptions.data.keyField.name]) !== -1
-				);
-			}
+			scopedRecords: data[configOptions.data.dataSource].filter(
+				(d) => limitParams.allowableKeys.findIndex((key) => key === d[configOptions.data.keyField.name]) !== -1
+			)
 		});
 	}
 
