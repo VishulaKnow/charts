@@ -26,7 +26,7 @@ export class PolarManager implements ChartContentManager {
 
 		engine.block.filterEventManager.setListenerPolar(options);
 
-		if (model.dataSettings.scope.hidedRecordsAmount !== 0)
+		if (model.dataSettings.scope.hiddenRecordsAmount !== 0)
 			RecordOverflowAlertCore.render(engine.block, options.recordOverflowAlert);
 
 		engine.block.getSvg().on("click", (e: MouseEvent) => {

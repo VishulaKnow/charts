@@ -1,4 +1,3 @@
-import { DataOptions } from "../../../config/config";
 import { DataScope } from "../../model";
 import { DataRepositoryModel } from "./dataRepository";
 

@@ -1,5 +1,7 @@
-import { DataManagerModelService } from "../../model/dataManagerModel/dataManagerModelService";
-import { DataScope } from "../../model/model";
+import {
+	DataManagerModelService,
+	KeyOrientedNotationDataScope
+} from "../../model/dataManagerModel/dataManagerModelService";
 
 describe("DataManagerModelSerivce", () => {
 	describe("getMaximumPossibleAmount", () => {
@@ -10,9 +12,9 @@ describe("DataManagerModelSerivce", () => {
 			const maxAmount = 10;
 			const res = service.getMaximumPossibleAmount(keys, maxAmount);
 
-			expect(res).toEqual<DataScope>({
+			expect(res).toEqual<KeyOrientedNotationDataScope>({
 				allowableKeys: keys,
-				hidedRecordsAmount: 0
+				hiddenRecordsAmount: 0
 			});
 		});
 
@@ -21,9 +23,9 @@ describe("DataManagerModelSerivce", () => {
 			const maxAmount = 5;
 			const res = service.getMaximumPossibleAmount(keys, maxAmount);
 
-			expect(res).toEqual<DataScope>({
+			expect(res).toEqual<KeyOrientedNotationDataScope>({
 				allowableKeys: keys,
-				hidedRecordsAmount: 0
+				hiddenRecordsAmount: 0
 			});
 		});
 
@@ -32,9 +34,9 @@ describe("DataManagerModelSerivce", () => {
 			const maxAmount = 3;
 			const res = service.getMaximumPossibleAmount(keys, maxAmount);
 
-			expect(res).toEqual<DataScope>({
+			expect(res).toEqual<KeyOrientedNotationDataScope>({
 				allowableKeys: ["key1", "key2", "key3"],
-				hidedRecordsAmount: 2
+				hiddenRecordsAmount: 2
 			});
 		});
 	});
@@ -48,9 +50,9 @@ describe("DataManagerModelSerivce", () => {
 			const maxAmount = 3;
 
 			const res = service.limitAllowableKeys(keys, hidedRecordsAmount, maxAmount);
-			expect(res).toEqual<DataScope>({
+			expect(res).toEqual<KeyOrientedNotationDataScope>({
 				allowableKeys: ["key1", "key2", "key3"],
-				hidedRecordsAmount: 7 // 5 + 2
+				hiddenRecordsAmount: 7 // 5 + 2
 			});
 		});
 
@@ -60,9 +62,9 @@ describe("DataManagerModelSerivce", () => {
 			const maxAmount = 5;
 
 			const res = service.limitAllowableKeys(keys, hidedRecordsAmount, maxAmount);
-			expect(res).toEqual<DataScope>({
+			expect(res).toEqual<KeyOrientedNotationDataScope>({
 				allowableKeys: keys,
-				hidedRecordsAmount
+				hiddenRecordsAmount: hidedRecordsAmount
 			});
 		});
 	});

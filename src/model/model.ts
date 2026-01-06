@@ -645,8 +645,9 @@ export interface DataSettings {
 	format: DataFormat;
 }
 export interface DataScope {
-	hidedRecordsAmount: number;
+	hiddenRecordsAmount: number;
 	allowableKeys: string[];
+	getScopedRecords: (originalRecords: MdtChartsDataRow[]) => MdtChartsDataRow[];
 }
 export interface DataFormat {
 	formatters: Formatter;

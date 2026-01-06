@@ -248,7 +248,7 @@ export class TwoDimensionalModel {
 				)
 			},
 			recordOverflowAlert: createRecordOverflowModel(
-				modelInstance.dataModel.getScope().hidedRecordsAmount,
+				modelInstance.dataModel.getScope().hiddenRecordsAmount,
 				{
 					one: isHorizontal ? "строка" : "столбец",
 					twoToFour: isHorizontal ? "строки" : "столбца",

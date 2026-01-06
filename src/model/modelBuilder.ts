@@ -141,6 +141,10 @@ export function getPreparedData(
 	const isModelOrDataEmpty = !model || Object.keys(model).length === 0 || !data || Object.keys(data).length === 0;
 	if (isModelOrDataEmpty) return null;
 
-	const preparedData = DataManagerModel.getPreparedData(data, model.dataSettings.scope.allowableKeys, config);
+	const preparedData: MdtChartsDataSource = {
+		[config.options.data.dataSource]: model.dataSettings.scope.getScopedRecords(
+			data[config.options.data.dataSource]
+		)
+	};
 	return preparedData;
 }

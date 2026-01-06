@@ -125,7 +125,7 @@ export class TwoDimensionalManager implements ChartContentManager {
 
 		Tooltip.render(engine.block, model, model.otherComponents.tooltipBlock, scales);
 
-		if (model.dataSettings.scope.hidedRecordsAmount !== 0)
+		if (model.dataSettings.scope.hiddenRecordsAmount !== 0)
 			RecordOverflowAlertCore.render(engine.block, options.recordOverflowAlert);
 
 		engine.block.getSvg().on("click", (e: MouseEvent) => {

@@ -6,7 +6,8 @@ import {
 	MdtChartsDataSource,
 	MdtChartsDataRow,
 	DataOptions,
-	TwoDimensionalChartType
+	TwoDimensionalChartType,
+	MdtChartsSunburstOptions
 } from "../../config/config";
 import { BarOptionsCanvas, DesignerConfig, LegendBlockCanvas } from "../../designer/designerConfig";
 import { AxisModel } from "../featuresModel/axis/axisModel";
@@ -33,18 +34,6 @@ export class DataManagerModel {
 	private static service = new DataManagerModelService();
 	private static polarMarginCalculator = new LegendPolarMarginCalculator();
 
-	public static getPreparedData(
-		data: MdtChartsDataSource,
-		allowableKeys: string[],
-		config: MdtChartsConfig
-	): MdtChartsDataSource {
-		let preparedData: MdtChartsDataSource;
-		if (config.options.type === "2d" || config.options.type === "polar")
-			preparedData = this.getScopedData(data, allowableKeys, config.options.data);
-		else preparedData = data;
-		return preparedData;
-	}
-
 	public static initDataScope(
 		config: MdtChartsConfig,
 		data: MdtChartsDataSource,
@@ -67,8 +56,11 @@ export class DataManagerModel {
 	}
 
 	private static initScopedData(data: MdtChartsDataSource, modelInstance: ModelInstance, config: MdtChartsConfig) {
-		const preparedData = DataManagerModel.getPreparedData(data, modelInstance.dataModel.getAllowableKeys(), config);
-		modelInstance.dataModel.repository.initScopedFullSource(preparedData);
+		modelInstance.dataModel.repository.initScopedFullSource({
+			[config.options.data.dataSource]: modelInstance.dataModel
+				.getScope()
+				.getScopedRecords(data[config.options.data.dataSource])
+		});
 	}
 
 	public static getDataValuesByKeyField(
@@ -102,9 +94,22 @@ export class DataManagerModel {
 		const allowableKeys = uniqueKeys.slice(0, limit);
 		const hidedRecordsAmount = dataLength - allowableKeys.length;
 
-		modelInstance.dataModel.initScope(
-			this.limitAllowableKeys(allowableKeys, hidedRecordsAmount, modelInstance.dataModel)
+		const limitParams = this.service.limitAllowableKeys(
+			allowableKeys,
+			hidedRecordsAmount,
+			modelInstance.dataModel.getMaxRecordsAmount()
 		);
+
+		modelInstance.dataModel.initScope({
+			hiddenRecordsAmount: limitParams.hiddenRecordsAmount,
+			allowableKeys: limitParams.allowableKeys,
+			getScopedRecords: (originalRecords: MdtChartsDataRow[]) => {
+				return originalRecords.filter(
+					(d) =>
+						limitParams.allowableKeys.findIndex((key) => key === d[configOptions.data.keyField.name]) !== -1
+				);
+			}
+		});
 	}
 
 	private static initDataScopeForPolar(
@@ -122,7 +127,22 @@ export class DataManagerModel {
 
 		if (!configOptions.legend.show) {
 			canvasModel.legendCanvas.setPosition("off");
-			modelInstance.dataModel.initScope(this.getMaximumPossibleScope(keys, modelInstance.dataModel));
+			const limitParams = this.service.getMaximumPossibleAmount(
+				keys,
+				modelInstance.dataModel.getMaxRecordsAmount()
+			);
+			modelInstance.dataModel.initScope({
+				allowableKeys: limitParams.allowableKeys,
+				hiddenRecordsAmount: limitParams.hiddenRecordsAmount,
+				getScopedRecords: (originalRecords: MdtChartsDataRow[]) => {
+					return originalRecords.filter(
+						(d) =>
+							limitParams.allowableKeys.findIndex(
+								(key) => key === d[configOptions.data.keyField.name]
+							) !== -1
+					);
+				}
+			});
 			return;
 		}
 
@@ -168,9 +188,21 @@ export class DataManagerModel {
 			position === "bottom" ? size.height : size.width
 		);
 
-		modelInstance.dataModel.initScope(
-			this.limitAllowableKeys(allowableKeys, hidedRecordsAmount, modelInstance.dataModel)
+		const limitParams = this.service.limitAllowableKeys(
+			allowableKeys,
+			hidedRecordsAmount,
+			modelInstance.dataModel.getMaxRecordsAmount()
 		);
+		modelInstance.dataModel.initScope({
+			allowableKeys: limitParams.allowableKeys,
+			hiddenRecordsAmount: limitParams.hiddenRecordsAmount,
+			getScopedRecords: (originalRecords: MdtChartsDataRow[]) => {
+				return originalRecords.filter(
+					(d) =>
+						limitParams.allowableKeys.findIndex((key) => key === d[configOptions.data.keyField.name]) !== -1
+				);
+			}
+		});
 	}
 
 	//TODO: position type
@@ -208,18 +240,6 @@ export class DataManagerModel {
 		}
 	}
 
-	private static getMaximumPossibleScope(keys: string[], dataModel: DataModelInstance): DataScope {
-		return this.service.getMaximumPossibleAmount(keys, dataModel.getMaxRecordsAmount());
-	}
-
-	private static limitAllowableKeys(
-		allowableKeys: string[],
-		hidedRecordsAmount: number,
-		dataModel: DataModelInstance
-	) {
-		return this.service.limitAllowableKeys(allowableKeys, hidedRecordsAmount, dataModel.getMaxRecordsAmount());
-	}
-
 	/**
 	 * Выводит количество элементов (преимущественно баров) в одной группе. Группа - один ключ
 	 * @param configOptions
@@ -242,29 +262,6 @@ export class DataManagerModel {
 			else if (chart.type === type) barsAmount += chart.data.valueFields.length;
 		});
 		return barsAmount;
-	}
-
-	private static getScopedData(
-		data: MdtChartsDataSource,
-		allowableKeys: string[],
-		dataOptions: DataOptions
-	): MdtChartsDataSource {
-		const newData: MdtChartsDataSource = {};
-		newData[dataOptions.dataSource] = this.getScopedChartData(
-			data[dataOptions.dataSource],
-			allowableKeys,
-			dataOptions.keyField.name
-		);
-
-		return newData;
-	}
-
-	private static getScopedChartData(
-		data: MdtChartsDataRow[],
-		allowableKeys: string[],
-		keyFieldName: string
-	): MdtChartsDataRow[] {
-		return data.filter((d) => allowableKeys.findIndex((key) => key === d[keyFieldName]) !== -1);
 	}
 
 	private static getDataLimitByItemSize(

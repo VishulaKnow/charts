@@ -71,7 +71,7 @@ export class PolarModel {
 			chartCanvas: donutSettings,
 			defs: { gradients: [] },
 			recordOverflowAlert: createRecordOverflowModel(
-				modelInstance.dataModel.getScope().hidedRecordsAmount,
+				modelInstance.dataModel.getScope().hiddenRecordsAmount,
 				{
 					one: "категория",
 					twoToFour: "категории",
