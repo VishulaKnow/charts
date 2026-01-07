@@ -47,12 +47,6 @@ function getBlockCanvas(config: MdtChartsConfig, modelInstance: ModelInstance): 
 	};
 }
 
-function getChartBlockModel(modelInstance: ModelInstance): ChartBlockModel {
-	return {
-		margin: modelInstance.canvasModel.getMargin()
-	};
-}
-
 function getOptions(
 	config: MdtChartsConfig,
 	designerConfig: DesignerConfig,
@@ -69,19 +63,6 @@ function getOptions(
 		return PolarModel.getOptions(config.options, designerConfig, modelInstance);
 	}
 	throw new Error("Unknown chart type");
-}
-
-function getDataSettings(dataScope: DataScope, designerConfig: DesignerConfig): DataSettings {
-	return {
-		scope: dataScope,
-		format: getDataFormat(designerConfig)
-	};
-}
-
-function getDataFormat(designerConfig: DesignerConfig): DataFormat {
-	return {
-		formatters: designerConfig.dataFormat.formatters
-	};
 }
 
 export function assembleModel(
@@ -117,9 +98,16 @@ export function assembleModel(
 		marginModel.recalcMarginByVerticalAxisLabel(modelInstance);
 
 	const blockCanvas = getBlockCanvas(config, modelInstance);
-	const chartBlock = getChartBlockModel(modelInstance);
+	const chartBlock: ChartBlockModel = {
+		margin: modelInstance.canvasModel.getMargin()
+	};
 	const options = getOptions(config, designerConfig, modelInstance);
-	const dataSettings = getDataSettings(modelInstance.dataModel.getScope(), designerConfig);
+	const dataSettings: DataSettings = {
+		scope: modelInstance.dataModel.getScope(),
+		format: {
+			formatters: designerConfig.dataFormat.formatters
+		}
+	};
 
 	modelInstance.canvasModel.roundMargin();
 
