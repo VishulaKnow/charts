@@ -4,23 +4,15 @@ import {
 	MdtChartsTwoDimensionalOptions,
 	MdtChartsPolarOptions,
 	MdtChartsDataSource,
-	MdtChartsDataRow,
-	DataOptions,
-	TwoDimensionalChartType,
-	MdtChartsSunburstOptions
+	TwoDimensionalChartType
 } from "../../config/config";
 import { BarOptionsCanvas, DesignerConfig, LegendBlockCanvas } from "../../designer/designerConfig";
 import { AxisModel } from "../featuresModel/axis/axisModel";
-import { LegendCanvasModel, LegendItemContentOptions } from "../featuresModel/legendModel/legendCanvasModel";
-import { DataScope, LegendBlockModel } from "../model";
+import { LegendBlockModel } from "../model";
 import { ModelHelper } from "../helpers/modelHelper";
-import { CanvasModel } from "../modelInstance/canvasModel/canvasModel";
-import { DataModelInstance } from "../modelInstance/dataModel/dataModel";
 import { ModelInstance } from "../modelInstance/modelInstance";
-import { MIN_DONUT_BLOCK_SIZE, PolarModel } from "../notations/polar/polarModel";
 import { DataManagerModelService } from "./dataManagerModelService";
-import { LegendPolarMarginCalculator } from "../featuresModel/legendModel/polarMarginCalculator";
-import { styledElementValues } from "../modelBuilder";
+import { PolarLegendParamsBuilder } from "../featuresModel/legendModel/polarLegendParamsBuilder";
 
 export interface DataLegendParams {
 	amount: number;
@@ -32,7 +24,7 @@ export interface DataLegendParams {
 
 export class DataManagerModel {
 	private static service = new DataManagerModelService();
-	private static polarMarginCalculator = new LegendPolarMarginCalculator();
+	private static polarLegendParamsBuilder = new PolarLegendParamsBuilder();
 
 	public static initDataScope(
 		config: MdtChartsConfig,
@@ -132,51 +124,17 @@ export class DataManagerModel {
 			return;
 		}
 
-		let position = PolarModel.getLegendPositionByBlockSize(modelInstance.canvasModel);
-		let { amount: maxItemsNumber, size } = this.getLegendDataParams(
-			position,
-			keys,
-			legendCanvas,
-			canvasModel,
-			legendBlock
-		);
-
-		if (
-			position === "right" &&
-			!PolarModel.doesChartBlockHasEnoughWidthForContainsLegend(
-				canvasModel.getChartBlockWidth(),
-				size.width,
-				legendBlock.coordinate
-			)
-		) {
-			const doesFreeSpaceExist = PolarModel.doesChartBlockHasEnoughHeightForContainsLegend(
-				canvasModel.getChartBlockHeight(),
-				legendBlock.coordinate
-			);
-			if (doesFreeSpaceExist) {
-				const newParams = this.getLegendDataParams("bottom", keys, legendCanvas, canvasModel, legendBlock);
-				position = "bottom";
-				maxItemsNumber = newParams.amount;
-				size = newParams.size;
-			}
-		}
-
-		//TODO: global refactor of method
-
-		const allowableKeys = keys.slice(0, maxItemsNumber);
-		const hidedRecordsAmount = keys.length - maxItemsNumber;
-
-		canvasModel.legendCanvas.setPosition(position);
-		this.polarMarginCalculator.updateMargin(
-			position,
-			canvasModel,
+		const { shownKeys, hiddenKeysAmount } = this.polarLegendParamsBuilder.getParams(
+			modelInstance,
+			configOptions.data.keyField.name,
+			data[configOptions.data.dataSource],
 			legendBlock,
-			position === "bottom" ? size.height : size.width
+			legendCanvas
 		);
 
 		const limitParams = this.service.limitAllowableKeys(
-			allowableKeys,
-			hidedRecordsAmount,
+			shownKeys,
+			hiddenKeysAmount,
 			modelInstance.dataModel.getMaxRecordsAmount()
 		);
 		modelInstance.dataModel.initScope({
@@ -185,41 +143,6 @@ export class DataManagerModel {
 				(d) => limitParams.allowableKeys.findIndex((key) => key === d[configOptions.data.keyField.name]) !== -1
 			)
 		});
-	}
-
-	//TODO: position type
-	private static getLegendDataParams(
-		position: "bottom" | "right",
-		keys: string[],
-		legendCanvas: LegendBlockCanvas,
-		canvasModel: CanvasModel,
-		legendBlock: LegendBlockModel
-	) {
-		const legendItemContentOptions: LegendItemContentOptions[] = keys.map((k) => ({
-			text: k,
-			markerSize: styledElementValues.defaultLegendMarkerSizes,
-			wrapperSize: { marginRightPx: styledElementValues.legend.inlineDynamicItemWrapperMarginRightPx }
-		}));
-		if (position === "right") {
-			return LegendCanvasModel.findElementsAmountByLegendSize(
-				legendItemContentOptions,
-				position,
-				this.polarMarginCalculator.getMaxLegendWidth(legendCanvas, canvasModel.getBlockSize().width),
-				canvasModel.getChartBlockHeight() - legendBlock.coordinate.right.margin.bottom
-			);
-		} else {
-			return LegendCanvasModel.findElementsAmountByLegendSize(
-				legendItemContentOptions,
-				position,
-				canvasModel.getChartBlockWidth() -
-					legendBlock.coordinate.bottom.margin.left -
-					legendBlock.coordinate.bottom.margin.right,
-				canvasModel.getChartBlockHeight() -
-					legendBlock.coordinate.bottom.margin.bottom -
-					legendBlock.coordinate.bottom.margin.top -
-					MIN_DONUT_BLOCK_SIZE
-			);
-		}
 	}
 
 	/**
