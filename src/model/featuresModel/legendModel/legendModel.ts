@@ -38,10 +38,6 @@ export class LegendModel {
 		};
 	}
 
-	public static getLegendItemClass(itemsPosition: LegendItemsDirection): string {
-		return itemsPosition === "column" ? "legend-item-row" : "legend-item-inline";
-	}
-
 	static getLegendTotalMargin(position: Orient, legendBlockModel: LegendBlockModel) {
 		const legendCoordinate = legendBlockModel.coordinate;
 
