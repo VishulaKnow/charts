@@ -5,7 +5,8 @@ import { ModelInstance } from "../modelInstance/modelInstance";
 import { CanvasModel } from "../modelInstance/canvasModel/canvasModel";
 import { TwoDimMarginModel } from "./twoDim/twoDimMarginModel";
 import { TwoDimConfigReader } from "../modelInstance/configReader/twoDimConfigReader/twoDimConfigReader";
-import { BaseConfigReader, getConfigReader } from "../modelInstance/configReader/baseConfigReader";
+import { BaseConfigReader } from "../modelInstance/configReader/baseConfigReader";
+import { getConfigReader } from "../modelInstance/configReader/configReaderFactory";
 
 export class MarginModel {
 	private twoDimModel: TwoDimMarginModel | undefined;

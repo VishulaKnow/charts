@@ -2,7 +2,7 @@ import { DataOptions, MdtChartsConfig, MdtChartsDataSource } from "../../config/
 import { DesignerConfig } from "../../designer/designerConfig";
 import { CanvasModel } from "./canvasModel/canvasModel";
 import { ChartBlockVersion } from "./chartBlockVersion/chartBlockVersion";
-import { getConfigReader } from "./configReader/baseConfigReader";
+import { getConfigReader } from "./configReader/configReaderFactory";
 import { DataModelInstance } from "./dataModel/dataModel";
 
 export class ModelInstance {

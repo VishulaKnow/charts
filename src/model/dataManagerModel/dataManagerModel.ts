@@ -51,22 +51,19 @@ export class DataManagerModel {
 				legendBlock,
 				designerConfig.canvas.legendBlock
 			);
+		} else {
+			modelInstance.dataModel.initScope({
+				hiddenRecordsAmount: 0,
+				scopedRecords: data[config.options.data.dataSource]
+			});
 		}
-		this.initScopedData(data, modelInstance, config);
+		this.initScopedData(modelInstance, config);
 	}
 
-	private static initScopedData(data: MdtChartsDataSource, modelInstance: ModelInstance, config: MdtChartsConfig) {
+	private static initScopedData(modelInstance: ModelInstance, config: MdtChartsConfig) {
 		modelInstance.dataModel.repository.initScopedFullSource({
 			[config.options.data.dataSource]: modelInstance.dataModel.getScope().scopedRecords
 		});
-	}
-
-	public static getDataValuesByKeyField(
-		data: MdtChartsDataSource,
-		dataSourceName: string,
-		keyFieldName: string
-	): string[] {
-		return data[dataSourceName].map((dataRow) => dataRow[keyFieldName]);
 	}
 
 	private static initDataScopeFor2D(
