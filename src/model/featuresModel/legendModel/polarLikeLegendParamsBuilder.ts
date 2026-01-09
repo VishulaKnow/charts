@@ -8,18 +8,16 @@ import { MIN_DONUT_BLOCK_SIZE, PolarModel } from "../../notations/polar/polarMod
 import { LegendCanvasModel, LegendItemContentOptions } from "./legendCanvasModel";
 import { LegendPolarMarginCalculator } from "./polarMarginCalculator";
 
-export class PolarLegendParamsBuilder {
+export class PolarLikeLegendParamsBuilder {
 	private polarMarginCalculator = new LegendPolarMarginCalculator();
 
-	getParams(
+	calculateParamsAndSetMargin(
 		modelInstance: ModelInstance,
-		fieldInLegendName: string,
-		dataRows: MdtChartsDataRow[],
+		valuesInLegend: string[],
 		legendBlock: LegendBlockModel,
 		legendCanvas: LegendBlockCanvas
 	): { shownKeys: string[]; hiddenKeysAmount: number } {
 		const canvasModel = modelInstance.canvasModel;
-		const valuesInLegend = dataRows.map<string>((dataRow) => dataRow[fieldInLegendName]);
 
 		let position = PolarModel.getLegendPositionByBlockSize(modelInstance.canvasModel);
 		let { amount: maxItemsNumber, size } = this.getLegendDataParams(

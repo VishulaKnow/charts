@@ -9,6 +9,10 @@ export class SunburstConfigReader implements BaseConfigReader {
 		this.options = config.options as MdtChartsSunburstOptions;
 	}
 
+	getFieldInLegend() {
+		return this.options.slices[0].data.keyField.name;
+	}
+
 	getValueFields(): MdtChartsField[] {
 		return [this.options.data.valueField];
 	}

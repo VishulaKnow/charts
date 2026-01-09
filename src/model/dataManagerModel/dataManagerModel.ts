@@ -12,7 +12,7 @@ import { LegendBlockModel } from "../model";
 import { ModelHelper } from "../helpers/modelHelper";
 import { ModelInstance } from "../modelInstance/modelInstance";
 import { DataManagerModelService } from "./dataManagerModelService";
-import { PolarLegendParamsBuilder } from "../featuresModel/legendModel/polarLegendParamsBuilder";
+import { PolarLikeLegendParamsBuilder } from "../featuresModel/legendModel/polarLikeLegendParamsBuilder";
 
 export interface DataLegendParams {
 	amount: number;
@@ -24,7 +24,7 @@ export interface DataLegendParams {
 
 export class DataManagerModel {
 	private static service = new DataManagerModelService();
-	private static polarLegendParamsBuilder = new PolarLegendParamsBuilder();
+	private static polarLegendParamsBuilder = new PolarLikeLegendParamsBuilder();
 
 	public static initDataScope(
 		config: MdtChartsConfig,
@@ -124,10 +124,12 @@ export class DataManagerModel {
 			return;
 		}
 
-		const { shownKeys, hiddenKeysAmount } = this.polarLegendParamsBuilder.getParams(
+		const valuesInLegend = data[configOptions.data.dataSource].map<string>(
+			(dataRow) => dataRow[configOptions.data.keyField.name]
+		);
+		const { shownKeys, hiddenKeysAmount } = this.polarLegendParamsBuilder.calculateParamsAndSetMargin(
 			modelInstance,
-			configOptions.data.keyField.name,
-			data[configOptions.data.dataSource],
+			valuesInLegend,
 			legendBlock,
 			legendCanvas
 		);
