@@ -136,7 +136,7 @@ export class PolarModel {
 			sizes: {
 				thickness,
 				outerRadius,
-				innerRadius: this.donutModel.getInnerRadius(outerRadius, thickness),
+				innerRadius: outerRadius - thickness,
 				translate: this.donutModel.getTranslate(margin, blockSize)
 			}
 		};

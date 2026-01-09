@@ -32,10 +32,6 @@ export class DonutModel {
 		);
 	}
 
-	public getInnerRadius(outerRadius: number, thickness: number): number {
-		return outerRadius - thickness;
-	}
-
 	public getTranslate(margin: BlockMargin, blockSize: Size): DonutChartTranslateModel {
 		return {
 			x: (blockSize.width - margin.left - margin.right) / 2 + margin.left,
