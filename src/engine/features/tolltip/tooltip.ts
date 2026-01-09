@@ -324,7 +324,7 @@ export class Tooltip {
 
 			if (tooltipSettings.position === "fixed") {
 				const coordinatePointer = TooltipDomHelper.getRecalcedCoordinateByArrow(
-					DonutHelper.getArcCentroid(chartSizes.outerRadius, dataRow, chartSizes.thickness),
+					DonutHelper.getArcCentroid(chartSizes.outerRadius, dataRow, chartSizes.innerRadius),
 					tooltipBlock.getEl(),
 					blockSize,
 					tooltipArrow,

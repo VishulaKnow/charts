@@ -120,7 +120,7 @@ export class ElementHighlighter {
 				.on("end", () => resolve(""))
 				.ease(easeLinear)
 				.attr("d", (d, i) =>
-					DonutHelper.getArcGeneratorObject(chartSizes.outerRadius, chartSizes.thickness)
+					DonutHelper.getArcGenerator(chartSizes.outerRadius, chartSizes.innerRadius)
 						.outerRadius(chartSizes.outerRadius + scaleSize)
 						.innerRadius(chartSizes.innerRadius - scaleSize)(d, i)
 				);

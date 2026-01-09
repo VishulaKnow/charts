@@ -1,10 +1,10 @@
 import { MdtChartsConfig, MdtChartsDataSource, Size } from "../config/config";
-import { Model, BlockCanvas, ChartBlockModel, DataSettings, DataFormat, DataScope, OptionsModel } from "./model";
+import { Model, BlockCanvas, ChartBlockModel, DataSettings, OptionsModel } from "./model";
 import { MarginModel } from "./margin/marginModel";
 import { TwoDimensionalModel } from "./notations/twoDimensionalModel";
 import { PolarModel } from "./notations/polar/polarModel";
 import { DataManagerModel } from "./dataManagerModel/dataManagerModel";
-import { DesignerConfig, Transitions } from "../designer/designerConfig";
+import { DesignerConfig } from "../designer/designerConfig";
 import { OtherComponentsModel } from "./featuresModel/otherComponents";
 import { ConfigValidator } from "./configsValidator/configValidator";
 import { ModelInstance } from "./modelInstance/modelInstance";

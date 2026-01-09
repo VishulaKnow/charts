@@ -24,7 +24,7 @@ export class PolarModel {
 	): PolarOptionsModel {
 		const titleConfig = TitleConfigReader.create(options.title, modelInstance);
 
-		const donutSettings = this.getDonutSettings(
+		const donutSettings = this.donutModel.getSettings(
 			designerConfig.canvas.chartOptions.donut,
 			options.chart,
 			modelInstance.dataModel.repository.getRawRows()
@@ -115,14 +115,6 @@ export class PolarModel {
 		const heightForLegend =
 			chartBlockHeight - bottomLegendMargin.bottom - bottomLegendMargin.top - MIN_DONUT_BLOCK_SIZE;
 		return heightForLegend >= minHeightForLegend;
-	}
-
-	private static getDonutSettings(
-		settings: DonutOptionsCanvas,
-		chartOptions: DonutChart,
-		dataRows: MdtChartsDataRow[]
-	): DonutChartSettings {
-		return this.donutModel.getSettings(settings, chartOptions, dataRows);
 	}
 
 	private static getChartsModel(

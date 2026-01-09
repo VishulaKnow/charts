@@ -1,24 +1,15 @@
 import { merge } from "d3-array";
 import { PieArcDatum, Arc, arc, Pie, pie } from "d3-shape";
 import { MdtChartsDataRow, Size, MdtChartsColorField } from "../../../config/config";
-import { BlockMargin } from "../../../model/model";
 
 export class DonutHelper {
 	public static getArcCentroid(
 		outerRadius: number,
 		dataItem: PieArcDatum<MdtChartsDataRow>,
-		donutThickness: number
+		innerRadius: number
 	): [number, number] {
-		const arc = this.getArcGeneratorObject(outerRadius, donutThickness);
+		const arc = this.getArcGenerator(outerRadius, innerRadius);
 		return arc.centroid(dataItem);
-	}
-
-	public static getArcGeneratorObject(
-		outerRadius: number,
-		donutThickness: number
-	): Arc<any, PieArcDatum<MdtChartsDataRow>> {
-		const arc = this.getArcGenerator(outerRadius, outerRadius - donutThickness);
-		return arc;
 	}
 
 	public static getArcGenerator(outerRadius: number, innerRadius: number): Arc<any, PieArcDatum<MdtChartsDataRow>> {
