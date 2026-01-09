@@ -7,6 +7,8 @@ import { TwoDimMarginModel } from "./twoDim/twoDimMarginModel";
 import { TwoDimConfigReader } from "../modelInstance/configReader/twoDimConfigReader/twoDimConfigReader";
 import { BaseConfigReader } from "../modelInstance/configReader/baseConfigReader";
 import { getConfigReader } from "../modelInstance/configReader/configReaderFactory";
+import { SunburstMarginModel } from "./sunburst/sunburstMarginModel";
+import { SunburstConfigReader } from "../modelInstance/configReader/sunburstConifgReader/sunburstConifgReader";
 
 export class MarginModel {
 	private twoDimModel: TwoDimMarginModel | undefined;
@@ -24,6 +26,14 @@ export class MarginModel {
 		if (this.config.options.type === "2d") {
 			this.twoDimModel = new TwoDimMarginModel(this.designerConfig, this.configReader as TwoDimConfigReader);
 			this.twoDimModel.recalcMargin(otherComponents, modelInstance);
+		}
+
+		if (this.config.options.type === "sunburst") {
+			const sunburstModel = new SunburstMarginModel(
+				this.designerConfig,
+				this.configReader as SunburstConfigReader
+			);
+			sunburstModel.recalcMargin(otherComponents, modelInstance);
 		}
 	}
 

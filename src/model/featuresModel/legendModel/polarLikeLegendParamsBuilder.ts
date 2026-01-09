@@ -1,4 +1,3 @@
-import { MdtChartsDataRow, MdtChartsDataSource } from "../../../config/config";
 import { LegendBlockCanvas } from "../../../designer/designerConfig";
 import { LegendBlockModel } from "../../model";
 import { styledElementValues } from "../../modelBuilder";
