@@ -1,5 +1,5 @@
 import { Selection, BaseType } from "d3-selection";
-import { TooltipBasicModel } from "../../../model/model";
+import { TooltipBasicModel, TooltipContent } from "../../../model/model";
 import { TooltipHelper } from "./tooltipHelper";
 import { Size } from "../../../config/config";
 import { getMarkerCreator } from "../legend/legendMarkerCreator";
@@ -23,11 +23,8 @@ export class TooltipDomHelper {
 
 	public static fillContent(
 		contentBlock: Selection<HTMLElement, unknown, BaseType, unknown>,
-		keyValue: string,
-		tooltipOptions: TooltipBasicModel
+		content: TooltipContent
 	): void {
-		const content = tooltipOptions.getContent(keyValue);
-
 		contentBlock.html("");
 
 		if (content.type === "html") {

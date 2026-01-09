@@ -5,7 +5,6 @@ import {
 	Model,
 	OptionsModelData,
 	Orient,
-	DonutChartModel,
 	PolarOptionsModel,
 	ScaleKeyModel,
 	TooltipBasicModel,
@@ -16,7 +15,7 @@ import {
 import { Block } from "../../block/block";
 import { TooltipDomHelper } from "./tooltipDomHelper";
 import { Donut } from "../../polarNotation/donut/donut";
-import { ChartOrientation, MdtChartsDataRow, MdtChartsDataSource, Size, TooltipOptions } from "../../../config/config";
+import { ChartOrientation, MdtChartsDataRow, Size } from "../../../config/config";
 import { Scales } from "../scale/scale";
 import { TooltipComponentsManager } from "./tooltipComponentsManager";
 import { ElementHighlighter } from "../../elementHighlighter/elementHighlighter";
@@ -29,7 +28,6 @@ import { TooltipSettings } from "../../../designer/designerConfig";
 import { DomSelectionHelper } from "../../helpers/domSelectionHelper";
 import { NewTooltip } from "./newTooltip/newTooltip";
 import { MarkDot } from "../../../engine/features/markDots/markDot";
-import { DonutThicknessCalculator } from "../../../model/notations/polar/donut/donutThicknessService";
 
 interface DonutOverDetails {
 	pointer: [number, number];
@@ -92,7 +90,6 @@ export class Tooltip {
 				block,
 				model.options,
 				model.blockCanvas.size,
-				model.chartBlock.margin,
 				model.options.charts[0].sizes,
 				model.otherComponents.tooltipBlock
 			);
@@ -135,7 +132,6 @@ export class Tooltip {
 		block: Block,
 		options: PolarOptionsModel,
 		blockSize: Size,
-		margin: BlockMargin,
 		chartSizes: DonutChartSizesModel,
 		tooltipOptions: TooltipSettings
 	): void {
@@ -147,7 +143,6 @@ export class Tooltip {
 			arcItems,
 			options.data,
 			blockSize,
-			margin,
 			chartSizes,
 			tooltipOptions,
 			options.tooltip,
@@ -190,7 +185,8 @@ export class Tooltip {
 
 			if (!currentKey || currentKey !== keyValue) {
 				TooltipComponentsManager.showComponent(tooltipBlock.getEl());
-				if (args.type === "2d") TooltipDomHelper.fillContent(tooltipContent, keyValue, args.tooltipOptions);
+				if (args.type === "2d")
+					TooltipDomHelper.fillContent(tooltipContent, args.tooltipOptions.getContent(keyValue));
 
 				if (args.tooltipSettings.position === "fixed") {
 					const tooltipCoordinate = TooltipHelper.getTooltipFixedCoordinate(
@@ -293,7 +289,6 @@ export class Tooltip {
 		elements: Selection<SVGGElement, PieArcDatum<MdtChartsDataRow>, SVGGElement, unknown>,
 		dataOptions: OptionsModelData,
 		blockSize: Size,
-		margin: BlockMargin,
 		chartSizes: DonutChartSizesModel,
 		tooltipSettings: TooltipSettings,
 		tooltipOptions: TooltipBasicModel,
@@ -320,7 +315,10 @@ export class Tooltip {
 
 		elements.on("mouseover", function (e, dataRow: PieArcDatum<MdtChartsDataRow>) {
 			TooltipComponentsManager.showComponent(tooltipBlock.getEl());
-			TooltipDomHelper.fillContent(tooltipContent, dataRow.data[dataOptions.keyField.name], tooltipOptions);
+			TooltipDomHelper.fillContent(
+				tooltipContent,
+				tooltipOptions.getContent(dataRow.data[dataOptions.keyField.name])
+			);
 
 			if (tooltipSettings.position === "fixed") {
 				const coordinatePointer = TooltipDomHelper.getRecalcedCoordinateByArrow(
