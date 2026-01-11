@@ -10,6 +10,7 @@ import { ConfigValidator } from "./configsValidator/configValidator";
 import { ModelInstance } from "./modelInstance/modelInstance";
 import { TwoDimConfigReader } from "./modelInstance/configReader/twoDimConfigReader/twoDimConfigReader";
 import { TitleConfigReader } from "./modelInstance/titleConfigReader";
+import { SunburstModel } from "./notations/sunburst/sunburstModel";
 
 export enum AxisType {
 	Key,
@@ -61,6 +62,8 @@ function getOptions(
 		);
 	} else if (config.options.type === "polar") {
 		return PolarModel.getOptions(config.options, designerConfig, modelInstance);
+	} else if (config.options.type === "sunburst") {
+		return SunburstModel.getOptions(config.options, designerConfig, modelInstance);
 	}
 	throw new Error("Unknown chart type");
 }

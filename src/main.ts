@@ -110,7 +110,11 @@ export class Chart implements IChart {
 	public updateData(data: MdtChartsDataSource): void {
 		this.model = assembleModel(this.config, data, this.designerConfig, this.id);
 		this.data = data;
-		this.engine.updateData(this.model, getPreparedData(this.model, this.data, this.config));
+		this.engine.updateData(
+			this.model,
+			this.config.options.data.dataSource,
+			getPreparedData(this.model, this.data, this.config)
+		);
 	}
 
 	/**

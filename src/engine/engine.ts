@@ -47,7 +47,7 @@ export class Engine {
 		this.block.destroy();
 	}
 
-	public updateData(model: Model, newData: MdtChartsDataSource): void {
+	public updateData(model: Model, dataSource: string, newData: MdtChartsDataSource): void {
 		if (!newData) {
 			this.data = newData;
 			this.block.clearWrapper();
@@ -55,7 +55,7 @@ export class Engine {
 			if (!this.data) {
 				this.data = newData;
 				this.updateFullBlock(model, this.data);
-			} else if (!Helper.compareData(this.data, newData, model.options.data.dataSource)) {
+			} else if (!Helper.compareData(this.data, newData, dataSource)) {
 				for (let source in newData) {
 					this.data[source] = newData[source];
 				}
@@ -77,6 +77,8 @@ export class Engine {
 	}
 
 	private setFilterEventManager(options: OptionsModel): void {
+		if (options.type === "sunburst") return; //TODO: implement sunburst filter event manager
+
 		let highlightIds: number[] = [];
 		if (this.initializeSelected instanceof Array && this.initializeSelected.length > 0)
 			highlightIds = [...this.initializeSelected];

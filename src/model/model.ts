@@ -39,7 +39,7 @@ export type TextAnchor = "start" | "middle" | "end";
 export type DominantBaseline = "hanging" | "middle" | "auto";
 export type GradientId = string;
 
-export type OptionsModel = TwoDimensionalOptionsModel | PolarOptionsModel;
+export type OptionsModel = TwoDimensionalOptionsModel | PolarOptionsModel | SunburstOptionsModel;
 
 export interface Model<O = OptionsModel> {
 	blockCanvas: BlockCanvas;
@@ -124,6 +124,16 @@ export interface PolarOptionsModel extends GraphicNotationOptionsModel {
 	type: "polar";
 	charts: DonutChartModel[];
 	chartCanvas: DonutChartSettings;
+}
+
+export interface SunburstOptionsModel {
+	type: "sunburst";
+	aggregator: DonutAggregatorModel;
+	slices: SunburstSlice[];
+	//TODO: remove duplicates ======
+	title: OptionsModelTitle;
+	selectable: boolean;
+	// =============================
 }
 
 //====================================================== Options Model Common
@@ -438,6 +448,18 @@ export interface DonutThicknessOptions {
 	max: number;
 	value?: number;
 	unit: DonutThicknessUnit;
+}
+
+//====================================================== SunburstOptionsModel
+export interface SunburstSlice {
+	segments: {
+		value: number;
+		color: string;
+		tooltip: {
+			content: TooltipContent;
+		};
+	}[];
+	sizes: DonutChartSizesModel;
 }
 
 //====================================================== Charts
