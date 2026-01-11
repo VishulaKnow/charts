@@ -102,7 +102,6 @@ interface GraphicNotationOptionsModel extends BasicOptionsModel {
 	data: OptionsModelData;
 	title: OptionsModelTitle;
 	selectable: boolean;
-	defs: OptionsModelGradients;
 	recordOverflowAlert: RecordOverflowAlertModel;
 }
 export interface TwoDimensionalOptionsModel extends GraphicNotationOptionsModel {
@@ -115,10 +114,12 @@ export interface TwoDimensionalOptionsModel extends GraphicNotationOptionsModel 
 	chartSettings: TwoDimChartElementsSettings;
 	valueLabels: TwoDimensionalValueLabels;
 	grouping: TwoDimGroupingModel;
+	defs: OptionsModelGradients;
 	canvasEvents: {
 		drawCompleted: () => void;
 	};
 }
+
 export interface PolarOptionsModel extends GraphicNotationOptionsModel {
 	type: "polar";
 	charts: DonutChartModel[];

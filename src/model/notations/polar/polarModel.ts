@@ -69,7 +69,6 @@ export class PolarModel {
 				}
 			},
 			chartCanvas: donutSettings,
-			defs: { gradients: [] },
 			recordOverflowAlert: createRecordOverflowModel(
 				modelInstance.dataModel.getScope().hiddenRecordsAmount,
 				{
