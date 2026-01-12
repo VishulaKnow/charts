@@ -128,7 +128,7 @@ export interface PolarOptionsModel extends GraphicNotationOptionsModel {
 
 export interface SunburstOptionsModel {
 	type: "sunburst";
-	aggregator: DonutAggregatorModel;
+	aggregator?: DonutAggregatorModel;
 	slices: SunburstSlice[];
 	//TODO: remove duplicates ======
 	title: OptionsModelTitle;

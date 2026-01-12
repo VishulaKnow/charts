@@ -22,13 +22,15 @@ export class SunburstModel {
 				fontSize: titleConfig.getFontSize()
 			},
 			selectable: !!options.selectable,
-			aggregator: {
-				margin: designerConfig.canvas.chartOptions.donut.aggregatorPad,
-				content: this.aggregatorService.getContent(options.aggregator, {
-					rows: modelInstance.dataModel.repository.getRawRows(),
-					valueFieldName: options.data.valueField.name
-				})
-			},
+			aggregator: options.aggregator
+				? {
+						margin: designerConfig.canvas.chartOptions.donut.aggregatorPad,
+						content: this.aggregatorService.getContent(options.aggregator, {
+							rows: modelInstance.dataModel.repository.getRawRows(),
+							valueFieldName: options.data.valueField.name
+						})
+				  }
+				: undefined,
 			slices: []
 		};
 	}

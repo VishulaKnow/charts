@@ -26,12 +26,6 @@ export class DonutModel {
 		};
 	}
 
-	public getOuterRadius(margin: BlockMargin, blockSize: Size): number {
-		return (
-			Math.min(blockSize.width - margin.left - margin.right, blockSize.height - margin.top - margin.bottom) / 2
-		);
-	}
-
 	public getTranslate(margin: BlockMargin, blockSize: Size): DonutChartTranslateModel {
 		return {
 			x: (blockSize.width - margin.left - margin.right) / 2 + margin.left,
