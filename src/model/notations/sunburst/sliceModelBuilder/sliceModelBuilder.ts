@@ -9,6 +9,7 @@ interface SliceModelBuilderConfig {
 	margin: BlockMargin;
 	blockSize: Size;
 	scopedDataRows: MdtChartsDataRow[];
+	topSliceColors: string[];
 }
 
 export class SliceModelBuilder {
@@ -19,39 +20,51 @@ export class SliceModelBuilder {
 	build(publicConfig: Pick<MdtChartsSunburstOptions, "slices" | "data">): SunburstSlice[] {
 		const sizesBySlices = this.getSliceSizes(publicConfig);
 
+		const topSliceKeyFieldName = publicConfig.slices[0].data.keyField.name;
+		//TODO: extract to function and remove duplicate with sunburstModel
+		const topSliceValues = this.config.scopedDataRows
+			.map((record) => record[topSliceKeyFieldName])
+			.filter((value, index, self) => self.indexOf(value) === index);
+		const topSliceColorsByValue = topSliceValues.reduce<Record<string, string>>((acc, value, index) => {
+			acc[value] = this.config.topSliceColors[index % this.config.topSliceColors.length];
+			return acc;
+		}, {});
+
 		return publicConfig.slices.map<SunburstSlice>((slice, sliceIndex) => {
-			const valuesForSliceKeys: Map<string, number> = new Map();
+			const valuesForSliceKeys: Map<string, { value: number; color: string }> = new Map();
+
 			this.config.scopedDataRows.forEach((row) => {
 				const key = row[slice.data.keyField.name];
+				const color = topSliceColorsByValue[row[topSliceKeyFieldName]];
 				if (key != null) {
-					valuesForSliceKeys.set(
-						key,
-						(valuesForSliceKeys.get(key) ?? 0) + row[publicConfig.data.valueField.name]
-					);
+					const newValue = (valuesForSliceKeys.get(key)?.value ?? 0) + row[publicConfig.data.valueField.name];
+					valuesForSliceKeys.set(key, { value: newValue, color });
 				}
 			});
 
 			return {
 				sizes: sizesBySlices[sliceIndex],
-				segments: Array.from(valuesForSliceKeys.entries()).map<SunburstSliceSegment>(([key, value]) => {
-					return {
-						value,
-						color: "rgb(32, 157, 227)",
-						tooltip: {
-							content: {
-								type: "rows",
-								rows: [
-									{
-										textContent: {
-											caption: key,
-											value: value
+				segments: Array.from(valuesForSliceKeys.entries()).map<SunburstSliceSegment>(
+					([key, { value, color }]) => {
+						return {
+							value,
+							color,
+							tooltip: {
+								content: {
+									type: "rows",
+									rows: [
+										{
+											textContent: {
+												caption: key,
+												value: value
+											}
 										}
-									}
-								]
+									]
+								}
 							}
-						}
-					};
-				})
+						};
+					}
+				)
 			};
 		});
 	}

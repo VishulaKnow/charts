@@ -1,5 +1,6 @@
 import { DesignerConfig } from "../../../designer/designerConfig";
 import { MdtChartsSunburstOptions } from "../../../main";
+import { ChartStyleModelService } from "../../chartStyleModel/chartStyleModel";
 import { SunburstOptionsModel, SunburstSlice } from "../../model";
 import { ModelInstance } from "../../modelInstance/modelInstance";
 import { TitleConfigReader } from "../../modelInstance/titleConfigReader";
@@ -16,23 +17,28 @@ export class SunburstModel {
 		modelInstance: ModelInstance
 	): SunburstOptionsModel {
 		const titleConfig = TitleConfigReader.create(options.title, modelInstance);
-		const sliceModelBuilder = new SliceModelBuilder({
-			margin: modelInstance.canvasModel.getMargin(),
-			blockSize: modelInstance.canvasModel.getBlockSize(),
-			scopedDataRows: modelInstance.dataModel.repository.getScopedRows()
-		});
 
-		const valuesForLegend = modelInstance.dataModel.repository
+		//TODO: extract to function and remove duplicate with sliceModelBuilder
+		const topSliceValues = modelInstance.dataModel.repository
 			.getScopedRows()
 			.map((record) => record[options.slices[0].data.keyField.name])
 			.filter((value, index, self) => self.indexOf(value) === index);
 
+		const chartStyle = ChartStyleModelService.getChartStyle(topSliceValues.length, designerConfig.chartStyle);
+
+		const sliceModelBuilder = new SliceModelBuilder({
+			margin: modelInstance.canvasModel.getMargin(),
+			blockSize: modelInstance.canvasModel.getBlockSize(),
+			scopedDataRows: modelInstance.dataModel.repository.getScopedRows(),
+			topSliceColors: chartStyle.elementColors
+		});
+
 		return {
 			legend: {
 				position: modelInstance.canvasModel.legendCanvas.getPosition(),
-				items: valuesForLegend.map((value) => ({
+				items: topSliceValues.map((value, index) => ({
 					marker: POLAR_LEGEND_MARKER,
-					markerColor: "rgb(32, 157, 227)",
+					markerColor: chartStyle.elementColors[index % chartStyle.elementColors.length],
 					textContent: value
 				}))
 			},

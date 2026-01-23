@@ -40,7 +40,12 @@ const scopedDataRows: MdtChartsDataRow[] = [
 describe("SliceModelBuilder", () => {
 	describe("build", () => {
 		test("should build a slice model for two slices without custom thickness", () => {
-			const sliceModelBuilder = new SliceModelBuilder({ blockSize, margin, scopedDataRows });
+			const sliceModelBuilder = new SliceModelBuilder({
+				blockSize,
+				margin,
+				scopedDataRows,
+				topSliceColors: ["red", "green", "blue"]
+			});
 
 			const sliceModel = sliceModelBuilder.build({
 				data: {
@@ -73,14 +78,14 @@ describe("SliceModelBuilder", () => {
 				{
 					segments: [
 						{
-							color: "rgb(32, 157, 227)",
+							color: "red",
 							tooltip: {
 								content: { rows: [{ textContent: { caption: 2020, value: 220000 } }], type: "rows" }
 							},
 							value: 220000
 						},
 						{
-							color: "rgb(32, 157, 227)",
+							color: "green",
 							tooltip: {
 								content: { rows: [{ textContent: { caption: 2026, value: 265000 } }], type: "rows" }
 							},
@@ -92,21 +97,21 @@ describe("SliceModelBuilder", () => {
 				{
 					segments: [
 						{
-							color: "rgb(32, 157, 227)",
+							color: "red",
 							tooltip: {
 								content: { rows: [{ textContent: { caption: "BMW", value: 100000 } }], type: "rows" }
 							},
 							value: 100000
 						},
 						{
-							color: "rgb(32, 157, 227)",
+							color: "red",
 							tooltip: {
 								content: { rows: [{ textContent: { caption: "AUDI", value: 120000 } }], type: "rows" }
 							},
 							value: 120000
 						},
 						{
-							color: "rgb(32, 157, 227)",
+							color: "green",
 							tooltip: {
 								content: {
 									rows: [{ textContent: { caption: "MERCEDES", value: 150000 } }],
@@ -116,7 +121,7 @@ describe("SliceModelBuilder", () => {
 							value: 150000
 						},
 						{
-							color: "rgb(32, 157, 227)",
+							color: "green",
 							tooltip: {
 								content: {
 									rows: [{ textContent: { caption: "VOLKSWAGEN", value: 115000 } }],
@@ -132,7 +137,12 @@ describe("SliceModelBuilder", () => {
 		});
 
 		test("should build a slice model for two slices with custom thickness", () => {
-			const sliceModelBuilder = new SliceModelBuilder({ blockSize, margin, scopedDataRows });
+			const sliceModelBuilder = new SliceModelBuilder({
+				blockSize,
+				margin,
+				scopedDataRows,
+				topSliceColors: ["red", "green", "blue"]
+			});
 
 			const sliceModel = sliceModelBuilder.build({
 				data: {
