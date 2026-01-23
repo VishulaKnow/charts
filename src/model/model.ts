@@ -133,6 +133,7 @@ export interface SunburstOptionsModel {
 	//TODO: remove duplicates ======
 	title: OptionsModelTitle;
 	selectable: boolean;
+	legend: ILegendModel;
 	// =============================
 }
 

@@ -6,6 +6,7 @@ import {
 	Model,
 	Orient,
 	PolarOptionsModel,
+	SunburstOptionsModel,
 	TwoDimensionalOptionsModel
 } from "../../../model/model";
 import { Block } from "../../block/block";
@@ -43,7 +44,11 @@ export class Legend {
 
 	private readonly markerCreator = new LegendMarkerCreator();
 
-	public render(block: Block, options: TwoDimensionalOptionsModel | PolarOptionsModel, model: Model): void {
+	public render(
+		block: Block,
+		options: TwoDimensionalOptionsModel | PolarOptionsModel | SunburstOptionsModel,
+		model: Model
+	): void {
 		if (options.legend.position !== "off") {
 			const legendObject = this.renderObject(
 				block,
@@ -98,7 +103,7 @@ export class Legend {
 
 	private setContent(
 		block: Block,
-		options: TwoDimensionalOptionsModel | PolarOptionsModel,
+		options: TwoDimensionalOptionsModel | PolarOptionsModel | SunburstOptionsModel,
 		legendObject: Selection<SVGForeignObjectElement, unknown, HTMLElement, any>,
 		legendBlockModel: LegendBlockModel
 	): void {

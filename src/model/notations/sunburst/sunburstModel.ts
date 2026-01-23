@@ -4,6 +4,7 @@ import { SunburstOptionsModel, SunburstSlice } from "../../model";
 import { ModelInstance } from "../../modelInstance/modelInstance";
 import { TitleConfigReader } from "../../modelInstance/titleConfigReader";
 import { DonutAggregatorService } from "../polar/donut/donutAggregatorService";
+import { POLAR_LEGEND_MARKER } from "../polar/modelConstants/polarLegendMarker";
 import { SliceModelBuilder } from "./sliceModelBuilder/sliceModelBuilder";
 
 export class SunburstModel {
@@ -21,7 +22,20 @@ export class SunburstModel {
 			scopedDataRows: modelInstance.dataModel.repository.getScopedRows()
 		});
 
+		const valuesForLegend = modelInstance.dataModel.repository
+			.getScopedRows()
+			.map((record) => record[options.slices[0].data.keyField.name])
+			.filter((value, index, self) => self.indexOf(value) === index);
+
 		return {
+			legend: {
+				position: modelInstance.canvasModel.legendCanvas.getPosition(),
+				items: valuesForLegend.map((value) => ({
+					marker: POLAR_LEGEND_MARKER,
+					markerColor: "rgb(32, 157, 227)",
+					textContent: value
+				}))
+			},
 			type: "sunburst",
 			title: {
 				textContent: titleConfig.getTextContent(),

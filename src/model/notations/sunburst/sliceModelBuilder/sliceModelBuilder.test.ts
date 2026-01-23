@@ -126,7 +126,7 @@ describe("SliceModelBuilder", () => {
 							value: 115000
 						}
 					],
-					sizes: { innerRadius: 30, outerRadius: 40, thickness: 10, translate: { x: 50, y: 50 } }
+					sizes: { innerRadius: 30.5, outerRadius: 40, thickness: 10, translate: { x: 50, y: 50 } }
 				}
 			]);
 		});
@@ -182,7 +182,7 @@ describe("SliceModelBuilder", () => {
 				translate: { x: 50, y: 50 }
 			});
 			expect(sliceModel[1].sizes).toEqual({
-				innerRadius: 36,
+				innerRadius: 36.5,
 				outerRadius: 40,
 				thickness: 4,
 				translate: { x: 50, y: 50 }
