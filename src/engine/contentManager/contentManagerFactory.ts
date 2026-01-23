@@ -5,6 +5,7 @@ import { Engine } from "../engine";
 import { PolarManager } from "../polarNotation/polarManager";
 import { TwoDimensionalManager } from "../twoDimensionalNotation/twoDimensionalManager";
 import { ChartClearSelectionOptions, FilterEventManager } from "../filterManager/filterEventManager";
+import { SunburstManager } from "../sunburstNotation/sunburstManager";
 
 export interface ChartContentManager {
 	render(engine: Engine, model: Model): void;
@@ -13,16 +14,13 @@ export interface ChartContentManager {
 	clearSelection(filterEventManager: FilterEventManager, model: Model, options?: ChartClearSelectionOptions): void;
 }
 
-interface Managers {
-	[type: string]: {
-		new (): ChartContentManager;
-	};
-}
+type Managers = Record<ChartNotation, { new (): ChartContentManager }>;
 
 export class ContentManagerFactory {
 	private managers: Managers = {
 		"2d": TwoDimensionalManager,
-		polar: PolarManager
+		polar: PolarManager,
+		sunburst: SunburstManager
 	};
 
 	getManager(type: ChartNotation): ChartContentManager {

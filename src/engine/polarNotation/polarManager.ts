@@ -1,4 +1,4 @@
-import { DonutChartSettings, Model, DonutChartModel, PolarOptionsModel } from "../../model/model";
+import { Model, PolarOptionsModel } from "../../model/model";
 import { Block } from "../block/block";
 import { Engine } from "../engine";
 import { Legend } from "../features/legend/legend";
@@ -17,11 +17,12 @@ export class PolarManager implements ChartContentManager {
 
 		engine.block.svg.render(model.blockCanvas.size);
 
-		this.renderCharts(engine.block, options.charts, engine.data, options.data.dataSource, options.chartCanvas);
-
 		Title.render(engine.block, options.title, model.otherComponents.titleBlock, model.blockCanvas.size);
 
+		Donut.render(engine.block, engine.data[options.data.dataSource], options.charts[0], options.chartCanvas);
+
 		Legend.get().render(engine.block, engine.data, options, model);
+
 		Tooltip.render(engine.block, model, model.otherComponents.tooltipBlock);
 
 		engine.block.filterEventManager.setListenerPolar(options);
@@ -70,17 +71,5 @@ export class PolarManager implements ChartContentManager {
 		options?: ChartClearSelectionOptions
 	): void {
 		filterEventManager.clearKeysForPolar(model.options, options);
-	}
-
-	private renderCharts(
-		block: Block,
-		charts: DonutChartModel[],
-		data: MdtChartsDataSource,
-		dataSource: string,
-		donutSettings: DonutChartSettings
-	) {
-		charts.forEach((chart: DonutChartModel) => {
-			Donut.render(block, data[dataSource], chart, donutSettings);
-		});
 	}
 }

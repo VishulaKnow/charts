@@ -1,9 +1,10 @@
 import { DesignerConfig } from "../../../designer/designerConfig";
 import { MdtChartsSunburstOptions } from "../../../main";
-import { SunburstOptionsModel } from "../../model";
+import { SunburstOptionsModel, SunburstSlice } from "../../model";
 import { ModelInstance } from "../../modelInstance/modelInstance";
 import { TitleConfigReader } from "../../modelInstance/titleConfigReader";
 import { DonutAggregatorService } from "../polar/donut/donutAggregatorService";
+import { SliceModelBuilder } from "./sliceModelBuilder/sliceModelBuilder";
 
 export class SunburstModel {
 	private static aggregatorService = new DonutAggregatorService();
@@ -14,6 +15,11 @@ export class SunburstModel {
 		modelInstance: ModelInstance
 	): SunburstOptionsModel {
 		const titleConfig = TitleConfigReader.create(options.title, modelInstance);
+		const sliceModelBuilder = new SliceModelBuilder({
+			margin: modelInstance.canvasModel.getMargin(),
+			blockSize: modelInstance.canvasModel.getBlockSize(),
+			scopedDataRows: modelInstance.dataModel.repository.getScopedRows()
+		});
 
 		return {
 			type: "sunburst",
@@ -29,9 +35,12 @@ export class SunburstModel {
 							rows: modelInstance.dataModel.repository.getRawRows(),
 							valueFieldName: options.data.valueField.name
 						})
-				  }
+					}
 				: undefined,
-			slices: []
+			slices: sliceModelBuilder.build({
+				data: options.data,
+				slices: options.slices
+			})
 		};
 	}
 }

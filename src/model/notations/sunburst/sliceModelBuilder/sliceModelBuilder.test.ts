@@ -39,7 +39,7 @@ const scopedDataRows: MdtChartsDataRow[] = [
 
 describe("SliceModelBuilder", () => {
 	describe("build", () => {
-		test("should build a slice model", () => {
+		test("should build a slice model for two slices without custom thickness", () => {
 			const sliceModelBuilder = new SliceModelBuilder({ blockSize, margin, scopedDataRows });
 
 			const sliceModel = sliceModelBuilder.build({
@@ -129,6 +129,64 @@ describe("SliceModelBuilder", () => {
 					sizes: { innerRadius: 30, outerRadius: 40, thickness: 10, translate: { x: 50, y: 50 } }
 				}
 			]);
+		});
+
+		test("should build a slice model for two slices with custom thickness", () => {
+			const sliceModelBuilder = new SliceModelBuilder({ blockSize, margin, scopedDataRows });
+
+			const sliceModel = sliceModelBuilder.build({
+				data: {
+					dataSource: "data",
+					valueField: {
+						name: "price",
+						format: "money",
+						title: "Стоимость"
+					}
+				},
+				slices: [
+					{
+						data: {
+							keyField: {
+								name: "year"
+							}
+						},
+						canvas: {
+							thickness: {
+								min: "40%",
+								max: "40%",
+								value: "40%"
+							}
+						}
+					},
+					{
+						data: {
+							keyField: {
+								name: "brand"
+							}
+						},
+						canvas: {
+							thickness: {
+								min: "10%",
+								max: "10%",
+								value: "10%"
+							}
+						}
+					}
+				]
+			});
+
+			expect(sliceModel[0].sizes).toEqual({
+				innerRadius: 20,
+				outerRadius: 36,
+				thickness: 16,
+				translate: { x: 50, y: 50 }
+			});
+			expect(sliceModel[1].sizes).toEqual({
+				innerRadius: 36,
+				outerRadius: 40,
+				thickness: 4,
+				translate: { x: 50, y: 50 }
+			});
 		});
 	});
 });
