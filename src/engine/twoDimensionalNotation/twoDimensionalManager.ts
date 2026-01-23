@@ -128,10 +128,6 @@ export class TwoDimensionalManager implements ChartContentManager {
 		if (model.dataSettings.scope.hiddenRecordsAmount !== 0)
 			RecordOverflowAlertCore.render(engine.block, options.recordOverflowAlert);
 
-		engine.block.getSvg().on("click", (e: MouseEvent) => {
-			if (e.target === engine.block.getSvg().node()) this.clearSelection(engine.block.filterEventManager, model);
-		});
-
 		this.canvasValueLabels = new CanvasValueLabels({
 			elementAccessors: {
 				getBlock: () => engine.block

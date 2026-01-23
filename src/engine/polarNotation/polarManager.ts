@@ -28,10 +28,6 @@ export class PolarManager implements ChartContentManager {
 
 		if (model.dataSettings.scope.hiddenRecordsAmount !== 0)
 			RecordOverflowAlertCore.render(engine.block, options.recordOverflowAlert);
-
-		engine.block.getSvg().on("click", (e: MouseEvent) => {
-			if (e.target === engine.block.getSvg().node()) this.clearSelection(engine.block.filterEventManager, model);
-		});
 	}
 
 	public updateData(block: Block, model: Model<PolarOptionsModel>, data: MdtChartsDataSource): void {

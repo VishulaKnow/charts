@@ -14,7 +14,11 @@ export class Engine {
 	private chartId: number;
 	private contentManager: ContentManager;
 
-	constructor(id: number, private filterCallback: FilterCallback, private initializeSelected: number[]) {
+	constructor(
+		id: number,
+		private filterCallback: FilterCallback,
+		private initializeSelected: number[]
+	) {
 		this.chartId = id;
 	}
 
@@ -74,6 +78,9 @@ export class Engine {
 
 	private renderCharts(model: Model): void {
 		this.contentManager.render(model, this);
+		this.block.getSvg().on("click", (e: MouseEvent) => {
+			if (e.target === this.block.getSvg().node()) this.contentManager.clearSelection(this, model);
+		});
 	}
 
 	private setFilterEventManager(options: OptionsModel): void {
