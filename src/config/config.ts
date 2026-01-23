@@ -109,8 +109,8 @@ export interface MdtChartsSunburstOptions {
 		data: {
 			keyField: MdtChartsBaseField;
 		};
-		canvas: {
-			thickness: MdtChartsDonutThicknessOptions;
+		canvas?: {
+			thickness?: MdtChartsDonutThicknessOptions;
 		};
 	}[];
 }

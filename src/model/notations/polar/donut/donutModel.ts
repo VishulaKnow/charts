@@ -21,24 +21,8 @@ export class DonutModel {
 	): DonutChartSettings {
 		return {
 			padAngle: settingsFromConfig.padAngle,
-			thickness: this.getThicknessOptions(settingsFromConfig.thickness),
+			thickness: this.thicknessService.buildThicknessOptions(settingsFromConfig.thickness),
 			aggregator: this.getAggregatorOptions(settingsFromConfig, chartOptions, rawDataRows)
-		};
-	}
-
-	public getTranslate(margin: BlockMargin, blockSize: Size): DonutChartTranslateModel {
-		return {
-			x: (blockSize.width - margin.left - margin.right) / 2 + margin.left,
-			y: (blockSize.height - margin.top - margin.bottom) / 2 + margin.top
-		};
-	}
-
-	private getThicknessOptions(settingsFromConfig: MdtChartsDonutThicknessOptions): DonutThicknessOptions {
-		return {
-			unit: this.thicknessService.getUnit(settingsFromConfig),
-			max: this.thicknessService.valueToNumber(settingsFromConfig.max),
-			min: this.thicknessService.valueToNumber(settingsFromConfig.min),
-			value: settingsFromConfig.value ? this.thicknessService.valueToNumber(settingsFromConfig.value) : undefined
 		};
 	}
 

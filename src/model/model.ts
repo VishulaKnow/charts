@@ -452,14 +452,16 @@ export interface DonutThicknessOptions {
 
 //====================================================== SunburstOptionsModel
 export interface SunburstSlice {
-	segments: {
-		value: number;
-		color: string;
-		tooltip: {
-			content: TooltipContent;
-		};
-	}[];
+	segments: SunburstSliceSegment[];
 	sizes: DonutChartSizesModel;
+}
+
+export interface SunburstSliceSegment {
+	value: number;
+	color: string;
+	tooltip: {
+		content: TooltipContent;
+	};
 }
 
 //====================================================== Charts
@@ -559,7 +561,8 @@ interface DotChartShapeOptions {
 }
 
 export interface TwoDimensionalChartModel
-	extends ChartModel,
+	extends
+		ChartModel,
 		TwoDimensionalLineLikeChartModel,
 		TwoDimensionalBarLikeChartModel,
 		TwoDimensionalAreaChartModel,

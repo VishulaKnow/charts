@@ -27,7 +27,7 @@ describe("DonutThicknessCalculator", () => {
 			const margin = getMargin(10);
 			const donutSettings = getDefaultDonutSettings();
 
-			const res = DonutThicknessCalculator.getThickness(donutSettings, size, margin);
+			const res = DonutThicknessCalculator.getThickness(donutSettings.thickness, size, margin);
 			expect(res).toBe(60);
 		});
 
@@ -36,7 +36,7 @@ describe("DonutThicknessCalculator", () => {
 			const margin = getMargin(60);
 			const donutSettings = getDefaultDonutSettings();
 
-			const res = DonutThicknessCalculator.getThickness(donutSettings, size, margin);
+			const res = DonutThicknessCalculator.getThickness(donutSettings.thickness, size, margin);
 			expect(res).toBe(40);
 		});
 
@@ -47,7 +47,7 @@ describe("DonutThicknessCalculator", () => {
 
 			donutSettings.thickness.value = 50;
 
-			const res = DonutThicknessCalculator.getThickness(donutSettings, size, margin);
+			const res = DonutThicknessCalculator.getThickness(donutSettings.thickness, size, margin);
 			expect(res).toBe(50);
 		});
 
@@ -59,7 +59,7 @@ describe("DonutThicknessCalculator", () => {
 			donutSettings.thickness.unit = "%";
 			donutSettings.thickness.value = 50;
 
-			const res = DonutThicknessCalculator.getThickness(donutSettings, size, margin);
+			const res = DonutThicknessCalculator.getThickness(donutSettings.thickness, size, margin);
 			expect(res).toBe(100); // (500 - 50 * 2) / 2 * 0.5
 		});
 	});

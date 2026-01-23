@@ -11,7 +11,7 @@ import { POLAR_LEGEND_MARKER } from "./modelConstants/polarLegendMarker";
 import { TwoDimTooltipContentGenerator } from "../../featuresModel/tooltipModel/tooltipContentModel";
 import { PolarInitialRowsProvider } from "../../featuresModel/tooltipModel/contentByNotations/polarInitialRowsProvider";
 import { DonutThicknessCalculator } from "./donut/donutThicknessService";
-import { getDonutLikeOuterRadius } from "./donut/donutLikeSizesCalculator";
+import { getDonutLikeOuterRadius, getDonutLikeTranslate } from "./donut/donutLikeSizesCalculator";
 
 export const MIN_DONUT_BLOCK_SIZE = 120;
 
@@ -126,7 +126,7 @@ export class PolarModel {
 		chartStyleConfig: ChartStyleConfig
 	): DonutChartModel {
 		const outerRadius = getDonutLikeOuterRadius(margin, blockSize);
-		const thickness = DonutThicknessCalculator.getThickness(donutSettings, blockSize, margin);
+		const thickness = DonutThicknessCalculator.getThickness(donutSettings.thickness, blockSize, margin);
 		return {
 			type: chart.type,
 			data: { ...chart.data },
@@ -137,7 +137,7 @@ export class PolarModel {
 				thickness,
 				outerRadius,
 				innerRadius: outerRadius - thickness,
-				translate: this.donutModel.getTranslate(margin, blockSize)
+				translate: getDonutLikeTranslate(margin, blockSize)
 			}
 		};
 	}

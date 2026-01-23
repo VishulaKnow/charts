@@ -1,12 +1,21 @@
 import { Size } from "../../../../config/config";
 import { MdtChartsDonutThicknessOptions } from "../../../../designer/designerConfig";
 import { getPxPercentUnitByValue } from "../../../helpers/unitsFromConfigReader";
-import { BlockMargin, DonutChartSettings, DonutThicknessUnit } from "../../../model";
+import { BlockMargin, DonutChartSettings, DonutThicknessOptions, DonutThicknessUnit } from "../../../model";
 
 const MIN_CHART_BLOCK_SIZE_FOR_MAX_THICKNESS = 400;
 
 export class DonutThicknessService {
 	private defaultUnit: DonutThicknessUnit = "px";
+
+	buildThicknessOptions(settingsFromConfig: MdtChartsDonutThicknessOptions): DonutThicknessOptions {
+		return {
+			unit: this.getUnit(settingsFromConfig),
+			max: this.valueToNumber(settingsFromConfig.max),
+			min: this.valueToNumber(settingsFromConfig.min),
+			value: settingsFromConfig.value ? this.valueToNumber(settingsFromConfig.value) : undefined
+		};
+	}
 
 	getUnit(settingsFromConfig: MdtChartsDonutThicknessOptions): DonutThicknessUnit {
 		if (settingsFromConfig.value) return getPxPercentUnitByValue(settingsFromConfig.value);
@@ -24,8 +33,7 @@ export class DonutThicknessService {
 }
 
 export class DonutThicknessCalculator {
-	public static getThickness(donutSettings: DonutChartSettings, blockSize: Size, margin: BlockMargin): number {
-		const thicknessOpts = donutSettings.thickness;
+	public static getThickness(thicknessOpts: DonutThicknessOptions, blockSize: Size, margin: BlockMargin): number {
 		const chartBlockSize = this.getChartBlockSize(blockSize, margin);
 
 		if (thicknessOpts.value)
