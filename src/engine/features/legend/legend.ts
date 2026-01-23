@@ -1,12 +1,19 @@
 import { BaseType, Selection, select } from "d3-selection";
 import { MdtChartsDataSource, Size } from "../../../config/config";
-import { LegendBlockModel, Model, Orient, PolarOptionsModel, TwoDimensionalOptionsModel } from "../../../model/model";
+import {
+	LegendBlockModel,
+	LegendItemModel,
+	Model,
+	Orient,
+	PolarOptionsModel,
+	TwoDimensionalOptionsModel
+} from "../../../model/model";
 import { Block } from "../../block/block";
 import { ColorReader } from "../../colorReader/colorReader";
 import { SelectionCondition } from "../../helpers/domSelectionHelper";
 import { LegendDomHelper, LegendItemSelection } from "./legendDomHelper";
 import { LegendEventsManager } from "./legendEventsManager";
-import { ChartLegendEngineModel, LegendCoordinate, LegendHelper } from "./legendHelper";
+import { LegendCoordinate, LegendHelper } from "./legendHelper";
 import { LegendMarkerCreator } from "./legendMarkerCreator";
 
 export interface LegendContentRenderingOptions {
@@ -36,12 +43,7 @@ export class Legend {
 
 	private readonly markerCreator = new LegendMarkerCreator();
 
-	public render(
-		block: Block,
-		data: MdtChartsDataSource,
-		options: TwoDimensionalOptionsModel | PolarOptionsModel,
-		model: Model
-	): void {
+	public render(block: Block, options: TwoDimensionalOptionsModel | PolarOptionsModel, model: Model): void {
 		if (options.legend.position !== "off") {
 			const legendObject = this.renderObject(
 				block,
@@ -49,15 +51,11 @@ export class Legend {
 				model.otherComponents.legendBlock,
 				model.blockCanvas.size
 			);
-			this.setContent(block, data, options, legendObject, model.otherComponents.legendBlock);
+			this.setContent(block, options, legendObject, model.otherComponents.legendBlock);
 		}
 	}
 
-	public update(
-		block: Block,
-		data: MdtChartsDataSource,
-		model: Model<TwoDimensionalOptionsModel | PolarOptionsModel>
-	): void {
+	public update(block: Block, model: Model<TwoDimensionalOptionsModel | PolarOptionsModel>): void {
 		if (model.options.legend.position !== "off") {
 			const legendObject = this.getObject(block);
 			const legendCoordinate = LegendHelper.getLegendCoordinateByPosition(
@@ -67,7 +65,7 @@ export class Legend {
 			);
 			this.fillCoordinate(legendObject, legendCoordinate);
 			this.removeContent(legendObject);
-			this.setContent(block, data, model.options, legendObject, model.otherComponents.legendBlock);
+			this.setContent(block, model.options, legendObject, model.otherComponents.legendBlock);
 		}
 	}
 
@@ -75,13 +73,12 @@ export class Legend {
 		if (options.type === "polar" && ColorReader.isNeedReadFromData(options.charts[0])) return;
 
 		const legendObject = this.getObject(block);
-		const colors = LegendHelper.getMarksColor(options);
-		const itemWrappers = legendObject.selectAll<HTMLDivElement, ChartLegendEngineModel>(`.${Legend.itemClass}`);
+		const itemWrappers = legendObject.selectAll<HTMLDivElement, LegendItemModel>(`.${Legend.itemClass}`);
 
 		const markerCreator = this.markerCreator;
 		itemWrappers.each(function (d, i) {
-			const selection = select<HTMLDivElement, ChartLegendEngineModel>(this);
-			markerCreator.updateColorForItem(selection, { ...d, color: colors[i % colors.length] });
+			const selection = select<HTMLDivElement, LegendItemModel>(this);
+			markerCreator.updateColorForItem(selection, { ...d.marker, color: options.legend.items[i].markerColor });
 		});
 	}
 
@@ -89,10 +86,10 @@ export class Legend {
 		block: Block,
 		keys: string[],
 		condition: SelectionCondition = SelectionCondition.Include
-	): Selection<HTMLDivElement, ChartLegendEngineModel, BaseType, unknown> {
+	): Selection<HTMLDivElement, LegendItemModel, BaseType, unknown> {
 		return block
 			.getSvg()
-			.selectAll<HTMLDivElement, ChartLegendEngineModel>(`.${this.itemClass}`)
+			.selectAll<HTMLDivElement, LegendItemModel>(`.${this.itemClass}`)
 			.filter((d) => {
 				const index = keys.findIndex((k) => k === d.textContent);
 				return condition === SelectionCondition.Include ? index !== -1 : index === -1;
@@ -101,25 +98,21 @@ export class Legend {
 
 	private setContent(
 		block: Block,
-		data: MdtChartsDataSource,
 		options: TwoDimensionalOptionsModel | PolarOptionsModel,
 		legendObject: Selection<SVGForeignObjectElement, unknown, HTMLElement, any>,
 		legendBlockModel: LegendBlockModel
 	): void {
-		const items = LegendHelper.getLegendItemsContent(options, data);
-		const colors = LegendHelper.getMarksColor(options, data[options.data.dataSource]);
 		const renderingOptions = LegendHelper.getContentRenderingOptions(
 			options.type,
 			options.legend.position,
 			legendBlockModel
 		);
 
-		const itemBlocks = this.renderContent(legendObject, items, colors, renderingOptions);
-		if (options.type === "polar") {
+		const itemBlocks = this.renderContent(legendObject, options.legend.items, renderingOptions);
+		if (options.type === "polar")
 			LegendEventsManager.setListeners(block, options.data.keyField.name, itemBlocks, options.selectable);
-		} else {
-			LegendDomHelper.setItemsTitles(itemBlocks);
-		}
+
+		if (options.type === "2d") LegendDomHelper.setItemsTitles(itemBlocks);
 	}
 
 	private renderObject(
@@ -142,8 +135,7 @@ export class Legend {
 
 	private renderContent(
 		foreignObject: Selection<SVGForeignObjectElement, unknown, HTMLElement, any>,
-		items: ChartLegendEngineModel[],
-		colorPalette: string[],
+		items: LegendItemModel[],
 		options: LegendContentRenderingOptions
 	): LegendItemSelection {
 		const wrapper = foreignObject.append("xhtml:div");
@@ -154,8 +146,8 @@ export class Legend {
 
 		const markerCreator = this.markerCreator;
 		itemWrappers.each(function (d, i) {
-			const selection = select<HTMLDivElement, ChartLegendEngineModel>(this);
-			const markers = markerCreator.create(selection, { ...d, color: colorPalette[i % colorPalette.length] });
+			const selection = select<HTMLDivElement, LegendItemModel>(this);
+			const markers = markerCreator.create(selection, { ...d.marker, color: d.markerColor });
 			markers.classed(options.itemsOptions.markerClass, true);
 		});
 

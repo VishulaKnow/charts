@@ -121,7 +121,7 @@ export class TwoDimensionalManager implements ChartContentManager {
 
 		Title.render(engine.block, options.title, model.otherComponents.titleBlock, model.blockCanvas.size);
 
-		Legend.get().render(engine.block, engine.data, options, model);
+		Legend.get().render(engine.block, options, model);
 
 		Tooltip.render(engine.block, model, model.otherComponents.tooltipBlock, scales);
 

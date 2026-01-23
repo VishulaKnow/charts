@@ -7,12 +7,6 @@ export class LegendCanvasModelInstance {
 
 	private sizeAndPadInited = false;
 
-	getModel(): ILegendModel {
-		return {
-			position: this.position
-		};
-	}
-
 	initSizeAndPad(size: number, pad: number) {
 		this.size = size;
 		this.pad = pad;

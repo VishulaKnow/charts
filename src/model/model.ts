@@ -139,7 +139,15 @@ export interface SunburstOptionsModel {
 //====================================================== Options Model Common
 export interface ILegendModel {
 	position: LegendPosition;
+	items: LegendItemModel[];
 }
+
+export interface LegendItemModel {
+	marker: ChartLegendMarkerModel;
+	markerColor: string;
+	textContent: string;
+}
+
 export interface BasicOptionsModelData {
 	dataSource: string;
 }

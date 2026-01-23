@@ -21,7 +21,7 @@ export class PolarManager implements ChartContentManager {
 
 		Donut.render(engine.block, engine.data[options.data.dataSource], options.charts[0], options.chartCanvas);
 
-		Legend.get().render(engine.block, engine.data, options, model);
+		Legend.get().render(engine.block, options, model);
 
 		Tooltip.render(engine.block, model, model.otherComponents.tooltipBlock);
 
@@ -55,7 +55,7 @@ export class PolarManager implements ChartContentManager {
 			block.filterEventManager.setListenerPolar(options);
 		});
 
-		Legend.get().update(block, data, model);
+		Legend.get().update(block, model);
 
 		RecordOverflowAlertCore.update(block, options.recordOverflowAlert);
 	}

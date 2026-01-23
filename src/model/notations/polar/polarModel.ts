@@ -1,7 +1,14 @@
 import { DonutChart, MdtChartsPolarOptions, MdtChartsDataRow, Size } from "../../../config/config";
 import { ChartStyleConfig, DesignerConfig, DonutOptionsCanvas } from "../../../designer/designerConfig";
 import { ChartStyleModelService } from "../../chartStyleModel/chartStyleModel";
-import { PolarOptionsModel, DonutChartModel, DonutChartSettings, LegendCoordinate, BlockMargin } from "../../model";
+import {
+	PolarOptionsModel,
+	DonutChartModel,
+	DonutChartSettings,
+	LegendCoordinate,
+	BlockMargin,
+	ChartStyle
+} from "../../model";
 import { CanvasModel } from "../../modelInstance/canvasModel/canvasModel";
 import { ModelInstance } from "../../modelInstance/modelInstance";
 import { DonutModel } from "./donut/donutModel";
@@ -31,13 +38,17 @@ export class PolarModel {
 			modelInstance.dataModel.repository.getRawRows()
 		);
 
+		const chartStyle = ChartStyleModelService.getChartStyle(
+			modelInstance.dataModel.repository.getScopedRows().length,
+			designerConfig.chartStyle
+		);
+
 		const chart = this.getChartsModel(
 			donutSettings,
 			modelInstance.canvasModel.getBlockSize(),
 			modelInstance.canvasModel.getMargin(),
 			options.chart,
-			modelInstance.dataModel.repository.getScopedRows().length,
-			designerConfig.chartStyle
+			chartStyle
 		);
 
 		return {
@@ -49,7 +60,16 @@ export class PolarModel {
 			},
 			data: { ...options.data },
 			charts: [chart],
-			legend: modelInstance.canvasModel.legendCanvas.getModel(),
+			legend: {
+				position: modelInstance.canvasModel.legendCanvas.getPosition(),
+				items: modelInstance.dataModel.repository
+					.getScopedRows()
+					.map((record: MdtChartsDataRow, index: number) => ({
+						marker: POLAR_LEGEND_MARKER,
+						markerColor: chartStyle.elementColors[index % chartStyle.elementColors.length],
+						textContent: record[options.data.keyField.name]
+					}))
+			},
 			tooltip: {
 				getContent: (keyFieldValue) => {
 					const generator = new TwoDimTooltipContentGenerator({
@@ -122,8 +142,7 @@ export class PolarModel {
 		blockSize: Size,
 		margin: BlockMargin,
 		chart: DonutChart,
-		dataLength: number,
-		chartStyleConfig: ChartStyleConfig
+		chartStyle: ChartStyle
 	): DonutChartModel {
 		const outerRadius = getDonutLikeOuterRadius(margin, blockSize);
 		const thickness = DonutThicknessCalculator.getThickness(donutSettings.thickness, blockSize, margin);
@@ -131,7 +150,7 @@ export class PolarModel {
 			type: chart.type,
 			data: { ...chart.data },
 			cssClasses: ChartStyleModelService.getCssClasses(0),
-			style: ChartStyleModelService.getChartStyle(dataLength, chartStyleConfig),
+			style: chartStyle,
 			legend: POLAR_LEGEND_MARKER,
 			sizes: {
 				thickness,

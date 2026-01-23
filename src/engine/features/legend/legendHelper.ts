@@ -1,13 +1,6 @@
-import { ChartNotation, MdtChartsDataRow, MdtChartsDataSource, Size } from "../../../config/config";
+import { ChartNotation, Size } from "../../../config/config";
 import { LegendItemsDirection } from "../../../model/featuresModel/legendModel/legendCanvasModel";
-import {
-	ChartLegendMarkerModel,
-	LegendBlockModel,
-	LegendPosition,
-	Orient,
-	PolarOptionsModel,
-	TwoDimensionalOptionsModel
-} from "../../../model/model";
+import { LegendBlockModel, LegendPosition, Orient } from "../../../model/model";
 import { Helper } from "../../helpers/helper";
 import { Legend, LegendContentRenderingOptions } from "./legend";
 import { LegendHelperService } from "./legendHelperService";
@@ -19,52 +12,8 @@ export interface LegendCoordinate {
 	width: number;
 }
 
-export type ChartLegendEngineModel = ChartLegendMarkerModel & {
-	textContent: string;
-};
-
 export class LegendHelper {
 	static service = new LegendHelperService();
-
-	public static getLegendItemsContent(
-		options: TwoDimensionalOptionsModel | PolarOptionsModel,
-		data: MdtChartsDataSource
-	): ChartLegendEngineModel[] {
-		if (options.type === "2d") {
-			let texts: ChartLegendEngineModel[] = [];
-			options.charts.forEach((chart) => {
-				texts = texts.concat(
-					chart.data.valueFields.map((field) => ({
-						...chart.legend,
-						textContent: field.title
-					}))
-				);
-			});
-			return texts;
-		}
-		if (options.type === "polar") {
-			return data[options.data.dataSource].map((record: MdtChartsDataRow) => ({
-				...options.charts[0].legend,
-				textContent: record[options.data.keyField.name]
-			}));
-		}
-	}
-
-	public static getMarksColor(
-		options: TwoDimensionalOptionsModel | PolarOptionsModel,
-		dataRows?: MdtChartsDataRow[]
-	): string[] {
-		if (options.type === "2d") {
-			let colors: string[] = [];
-			options.charts.forEach((chart) => {
-				colors = colors.concat(chart.style.elementColors);
-			});
-			return colors;
-		} else if (options.type === "polar") {
-			if (!options.charts[0].data.colorField) return options.charts.map((chart) => chart.style.elementColors)[0];
-			return dataRows.map((row) => row[options.charts[0].data.colorField]);
-		}
-	}
 
 	public static getMaxItemWidth(
 		legendBlockWidth: string,

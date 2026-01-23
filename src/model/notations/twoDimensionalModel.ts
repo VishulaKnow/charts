@@ -18,7 +18,8 @@ import {
 	TwoDimChartElementsSettings,
 	Orient,
 	TwoDimGroupingItemModel,
-	ScaleKeyModel
+	ScaleKeyModel,
+	LegendItemModel
 } from "../model";
 import { TwoDimConfigReader } from "../modelInstance/configReader/twoDimConfigReader/twoDimConfigReader";
 import { ModelInstance } from "../modelInstance/modelInstance";
@@ -131,7 +132,19 @@ export class TwoDimensionalModel {
 		const keyTotalSpaceCalculator = new KeyTotalSpaceCalculator({ scaleSizesCalculator });
 
 		return {
-			legend: canvasModel.legendCanvas.getModel(),
+			legend: {
+				position: canvasModel.legendCanvas.getPosition(),
+				items: charts.reduce((acc, chart) => {
+					const items = chart.data.valueFields.map<LegendItemModel>((field, fieldIndex) => {
+						return {
+							marker: chart.legend,
+							markerColor: chart.style.elementColors[fieldIndex % chart.style.elementColors.length],
+							textContent: field.title
+						};
+					});
+					return acc.concat(items);
+				}, [] as LegendItemModel[])
+			},
 			canvasEvents: {
 				drawCompleted: () => {
 					options.events?.drawComplete?.({
