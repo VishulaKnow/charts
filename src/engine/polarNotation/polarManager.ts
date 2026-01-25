@@ -23,7 +23,7 @@ export class PolarManager implements ChartContentManager {
 
 		Legend.get().render(engine.block, options, model);
 
-		Tooltip.render(engine.block, model, model.otherComponents.tooltipBlock);
+		Tooltip.render(engine.block, model);
 
 		engine.block.filterEventManager.setListenerPolar(options);
 
@@ -51,7 +51,7 @@ export class PolarManager implements ChartContentManager {
 			options.chartCanvas,
 			options.data.keyField.name
 		).then(() => {
-			Tooltip.render(block, model, model.otherComponents.tooltipBlock);
+			Tooltip.render(block, model);
 			block.filterEventManager.setListenerPolar(options);
 		});
 

@@ -14,19 +14,6 @@ import {
 type TextAnchor = "start" | "end" | "middle";
 
 export class AxisLabelHelper {
-	public static setTitles(
-		axisElement: Selection<SVGGElement, unknown, BaseType, any>,
-		axisOptions: AxisModelOptions
-	): void {
-		axisElement.selectAll<SVGTextElement, string>(".tick text").each(function (d, i) {
-			const tickTitle = select(this).select("title");
-			if (tickTitle.empty()) select(this).append("title").text(axisOptions.browserTooltip.format(d));
-			else {
-				tickTitle.text(axisOptions.browserTooltip.format(d));
-			}
-		});
-	}
-
 	public static setAxisLabelPaddingByOrient(axis: IAxis<any>, axisOptions: AxisModelOptions): void {
 		let axisLabelPadding = AXIS_HORIZONTAL_LABEL_PADDING;
 		if (axisOptions.orient === "left" || axisOptions.orient === "right")

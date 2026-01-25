@@ -85,7 +85,6 @@ export class TwoDimensionalModel {
 			modelInstance.dataModel.repository.getScopedFullSource(),
 			designerConfig.canvas.axisLabel,
 			canvasModel,
-			designerConfig.elementsOptions.tooltip,
 			() => scaleValueInfo.scaleFn(scaleValueInfo.scale.rootValue)
 		);
 

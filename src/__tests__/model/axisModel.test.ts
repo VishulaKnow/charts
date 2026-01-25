@@ -9,7 +9,6 @@ import {
 	ShowTickFn,
 	AxisLabelFormatter
 } from "../../config/config";
-import { TooltipSettings } from "../../designer/designerConfig";
 import {
 	AxisModel,
 	MINIMAL_HORIZONTAL_STEP_SIZE,
@@ -55,7 +54,6 @@ describe("get axes", () => {
 	let dataOptions: DataOptions;
 	let margin: BlockMargin;
 	let blockSize: Size;
-	let tooltipSettings: TooltipSettings;
 	let defaultFormatter: AxisLabelFormatter;
 
 	beforeEach(() => {
@@ -111,9 +109,6 @@ describe("get axes", () => {
 		dataOptions = { dataSource: "dataSet_poor", keyField: { name: "brand", format: null } };
 		margin = { top: 20, bottom: 20, left: 20, right: 20 };
 		blockSize = { height: 500, width: 1000 };
-		tooltipSettings = {
-			position: "fixed"
-		};
 		defaultFormatter = () => "value";
 	});
 
@@ -126,8 +121,7 @@ describe("get axes", () => {
 			{ charts, orientation: "vertical", data: dataOptions, axis: { key: discreteAxisOptions } } as any,
 			data,
 			{ maxSize: { main: 60 } },
-			canvasModel,
-			tooltipSettings
+			canvasModel
 		);
 		const expected: DiscreteAxisModelOptions = {
 			visibility: true,
@@ -137,7 +131,6 @@ describe("get axes", () => {
 				maxSize: 60,
 				position: "straight",
 				visible: true,
-				defaultTooltip: true,
 				showTick: showAllTicks,
 				linearTickStep: MINIMAL_HORIZONTAL_STEP_SIZE,
 				tickAmountSettings: {
@@ -170,13 +163,11 @@ describe("get axes", () => {
 		canvasModel.initBlockSize(blockSize);
 
 		discreteAxisOptions.position = "start";
-		tooltipSettings.position = "followCursor";
 		const result = AxisModel.getKeyAxis(
 			{ charts, orientation: "horizontal", data: dataOptions, axis: { key: discreteAxisOptions } } as any,
 			data,
 			{ maxSize: { main: 60 } },
-			canvasModel,
-			tooltipSettings
+			canvasModel
 		);
 		const expected: DiscreteAxisModelOptions = {
 			visibility: true,
@@ -186,7 +177,6 @@ describe("get axes", () => {
 				maxSize: 60,
 				position: "straight",
 				visible: true,
-				defaultTooltip: false,
 				showTick: showAllTicks,
 				linearTickStep: MINIMAL_HORIZONTAL_STEP_SIZE,
 				tickAmountSettings: {
@@ -222,8 +212,7 @@ describe("get axes", () => {
 			{ charts, orientation: "vertical", data: dataOptions, axis: { key: discreteAxisOptions } } as any,
 			data,
 			{ maxSize: { main: 60 } },
-			canvasModel,
-			tooltipSettings
+			canvasModel
 		);
 		const expected: AxisModelOptions = {
 			visibility: true,
@@ -233,7 +222,6 @@ describe("get axes", () => {
 				maxSize: 0,
 				position: "straight",
 				visible: true,
-				defaultTooltip: true,
 				showTick: (d, i) => (i % 2 === 0 ? true : false),
 				linearTickStep: MINIMAL_HORIZONTAL_STEP_SIZE,
 				tickAmountSettings: {
@@ -275,8 +263,7 @@ describe("get axes", () => {
 			{ charts, orientation: "vertical", data: dataOptions, axis: { key: discreteAxisOptions } } as any,
 			data,
 			{ maxSize: { main: 60 } },
-			canvasModel,
-			tooltipSettings
+			canvasModel
 		);
 		const expected: AxisModelOptions = {
 			visibility: true,
@@ -286,7 +273,6 @@ describe("get axes", () => {
 				maxSize: 0,
 				position: "straight",
 				visible: true,
-				defaultTooltip: true,
 				showTick: (d, i) => (i % 3 === 0 ? true : false),
 				linearTickStep: MINIMAL_HORIZONTAL_STEP_SIZE,
 				tickAmountSettings: {
@@ -329,8 +315,7 @@ describe("get axes", () => {
 			{ charts, orientation: "vertical", data: dataOptions, axis: { key: discreteAxisOptions } } as any,
 			data,
 			{ maxSize: { main: 60 } },
-			canvasModel,
-			tooltipSettings
+			canvasModel
 		);
 		const expected: AxisModelOptions = {
 			visibility: true,
@@ -340,7 +325,6 @@ describe("get axes", () => {
 				maxSize: 0,
 				position: "straight",
 				visible: true,
-				defaultTooltip: true,
 				showTick: showRule,
 				linearTickStep: MINIMAL_HORIZONTAL_STEP_SIZE,
 				tickAmountSettings: {
@@ -379,8 +363,7 @@ describe("get axes", () => {
 			{ charts, orientation: "vertical", data: dataOptions, axis: { key: discreteAxisOptions } } as any,
 			data,
 			{ maxSize: { main: 60 } },
-			canvasModel,
-			tooltipSettings
+			canvasModel
 		);
 
 		const label = result.labels.format({ key: "BMW" });
@@ -398,8 +381,7 @@ describe("get axes", () => {
 			{ charts, orientation: "vertical", data: dataOptions, axis: { key: discreteAxisOptions } } as any,
 			data,
 			{ maxSize: { main: 60 } },
-			canvasModel,
-			tooltipSettings
+			canvasModel
 		);
 
 		result.labels.format({ key: "BMW" });
@@ -420,8 +402,7 @@ describe("get axes", () => {
 			{ charts, orientation: "vertical", data: dataOptions, axis: { key: discreteAxisOptions } } as any,
 			data,
 			{ maxSize: { main: 60 } },
-			canvasModel,
-			tooltipSettings
+			canvasModel
 		);
 
 		const resultLabel = result.labels.format({ key: "Not found key" });
@@ -452,7 +433,6 @@ describe("get axes", () => {
 				maxSize: 60,
 				position: "straight",
 				visible: true,
-				defaultTooltip: true,
 				showTick: showAllTicks,
 				linearTickStep: MINIMAL_VERTICAL_STEP_SIZE,
 				tickAmountSettings: {
@@ -499,7 +479,6 @@ describe("get axes", () => {
 				maxSize: 60,
 				position: "straight",
 				visible: true,
-				defaultTooltip: true,
 				showTick: showAllTicks,
 				linearTickStep: MINIMAL_VERTICAL_STEP_SIZE,
 				tickAmountSettings: {
@@ -546,7 +525,6 @@ describe("get axes", () => {
 				maxSize: 60,
 				position: "straight",
 				visible: true,
-				defaultTooltip: true,
 				showTick: showAllTicks,
 				linearTickStep: MINIMAL_VERTICAL_STEP_SIZE,
 				tickAmountSettings: {

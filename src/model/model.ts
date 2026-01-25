@@ -19,7 +19,6 @@ import {
 	DonutOptionsCanvas,
 	Formatter,
 	StaticLegendBlockCanvas,
-	TooltipSettings,
 	Transitions
 } from "../designer/designerConfig";
 import { BoundingRect } from "../engine/features/valueLabelsCollision/valueLabelsCollision";
@@ -268,7 +267,6 @@ export interface AxisLabelModel {
 	maxSize: number;
 	position: AxisLabelPosition;
 	visible: boolean;
-	defaultTooltip: boolean;
 	showTick: ShowTickFn;
 	linearTickStep: number;
 	tickAmountSettings: TickAmountModel;
@@ -692,7 +690,6 @@ export interface DataFormat {
 export interface OtherCommonComponents {
 	legendBlock: LegendBlockModel;
 	titleBlock: TitleBlockModel;
-	tooltipBlock: TooltipSettings;
 }
 interface ComponentBlockModel {
 	margin: BlockMargin;

@@ -1,6 +1,6 @@
 import { AxisScale } from "d3-axis";
 import { ChartOrientation } from "../../../config/config";
-import { BlockMargin, Orient } from "../../../model/model";
+import { BlockMargin } from "../../../model/model";
 import { Scale } from "../scale/scale";
 import {
 	ARROW_DEFAULT_POSITION,
@@ -43,56 +43,6 @@ export class TooltipHelper {
 		return horizontalPad > tooltipBlockWidth
 			? tooltipBlockWidth - ARROW_DEFAULT_POSITION - 20 * Math.sqrt(2)
 			: horizontalPad; // If tooltip arrow has coordinate outside svg, it take X position in end of tooltip block
-	}
-
-	public static getCoordinateByPointer(pointer: [number, number]): TooltipCoordinate {
-		const coordinate: TooltipCoordinate = {
-			left: null,
-			top: null,
-			right: null,
-			bottom: null
-		};
-
-		coordinate.left = pointer[0] + "px";
-		coordinate.top = pointer[1] + "px";
-
-		return coordinate;
-	}
-
-	public static getTooltipFixedCoordinate(
-		scaleKey: AxisScale<any>,
-		margin: BlockMargin,
-		keyValue: string,
-		blockBoundingRect: DOMRect,
-		tooltipBoundingRect: DOMRect,
-		keyAxisOrient: Orient,
-		winWidth: number,
-		winHeight: number
-	): TooltipCoordinate {
-		const coordinate: TooltipPreCoordinate = {
-			top: null,
-			left: null
-		};
-		if (keyAxisOrient === "bottom" || keyAxisOrient === "top") {
-			coordinate.left =
-				Scale.getScaledValueOnMiddleOfItem(scaleKey, keyValue) + margin.left - tooltipBoundingRect.width / 2;
-			if (keyAxisOrient === "bottom") coordinate.top = margin.top - 5 - tooltipBoundingRect.height;
-			else coordinate.top = blockBoundingRect.height - margin.bottom;
-		}
-		if (keyAxisOrient === "left" || keyAxisOrient === "right") {
-			coordinate.top =
-				Scale.getScaledValueOnMiddleOfItem(scaleKey, keyValue) + margin.top - tooltipBoundingRect.height / 2;
-			if (keyAxisOrient === "left") coordinate.left = blockBoundingRect.width - margin.right;
-			else coordinate.left = margin.left - tooltipBoundingRect.width;
-		}
-
-		return this.recalcToolTipCoordinateByViewPort(
-			blockBoundingRect,
-			tooltipBoundingRect,
-			coordinate,
-			winWidth,
-			winHeight
-		);
 	}
 
 	public static getTooltipCursorCoordinate(

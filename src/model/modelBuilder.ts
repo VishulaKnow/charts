@@ -87,7 +87,6 @@ export function assembleModel(
 
 	const otherComponents = OtherComponentsModel.getOtherComponentsModel(
 		{
-			elementsOptions: designerConfig.elementsOptions,
 			legendConfig: designerConfig.canvas.legendBlock,
 			titleConfig: TitleConfigReader.create(config.options.title, modelInstance)
 		},

@@ -19,9 +19,8 @@ import {
 } from "../../model";
 import { ModelHelper } from "../../helpers/modelHelper";
 import { AxisType } from "../../modelBuilder";
-import { DataManagerModel } from "../../dataManagerModel/dataManagerModel";
 import { TwoDimensionalModel } from "../../notations/twoDimensionalModel";
-import { AxisLabelCanvas, TooltipSettings } from "../../../designer/designerConfig";
+import { AxisLabelCanvas } from "../../../designer/designerConfig";
 import { CanvasModel } from "../../modelInstance/canvasModel/canvasModel";
 import { AxisModelService, AxisModelTickCalculator, showAllTicks } from "./axisModelService";
 
@@ -45,7 +44,6 @@ export class AxisModel {
 		data: MdtChartsDataSource,
 		labelConfig: AxisLabelCanvas,
 		canvasModel: CanvasModel,
-		tooltipSettings: TooltipSettings,
 		getZeroCoordinate?: () => number
 	): DiscreteAxisModelOptions {
 		const { charts, orientation, data: dataOptions } = options;
@@ -77,7 +75,6 @@ export class AxisModel {
 				).width,
 				position: AxisModel.getKeyAxisLabelPosition(canvasModel, allKeyFieldValues.length, axisConfig),
 				visible: !TwoDimensionalModel.getChartsEmbeddedLabelsFlag(charts, orientation),
-				defaultTooltip: tooltipSettings.position === "fixed",
 				showTick: tickCalculator.createFunctionCalculator(this.getAxisLength(orientation, canvasModel)),
 				linearTickStep: MINIMAL_HORIZONTAL_STEP_SIZE,
 				tickAmountSettings: {
@@ -167,7 +164,6 @@ export class AxisModel {
 				maxSize: labelConfig.maxSize.main,
 				position: "straight",
 				visible: true,
-				defaultTooltip: true,
 				showTick: showAllTicks,
 				linearTickStep: this.getTickStep(orient, axisConfig),
 				tickAmountSettings: {

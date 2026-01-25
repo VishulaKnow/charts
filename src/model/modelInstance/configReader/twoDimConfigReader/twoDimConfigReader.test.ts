@@ -140,7 +140,6 @@ describe("getValueLabelsFormatter", () => {
 			canvas: null,
 			chartStyle: null,
 			transitions: null,
-			elementsOptions: null,
 			dataFormat: {
 				formatters
 			}

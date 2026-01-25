@@ -268,10 +268,6 @@ class Listeners {
 
 	private setDesignerListeners(): void {
 		const thisClass = this;
-		document.querySelector("#tooltip-position").addEventListener("change", function () {
-			designerConfig.elementsOptions.tooltip.position = this.value;
-			thisClass.updateFull();
-		});
 		document.querySelector("#axis-label-width").addEventListener("input", function () {
 			thisClass.designerConfig.canvas.axisLabel.maxSize.main = parseFloat(
 				ListenersHelper.getInputValue("#axis-label-width")
@@ -573,7 +569,6 @@ class Listeners {
 		ListenersHelper.setInputValue("#aggregator-pad", designerConfig.canvas.chartOptions.donut.aggregatorPad);
 		ListenersHelper.setInputValue("#donut-max-thickness", designerConfig.canvas.chartOptions.donut.thickness.max);
 		ListenersHelper.setInputValue("#donut-min-thickness", designerConfig.canvas.chartOptions.donut.thickness.min);
-		ListenersHelper.setInputValue("#tooltip-position", designerConfig.elementsOptions.tooltip.position);
 
 		if (config.options.type === "2d") {
 			ListenersHelper.setInputValue("#chart-2d-type", config.options.charts[0].type);
