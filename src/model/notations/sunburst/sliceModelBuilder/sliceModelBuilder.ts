@@ -3,13 +3,14 @@ import { BlockMargin } from "../../../model";
 import { MdtChartsDataRow, MdtChartsSunburstOptions, Size } from "../../../../config/config";
 import { DonutThicknessCalculator, DonutThicknessService } from "../../polar/donut/donutThicknessService";
 import { getDonutLikeOuterRadius, getDonutLikeTranslate } from "../../polar/donut/donutLikeSizesCalculator";
-import { MdtChartsDonutThicknessOptions } from "../../../../designer/designerConfig";
+import { Formatter, MdtChartsDonutThicknessOptions } from "../../../../designer/designerConfig";
 
 interface SliceModelBuilderConfig {
 	margin: BlockMargin;
 	blockSize: Size;
 	scopedDataRows: MdtChartsDataRow[];
 	topSliceColors: string[];
+	formatter: Formatter;
 }
 
 export class SliceModelBuilder {
@@ -56,7 +57,9 @@ export class SliceModelBuilder {
 										{
 											textContent: {
 												caption: key,
-												value: value
+												value: this.config.formatter(value, {
+													type: publicConfig.data.valueField.format
+												})
 											}
 										}
 									]

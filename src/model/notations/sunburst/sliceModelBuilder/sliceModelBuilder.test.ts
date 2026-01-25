@@ -44,7 +44,8 @@ describe("SliceModelBuilder", () => {
 				blockSize,
 				margin,
 				scopedDataRows,
-				topSliceColors: ["red", "green", "blue"]
+				topSliceColors: ["red", "green", "blue"],
+				formatter: (value) => value.toFixed(2)
 			});
 
 			const sliceModel = sliceModelBuilder.build({
@@ -80,14 +81,20 @@ describe("SliceModelBuilder", () => {
 						{
 							color: "red",
 							tooltip: {
-								content: { rows: [{ textContent: { caption: 2020, value: 220000 } }], type: "rows" }
+								content: {
+									rows: [{ textContent: { caption: 2020, value: "220000.00" } }],
+									type: "rows"
+								}
 							},
 							value: 220000
 						},
 						{
 							color: "green",
 							tooltip: {
-								content: { rows: [{ textContent: { caption: 2026, value: 265000 } }], type: "rows" }
+								content: {
+									rows: [{ textContent: { caption: 2026, value: "265000.00" } }],
+									type: "rows"
+								}
 							},
 							value: 265000
 						}
@@ -99,14 +106,20 @@ describe("SliceModelBuilder", () => {
 						{
 							color: "red",
 							tooltip: {
-								content: { rows: [{ textContent: { caption: "BMW", value: 100000 } }], type: "rows" }
+								content: {
+									rows: [{ textContent: { caption: "BMW", value: "100000.00" } }],
+									type: "rows"
+								}
 							},
 							value: 100000
 						},
 						{
 							color: "red",
 							tooltip: {
-								content: { rows: [{ textContent: { caption: "AUDI", value: 120000 } }], type: "rows" }
+								content: {
+									rows: [{ textContent: { caption: "AUDI", value: "120000.00" } }],
+									type: "rows"
+								}
 							},
 							value: 120000
 						},
@@ -114,7 +127,7 @@ describe("SliceModelBuilder", () => {
 							color: "green",
 							tooltip: {
 								content: {
-									rows: [{ textContent: { caption: "MERCEDES", value: 150000 } }],
+									rows: [{ textContent: { caption: "MERCEDES", value: "150000.00" } }],
 									type: "rows"
 								}
 							},
@@ -124,7 +137,7 @@ describe("SliceModelBuilder", () => {
 							color: "green",
 							tooltip: {
 								content: {
-									rows: [{ textContent: { caption: "VOLKSWAGEN", value: 115000 } }],
+									rows: [{ textContent: { caption: "VOLKSWAGEN", value: "115000.00" } }],
 									type: "rows"
 								}
 							},
@@ -141,7 +154,8 @@ describe("SliceModelBuilder", () => {
 				blockSize,
 				margin,
 				scopedDataRows,
-				topSliceColors: ["red", "green", "blue"]
+				topSliceColors: ["red", "green", "blue"],
+				formatter: (value) => value.toFixed(2)
 			});
 
 			const sliceModel = sliceModelBuilder.build({

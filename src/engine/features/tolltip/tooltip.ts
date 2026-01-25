@@ -9,7 +9,9 @@ import {
 	TooltipBasicModel,
 	TwoDimensionalChartModel,
 	TwoDimensionalOptionsModel,
-	DonutChartSizesModel
+	DonutChartSizesModel,
+	SunburstSliceSegment,
+	SunburstOptionsModel
 } from "../../../model/model";
 import { Block } from "../../block/block";
 import { TooltipDomHelper } from "./tooltipDomHelper";
@@ -24,6 +26,7 @@ import { TooltipHelper } from "./tooltipHelper";
 import { DomSelectionHelper } from "../../helpers/domSelectionHelper";
 import { NewTooltip } from "./newTooltip/newTooltip";
 import { MarkDot } from "../../../engine/features/markDots/markDot";
+import { Sunburst } from "../../sunburstNotation/sunburst";
 
 interface DonutOverDetails {
 	pointer: [number, number];
@@ -33,11 +36,6 @@ interface DonutOverDetails {
 interface TipBoxOverDetails {
 	pointer: [number, number];
 	keyValue: string;
-}
-
-interface TooltipTranslate {
-	x: number;
-	y: number;
 }
 
 interface LineTooltipParams {
@@ -64,7 +62,7 @@ export class Tooltip {
 
 	public static render(
 		block: Block,
-		model: Model<TwoDimensionalOptionsModel | PolarOptionsModel>,
+		model: Model<TwoDimensionalOptionsModel | PolarOptionsModel | SunburstOptionsModel>,
 		scales?: Scales
 	): void {
 		TooltipComponentsManager.renderTooltipWrapper(block);
@@ -78,7 +76,9 @@ export class Tooltip {
 				model.options
 			);
 		} else if (model.options.type === "polar") {
-			this.renderTooltipForPolar(block, model.options, model.options.charts[0].sizes);
+			this.renderTooltipForDonut(block, model.options.data, model.options.charts[0].sizes, model.options.tooltip);
+		} else if (model.options.type === "sunburst") {
+			this.renderTooltipForSunburst(block);
 		}
 	}
 
@@ -109,15 +109,6 @@ export class Tooltip {
 		};
 
 		this.renderLineTooltip(block, tooltipParams);
-	}
-
-	private static renderTooltipForPolar(
-		block: Block,
-		options: PolarOptionsModel,
-		chartSizes: DonutChartSizesModel
-	): void {
-		const arcItems = Donut.getAllArcGroups(block);
-		this.renderTooltipForDonut(block, arcItems, options.data, chartSizes, options.tooltip);
 	}
 
 	private static renderLineTooltip(block: Block, args: LineTooltip2DParams): void {
@@ -235,14 +226,79 @@ export class Tooltip {
 
 	private static renderTooltipForDonut(
 		block: Block,
-		elements: Selection<SVGGElement, PieArcDatum<MdtChartsDataRow>, SVGGElement, unknown>,
 		dataOptions: OptionsModelData,
 		chartSizes: DonutChartSizesModel,
 		tooltipOptions: TooltipBasicModel
 	): void {
+		const elements = Donut.getAllArcGroups(block);
 		const tooltipBlock = TooltipComponentsManager.renderTooltipBlock(block);
 		const tooltipContent = TooltipComponentsManager.renderTooltipContentBlock(tooltipBlock);
 
+		this.attachTooltipMoveOnElements(elements, block, tooltipBlock, {
+			mouseover: function (e, dataRow) {
+				TooltipDomHelper.fillContent(
+					tooltipContent,
+					tooltipOptions.getContent(dataRow.data[dataOptions.keyField.name])
+				);
+
+				ElementHighlighter.toggleActivityStyle(select(this), true);
+				const clones = Donut.getAllArcClones(block).filter(
+					(d: PieArcDatum<MdtChartsDataRow>) =>
+						d.data[dataOptions.keyField.name] === dataRow.data[dataOptions.keyField.name]
+				);
+				if (
+					clones.nodes().length === 0 &&
+					(block.filterEventManager.getSelectedKeys().length === 0 ||
+						block.filterEventManager.isSelected(dataRow.data[dataOptions.keyField.name]))
+				) {
+					ElementHighlighter.renderArcCloneAndHighlight(block, select(this), chartSizes);
+				}
+			},
+			mouseleave: function (e, dataRow) {
+				if (!block.filterEventManager.isSelected(dataRow.data[dataOptions.keyField.name])) {
+					ElementHighlighter.removeCloneForElem(block, dataOptions.keyField.name, select(this));
+					ElementHighlighter.removeShadowClone(block, dataOptions.keyField.name, select(this), chartSizes);
+					ElementHighlighter.toggleDonutHighlightState(
+						select(this),
+						chartSizes,
+						block.transitionManager.durations.higlightedScale,
+						false
+					);
+					if (block.filterEventManager.getSelectedKeys().length > 0) {
+						ElementHighlighter.toggleActivityStyle(select(this), false);
+					}
+				}
+			}
+		});
+	}
+
+	private static renderTooltipForSunburst(block: Block) {
+		const elements = block.getSvg().selectAll(`.${Sunburst.arcItemClass}`) as Selection<
+			SVGGElement,
+			{ data: SunburstSliceSegment },
+			SVGGElement,
+			unknown
+		>;
+
+		const tooltipBlock = TooltipComponentsManager.renderTooltipBlock(block);
+		const tooltipContent = TooltipComponentsManager.renderTooltipContentBlock(tooltipBlock);
+
+		this.attachTooltipMoveOnElements(elements, block, tooltipBlock, {
+			mouseover: (e, segment) => {
+				TooltipDomHelper.fillContent(tooltipContent, segment.data.tooltip.content);
+			}
+		});
+	}
+
+	private static attachTooltipMoveOnElements<D>(
+		elements: Selection<SVGGElement, D, SVGGElement, unknown>,
+		block: Block,
+		tooltipBlock: NewTooltip,
+		additionalEventsLogic?: {
+			mouseleave?: (e: MouseEvent, elData: D) => void;
+			mouseover?: (e: MouseEvent, elData: D) => void;
+		}
+	) {
 		elements.on("mousemove", function (e: CustomEvent<DonutOverDetails> | MouseEvent) {
 			const pointerCoordinate = e instanceof CustomEvent ? e.detail.pointer : pointer(e, block.getSvg().node());
 			const tooltipCoordinate = TooltipHelper.getTooltipCursorCoordinate(
@@ -253,42 +309,14 @@ export class Tooltip {
 			tooltipBlock.setCoordinate(tooltipCoordinate);
 		});
 
-		elements.on("mouseover", function (e, dataRow: PieArcDatum<MdtChartsDataRow>) {
+		elements.on("mouseover", function (e, elData: D) {
 			TooltipComponentsManager.showComponent(tooltipBlock.getEl());
-			TooltipDomHelper.fillContent(
-				tooltipContent,
-				tooltipOptions.getContent(dataRow.data[dataOptions.keyField.name])
-			);
-
-			ElementHighlighter.toggleActivityStyle(select(this), true);
-			const clones = Donut.getAllArcClones(block).filter(
-				(d: PieArcDatum<MdtChartsDataRow>) =>
-					d.data[dataOptions.keyField.name] === dataRow.data[dataOptions.keyField.name]
-			);
-			if (
-				clones.nodes().length === 0 &&
-				(block.filterEventManager.getSelectedKeys().length === 0 ||
-					block.filterEventManager.isSelected(dataRow.data[dataOptions.keyField.name]))
-			) {
-				ElementHighlighter.renderArcCloneAndHighlight(block, select(this), chartSizes);
-			}
+			additionalEventsLogic?.mouseover?.call(this, e, elData);
 		});
 
-		elements.on("mouseleave", function (e, dataRow: PieArcDatum<MdtChartsDataRow>) {
+		elements.on("mouseleave", function (e, elData) {
 			TooltipComponentsManager.hideComponent(tooltipBlock.getEl());
-			if (!block.filterEventManager.isSelected(dataRow.data[dataOptions.keyField.name])) {
-				ElementHighlighter.removeCloneForElem(block, dataOptions.keyField.name, select(this));
-				ElementHighlighter.removeShadowClone(block, dataOptions.keyField.name, select(this), chartSizes);
-				ElementHighlighter.toggleDonutHighlightState(
-					select(this),
-					chartSizes,
-					block.transitionManager.durations.higlightedScale,
-					false
-				);
-				if (block.filterEventManager.getSelectedKeys().length > 0) {
-					ElementHighlighter.toggleActivityStyle(select(this), false);
-				}
-			}
+			additionalEventsLogic?.mouseleave?.call(this, e, elData);
 		});
 	}
 }

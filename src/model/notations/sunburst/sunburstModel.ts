@@ -30,7 +30,8 @@ export class SunburstModel {
 			margin: modelInstance.canvasModel.getMargin(),
 			blockSize: modelInstance.canvasModel.getBlockSize(),
 			scopedDataRows: modelInstance.dataModel.repository.getScopedRows(),
-			topSliceColors: chartStyle.elementColors
+			topSliceColors: chartStyle.elementColors,
+			formatter: designerConfig.dataFormat.formatters
 		});
 
 		return {

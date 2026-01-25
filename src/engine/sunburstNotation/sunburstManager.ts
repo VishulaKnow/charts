@@ -5,6 +5,7 @@ import { ChartContentManager } from "../contentManager/contentManagerFactory";
 import { Engine } from "../engine";
 import { Legend } from "../features/legend/legend";
 import { Title } from "../features/title/title";
+import { Tooltip } from "../features/tolltip/tooltip";
 import { FilterEventManager, ChartClearSelectionOptions } from "../filterManager/filterEventManager";
 import { Sunburst } from "./sunburst";
 
@@ -19,6 +20,8 @@ export class SunburstManager implements ChartContentManager {
 		Legend.get().render(engine.block, model.options, model);
 
 		this.sunburst.render(engine.block, model.options);
+
+		Tooltip.render(engine.block, model);
 	}
 
 	updateData(block: Block, model: Model, newData: MdtChartsDataSource): void {

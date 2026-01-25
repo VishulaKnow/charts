@@ -4,9 +4,9 @@ import { Block } from "../block/block";
 import { DonutHelper } from "../polarNotation/donut/donutHelper";
 
 export class Sunburst {
-	public readonly donutBlockClass = "donut-block";
-	public readonly arcItemClass = "arc";
-	public readonly arcPathClass = "arc-path";
+	public static readonly donutBlockClass = "donut-block";
+	public static readonly arcItemClass = "arc";
+	public static readonly arcPathClass = "arc-path";
 
 	render(block: Block, options: SunburstOptionsModel) {
 		options.slices.forEach((slice) => {
@@ -19,26 +19,26 @@ export class Sunburst {
 			const donutBlock = block
 				.getSvg()
 				.append("g")
-				.attr("class", this.donutBlockClass)
+				.attr("class", Sunburst.donutBlockClass)
 				.attr("x", slice.sizes.translate.x)
 				.attr("y", slice.sizes.translate.y)
 				.attr("transform", `translate(${slice.sizes.translate.x}, ${slice.sizes.translate.y})`);
 
 			const items = donutBlock
-				.selectAll(`.${this.arcItemClass}`)
+				.selectAll(`.${Sunburst.arcItemClass}`)
 				.data(pieGenerator(slice.segments))
 				.enter()
 				.append("g")
-				.attr("class", this.arcItemClass)
+				.attr("class", Sunburst.arcItemClass)
 				.style("fill", (segment) => segment.data.color);
 
-			const arcs = items
+			items
 				.append("path")
 				.attr("d", arcGenerator)
-				.attr("class", this.arcPathClass)
+				.attr("class", Sunburst.arcPathClass)
 				.each(function (d) {
 					(this as any)._currentData = d;
-				}); // _currentData используется для получения текущих данных внутри функции обновления.
+				}); // TODO: _currentData используется для получения текущих данных внутри функции обновления.
 		});
 	}
 }
