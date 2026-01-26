@@ -2,11 +2,21 @@ import { pie } from "d3-shape";
 import { SunburstOptionsModel, SunburstSliceSegment } from "../../model/model";
 import { Block } from "../block/block";
 import { DonutHelper } from "../polarNotation/donut/donutHelper";
+import { Selection } from "d3-selection";
 
 export class Sunburst {
 	public static readonly donutBlockClass = "donut-block";
 	public static readonly arcItemClass = "arc";
 	public static readonly arcPathClass = "arc-path";
+
+	static getAllArcGroups(block: Block): Selection<SVGGElement, { data: SunburstSliceSegment }, SVGGElement, unknown> {
+		return block.getSvg().selectAll(`.${Sunburst.arcItemClass}`) as Selection<
+			SVGGElement,
+			{ data: SunburstSliceSegment },
+			SVGGElement,
+			unknown
+		>;
+	}
 
 	render(block: Block, options: SunburstOptionsModel) {
 		options.slices.forEach((slice) => {

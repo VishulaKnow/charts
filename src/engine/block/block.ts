@@ -10,6 +10,7 @@ import { BlockHelper } from "./blockHelper";
 import { Size } from "../../config/config";
 import { BlockSvg } from "./blockSvg";
 import { BlockHtml } from "./blockHtml";
+import { Sunburst } from "../sunburstNotation/sunburst";
 
 export class Block {
 	public parentElement: HTMLElement;
@@ -81,6 +82,12 @@ export class Block {
 		tipBoxes.on("click", null);
 
 		const arcItems = Donut.getAllArcGroups(this);
+		arcItems.on("mouseover", null);
+		arcItems.on("mouseleave", null);
+		arcItems.on("mousemove", null);
+		arcItems.on("click", null);
+
+		const sunburstArcItems = Sunburst.getAllArcGroups(this);
 		arcItems.on("mouseover", null);
 		arcItems.on("mouseleave", null);
 		arcItems.on("mousemove", null);

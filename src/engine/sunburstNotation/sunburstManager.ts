@@ -33,8 +33,22 @@ export class SunburstManager implements ChartContentManager {
 		Tooltip.render(engine.block, model);
 	}
 
-	updateData(block: Block, model: Model, newData: MdtChartsDataSource): void {
-		throw new Error("Method not implemented.");
+	updateData(block: Block, model: Model<SunburstOptionsModel>, newData: MdtChartsDataSource): void {
+		block.transitionManager.interruptTransitions();
+		block.removeMouseEvents();
+
+		Title.updateData(block, model.options.title);
+
+		Tooltip.hide(block);
+
+		Aggregator.update(
+			block,
+			model.options.aggregator,
+			model.options.slices[0].sizes.innerRadius,
+			model.options.slices[0].sizes.translate
+		);
+
+		Legend.get().update(block, model);
 	}
 
 	updateColors(block: Block, model: Model): void {

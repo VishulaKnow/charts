@@ -10,6 +10,7 @@ import { Donut } from "./polarNotation/donut/donut";
 import { Area } from "./twoDimensionalNotation/area/area";
 import { Bar } from "./twoDimensionalNotation/bar/bar";
 import { Line } from "./twoDimensionalNotation/line/line";
+import { Sunburst } from "./sunburstNotation/sunburst";
 
 interface Durations extends Transitions {}
 
@@ -39,6 +40,7 @@ export class TransitionManager {
 		MarkDot.markerDotClass,
 		EmbeddedLabels.embeddedLabelClass,
 		Donut.arcPathClass,
+		Sunburst.arcPathClass,
 		Aggregator.aggregatorValueClass
 	];
 

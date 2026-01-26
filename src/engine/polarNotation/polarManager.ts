@@ -66,7 +66,6 @@ export class PolarManager implements ChartContentManager {
 
 		Aggregator.update(
 			block,
-			options.charts[0].data.valueField.format,
 			options.chartCanvas.aggregator,
 			options.charts[0].sizes.innerRadius,
 			options.charts[0].sizes.translate

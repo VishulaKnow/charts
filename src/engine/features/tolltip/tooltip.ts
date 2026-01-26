@@ -273,12 +273,7 @@ export class Tooltip {
 	}
 
 	private static renderTooltipForSunburst(block: Block) {
-		const elements = block.getSvg().selectAll(`.${Sunburst.arcItemClass}`) as Selection<
-			SVGGElement,
-			{ data: SunburstSliceSegment },
-			SVGGElement,
-			unknown
-		>;
+		const elements = Sunburst.getAllArcGroups(block);
 
 		const tooltipBlock = TooltipComponentsManager.renderTooltipBlock(block);
 		const tooltipContent = TooltipComponentsManager.renderTooltipContentBlock(tooltipBlock);

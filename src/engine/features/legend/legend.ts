@@ -60,7 +60,10 @@ export class Legend {
 		}
 	}
 
-	public update(block: Block, model: Model<TwoDimensionalOptionsModel | PolarOptionsModel>): void {
+	public update(
+		block: Block,
+		model: Model<TwoDimensionalOptionsModel | PolarOptionsModel | SunburstOptionsModel>
+	): void {
 		if (model.options.legend.position !== "off") {
 			const legendObject = this.getObject(block);
 			const legendCoordinate = LegendHelper.getLegendCoordinateByPosition(

@@ -38,7 +38,6 @@ export class Aggregator {
 
 	public static update(
 		block: Block,
-		format: DataType,
 		settings: DonutAggregatorModel,
 		innerRadius: number,
 		translate: Translate
@@ -46,7 +45,7 @@ export class Aggregator {
 		const aggregator: AggregatorInfo = {
 			name: settings.content.title,
 			value: settings.content.value,
-			format,
+			format: settings.valueFormat,
 			marginInPercent: settings.margin
 		};
 		const aggregatorObject = block.getSvg().select<SVGForeignObjectElement>(`.${this.aggregatorObjectClass}`);
