@@ -16,24 +16,28 @@ const margin: BlockMargin = {
 
 const scopedDataRows: MdtChartsDataRow[] = [
 	{
-		year: 2020,
+		year: 2019,
 		brand: "BMW",
-		price: 100_000
+		price: 100_000,
+		decade: "2010s"
 	},
 	{
-		year: 2020,
+		year: 2019,
 		brand: "AUDI",
-		price: 120_000
+		price: 120_000,
+		decade: "2010s"
 	},
 	{
 		year: 2026,
 		brand: "MERCEDES",
-		price: 150_000
+		price: 150_000,
+		decade: "2020s"
 	},
 	{
 		year: 2026,
 		brand: "VOLKSWAGEN",
-		price: 115_000
+		price: 115_000,
+		decade: "2020s"
 	}
 ];
 
@@ -84,7 +88,7 @@ describe("SliceModelBuilder", () => {
 								content: {
 									rows: [
 										{
-											textContent: { caption: 2020 }
+											textContent: { caption: 2019 }
 										},
 										{
 											textContent: { caption: "Стоимость", value: "220000.00" },
@@ -94,7 +98,7 @@ describe("SliceModelBuilder", () => {
 									type: "rows"
 								}
 							},
-							key: 2020,
+							key: 2019,
 							value: 220000
 						},
 						{
@@ -117,7 +121,7 @@ describe("SliceModelBuilder", () => {
 							value: 265000
 						}
 					],
-					sizes: { innerRadius: 20, outerRadius: 30, thickness: 10, translate: { x: 50, y: 50 } }
+					sizes: { innerRadius: 20.4, outerRadius: 30, thickness: 9.6, translate: { x: 50, y: 50 } }
 				},
 				{
 					segments: [
@@ -198,7 +202,7 @@ describe("SliceModelBuilder", () => {
 							value: 115000
 						}
 					],
-					sizes: { innerRadius: 30.5, outerRadius: 40, thickness: 10, translate: { x: 50, y: 50 } }
+					sizes: { innerRadius: 30.4, outerRadius: 40, thickness: 9.6, translate: { x: 50, y: 50 } }
 				}
 			]);
 		});
@@ -254,16 +258,87 @@ describe("SliceModelBuilder", () => {
 			});
 
 			expect(sliceModel[0].sizes).toEqual({
-				innerRadius: 20,
-				outerRadius: 36,
+				innerRadius: 19.6,
+				outerRadius: 35.6,
 				thickness: 16,
 				translate: { x: 50, y: 50 }
 			});
 			expect(sliceModel[1].sizes).toEqual({
-				innerRadius: 36.5,
+				innerRadius: 36,
 				outerRadius: 40,
 				thickness: 4,
 				translate: { x: 50, y: 50 }
+			});
+		});
+
+		test("should calculate radiuses for 2+ slices correctly", () => {
+			const sliceModelBuilder = new SliceModelBuilder({
+				blockSize: {
+					height: 200,
+					width: 200
+				},
+				margin: {
+					top: 25,
+					left: 25,
+					right: 25,
+					bottom: 25
+				},
+				scopedDataRows,
+				topSliceColors: ["red", "green", "blue"],
+				formatter: (value) => value.toFixed(2)
+			});
+
+			const sliceModel = sliceModelBuilder.build({
+				data: {
+					dataSource: "data",
+					valueField: {
+						name: "price",
+						format: "money",
+						title: "Стоимость"
+					}
+				},
+				slices: [
+					{
+						data: {
+							keyField: {
+								name: "decade"
+							}
+						}
+					},
+					{
+						data: {
+							keyField: {
+								name: "year"
+							}
+						}
+					},
+					{
+						data: {
+							keyField: {
+								name: "brand"
+							}
+						}
+					}
+				]
+			});
+
+			expect(sliceModel[0].sizes).toEqual({
+				innerRadius: 37.5,
+				outerRadius: 49.5,
+				thickness: 12,
+				translate: { x: 100, y: 100 }
+			});
+			expect(sliceModel[1].sizes).toEqual({
+				innerRadius: 50.25,
+				outerRadius: 62.25,
+				thickness: 12,
+				translate: { x: 100, y: 100 }
+			});
+			expect(sliceModel[2].sizes).toEqual({
+				innerRadius: 63,
+				outerRadius: 75,
+				thickness: 12,
+				translate: { x: 100, y: 100 }
 			});
 		});
 	});

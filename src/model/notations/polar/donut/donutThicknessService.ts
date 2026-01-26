@@ -44,6 +44,13 @@ export class DonutThicknessCalculator {
 		return this.getThicknessByUnit(chartBlockSize, thicknessOpts.min, thicknessOpts.unit);
 	}
 
+	public static getChartBlockSize(blockSize: Size, margin: BlockMargin): Size {
+		return {
+			height: blockSize.height - margin.top - margin.bottom,
+			width: blockSize.width - margin.left - margin.right
+		};
+	}
+
 	public static calcPercentValue(chartBlockSize: Size, value: number) {
 		const minSideSize = Math.min(chartBlockSize.width, chartBlockSize.height);
 		return (minSideSize / 2) * (value / 100);
@@ -52,12 +59,5 @@ export class DonutThicknessCalculator {
 	private static getThicknessByUnit(chartBlockSize: Size, valueInPx: number, unit: DonutThicknessUnit) {
 		if (unit === "px") return valueInPx;
 		return this.calcPercentValue(chartBlockSize, valueInPx);
-	}
-
-	private static getChartBlockSize(blockSize: Size, margin: BlockMargin): Size {
-		return {
-			height: blockSize.height - margin.top - margin.bottom,
-			width: blockSize.width - margin.left - margin.right
-		};
 	}
 }

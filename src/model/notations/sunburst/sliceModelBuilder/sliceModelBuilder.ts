@@ -85,9 +85,9 @@ export class SliceModelBuilder {
 	private getSliceSizes(publicConfig: Pick<MdtChartsSunburstOptions, "slices">): DonutChartSizesModel[] {
 		const gapBetweenSlicesInPercent = 1;
 
-		const defaultThicknessInPercent = Math.max(
+		const defaultThicknessInPercent = Math.min(
 			25,
-			Math.floor(50 / publicConfig.slices.length - gapBetweenSlicesInPercent * (publicConfig.slices.length - 1))
+			Math.floor((50 - gapBetweenSlicesInPercent * (publicConfig.slices.length - 1)) / publicConfig.slices.length)
 		);
 		const defaultThicknessOptions: MdtChartsDonutThicknessOptions = {
 			min: `${defaultThicknessInPercent}%`,
@@ -96,7 +96,7 @@ export class SliceModelBuilder {
 		};
 
 		const gapBetweenSlicesInPx = DonutThicknessCalculator.calcPercentValue(
-			this.config.blockSize,
+			DonutThicknessCalculator.getChartBlockSize(this.config.blockSize, this.config.margin),
 			gapBetweenSlicesInPercent
 		);
 
@@ -110,14 +110,16 @@ export class SliceModelBuilder {
 		});
 
 		return publicConfig.slices.map<DonutChartSizesModel>((slice, sliceIndex) => {
-			const thicknessOfOuterSlices = thicknessBySliceIndexes
-				.slice(sliceIndex + 1)
-				.reduce((acc, curr) => acc + curr, 0);
+			const outerSlices = thicknessBySliceIndexes.slice(sliceIndex + 1);
+			const thicknessOfOuterSlices = outerSlices.reduce((acc, curr) => acc + curr, 0);
+
 			const outerRadius =
-				getDonutLikeOuterRadius(this.config.margin, this.config.blockSize) - thicknessOfOuterSlices;
+				getDonutLikeOuterRadius(this.config.margin, this.config.blockSize) -
+				thicknessOfOuterSlices -
+				gapBetweenSlicesInPx * outerSlices.length;
 			return {
 				outerRadius,
-				innerRadius: outerRadius - thicknessBySliceIndexes[sliceIndex] + gapBetweenSlicesInPx * sliceIndex,
+				innerRadius: outerRadius - thicknessBySliceIndexes[sliceIndex],
 				thickness: thicknessBySliceIndexes[sliceIndex],
 				translate: getDonutLikeTranslate(this.config.margin, this.config.blockSize)
 			};
