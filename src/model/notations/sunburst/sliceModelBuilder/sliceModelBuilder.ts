@@ -49,6 +49,7 @@ export class SliceModelBuilder {
 					([key, { value, color }]) => {
 						return {
 							value,
+							key,
 							color,
 							tooltip: {
 								content: {

@@ -466,6 +466,7 @@ export interface SunburstSlice {
 
 export interface SunburstSliceSegment {
 	value: number;
+	key: string | number;
 	color: string;
 	tooltip: {
 		content: TooltipContent;

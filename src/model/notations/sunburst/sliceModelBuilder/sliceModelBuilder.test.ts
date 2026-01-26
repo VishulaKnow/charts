@@ -94,6 +94,7 @@ describe("SliceModelBuilder", () => {
 									type: "rows"
 								}
 							},
+							key: 2020,
 							value: 220000
 						},
 						{
@@ -112,6 +113,7 @@ describe("SliceModelBuilder", () => {
 									type: "rows"
 								}
 							},
+							key: 2026,
 							value: 265000
 						}
 					],
@@ -135,6 +137,7 @@ describe("SliceModelBuilder", () => {
 									type: "rows"
 								}
 							},
+							key: "BMW",
 							value: 100000
 						},
 						{
@@ -153,6 +156,7 @@ describe("SliceModelBuilder", () => {
 									type: "rows"
 								}
 							},
+							key: "AUDI",
 							value: 120000
 						},
 						{
@@ -171,6 +175,7 @@ describe("SliceModelBuilder", () => {
 									type: "rows"
 								}
 							},
+							key: "MERCEDES",
 							value: 150000
 						},
 						{
@@ -189,6 +194,7 @@ describe("SliceModelBuilder", () => {
 									type: "rows"
 								}
 							},
+							key: "VOLKSWAGEN",
 							value: 115000
 						}
 					],

@@ -11,7 +11,7 @@ import { FilterEventManager, ChartClearSelectionOptions } from "../filterManager
 import { Sunburst } from "./sunburst";
 
 export class SunburstManager implements ChartContentManager {
-	private sunburst = new Sunburst();
+	private sunburst: Sunburst | undefined = undefined;
 
 	render(engine: Engine, model: Model<SunburstOptionsModel>) {
 		engine.block.svg.render(model.blockCanvas.size);
@@ -28,18 +28,25 @@ export class SunburstManager implements ChartContentManager {
 
 		Legend.get().render(engine.block, model.options, model);
 
-		this.sunburst.render(engine.block, model.options);
+		this.sunburst = new Sunburst(engine.block);
+		this.sunburst.render(model.options.slices);
 
 		Tooltip.render(engine.block, model);
 	}
 
 	updateData(block: Block, model: Model<SunburstOptionsModel>, newData: MdtChartsDataSource): void {
+		if (!this.sunburst) throw new Error("Sunburst not initialized");
+
 		block.transitionManager.interruptTransitions();
 		block.removeMouseEvents();
 
 		Title.updateData(block, model.options.title);
 
 		Tooltip.hide(block);
+
+		this.sunburst.update(model.options.slices).then(() => {
+			Tooltip.render(block, model);
+		});
 
 		Aggregator.update(
 			block,
