@@ -443,6 +443,7 @@ export interface DonutChartSettings extends Omit<DonutOptionsCanvas, "aggregator
 export interface DonutAggregatorModel {
 	margin: number;
 	content: DonutAggregatorContent;
+	valueFormat: DataType;
 }
 export interface DonutAggregatorContent {
 	value: string | number;

@@ -22,36 +22,36 @@ export class Aggregator {
 
 	public static render(
 		block: Block,
-		valueField: Field,
 		innerRadius: number,
 		translate: Translate,
 		fontSize: number,
 		settings: DonutAggregatorModel
 	): void {
-		const aggregator = this.buildConfig(valueField, settings);
+		const aggregator: AggregatorInfo = {
+			name: settings.content.title,
+			value: settings.content.value,
+			format: settings.valueFormat,
+			marginInPercent: settings.margin
+		};
 		this.renderText(block, innerRadius, aggregator, fontSize, translate);
 	}
 
 	public static update(
 		block: Block,
-		valueField: Field,
+		format: DataType,
 		settings: DonutAggregatorModel,
 		innerRadius: number,
 		translate: Translate
 	): void {
-		const aggregator = this.buildConfig(valueField, settings);
+		const aggregator: AggregatorInfo = {
+			name: settings.content.title,
+			value: settings.content.value,
+			format,
+			marginInPercent: settings.margin
+		};
 		const aggregatorObject = block.getSvg().select<SVGForeignObjectElement>(`.${this.aggregatorObjectClass}`);
 		this.updateText(block, aggregatorObject, aggregator, typeof aggregator.value === "string");
 		this.setAggregatorPosition(aggregatorObject, translate, innerRadius);
-	}
-
-	private static buildConfig(valueField: Field, settings: DonutAggregatorModel): AggregatorInfo {
-		return {
-			name: settings.content.title,
-			value: settings.content.value,
-			format: valueField.format,
-			marginInPercent: settings.margin
-		};
 	}
 
 	private static renderText(

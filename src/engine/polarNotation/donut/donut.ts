@@ -1,12 +1,11 @@
 import { Arc, Pie, PieArcDatum } from "d3-shape";
 import { Selection, BaseType } from "d3-selection";
 import { interpolate } from "d3-interpolate";
-import { BlockMargin, DonutChartSettings, DonutChartModel } from "../../../model/model";
+import { DonutChartSettings, DonutChartModel } from "../../../model/model";
 import { Block } from "../../block/block";
-import { Aggregator } from "../../features/aggregator/aggregator";
 import { DonutHelper } from "./donutHelper";
 import { DomSelectionHelper } from "../../helpers/domSelectionHelper";
-import { MdtChartsDataRow, Size } from "../../../config/config";
+import { MdtChartsDataRow } from "../../../config/config";
 import { ColorReader } from "../../colorReader/colorReader";
 
 export interface Translate {
@@ -32,15 +31,6 @@ export class Donut {
 	): void {
 		const arcGenerator = DonutHelper.getArcGenerator(chart.sizes.outerRadius, chart.sizes.innerRadius);
 		const pieGenerator = DonutHelper.getPieGenerator(chart.data.valueField.name, settings.padAngle);
-
-		Aggregator.render(
-			block,
-			chart.data.valueField,
-			chart.sizes.innerRadius,
-			chart.sizes.translate,
-			chart.sizes.thickness,
-			settings.aggregator
-		);
 
 		const donutBlock = block
 			.getSvg()
@@ -96,14 +86,6 @@ export class Donut {
 		const path = this.getAllArcGroups(block).data(pieGenerator(dataExtraZeroRows)).select<SVGPathElement>("path");
 		const items = this.getAllArcGroups(block).data(pieGenerator(data));
 		this.setElementsColor(this.getAllArcGroups(block), chart);
-
-		Aggregator.update(
-			block,
-			chart.data.valueField,
-			donutSettings.aggregator,
-			chart.sizes.innerRadius,
-			chart.sizes.translate
-		);
 
 		return new Promise((resolve) => {
 			this.raiseClonesG(block);

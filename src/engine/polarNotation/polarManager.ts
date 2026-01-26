@@ -10,6 +10,7 @@ import { MdtChartsDataSource } from "../../config/config";
 import { ChartContentManager } from "../contentManager/contentManagerFactory";
 import { ChartClearSelectionOptions, FilterEventManager } from "../filterManager/filterEventManager";
 import { RecordOverflowAlertCore } from "../features/recordOverflowAlert/recordOverflowAlertCore";
+import { Aggregator } from "../features/aggregator/aggregator";
 
 export class PolarManager implements ChartContentManager {
 	public render(engine: Engine, model: Model<PolarOptionsModel>) {
@@ -20,6 +21,14 @@ export class PolarManager implements ChartContentManager {
 		Title.render(engine.block, options.title, model.otherComponents.titleBlock, model.blockCanvas.size);
 
 		Donut.render(engine.block, engine.data[options.data.dataSource], options.charts[0], options.chartCanvas);
+
+		Aggregator.render(
+			engine.block,
+			options.charts[0].sizes.innerRadius,
+			options.charts[0].sizes.translate,
+			options.charts[0].sizes.thickness,
+			options.chartCanvas.aggregator
+		);
 
 		Legend.get().render(engine.block, options, model);
 
@@ -54,6 +63,14 @@ export class PolarManager implements ChartContentManager {
 			Tooltip.render(block, model);
 			block.filterEventManager.setListenerPolar(options);
 		});
+
+		Aggregator.update(
+			block,
+			options.charts[0].data.valueField.format,
+			options.chartCanvas.aggregator,
+			options.charts[0].sizes.innerRadius,
+			options.charts[0].sizes.translate
+		);
 
 		Legend.get().update(block, model);
 

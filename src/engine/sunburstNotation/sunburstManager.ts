@@ -3,6 +3,7 @@ import { Model, SunburstOptionsModel } from "../../model/model";
 import { Block } from "../block/block";
 import { ChartContentManager } from "../contentManager/contentManagerFactory";
 import { Engine } from "../engine";
+import { Aggregator } from "../features/aggregator/aggregator";
 import { Legend } from "../features/legend/legend";
 import { Title } from "../features/title/title";
 import { Tooltip } from "../features/tolltip/tooltip";
@@ -16,6 +17,14 @@ export class SunburstManager implements ChartContentManager {
 		engine.block.svg.render(model.blockCanvas.size);
 
 		Title.render(engine.block, model.options.title, model.otherComponents.titleBlock, model.blockCanvas.size);
+
+		Aggregator.render(
+			engine.block,
+			model.options.slices[0].sizes.innerRadius,
+			model.options.slices[0].sizes.translate,
+			model.options.slices[0].sizes.thickness,
+			model.options.aggregator
+		);
 
 		Legend.get().render(engine.block, model.options, model);
 

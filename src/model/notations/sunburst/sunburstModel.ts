@@ -55,7 +55,8 @@ export class SunburstModel {
 						content: this.aggregatorService.getContent(options.aggregator, {
 							rows: modelInstance.dataModel.repository.getRawRows(),
 							valueFieldName: options.data.valueField.name
-						})
+						}),
+						valueFormat: options.data.valueField.format
 					}
 				: undefined,
 			slices: sliceModelBuilder.build({

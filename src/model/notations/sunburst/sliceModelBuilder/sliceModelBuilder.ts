@@ -56,7 +56,16 @@ export class SliceModelBuilder {
 									rows: [
 										{
 											textContent: {
-												caption: key,
+												caption: key
+											}
+										},
+										{
+											marker: {
+												markerShape: "circle",
+												color
+											},
+											textContent: {
+												caption: publicConfig.data.valueField.title,
 												value: this.config.formatter(value, {
 													type: publicConfig.data.valueField.format
 												})

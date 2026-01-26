@@ -36,7 +36,8 @@ export class DonutModel {
 			content: this.aggregatorService.getContent(chartOptions.aggregator, {
 				rows: rawDataRows,
 				valueFieldName: chartOptions.data.valueField.name
-			})
+			}),
+			valueFormat: chartOptions.data.valueField.format
 		};
 	}
 }

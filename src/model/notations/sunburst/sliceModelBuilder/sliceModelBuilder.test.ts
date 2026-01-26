@@ -82,7 +82,15 @@ describe("SliceModelBuilder", () => {
 							color: "red",
 							tooltip: {
 								content: {
-									rows: [{ textContent: { caption: 2020, value: "220000.00" } }],
+									rows: [
+										{
+											textContent: { caption: 2020 }
+										},
+										{
+											textContent: { caption: "Стоимость", value: "220000.00" },
+											marker: { markerShape: "circle", color: "red" }
+										}
+									],
 									type: "rows"
 								}
 							},
@@ -92,7 +100,15 @@ describe("SliceModelBuilder", () => {
 							color: "green",
 							tooltip: {
 								content: {
-									rows: [{ textContent: { caption: 2026, value: "265000.00" } }],
+									rows: [
+										{
+											textContent: { caption: 2026 }
+										},
+										{
+											textContent: { caption: "Стоимость", value: "265000.00" },
+											marker: { markerShape: "circle", color: "green" }
+										}
+									],
 									type: "rows"
 								}
 							},
@@ -107,7 +123,15 @@ describe("SliceModelBuilder", () => {
 							color: "red",
 							tooltip: {
 								content: {
-									rows: [{ textContent: { caption: "BMW", value: "100000.00" } }],
+									rows: [
+										{
+											textContent: { caption: "BMW" }
+										},
+										{
+											textContent: { caption: "Стоимость", value: "100000.00" },
+											marker: { markerShape: "circle", color: "red" }
+										}
+									],
 									type: "rows"
 								}
 							},
@@ -117,7 +141,15 @@ describe("SliceModelBuilder", () => {
 							color: "red",
 							tooltip: {
 								content: {
-									rows: [{ textContent: { caption: "AUDI", value: "120000.00" } }],
+									rows: [
+										{
+											textContent: { caption: "AUDI" }
+										},
+										{
+											textContent: { caption: "Стоимость", value: "120000.00" },
+											marker: { markerShape: "circle", color: "red" }
+										}
+									],
 									type: "rows"
 								}
 							},
@@ -127,7 +159,15 @@ describe("SliceModelBuilder", () => {
 							color: "green",
 							tooltip: {
 								content: {
-									rows: [{ textContent: { caption: "MERCEDES", value: "150000.00" } }],
+									rows: [
+										{
+											textContent: { caption: "MERCEDES" }
+										},
+										{
+											textContent: { caption: "Стоимость", value: "150000.00" },
+											marker: { markerShape: "circle", color: "green" }
+										}
+									],
 									type: "rows"
 								}
 							},
@@ -137,7 +177,15 @@ describe("SliceModelBuilder", () => {
 							color: "green",
 							tooltip: {
 								content: {
-									rows: [{ textContent: { caption: "VOLKSWAGEN", value: "115000.00" } }],
+									rows: [
+										{
+											textContent: { caption: "VOLKSWAGEN" }
+										},
+										{
+											textContent: { caption: "Стоимость", value: "115000.00" },
+											marker: { markerShape: "circle", color: "green" }
+										}
+									],
 									type: "rows"
 								}
 							},
