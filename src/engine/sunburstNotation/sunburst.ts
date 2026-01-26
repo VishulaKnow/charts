@@ -34,6 +34,8 @@ export class Sunburst {
 		>;
 	}
 
+	private readonly pagAngle = 0.005;
+
 	constructor(private readonly block: Block) {
 		this.block = block;
 	}
@@ -44,7 +46,7 @@ export class Sunburst {
 				.innerRadius(slice.sizes.innerRadius)
 				.outerRadius(slice.sizes.outerRadius);
 			const pieGenerator = pie<SunburstSliceSegment>()
-				.padAngle(0.005)
+				.padAngle(this.pagAngle)
 				.sort(null)
 				.value((d) => d.value);
 
@@ -67,8 +69,9 @@ export class Sunburst {
 			const arcGenerator = arc<PieArcDatum<SunburstSliceSegment>>()
 				.innerRadius(slice.sizes.innerRadius)
 				.outerRadius(slice.sizes.outerRadius);
+
 			const pieGenerator = pie<SunburstSliceSegment>()
-				.padAngle(0.005)
+				.padAngle(this.pagAngle)
 				.sort(null)
 				.value((d) => d.value);
 
