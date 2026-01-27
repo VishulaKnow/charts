@@ -58,45 +58,24 @@ export class Tooltip {
 	public static readonly tooltipLineClass = "mdt-charts-tooltip-line";
 	public static readonly tooltipWrapperClass = "mdt-charts-tooltip-wrapper";
 	public static readonly tooltipContentClass = "mdt-charts-tooltip-content";
-	public static readonly tooltipArrowClass = "mdt-charts-tooltip-arrow";
 
-	public static render(
-		block: Block,
-		model: Model<TwoDimensionalOptionsModel | PolarOptionsModel | SunburstOptionsModel>,
-		scales?: Scales
-	): void {
-		TooltipComponentsManager.renderTooltipWrapper(block);
-
-		if (model.options.type === "2d") {
-			this.renderTooltipFor2DCharts(
-				block,
-				model.blockCanvas.size,
-				model.chartBlock.margin,
-				scales,
-				model.options
-			);
-		} else if (model.options.type === "polar") {
-			this.renderTooltipForDonut(block, model.options.data, model.options.charts[0].sizes, model.options.tooltip);
-		} else if (model.options.type === "sunburst") {
-			this.renderTooltipForSunburst(block);
-		}
-	}
-
-	public static hide(block: Block): void {
+	static hide(block: Block): void {
 		TooltipComponentsManager.hideComponent(block.getWrapper().select(`.${this.tooltipBlockClass}`));
 		TooltipComponentsManager.hideComponent(block.getSvg().select(`.${this.tooltipLineClass}`));
 	}
 
-	private static renderTooltipFor2DCharts(
+	static renderTooltipFor2DCharts(
 		block: Block,
 		blockSize: Size,
 		margin: BlockMargin,
 		scales: Scales,
 		options: TwoDimensionalOptionsModel
 	): void {
+		TooltipComponentsManager.renderTooltipWrapper(block);
+
 		if (scales.key.domain().length === 0) return;
 
-		const tooltipParams: LineTooltip2DParams = {
+		const args: LineTooltip2DParams = {
 			type: "2d",
 			scales,
 			margin,
@@ -108,10 +87,6 @@ export class Tooltip {
 			tooltipOptions: options.tooltip
 		};
 
-		this.renderLineTooltip(block, tooltipParams);
-	}
-
-	private static renderLineTooltip(block: Block, args: LineTooltip2DParams): void {
 		const tooltipBlock = TooltipComponentsManager.renderTooltipBlock(block);
 		const tooltipContent = TooltipComponentsManager.renderTooltipContentBlock(tooltipBlock);
 		const tooltipLine = TooltipComponentsManager.renderTooltipLine(block);
@@ -224,12 +199,14 @@ export class Tooltip {
 		});
 	}
 
-	private static renderTooltipForDonut(
+	static renderTooltipForDonut(
 		block: Block,
 		dataOptions: OptionsModelData,
 		chartSizes: DonutChartSizesModel,
 		tooltipOptions: TooltipBasicModel
 	): void {
+		TooltipComponentsManager.renderTooltipWrapper(block);
+
 		const elements = Donut.getAllArcGroups(block);
 		const tooltipBlock = TooltipComponentsManager.renderTooltipBlock(block);
 		const tooltipContent = TooltipComponentsManager.renderTooltipContentBlock(tooltipBlock);
@@ -272,7 +249,9 @@ export class Tooltip {
 		});
 	}
 
-	private static renderTooltipForSunburst(block: Block) {
+	static renderTooltipForSunburst(block: Block) {
+		TooltipComponentsManager.renderTooltipWrapper(block);
+
 		const elements = Sunburst.getAllArcGroups(block);
 
 		const tooltipBlock = TooltipComponentsManager.renderTooltipBlock(block);

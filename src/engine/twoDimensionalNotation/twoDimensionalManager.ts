@@ -123,7 +123,13 @@ export class TwoDimensionalManager implements ChartContentManager {
 
 		Legend.get().render(engine.block, options, model);
 
-		Tooltip.render(engine.block, model, scales);
+		Tooltip.renderTooltipFor2DCharts(
+			engine.block,
+			model.blockCanvas.size,
+			model.chartBlock.margin,
+			scales,
+			model.options
+		);
 
 		if (model.dataSettings.scope.hiddenRecordsAmount !== 0)
 			RecordOverflowAlertCore.render(engine.block, options.recordOverflowAlert);
@@ -209,7 +215,13 @@ export class TwoDimensionalManager implements ChartContentManager {
 				model.blockCanvas.size,
 				options
 			);
-			Tooltip.render(block, model, scales);
+			Tooltip.renderTooltipFor2DCharts(
+				block,
+				model.blockCanvas.size,
+				model.chartBlock.margin,
+				scales,
+				model.options
+			);
 			model.options.canvasEvents.drawCompleted();
 		});
 

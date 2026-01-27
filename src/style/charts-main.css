@@ -146,12 +146,6 @@
     background: rgba(0, 0, 0, 0.82);
     font-size: var(--chart-base-font-size);
 }
-.mdt-charts-tooltip-arrow {
-    width: 0;
-    height: 0;
-    border-style: solid;
-    border-color: rgba(0, 0, 0, 0.82) transparent transparent transparent;
-}
 
 /* Tooltip Content */
 .tooltip-group {

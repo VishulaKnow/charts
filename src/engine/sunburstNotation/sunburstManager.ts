@@ -31,7 +31,7 @@ export class SunburstManager implements ChartContentManager {
 		this.sunburst = new Sunburst(engine.block);
 		this.sunburst.render(model.options.levels);
 
-		Tooltip.render(engine.block, model);
+		Tooltip.renderTooltipForSunburst(engine.block);
 	}
 
 	updateData(block: Block, model: Model<SunburstOptionsModel>, newData: MdtChartsDataSource): void {
@@ -45,7 +45,7 @@ export class SunburstManager implements ChartContentManager {
 		Tooltip.hide(block);
 
 		this.sunburst.update(model.options.levels).then(() => {
-			Tooltip.render(block, model);
+			Tooltip.renderTooltipForSunburst(block);
 		});
 
 		Aggregator.update(

@@ -90,25 +90,6 @@ export class TooltipComponentsManager {
 		return parseFloat(tooltipLine.style("stroke-width"));
 	}
 
-	public static renderTooltipArrow(
-		tooltipBlock: Selection<BaseType, unknown, HTMLElement, any>
-	): Selection<BaseType, unknown, HTMLElement, any> {
-		let arrowSize: number = ARROW_SIZE / 2;
-		let tooltipArrow = tooltipBlock.select(`.${Tooltip.tooltipArrowClass}`);
-		if (tooltipArrow.empty())
-			tooltipArrow = tooltipBlock
-				.append("div")
-				.attr("class", Tooltip.tooltipArrowClass)
-				.style("position", "absolute")
-				.style("left", `${ARROW_DEFAULT_POSITION}px`)
-				.style("border-top-width", `${arrowSize}px`)
-				.style("border-right-width", `${arrowSize}px`)
-				.style("border-bottom-width", `0px`)
-				.style("border-left-width", `${arrowSize}px`);
-
-		return tooltipArrow;
-	}
-
 	public static setLineTooltipCoordinate(
 		tooltip: NewTooltip,
 		tooltipCoordinate: TooltipCoordinate,
