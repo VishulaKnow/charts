@@ -1,4 +1,4 @@
-import { select, Selection, pointer } from "d3-selection";
+import { select, Selection, pointer, BaseType } from "d3-selection";
 import { PieArcDatum } from "d3-shape";
 import {
 	BlockMargin,
@@ -10,7 +10,7 @@ import {
 	TwoDimensionalChartModel,
 	TwoDimensionalOptionsModel,
 	DonutChartSizesModel,
-	SunburstSliceSegment,
+	SunburstLevelSegment,
 	SunburstOptionsModel
 } from "../../../model/model";
 import { Block } from "../../block/block";
@@ -286,7 +286,7 @@ export class Tooltip {
 	}
 
 	private static attachTooltipMoveOnElements<D>(
-		elements: Selection<SVGGElement, D, SVGGElement, unknown>,
+		elements: Selection<Element, D, BaseType, unknown>,
 		block: Block,
 		tooltipBlock: NewTooltip,
 		additionalEventsLogic?: {

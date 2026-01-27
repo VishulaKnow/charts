@@ -1,12 +1,12 @@
 import { DesignerConfig } from "../../../designer/designerConfig";
 import { MdtChartsSunburstOptions } from "../../../main";
 import { ChartStyleModelService } from "../../chartStyleModel/chartStyleModel";
-import { SunburstOptionsModel, SunburstSlice } from "../../model";
+import { LegendItemModel, SunburstOptionsModel, SunburstLevel } from "../../model";
 import { ModelInstance } from "../../modelInstance/modelInstance";
 import { TitleConfigReader } from "../../modelInstance/titleConfigReader";
 import { DonutAggregatorService } from "../polar/donut/donutAggregatorService";
 import { POLAR_LEGEND_MARKER } from "../polar/modelConstants/polarLegendMarker";
-import { SliceModelBuilder } from "./sliceModelBuilder/sliceModelBuilder";
+import { LevelModelBuilder } from "./levelModelBuilder/levelModelBuilder";
 
 export class SunburstModel {
 	private static aggregatorService = new DonutAggregatorService();
@@ -18,26 +18,26 @@ export class SunburstModel {
 	): SunburstOptionsModel {
 		const titleConfig = TitleConfigReader.create(options.title, modelInstance);
 
-		//TODO: extract to function and remove duplicate with sliceModelBuilder
-		const topSliceValues = modelInstance.dataModel.repository
+		//TODO: extract to function and remove duplicate with levelModelBuilder
+		const topLevelValues = modelInstance.dataModel.repository
 			.getScopedRows()
-			.map((record) => record[options.slices[0].data.keyField.name])
+			.map((record) => record[options.levels[0].data.keyField.name])
 			.filter((value, index, self) => self.indexOf(value) === index);
 
-		const chartStyle = ChartStyleModelService.getChartStyle(topSliceValues.length, designerConfig.chartStyle);
+		const chartStyle = ChartStyleModelService.getChartStyle(topLevelValues.length, designerConfig.chartStyle);
 
-		const sliceModelBuilder = new SliceModelBuilder({
+		const levelModelBuilder = new LevelModelBuilder({
 			margin: modelInstance.canvasModel.getMargin(),
 			blockSize: modelInstance.canvasModel.getBlockSize(),
 			scopedDataRows: modelInstance.dataModel.repository.getScopedRows(),
-			topSliceColors: chartStyle.elementColors,
+			topLevelColors: chartStyle.elementColors,
 			formatter: designerConfig.dataFormat.formatters
 		});
 
 		return {
 			legend: {
 				position: modelInstance.canvasModel.legendCanvas.getPosition(),
-				items: topSliceValues.map((value, index) => ({
+				items: topLevelValues.map<LegendItemModel>((value, index) => ({
 					marker: POLAR_LEGEND_MARKER,
 					markerColor: chartStyle.elementColors[index % chartStyle.elementColors.length],
 					textContent: value
@@ -59,9 +59,9 @@ export class SunburstModel {
 						valueFormat: options.data.valueField.format
 					}
 				: undefined,
-			slices: sliceModelBuilder.build({
+			levels: levelModelBuilder.build({
 				data: options.data,
-				slices: options.slices
+				levels: options.levels
 			})
 		};
 	}

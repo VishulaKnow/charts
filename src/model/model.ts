@@ -128,7 +128,7 @@ export interface PolarOptionsModel extends GraphicNotationOptionsModel {
 export interface SunburstOptionsModel {
 	type: "sunburst";
 	aggregator?: DonutAggregatorModel;
-	slices: SunburstSlice[];
+	levels: SunburstLevel[];
 	//TODO: remove duplicates ======
 	title: OptionsModelTitle;
 	selectable: boolean;
@@ -459,12 +459,12 @@ export interface DonutThicknessOptions {
 }
 
 //====================================================== SunburstOptionsModel
-export interface SunburstSlice {
-	segments: SunburstSliceSegment[];
+export interface SunburstLevel {
+	segments: SunburstLevelSegment[];
 	sizes: DonutChartSizesModel;
 }
 
-export interface SunburstSliceSegment {
+export interface SunburstLevelSegment {
 	value: number;
 	key: string | number;
 	color: string;

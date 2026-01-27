@@ -1,6 +1,6 @@
 import { BlockMargin, MdtChartsDataRow, Size } from "../../../../config/config";
-import { SunburstSlice } from "../../../model";
-import { SliceModelBuilder } from "./sliceModelBuilder";
+import { SunburstLevel } from "../../../model";
+import { LevelModelBuilder } from "./levelModelBuilder";
 
 const blockSize: Size = {
 	height: 100,
@@ -41,18 +41,18 @@ const scopedDataRows: MdtChartsDataRow[] = [
 	}
 ];
 
-describe("SliceModelBuilder", () => {
+describe("LevelModelBuilder", () => {
 	describe("build", () => {
-		test("should build a slice model for two slices without custom thickness", () => {
-			const sliceModelBuilder = new SliceModelBuilder({
+		test("should build a level model for two levels without custom thickness", () => {
+			const levelModelBuilder = new LevelModelBuilder({
 				blockSize,
 				margin,
 				scopedDataRows,
-				topSliceColors: ["red", "green", "blue"],
+				topLevelColors: ["red", "green", "blue"],
 				formatter: (value) => value.toFixed(2)
 			});
 
-			const sliceModel = sliceModelBuilder.build({
+			const levelModel = levelModelBuilder.build({
 				data: {
 					dataSource: "data",
 					valueField: {
@@ -61,7 +61,7 @@ describe("SliceModelBuilder", () => {
 						title: "Стоимость"
 					}
 				},
-				slices: [
+				levels: [
 					{
 						data: {
 							keyField: {
@@ -79,7 +79,7 @@ describe("SliceModelBuilder", () => {
 				]
 			});
 
-			expect(sliceModel).toEqual(<SunburstSlice[]>[
+			expect(levelModel).toEqual(<SunburstLevel[]>[
 				{
 					segments: [
 						{
@@ -207,16 +207,16 @@ describe("SliceModelBuilder", () => {
 			]);
 		});
 
-		test("should build a slice model for two slices with custom thickness", () => {
-			const sliceModelBuilder = new SliceModelBuilder({
+		test("should build a level model for two levels with custom thickness", () => {
+			const levelModelBuilder = new LevelModelBuilder({
 				blockSize,
 				margin,
 				scopedDataRows,
-				topSliceColors: ["red", "green", "blue"],
+				topLevelColors: ["red", "green", "blue"],
 				formatter: (value) => value.toFixed(2)
 			});
 
-			const sliceModel = sliceModelBuilder.build({
+			const levelModel = levelModelBuilder.build({
 				data: {
 					dataSource: "data",
 					valueField: {
@@ -225,7 +225,7 @@ describe("SliceModelBuilder", () => {
 						title: "Стоимость"
 					}
 				},
-				slices: [
+				levels: [
 					{
 						data: {
 							keyField: {
@@ -257,13 +257,13 @@ describe("SliceModelBuilder", () => {
 				]
 			});
 
-			expect(sliceModel[0].sizes).toEqual({
+			expect(levelModel[0].sizes).toEqual({
 				innerRadius: 19.6,
 				outerRadius: 35.6,
 				thickness: 16,
 				translate: { x: 50, y: 50 }
 			});
-			expect(sliceModel[1].sizes).toEqual({
+			expect(levelModel[1].sizes).toEqual({
 				innerRadius: 36,
 				outerRadius: 40,
 				thickness: 4,
@@ -271,8 +271,8 @@ describe("SliceModelBuilder", () => {
 			});
 		});
 
-		test("should calculate radiuses for 2+ slices correctly", () => {
-			const sliceModelBuilder = new SliceModelBuilder({
+		test("should calculate radiuses for 2+ levels correctly", () => {
+			const levelModelBuilder = new LevelModelBuilder({
 				blockSize: {
 					height: 200,
 					width: 200
@@ -284,11 +284,11 @@ describe("SliceModelBuilder", () => {
 					bottom: 25
 				},
 				scopedDataRows,
-				topSliceColors: ["red", "green", "blue"],
+				topLevelColors: ["red", "green", "blue"],
 				formatter: (value) => value.toFixed(2)
 			});
 
-			const sliceModel = sliceModelBuilder.build({
+			const levelModel = levelModelBuilder.build({
 				data: {
 					dataSource: "data",
 					valueField: {
@@ -297,7 +297,7 @@ describe("SliceModelBuilder", () => {
 						title: "Стоимость"
 					}
 				},
-				slices: [
+				levels: [
 					{
 						data: {
 							keyField: {
@@ -322,19 +322,19 @@ describe("SliceModelBuilder", () => {
 				]
 			});
 
-			expect(sliceModel[0].sizes).toEqual({
+			expect(levelModel[0].sizes).toEqual({
 				innerRadius: 37.5,
 				outerRadius: 49.5,
 				thickness: 12,
 				translate: { x: 100, y: 100 }
 			});
-			expect(sliceModel[1].sizes).toEqual({
+			expect(levelModel[1].sizes).toEqual({
 				innerRadius: 50.25,
 				outerRadius: 62.25,
 				thickness: 12,
 				translate: { x: 100, y: 100 }
 			});
-			expect(sliceModel[2].sizes).toEqual({
+			expect(levelModel[2].sizes).toEqual({
 				innerRadius: 63,
 				outerRadius: 75,
 				thickness: 12,

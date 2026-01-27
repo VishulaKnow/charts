@@ -101,11 +101,10 @@ export interface MdtChartsSunburstOptions {
 	aggregator?: MdtChartsDonutAggregator;
 	data: {
 		dataSource: string;
-		//TODO: multiple value fields for each slice?
+		//TODO: multiple value fields for each level?
 		valueField: MdtChartsValueField;
 	};
-	//TODO: rename?
-	slices: {
+	levels: {
 		data: {
 			keyField: MdtChartsBaseField;
 		};

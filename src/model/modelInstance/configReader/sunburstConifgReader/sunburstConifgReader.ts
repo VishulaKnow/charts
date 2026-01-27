@@ -5,12 +5,15 @@ import { BaseConfigReader } from "../baseConfigReader";
 export class SunburstConfigReader implements BaseConfigReader {
 	private readonly options: MdtChartsSunburstOptions;
 
-	constructor(config: MdtChartsConfig, private readonly designerConfig: DesignerConfig) {
+	constructor(
+		config: MdtChartsConfig,
+		private readonly designerConfig: DesignerConfig
+	) {
 		this.options = config.options as MdtChartsSunburstOptions;
 	}
 
 	getFieldInLegend() {
-		return this.options.slices[0].data.keyField.name;
+		return this.options.levels[0].data.keyField.name;
 	}
 
 	getValueFields(): MdtChartsField[] {

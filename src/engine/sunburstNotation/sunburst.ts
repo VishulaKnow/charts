@@ -1,34 +1,33 @@
 import { arc, Arc, Pie, pie, PieArcDatum } from "d3-shape";
-import { SunburstOptionsModel, SunburstSlice, SunburstSliceSegment } from "../../model/model";
+import { SunburstLevel, SunburstLevelSegment } from "../../model/model";
 import { Block } from "../block/block";
-import { DonutHelper } from "../polarNotation/donut/donutHelper";
 import { Selection } from "d3-selection";
 import { merge } from "d3-array";
 import { interpolate } from "d3-interpolate";
 
 export class Sunburst {
-	public static readonly donutBlockClassPrefix = "slice-donut-block";
+	public static readonly donutBlockClassPrefix = "level-donut-block";
 	public static readonly arcItemClass = "arc";
 	public static readonly arcPathClass = "arc-path";
 
-	static getAllArcGroups(block: Block): Selection<SVGGElement, { data: SunburstSliceSegment }, SVGGElement, unknown> {
+	static getAllArcGroups(block: Block): Selection<SVGGElement, { data: SunburstLevelSegment }, SVGGElement, unknown> {
 		return block.getSvg().selectAll(`.${Sunburst.arcItemClass}`) as Selection<
 			SVGGElement,
-			{ data: SunburstSliceSegment },
+			{ data: SunburstLevelSegment },
 			SVGGElement,
 			unknown
 		>;
 	}
 
-	static getSliceArcGroups(
+	static getLevelArcGroups(
 		block: Block,
-		sliceIndex: number
-	): Selection<SVGGElement, { data: SunburstSliceSegment }, SVGGElement, unknown> {
+		levelIndex: number
+	): Selection<SVGGElement, { data: SunburstLevelSegment }, SVGGElement, unknown> {
 		return block
 			.getSvg()
-			.selectAll(`.${Sunburst.donutBlockClassPrefix}-${sliceIndex} .${Sunburst.arcItemClass}`) as Selection<
+			.selectAll(`.${Sunburst.donutBlockClassPrefix}-${levelIndex} .${Sunburst.arcItemClass}`) as Selection<
 			SVGGElement,
-			{ data: SunburstSliceSegment },
+			{ data: SunburstLevelSegment },
 			SVGGElement,
 			unknown
 		>;
@@ -40,61 +39,61 @@ export class Sunburst {
 		this.block = block;
 	}
 
-	render(slices: SunburstSlice[]) {
-		slices.forEach((slice, sliceIndex) => {
-			const arcGenerator = arc<PieArcDatum<SunburstSliceSegment>>()
-				.innerRadius(slice.sizes.innerRadius)
-				.outerRadius(slice.sizes.outerRadius);
-			const pieGenerator = pie<SunburstSliceSegment>()
+	render(levels: SunburstLevel[]) {
+		levels.forEach((level, levelIndex) => {
+			const arcGenerator = arc<PieArcDatum<SunburstLevelSegment>>()
+				.innerRadius(level.sizes.innerRadius)
+				.outerRadius(level.sizes.outerRadius);
+			const pieGenerator = pie<SunburstLevelSegment>()
 				.padAngle(this.pagAngle)
 				.sort(null)
 				.value((d) => d.value);
 
-			const sliceDonutBlock = this.block
+			const levelDonutBlock = this.block
 				.getSvg()
 				.append("g")
-				.attr("class", `${Sunburst.donutBlockClassPrefix}-${sliceIndex}`)
-				.attr("x", slice.sizes.translate.x)
-				.attr("y", slice.sizes.translate.y)
-				.attr("transform", `translate(${slice.sizes.translate.x}, ${slice.sizes.translate.y})`);
+				.attr("class", `${Sunburst.donutBlockClassPrefix}-${levelIndex}`)
+				.attr("x", level.sizes.translate.x)
+				.attr("y", level.sizes.translate.y)
+				.attr("transform", `translate(${level.sizes.translate.x}, ${level.sizes.translate.y})`);
 
-			this.renderNewArcItems(sliceDonutBlock, pieGenerator, arcGenerator, slice.segments);
+			this.renderNewArcItems(levelDonutBlock, pieGenerator, arcGenerator, level.segments);
 		});
 	}
 
-	update(newSlices: SunburstSlice[]): Promise<void[]> {
+	update(newLevels: SunburstLevel[]): Promise<void[]> {
 		const promises: Promise<void>[] = [];
 
-		newSlices.forEach((slice, sliceIndex) => {
-			const arcGenerator = arc<PieArcDatum<SunburstSliceSegment>>()
-				.innerRadius(slice.sizes.innerRadius)
-				.outerRadius(slice.sizes.outerRadius);
+		newLevels.forEach((level, levelIndex) => {
+			const arcGenerator = arc<PieArcDatum<SunburstLevelSegment>>()
+				.innerRadius(level.sizes.innerRadius)
+				.outerRadius(level.sizes.outerRadius);
 
-			const pieGenerator = pie<SunburstSliceSegment>()
+			const pieGenerator = pie<SunburstLevelSegment>()
 				.padAngle(this.pagAngle)
 				.sort(null)
 				.value((d) => d.value);
 
-			const oldSegments = Sunburst.getSliceArcGroups(this.block, sliceIndex)
+			const oldSegments = Sunburst.getLevelArcGroups(this.block, levelIndex)
 				.data()
 				.map((d) => d.data);
 
-			const dataNewZeroRows = this.mergeSegmentsWithZeros(slice.segments, oldSegments);
-			const dataExtraZeroRows = this.mergeSegmentsWithZeros(oldSegments, slice.segments);
+			const dataNewZeroRows = this.mergeSegmentsWithZeros(level.segments, oldSegments);
+			const dataExtraZeroRows = this.mergeSegmentsWithZeros(oldSegments, level.segments);
 
-			const sliceDonutBlock = this.block
+			const levelDonutBlock = this.block
 				.getSvg()
-				.select<SVGGElement>(`.${Sunburst.donutBlockClassPrefix}-${sliceIndex}`)
-				.attr("x", slice.sizes.translate.x)
-				.attr("y", slice.sizes.translate.y)
-				.attr("transform", `translate(${slice.sizes.translate.x}, ${slice.sizes.translate.y})`);
+				.select<SVGGElement>(`.${Sunburst.donutBlockClassPrefix}-${levelIndex}`)
+				.attr("x", level.sizes.translate.x)
+				.attr("y", level.sizes.translate.y)
+				.attr("transform", `translate(${level.sizes.translate.x}, ${level.sizes.translate.y})`);
 
-			this.renderNewArcItems(sliceDonutBlock, pieGenerator, arcGenerator, dataNewZeroRows);
+			this.renderNewArcItems(levelDonutBlock, pieGenerator, arcGenerator, dataNewZeroRows);
 
-			const path = Sunburst.getSliceArcGroups(this.block, sliceIndex)
+			const path = Sunburst.getLevelArcGroups(this.block, levelIndex)
 				.data(pieGenerator(dataExtraZeroRows))
 				.select<SVGPathElement>("path");
-			const items = Sunburst.getSliceArcGroups(this.block, sliceIndex).data(pieGenerator(slice.segments));
+			const items = Sunburst.getLevelArcGroups(this.block, levelIndex).data(pieGenerator(level.segments));
 
 			items.style("fill", (segment) => segment.data.color);
 
@@ -122,12 +121,12 @@ export class Sunburst {
 	}
 
 	private renderNewArcItems(
-		sliceDonutBlock: Selection<SVGGElement, unknown, HTMLElement, any>,
-		pieGenerator: Pie<any, SunburstSliceSegment>,
-		arcGenerator: Arc<any, PieArcDatum<SunburstSliceSegment>>,
-		segments: SunburstSliceSegment[]
-	): Selection<SVGGElement, PieArcDatum<SunburstSliceSegment>, SVGGElement, unknown> {
-		const items = sliceDonutBlock
+		levelDonutBlock: Selection<SVGGElement, unknown, HTMLElement, any>,
+		pieGenerator: Pie<any, SunburstLevelSegment>,
+		arcGenerator: Arc<any, PieArcDatum<SunburstLevelSegment>>,
+		segments: SunburstLevelSegment[]
+	): Selection<SVGGElement, PieArcDatum<SunburstLevelSegment>, SVGGElement, unknown> {
+		const items = levelDonutBlock
 			.selectAll(`.${Sunburst.arcItemClass}`)
 			.data(pieGenerator(segments))
 			.enter()
@@ -147,23 +146,23 @@ export class Sunburst {
 	}
 
 	private mergeSegmentsWithZeros(
-		firstSegments: SunburstSliceSegment[],
-		secondSegments: SunburstSliceSegment[]
-	): SunburstSliceSegment[] {
+		firstSegments: SunburstLevelSegment[],
+		secondSegments: SunburstLevelSegment[]
+	): SunburstLevelSegment[] {
 		const secondSet = new Set();
 		secondSegments.forEach((s) => secondSet.add(s.key));
 
 		const onlyNew = firstSegments
 			.filter((s) => !secondSet.has(s.key))
 			.map((s, index, array) => {
-				const segmentToChangeToZero: SunburstSliceSegment = {
+				const segmentToChangeToZero: SunburstLevelSegment = {
 					...s,
 					value: 0
 				};
 				return segmentToChangeToZero;
 			});
 
-		const merged = merge<SunburstSliceSegment>([secondSegments, onlyNew]);
+		const merged = merge<SunburstLevelSegment>([secondSegments, onlyNew]);
 		return merged;
 	}
 }

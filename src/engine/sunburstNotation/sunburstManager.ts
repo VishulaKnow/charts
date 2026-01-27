@@ -20,16 +20,16 @@ export class SunburstManager implements ChartContentManager {
 
 		Aggregator.render(
 			engine.block,
-			model.options.slices[0].sizes.innerRadius,
-			model.options.slices[0].sizes.translate,
-			model.options.slices[0].sizes.thickness,
+			model.options.levels[0].sizes.innerRadius,
+			model.options.levels[0].sizes.translate,
+			model.options.levels[0].sizes.thickness,
 			model.options.aggregator
 		);
 
 		Legend.get().render(engine.block, model.options, model);
 
 		this.sunburst = new Sunburst(engine.block);
-		this.sunburst.render(model.options.slices);
+		this.sunburst.render(model.options.levels);
 
 		Tooltip.render(engine.block, model);
 	}
@@ -44,15 +44,15 @@ export class SunburstManager implements ChartContentManager {
 
 		Tooltip.hide(block);
 
-		this.sunburst.update(model.options.slices).then(() => {
+		this.sunburst.update(model.options.levels).then(() => {
 			Tooltip.render(block, model);
 		});
 
 		Aggregator.update(
 			block,
 			model.options.aggregator,
-			model.options.slices[0].sizes.innerRadius,
-			model.options.slices[0].sizes.translate
+			model.options.levels[0].sizes.innerRadius,
+			model.options.levels[0].sizes.translate
 		);
 
 		Legend.get().update(block, model);
