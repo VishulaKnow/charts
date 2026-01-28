@@ -4,10 +4,12 @@ import { Block } from "../block/block";
 import { Selection } from "d3-selection";
 import { merge } from "d3-array";
 import { interpolate } from "d3-interpolate";
+import { SunburstHighlightState } from "./sunburstHighlightState/sunburstHighlightState";
 
 export class Sunburst {
 	public static readonly donutBlockClassPrefix = "level-donut-block";
 	public static readonly arcItemClass = "arc";
+	private static readonly arcItemNonHighlightedClass = "mdt-charts-arc-non-highlighted";
 	public static readonly arcPathClass = "arc-path";
 
 	static getAllArcGroups(block: Block) {
@@ -113,6 +115,33 @@ export class Sunburst {
 			const { pieGenerator } = this.getGenerators(level);
 			const levelSegments = Sunburst.getLevelArcGroups(this.block, levelIndex);
 			levelSegments.data(pieGenerator(level.segments)).style("fill", (segmentDatum) => segmentDatum.data.color);
+		});
+	}
+
+	setHighlightedSegmentsHandle(sunburstHighlightState: SunburstHighlightState) {
+		sunburstHighlightState.on("highlightedSegmentsChanged", ({ highlightedSegments }) => {
+			const allArcGroups = Sunburst.getAllArcGroups(this.block);
+
+			if (highlightedSegments.length === 0) {
+				allArcGroups
+					.filter(".mdt-charts-arc-non-highlighted")
+					.classed(Sunburst.arcItemNonHighlightedClass, false);
+			} else {
+				allArcGroups
+					.filter(":not(.mdt-charts-arc-non-highlighted)")
+					.filter(
+						(d) =>
+							!highlightedSegments.some((s) => s.key === d.data.key && s.levelIndex === d.data.levelIndex)
+					)
+					.classed(Sunburst.arcItemNonHighlightedClass, true);
+
+				allArcGroups
+					.filter(".mdt-charts-arc-non-highlighted")
+					.filter((d) =>
+						highlightedSegments.some((s) => s.key === d.data.key && s.levelIndex === d.data.levelIndex)
+					)
+					.classed(Sunburst.arcItemNonHighlightedClass, false);
+			}
 		});
 	}
 

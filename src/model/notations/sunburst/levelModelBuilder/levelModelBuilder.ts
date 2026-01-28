@@ -50,6 +50,7 @@ export class LevelModelBuilder {
 						return {
 							value,
 							key,
+							levelIndex,
 							color,
 							tooltip: {
 								content: {

@@ -9,11 +9,13 @@ import { Title } from "../features/title/title";
 import { Tooltip } from "../features/tolltip/tooltip";
 import { FilterEventManager, ChartClearSelectionOptions } from "../filterManager/filterEventManager";
 import { Sunburst } from "./sunburst";
+import { SunburstHighlightState } from "./sunburstHighlightState/sunburstHighlightState";
 import { SunburstSegmentEventDispatcher } from "./sunburstSegmentEventDispatcher";
 
 export class SunburstManager implements ChartContentManager {
 	private sunburst: Sunburst | undefined = undefined;
 	private readonly sunburstSegmentEventDispatcher = new SunburstSegmentEventDispatcher();
+	private readonly sunburstHighlightState = new SunburstHighlightState();
 
 	render(engine: Engine, model: Model<SunburstOptionsModel>) {
 		engine.block.svg.render(model.blockCanvas.size);
@@ -35,6 +37,16 @@ export class SunburstManager implements ChartContentManager {
 		this.sunburstSegmentEventDispatcher.bind(allSegmentsSelection, legendItemsSelection);
 
 		Tooltip.renderTooltipForSunburst(engine.block, this.sunburstSegmentEventDispatcher);
+
+		this.sunburstHighlightState.setLevels(model.options.levels);
+		this.sunburstSegmentEventDispatcher.on("segmentMouseover", ({ segment }) => {
+			this.sunburstHighlightState.setHoverHighlightedSegment(segment);
+		});
+		this.sunburstSegmentEventDispatcher.on("segmentMouseleave", ({ segment }) => {
+			this.sunburstHighlightState.clearHoverHighlightedSegment();
+		});
+
+		this.sunburst.setHighlightedSegmentsHandle(this.sunburstHighlightState);
 	}
 
 	updateData(block: Block, model: Model<SunburstOptionsModel>, newData: MdtChartsDataSource): void {

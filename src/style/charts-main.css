@@ -295,3 +295,7 @@
 .mdt-charts-value-label-hidden {
     display: none !important;
 }
+
+.mdt-charts-arc-non-highlighted {
+    opacity: 0.6;
+}

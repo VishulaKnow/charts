@@ -99,7 +99,8 @@ describe("LevelModelBuilder", () => {
 								}
 							},
 							key: 2019,
-							value: 220000
+							value: 220000,
+							levelIndex: 0
 						},
 						{
 							color: "green",
@@ -118,7 +119,8 @@ describe("LevelModelBuilder", () => {
 								}
 							},
 							key: 2026,
-							value: 265000
+							value: 265000,
+							levelIndex: 0
 						}
 					],
 					sizes: { innerRadius: 20.4, outerRadius: 30, thickness: 9.6, translate: { x: 50, y: 50 } }
@@ -142,7 +144,8 @@ describe("LevelModelBuilder", () => {
 								}
 							},
 							key: "BMW",
-							value: 100000
+							value: 100000,
+							levelIndex: 1
 						},
 						{
 							color: "red",
@@ -161,7 +164,8 @@ describe("LevelModelBuilder", () => {
 								}
 							},
 							key: "AUDI",
-							value: 120000
+							value: 120000,
+							levelIndex: 1
 						},
 						{
 							color: "green",
@@ -180,7 +184,8 @@ describe("LevelModelBuilder", () => {
 								}
 							},
 							key: "MERCEDES",
-							value: 150000
+							value: 150000,
+							levelIndex: 1
 						},
 						{
 							color: "green",
@@ -199,7 +204,8 @@ describe("LevelModelBuilder", () => {
 								}
 							},
 							key: "VOLKSWAGEN",
-							value: 115000
+							value: 115000,
+							levelIndex: 1
 						}
 					],
 					sizes: { innerRadius: 30.4, outerRadius: 40, thickness: 9.6, translate: { x: 50, y: 50 } }
