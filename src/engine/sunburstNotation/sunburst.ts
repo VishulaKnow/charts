@@ -81,9 +81,12 @@ export class Sunburst {
 			this.renderNewArcItems(levelDonutBlock, pieGenerator, arcGenerator, dataNewZeroRows);
 
 			const path = Sunburst.getLevelArcGroups(this.block, levelIndex)
-				.data(pieGenerator(dataExtraZeroRows))
+				.data(pieGenerator(dataExtraZeroRows), (d) => d.data.key)
 				.select<SVGPathElement>("path");
-			const items = Sunburst.getLevelArcGroups(this.block, levelIndex).data(pieGenerator(level.segments));
+			const items = Sunburst.getLevelArcGroups(this.block, levelIndex).data(
+				pieGenerator(level.segments),
+				(d) => d.data.key
+			);
 
 			items.style("fill", (segment) => segment.data.color);
 
@@ -114,7 +117,9 @@ export class Sunburst {
 		levelsWithNewColors.forEach((level, levelIndex) => {
 			const { pieGenerator } = this.getGenerators(level);
 			const levelSegments = Sunburst.getLevelArcGroups(this.block, levelIndex);
-			levelSegments.data(pieGenerator(level.segments)).style("fill", (segmentDatum) => segmentDatum.data.color);
+			levelSegments
+				.data(pieGenerator(level.segments), (d) => d.data.key)
+				.style("fill", (segmentDatum) => segmentDatum.data.color);
 		});
 	}
 
@@ -152,8 +157,8 @@ export class Sunburst {
 		segments: SunburstLevelSegment[]
 	): Selection<SVGGElement, PieArcDatum<SunburstLevelSegment>, SVGGElement, unknown> {
 		const items = levelDonutBlock
-			.selectAll(`.${Sunburst.arcItemClass}`)
-			.data(pieGenerator(segments))
+			.selectAll<SVGGElement, PieArcDatum<SunburstLevelSegment>>(`.${Sunburst.arcItemClass}`)
+			.data(pieGenerator(segments), (d) => d.data.key)
 			.enter()
 			.append("g")
 			.attr("class", Sunburst.arcItemClass)
