@@ -39,10 +39,21 @@ export class SunburstManager implements ChartContentManager {
 		Tooltip.renderTooltipForSunburst(engine.block, this.sunburstSegmentEventDispatcher);
 
 		this.sunburstHighlightState.setLevels(model.options.levels);
+
 		this.sunburstSegmentEventDispatcher.on("segmentMouseover", ({ segment }) => {
 			this.sunburstHighlightState.setHoverHighlightedSegment(segment);
 		});
 		this.sunburstSegmentEventDispatcher.on("segmentMouseleave", ({ segment }) => {
+			this.sunburstHighlightState.clearHoverHighlightedSegment();
+		});
+
+		this.sunburstSegmentEventDispatcher.on("legendItemMouseover", ({ legendItem }) => {
+			const segment = model.options.levels[0].segments.find((segment) => segment.key === legendItem.textContent);
+			if (segment) {
+				this.sunburstHighlightState.setHoverSegmentLegendItem(segment);
+			}
+		});
+		this.sunburstSegmentEventDispatcher.on("legendItemMouseleave", ({ legendItem }) => {
 			this.sunburstHighlightState.clearHoverHighlightedSegment();
 		});
 

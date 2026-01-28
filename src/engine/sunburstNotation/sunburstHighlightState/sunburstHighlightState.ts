@@ -6,12 +6,14 @@ export class SunburstHighlightState {
 		highlightedSegmentsChanged: {
 			highlightedSegments: SunburstLevelSegment[];
 		};
+		selectedSegmentsChanged: {
+			selectedSegments: SunburstLevelSegment[];
+		};
 	}>();
 	readonly on = this.eventEmitter.getSubscribeController().subscribe;
 
 	private levels: SunburstLevel[] | undefined = undefined;
 	private selectedSegments: SunburstLevelSegment[] = [];
-	private hoverHighlightedSegment: SunburstLevelSegment | undefined = undefined;
 
 	setLevels(levels: SunburstLevel[]): void {
 		this.levels = levels;
@@ -19,16 +21,32 @@ export class SunburstHighlightState {
 	}
 
 	setHoverHighlightedSegment(segment: SunburstLevelSegment): void {
-		if (!this.levels) return;
-
-		this.hoverHighlightedSegment = segment;
 		this.eventEmitter.emit("highlightedSegmentsChanged", {
 			highlightedSegments: [...this.selectedSegments, segment]
 		});
 	}
 
+	setHoverSegmentLegendItem(segment: SunburstLevelSegment): void {
+		const highlightSegments: SunburstLevelSegment[] = [segment];
+
+		let currentParentKeys = [segment.key];
+		for (let i = segment.levelIndex + 1; i < this.levels.length; i++) {
+			const newParentKeys: (string | number)[] = [];
+			this.levels[i].segments.forEach((segment) => {
+				if (currentParentKeys.includes(segment.parentLevelKey)) {
+					highlightSegments.push(segment);
+					newParentKeys.push(segment.key);
+				}
+			});
+			currentParentKeys = newParentKeys;
+		}
+
+		this.eventEmitter.emit("highlightedSegmentsChanged", {
+			highlightedSegments: [...this.selectedSegments, ...highlightSegments]
+		});
+	}
+
 	clearHoverHighlightedSegment(): void {
-		this.hoverHighlightedSegment = undefined;
 		this.eventEmitter.emit("highlightedSegmentsChanged", {
 			highlightedSegments: this.selectedSegments
 		});

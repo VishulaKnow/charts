@@ -471,6 +471,7 @@ export interface SunburstLevelSegment {
 	value: number;
 	key: string | number;
 	levelIndex: number;
+	parentLevelKey: string | number | undefined;
 	color: string;
 	tooltip: {
 		content: TooltipContent;
