@@ -19,15 +19,12 @@ export class Sunburst {
 		>;
 	}
 
-	static getLevelArcGroups(
-		block: Block,
-		levelIndex: number
-	): Selection<SVGGElement, { data: SunburstLevelSegment }, SVGGElement, unknown> {
+	static getLevelArcGroups(block: Block, levelIndex: number) {
 		return block
 			.getSvg()
 			.selectAll(`.${Sunburst.donutBlockClassPrefix}-${levelIndex} .${Sunburst.arcItemClass}`) as Selection<
 			SVGGElement,
-			{ data: SunburstLevelSegment },
+			PieArcDatum<SunburstLevelSegment>,
 			SVGGElement,
 			unknown
 		>;
@@ -41,13 +38,7 @@ export class Sunburst {
 
 	render(levels: SunburstLevel[]) {
 		levels.forEach((level, levelIndex) => {
-			const arcGenerator = arc<PieArcDatum<SunburstLevelSegment>>()
-				.innerRadius(level.sizes.innerRadius)
-				.outerRadius(level.sizes.outerRadius);
-			const pieGenerator = pie<SunburstLevelSegment>()
-				.padAngle(this.pagAngle)
-				.sort(null)
-				.value((d) => d.value);
+			const { arcGenerator, pieGenerator } = this.getGenerators(level);
 
 			const levelDonutBlock = this.block
 				.getSvg()
@@ -69,14 +60,7 @@ export class Sunburst {
 		const promises: Promise<void>[] = [];
 
 		newLevels.forEach((level, levelIndex) => {
-			const arcGenerator = arc<PieArcDatum<SunburstLevelSegment>>()
-				.innerRadius(level.sizes.innerRadius)
-				.outerRadius(level.sizes.outerRadius);
-
-			const pieGenerator = pie<SunburstLevelSegment>()
-				.padAngle(this.pagAngle)
-				.sort(null)
-				.value((d) => d.value);
+			const { arcGenerator, pieGenerator } = this.getGenerators(level);
 
 			const oldSegments = Sunburst.getLevelArcGroups(this.block, levelIndex)
 				.data()
@@ -124,6 +108,14 @@ export class Sunburst {
 		return Promise.all(promises).then(() => Sunburst.getAllArcGroups(this.block));
 	}
 
+	updateColors(levelsWithNewColors: SunburstLevel[]) {
+		levelsWithNewColors.forEach((level, levelIndex) => {
+			const { pieGenerator } = this.getGenerators(level);
+			const levelSegments = Sunburst.getLevelArcGroups(this.block, levelIndex);
+			levelSegments.data(pieGenerator(level.segments)).style("fill", (segmentDatum) => segmentDatum.data.color);
+		});
+	}
+
 	private renderNewArcItems(
 		levelDonutBlock: Selection<SVGGElement, unknown, HTMLElement, any>,
 		pieGenerator: Pie<any, SunburstLevelSegment>,
@@ -147,6 +139,22 @@ export class Sunburst {
 			}); // TODO: _currentData используется для получения текущих данных внутри функции обновления.
 
 		return items;
+	}
+
+	private getGenerators(level: SunburstLevel): {
+		arcGenerator: Arc<any, PieArcDatum<SunburstLevelSegment>>;
+		pieGenerator: Pie<any, SunburstLevelSegment>;
+	} {
+		const arcGenerator = arc<PieArcDatum<SunburstLevelSegment>>()
+			.innerRadius(level.sizes.innerRadius)
+			.outerRadius(level.sizes.outerRadius);
+
+		const pieGenerator = pie<SunburstLevelSegment>()
+			.padAngle(this.pagAngle)
+			.sort(null)
+			.value((d) => d.value);
+
+		return { arcGenerator, pieGenerator };
 	}
 
 	private mergeSegmentsWithZeros(

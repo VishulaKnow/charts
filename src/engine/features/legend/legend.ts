@@ -77,16 +77,21 @@ export class Legend {
 		}
 	}
 
-	public updateColors(block: Block, options: TwoDimensionalOptionsModel | PolarOptionsModel): void {
+	public updateColors(
+		block: Block,
+		options: TwoDimensionalOptionsModel | PolarOptionsModel | SunburstOptionsModel
+	): void {
 		if (options.type === "polar" && ColorReader.isNeedReadFromData(options.charts[0])) return;
 
 		const legendObject = this.getObject(block);
-		const itemWrappers = legendObject.selectAll<HTMLDivElement, LegendItemModel>(`.${Legend.itemClass}`);
+		const itemWrappers = legendObject
+			.selectAll<HTMLDivElement, LegendItemModel>(`.${Legend.itemClass}`)
+			.data(options.legend.items);
 
 		const markerCreator = this.markerCreator;
 		itemWrappers.each(function (d, i) {
 			const selection = select<HTMLDivElement, LegendItemModel>(this);
-			markerCreator.updateColorForItem(selection, { ...d.marker, color: options.legend.items[i].markerColor });
+			markerCreator.updateColorForItem(selection, { ...d.marker, color: d.markerColor });
 		});
 	}
 

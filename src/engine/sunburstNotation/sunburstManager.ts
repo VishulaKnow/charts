@@ -60,8 +60,11 @@ export class SunburstManager implements ChartContentManager {
 		Legend.get().update(block, model);
 	}
 
-	updateColors(block: Block, model: Model): void {
-		throw new Error("Method not implemented.");
+	updateColors(block: Block, model: Model<SunburstOptionsModel>): void {
+		if (!this.sunburst) throw new Error("Sunburst not initialized");
+
+		this.sunburst.updateColors(model.options.levels);
+		Legend.get().updateColors(block, model.options);
 	}
 
 	clearSelection(filterEventManager: FilterEventManager, model: Model, options?: ChartClearSelectionOptions): void {
