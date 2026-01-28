@@ -10,10 +10,10 @@ export class Sunburst {
 	public static readonly arcItemClass = "arc";
 	public static readonly arcPathClass = "arc-path";
 
-	static getAllArcGroups(block: Block): Selection<SVGGElement, { data: SunburstLevelSegment }, SVGGElement, unknown> {
+	static getAllArcGroups(block: Block) {
 		return block.getSvg().selectAll(`.${Sunburst.arcItemClass}`) as Selection<
 			SVGGElement,
-			{ data: SunburstLevelSegment },
+			PieArcDatum<SunburstLevelSegment>,
 			SVGGElement,
 			unknown
 		>;
@@ -59,9 +59,13 @@ export class Sunburst {
 
 			this.renderNewArcItems(levelDonutBlock, pieGenerator, arcGenerator, level.segments);
 		});
+
+		return Sunburst.getAllArcGroups(this.block);
 	}
 
-	update(newLevels: SunburstLevel[]): Promise<void[]> {
+	update(
+		newLevels: SunburstLevel[]
+	): Promise<Selection<SVGGElement, PieArcDatum<SunburstLevelSegment>, SVGGElement, unknown>> {
 		const promises: Promise<void>[] = [];
 
 		newLevels.forEach((level, levelIndex) => {
@@ -117,7 +121,7 @@ export class Sunburst {
 			);
 		});
 
-		return Promise.all(promises);
+		return Promise.all(promises).then(() => Sunburst.getAllArcGroups(this.block));
 	}
 
 	private renderNewArcItems(

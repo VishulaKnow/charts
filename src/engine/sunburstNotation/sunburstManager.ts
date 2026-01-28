@@ -9,9 +9,11 @@ import { Title } from "../features/title/title";
 import { Tooltip } from "../features/tolltip/tooltip";
 import { FilterEventManager, ChartClearSelectionOptions } from "../filterManager/filterEventManager";
 import { Sunburst } from "./sunburst";
+import { SunburstSegmentEventDispatcher } from "./sunburstSegmentEventDispatcher";
 
 export class SunburstManager implements ChartContentManager {
 	private sunburst: Sunburst | undefined = undefined;
+	private readonly sunburstSegmentEventDispatcher = new SunburstSegmentEventDispatcher();
 
 	render(engine: Engine, model: Model<SunburstOptionsModel>) {
 		engine.block.svg.render(model.blockCanvas.size);
@@ -29,23 +31,23 @@ export class SunburstManager implements ChartContentManager {
 		Legend.get().render(engine.block, model.options, model);
 
 		this.sunburst = new Sunburst(engine.block);
-		this.sunburst.render(model.options.levels);
+		const allSegmentsSelection = this.sunburst.render(model.options.levels);
+		this.sunburstSegmentEventDispatcher.bind(allSegmentsSelection);
 
-		Tooltip.renderTooltipForSunburst(engine.block);
+		Tooltip.renderTooltipForSunburst(engine.block, this.sunburstSegmentEventDispatcher);
 	}
 
 	updateData(block: Block, model: Model<SunburstOptionsModel>, newData: MdtChartsDataSource): void {
 		if (!this.sunburst) throw new Error("Sunburst not initialized");
 
 		block.transitionManager.interruptTransitions();
-		block.removeMouseEvents();
+		this.sunburstSegmentEventDispatcher.clearEventListeners();
+		Tooltip.hide(block);
 
 		Title.updateData(block, model.options.title);
 
-		Tooltip.hide(block);
-
-		this.sunburst.update(model.options.levels).then(() => {
-			Tooltip.renderTooltipForSunburst(block);
+		this.sunburst.update(model.options.levels).then((allSegmentsSelection) => {
+			this.sunburstSegmentEventDispatcher.bind(allSegmentsSelection);
 		});
 
 		Aggregator.update(

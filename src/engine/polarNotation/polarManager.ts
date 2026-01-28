@@ -47,7 +47,13 @@ export class PolarManager implements ChartContentManager {
 
 	public updateData(block: Block, model: Model<PolarOptionsModel>, data: MdtChartsDataSource): void {
 		block.transitionManager.interruptTransitions();
-		block.removeMouseEvents();
+
+		const arcItems = Donut.getAllArcGroups(block);
+		arcItems.on("mouseover", null);
+		arcItems.on("mouseleave", null);
+		arcItems.on("mousemove", null);
+		arcItems.on("click", null);
+
 		block.filterEventManager.updateData(data[model.options.data.dataSource]);
 		Title.updateData(block, model.options.title);
 		ElementHighlighter.removeDonutArcClones(block);

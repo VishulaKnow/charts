@@ -60,7 +60,6 @@ export class Block {
 
 	public destroy(): void {
 		this.transitionManager.interruptTransitions();
-		this.removeMouseEvents();
 		this.getWrapper().remove();
 	}
 
@@ -71,27 +70,6 @@ export class Block {
 
 	public getWrapper(): Selection<BaseType, unknown, HTMLElement, any> {
 		return this.wrapper;
-	}
-
-	public removeMouseEvents(): void {
-		//TODO: move this method in blockSvg
-		const tipBoxes = this.getSvg().selectAll(`.${TipBox.tipBoxClass}`);
-		tipBoxes.on("mousemove", null);
-		tipBoxes.on("mouseover", null);
-		tipBoxes.on("mouseleave", null);
-		tipBoxes.on("click", null);
-
-		const arcItems = Donut.getAllArcGroups(this);
-		arcItems.on("mouseover", null);
-		arcItems.on("mouseleave", null);
-		arcItems.on("mousemove", null);
-		arcItems.on("click", null);
-
-		const sunburstArcItems = Sunburst.getAllArcGroups(this);
-		arcItems.on("mouseover", null);
-		arcItems.on("mouseleave", null);
-		arcItems.on("mousemove", null);
-		arcItems.on("click", null);
 	}
 
 	public clearWrapper(): void {

@@ -2,16 +2,12 @@ import { select, Selection, pointer, BaseType } from "d3-selection";
 import { PieArcDatum } from "d3-shape";
 import {
 	BlockMargin,
-	Model,
 	OptionsModelData,
-	PolarOptionsModel,
 	ScaleKeyModel,
 	TooltipBasicModel,
 	TwoDimensionalChartModel,
 	TwoDimensionalOptionsModel,
-	DonutChartSizesModel,
-	SunburstLevelSegment,
-	SunburstOptionsModel
+	DonutChartSizesModel
 } from "../../../model/model";
 import { Block } from "../../block/block";
 import { TooltipDomHelper } from "./tooltipDomHelper";
@@ -26,9 +22,9 @@ import { TooltipHelper } from "./tooltipHelper";
 import { DomSelectionHelper } from "../../helpers/domSelectionHelper";
 import { NewTooltip } from "./newTooltip/newTooltip";
 import { MarkDot } from "../../../engine/features/markDots/markDot";
-import { Sunburst } from "../../sunburstNotation/sunburst";
+import { SunburstSegmentEventDispatcher } from "../../sunburstNotation/sunburstSegmentEventDispatcher";
 
-interface DonutOverDetails {
+export interface DonutOverDetails {
 	pointer: [number, number];
 	ignoreTranslate?: boolean;
 }
@@ -249,18 +245,28 @@ export class Tooltip {
 		});
 	}
 
-	static renderTooltipForSunburst(block: Block) {
+	static renderTooltipForSunburst(block: Block, sunburstSegmentEventDispatcher: SunburstSegmentEventDispatcher) {
 		TooltipComponentsManager.renderTooltipWrapper(block);
-
-		const elements = Sunburst.getAllArcGroups(block);
-
 		const tooltipBlock = TooltipComponentsManager.renderTooltipBlock(block);
 		const tooltipContent = TooltipComponentsManager.renderTooltipContentBlock(tooltipBlock);
 
-		this.attachTooltipMoveOnElements(elements, block, tooltipBlock, {
-			mouseover: (e, segment) => {
-				TooltipDomHelper.fillContent(tooltipContent, segment.data.tooltip.content);
-			}
+		sunburstSegmentEventDispatcher.on("mousemove", ({ e, segment }) => {
+			const pointerCoordinate = e instanceof CustomEvent ? e.detail.pointer : pointer(e, block.getSvg().node());
+			const tooltipCoordinate = TooltipHelper.getTooltipCursorCoordinate(
+				pointerCoordinate,
+				block.getSvg().node().getBoundingClientRect(),
+				tooltipBlock.getEl().node().getBoundingClientRect()
+			);
+			tooltipBlock.setCoordinate(tooltipCoordinate);
+		});
+
+		sunburstSegmentEventDispatcher.on("mouseover", ({ e, segment }) => {
+			TooltipComponentsManager.showComponent(tooltipBlock.getEl());
+			TooltipDomHelper.fillContent(tooltipContent, segment.tooltip.content);
+		});
+
+		sunburstSegmentEventDispatcher.on("mouseleave", ({ e, segment }) => {
+			TooltipComponentsManager.hideComponent(tooltipBlock.getEl());
 		});
 	}
 

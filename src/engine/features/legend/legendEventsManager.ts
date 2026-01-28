@@ -5,11 +5,6 @@ import { Donut } from "../../polarNotation/donut/donut";
 import { LegendItemSelection } from "./legendDomHelper";
 
 export class LegendEventsManager {
-	/**
-	 * @param block
-	 * @param keyFieldName
-	 * @param legendItems айтемы легенды полара, которые привязаны к ключам
-	 */
 	public static setListeners(
 		block: Block,
 		keyFieldName: string,

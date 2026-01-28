@@ -1,3 +1,8 @@
+export interface EventEmitterSubscribeController<E> {
+	subscribe: <T extends keyof E>(code: T, listener: (args: E[T]) => unknown) => () => void;
+	unsubscribe: <T extends keyof E>(code: T, listener: (args: E[T]) => unknown) => void;
+}
+
 export class EventEmitter<E = Record<string, Record<string, any>>> {
 	private events: {
 		[key in keyof E]?: ((args: E[keyof E]) => void | Promise<void>)[];
