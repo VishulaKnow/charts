@@ -31,8 +31,33 @@ export class SunburstHighlightState {
 	}
 
 	setLevels(levels: SunburstLevel[]): void {
+		const prevLevelsValue = this.levels;
 		this.levels = levels;
-		//TODO: check if selected segments are still in the new levels
+
+		if (!prevLevelsValue) return;
+
+		const newSegments: (SunburstLevelSegment | undefined)[] = this.selectedSegments.map((segment, index) => {
+			const level = levels[segment.levelIndex];
+			const sameSegmentWithPossibleNewData = level.segments.find(
+				(s) => s.key === segment.key && s.levelIndex === segment.levelIndex
+			);
+			return sameSegmentWithPossibleNewData;
+		});
+
+		const changedNonDeletedSegments = newSegments.filter(
+			(segment) => segment !== undefined
+		) as SunburstLevelSegment[];
+		this.selectedSegments = changedNonDeletedSegments;
+
+		const firePublicEvent = changedNonDeletedSegments.length !== newSegments.length;
+
+		this.eventEmitter.emit("selectedSegmentsChanged", {
+			selectedSegments: this.selectedSegments,
+			firePublicEvent
+		});
+		this.eventEmitter.emit("highlightedSegmentsChanged", {
+			highlightedSegments: this.selectedSegments
+		});
 	}
 
 	setHoverHighlightedSegment(segment: SunburstLevelSegment): void {

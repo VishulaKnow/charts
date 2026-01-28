@@ -86,6 +86,7 @@ export class SunburstManager implements ChartContentManager {
 
 		this.sunburst.update(model.options.levels).then((allSegmentsSelection) => {
 			this.sunburstSegmentEventDispatcher.bind(allSegmentsSelection, legendItemsSelection);
+			this.sunburstHighlightState.setLevels(model.options.levels);
 		});
 
 		Aggregator.update(
