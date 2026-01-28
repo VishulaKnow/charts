@@ -101,7 +101,21 @@ describe("LevelModelBuilder", () => {
 							key: 2019,
 							value: 220000,
 							levelIndex: 0,
-							parentLevelKey: undefined
+							parentLevelKey: undefined,
+							attachedDataRows: [
+								{
+									year: 2019,
+									brand: "BMW",
+									price: 100_000,
+									decade: "2010s"
+								},
+								{
+									year: 2019,
+									brand: "AUDI",
+									price: 120_000,
+									decade: "2010s"
+								}
+							]
 						},
 						{
 							color: "green",
@@ -122,7 +136,21 @@ describe("LevelModelBuilder", () => {
 							key: 2026,
 							value: 265000,
 							levelIndex: 0,
-							parentLevelKey: undefined
+							parentLevelKey: undefined,
+							attachedDataRows: [
+								{
+									year: 2026,
+									brand: "MERCEDES",
+									price: 150_000,
+									decade: "2020s"
+								},
+								{
+									year: 2026,
+									brand: "VOLKSWAGEN",
+									price: 115_000,
+									decade: "2020s"
+								}
+							]
 						}
 					],
 					sizes: { innerRadius: 20.4, outerRadius: 30, thickness: 9.6, translate: { x: 50, y: 50 } }
@@ -148,7 +176,15 @@ describe("LevelModelBuilder", () => {
 							key: "BMW",
 							value: 100000,
 							levelIndex: 1,
-							parentLevelKey: 2019
+							parentLevelKey: 2019,
+							attachedDataRows: [
+								{
+									year: 2019,
+									brand: "BMW",
+									price: 100_000,
+									decade: "2010s"
+								}
+							]
 						},
 						{
 							color: "red",
@@ -169,7 +205,15 @@ describe("LevelModelBuilder", () => {
 							key: "AUDI",
 							value: 120000,
 							levelIndex: 1,
-							parentLevelKey: 2019
+							parentLevelKey: 2019,
+							attachedDataRows: [
+								{
+									year: 2019,
+									brand: "AUDI",
+									price: 120_000,
+									decade: "2010s"
+								}
+							]
 						},
 						{
 							color: "green",
@@ -190,7 +234,15 @@ describe("LevelModelBuilder", () => {
 							key: "MERCEDES",
 							value: 150000,
 							levelIndex: 1,
-							parentLevelKey: 2026
+							parentLevelKey: 2026,
+							attachedDataRows: [
+								{
+									year: 2026,
+									brand: "MERCEDES",
+									price: 150_000,
+									decade: "2020s"
+								}
+							]
 						},
 						{
 							color: "green",
@@ -211,7 +263,15 @@ describe("LevelModelBuilder", () => {
 							key: "VOLKSWAGEN",
 							value: 115000,
 							levelIndex: 1,
-							parentLevelKey: 2026
+							parentLevelKey: 2026,
+							attachedDataRows: [
+								{
+									year: 2026,
+									brand: "VOLKSWAGEN",
+									price: 115_000,
+									decade: "2020s"
+								}
+							]
 						}
 					],
 					sizes: { innerRadius: 30.4, outerRadius: 40, thickness: 9.6, translate: { x: 50, y: 50 } }

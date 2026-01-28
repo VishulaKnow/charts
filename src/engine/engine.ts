@@ -36,7 +36,7 @@ export class Engine {
 		this.block.renderWrapper(model.blockCanvas.size);
 
 		if (model.options) {
-			this.contentManager = new ContentManager(model);
+			this.contentManager = new ContentManager(model, this.filterCallback);
 			ValueFormatter.setFormatFunction(model.dataSettings.format.formatters);
 			this.renderCharts(model);
 		}

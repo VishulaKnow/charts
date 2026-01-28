@@ -20,7 +20,7 @@ export class SunburstSegmentEventDispatcher {
 			segment: SunburstLevelSegment;
 		};
 		segmentClick: {
-			e: MouseEvent;
+			multiModeKeyPressed: boolean;
 			segment: SunburstLevelSegment;
 		};
 		legendItemMousemove: {
@@ -36,7 +36,7 @@ export class SunburstSegmentEventDispatcher {
 			legendItem: LegendItemModel;
 		};
 		legendItemClick: {
-			e: MouseEvent;
+			multiModeKeyPressed: boolean;
 			legendItem: LegendItemModel;
 		};
 	}>();
@@ -54,17 +54,17 @@ export class SunburstSegmentEventDispatcher {
 				this.eventEmitter.emit("segmentMousemove", { e, segment: segmentDatum.data });
 			}
 		);
-
 		segmentSelection.on("mouseover", (e: MouseEvent, segmentDatum: PieArcDatum<SunburstLevelSegment>) => {
 			this.eventEmitter.emit("segmentMouseover", { e, segment: segmentDatum.data });
 		});
-
 		segmentSelection.on("mouseleave", (e: MouseEvent, segmentDatum: PieArcDatum<SunburstLevelSegment>) => {
 			this.eventEmitter.emit("segmentMouseleave", { e, segment: segmentDatum.data });
 		});
-
 		segmentSelection.on("click", (e: MouseEvent, segmentDatum: PieArcDatum<SunburstLevelSegment>) => {
-			this.eventEmitter.emit("segmentClick", { e, segment: segmentDatum.data });
+			this.eventEmitter.emit("segmentClick", {
+				multiModeKeyPressed: e.ctrlKey || e.metaKey,
+				segment: segmentDatum.data
+			});
 		});
 
 		if (legendItemSelection) {
@@ -78,7 +78,7 @@ export class SunburstSegmentEventDispatcher {
 				this.eventEmitter.emit("legendItemMouseleave", { e, legendItem });
 			});
 			legendItemSelection.on("click", (e: MouseEvent, legendItem: LegendItemModel) => {
-				this.eventEmitter.emit("legendItemClick", { e, legendItem });
+				this.eventEmitter.emit("legendItemClick", { multiModeKeyPressed: e.ctrlKey || e.metaKey, legendItem });
 			});
 		}
 

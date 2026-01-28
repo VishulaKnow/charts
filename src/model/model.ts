@@ -473,6 +473,7 @@ export interface SunburstLevelSegment {
 	levelIndex: number;
 	parentLevelKey: string | number | undefined;
 	color: string;
+	attachedDataRows: MdtChartsDataRow[];
 	tooltip: {
 		content: TooltipContent;
 	};

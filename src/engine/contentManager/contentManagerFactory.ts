@@ -4,7 +4,7 @@ import { Block } from "../block/block";
 import { Engine } from "../engine";
 import { PolarManager } from "../polarNotation/polarManager";
 import { TwoDimensionalManager } from "../twoDimensionalNotation/twoDimensionalManager";
-import { ChartClearSelectionOptions, FilterEventManager } from "../filterManager/filterEventManager";
+import { ChartClearSelectionOptions, FilterCallback, FilterEventManager } from "../filterManager/filterEventManager";
 import { SunburstManager } from "../sunburstNotation/sunburstManager";
 
 export interface ChartContentManager {
@@ -14,7 +14,7 @@ export interface ChartContentManager {
 	clearSelection(filterEventManager: FilterEventManager, model: Model, options?: ChartClearSelectionOptions): void;
 }
 
-type Managers = Record<ChartNotation, { new (): ChartContentManager }>;
+type Managers = Record<ChartNotation, { new (callback: FilterCallback): ChartContentManager }>;
 
 export class ContentManagerFactory {
 	private managers: Managers = {
@@ -23,13 +23,13 @@ export class ContentManagerFactory {
 		sunburst: SunburstManager
 	};
 
-	getManager(type: ChartNotation): ChartContentManager {
+	getManager(type: ChartNotation, callback: FilterCallback): ChartContentManager {
 		const managerClass = this.managers[type];
-		return new managerClass();
+		return new managerClass(callback);
 	}
 }
 
-export function getChartContentManager(model: Model): ChartContentManager {
+export function getChartContentManager(model: Model, callback: FilterCallback): ChartContentManager {
 	const factory = new ContentManagerFactory();
-	return factory.getManager(model.options.type);
+	return factory.getManager(model.options.type, callback);
 }

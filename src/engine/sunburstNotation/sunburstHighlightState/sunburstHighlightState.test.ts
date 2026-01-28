@@ -12,7 +12,19 @@ const levels: SunburstLevel[] = [
 				tooltip: {
 					content: { type: "rows", rows: [] }
 				},
-				parentLevelKey: undefined
+				parentLevelKey: undefined,
+				attachedDataRows: [
+					{
+						territory: "Moscow",
+						brand: "BMW",
+						value: 50
+					},
+					{
+						territory: "Moscow",
+						brand: "MERCEDES",
+						value: 50
+					}
+				]
 			},
 			{
 				color: "green",
@@ -22,7 +34,19 @@ const levels: SunburstLevel[] = [
 				tooltip: {
 					content: { type: "rows", rows: [] }
 				},
-				parentLevelKey: undefined
+				parentLevelKey: undefined,
+				attachedDataRows: [
+					{
+						territory: "Center west",
+						brand: "VOLKSWAGEN",
+						value: 50
+					},
+					{
+						territory: "Center west",
+						brand: "DODGE",
+						value: 50
+					}
+				]
 			}
 		],
 		sizes: {
@@ -42,7 +66,14 @@ const levels: SunburstLevel[] = [
 				tooltip: {
 					content: { type: "rows", rows: [] }
 				},
-				parentLevelKey: "Moscow"
+				parentLevelKey: "Moscow",
+				attachedDataRows: [
+					{
+						territory: "Moscow",
+						brand: "BMW",
+						value: 50
+					}
+				]
 			},
 			{
 				color: "red",
@@ -52,7 +83,14 @@ const levels: SunburstLevel[] = [
 				tooltip: {
 					content: { type: "rows", rows: [] }
 				},
-				parentLevelKey: "Moscow"
+				parentLevelKey: "Moscow",
+				attachedDataRows: [
+					{
+						territory: "Moscow",
+						brand: "MERCEDES",
+						value: 50
+					}
+				]
 			},
 
 			{
@@ -63,7 +101,14 @@ const levels: SunburstLevel[] = [
 				tooltip: {
 					content: { type: "rows", rows: [] }
 				},
-				parentLevelKey: "Center west"
+				parentLevelKey: "Center west",
+				attachedDataRows: [
+					{
+						territory: "Center west",
+						brand: "VOLKSWAGEN",
+						value: 50
+					}
+				]
 			},
 			{
 				color: "green",
@@ -73,7 +118,14 @@ const levels: SunburstLevel[] = [
 				tooltip: {
 					content: { type: "rows", rows: [] }
 				},
-				parentLevelKey: "Center west"
+				parentLevelKey: "Center west",
+				attachedDataRows: [
+					{
+						territory: "Center west",
+						brand: "DODGE",
+						value: 50
+					}
+				]
 			}
 		],
 		sizes: {
@@ -85,9 +137,15 @@ const levels: SunburstLevel[] = [
 	}
 ];
 
+const publicSelectEventCallback = jest.fn();
+
 describe("SunburstHighlightState", () => {
+	beforeEach(() => {
+		publicSelectEventCallback.mockClear();
+	});
+
 	it("should set highlighted segments", () => {
-		const sunburstHighlightState = new SunburstHighlightState();
+		const sunburstHighlightState = new SunburstHighlightState(publicSelectEventCallback);
 		sunburstHighlightState.setLevels(levels);
 
 		let result: SunburstLevelSegment[] = [];
@@ -101,7 +159,7 @@ describe("SunburstHighlightState", () => {
 	});
 
 	it("should set highlighted segment with its children when hovering segment legend item", () => {
-		const sunburstHighlightState = new SunburstHighlightState();
+		const sunburstHighlightState = new SunburstHighlightState(publicSelectEventCallback);
 		sunburstHighlightState.setLevels(levels);
 
 		let result: SunburstLevelSegment[] = [];
@@ -112,5 +170,227 @@ describe("SunburstHighlightState", () => {
 		sunburstHighlightState.setHoverSegmentLegendItem(levels[0].segments[0]);
 
 		expect(result).toEqual([levels[0].segments[0], levels[1].segments[0], levels[1].segments[1]]);
+	});
+
+	it("should set segment selection in non-multi mode", () => {
+		const sunburstHighlightState = new SunburstHighlightState(publicSelectEventCallback);
+		sunburstHighlightState.setLevels(levels);
+
+		let resultHighlighted: SunburstLevelSegment[] = [];
+		sunburstHighlightState.on("highlightedSegmentsChanged", ({ highlightedSegments }) => {
+			resultHighlighted = highlightedSegments;
+		});
+
+		let resultSelected: SunburstLevelSegment[] = [];
+		sunburstHighlightState.on("selectedSegmentsChanged", ({ selectedSegments }) => {
+			resultSelected = selectedSegments;
+		});
+
+		sunburstHighlightState.changeSegmentSelection(levels[0].segments[0], false);
+
+		expect(resultHighlighted).toEqual([levels[0].segments[0], levels[1].segments[0], levels[1].segments[1]]);
+		expect(resultSelected).toEqual([levels[0].segments[0], levels[1].segments[0], levels[1].segments[1]]);
+	});
+
+	it("should reset existing segment in non-multi mode", () => {
+		const sunburstHighlightState = new SunburstHighlightState(publicSelectEventCallback);
+		sunburstHighlightState.setLevels(levels);
+
+		let resultHighlighted: SunburstLevelSegment[] = [];
+		sunburstHighlightState.on("highlightedSegmentsChanged", ({ highlightedSegments }) => {
+			resultHighlighted = highlightedSegments;
+		});
+
+		let resultSelected: SunburstLevelSegment[] = [];
+		sunburstHighlightState.on("selectedSegmentsChanged", ({ selectedSegments }) => {
+			resultSelected = selectedSegments;
+		});
+
+		sunburstHighlightState.changeSegmentSelection(levels[0].segments[0], false);
+		sunburstHighlightState.changeSegmentSelection(levels[0].segments[1], false);
+
+		expect(resultHighlighted).toEqual([levels[0].segments[1], levels[1].segments[2], levels[1].segments[3]]);
+		expect(resultSelected).toEqual([levels[0].segments[1], levels[1].segments[2], levels[1].segments[3]]);
+	});
+
+	it("should drop existing segment selection in non-multi mode", () => {
+		const sunburstHighlightState = new SunburstHighlightState(publicSelectEventCallback);
+		sunburstHighlightState.setLevels(levels);
+
+		let resultHighlighted: SunburstLevelSegment[] = [];
+		sunburstHighlightState.on("highlightedSegmentsChanged", ({ highlightedSegments }) => {
+			resultHighlighted = highlightedSegments;
+		});
+
+		let resultSelected: SunburstLevelSegment[] = [];
+		sunburstHighlightState.on("selectedSegmentsChanged", ({ selectedSegments }) => {
+			resultSelected = selectedSegments;
+		});
+
+		sunburstHighlightState.changeSegmentSelection(levels[0].segments[0], false);
+		sunburstHighlightState.changeSegmentSelection(levels[0].segments[0], false);
+
+		expect(resultHighlighted).toEqual([]);
+		expect(resultSelected).toEqual([]);
+	});
+
+	it("should set one segment if multiple segments are selected and target segment is included in the selection", () => {
+		const sunburstHighlightState = new SunburstHighlightState(publicSelectEventCallback);
+		sunburstHighlightState.setLevels(levels);
+
+		let resultHighlighted: SunburstLevelSegment[] = [];
+		sunburstHighlightState.on("highlightedSegmentsChanged", ({ highlightedSegments }) => {
+			resultHighlighted = highlightedSegments;
+		});
+
+		let resultSelected: SunburstLevelSegment[] = [];
+		sunburstHighlightState.on("selectedSegmentsChanged", ({ selectedSegments }) => {
+			resultSelected = selectedSegments;
+		});
+
+		sunburstHighlightState.changeSegmentSelection(levels[0].segments[0], true);
+		sunburstHighlightState.changeSegmentSelection(levels[0].segments[1], true);
+		sunburstHighlightState.changeSegmentSelection(levels[0].segments[0], false);
+
+		expect(resultHighlighted).toEqual([levels[0].segments[0], levels[1].segments[0], levels[1].segments[1]]);
+		expect(resultSelected).toEqual([levels[0].segments[0], levels[1].segments[0], levels[1].segments[1]]);
+	});
+
+	it("should add new segments to the selection in multi mode", () => {
+		const sunburstHighlightState = new SunburstHighlightState(publicSelectEventCallback);
+		sunburstHighlightState.setLevels(levels);
+
+		let resultHighlighted: SunburstLevelSegment[] = [];
+		sunburstHighlightState.on("highlightedSegmentsChanged", ({ highlightedSegments }) => {
+			resultHighlighted = highlightedSegments;
+		});
+
+		let resultSelected: SunburstLevelSegment[] = [];
+		sunburstHighlightState.on("selectedSegmentsChanged", ({ selectedSegments }) => {
+			resultSelected = selectedSegments;
+		});
+
+		sunburstHighlightState.changeSegmentSelection(levels[0].segments[0], true);
+		expect(resultHighlighted).toEqual([levels[0].segments[0], levels[1].segments[0], levels[1].segments[1]]);
+		expect(resultSelected).toEqual([levels[0].segments[0], levels[1].segments[0], levels[1].segments[1]]);
+
+		sunburstHighlightState.changeSegmentSelection(levels[0].segments[1], true);
+		expect(resultHighlighted).toEqual([
+			levels[0].segments[0],
+			levels[1].segments[0],
+			levels[1].segments[1],
+			levels[0].segments[1],
+			levels[1].segments[2],
+			levels[1].segments[3]
+		]);
+		expect(resultSelected).toEqual([
+			levels[0].segments[0],
+			levels[1].segments[0],
+			levels[1].segments[1],
+			levels[0].segments[1],
+			levels[1].segments[2],
+			levels[1].segments[3]
+		]);
+	});
+
+	it("should remove segment from selection if it is deselected in multi mode", () => {
+		const sunburstHighlightState = new SunburstHighlightState(publicSelectEventCallback);
+		sunburstHighlightState.setLevels(levels);
+
+		let resultHighlighted: SunburstLevelSegment[] = [];
+		sunburstHighlightState.on("highlightedSegmentsChanged", ({ highlightedSegments }) => {
+			resultHighlighted = highlightedSegments;
+		});
+
+		let resultSelected: SunburstLevelSegment[] = [];
+		sunburstHighlightState.on("selectedSegmentsChanged", ({ selectedSegments }) => {
+			resultSelected = selectedSegments;
+		});
+
+		sunburstHighlightState.changeSegmentSelection(levels[0].segments[0], true);
+		sunburstHighlightState.changeSegmentSelection(levels[0].segments[1], true);
+		sunburstHighlightState.changeSegmentSelection(levels[0].segments[0], true);
+
+		expect(resultHighlighted).toEqual([levels[0].segments[1], levels[1].segments[2], levels[1].segments[3]]);
+		expect(resultSelected).toEqual([levels[0].segments[1], levels[1].segments[2], levels[1].segments[3]]);
+	});
+
+	it("should highlight all segment children if some but not all children are selected and parent segment has been selected now", () => {
+		const sunburstHighlightState = new SunburstHighlightState(publicSelectEventCallback);
+		sunburstHighlightState.setLevels(levels);
+
+		let resultHighlighted: SunburstLevelSegment[] = [];
+		sunburstHighlightState.on("highlightedSegmentsChanged", ({ highlightedSegments }) => {
+			resultHighlighted = highlightedSegments;
+		});
+
+		let resultSelected: SunburstLevelSegment[] = [];
+		sunburstHighlightState.on("selectedSegmentsChanged", ({ selectedSegments }) => {
+			resultSelected = selectedSegments;
+		});
+
+		sunburstHighlightState.changeSegmentSelection(levels[1].segments[0], false);
+		expect(resultHighlighted).toEqual([levels[1].segments[0]]);
+		expect(resultSelected).toEqual([levels[1].segments[0]]);
+
+		sunburstHighlightState.changeSegmentSelection(levels[0].segments[0], false);
+		expect(resultHighlighted).toEqual([levels[0].segments[0], levels[1].segments[0], levels[1].segments[1]]);
+		expect(resultSelected).toEqual([levels[0].segments[0], levels[1].segments[0], levels[1].segments[1]]);
+	});
+
+	it("should highlight all segment children if some but not all children are selected and parent segment has been selected now", () => {
+		const sunburstHighlightState = new SunburstHighlightState(publicSelectEventCallback);
+		sunburstHighlightState.setLevels(levels);
+
+		let resultHighlighted: SunburstLevelSegment[] = [];
+		sunburstHighlightState.on("highlightedSegmentsChanged", ({ highlightedSegments }) => {
+			resultHighlighted = highlightedSegments;
+		});
+
+		let resultSelected: SunburstLevelSegment[] = [];
+		sunburstHighlightState.on("selectedSegmentsChanged", ({ selectedSegments }) => {
+			resultSelected = selectedSegments;
+		});
+
+		sunburstHighlightState.changeSegmentSelection(levels[1].segments[0], true);
+		expect(resultHighlighted).toEqual([levels[1].segments[0]]);
+		expect(resultSelected).toEqual([levels[1].segments[0]]);
+
+		sunburstHighlightState.changeSegmentSelection(levels[0].segments[0], true);
+		expect(resultHighlighted).toEqual([levels[1].segments[0], levels[0].segments[0], levels[1].segments[1]]);
+		expect(resultSelected).toEqual([levels[1].segments[0], levels[0].segments[0], levels[1].segments[1]]);
+	});
+
+	it("should fire public event when selected segments change", () => {
+		const sunburstHighlightState = new SunburstHighlightState(publicSelectEventCallback);
+		sunburstHighlightState.setLevels(levels);
+
+		sunburstHighlightState.changeSegmentSelection(levels[0].segments[0], false);
+		expect(publicSelectEventCallback).toHaveBeenCalledTimes(1);
+
+		sunburstHighlightState.clearSelection();
+		expect(publicSelectEventCallback).toHaveBeenCalledTimes(2);
+
+		sunburstHighlightState.clearSelection(false);
+		expect(publicSelectEventCallback).toHaveBeenCalledTimes(2);
+	});
+
+	it("should fire public event when selected segments change", () => {
+		const sunburstHighlightState = new SunburstHighlightState(publicSelectEventCallback);
+		sunburstHighlightState.setLevels(levels);
+
+		sunburstHighlightState.changeSegmentSelection(levels[0].segments[0], false);
+		expect(publicSelectEventCallback).toHaveBeenCalledWith([
+			{
+				territory: "Moscow",
+				brand: "BMW",
+				value: 50
+			},
+			{
+				territory: "Moscow",
+				brand: "MERCEDES",
+				value: 50
+			}
+		]);
 	});
 });

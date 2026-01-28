@@ -7,7 +7,7 @@ import { Aggregator } from "../features/aggregator/aggregator";
 import { Legend } from "../features/legend/legend";
 import { Title } from "../features/title/title";
 import { Tooltip } from "../features/tolltip/tooltip";
-import { FilterEventManager, ChartClearSelectionOptions } from "../filterManager/filterEventManager";
+import { FilterEventManager, ChartClearSelectionOptions, FilterCallback } from "../filterManager/filterEventManager";
 import { Sunburst } from "./sunburst";
 import { SunburstHighlightState } from "./sunburstHighlightState/sunburstHighlightState";
 import { SunburstSegmentEventDispatcher } from "./sunburstSegmentEventDispatcher";
@@ -15,7 +15,11 @@ import { SunburstSegmentEventDispatcher } from "./sunburstSegmentEventDispatcher
 export class SunburstManager implements ChartContentManager {
 	private sunburst: Sunburst | undefined = undefined;
 	private readonly sunburstSegmentEventDispatcher = new SunburstSegmentEventDispatcher();
-	private readonly sunburstHighlightState = new SunburstHighlightState();
+	private readonly sunburstHighlightState: SunburstHighlightState;
+
+	constructor(private callback: FilterCallback) {
+		this.sunburstHighlightState = new SunburstHighlightState(this.callback);
+	}
 
 	render(engine: Engine, model: Model<SunburstOptionsModel>) {
 		engine.block.svg.render(model.blockCanvas.size);
@@ -46,6 +50,9 @@ export class SunburstManager implements ChartContentManager {
 		this.sunburstSegmentEventDispatcher.on("segmentMouseleave", ({ segment }) => {
 			this.sunburstHighlightState.clearHoverHighlightedSegment();
 		});
+		this.sunburstSegmentEventDispatcher.on("segmentClick", ({ multiModeKeyPressed, segment }) => {
+			this.sunburstHighlightState.changeSegmentSelection(segment, multiModeKeyPressed);
+		});
 
 		this.sunburstSegmentEventDispatcher.on("legendItemMouseover", ({ legendItem }) => {
 			const segment = model.options.levels[0].segments.find((segment) => segment.key === legendItem.textContent);
@@ -55,6 +62,12 @@ export class SunburstManager implements ChartContentManager {
 		});
 		this.sunburstSegmentEventDispatcher.on("legendItemMouseleave", ({ legendItem }) => {
 			this.sunburstHighlightState.clearHoverHighlightedSegment();
+		});
+		this.sunburstSegmentEventDispatcher.on("legendItemClick", ({ multiModeKeyPressed, legendItem }) => {
+			const segment = model.options.levels[0].segments.find((segment) => segment.key === legendItem.textContent);
+			if (segment) {
+				this.sunburstHighlightState.changeSegmentSelection(segment, multiModeKeyPressed);
+			}
 		});
 
 		this.sunburst.setHighlightedSegmentsHandle(this.sunburstHighlightState);
@@ -91,6 +104,6 @@ export class SunburstManager implements ChartContentManager {
 	}
 
 	clearSelection(filterEventManager: FilterEventManager, model: Model, options?: ChartClearSelectionOptions): void {
-		throw new Error("Method not implemented.");
+		this.sunburstHighlightState.clearSelection(options?.firePublicEvent);
 	}
 }

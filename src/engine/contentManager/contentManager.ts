@@ -3,13 +3,13 @@ import { Engine } from "../engine";
 import { Block } from "../block/block";
 import { MdtChartsDataSource } from "../../config/config";
 import { ChartContentManager, getChartContentManager } from "./contentManagerFactory";
-import { ChartClearSelectionOptions } from "../filterManager/filterEventManager";
+import { ChartClearSelectionOptions, FilterCallback } from "../filterManager/filterEventManager";
 
 export class ContentManager {
 	private manager: ChartContentManager;
 
-	constructor(model: Model) {
-		this.manager = getChartContentManager(model);
+	constructor(model: Model, callback: FilterCallback) {
+		this.manager = getChartContentManager(model, callback);
 	}
 
 	public render(model: Model, engine: Engine): void {

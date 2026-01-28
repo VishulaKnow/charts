@@ -34,31 +34,42 @@ export class LevelModelBuilder {
 		return publicConfig.levels.map<SunburstLevel>((level, levelIndex) => {
 			const valuesForLevelKeys: Map<
 				string,
-				{ value: number; color: string; parentLevelKey: string | number | undefined }
+				{
+					value: number;
+					color: string;
+					parentLevelKey: string | number | undefined;
+					attachedDataRows: MdtChartsDataRow[];
+				}
 			> = new Map();
 
 			this.config.scopedDataRows.forEach((row) => {
 				const key = row[level.data.keyField.name];
+
+				if (key == null) return;
+
 				const color = topLevelColorsByValue[row[topLevelKeyFieldName]];
 				let parentLevelKey: string | number | undefined = undefined;
 				if (levelIndex > 0) {
 					parentLevelKey = row[publicConfig.levels[levelIndex - 1].data.keyField.name];
 				}
-				if (key != null) {
-					const newValue = (valuesForLevelKeys.get(key)?.value ?? 0) + row[publicConfig.data.valueField.name];
-					valuesForLevelKeys.set(key, { value: newValue, color, parentLevelKey });
-				}
+
+				const newValue = (valuesForLevelKeys.get(key)?.value ?? 0) + row[publicConfig.data.valueField.name];
+				const attachedDataRows = valuesForLevelKeys.get(key)?.attachedDataRows ?? [];
+				attachedDataRows.push(row);
+
+				valuesForLevelKeys.set(key, { value: newValue, color, parentLevelKey, attachedDataRows });
 			});
 
 			return {
 				sizes: sizesByLevels[levelIndex],
 				segments: Array.from(valuesForLevelKeys.entries()).map<SunburstLevelSegment>(
-					([key, { value, color, parentLevelKey }]) => {
+					([key, { value, color, parentLevelKey, attachedDataRows }]) => {
 						return {
 							value,
 							key,
 							levelIndex,
 							parentLevelKey,
+							attachedDataRows,
 							color,
 							tooltip: {
 								content: {
