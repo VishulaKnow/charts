@@ -8,231 +8,231 @@ const configCars: MdtChartsConfig = {
 			height: 400
 		}
 	},
-	options: {
-		type: "2d",
-		title: "Объем товародвижения по брендам",
-		selectable: true,
-		grouping: {
-			items: [
-				{
-					data: {
-						field: { name: "decade" }
-					}
-				},
-				{
-					data: {
-						field: { name: "year" }
-					}
-					// labels: { position: "start" }
-				}
-			]
-		},
-		// events: {
-		// 	drawComplete: ({ canvas }) => {
-		// 		console.log(canvas.keyItems, canvas.plotAreaMargin);
-		// 	}
-		// },
-		axis: {
-			key: {
-				visibility: true,
-				position: "end",
-				ticks: {
-					flag: false
-				},
-				labels: {
-					// format: (options) => options.key
-				}
-			},
-			value: {
-				visibility: true,
-				position: "start",
-				domain: {
-					start: -1,
-					end: -1
-				},
-				ticks: {
-					flag: false
-				},
-				labels: {
-					format: (value) => nFormatter(value)
-				},
-				line: {
-					visible: false
-				}
-			},
-			valueSecondary: {
-				domain: {
-					end: -1,
-					start: -1
-				},
-				ticks: {
-					flag: false
-				},
-				labels: {
-					format: (value) => nFormatter(value)
-				},
-				visibility: true,
-				line: {
-					visible: false
-				}
-			}
-		},
-		additionalElements: {
-			gridLine: {
-				flag: {
-					value: true,
-					key: false
-				}
-			}
-		},
-		legend: {
-			show: true,
-			position: "bottom"
-		},
-		orientation: "vertical",
-		data: {
-			dataSource: "dataSet",
-			keyField: {
-				name: "brand",
-				format: "string"
-			}
-		},
-		valueLabels: {
-			style: {
-				cssClassName: "value-labels-style",
-				fontSize: 12,
-				color: "rgba(68, 68, 68, 1)"
-			}
-		},
-		tooltip: {
-			aggregator: {
-				content: ({ row }) => {
-					return [
-						{
-							type: "captionValue",
-							caption: "Общая сумма",
-							value: nFormatter(row.price * row.count, 2)
-						},
-						{
-							type: "captionValue",
-							caption: "Год",
-							value: row.year
-						},
-						{ type: "plainText", textContent: "Данные не являются официальными" }
-					];
-				},
-				position: "underValues"
-			},
-			rows: {
-				filterPredicate: (row) => row.textContent.value !== undefined,
-				sortCompareFn: (aRow, bRow) => aRow.textContent.value - bRow.textContent.value
-			}
-		},
-		charts: [
-			// {
-			// 	isSegmented: false,
-			// 	type: "bar",
-			// 	data: {
-			// 		valueFields: [
-			// 			{
-			// 				name: "price",
-			// 				format: "money",
-			// 				title: "Стоимость"
-			// 			}
-			// 		],
-			// 		valueGroup: "main"
-			// 	},
-			// 	embeddedLabels: "none",
-			// 	markers: {
-			// 		show: false
-			// 	},
-			// 	lineStyles: {
-			// 		dash: {
-			// 			on: true,
-			// 			dashSize: 3,
-			// 			gapSize: 3
-			// 		}
-			// 	},
-			// 	barStyles: {
-			// 		hatch: {
-			// 			on: false
-			// 		}
-			// 	},
-			// 	areaStyles: {
-			// 		borderLine: {
-			// 			on: true
-			// 		},
-			// 		gradient: {
-			// 			on: true
-			// 		}
-			// 	},
-			// 	valueLabels: {
-			// 		on: false,
-			// 		position: {
-			// 			mode: "center"
-			// 		},
-			// 		rotation: {
-			// 			// angle: -45
-			// 		},
-			// 		format: (value) => nFormatter(value)
-			// 	}
-			// },
-			{
-				isSegmented: true,
-				type: "bar",
-				data: {
-					valueFields: [
-						{
-							name: "count",
-							format: "money",
-							title: "Количество"
-						},
-						{
-							name: "price",
-							format: "money",
-							title: "Прайс"
-						}
-					],
-					valueGroup: "main"
-				},
-				embeddedLabels: "none",
-				markers: {
-					show: false
-				},
-				valueLabels: {
-					on: true,
-					position: {
-						mode: "afterStart",
-						offsetSize: 5
-					}
-					// renderForFields: ["price"]
-				},
-				lineStyles: {
-					dash: {
-						on: true,
-						dashSize: 3,
-						gapSize: 3
-					}
-				},
-				areaStyles: {
-					gradient: {
-						on: true
-					},
-					borderLine: {
-						on: true
-					}
-				},
-				barStyles: {
-					hatch: {
-						on: false
-					},
-					borderRadius: {
-						value: 0
-					}
-				}
-			}
-		]
-	}
+	// options: {
+	// 	type: "2d",
+	// 	title: "Объем товародвижения по брендам",
+	// 	selectable: true,
+	// 	grouping: {
+	// 		items: [
+	// 			{
+	// 				data: {
+	// 					field: { name: "decade" }
+	// 				}
+	// 			},
+	// 			{
+	// 				data: {
+	// 					field: { name: "year" }
+	// 				}
+	// 				// labels: { position: "start" }
+	// 			}
+	// 		]
+	// 	},
+	// 	// events: {
+	// 	// 	drawComplete: ({ canvas }) => {
+	// 	// 		console.log(canvas.keyItems, canvas.plotAreaMargin);
+	// 	// 	}
+	// 	// },
+	// 	axis: {
+	// 		key: {
+	// 			visibility: true,
+	// 			position: "end",
+	// 			ticks: {
+	// 				flag: false
+	// 			},
+	// 			labels: {
+	// 				// format: (options) => options.key
+	// 			}
+	// 		},
+	// 		value: {
+	// 			visibility: true,
+	// 			position: "start",
+	// 			domain: {
+	// 				start: -1,
+	// 				end: -1
+	// 			},
+	// 			ticks: {
+	// 				flag: false
+	// 			},
+	// 			labels: {
+	// 				format: (value) => nFormatter(value)
+	// 			},
+	// 			line: {
+	// 				visible: false
+	// 			}
+	// 		},
+	// 		valueSecondary: {
+	// 			domain: {
+	// 				end: -1,
+	// 				start: -1
+	// 			},
+	// 			ticks: {
+	// 				flag: false
+	// 			},
+	// 			labels: {
+	// 				format: (value) => nFormatter(value)
+	// 			},
+	// 			visibility: true,
+	// 			line: {
+	// 				visible: false
+	// 			}
+	// 		}
+	// 	},
+	// 	additionalElements: {
+	// 		gridLine: {
+	// 			flag: {
+	// 				value: true,
+	// 				key: false
+	// 			}
+	// 		}
+	// 	},
+	// 	legend: {
+	// 		show: true,
+	// 		position: "bottom"
+	// 	},
+	// 	orientation: "vertical",
+	// 	data: {
+	// 		dataSource: "dataSet",
+	// 		keyField: {
+	// 			name: "brand",
+	// 			format: "string"
+	// 		}
+	// 	},
+	// 	valueLabels: {
+	// 		style: {
+	// 			cssClassName: "value-labels-style",
+	// 			fontSize: 12,
+	// 			color: "rgba(68, 68, 68, 1)"
+	// 		}
+	// 	},
+	// 	tooltip: {
+	// 		aggregator: {
+	// 			content: ({ row }) => {
+	// 				return [
+	// 					{
+	// 						type: "captionValue",
+	// 						caption: "Общая сумма",
+	// 						value: nFormatter(row.price * row.count, 2)
+	// 					},
+	// 					{
+	// 						type: "captionValue",
+	// 						caption: "Год",
+	// 						value: row.year
+	// 					},
+	// 					{ type: "plainText", textContent: "Данные не являются официальными" }
+	// 				];
+	// 			},
+	// 			position: "underValues"
+	// 		},
+	// 		rows: {
+	// 			filterPredicate: (row) => row.textContent.value !== undefined,
+	// 			sortCompareFn: (aRow, bRow) => aRow.textContent.value - bRow.textContent.value
+	// 		}
+	// 	},
+	// 	charts: [
+	// 		// {
+	// 		// 	isSegmented: false,
+	// 		// 	type: "bar",
+	// 		// 	data: {
+	// 		// 		valueFields: [
+	// 		// 			{
+	// 		// 				name: "price",
+	// 		// 				format: "money",
+	// 		// 				title: "Стоимость"
+	// 		// 			}
+	// 		// 		],
+	// 		// 		valueGroup: "main"
+	// 		// 	},
+	// 		// 	embeddedLabels: "none",
+	// 		// 	markers: {
+	// 		// 		show: false
+	// 		// 	},
+	// 		// 	lineStyles: {
+	// 		// 		dash: {
+	// 		// 			on: true,
+	// 		// 			dashSize: 3,
+	// 		// 			gapSize: 3
+	// 		// 		}
+	// 		// 	},
+	// 		// 	barStyles: {
+	// 		// 		hatch: {
+	// 		// 			on: false
+	// 		// 		}
+	// 		// 	},
+	// 		// 	areaStyles: {
+	// 		// 		borderLine: {
+	// 		// 			on: true
+	// 		// 		},
+	// 		// 		gradient: {
+	// 		// 			on: true
+	// 		// 		}
+	// 		// 	},
+	// 		// 	valueLabels: {
+	// 		// 		on: false,
+	// 		// 		position: {
+	// 		// 			mode: "center"
+	// 		// 		},
+	// 		// 		rotation: {
+	// 		// 			// angle: -45
+	// 		// 		},
+	// 		// 		format: (value) => nFormatter(value)
+	// 		// 	}
+	// 		// },
+	// 		{
+	// 			isSegmented: true,
+	// 			type: "bar",
+	// 			data: {
+	// 				valueFields: [
+	// 					{
+	// 						name: "count",
+	// 						format: "money",
+	// 						title: "Количество"
+	// 					},
+	// 					{
+	// 						name: "price",
+	// 						format: "money",
+	// 						title: "Прайс"
+	// 					}
+	// 				],
+	// 				valueGroup: "main"
+	// 			},
+	// 			embeddedLabels: "none",
+	// 			markers: {
+	// 				show: false
+	// 			},
+	// 			valueLabels: {
+	// 				on: true,
+	// 				position: {
+	// 					mode: "afterStart",
+	// 					offsetSize: 5
+	// 				}
+	// 				// renderForFields: ["price"]
+	// 			},
+	// 			lineStyles: {
+	// 				dash: {
+	// 					on: true,
+	// 					dashSize: 3,
+	// 					gapSize: 3
+	// 				}
+	// 			},
+	// 			areaStyles: {
+	// 				gradient: {
+	// 					on: true
+	// 				},
+	// 				borderLine: {
+	// 					on: true
+	// 				}
+	// 			},
+	// 			barStyles: {
+	// 				hatch: {
+	// 					on: false
+	// 				},
+	// 				borderRadius: {
+	// 					value: 0
+	// 				}
+	// 			}
+	// 		}
+	// 	]
+	// }
 	// options: {
 	// 	type: "polar",
 	// 	selectable: true,
@@ -241,12 +241,11 @@ const configCars: MdtChartsConfig = {
 	// 		show: true
 	// 	},
 	// 	data: {
-	// 		dataSource: "dataSet-72",
+	// 		dataSource: "dataSet",
 	// 		keyField: {
 	// 			name: "brand",
 	// 			format: "string"
-	// 		},
-	// 		maxRecordsAmount: 10
+	// 		}
 	// 	},
 	// 	chart: {
 	// 		type: "donut",
@@ -265,6 +264,47 @@ const configCars: MdtChartsConfig = {
 	// 		}
 	// 	}
 	// }
+	options: {
+		type: "sunburst",
+		data: {
+			dataSource: "dataSet",
+			valueField: {
+				name: "price",
+				format: "money",
+				title: "Volume"
+			}
+		},
+		title: "Sales by territory and brand",
+		aggregator: {
+			content: (model) => ({
+				title: "Total sum",
+				value: model.data.reduce((acc, row) => acc + row.price, 0)
+			})
+		},
+		levels: [
+			// {
+			// 	data: {
+			// 		keyField: {
+			// 			name: "decade"
+			// 		}
+			// 	}
+			// },
+			{
+				data: {
+					keyField: {
+						name: "territory"
+					}
+				}
+			},
+			{
+				data: {
+					keyField: {
+						name: "brand"
+					}
+				}
+			}
+		]
+	}
 };
 
 function nFormatter(num: number, digits: number = 1) {

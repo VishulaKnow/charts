@@ -7,7 +7,9 @@ import {
 	TooltipBasicModel,
 	TwoDimensionalChartModel,
 	TwoDimensionalOptionsModel,
-	DonutChartSizesModel
+	DonutChartSizesModel,
+	SunburstLevelSegment,
+	TooltipContent
 } from "../../../model/model";
 import { Block } from "../../block/block";
 import { TooltipDomHelper } from "./tooltipDomHelper";
@@ -248,9 +250,9 @@ export class Tooltip {
 	static renderTooltipForSunburst(block: Block, sunburstSegmentEventDispatcher: SunburstSegmentEventDispatcher) {
 		TooltipComponentsManager.renderTooltipWrapper(block);
 		const tooltipBlock = TooltipComponentsManager.renderTooltipBlock(block);
-		const tooltipContent = TooltipComponentsManager.renderTooltipContentBlock(tooltipBlock);
+		const tooltipContentBlock = TooltipComponentsManager.renderTooltipContentBlock(tooltipBlock);
 
-		sunburstSegmentEventDispatcher.on("mousemove", ({ e, segment }) => {
+		const mousemoveHandler = (e: CustomEvent<DonutOverDetails> | MouseEvent) => {
 			const pointerCoordinate = e instanceof CustomEvent ? e.detail.pointer : pointer(e, block.getSvg().node());
 			const tooltipCoordinate = TooltipHelper.getTooltipCursorCoordinate(
 				pointerCoordinate,
@@ -258,15 +260,35 @@ export class Tooltip {
 				tooltipBlock.getEl().node().getBoundingClientRect()
 			);
 			tooltipBlock.setCoordinate(tooltipCoordinate);
-		});
+		};
 
-		sunburstSegmentEventDispatcher.on("mouseover", ({ e, segment }) => {
+		const mouseoverHandler = (tooltipContent: TooltipContent) => {
 			TooltipComponentsManager.showComponent(tooltipBlock.getEl());
-			TooltipDomHelper.fillContent(tooltipContent, segment.tooltip.content);
+			TooltipDomHelper.fillContent(tooltipContentBlock, tooltipContent);
+		};
+
+		const mouseleaveHandler = () => {
+			TooltipComponentsManager.hideComponent(tooltipBlock.getEl());
+		};
+
+		sunburstSegmentEventDispatcher.on("segmentMousemove", ({ e, segment }) => {
+			mousemoveHandler(e);
+		});
+		sunburstSegmentEventDispatcher.on("segmentMouseover", ({ e, segment }) => {
+			mouseoverHandler(segment.tooltip.content);
+		});
+		sunburstSegmentEventDispatcher.on("segmentMouseleave", ({ e, segment }) => {
+			mouseleaveHandler();
 		});
 
-		sunburstSegmentEventDispatcher.on("mouseleave", ({ e, segment }) => {
-			TooltipComponentsManager.hideComponent(tooltipBlock.getEl());
+		sunburstSegmentEventDispatcher.on("legendItemMousemove", ({ e, legendItem }) => {
+			mousemoveHandler(e);
+		});
+		sunburstSegmentEventDispatcher.on("legendItemMouseover", ({ e, legendItem }) => {
+			if (legendItem.tooltip) mouseoverHandler(legendItem.tooltip.content);
+		});
+		sunburstSegmentEventDispatcher.on("legendItemMouseleave", ({ e, legendItem }) => {
+			mouseleaveHandler();
 		});
 	}
 

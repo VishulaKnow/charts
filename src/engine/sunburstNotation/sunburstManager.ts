@@ -28,11 +28,11 @@ export class SunburstManager implements ChartContentManager {
 			model.options.aggregator
 		);
 
-		Legend.get().render(engine.block, model.options, model);
+		const legendItemsSelection = Legend.get().render(engine.block, model.options, model);
 
 		this.sunburst = new Sunburst(engine.block);
 		const allSegmentsSelection = this.sunburst.render(model.options.levels);
-		this.sunburstSegmentEventDispatcher.bind(allSegmentsSelection);
+		this.sunburstSegmentEventDispatcher.bind(allSegmentsSelection, legendItemsSelection);
 
 		Tooltip.renderTooltipForSunburst(engine.block, this.sunburstSegmentEventDispatcher);
 	}
@@ -46,8 +46,10 @@ export class SunburstManager implements ChartContentManager {
 
 		Title.updateData(block, model.options.title);
 
+		const legendItemsSelection = Legend.get().update(block, model);
+
 		this.sunburst.update(model.options.levels).then((allSegmentsSelection) => {
-			this.sunburstSegmentEventDispatcher.bind(allSegmentsSelection);
+			this.sunburstSegmentEventDispatcher.bind(allSegmentsSelection, legendItemsSelection);
 		});
 
 		Aggregator.update(
@@ -56,8 +58,6 @@ export class SunburstManager implements ChartContentManager {
 			model.options.levels[0].sizes.innerRadius,
 			model.options.levels[0].sizes.translate
 		);
-
-		Legend.get().update(block, model);
 	}
 
 	updateColors(block: Block, model: Model<SunburstOptionsModel>): void {

@@ -146,6 +146,9 @@ export interface LegendItemModel {
 	marker: ChartLegendMarkerModel;
 	markerColor: string;
 	textContent: string;
+	tooltip?: {
+		content: TooltipContent;
+	};
 }
 
 export interface BasicOptionsModelData {

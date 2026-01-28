@@ -34,21 +34,29 @@ export class SunburstModel {
 			formatter: designerConfig.dataFormat.formatters
 		});
 
+		const levels = levelModelBuilder.build({
+			data: options.data,
+			levels: options.levels
+		});
+
 		return {
-			legend: {
-				position: modelInstance.canvasModel.legendCanvas.getPosition(),
-				items: topLevelValues.map<LegendItemModel>((value, index) => ({
-					marker: POLAR_LEGEND_MARKER,
-					markerColor: chartStyle.elementColors[index % chartStyle.elementColors.length],
-					textContent: value
-				}))
-			},
 			type: "sunburst",
 			title: {
 				textContent: titleConfig.getTextContent(),
 				fontSize: titleConfig.getFontSize()
 			},
 			selectable: !!options.selectable,
+			legend: {
+				position: modelInstance.canvasModel.legendCanvas.getPosition(),
+				items: levels[0].segments.map<LegendItemModel>((segment, index) => ({
+					marker: POLAR_LEGEND_MARKER,
+					markerColor: segment.color,
+					textContent: segment.key.toString(),
+					tooltip: {
+						content: segment.tooltip.content
+					}
+				}))
+			},
 			aggregator: options.aggregator
 				? {
 						margin: designerConfig.canvas.chartOptions.donut.aggregatorPad,
@@ -59,10 +67,7 @@ export class SunburstModel {
 						valueFormat: options.data.valueField.format
 					}
 				: undefined,
-			levels: levelModelBuilder.build({
-				data: options.data,
-				levels: options.levels
-			})
+			levels
 		};
 	}
 }

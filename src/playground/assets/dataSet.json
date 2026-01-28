@@ -8,7 +8,8 @@
 			"count": 10000,
 			"color": "red",
 			"year": 2004,
-			"decade": "2000s"
+			"decade": "2000s",
+			"territory": "Moscow"
 		},
 		{
 			"$id": 2,
@@ -18,7 +19,8 @@
 			"count": 10000,
 			"color": "green",
 			"year": 2004,
-			"decade": "2000s"
+			"decade": "2000s",
+			"territory": "Moscow"
 		},
 		{
 			"$id": 3,
@@ -28,7 +30,8 @@
 			"count": 10000,
 			"color": "blue",
 			"year": 2004,
-			"decade": "2000s"
+			"decade": "2000s",
+			"territory": "Moscow"
 		},
 		{
 			"$id": 4,
@@ -38,7 +41,8 @@
 			"count": 500,
 			"color": "yellow",
 			"year": 2005,
-			"decade": "2000s"
+			"decade": "2000s",
+			"territory": "Center west"
 		},
 		{
 			"$id": 5,
@@ -48,7 +52,8 @@
 			"count": 6000,
 			"color": "cyan",
 			"year": 2005,
-			"decade": "2000s"
+			"decade": "2000s",
+			"territory": "Center west"
 		},
 		{
 			"$id": 6,
@@ -58,7 +63,8 @@
 			"count": 4000,
 			"color": "red",
 			"year": 2005,
-			"decade": "2000s"
+			"decade": "2000s",
+			"territory": "Center west"
 		},
 		{
 			"$id": 7,
@@ -68,7 +74,8 @@
 			"count": 11000,
 			"color": "orange",
 			"year": 2005,
-			"decade": "2000s"
+			"decade": "2000s",
+			"territory": "Center west"
 		},
 		{
 			"$id": 8,
@@ -78,7 +85,8 @@
 			"count": 2000,
 			"color": "brown",
 			"year": 2026,
-			"decade": "2020s"
+			"decade": "2020s",
+			"territory": "South"
 		},
 		{
 			"$id": 9,
@@ -88,7 +96,8 @@
 			"count": 15000,
 			"color": "pink",
 			"year": 2026,
-			"decade": "2020s"
+			"decade": "2020s",
+			"territory": "South"
 		},
 		{
 			"$id": 9,
@@ -98,7 +107,8 @@
 			"count": 15000,
 			"color": "pink",
 			"year": 2027,
-			"decade": "2020s"
+			"decade": "2020s",
+			"territory": "Siberia"
 		}
 	],
 	"dataSet-months": [

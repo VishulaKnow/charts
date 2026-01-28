@@ -48,7 +48,7 @@ export class Legend {
 		block: Block,
 		options: TwoDimensionalOptionsModel | PolarOptionsModel | SunburstOptionsModel,
 		model: Model
-	): void {
+	): LegendItemSelection | undefined {
 		if (options.legend.position !== "off") {
 			const legendObject = this.renderObject(
 				block,
@@ -56,14 +56,15 @@ export class Legend {
 				model.otherComponents.legendBlock,
 				model.blockCanvas.size
 			);
-			this.setContent(block, options, legendObject, model.otherComponents.legendBlock);
+			return this.setContent(block, options, legendObject, model.otherComponents.legendBlock);
 		}
+		return undefined;
 	}
 
 	public update(
 		block: Block,
 		model: Model<TwoDimensionalOptionsModel | PolarOptionsModel | SunburstOptionsModel>
-	): void {
+	): LegendItemSelection | undefined {
 		if (model.options.legend.position !== "off") {
 			const legendObject = this.getObject(block);
 			const legendCoordinate = LegendHelper.getLegendCoordinateByPosition(
@@ -73,8 +74,9 @@ export class Legend {
 			);
 			this.fillCoordinate(legendObject, legendCoordinate);
 			this.removeContent(legendObject);
-			this.setContent(block, model.options, legendObject, model.otherComponents.legendBlock);
+			return this.setContent(block, model.options, legendObject, model.otherComponents.legendBlock);
 		}
+		return undefined;
 	}
 
 	public updateColors(
@@ -114,7 +116,7 @@ export class Legend {
 		options: TwoDimensionalOptionsModel | PolarOptionsModel | SunburstOptionsModel,
 		legendObject: Selection<SVGForeignObjectElement, unknown, HTMLElement, any>,
 		legendBlockModel: LegendBlockModel
-	): void {
+	): LegendItemSelection {
 		const renderingOptions = LegendHelper.getContentRenderingOptions(
 			options.type,
 			options.legend.position,
@@ -126,6 +128,8 @@ export class Legend {
 			LegendEventsManager.setListeners(block, options.data.keyField.name, itemBlocks, options.selectable);
 
 		if (options.type === "2d") LegendDomHelper.setItemsTitles(itemBlocks);
+
+		return itemBlocks;
 	}
 
 	private renderObject(
