@@ -181,10 +181,10 @@ export class Sunburst {
 	} {
 		const arcGenerator = arc<PieArcDatum<SunburstLevelSegment>>()
 			.innerRadius(level.sizes.innerRadius)
-			.outerRadius(level.sizes.outerRadius);
+			.outerRadius(level.sizes.outerRadius)
+			.padAngle((d) => (d.value === 0 ? 0 : this.pagAngle));
 
 		const pieGenerator = pie<SunburstLevelSegment>()
-			.padAngle(this.pagAngle)
 			.sort(null)
 			.value((d) => d.value);
 
