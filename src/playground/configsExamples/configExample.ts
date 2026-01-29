@@ -293,10 +293,10 @@ const configCars: MdtChartsConfig = {
 				data: {
 					keyField: {
 						name: "territory"
-					},
-					colorField: {
-						name: "territoryColor"
 					}
+					// colorField: {
+					// 	name: "territoryColor"
+					// }
 				}
 			},
 			{

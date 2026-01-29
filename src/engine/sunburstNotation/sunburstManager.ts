@@ -26,13 +26,15 @@ export class SunburstManager implements ChartContentManager {
 
 		Title.render(engine.block, model.options.title, model.otherComponents.titleBlock, model.blockCanvas.size);
 
-		Aggregator.render(
-			engine.block,
-			model.options.levels[0].sizes.innerRadius,
-			model.options.levels[0].sizes.translate,
-			model.options.levels[0].sizes.thickness,
-			model.options.aggregator
-		);
+		if (model.options.aggregator) {
+			Aggregator.render(
+				engine.block,
+				model.options.levels[0].sizes.innerRadius,
+				model.options.levels[0].sizes.translate,
+				model.options.levels[0].sizes.thickness,
+				model.options.aggregator
+			);
+		}
 
 		const legendItemsSelection = Legend.get().render(engine.block, model.options, model);
 
@@ -83,12 +85,14 @@ export class SunburstManager implements ChartContentManager {
 			this.sunburstHighlightState.setLevels(model.options.levels);
 		});
 
-		Aggregator.update(
-			block,
-			model.options.aggregator,
-			model.options.levels[0].sizes.innerRadius,
-			model.options.levels[0].sizes.translate
-		);
+		if (model.options.aggregator) {
+			Aggregator.update(
+				block,
+				model.options.aggregator,
+				model.options.levels[0].sizes.innerRadius,
+				model.options.levels[0].sizes.translate
+			);
+		}
 	}
 
 	updateColors(block: Block, model: Model<SunburstOptionsModel>): void {
