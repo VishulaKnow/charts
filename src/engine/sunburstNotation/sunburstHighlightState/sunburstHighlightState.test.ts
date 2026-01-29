@@ -493,4 +493,120 @@ describe("SunburstHighlightState", () => {
 			}
 		]);
 	});
+
+	it("should highlight new segment on its legend hover when it is added", () => {
+		const sunburstHighlightState = new SunburstHighlightState(publicSelectEventCallback);
+		sunburstHighlightState.setLevels(levels);
+
+		let resultHighlighted: SunburstLevelSegment[] = [];
+		sunburstHighlightState.on("highlightedSegmentsChanged", ({ highlightedSegments }) => {
+			resultHighlighted = highlightedSegments;
+		});
+
+		const newLevels: SunburstLevel[] = JSON.parse(JSON.stringify(levels));
+		newLevels[0].segments.push({
+			color: "blue",
+			key: "America",
+			levelIndex: 0,
+			parentLevelKey: undefined,
+			attachedDataRows: [],
+			tooltip: {
+				content: { type: "rows", rows: [] }
+			},
+			value: 100
+		});
+		newLevels[1].segments.push({
+			color: "blue",
+			key: "Buick",
+			levelIndex: 1,
+			parentLevelKey: "America",
+			attachedDataRows: [],
+			tooltip: {
+				content: { type: "rows", rows: [] }
+			},
+			value: 100
+		});
+
+		sunburstHighlightState.setLevels(newLevels);
+
+		sunburstHighlightState.setHoverSegmentLegendItem({
+			marker: { markerShape: "circle" },
+			markerColor: "red",
+			textContent: "America"
+		});
+
+		expect(resultHighlighted).toEqual([newLevels[0].segments[2], newLevels[1].segments[4]]);
+	});
+
+	it("should select new segment on its legend click when it is added", () => {
+		const sunburstHighlightState = new SunburstHighlightState(publicSelectEventCallback);
+		sunburstHighlightState.setLevels(levels);
+
+		let resultHighlighted: SunburstLevelSegment[] = [];
+		sunburstHighlightState.on("highlightedSegmentsChanged", ({ highlightedSegments }) => {
+			resultHighlighted = highlightedSegments;
+		});
+
+		let resultSelected: SunburstLevelSegment[] = [];
+		sunburstHighlightState.on("selectedSegmentsChanged", ({ selectedSegments }) => {
+			resultSelected = selectedSegments;
+		});
+
+		const newLevels: SunburstLevel[] = JSON.parse(JSON.stringify(levels));
+		newLevels[0].segments.push({
+			color: "blue",
+			key: "America",
+			levelIndex: 0,
+			parentLevelKey: undefined,
+			attachedDataRows: [
+				{
+					territory: "America",
+					brand: "Buick",
+					value: 100
+				}
+			],
+			tooltip: {
+				content: { type: "rows", rows: [] }
+			},
+			value: 100
+		});
+		newLevels[1].segments.push({
+			color: "blue",
+			key: "Buick",
+			levelIndex: 1,
+			parentLevelKey: "America",
+			attachedDataRows: [
+				{
+					territory: "America",
+					brand: "Buick",
+					value: 100
+				}
+			],
+			tooltip: {
+				content: { type: "rows", rows: [] }
+			},
+			value: 100
+		});
+
+		sunburstHighlightState.setLevels(newLevels);
+
+		sunburstHighlightState.changeLegendItemSelection(
+			{
+				marker: { markerShape: "circle" },
+				markerColor: "red",
+				textContent: "America"
+			},
+			false
+		);
+
+		expect(resultSelected).toEqual([newLevels[0].segments[2], newLevels[1].segments[4]]);
+
+		expect(publicSelectEventCallback).toHaveBeenCalledWith([
+			{
+				territory: "America",
+				brand: "Buick",
+				value: 100
+			}
+		]);
+	});
 });
