@@ -104,14 +104,17 @@ export interface MdtChartsSunburstOptions {
 		//TODO: multiple value fields for each level?
 		valueField: MdtChartsValueField;
 	};
-	levels: {
-		data: {
-			keyField: MdtChartsBaseField;
-		};
-		canvas?: {
-			thickness?: MdtChartsDonutThicknessOptions;
-		};
-	}[];
+	levels: MdtChartsSunburstLevel[];
+}
+
+export interface MdtChartsSunburstLevel {
+	data: {
+		keyField: MdtChartsBaseField;
+		colorField?: MdtChartsBaseField;
+	};
+	canvas?: {
+		thickness?: MdtChartsDonutThicknessOptions;
+	};
 }
 
 //====================================================== Options

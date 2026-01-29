@@ -22,12 +22,16 @@ export class LevelModelBuilder {
 		const sizesByLevels = this.getLevelSizes(publicConfig);
 
 		const topLevelKeyFieldName = publicConfig.levels[0].data.keyField.name;
-		//TODO: extract to function and remove duplicate with sunburstModel
-		const topLevelValues = this.config.scopedDataRows
-			.map((record) => record[topLevelKeyFieldName])
-			.filter((value, index, self) => self.indexOf(value) === index);
-		const topLevelColorsByValue = topLevelValues.reduce<Record<string, string>>((acc, value, index) => {
-			acc[value] = this.config.topLevelColors[index % this.config.topLevelColors.length];
+		const topLevelColorFieldName = publicConfig.levels[0].data.colorField?.name;
+
+		const topLevelKeys = this.config.scopedDataRows
+			.map((record) => ({
+				key: record[topLevelKeyFieldName],
+				color: topLevelColorFieldName ? record[topLevelColorFieldName] : undefined
+			}))
+			.filter((values, index, self) => self.findIndex((v) => v.key === values.key) === index);
+		const topLevelColorsByKey = topLevelKeys.reduce<Record<string, string>>((acc, value, index) => {
+			acc[value.key] = value.color ?? this.config.topLevelColors[index % this.config.topLevelColors.length];
 			return acc;
 		}, {});
 
@@ -47,7 +51,7 @@ export class LevelModelBuilder {
 
 				if (key == null) return;
 
-				const color = topLevelColorsByValue[row[topLevelKeyFieldName]];
+				const color = topLevelColorsByKey[row[topLevelKeyFieldName]];
 				let parentLevelKey: string | number | undefined = undefined;
 				if (levelIndex > 0) {
 					parentLevelKey = row[publicConfig.levels[levelIndex - 1].data.keyField.name];

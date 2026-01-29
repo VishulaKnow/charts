@@ -17,6 +17,7 @@ const margin: BlockMargin = {
 const scopedDataRows: MdtChartsDataRow[] = [
 	{
 		year: 2019,
+		yearColor: "#aaa",
 		brand: "BMW",
 		price: 100_000,
 		decade: "2010s"
@@ -24,17 +25,20 @@ const scopedDataRows: MdtChartsDataRow[] = [
 	{
 		year: 2019,
 		brand: "AUDI",
+		yearColor: "#aaa",
 		price: 120_000,
 		decade: "2010s"
 	},
 	{
 		year: 2026,
+		yearColor: "#ccc",
 		brand: "MERCEDES",
 		price: 150_000,
 		decade: "2020s"
 	},
 	{
 		year: 2026,
+		yearColor: "#ccc",
 		brand: "VOLKSWAGEN",
 		price: 115_000,
 		decade: "2020s"
@@ -105,12 +109,14 @@ describe("LevelModelBuilder", () => {
 							attachedDataRows: [
 								{
 									year: 2019,
+									yearColor: "#aaa",
 									brand: "BMW",
 									price: 100_000,
 									decade: "2010s"
 								},
 								{
 									year: 2019,
+									yearColor: "#aaa",
 									brand: "AUDI",
 									price: 120_000,
 									decade: "2010s"
@@ -140,12 +146,14 @@ describe("LevelModelBuilder", () => {
 							attachedDataRows: [
 								{
 									year: 2026,
+									yearColor: "#ccc",
 									brand: "MERCEDES",
 									price: 150_000,
 									decade: "2020s"
 								},
 								{
 									year: 2026,
+									yearColor: "#ccc",
 									brand: "VOLKSWAGEN",
 									price: 115_000,
 									decade: "2020s"
@@ -180,6 +188,7 @@ describe("LevelModelBuilder", () => {
 							attachedDataRows: [
 								{
 									year: 2019,
+									yearColor: "#aaa",
 									brand: "BMW",
 									price: 100_000,
 									decade: "2010s"
@@ -209,6 +218,7 @@ describe("LevelModelBuilder", () => {
 							attachedDataRows: [
 								{
 									year: 2019,
+									yearColor: "#aaa",
 									brand: "AUDI",
 									price: 120_000,
 									decade: "2010s"
@@ -238,6 +248,7 @@ describe("LevelModelBuilder", () => {
 							attachedDataRows: [
 								{
 									year: 2026,
+									yearColor: "#ccc",
 									brand: "MERCEDES",
 									price: 150_000,
 									decade: "2020s"
@@ -267,6 +278,7 @@ describe("LevelModelBuilder", () => {
 							attachedDataRows: [
 								{
 									year: 2026,
+									yearColor: "#ccc",
 									brand: "VOLKSWAGEN",
 									price: 115_000,
 									decade: "2020s"
@@ -412,6 +424,51 @@ describe("LevelModelBuilder", () => {
 				thickness: 12,
 				translate: { x: 100, y: 100 }
 			});
+		});
+
+		test("should build a level model for two levels without custom thickness", () => {
+			const levelModelBuilder = new LevelModelBuilder({
+				blockSize,
+				margin,
+				scopedDataRows,
+				topLevelColors: ["red", "green", "blue"],
+				formatter: (value) => value.toFixed(2)
+			});
+
+			const levelModel = levelModelBuilder.build({
+				data: {
+					dataSource: "data",
+					valueField: {
+						name: "price",
+						format: "money",
+						title: "Стоимость"
+					}
+				},
+				levels: [
+					{
+						data: {
+							keyField: {
+								name: "year"
+							},
+							colorField: { name: "yearColor" }
+						}
+					},
+					{
+						data: {
+							keyField: {
+								name: "brand"
+							}
+						}
+					}
+				]
+			});
+
+			expect(levelModel[0].segments[0].color).toEqual("#aaa");
+			expect(levelModel[0].segments[1].color).toEqual("#ccc");
+			expect(levelModel[1].segments[0].color).toEqual("#aaa");
+			expect(levelModel[1].segments[1].color).toEqual("#aaa");
+			expect(levelModel[1].segments[2].color).toEqual("#ccc");
+			expect(levelModel[1].segments[3].color).toEqual("#ccc");
 		});
 	});
 });
