@@ -642,11 +642,24 @@ const instance = new ChartInstanceStorage(config, designerConfig, data);
 new Listeners(instance, config, designerConfig, data);
 
 // setTimeout(() => {
-//     const newData = { dataSet: data.dataSet.map((r: any) => ({ ...r })) };
-//     newData.dataSet[4].price = 10_000;
-//     newData.dataSet[8].count = 1000;
-//     instance.getChart().updateData(newData);
-//     instance.getChart().updateColors(["red", "yellow", "blue"])
+// 	const newData = { dataSet: data.dataSet.map((r: any) => ({ ...r })) };
+// 	newData.dataSet[8].price = 10_000;
+// 	newData.dataSet[8].count = 1000;
+// 	newData.dataSet.push({
+// 		$id: 14,
+// 		brand: "FORD FORD - 15%",
+// 		price: 12000,
+// 		price2: 20000,
+// 		count: 10000,
+// 		color: "green",
+// 		year: 2035,
+// 		decade: "2030s",
+// 		territory: "Europe",
+// 		territoryColor: "orange"
+// 	});
+// 	newData.dataSet = newData.dataSet.filter((r: any) => r.territory !== "Center west");
+// 	instance.getChart().updateData(newData);
+// 	// instance.getChart().updateColors(["red", "yellow", "blue"]);
 // }, 5000);
 
 const chart2 = new Chart(require("./configsExamples/configTest2D.json"), designerConfig, data, false);
