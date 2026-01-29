@@ -168,7 +168,11 @@ describe("SunburstHighlightState", () => {
 			result = highlightedSegments;
 		});
 
-		sunburstHighlightState.setHoverSegmentLegendItem(levels[0].segments[0]);
+		sunburstHighlightState.setHoverSegmentLegendItem({
+			marker: { markerShape: "circle" },
+			markerColor: "red",
+			textContent: "Moscow"
+		});
 
 		expect(result).toEqual([levels[0].segments[0], levels[1].segments[0], levels[1].segments[1]]);
 	});

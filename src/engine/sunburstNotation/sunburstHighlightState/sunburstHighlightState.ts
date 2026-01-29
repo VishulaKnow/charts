@@ -1,6 +1,6 @@
 import { MdtChartsDataRow } from "../../../config/config";
 import { EventEmitter } from "../../../model/helpers/eventEmitter";
-import { SunburstLevel, SunburstLevelSegment } from "../../../model/model";
+import { LegendItemModel, SunburstLevel, SunburstLevelSegment } from "../../../model/model";
 import { FilterCallback } from "../../filterManager/filterEventManager";
 
 export class SunburstHighlightState {
@@ -66,17 +66,6 @@ export class SunburstHighlightState {
 		});
 	}
 
-	setHoverSegmentLegendItem(segment: SunburstLevelSegment): void {
-		const highlightSegments: SunburstLevelSegment[] = [segment];
-
-		const childSegments = this.getAllChildSegments(segment);
-		highlightSegments.push(...childSegments);
-
-		this.eventEmitter.emit("highlightedSegmentsChanged", {
-			highlightedSegments: [...this.selectedSegments, ...highlightSegments]
-		});
-	}
-
 	clearHoverHighlightedSegment(): void {
 		this.eventEmitter.emit("highlightedSegmentsChanged", {
 			highlightedSegments: this.selectedSegments
@@ -126,6 +115,27 @@ export class SunburstHighlightState {
 		this.eventEmitter.emit("selectedSegmentsChanged", {
 			selectedSegments: this.selectedSegments
 		});
+	}
+
+	setHoverSegmentLegendItem(legendItem: LegendItemModel): void {
+		const segment = this.levels[0].segments.find((segment) => segment.key === legendItem.textContent);
+		if (segment) {
+			const highlightSegments: SunburstLevelSegment[] = [segment];
+
+			const childSegments = this.getAllChildSegments(segment);
+			highlightSegments.push(...childSegments);
+
+			this.eventEmitter.emit("highlightedSegmentsChanged", {
+				highlightedSegments: [...this.selectedSegments, ...highlightSegments]
+			});
+		}
+	}
+
+	changeLegendItemSelection(legendItem: LegendItemModel, multiModeKeyPressed: boolean) {
+		const segment = this.levels[0].segments.find((segment) => segment.key === legendItem.textContent);
+		if (segment) {
+			this.changeSegmentSelection(segment, multiModeKeyPressed);
+		}
 	}
 
 	clearSelection(firePublicEvent?: boolean): void {

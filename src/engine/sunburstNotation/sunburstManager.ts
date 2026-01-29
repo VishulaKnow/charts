@@ -55,19 +55,13 @@ export class SunburstManager implements ChartContentManager {
 		});
 
 		this.sunburstSegmentEventDispatcher.on("legendItemMouseover", ({ legendItem }) => {
-			const segment = model.options.levels[0].segments.find((segment) => segment.key === legendItem.textContent);
-			if (segment) {
-				this.sunburstHighlightState.setHoverSegmentLegendItem(segment);
-			}
+			this.sunburstHighlightState.setHoverSegmentLegendItem(legendItem);
 		});
 		this.sunburstSegmentEventDispatcher.on("legendItemMouseleave", ({ legendItem }) => {
 			this.sunburstHighlightState.clearHoverHighlightedSegment();
 		});
 		this.sunburstSegmentEventDispatcher.on("legendItemClick", ({ multiModeKeyPressed, legendItem }) => {
-			const segment = model.options.levels[0].segments.find((segment) => segment.key === legendItem.textContent);
-			if (segment) {
-				this.sunburstHighlightState.changeSegmentSelection(segment, multiModeKeyPressed);
-			}
+			this.sunburstHighlightState.changeLegendItemSelection(legendItem, multiModeKeyPressed);
 		});
 
 		this.sunburst.setHighlightedSegmentsHandle(this.sunburstHighlightState);
