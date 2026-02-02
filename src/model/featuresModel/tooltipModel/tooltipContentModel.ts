@@ -1,6 +1,12 @@
-import { MdtChartsDataRow, TooltipOptions } from "../../../config/config";
+import { MdtChartsDataRow, TooltipTypedRowContent, TooltipOptions } from "../../../config/config";
 import { Formatter } from "../../../main";
 import { TooltipContent, TooltipContentRow, TooltipContentWithRows, TooltipMarkerModel, ValueField } from "../../model";
+import {
+	BAR_CHART_BORDER_RADIUS_DEFAULT,
+	getBorderRadiusValues,
+	getWidthOfLegendMarkerByType,
+	LINE_CHART_DEFAULT_WIDTH
+} from "../../notations/twoDimensional/styles";
 import { TooltipContentInitialRowsProvider } from "./contentByNotations/tooltipContentInitialRowsProvider";
 
 export interface TooltipContentGeneratorOptions {
@@ -20,9 +26,9 @@ interface TooltipInitialRow {
 	valueField: ValueField;
 }
 
-export class TwoDimTooltipContentGenerator {
-	private readonly headWrapperCssClassName: string = "tooltip-head";
+export const TOOLTIP_HEAD_WRAPPER_CSS_CLASSNAME = "tooltip-head";
 
+export class TwoDimTooltipContentGenerator {
 	constructor(private readonly options: TooltipContentGeneratorOptions) {}
 
 	generateContent(keyFieldValue: string): TooltipContent {
@@ -68,7 +74,7 @@ export class TwoDimTooltipContentGenerator {
 				? this.options.publicOptions.formatValue({
 						rawValue: currentDataRow[initialRow.valueField.name],
 						autoFormattedValue: formattedValueByDefault
-				  })
+					})
 				: formattedValueByDefault;
 
 			contentRows.push({
@@ -84,17 +90,7 @@ export class TwoDimTooltipContentGenerator {
 			const contentResult = this.options.publicOptions.aggregator.content({ row: currentDataRow });
 			const aggregatorContent = Array.isArray(contentResult) ? contentResult : [contentResult];
 
-			const tooltipAggregatorItem = aggregatorContent.map<TooltipContentRow>((content) => {
-				const caption = content.type === "plainText" ? content.textContent : content.caption;
-				const value = content.type === "plainText" ? undefined : content.value;
-
-				return {
-					textContent: {
-						caption,
-						value
-					}
-				};
-			});
+			const tooltipAggregatorItem = tooltipPublicRowToModel(aggregatorContent);
 
 			if (this.options.publicOptions.aggregator.position === "underValues")
 				contentRows = contentRows.concat(tooltipAggregatorItem);
@@ -106,7 +102,7 @@ export class TwoDimTooltipContentGenerator {
 				caption: keyFieldValue
 			},
 			wrapper: {
-				cssClassName: this.headWrapperCssClassName
+				cssClassName: TOOLTIP_HEAD_WRAPPER_CSS_CLASSNAME
 			}
 		};
 		contentRows.unshift(headerRow);
@@ -116,4 +112,45 @@ export class TwoDimTooltipContentGenerator {
 			rows: contentRows
 		};
 	}
+}
+
+export function tooltipPublicRowToModel(publicRows: TooltipTypedRowContent[]): TooltipContentRow[] {
+	return publicRows.map<TooltipContentRow>((content) => {
+		const caption = content.type === "plainText" ? content.textContent : content.caption;
+		const value = content.type === "plainText" ? undefined : content.value;
+
+		let marker: TooltipMarkerModel | undefined = undefined;
+		if (content.marker) {
+			if (content.marker.shape === "circle") marker = { markerShape: "circle", color: content.marker.color };
+			else if (content.marker.shape === "bar")
+				marker = {
+					markerShape: "bar",
+					barViewOptions: {
+						width: getWidthOfLegendMarkerByType("bar"),
+						hatch: { on: false },
+						borderRadius: getBorderRadiusValues(BAR_CHART_BORDER_RADIUS_DEFAULT)
+					},
+					color: content.marker.color
+				};
+			else if (content.marker.shape === "line")
+				marker = {
+					markerShape: "line",
+					lineViewOptions: {
+						length: getWidthOfLegendMarkerByType("line"),
+						dashedStyles: { on: false, dashSize: 0, gapSize: 0 },
+						strokeWidth: LINE_CHART_DEFAULT_WIDTH
+					},
+					color: content.marker.color
+				};
+		}
+
+		return {
+			marker,
+			textContent: {
+				caption,
+				value
+			},
+			wrapper: content.wrapperElOptions ? { cssClassName: content.wrapperElOptions.cssClassName } : undefined
+		};
+	});
 }

@@ -1,9 +1,13 @@
 import { DonutChartSizesModel, SunburstLevel, SunburstLevelSegment } from "../../../model";
 import { BlockMargin } from "../../../model";
-import { MdtChartsDataRow, MdtChartsSunburstOptions, Size } from "../../../../config/config";
+import { MdtChartsDataRow, MdtChartsSunburstOptions, Size, TooltipTypedRowContent } from "../../../../config/config";
 import { DonutThicknessCalculator, DonutThicknessService } from "../../polar/donut/donutThicknessService";
 import { getDonutLikeOuterRadius, getDonutLikeTranslate } from "../../polar/donut/donutLikeSizesCalculator";
 import { Formatter, MdtChartsDonutThicknessOptions } from "../../../../designer/designerConfig";
+import {
+	TOOLTIP_HEAD_WRAPPER_CSS_CLASSNAME,
+	tooltipPublicRowToModel
+} from "../../../featuresModel/tooltipModel/tooltipContentModel";
 
 interface LevelModelBuilderConfig {
 	margin: BlockMargin;
@@ -68,6 +72,32 @@ export class LevelModelBuilder {
 				sizes: sizesByLevels[levelIndex],
 				segments: Array.from(valuesForLevelKeys.entries()).map<SunburstLevelSegment>(
 					([key, { value, color, parentLevelKey, attachedDataRows }]) => {
+						let tooltipContentRows: TooltipTypedRowContent[] = [
+							{
+								type: "plainText",
+								textContent: key,
+								wrapperElOptions: { cssClassName: TOOLTIP_HEAD_WRAPPER_CSS_CLASSNAME }
+							},
+							{
+								type: "captionValue",
+								marker: {
+									shape: "circle",
+									color
+								},
+								caption: publicConfig.data.valueField.title,
+								value: this.config.formatter(value, {
+									type: publicConfig.data.valueField.format
+								})
+							}
+						];
+
+						if (level.tooltip?.overrideContent) {
+							tooltipContentRows = level.tooltip.overrideContent({
+								autoTooltipRows: tooltipContentRows,
+								attachedDataRows
+							}).rows;
+						}
+
 						return {
 							value,
 							key,
@@ -78,25 +108,7 @@ export class LevelModelBuilder {
 							tooltip: {
 								content: {
 									type: "rows",
-									rows: [
-										{
-											textContent: {
-												caption: key
-											}
-										},
-										{
-											marker: {
-												markerShape: "circle",
-												color
-											},
-											textContent: {
-												caption: publicConfig.data.valueField.title,
-												value: this.config.formatter(value, {
-													type: publicConfig.data.valueField.format
-												})
-											}
-										}
-									]
+									rows: tooltipPublicRowToModel(tooltipContentRows)
 								}
 							}
 						};

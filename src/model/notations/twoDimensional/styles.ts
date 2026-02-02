@@ -24,7 +24,7 @@ import {
 import { MdtChartsLineLikeChartCurveType, MdtChartsLineLikeChartShape } from "../../../designer/designerConfig";
 import { styledElementValues } from "../../modelBuilder";
 
-const BAR_CHART_BORDER_RADIUS_DEFAULT = 2;
+export const BAR_CHART_BORDER_RADIUS_DEFAULT = 2;
 export const LINE_CHART_DEFAULT_WIDTH = 2;
 
 export function parseShape(
@@ -67,7 +67,7 @@ export function getBarViewOptions(
 	const defaultRadius = chart.barStyles?.borderRadius?.value ?? BAR_CHART_BORDER_RADIUS_DEFAULT;
 
 	const borderRadius: BarLikeChartBorderRadius = {
-		grouped: getRadiusValues(defaultRadius),
+		grouped: getBorderRadiusValues(defaultRadius),
 		segmented: {
 			handle: (valueIndex: number) =>
 				getSegmentedRadiusValues(chart.data.valueFields.length, valueIndex, keyAxisOrient, defaultRadius)
@@ -95,7 +95,7 @@ export function calculateBarIndexes(
 	return currentChart.data.valueFields.map((_, index) => startBarIndex + index);
 }
 
-function getRadiusValues(defaultRadius: number): BarBorderRadius {
+export function getBorderRadiusValues(defaultRadius: number): BarBorderRadius {
 	return {
 		topLeft: defaultRadius,
 		topRight: defaultRadius,
@@ -124,7 +124,7 @@ export function getSegmentedRadiusValues(
 			right: { topLeft: defaultRadius, topRight: 0, bottomLeft: defaultRadius, bottomRight: 0 }
 		},
 		middle: { topLeft: 0, topRight: 0, bottomLeft: 0, bottomRight: 0 },
-		default: getRadiusValues(defaultRadius)
+		default: getBorderRadiusValues(defaultRadius)
 	};
 
 	if (segmentsLength === 1) return radiusConfigs.default;
@@ -145,7 +145,9 @@ export function getLegendMarkerOptions(chart: MdtChartsTwoDimensionalChart): Cha
 		markerShape: shapeByType[chart.type],
 		barViewOptions: {
 			hatch: { on: chart.barStyles?.hatch?.on ?? false },
-			borderRadius: getRadiusValues(chart.barStyles?.borderRadius?.value ?? BAR_CHART_BORDER_RADIUS_DEFAULT),
+			borderRadius: getBorderRadiusValues(
+				chart.barStyles?.borderRadius?.value ?? BAR_CHART_BORDER_RADIUS_DEFAULT
+			),
 			width: getWidthOfLegendMarkerByType("bar")
 		},
 		lineViewOptions: getLineViewOptions(chart)

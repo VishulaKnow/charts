@@ -112,6 +112,14 @@ export interface MdtChartsSunburstLevel {
 		keyField: MdtChartsBaseField;
 		colorField?: MdtChartsBaseField;
 	};
+	tooltip?: {
+		overrideContent?: (options: {
+			autoTooltipRows: TooltipTypedRowContent[];
+			attachedDataRows: MdtChartsDataRow[];
+		}) => {
+			rows: TooltipTypedRowContent[];
+		};
+	};
 	canvas?: {
 		thickness?: MdtChartsDonutThicknessOptions;
 	};
@@ -201,13 +209,24 @@ export interface TooltipOptions {
 export type TooltipHtml = (dataRow: MdtChartsDataRow) => string;
 
 export interface TooltipAggregator {
-	content: (options: { row: MdtChartsDataRow }) => TooltipAggregatorContent | TooltipAggregatorContent[];
+	content: (options: { row: MdtChartsDataRow }) => TooltipTypedRowContent | TooltipTypedRowContent[];
 	position?: "underKey" | "underValues";
 }
 
-export type TooltipAggregatorContent =
-	| { type: "plainText"; textContent: string }
-	| { type: "captionValue"; caption: string; value: any };
+export type TooltipTypedRowContent =
+	| {
+			type: "plainText";
+			textContent: string;
+			marker?: { shape: "circle" | "bar" | "line"; color: string };
+			wrapperElOptions?: { cssClassName?: string };
+	  }
+	| {
+			type: "captionValue";
+			caption: string;
+			value: any;
+			marker?: { shape: "circle" | "bar" | "line"; color: string };
+			wrapperElOptions?: { cssClassName?: string };
+	  };
 
 export type TooltipFormatValue = (params: {
 	rawValue: number | null | undefined;

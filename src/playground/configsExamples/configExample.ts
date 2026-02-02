@@ -297,6 +297,26 @@ const configCars: MdtChartsConfig = {
 					// colorField: {
 					// 	name: "territoryColor"
 					// }
+				},
+				tooltip: {
+					overrideContent: ({ attachedDataRows, autoTooltipRows }) => {
+						if (autoTooltipRows[0].type === "plainText") {
+							autoTooltipRows[0].textContent = autoTooltipRows[0].textContent + " +23";
+						}
+						return {
+							rows: autoTooltipRows.concat([
+								{
+									type: "captionValue",
+									caption: "Attached data rows",
+									value: attachedDataRows.length,
+									marker: {
+										shape: "circle",
+										color: "red"
+									}
+								}
+							])
+						};
+					}
 				}
 			},
 			{

@@ -1,4 +1,5 @@
 import { BlockMargin, MdtChartsDataRow, Size } from "../../../../config/config";
+import { TOOLTIP_HEAD_WRAPPER_CSS_CLASSNAME } from "../../../featuresModel/tooltipModel/tooltipContentModel";
 import { SunburstLevel } from "../../../model";
 import { LevelModelBuilder } from "./levelModelBuilder";
 
@@ -92,7 +93,8 @@ describe("LevelModelBuilder", () => {
 								content: {
 									rows: [
 										{
-											textContent: { caption: 2019 }
+											textContent: { caption: 2019 },
+											wrapper: { cssClassName: TOOLTIP_HEAD_WRAPPER_CSS_CLASSNAME }
 										},
 										{
 											textContent: { caption: "Стоимость", value: "220000.00" },
@@ -129,7 +131,8 @@ describe("LevelModelBuilder", () => {
 								content: {
 									rows: [
 										{
-											textContent: { caption: 2026 }
+											textContent: { caption: 2026 },
+											wrapper: { cssClassName: TOOLTIP_HEAD_WRAPPER_CSS_CLASSNAME }
 										},
 										{
 											textContent: { caption: "Стоимость", value: "265000.00" },
@@ -171,7 +174,8 @@ describe("LevelModelBuilder", () => {
 								content: {
 									rows: [
 										{
-											textContent: { caption: "BMW" }
+											textContent: { caption: "BMW" },
+											wrapper: { cssClassName: TOOLTIP_HEAD_WRAPPER_CSS_CLASSNAME }
 										},
 										{
 											textContent: { caption: "Стоимость", value: "100000.00" },
@@ -201,7 +205,8 @@ describe("LevelModelBuilder", () => {
 								content: {
 									rows: [
 										{
-											textContent: { caption: "AUDI" }
+											textContent: { caption: "AUDI" },
+											wrapper: { cssClassName: TOOLTIP_HEAD_WRAPPER_CSS_CLASSNAME }
 										},
 										{
 											textContent: { caption: "Стоимость", value: "120000.00" },
@@ -231,7 +236,8 @@ describe("LevelModelBuilder", () => {
 								content: {
 									rows: [
 										{
-											textContent: { caption: "MERCEDES" }
+											textContent: { caption: "MERCEDES" },
+											wrapper: { cssClassName: TOOLTIP_HEAD_WRAPPER_CSS_CLASSNAME }
 										},
 										{
 											textContent: { caption: "Стоимость", value: "150000.00" },
@@ -261,7 +267,8 @@ describe("LevelModelBuilder", () => {
 								content: {
 									rows: [
 										{
-											textContent: { caption: "VOLKSWAGEN" }
+											textContent: { caption: "VOLKSWAGEN" },
+											wrapper: { cssClassName: TOOLTIP_HEAD_WRAPPER_CSS_CLASSNAME }
 										},
 										{
 											textContent: { caption: "Стоимость", value: "115000.00" },
