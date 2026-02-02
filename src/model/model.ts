@@ -595,7 +595,6 @@ export interface TwoDimensionalChartModel
 export interface DonutChartModel extends ChartModel {
 	type: PolarChartType;
 	data: PolarChartDataModel;
-	legend: ChartLegendMarkerModel;
 	sizes: DonutChartSizesModel;
 }
 

@@ -30,9 +30,6 @@ describe("Donut ColorReader", () => {
 						title: ""
 					},
 					colorField
-				},
-				legend: {
-					markerShape: "circle"
 				}
 			};
 		};

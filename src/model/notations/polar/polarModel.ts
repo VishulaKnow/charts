@@ -151,7 +151,6 @@ export class PolarModel {
 			data: { ...chart.data },
 			cssClasses: ChartStyleModelService.getCssClasses(0),
 			style: chartStyle,
-			legend: POLAR_LEGEND_MARKER,
 			sizes: {
 				thickness,
 				outerRadius,
