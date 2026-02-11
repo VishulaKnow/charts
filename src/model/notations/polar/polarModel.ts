@@ -64,11 +64,16 @@ export class PolarModel {
 				position: modelInstance.canvasModel.legendCanvas.getPosition(),
 				items: modelInstance.dataModel.repository
 					.getScopedRows()
-					.map((record: MdtChartsDataRow, index: number) => ({
-						marker: POLAR_LEGEND_MARKER,
-						markerColor: chartStyle.elementColors[index % chartStyle.elementColors.length],
-						textContent: record[options.data.keyField.name]
-					}))
+					.map((record: MdtChartsDataRow, index: number) => {
+						let markerColor = chartStyle.elementColors[index % chartStyle.elementColors.length];
+						if (options.chart.data.colorField) markerColor = record[options.chart.data.colorField];
+
+						return {
+							marker: POLAR_LEGEND_MARKER,
+							markerColor,
+							textContent: record[options.data.keyField.name]
+						};
+					})
 			},
 			tooltip: {
 				getContent: (keyFieldValue) => {
