@@ -299,3 +299,11 @@
 .mdt-charts-arc-non-highlighted {
     opacity: 0.6;
 }
+
+.mdt-charts-arc-label {
+    text-anchor: middle;
+    dominant-baseline: middle;
+    font-size: 10px;
+    fill: black;
+    pointer-events: none;
+}

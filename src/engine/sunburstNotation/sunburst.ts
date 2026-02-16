@@ -5,12 +5,16 @@ import { Selection } from "d3-selection";
 import { merge } from "d3-array";
 import { interpolate } from "d3-interpolate";
 import { SunburstHighlightState } from "./sunburstHighlightState/sunburstHighlightState";
+import { SunburstSegmentLabel } from "./sunburstSegmentLabel";
 
 export class Sunburst {
 	public static readonly donutBlockClassPrefix = "level-donut-block";
 	public static readonly arcItemClass = "arc";
-	private static readonly arcItemNonHighlightedClass = "mdt-charts-arc-non-highlighted";
 	public static readonly arcPathClass = "arc-path";
+
+	private static readonly arcItemNonHighlightedClass = "mdt-charts-arc-non-highlighted";
+
+	private readonly sunburstSegmentLabels: Record<number, SunburstSegmentLabel> = {};
 
 	static getAllArcGroups(block: Block) {
 		return block.getSvg().selectAll(`.${Sunburst.arcItemClass}`) as Selection<
@@ -51,6 +55,9 @@ export class Sunburst {
 				.attr("transform", `translate(${level.sizes.translate.x}, ${level.sizes.translate.y})`);
 
 			this.renderNewArcItems(levelDonutBlock, pieGenerator, arcGenerator, level.segments);
+
+			this.sunburstSegmentLabels[levelIndex] = new SunburstSegmentLabel(levelDonutBlock);
+			this.sunburstSegmentLabels[levelIndex].render({ arcGenerator, pieGenerator }, level.segments);
 		});
 
 		return Sunburst.getAllArcGroups(this.block);
@@ -100,14 +107,22 @@ export class Sunburst {
 							resolve();
 						})
 						.attrTween("d", function (d) {
-							const interpolateFunc = interpolate((this as any)._currentData, d);
+							const interpolateFunc = interpolate((this as any)._currentDataForUsingOnUpdate, d);
 							return (t) => {
-								(this as any)._currentData = interpolateFunc(t);
-								return arcGenerator((this as any)._currentData);
+								(this as any)._currentDataForUsingOnUpdate = interpolateFunc(t);
+								return arcGenerator((this as any)._currentDataForUsingOnUpdate);
 							};
 						});
 				})
 			);
+
+			const updateLabelsPromise = this.sunburstSegmentLabels[levelIndex].update(
+				{ arcGenerator, pieGenerator },
+				level.segments,
+				dataExtraZeroRows,
+				this.block.transitionManager.durations.chartUpdate
+			);
+			promises.push(updateLabelsPromise);
 		});
 
 		return Promise.all(promises).then(() => Sunburst.getAllArcGroups(this.block));
@@ -169,8 +184,8 @@ export class Sunburst {
 			.attr("d", arcGenerator)
 			.attr("class", Sunburst.arcPathClass)
 			.each(function (d) {
-				(this as any)._currentData = d;
-			}); // TODO: _currentData используется для получения текущих данных внутри функции обновления.
+				(this as any)._currentDataForUsingOnUpdate = d;
+			}); // TODO: _currentDataForUsingOnUpdate используется для получения текущих данных внутри функции обновления.
 
 		return items;
 	}
