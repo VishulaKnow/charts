@@ -256,6 +256,14 @@ const configCars: MdtChartsConfig = {
 	// 				title: "Стоимость очень большой текст"
 	// 			}
 	// 		},
+	// 		valueLabels: {
+	// 			on: true,
+	// 			content: (dataRow) => dataRow.brand,
+	// 			cssClass: "test-value-labels",
+	// 			rotation: {
+	// 				type: "tangential"
+	// 			}
+	// 		},
 	// 		aggregator: {
 	// 			content: (model) => ({
 	// 				title: "Big Text text word another one",
@@ -317,6 +325,9 @@ const configCars: MdtChartsConfig = {
 							])
 						};
 					}
+				},
+				valueLabels: {
+					on: true
 				}
 			},
 			{
@@ -324,6 +335,16 @@ const configCars: MdtChartsConfig = {
 					keyField: {
 						name: "brand"
 					}
+				},
+				valueLabels: {
+					on: true,
+					rotation: {
+						type: "none"
+					},
+					content(segment) {
+						return nFormatter(segment.attachedDataRow[0].price);
+					},
+					cssClass: "test-value-label"
 				}
 			}
 		]
