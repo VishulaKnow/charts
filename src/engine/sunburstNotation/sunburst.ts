@@ -57,7 +57,16 @@ export class Sunburst {
 			this.renderNewArcItems(levelDonutBlock, pieGenerator, arcGenerator, level.segments);
 
 			this.sunburstSegmentLabels[levelIndex] = new SunburstSegmentLabel(levelDonutBlock);
-			this.sunburstSegmentLabels[levelIndex].render({ arcGenerator, pieGenerator }, level.segments);
+			this.sunburstSegmentLabels[levelIndex].render(
+				{
+					sizesForGenerators: {
+						innerRadius: level.sizes.innerRadius,
+						outerRadius: level.sizes.outerRadius,
+						padAngle: this.pagAngle
+					}
+				},
+				level.segments
+			);
 		});
 
 		return Sunburst.getAllArcGroups(this.block);
@@ -117,7 +126,13 @@ export class Sunburst {
 			);
 
 			const updateLabelsPromise = this.sunburstSegmentLabels[levelIndex].update(
-				{ arcGenerator, pieGenerator },
+				{
+					sizesForGenerators: {
+						innerRadius: level.sizes.innerRadius,
+						outerRadius: level.sizes.outerRadius,
+						padAngle: this.pagAngle
+					}
+				},
 				level.segments,
 				dataExtraZeroRows,
 				this.block.transitionManager.durations.chartUpdate
