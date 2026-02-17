@@ -22,7 +22,7 @@ export class PolarManager implements ChartContentManager {
 
 		Title.render(engine.block, options.title, model.otherComponents.titleBlock, model.blockCanvas.size);
 
-		this.donut.render(engine.block, engine.data[options.data.dataSource], options.charts[0], options.chartCanvas);
+		this.donut.render(engine.block, options.charts[0], options.chartCanvas);
 
 		Aggregator.render(
 			engine.block,
@@ -66,23 +66,15 @@ export class PolarManager implements ChartContentManager {
 
 		const options = <PolarOptionsModel>model.options;
 
-		this.donut
-			.update(
+		this.donut.update(block, options.charts[0], options.chartCanvas).then(() => {
+			Tooltip.renderTooltipForDonut(
 				block,
-				data[options.data.dataSource],
-				options.charts[0],
-				options.chartCanvas,
-				options.data.keyField.name
-			)
-			.then(() => {
-				Tooltip.renderTooltipForDonut(
-					block,
-					model.options.data,
-					model.options.charts[0].sizes,
-					model.options.tooltip
-				);
-				block.filterEventManager.setListenerPolar(options);
-			});
+				model.options.data,
+				model.options.charts[0].sizes,
+				model.options.tooltip
+			);
+			block.filterEventManager.setListenerPolar(options);
+		});
 
 		Aggregator.update(
 			block,

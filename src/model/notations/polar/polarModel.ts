@@ -20,6 +20,7 @@ import { PolarInitialRowsProvider } from "../../featuresModel/tooltipModel/conte
 import { DonutThicknessCalculator } from "./donut/donutThicknessService";
 import { getDonutLikeOuterRadius, getDonutLikeTranslate } from "./donut/donutLikeSizesCalculator";
 import { SegmentModelBuilder } from "./segmentModelBuilder/segmentModelBuilder";
+import { DonutChartValueLabelsConfig } from "../../../config/valueLabelsConfig";
 
 export const MIN_DONUT_BLOCK_SIZE = 120;
 
@@ -51,7 +52,8 @@ export class PolarModel {
 			options.chart,
 			chartStyle,
 			modelInstance.dataModel.repository.getScopedRows(),
-			options.data.keyField.name
+			options.data.keyField.name,
+			options.chart.valueLabels
 		);
 
 		return {
@@ -145,7 +147,8 @@ export class PolarModel {
 		chart: DonutChart,
 		chartStyle: ChartStyle,
 		scopedDataRows: MdtChartsDataRow[],
-		keyFieldName: string
+		keyFieldName: string,
+		valueLabels?: DonutChartValueLabelsConfig
 	): DonutChartModel {
 		const outerRadius = getDonutLikeOuterRadius(margin, blockSize);
 		const thickness = DonutThicknessCalculator.getThickness(donutSettings.thickness, blockSize, margin);
@@ -156,11 +159,22 @@ export class PolarModel {
 			chartPaletteColors: chartStyle.elementColors,
 			colorFieldName: chart.data.colorField
 		});
+		const segments = segmentModelBuilder.build();
 		return {
 			type: chart.type,
 			data: {
 				...chart.data,
-				segments: segmentModelBuilder.build()
+				segments
+			},
+			valueLabels: {
+				on: valueLabels?.on ?? false,
+				items: segments.map((segment) => ({
+					key: segment.key,
+					value: segment.value,
+					textContent: valueLabels?.content?.(segment.attachedDataRow) ?? segment.key.toString(),
+					rotation: valueLabels?.rotation ?? { type: "tangential" },
+					cssClass: valueLabels?.cssClass
+				}))
 			},
 			cssClasses: ChartStyleModelService.getCssClasses(0),
 			style: chartStyle,

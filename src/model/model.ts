@@ -22,6 +22,7 @@ import {
 	Transitions
 } from "../designer/designerConfig";
 import { BoundingRect } from "../engine/features/valueLabelsCollision/valueLabelsCollision";
+import { PolarLikeChartValueLabelsModel } from "./modelTypes/valueLabelsModel";
 
 type AxisType = "key" | "value";
 
@@ -465,6 +466,7 @@ export interface DonutThicknessOptions {
 export interface SunburstLevel {
 	segments: SunburstLevelSegment[];
 	sizes: DonutChartSizesModel;
+	valueLabels: PolarLikeChartValueLabelsModel;
 }
 
 export interface SunburstLevelSegment {
@@ -596,6 +598,7 @@ export interface DonutChartModel extends ChartModel {
 	type: PolarChartType;
 	data: PolarChartDataModel;
 	sizes: DonutChartSizesModel;
+	valueLabels: PolarLikeChartValueLabelsModel;
 }
 
 export interface DonutChartSizesModel {

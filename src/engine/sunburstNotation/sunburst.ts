@@ -56,17 +56,19 @@ export class Sunburst {
 
 			this.renderNewArcItems(levelDonutBlock, pieGenerator, arcGenerator, level.segments);
 
-			this.sunburstSegmentLabels[levelIndex] = new SunburstSegmentLabel(levelDonutBlock);
-			this.sunburstSegmentLabels[levelIndex].render(
-				{
-					sizesForGenerators: {
-						innerRadius: level.sizes.innerRadius,
-						outerRadius: level.sizes.outerRadius,
-						padAngle: this.pagAngle
-					}
-				},
-				level.segments
-			);
+			if (level.valueLabels.on) {
+				this.sunburstSegmentLabels[levelIndex] = new SunburstSegmentLabel(levelDonutBlock);
+				this.sunburstSegmentLabels[levelIndex].render(
+					{
+						sizesForGenerators: {
+							innerRadius: level.sizes.innerRadius,
+							outerRadius: level.sizes.outerRadius,
+							padAngle: this.pagAngle
+						}
+					},
+					level.valueLabels.items
+				);
+			}
 		});
 
 		return Sunburst.getAllArcGroups(this.block);
@@ -125,21 +127,22 @@ export class Sunburst {
 				})
 			);
 
-			const updateLabelsPromise = this.sunburstSegmentLabels[levelIndex]
-				.update(
-					{
-						sizesForGenerators: {
-							innerRadius: level.sizes.innerRadius,
-							outerRadius: level.sizes.outerRadius,
-							padAngle: this.pagAngle
-						}
-					},
-					level.segments,
-					dataExtraZeroRows,
-					this.block.transitionManager.durations.chartUpdate
-				)
-				.then(() => undefined as any);
-			promises.push(updateLabelsPromise);
+			if (level.valueLabels.on) {
+				const updateLabelsPromise = this.sunburstSegmentLabels[levelIndex]
+					.update(
+						{
+							sizesForGenerators: {
+								innerRadius: level.sizes.innerRadius,
+								outerRadius: level.sizes.outerRadius,
+								padAngle: this.pagAngle
+							}
+						},
+						level.valueLabels.items,
+						this.block.transitionManager.durations.chartUpdate
+					)
+					.then(() => undefined as any);
+				promises.push(updateLabelsPromise);
+			}
 		});
 
 		return Promise.all(promises).then(() => Sunburst.getAllArcGroups(this.block));

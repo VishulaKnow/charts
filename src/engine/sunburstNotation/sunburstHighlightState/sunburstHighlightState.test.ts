@@ -61,6 +61,9 @@ describe("SunburstHighlightState", () => {
 					outerRadius: 0,
 					thickness: 0,
 					translate: { x: 0, y: 0 }
+				},
+				valueLabels: {
+					on: false
 				}
 			},
 			{
@@ -140,6 +143,9 @@ describe("SunburstHighlightState", () => {
 					outerRadius: 0,
 					thickness: 0,
 					translate: { x: 0, y: 0 }
+				},
+				valueLabels: {
+					on: false
 				}
 			}
 		];

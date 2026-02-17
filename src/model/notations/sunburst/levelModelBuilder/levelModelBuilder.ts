@@ -8,6 +8,8 @@ import {
 	TOOLTIP_HEAD_WRAPPER_CSS_CLASSNAME,
 	tooltipPublicRowToModel
 } from "../../../featuresModel/tooltipModel/tooltipContentModel";
+import { SunburstChartValueLabelsConfig } from "../../../../config/valueLabelsConfig";
+import { PolarSegmentLabelDataItem } from "../../../modelTypes/valueLabelsModel";
 
 interface LevelModelBuilderConfig {
 	margin: BlockMargin;
@@ -68,52 +70,73 @@ export class LevelModelBuilder {
 				valuesForLevelKeys.set(key, { value: newValue, color, parentLevelKey, attachedDataRows });
 			});
 
+			const segments = Array.from(valuesForLevelKeys.entries()).map<SunburstLevelSegment>(
+				([key, { value, color, parentLevelKey, attachedDataRows }]) => {
+					let tooltipContentRows: TooltipTypedRowContent[] = [
+						{
+							type: "plainText",
+							textContent: key,
+							wrapperElOptions: { cssClassName: TOOLTIP_HEAD_WRAPPER_CSS_CLASSNAME }
+						},
+						{
+							type: "captionValue",
+							marker: {
+								shape: "circle",
+								color
+							},
+							caption: publicConfig.data.valueField.title,
+							value: this.config.formatter(value, {
+								type: publicConfig.data.valueField.format
+							})
+						}
+					];
+
+					if (level.tooltip?.overrideContent) {
+						tooltipContentRows = level.tooltip.overrideContent({
+							autoTooltipRows: tooltipContentRows,
+							attachedDataRows
+						}).rows;
+					}
+
+					return {
+						value,
+						key,
+						levelIndex,
+						parentLevelKey,
+						attachedDataRows,
+						color,
+						tooltip: {
+							content: {
+								type: "rows",
+								rows: tooltipPublicRowToModel(tooltipContentRows)
+							}
+						}
+					};
+				}
+			);
+
+			const valueLabelsIsOn = level.valueLabels?.on ?? false;
+
 			return {
 				sizes: sizesByLevels[levelIndex],
-				segments: Array.from(valuesForLevelKeys.entries()).map<SunburstLevelSegment>(
-					([key, { value, color, parentLevelKey, attachedDataRows }]) => {
-						let tooltipContentRows: TooltipTypedRowContent[] = [
-							{
-								type: "plainText",
-								textContent: key,
-								wrapperElOptions: { cssClassName: TOOLTIP_HEAD_WRAPPER_CSS_CLASSNAME }
-							},
-							{
-								type: "captionValue",
-								marker: {
-									shape: "circle",
-									color
-								},
-								caption: publicConfig.data.valueField.title,
-								value: this.config.formatter(value, {
-									type: publicConfig.data.valueField.format
-								})
-							}
-						];
-
-						if (level.tooltip?.overrideContent) {
-							tooltipContentRows = level.tooltip.overrideContent({
-								autoTooltipRows: tooltipContentRows,
-								attachedDataRows
-							}).rows;
+				segments,
+				valueLabels: valueLabelsIsOn
+					? {
+							on: true,
+							items: segments.map<PolarSegmentLabelDataItem>((segment) => {
+								return {
+									key: segment.key,
+									value: segment.value,
+									rotation: level.valueLabels?.rotation ?? { type: "tangential" },
+									cssClass: level.valueLabels?.cssClass,
+									textContent:
+										level.valueLabels?.content?.({
+											attachedDataRow: segment.attachedDataRows
+										}) ?? segment.key.toString()
+								};
+							})
 						}
-
-						return {
-							value,
-							key,
-							levelIndex,
-							parentLevelKey,
-							attachedDataRows,
-							color,
-							tooltip: {
-								content: {
-									type: "rows",
-									rows: tooltipPublicRowToModel(tooltipContentRows)
-								}
-							}
-						};
-					}
-				)
+					: { on: false }
 			};
 		});
 	}

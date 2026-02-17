@@ -15,24 +15,24 @@ export class DonutHelper {
 			.value((d) => d.value);
 	}
 
-	public static mergeDataWithZeros(
-		firstDataset: PolarSegmentModel[],
-		secondDataset: PolarSegmentModel[]
-	): PolarSegmentModel[] {
+	public static mergeDataWithZeros<R extends { key: string | number; value: number }>(
+		firstDataset: R[],
+		secondDataset: R[]
+	): R[] {
 		const secondSet = new Set();
 		secondDataset.forEach((segment) => secondSet.add(segment.key));
 
 		const onlyNew = firstDataset
 			.filter((d) => !secondSet.has(d.key))
 			.map((d, index, array) => {
-				const segmentToChangeToZero: PolarSegmentModel = {
+				const segmentToChangeToZero: R = {
 					...d,
 					value: 0
 				};
 				return segmentToChangeToZero;
 			});
 
-		const merged = merge<PolarSegmentModel>([secondDataset, onlyNew]);
+		const merged = merge<R>([secondDataset, onlyNew]);
 		return merged;
 	}
 }

@@ -164,7 +164,10 @@ describe("LevelModelBuilder", () => {
 							]
 						}
 					],
-					sizes: { innerRadius: 20.4, outerRadius: 30, thickness: 9.6, translate: { x: 50, y: 50 } }
+					sizes: { innerRadius: 20.4, outerRadius: 30, thickness: 9.6, translate: { x: 50, y: 50 } },
+					valueLabels: {
+						on: false
+					}
 				},
 				{
 					segments: [
@@ -293,7 +296,10 @@ describe("LevelModelBuilder", () => {
 							]
 						}
 					],
-					sizes: { innerRadius: 30.4, outerRadius: 40, thickness: 9.6, translate: { x: 50, y: 50 } }
+					sizes: { innerRadius: 30.4, outerRadius: 40, thickness: 9.6, translate: { x: 50, y: 50 } },
+					valueLabels: {
+						on: false
+					}
 				}
 			]);
 		});

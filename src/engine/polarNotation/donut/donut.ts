@@ -52,7 +52,7 @@ export class Donut {
 
 	private segmentLabels: SunburstSegmentLabel | undefined;
 
-	public render(block: Block, data: MdtChartsDataRow[], chart: DonutChartModel, settings: DonutChartSettings): void {
+	public render(block: Block, chart: DonutChartModel, settings: DonutChartSettings): void {
 		const arcGenerator = DonutHelper.getArcGenerator(chart.sizes.outerRadius, chart.sizes.innerRadius);
 		const pieGenerator = DonutHelper.getPieGenerator(settings.padAngle);
 
@@ -67,26 +67,22 @@ export class Donut {
 		this.renderNewArcItems(arcGenerator, pieGenerator, donutBlock, chart.data.segments, chart.cssClasses);
 		this.renderClonesG(donutBlock);
 
-		this.segmentLabels = new SunburstSegmentLabel(donutBlock);
-		this.segmentLabels.render(
-			{
-				sizesForGenerators: {
-					innerRadius: chart.sizes.innerRadius,
-					outerRadius: chart.sizes.outerRadius,
-					padAngle: settings.padAngle
-				}
-			},
-			chart.data.segments
-		);
+		if (chart.valueLabels.on) {
+			this.segmentLabels = new SunburstSegmentLabel(donutBlock);
+			this.segmentLabels.render(
+				{
+					sizesForGenerators: {
+						innerRadius: chart.sizes.innerRadius,
+						outerRadius: chart.sizes.outerRadius,
+						padAngle: settings.padAngle
+					}
+				},
+				chart.valueLabels.items
+			);
+		}
 	}
 
-	public update(
-		block: Block,
-		data: MdtChartsDataRow[],
-		chart: DonutChartModel,
-		donutSettings: DonutChartSettings,
-		keyField: string
-	): Promise<any> {
+	public update(block: Block, chart: DonutChartModel, donutSettings: DonutChartSettings): Promise<any> {
 		const arcGenerator = DonutHelper.getArcGenerator(chart.sizes.outerRadius, chart.sizes.innerRadius);
 		const pieGenerator = DonutHelper.getPieGenerator(donutSettings.padAngle);
 
@@ -134,22 +130,26 @@ export class Donut {
 				});
 		});
 
-		const updateLabelsPromise = this.segmentLabels
-			?.update(
-				{
-					sizesForGenerators: {
-						innerRadius: chart.sizes.innerRadius,
-						outerRadius: chart.sizes.outerRadius,
-						padAngle: donutSettings.padAngle
-					}
-				},
-				chart.data.segments,
-				dataExtraZeroRows,
-				block.transitionManager.durations.chartUpdate
-			)
-			.then((labels) => labels.raise());
+		const promises: Promise<any>[] = [updateDonutPromise];
 
-		return Promise.all([updateDonutPromise, updateLabelsPromise]);
+		if (chart.valueLabels.on) {
+			const updateLabelsPromise = this.segmentLabels
+				?.update(
+					{
+						sizesForGenerators: {
+							innerRadius: chart.sizes.innerRadius,
+							outerRadius: chart.sizes.outerRadius,
+							padAngle: donutSettings.padAngle
+						}
+					},
+					chart.valueLabels.items,
+					block.transitionManager.durations.chartUpdate
+				)
+				.then((labels) => labels.raise());
+			promises.push(updateLabelsPromise);
+		}
+
+		return Promise.all(promises);
 	}
 
 	public updateColors(block: Block, chart: DonutChartModel, settings: DonutChartSettings): void {

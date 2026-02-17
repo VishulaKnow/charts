@@ -1,4 +1,5 @@
 import { MdtChartsDonutThicknessOptions } from "../designer/designerConfig";
+import { DonutChartValueLabelsConfig, SunburstChartValueLabelsConfig } from "./valueLabelsConfig";
 
 type DataType = string;
 export type MdtChartsIconElement = () => HTMLElement;
@@ -123,6 +124,7 @@ export interface MdtChartsSunburstLevel {
 	canvas?: {
 		thickness?: MdtChartsDonutThicknessOptions;
 	};
+	valueLabels?: SunburstChartValueLabelsConfig;
 }
 
 //====================================================== Options
@@ -453,6 +455,7 @@ export interface DonutChart {
 	type: "donut";
 	data: PolarChartData;
 	aggregator?: MdtChartsDonutAggregator;
+	valueLabels?: DonutChartValueLabelsConfig;
 }
 
 //====================================================== TwoDimensionalChart
