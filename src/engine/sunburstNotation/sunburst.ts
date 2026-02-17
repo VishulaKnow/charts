@@ -125,18 +125,20 @@ export class Sunburst {
 				})
 			);
 
-			const updateLabelsPromise = this.sunburstSegmentLabels[levelIndex].update(
-				{
-					sizesForGenerators: {
-						innerRadius: level.sizes.innerRadius,
-						outerRadius: level.sizes.outerRadius,
-						padAngle: this.pagAngle
-					}
-				},
-				level.segments,
-				dataExtraZeroRows,
-				this.block.transitionManager.durations.chartUpdate
-			);
+			const updateLabelsPromise = this.sunburstSegmentLabels[levelIndex]
+				.update(
+					{
+						sizesForGenerators: {
+							innerRadius: level.sizes.innerRadius,
+							outerRadius: level.sizes.outerRadius,
+							padAngle: this.pagAngle
+						}
+					},
+					level.segments,
+					dataExtraZeroRows,
+					this.block.transitionManager.durations.chartUpdate
+				)
+				.then(() => undefined as any);
 			promises.push(updateLabelsPromise);
 		});
 

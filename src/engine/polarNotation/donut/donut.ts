@@ -6,6 +6,7 @@ import { Block } from "../../block/block";
 import { DonutHelper } from "./donutHelper";
 import { DomSelectionHelper } from "../../helpers/domSelectionHelper";
 import { MdtChartsDataRow } from "../../../config/config";
+import { SunburstSegmentLabel } from "../../sunburstNotation/sunburstSegmentLabel";
 
 export interface Translate {
 	x: number;
@@ -21,90 +22,6 @@ export class Donut {
 	public static readonly arcShadowsGroupClass = "arc-shadow-clones";
 	public static readonly arcCloneClass = "arc-clone";
 	public static readonly arcShadowClass = "arc-shadow-clone";
-
-	public static render(
-		block: Block,
-		data: MdtChartsDataRow[],
-		chart: DonutChartModel,
-		settings: DonutChartSettings
-	): void {
-		const arcGenerator = DonutHelper.getArcGenerator(chart.sizes.outerRadius, chart.sizes.innerRadius);
-		const pieGenerator = DonutHelper.getPieGenerator(settings.padAngle);
-
-		const donutBlock = block
-			.getSvg()
-			.append("g")
-			.attr("class", this.donutBlockClass)
-			.attr("x", chart.sizes.translate.x)
-			.attr("y", chart.sizes.translate.y)
-			.attr("transform", `translate(${chart.sizes.translate.x}, ${chart.sizes.translate.y})`);
-
-		this.renderNewArcItems(arcGenerator, pieGenerator, donutBlock, chart.data.segments, chart.cssClasses);
-		this.renderClonesG(donutBlock);
-	}
-
-	public static update(
-		block: Block,
-		data: MdtChartsDataRow[],
-		chart: DonutChartModel,
-		donutSettings: DonutChartSettings,
-		keyField: string
-	): Promise<any> {
-		const arcGenerator = DonutHelper.getArcGenerator(chart.sizes.outerRadius, chart.sizes.innerRadius);
-		const pieGenerator = DonutHelper.getPieGenerator(donutSettings.padAngle);
-
-		const oldSegments = block
-			.getSvg()
-			.selectAll(`.${this.donutBlockClass}`)
-			.selectAll<SVGPathElement, PieArcDatum<PolarSegmentModel>>("path")
-			.data()
-			.map((d) => d.data);
-
-		const dataNewZeroRows = DonutHelper.mergeDataWithZeros(chart.data.segments, oldSegments);
-		const dataExtraZeroRows = DonutHelper.mergeDataWithZeros(oldSegments, chart.data.segments);
-
-		const donutBlock = block.getSvg().select<SVGGElement>(`.${this.donutBlockClass}`);
-
-		donutBlock
-			.attr("x", chart.sizes.translate.x)
-			.attr("y", chart.sizes.translate.y)
-			.attr("transform", `translate(${chart.sizes.translate.x}, ${chart.sizes.translate.y})`);
-
-		this.renderNewArcItems(arcGenerator, pieGenerator, donutBlock, dataNewZeroRows, chart.cssClasses);
-
-		const path = this.getAllArcGroups(block)
-			.data(pieGenerator(dataExtraZeroRows), (d) => d.data.key)
-			.select<SVGPathElement>("path");
-		const items = this.getAllArcGroups(block).data(pieGenerator(chart.data.segments), (d) => d.data.key);
-
-		items.select(`.${this.arcPathClass}`).style("fill", (d) => d.data.color);
-
-		return new Promise((resolve) => {
-			this.raiseClonesG(block);
-			path.interrupt()
-				.transition()
-				.duration(block.transitionManager.durations.chartUpdate)
-				.on("end", () => {
-					items.exit().remove();
-					resolve("updated");
-				})
-				.attrTween("d", function (d) {
-					const interpolateFunc = interpolate((this as any)._currentData, d);
-					return (t) => {
-						(this as any)._currentData = interpolateFunc(t); // _current - старые данные до обновления, задаются во время рендера
-						return arcGenerator((this as any)._currentData);
-					};
-				});
-		});
-	}
-
-	public static updateColors(block: Block, chart: DonutChartModel, settings: DonutChartSettings): void {
-		const pieGenerator = DonutHelper.getPieGenerator(settings.padAngle);
-		this.getAllArcGroups(block)
-			.data(pieGenerator(chart.data.segments), (d) => d.data.key)
-			.select(`.${this.arcPathClass}`)
-			.style("fill", (d) => d.data.color);
-	}
 
 	public static getAllArcGroups(block: Block) {
 		return block.getSvg().selectAll(`.${this.arcItemClass}`) as Selection<
@@ -133,7 +50,117 @@ export class Donut {
 		>;
 	}
 
-	private static renderNewArcItems(
+	private segmentLabels: SunburstSegmentLabel | undefined;
+
+	public render(block: Block, data: MdtChartsDataRow[], chart: DonutChartModel, settings: DonutChartSettings): void {
+		const arcGenerator = DonutHelper.getArcGenerator(chart.sizes.outerRadius, chart.sizes.innerRadius);
+		const pieGenerator = DonutHelper.getPieGenerator(settings.padAngle);
+
+		const donutBlock = block
+			.getSvg()
+			.append("g")
+			.attr("class", Donut.donutBlockClass)
+			.attr("x", chart.sizes.translate.x)
+			.attr("y", chart.sizes.translate.y)
+			.attr("transform", `translate(${chart.sizes.translate.x}, ${chart.sizes.translate.y})`);
+
+		this.renderNewArcItems(arcGenerator, pieGenerator, donutBlock, chart.data.segments, chart.cssClasses);
+		this.renderClonesG(donutBlock);
+
+		this.segmentLabels = new SunburstSegmentLabel(donutBlock);
+		this.segmentLabels.render(
+			{
+				sizesForGenerators: {
+					innerRadius: chart.sizes.innerRadius,
+					outerRadius: chart.sizes.outerRadius,
+					padAngle: settings.padAngle
+				}
+			},
+			chart.data.segments
+		);
+	}
+
+	public update(
+		block: Block,
+		data: MdtChartsDataRow[],
+		chart: DonutChartModel,
+		donutSettings: DonutChartSettings,
+		keyField: string
+	): Promise<any> {
+		const arcGenerator = DonutHelper.getArcGenerator(chart.sizes.outerRadius, chart.sizes.innerRadius);
+		const pieGenerator = DonutHelper.getPieGenerator(donutSettings.padAngle);
+
+		const oldSegments = block
+			.getSvg()
+			.selectAll(`.${Donut.donutBlockClass}`)
+			.selectAll<SVGPathElement, PieArcDatum<PolarSegmentModel>>("path")
+			.data()
+			.map((d) => d.data);
+
+		const dataNewZeroRows = DonutHelper.mergeDataWithZeros(chart.data.segments, oldSegments);
+		const dataExtraZeroRows = DonutHelper.mergeDataWithZeros(oldSegments, chart.data.segments);
+
+		const donutBlock = block.getSvg().select<SVGGElement>(`.${Donut.donutBlockClass}`);
+
+		donutBlock
+			.attr("x", chart.sizes.translate.x)
+			.attr("y", chart.sizes.translate.y)
+			.attr("transform", `translate(${chart.sizes.translate.x}, ${chart.sizes.translate.y})`);
+
+		this.renderNewArcItems(arcGenerator, pieGenerator, donutBlock, dataNewZeroRows, chart.cssClasses);
+
+		const path = Donut.getAllArcGroups(block)
+			.data(pieGenerator(dataExtraZeroRows), (d) => d.data.key)
+			.select<SVGPathElement>("path");
+		const items = Donut.getAllArcGroups(block).data(pieGenerator(chart.data.segments), (d) => d.data.key);
+
+		items.select(`.${Donut.arcPathClass}`).style("fill", (d) => d.data.color);
+
+		const updateDonutPromise = new Promise((resolve) => {
+			this.raiseClonesG(block);
+			path.interrupt()
+				.transition()
+				.duration(block.transitionManager.durations.chartUpdate)
+				.on("end", () => {
+					items.exit().remove();
+					resolve("updated");
+				})
+				.attrTween("d", function (d) {
+					const interpolateFunc = interpolate((this as any)._currentData, d);
+					return (t) => {
+						(this as any)._currentData = interpolateFunc(t); // _current - старые данные до обновления, задаются во время рендера
+						return arcGenerator((this as any)._currentData);
+					};
+				});
+		});
+
+		const updateLabelsPromise = this.segmentLabels
+			?.update(
+				{
+					sizesForGenerators: {
+						innerRadius: chart.sizes.innerRadius,
+						outerRadius: chart.sizes.outerRadius,
+						padAngle: donutSettings.padAngle
+					}
+				},
+				chart.data.segments,
+				dataExtraZeroRows,
+				block.transitionManager.durations.chartUpdate
+			)
+			.then((labels) => labels.raise());
+
+		return Promise.all([updateDonutPromise, updateLabelsPromise]);
+	}
+
+	public updateColors(block: Block, chart: DonutChartModel, settings: DonutChartSettings): void {
+		const pieGenerator = DonutHelper.getPieGenerator(settings.padAngle);
+		Donut.getAllArcGroups(block)
+			.data(pieGenerator(chart.data.segments), (d) => d.data.key)
+			.select(`.${Donut.arcPathClass}`)
+			.style("fill", (d) => d.data.color);
+	}
+
+	private renderNewArcItems(
 		arcGenerator: Arc<any, PieArcDatum<PolarSegmentModel>>,
 		pieGenerator: Pie<any, PolarSegmentModel>,
 		donutBlock: Selection<SVGGElement, unknown, HTMLElement, any>,
@@ -141,16 +168,16 @@ export class Donut {
 		cssClasses: string[]
 	): void {
 		const items = donutBlock
-			.selectAll<SVGGElement, PieArcDatum<PolarSegmentModel>>(`.${this.arcItemClass}`)
+			.selectAll<SVGGElement, PieArcDatum<PolarSegmentModel>>(`.${Donut.arcItemClass}`)
 			.data(pieGenerator(segments), (d) => d.data.key)
 			.enter()
 			.append("g")
-			.attr("class", this.arcItemClass);
+			.attr("class", Donut.arcItemClass);
 
 		const arcs = items
 			.append("path")
 			.attr("d", arcGenerator)
-			.attr("class", this.arcPathClass)
+			.attr("class", Donut.arcPathClass)
 			.style("fill", (d) => d.data.color)
 			.each(function (d) {
 				(this as any)._currentData = d;
@@ -162,14 +189,14 @@ export class Donut {
 	/**
 	 * Рендер группы для клонов сегментов доната внутри donut-block. Объекдиняет в себе стили для клонов
 	 */
-	private static renderClonesG(donutBlock: Selection<SVGGElement, unknown, BaseType, unknown>): void {
-		const clonesShadowsG = donutBlock.append("g").attr("class", this.arcShadowsGroupClass).raise();
-		const clonesG = donutBlock.append("g").attr("class", this.arcClonesGroupClass).raise();
+	private renderClonesG(donutBlock: Selection<SVGGElement, unknown, BaseType, unknown>): void {
+		const clonesShadowsG = donutBlock.append("g").attr("class", Donut.arcShadowsGroupClass).raise();
+		const clonesG = donutBlock.append("g").attr("class", Donut.arcClonesGroupClass).raise();
 	}
 
-	private static raiseClonesG(block: Block): void {
-		block.getSvg().select(`.${this.donutBlockClass}`).select(`.${this.arcShadowsGroupClass}`).raise();
+	private raiseClonesG(block: Block): void {
+		block.getSvg().select(`.${Donut.donutBlockClass}`).select(`.${Donut.arcShadowsGroupClass}`).raise();
 
-		block.getSvg().select(`.${this.donutBlockClass}`).select(`.${this.arcClonesGroupClass}`).raise();
+		block.getSvg().select(`.${Donut.donutBlockClass}`).select(`.${Donut.arcClonesGroupClass}`).raise();
 	}
 }

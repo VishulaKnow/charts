@@ -13,6 +13,8 @@ import { RecordOverflowAlertCore } from "../features/recordOverflowAlert/recordO
 import { Aggregator } from "../features/aggregator/aggregator";
 
 export class PolarManager implements ChartContentManager {
+	private readonly donut = new Donut();
+
 	public render(engine: Engine, model: Model<PolarOptionsModel>) {
 		const options = model.options;
 
@@ -20,7 +22,7 @@ export class PolarManager implements ChartContentManager {
 
 		Title.render(engine.block, options.title, model.otherComponents.titleBlock, model.blockCanvas.size);
 
-		Donut.render(engine.block, engine.data[options.data.dataSource], options.charts[0], options.chartCanvas);
+		this.donut.render(engine.block, engine.data[options.data.dataSource], options.charts[0], options.chartCanvas);
 
 		Aggregator.render(
 			engine.block,
@@ -64,21 +66,23 @@ export class PolarManager implements ChartContentManager {
 
 		const options = <PolarOptionsModel>model.options;
 
-		Donut.update(
-			block,
-			data[options.data.dataSource],
-			options.charts[0],
-			options.chartCanvas,
-			options.data.keyField.name
-		).then(() => {
-			Tooltip.renderTooltipForDonut(
+		this.donut
+			.update(
 				block,
-				model.options.data,
-				model.options.charts[0].sizes,
-				model.options.tooltip
-			);
-			block.filterEventManager.setListenerPolar(options);
-		});
+				data[options.data.dataSource],
+				options.charts[0],
+				options.chartCanvas,
+				options.data.keyField.name
+			)
+			.then(() => {
+				Tooltip.renderTooltipForDonut(
+					block,
+					model.options.data,
+					model.options.charts[0].sizes,
+					model.options.tooltip
+				);
+				block.filterEventManager.setListenerPolar(options);
+			});
 
 		Aggregator.update(
 			block,
@@ -94,7 +98,7 @@ export class PolarManager implements ChartContentManager {
 
 	public updateColors(block: Block, model: Model<PolarOptionsModel>): void {
 		Legend.get().updateColors(block, model.options);
-		Donut.updateColors(block, model.options.charts[0], model.options.chartCanvas);
+		this.donut.updateColors(block, model.options.charts[0], model.options.chartCanvas);
 		//TODO: temp solution for updating marker colors in tooltip. In future should attach tooltip data to segments like in sunburst chart
 		Tooltip.renderTooltipForDonut(block, model.options.data, model.options.charts[0].sizes, model.options.tooltip);
 	}

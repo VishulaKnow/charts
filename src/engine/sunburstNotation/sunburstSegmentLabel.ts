@@ -43,7 +43,7 @@ export class SunburstSegmentLabel {
 		segments: SunburstSegmentLabelDataItem[],
 		dataWithOldZeroSegments: SunburstSegmentLabelDataItem[],
 		animationDuration: number
-	) {
+	): Promise<Selection<SVGTextElement, PieArcDatum<SunburstSegmentLabelDataItem>, BaseType, unknown>> {
 		this.render(options, segments);
 
 		const { arcGenerator, pieGenerator } = this.getGenerators(options);
@@ -58,14 +58,14 @@ export class SunburstSegmentLabel {
 
 		const thisClass = this;
 
-		return new Promise<void>((resolve) => {
+		return new Promise((resolve) => {
 			labelsNewAndOld
 				.interrupt()
 				.transition()
 				.duration(animationDuration)
 				.on("end", () => {
 					onlyNewLabels.exit().remove();
-					resolve();
+					resolve(onlyNewLabels);
 				})
 				.attrTween("transform", function (d) {
 					const interpolateFunc = interpolate((this as any)._currentDataForUsingOnUpdate, d);
