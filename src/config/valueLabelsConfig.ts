@@ -15,5 +15,5 @@ export interface SunburstChartValueLabelsConfig {
 		type: "none" | "tangential";
 	};
 	cssClass?: string;
-	content?: (segment: { attachedDataRow: MdtChartsDataRow[] }) => string;
+	content?: (segment: { attachedDataRows: MdtChartsDataRow[] }) => string;
 }

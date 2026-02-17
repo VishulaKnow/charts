@@ -131,7 +131,7 @@ export class LevelModelBuilder {
 									cssClass: level.valueLabels?.cssClass,
 									textContent:
 										level.valueLabels?.content?.({
-											attachedDataRow: segment.attachedDataRows
+											attachedDataRows: segment.attachedDataRows
 										}) ?? segment.key.toString()
 								};
 							})

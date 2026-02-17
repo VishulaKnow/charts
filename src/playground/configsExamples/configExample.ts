@@ -342,7 +342,7 @@ const configCars: MdtChartsConfig = {
 						type: "none"
 					},
 					content(segment) {
-						return nFormatter(segment.attachedDataRow[0].price);
+						return nFormatter(segment.attachedDataRows[0].price);
 					},
 					cssClass: "test-value-label"
 				}
