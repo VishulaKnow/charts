@@ -1,9 +1,10 @@
 import { Selection, BaseType } from "d3-selection";
 import { MdtChartsDataRow } from "../../config/config";
-import { ChartStyle, TwoDimensionalChartModel } from "../../model/model";
+import { ChartStyle, PolarSegmentModel, TwoDimensionalChartModel } from "../../model/model";
 import { Block } from "../block/block";
 import { MarkDot } from "../features/markDots/markDot";
 import { Bar } from "../twoDimensionalNotation/bar/bar";
+import { PieArcDatum } from "d3-shape";
 
 type StyleColorType = "fill" | "stroke";
 
@@ -89,6 +90,20 @@ export class DomSelectionHelper {
 			let i: number;
 			if (dataWrapped) i = keyValues.findIndex((kv) => kv === d.data[keyFieldName]);
 			else i = keyValues.findIndex((kv) => kv === d[keyFieldName]);
+
+			return condition === SelectionCondition.Exclude ? i === -1 : i !== -1;
+		});
+	}
+
+	//TODO: remove this method after refactoring
+	public static getChartElementsByKeysForPolar<T extends BaseType>(
+		initialSelection: Selection<T, PieArcDatum<PolarSegmentModel>, BaseType, unknown>,
+		keyValues: string[],
+		condition: SelectionCondition = SelectionCondition.Include
+	): Selection<T, any, BaseType, unknown> {
+		return initialSelection.filter((d) => {
+			let i: number;
+			i = keyValues.findIndex((kv) => kv === d.data.key);
 
 			return condition === SelectionCondition.Exclude ? i === -1 : i !== -1;
 		});

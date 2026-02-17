@@ -126,7 +126,7 @@ export class FilterEventManager {
 		if (this.filterable) {
 			this.registerEventToDonut(options);
 			const selectedElems = Donut.getAllArcGroups(this.block).filter(
-				(d) => this.selectedKeys.findIndex((sid) => sid === d.data[options.data.keyField.name]) !== -1
+				(d) => this.selectedKeys.findIndex((sid) => sid === d.data.key) !== -1
 			);
 			this.selectedKeys = [];
 			selectedElems.dispatch("click", { bubbles: false, cancelable: true, detail: { multySelect: true } });
@@ -201,7 +201,7 @@ export class FilterEventManager {
 
 		arcItems.on("click", function (e: CustomEvent<SelectDetails>, dataRow) {
 			const multySelect = thisClass.getMultySelectParam(e);
-			const keyValue = dataRow.data[options.data.keyField.name];
+			const keyValue = dataRow.data.key;
 			const appended = thisClass.processKey(multySelect, keyValue);
 			SelectHighlighter.clickPolarHandler(
 				multySelect,

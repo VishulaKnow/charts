@@ -83,17 +83,6 @@ const getTwoDimInitialRowsProviderOptions = (): TwoDimInitialRowsProviderOptions
 	]
 });
 
-const getPolarInitialRowsProviderOptions = (): PolarInitialRowsProviderOptions => ({
-	datasource: createDatasource(),
-	chartColors: ["red", "blue", "green"],
-	valueField: {
-		name: "price",
-		title: "Price",
-		format: "money"
-	},
-	keyFieldName: "brand"
-});
-
 describe("TwoDimTooltipContentGenerator", () => {
 	it("should render defined html if it is defined in public options", () => {
 		const options = createInitialOptions(new TwoDimInitialRowsProvider(getTwoDimInitialRowsProviderOptions()));
@@ -727,6 +716,38 @@ describe("TwoDimTooltipContentGenerator", () => {
 	});
 
 	describe("for polar notation", () => {
+		const getPolarInitialRowsProviderOptions = (): PolarInitialRowsProviderOptions => {
+			const datasource = createDatasource();
+			return {
+				segments: [
+					{
+						key: "BMW",
+						value: 109000,
+						color: "#aaa",
+						attachedDataRow: datasource[0]
+					},
+					{
+						key: "LADA",
+						value: 12000,
+						color: "#bbb",
+						attachedDataRow: datasource[1]
+					},
+					{
+						key: "MERCEDES",
+						value: 15000,
+						color: "#ccc",
+						attachedDataRow: datasource[2]
+					}
+				],
+				chartColors: ["red", "blue", "green"],
+				valueField: {
+					name: "price",
+					title: "Price",
+					format: "money"
+				}
+			};
+		};
+
 		it("should set color for marker by data row index", () => {
 			const generator = new TwoDimTooltipContentGenerator(
 				createInitialOptions(new PolarInitialRowsProvider(getPolarInitialRowsProviderOptions()))
@@ -750,7 +771,7 @@ describe("TwoDimTooltipContentGenerator", () => {
 							value: "109000"
 						},
 						marker: {
-							color: "red",
+							color: "#aaa",
 							markerShape: "circle"
 						}
 					}
@@ -776,7 +797,7 @@ describe("TwoDimTooltipContentGenerator", () => {
 							value: "15000"
 						},
 						marker: {
-							color: "green",
+							color: "#ccc",
 							markerShape: "circle"
 						}
 					}
@@ -788,8 +809,7 @@ describe("TwoDimTooltipContentGenerator", () => {
 			const generator = new TwoDimTooltipContentGenerator(
 				createInitialOptions(
 					new PolarInitialRowsProvider({
-						...getPolarInitialRowsProviderOptions(),
-						colorField: "color"
+						...getPolarInitialRowsProviderOptions()
 					})
 				)
 			);

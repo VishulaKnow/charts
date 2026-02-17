@@ -94,7 +94,9 @@ export class PolarManager implements ChartContentManager {
 
 	public updateColors(block: Block, model: Model<PolarOptionsModel>): void {
 		Legend.get().updateColors(block, model.options);
-		Donut.updateColors(block, (<PolarOptionsModel>model.options).charts[0]);
+		Donut.updateColors(block, model.options.charts[0], model.options.chartCanvas);
+		//TODO: temp solution for updating marker colors in tooltip. In future should attach tooltip data to segments like in sunburst chart
+		Tooltip.renderTooltipForDonut(block, model.options.data, model.options.charts[0].sizes, model.options.tooltip);
 	}
 
 	public clearSelection(

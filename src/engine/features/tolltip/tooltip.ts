@@ -9,7 +9,8 @@ import {
 	TwoDimensionalOptionsModel,
 	DonutChartSizesModel,
 	SunburstLevelSegment,
-	TooltipContent
+	TooltipContent,
+	PolarSegmentModel
 } from "../../../model/model";
 import { Block } from "../../block/block";
 import { TooltipDomHelper } from "./tooltipDomHelper";
@@ -210,27 +211,23 @@ export class Tooltip {
 		const tooltipContent = TooltipComponentsManager.renderTooltipContentBlock(tooltipBlock);
 
 		this.attachTooltipMoveOnElements(elements, block, tooltipBlock, {
-			mouseover: function (e, dataRow) {
-				TooltipDomHelper.fillContent(
-					tooltipContent,
-					tooltipOptions.getContent(dataRow.data[dataOptions.keyField.name])
-				);
+			mouseover: function (e, segment) {
+				TooltipDomHelper.fillContent(tooltipContent, tooltipOptions.getContent(segment.data.key));
 
 				ElementHighlighter.toggleActivityStyle(select(this), true);
 				const clones = Donut.getAllArcClones(block).filter(
-					(d: PieArcDatum<MdtChartsDataRow>) =>
-						d.data[dataOptions.keyField.name] === dataRow.data[dataOptions.keyField.name]
+					(d: PieArcDatum<PolarSegmentModel>) => d.data.key === segment.data.key
 				);
 				if (
 					clones.nodes().length === 0 &&
 					(block.filterEventManager.getSelectedKeys().length === 0 ||
-						block.filterEventManager.isSelected(dataRow.data[dataOptions.keyField.name]))
+						block.filterEventManager.isSelected(segment.data.key))
 				) {
 					ElementHighlighter.renderArcCloneAndHighlight(block, select(this), chartSizes);
 				}
 			},
-			mouseleave: function (e, dataRow) {
-				if (!block.filterEventManager.isSelected(dataRow.data[dataOptions.keyField.name])) {
+			mouseleave: function (e, segment) {
+				if (!block.filterEventManager.isSelected(segment.data.key)) {
 					ElementHighlighter.removeCloneForElem(block, dataOptions.keyField.name, select(this));
 					ElementHighlighter.removeShadowClone(block, dataOptions.keyField.name, select(this), chartSizes);
 					ElementHighlighter.toggleDonutHighlightState(

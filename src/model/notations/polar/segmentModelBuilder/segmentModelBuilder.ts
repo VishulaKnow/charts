@@ -15,7 +15,9 @@ export class SegmentModelBuilder {
 	build(): PolarSegmentModel[] {
 		return this.config.scopedDataRows.map<PolarSegmentModel>((row, index) => {
 			const paletteColor = this.config.chartPaletteColors[index % this.config.chartPaletteColors.length];
-			const color = this.config.colorFieldName ? row[this.config.colorFieldName] : paletteColor;
+			let color = paletteColor;
+
+			if (this.config.colorFieldName && row[this.config.colorFieldName]) color = row[this.config.colorFieldName];
 
 			return {
 				key: row[this.config.keyFieldName],

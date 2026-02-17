@@ -20,7 +20,7 @@ export class LegendEventsManager {
 
 		legendItems.on("mousemove", function (e, keyValue) {
 			arcItems
-				.filter((row) => row.data[keyFieldName] === keyValue.textContent)
+				.filter((row) => row.data.key === keyValue.textContent)
 				.dispatch("mousemove", {
 					bubbles: false,
 					cancelable: true,
@@ -32,12 +32,12 @@ export class LegendEventsManager {
 		});
 
 		legendItems.on("mouseover", function (e, keyValue) {
-			arcItems.filter((row) => row.data[keyFieldName] === keyValue.textContent).dispatch("mouseover");
+			arcItems.filter((row) => row.data.key === keyValue.textContent).dispatch("mouseover");
 			ElementHighlighter.toggleActivityStyle(select(this), true);
 		});
 
 		legendItems.on("mouseleave", function (e, keyValue) {
-			arcItems.filter((row) => row.data[keyFieldName] === keyValue.textContent).dispatch("mouseleave");
+			arcItems.filter((row) => row.data.key === keyValue.textContent).dispatch("mouseleave");
 			if (
 				!block.filterEventManager.isSelected(keyValue.textContent) &&
 				block.filterEventManager.getSelectedKeys().length > 0
@@ -51,7 +51,7 @@ export class LegendEventsManager {
 
 		legendItems.on("click", (e: MouseEvent, keyValue) => {
 			arcItems
-				.filter((row) => row.data[keyFieldName] === keyValue.textContent)
+				.filter((row) => row.data.key === keyValue.textContent)
 				.dispatch("click", {
 					bubbles: false,
 					cancelable: true,

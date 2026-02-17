@@ -24,6 +24,7 @@ describe("Donut ColorReader", () => {
 				},
 				type: "donut",
 				data: {
+					segments: [],
 					valueField: {
 						format: "",
 						name: "",

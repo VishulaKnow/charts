@@ -92,4 +92,34 @@ describe("SegmentModelBuilder", () => {
 			}
 		]);
 	});
+
+	test("should use row color from colorFieldName when provided", () => {
+		const scopedDataRows: MdtChartsDataRow[] = [
+			{ category: "A", amount: 10, color: "#aaaaaa" },
+			{ category: "B", amount: 20 }
+		];
+
+		const modelBuilder = new SegmentModelBuilder({
+			scopedDataRows,
+			keyFieldName: "category",
+			valueFieldName: "amount",
+			chartPaletteColors: ["#111111", "#222222"],
+			colorFieldName: "color"
+		});
+
+		expect(modelBuilder.build()).toEqual([
+			{
+				key: "A",
+				value: 10,
+				color: "#aaaaaa",
+				attachedDataRow: scopedDataRows[0]
+			},
+			{
+				key: "B",
+				value: 20,
+				color: "#222222",
+				attachedDataRow: scopedDataRows[1]
+			}
+		]);
+	});
 });

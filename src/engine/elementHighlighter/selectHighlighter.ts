@@ -1,14 +1,12 @@
 import { BaseType, select, Selection } from "d3-selection";
 import { PieArcDatum } from "d3-shape";
-import { MdtChartsDataRow, Size } from "../../config/config";
-import { BlockMargin, DonutChartSettings, PolarOptionsModel, TwoDimensionalOptionsModel } from "../../model/model";
+import { PolarOptionsModel, PolarSegmentModel, TwoDimensionalOptionsModel } from "../../model/model";
 import { Block } from "../block/block";
 import { Legend } from "../features/legend/legend";
 import { DomSelectionHelper, SelectionCondition } from "../helpers/domSelectionHelper";
 import { Donut } from "../polarNotation/donut/donut";
 import { ElementHighlighter } from "./elementHighlighter";
 import { MarkDot } from "../../engine/features/markDots/markDot";
-import { DonutThicknessCalculator } from "../../model/notations/polar/donut/donutThicknessService";
 
 export class SelectHighlighter {
 	public static click2DHandler(
@@ -95,11 +93,11 @@ export class SelectHighlighter {
 	public static clickPolarHandler(
 		multySelection: boolean,
 		appendKey: boolean,
-		selectedSegment: Selection<SVGGElement, PieArcDatum<MdtChartsDataRow>, BaseType, unknown>,
+		selectedSegment: Selection<SVGGElement, PieArcDatum<PolarSegmentModel>, BaseType, unknown>,
 		selectedKeys: string[],
 		block: Block,
 		options: PolarOptionsModel,
-		arcItems: Selection<SVGGElement, PieArcDatum<MdtChartsDataRow>, SVGGElement, unknown>
+		arcItems: Selection<SVGGElement, PieArcDatum<PolarSegmentModel>, SVGGElement, unknown>
 	): void {
 		if (!appendKey) {
 			ElementHighlighter.toggleDonutHighlightState(
@@ -144,10 +142,8 @@ export class SelectHighlighter {
 
 			ElementHighlighter.toggleActivityStyle(selectedSegment, true);
 			ElementHighlighter.toggleActivityStyle(
-				DomSelectionHelper.getChartElementsByKeys(
+				DomSelectionHelper.getChartElementsByKeysForPolar(
 					Donut.getAllArcGroups(block),
-					true,
-					options.data.keyField.name,
 					selectedKeys,
 					SelectionCondition.Exclude
 				),
@@ -186,7 +182,7 @@ export class SelectHighlighter {
 	public static clearPolar(
 		block: Block,
 		options: PolarOptionsModel,
-		arcItems: Selection<SVGGElement, PieArcDatum<MdtChartsDataRow>, SVGGElement, unknown>
+		arcItems: Selection<SVGGElement, PieArcDatum<PolarSegmentModel>, SVGGElement, unknown>
 	): void {
 		ElementHighlighter.toggleDonutHighlightState(
 			arcItems,

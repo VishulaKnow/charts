@@ -677,11 +677,11 @@ interface MarkersBaseSizeOptions {
 export interface PolarChartDataModel {
 	valueField: ValueField;
 	colorField?: MdtChartsColorField;
-	segments?: PolarSegmentModel[];
+	segments: PolarSegmentModel[];
 }
 
 export interface PolarSegmentModel {
-	key: string | number;
+	key: string;
 	value: number;
 	color: string;
 	attachedDataRow: MdtChartsDataRow;

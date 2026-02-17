@@ -65,18 +65,13 @@ export class PolarModel {
 			charts: [chart],
 			legend: {
 				position: modelInstance.canvasModel.legendCanvas.getPosition(),
-				items: modelInstance.dataModel.repository
-					.getScopedRows()
-					.map((record: MdtChartsDataRow, index: number) => {
-						let markerColor = chartStyle.elementColors[index % chartStyle.elementColors.length];
-						if (options.chart.data.colorField) markerColor = record[options.chart.data.colorField];
-
-						return {
-							marker: POLAR_LEGEND_MARKER,
-							markerColor,
-							textContent: record[options.data.keyField.name]
-						};
-					})
+				items: chart.data.segments.map((segment, index) => {
+					return {
+						marker: POLAR_LEGEND_MARKER,
+						markerColor: segment.color,
+						textContent: segment.key
+					};
+				})
 			},
 			tooltip: {
 				getContent: (keyFieldValue) => {
@@ -85,11 +80,9 @@ export class PolarModel {
 						keyFieldName: options.data.keyField.name,
 						publicOptions: options.tooltip,
 						initialRowsProvider: new PolarInitialRowsProvider({
-							datasource: modelInstance.dataModel.repository.getRawRows(),
+							segments: chart.data.segments,
 							valueField: options.chart.data.valueField,
-							keyFieldName: options.data.keyField.name,
-							chartColors: chart.style.elementColors,
-							colorField: options.chart.data.colorField
+							chartColors: chart.style.elementColors
 						}),
 						valueGlobalFormatter: designerConfig.dataFormat.formatters
 					});

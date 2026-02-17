@@ -1,6 +1,12 @@
 import { Selection, BaseType, select } from "d3-selection";
 import { PieArcDatum } from "d3-shape";
-import { BlockMargin, DonutChartSizesModel, MarkersStyleOptions, TwoDimensionalChartModel } from "../../model/model";
+import {
+	BlockMargin,
+	DonutChartSizesModel,
+	MarkersStyleOptions,
+	PolarSegmentModel,
+	TwoDimensionalChartModel
+} from "../../model/model";
 import { Block } from "../block/block";
 import { easeLinear } from "d3-ease";
 import { interrupt, Transition } from "d3-transition";
@@ -48,11 +54,11 @@ export class ElementHighlighter {
 	public static removeShadowClone(
 		block: Block,
 		keyFieldName: string,
-		selectedSegment: Selection<SVGGElement, PieArcDatum<MdtChartsDataRow>, BaseType, unknown>,
+		selectedSegment: Selection<SVGGElement, PieArcDatum<PolarSegmentModel>, BaseType, unknown>,
 		chartSizes: DonutChartSizesModel
 	): void {
 		const shadowClone = Donut.getAllArcShadows(block).filter(
-			(d: PieArcDatum<MdtChartsDataRow>) => d.data[keyFieldName] === selectedSegment.datum().data[keyFieldName]
+			(d: PieArcDatum<PolarSegmentModel>) => d.data.key === selectedSegment.datum().data.key
 		);
 		this.removeFilter(shadowClone.select("path"));
 		this.toggleDonutHighlightState(
@@ -66,11 +72,9 @@ export class ElementHighlighter {
 	public static removeCloneForElem(
 		block: Block,
 		keyFieldName: string,
-		selectedSegment: Selection<SVGGElement, PieArcDatum<MdtChartsDataRow>, BaseType, unknown>
+		selectedSegment: Selection<SVGGElement, PieArcDatum<PolarSegmentModel>, BaseType, unknown>
 	): void {
-		const clone = Donut.getAllArcClones(block).filter(
-			(d: PieArcDatum<MdtChartsDataRow>) => d.data[keyFieldName] === selectedSegment.datum().data[keyFieldName]
-		);
+		const clone = Donut.getAllArcClones(block).filter((d) => d.data.key === selectedSegment.datum().data.key);
 		clone.remove();
 	}
 
@@ -81,7 +85,7 @@ export class ElementHighlighter {
 
 	public static renderArcCloneAndHighlight(
 		block: Block,
-		arcSelection: Selection<SVGGElement, PieArcDatum<MdtChartsDataRow>, BaseType, unknown>,
+		arcSelection: Selection<SVGGElement, PieArcDatum<PolarSegmentModel>, BaseType, unknown>,
 		chartSizes: DonutChartSizesModel
 	): void {
 		const clone = this.makeArcClone(arcSelection, block);
@@ -103,7 +107,7 @@ export class ElementHighlighter {
 	}
 
 	public static toggleDonutHighlightState(
-		segment: Selection<SVGGElement, PieArcDatum<MdtChartsDataRow>, BaseType, unknown>,
+		segment: Selection<SVGGElement, PieArcDatum<PolarSegmentModel>, BaseType, unknown>,
 		chartSizes: DonutChartSizesModel,
 		transitionDuration: number,
 		on: boolean
@@ -128,15 +132,13 @@ export class ElementHighlighter {
 	}
 
 	public static removeDonutHighlightingByKeys(
-		arcSegments: Selection<SVGGElement, PieArcDatum<MdtChartsDataRow>, BaseType, unknown>,
+		arcSegments: Selection<SVGGElement, PieArcDatum<PolarSegmentModel>, BaseType, unknown>,
 		keyFieldName: string,
 		keyValues: string[],
 		chartSizes: DonutChartSizesModel
 	): void {
-		const segments = DomSelectionHelper.getChartElementsByKeys(
+		const segments = DomSelectionHelper.getChartElementsByKeysForPolar(
 			arcSegments,
-			true,
-			keyFieldName,
 			keyValues,
 			SelectionCondition.Exclude
 		);
@@ -227,9 +229,9 @@ export class ElementHighlighter {
 	}
 
 	private static makeArcClone(
-		segment: Selection<SVGGElement, PieArcDatum<MdtChartsDataRow>, BaseType, unknown>,
+		segment: Selection<SVGGElement, PieArcDatum<PolarSegmentModel>, BaseType, unknown>,
 		block: Block
-	): Selection<SVGGElement, PieArcDatum<MdtChartsDataRow>, SVGGElement, unknown> {
+	): Selection<SVGGElement, PieArcDatum<PolarSegmentModel>, SVGGElement, unknown> {
 		const clone = this.renderDonutSegmentClone(segment, `${Donut.arcCloneClass}`);
 		block
 			.getSvg()
@@ -237,13 +239,13 @@ export class ElementHighlighter {
 			.append(function () {
 				return clone.node();
 			});
-		return clone as Selection<SVGGElement, PieArcDatum<MdtChartsDataRow>, SVGGElement, unknown>;
+		return clone as Selection<SVGGElement, PieArcDatum<PolarSegmentModel>, SVGGElement, unknown>;
 	}
 
 	private static makeArcShadow(
-		segment: Selection<SVGGElement, PieArcDatum<MdtChartsDataRow>, BaseType, unknown>,
+		segment: Selection<SVGGElement, PieArcDatum<PolarSegmentModel>, BaseType, unknown>,
 		block: Block
-	): Selection<SVGGElement, PieArcDatum<MdtChartsDataRow>, SVGGElement, unknown> {
+	): Selection<SVGGElement, PieArcDatum<PolarSegmentModel>, SVGGElement, unknown> {
 		const shadowClone = this.renderDonutSegmentClone(segment, `${Donut.arcShadowClass}`);
 		block
 			.getSvg()
@@ -251,13 +253,13 @@ export class ElementHighlighter {
 			.append(function () {
 				return shadowClone.node();
 			});
-		return shadowClone as Selection<SVGGElement, PieArcDatum<MdtChartsDataRow>, SVGGElement, unknown>;
+		return shadowClone as Selection<SVGGElement, PieArcDatum<PolarSegmentModel>, SVGGElement, unknown>;
 	}
 
 	private static renderDonutSegmentClone(
-		segment: Selection<SVGGElement, PieArcDatum<MdtChartsDataRow>, BaseType, unknown>,
+		segment: Selection<SVGGElement, PieArcDatum<PolarSegmentModel>, BaseType, unknown>,
 		newClass: string
-	): Selection<SVGGElement, PieArcDatum<MdtChartsDataRow>, BaseType, unknown> {
+	): Selection<SVGGElement, PieArcDatum<PolarSegmentModel>, BaseType, unknown> {
 		return segment
 			.clone(true)
 			.style("pointer-events", "none")
