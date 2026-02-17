@@ -1,5 +1,5 @@
 import { DonutChart, MdtChartsPolarOptions, MdtChartsDataRow, Size } from "../../../config/config";
-import { ChartStyleConfig, DesignerConfig, DonutOptionsCanvas } from "../../../designer/designerConfig";
+import { DesignerConfig } from "../../../designer/designerConfig";
 import { ChartStyleModelService } from "../../chartStyleModel/chartStyleModel";
 import {
 	PolarOptionsModel,
@@ -19,6 +19,7 @@ import { TwoDimTooltipContentGenerator } from "../../featuresModel/tooltipModel/
 import { PolarInitialRowsProvider } from "../../featuresModel/tooltipModel/contentByNotations/polarInitialRowsProvider";
 import { DonutThicknessCalculator } from "./donut/donutThicknessService";
 import { getDonutLikeOuterRadius, getDonutLikeTranslate } from "./donut/donutLikeSizesCalculator";
+import { SegmentModelBuilder } from "./segmentModelBuilder/segmentModelBuilder";
 
 export const MIN_DONUT_BLOCK_SIZE = 120;
 
@@ -48,7 +49,9 @@ export class PolarModel {
 			modelInstance.canvasModel.getBlockSize(),
 			modelInstance.canvasModel.getMargin(),
 			options.chart,
-			chartStyle
+			chartStyle,
+			modelInstance.dataModel.repository.getScopedRows(),
+			options.data.keyField.name
 		);
 
 		return {
@@ -147,13 +150,25 @@ export class PolarModel {
 		blockSize: Size,
 		margin: BlockMargin,
 		chart: DonutChart,
-		chartStyle: ChartStyle
+		chartStyle: ChartStyle,
+		scopedDataRows: MdtChartsDataRow[],
+		keyFieldName: string
 	): DonutChartModel {
 		const outerRadius = getDonutLikeOuterRadius(margin, blockSize);
 		const thickness = DonutThicknessCalculator.getThickness(donutSettings.thickness, blockSize, margin);
+		const segmentModelBuilder = new SegmentModelBuilder({
+			scopedDataRows,
+			keyFieldName,
+			valueFieldName: chart.data.valueField.name,
+			chartPaletteColors: chartStyle.elementColors,
+			colorFieldName: chart.data.colorField
+		});
 		return {
 			type: chart.type,
-			data: { ...chart.data },
+			data: {
+				...chart.data,
+				segments: segmentModelBuilder.build()
+			},
 			cssClasses: ChartStyleModelService.getCssClasses(0),
 			style: chartStyle,
 			sizes: {
