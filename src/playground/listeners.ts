@@ -651,7 +651,7 @@ new Listeners(instance, config, designerConfig, data);
 // 		price: 12000,
 // 		price2: 20000,
 // 		count: 10000,
-// 		color: "green",
+// 		color: "grey",
 // 		year: 2035,
 // 		decade: "2030s",
 // 		territory: "Europe",
@@ -659,7 +659,7 @@ new Listeners(instance, config, designerConfig, data);
 // 	});
 // 	newData.dataSet = newData.dataSet.filter((r: any) => r.territory !== "Center west");
 // 	instance.getChart().updateData(newData);
-// 	// instance.getChart().updateColors(["red", "yellow", "blue"]);
+// 	instance.getChart().updateColors(["red", "green", "yellow", "blue"]);
 // }, 5000);
 
 const chart2 = new Chart(require("./configsExamples/configTest2D.json"), designerConfig, data, false);
