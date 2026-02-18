@@ -6,7 +6,7 @@ import { Block } from "../../block/block";
 import { DonutHelper } from "./donutHelper";
 import { DomSelectionHelper } from "../../helpers/domSelectionHelper";
 import { MdtChartsDataRow } from "../../../config/config";
-import { SunburstSegmentLabel } from "../../sunburstNotation/sunburstSegmentLabel";
+import { PolarLikeSegmentLabel } from "../polarLikeSegmentLabel/polarLikeSegmentLabel";
 
 export interface Translate {
 	x: number;
@@ -50,7 +50,7 @@ export class Donut {
 		>;
 	}
 
-	private segmentLabels: SunburstSegmentLabel | undefined;
+	private segmentLabels: PolarLikeSegmentLabel | undefined;
 
 	public render(block: Block, chart: DonutChartModel, settings: DonutChartSettings): void {
 		const arcGenerator = DonutHelper.getArcGenerator(chart.sizes.outerRadius, chart.sizes.innerRadius);
@@ -68,14 +68,15 @@ export class Donut {
 		this.renderClonesG(donutBlock);
 
 		if (chart.valueLabels.on) {
-			this.segmentLabels = new SunburstSegmentLabel(donutBlock);
+			this.segmentLabels = new PolarLikeSegmentLabel(block);
 			this.segmentLabels.render(
 				{
 					sizesForGenerators: {
 						innerRadius: chart.sizes.innerRadius,
 						outerRadius: chart.sizes.outerRadius,
 						padAngle: settings.padAngle
-					}
+					},
+					wrapperTranslate: chart.sizes.translate
 				},
 				chart.valueLabels.items
 			);
@@ -140,7 +141,8 @@ export class Donut {
 							innerRadius: chart.sizes.innerRadius,
 							outerRadius: chart.sizes.outerRadius,
 							padAngle: donutSettings.padAngle
-						}
+						},
+						wrapperTranslate: chart.sizes.translate
 					},
 					chart.valueLabels.items,
 					block.transitionManager.durations.chartUpdate

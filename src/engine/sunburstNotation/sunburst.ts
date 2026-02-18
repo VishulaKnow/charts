@@ -5,7 +5,7 @@ import { Selection } from "d3-selection";
 import { merge } from "d3-array";
 import { interpolate } from "d3-interpolate";
 import { SunburstHighlightState } from "./sunburstHighlightState/sunburstHighlightState";
-import { SunburstSegmentLabel } from "./sunburstSegmentLabel";
+import { PolarLikeSegmentLabel } from "../polarNotation/polarLikeSegmentLabel/polarLikeSegmentLabel";
 
 export class Sunburst {
 	public static readonly donutBlockClassPrefix = "level-donut-block";
@@ -14,7 +14,7 @@ export class Sunburst {
 
 	private static readonly arcItemNonHighlightedClass = "mdt-charts-arc-non-highlighted";
 
-	private readonly sunburstSegmentLabels: Record<number, SunburstSegmentLabel> = {};
+	private readonly sunburstSegmentLabels: Record<number, PolarLikeSegmentLabel> = {};
 
 	static getAllArcGroups(block: Block) {
 		return block.getSvg().selectAll(`.${Sunburst.arcItemClass}`) as Selection<
@@ -55,16 +55,19 @@ export class Sunburst {
 				.attr("transform", `translate(${level.sizes.translate.x}, ${level.sizes.translate.y})`);
 
 			this.renderNewArcItems(levelDonutBlock, pieGenerator, arcGenerator, level.segments);
+		});
 
+		levels.forEach((level, levelIndex) => {
 			if (level.valueLabels.on) {
-				this.sunburstSegmentLabels[levelIndex] = new SunburstSegmentLabel(levelDonutBlock);
+				this.sunburstSegmentLabels[levelIndex] = new PolarLikeSegmentLabel(this.block, levelIndex);
 				this.sunburstSegmentLabels[levelIndex].render(
 					{
 						sizesForGenerators: {
 							innerRadius: level.sizes.innerRadius,
 							outerRadius: level.sizes.outerRadius,
 							padAngle: this.pagAngle
-						}
+						},
+						wrapperTranslate: level.sizes.translate
 					},
 					level.valueLabels.items
 				);
@@ -135,7 +138,8 @@ export class Sunburst {
 								innerRadius: level.sizes.innerRadius,
 								outerRadius: level.sizes.outerRadius,
 								padAngle: this.pagAngle
-							}
+							},
+							wrapperTranslate: level.sizes.translate
 						},
 						level.valueLabels.items,
 						this.block.transitionManager.durations.chartUpdate

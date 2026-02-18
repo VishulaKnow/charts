@@ -1,8 +1,10 @@
 import { arc, Arc, pie, PieArcDatum } from "d3-shape";
 import { BaseType, select, Selection } from "d3-selection";
 import { interpolate } from "d3-interpolate";
-import { PolarSegmentLabelDataItem } from "../../model/modelTypes/valueLabelsModel";
-import { DonutHelper } from "../polarNotation/donut/donutHelper";
+import { PolarSegmentLabelDataItem } from "../../../model/modelTypes/valueLabelsModel";
+import { DonutHelper } from "../donut/donutHelper";
+import { DonutChartTranslateModel } from "../../../model/model";
+import { Block } from "../../block/block";
 
 interface SunburstSegmentLabelOptions {
 	sizesForGenerators: {
@@ -10,17 +12,34 @@ interface SunburstSegmentLabelOptions {
 		outerRadius: number;
 		padAngle?: number;
 	};
+	wrapperTranslate: DonutChartTranslateModel;
 }
 
-export class SunburstSegmentLabel {
+export class PolarLikeSegmentLabel {
 	private static readonly arcLabelClass = "mdt-charts-arc-label";
 
-	constructor(private readonly parentSelection: Selection<BaseType, unknown, BaseType, unknown>) {}
+	private readonly wrapperCssClassName: string;
+
+	constructor(
+		private readonly block: Block,
+		index: number = 0
+	) {
+		this.wrapperCssClassName = `mdt-charts-donut-label-wrapper-${index}`;
+	}
 
 	render(options: SunburstSegmentLabelOptions, segments: PolarSegmentLabelDataItem[]) {
 		const { arcGenerator, pieGenerator } = this.getGenerators(options);
 
-		this.parentSelection
+		let parentSelection = this.block.getSvg().select<SVGGElement>(`.${this.wrapperCssClassName}`);
+		if (parentSelection.empty()) {
+			parentSelection = this.block
+				.getSvg()
+				.append("g")
+				.classed(this.wrapperCssClassName, true)
+				.attr("transform", `translate(${options.wrapperTranslate.x}, ${options.wrapperTranslate.y})`);
+		}
+
+		parentSelection
 			.selectAll<SVGTextElement, PieArcDatum<PolarSegmentLabelDataItem>>("text")
 			.data(pieGenerator(segments), (d) => d.data.key)
 			.enter()
@@ -28,7 +47,7 @@ export class SunburstSegmentLabel {
 			.attr("transform", (d) => {
 				return this.getTransformAttrValue(arcGenerator, d);
 			})
-			.classed(SunburstSegmentLabel.arcLabelClass, true)
+			.classed(PolarLikeSegmentLabel.arcLabelClass, true)
 			.text((d) => d.data.textContent)
 			.each(function (d) {
 				if (d.data.cssClass) select(this).classed(d.data.cssClass, true);
@@ -42,7 +61,11 @@ export class SunburstSegmentLabel {
 		segments: PolarSegmentLabelDataItem[],
 		animationDuration: number
 	): Promise<Selection<SVGTextElement, PieArcDatum<PolarSegmentLabelDataItem>, BaseType, unknown>> {
-		const oldLabels = this.parentSelection
+		const parentSelection = this.block.getSvg().select<SVGGElement>(`.${this.wrapperCssClassName}`);
+
+		parentSelection.attr("transform", `translate(${options.wrapperTranslate.x}, ${options.wrapperTranslate.y})`);
+
+		const oldLabels = parentSelection
 			.selectAll<SVGTextElement, PieArcDatum<PolarSegmentLabelDataItem>>("text")
 			.data()
 			.map((d) => d.data);
@@ -53,11 +76,11 @@ export class SunburstSegmentLabel {
 
 		const { arcGenerator, pieGenerator } = this.getGenerators(options);
 
-		const labelsNewAndOld = this.parentSelection
+		const labelsNewAndOld = parentSelection
 			.selectAll<SVGTextElement, PieArcDatum<PolarSegmentLabelDataItem>>("text")
 			.data(pieGenerator(valueLabelsZeroRows), (d) => d.data.key);
 
-		const onlyNewLabels = this.parentSelection
+		const onlyNewLabels = parentSelection
 			.selectAll<SVGTextElement, PieArcDatum<PolarSegmentLabelDataItem>>("text")
 			.data(pieGenerator(segments), (d) => d.data.key);
 
