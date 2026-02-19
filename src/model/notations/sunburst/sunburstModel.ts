@@ -1,7 +1,7 @@
 import { DesignerConfig } from "../../../designer/designerConfig";
 import { MdtChartsSunburstOptions } from "../../../main";
 import { ChartStyleModelService } from "../../chartStyleModel/chartStyleModel";
-import { LegendItemModel, SunburstOptionsModel, SunburstLevel } from "../../model";
+import { LegendItemModel, SunburstOptionsModel, SunburstLevel, SunburstLegendItemModel } from "../../model";
 import { SunburstConfigReader } from "../../modelInstance/configReader/sunburstConifgReader/sunburstConifgReader";
 import { ModelInstance } from "../../modelInstance/modelInstance";
 import { TitleConfigReader } from "../../modelInstance/titleConfigReader";
@@ -41,12 +41,13 @@ export class SunburstModel {
 			levels: options.levels
 		});
 
-		const totalLegendItems: LegendItemModel[] = [];
+		const totalLegendItems: SunburstLegendItemModel[] = [];
 		for (const { levelIndex } of configReader.getLevelsWithLegendTurnedOn()) {
-			const levelLegendItems = levels[levelIndex].segments.map<LegendItemModel>((segment) => ({
+			const levelLegendItems = levels[levelIndex].segments.map<SunburstLegendItemModel>((segment) => ({
 				marker: POLAR_LEGEND_MARKER,
 				markerColor: segment.color,
 				textContent: segment.key.toString(),
+				levelIndex,
 				tooltip: {
 					content: segment.tooltip.content
 				}

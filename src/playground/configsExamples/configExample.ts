@@ -238,7 +238,8 @@ const configCars: MdtChartsConfig = {
 	// 	selectable: true,
 	// 	title: "Chart header",
 	// 	legend: {
-	// 		show: true
+	// 		show: true,
+	// 		position: "bottom"
 	// 	},
 	// 	data: {
 	// 		dataSource: "dataSet",
@@ -282,6 +283,10 @@ const configCars: MdtChartsConfig = {
 				title: "Volume"
 			}
 		},
+		legend: {
+			show: true
+			// position: "right"
+		},
 		title: "Sales by territory and brand",
 		aggregator: {
 			content: (model) => ({
@@ -305,6 +310,9 @@ const configCars: MdtChartsConfig = {
 					// colorField: {
 					// 	name: "territoryColor"
 					// }
+				},
+				legend: {
+					show: false
 				},
 				tooltip: {
 					overrideContent: ({ attachedDataRows, autoTooltipRows }) => {
@@ -335,6 +343,9 @@ const configCars: MdtChartsConfig = {
 					keyField: {
 						name: "brand"
 					}
+				},
+				legend: {
+					show: true
 				},
 				valueLabels: {
 					on: true,

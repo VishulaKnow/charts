@@ -177,7 +177,8 @@ describe("SunburstHighlightState", () => {
 		sunburstHighlightState.setHoverSegmentLegendItem({
 			marker: { markerShape: "circle" },
 			markerColor: "red",
-			textContent: "Moscow"
+			textContent: "Moscow",
+			levelIndex: 0
 		});
 
 		expect(result).toEqual([levels[0].segments[0], levels[1].segments[0], levels[1].segments[1]]);
@@ -538,7 +539,8 @@ describe("SunburstHighlightState", () => {
 		sunburstHighlightState.setHoverSegmentLegendItem({
 			marker: { markerShape: "circle" },
 			markerColor: "red",
-			textContent: "America"
+			textContent: "America",
+			levelIndex: 0
 		});
 
 		expect(resultHighlighted).toEqual([newLevels[0].segments[2], newLevels[1].segments[4]]);
@@ -600,7 +602,8 @@ describe("SunburstHighlightState", () => {
 			{
 				marker: { markerShape: "circle" },
 				markerColor: "red",
-				textContent: "America"
+				textContent: "America",
+				levelIndex: 0
 			},
 			false
 		);

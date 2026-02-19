@@ -1,5 +1,5 @@
 import { Selection } from "d3-selection";
-import { LegendItemModel, SunburstLevelSegment } from "../../model/model";
+import { SunburstLegendItemModel, SunburstLevelSegment } from "../../model/model";
 import { EventEmitter } from "../../model/helpers/eventEmitter";
 import { DonutOverDetails } from "../features/tolltip/tooltip";
 import { PieArcDatum } from "d3-shape";
@@ -25,19 +25,19 @@ export class SunburstSegmentEventDispatcher {
 		};
 		legendItemMousemove: {
 			e: MouseEvent;
-			legendItem: LegendItemModel;
+			legendItem: SunburstLegendItemModel;
 		};
 		legendItemMouseover: {
 			e: MouseEvent;
-			legendItem: LegendItemModel;
+			legendItem: SunburstLegendItemModel;
 		};
 		legendItemMouseleave: {
 			e: MouseEvent;
-			legendItem: LegendItemModel;
+			legendItem: SunburstLegendItemModel;
 		};
 		legendItemClick: {
 			multiModeKeyPressed: boolean;
-			legendItem: LegendItemModel;
+			legendItem: SunburstLegendItemModel;
 		};
 	}>();
 	readonly on = this.eventEmitter.getSubscribeController().subscribe;
@@ -68,16 +68,16 @@ export class SunburstSegmentEventDispatcher {
 		});
 
 		if (legendItemSelection) {
-			legendItemSelection.on("mousemove", (e: MouseEvent, legendItem: LegendItemModel) => {
+			legendItemSelection.on("mousemove", (e: MouseEvent, legendItem: SunburstLegendItemModel) => {
 				this.eventEmitter.emit("legendItemMousemove", { e, legendItem });
 			});
-			legendItemSelection.on("mouseover", (e: MouseEvent, legendItem: LegendItemModel) => {
+			legendItemSelection.on("mouseover", (e: MouseEvent, legendItem: SunburstLegendItemModel) => {
 				this.eventEmitter.emit("legendItemMouseover", { e, legendItem });
 			});
-			legendItemSelection.on("mouseleave", (e: MouseEvent, legendItem: LegendItemModel) => {
+			legendItemSelection.on("mouseleave", (e: MouseEvent, legendItem: SunburstLegendItemModel) => {
 				this.eventEmitter.emit("legendItemMouseleave", { e, legendItem });
 			});
-			legendItemSelection.on("click", (e: MouseEvent, legendItem: LegendItemModel) => {
+			legendItemSelection.on("click", (e: MouseEvent, legendItem: SunburstLegendItemModel) => {
 				this.eventEmitter.emit("legendItemClick", { multiModeKeyPressed: e.ctrlKey || e.metaKey, legendItem });
 			});
 		}

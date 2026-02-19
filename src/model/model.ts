@@ -130,11 +130,9 @@ export interface SunburstOptionsModel {
 	type: "sunburst";
 	aggregator?: DonutAggregatorModel;
 	levels: SunburstLevel[];
-	//TODO: remove duplicates ======
 	title: OptionsModelTitle;
 	selectable: boolean;
-	legend: ILegendModel;
-	// =============================
+	legend: SunburstLegendModel;
 }
 
 //====================================================== Options Model Common
@@ -150,6 +148,15 @@ export interface LegendItemModel {
 	tooltip?: {
 		content: TooltipContent;
 	};
+}
+
+export interface SunburstLegendModel {
+	position: LegendPosition;
+	items: SunburstLegendItemModel[];
+}
+
+export interface SunburstLegendItemModel extends LegendItemModel {
+	levelIndex: number;
 }
 
 export interface BasicOptionsModelData {

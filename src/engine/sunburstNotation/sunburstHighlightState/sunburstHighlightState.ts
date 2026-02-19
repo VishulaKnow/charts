@@ -1,6 +1,6 @@
 import { MdtChartsDataRow } from "../../../config/config";
 import { EventEmitter } from "../../../model/helpers/eventEmitter";
-import { LegendItemModel, SunburstLevel, SunburstLevelSegment } from "../../../model/model";
+import { SunburstLegendItemModel, SunburstLevel, SunburstLevelSegment } from "../../../model/model";
 import { FilterCallback } from "../../filterManager/filterEventManager";
 
 export class SunburstHighlightState {
@@ -117,8 +117,10 @@ export class SunburstHighlightState {
 		});
 	}
 
-	setHoverSegmentLegendItem(legendItem: LegendItemModel): void {
-		const segment = this.levels[0].segments.find((segment) => segment.key === legendItem.textContent);
+	setHoverSegmentLegendItem(legendItem: SunburstLegendItemModel): void {
+		const segment = this.levels[legendItem.levelIndex].segments.find(
+			(segment) => segment.key === legendItem.textContent
+		);
 		if (segment) {
 			const highlightSegments: SunburstLevelSegment[] = [segment];
 
@@ -131,8 +133,10 @@ export class SunburstHighlightState {
 		}
 	}
 
-	changeLegendItemSelection(legendItem: LegendItemModel, multiModeKeyPressed: boolean) {
-		const segment = this.levels[0].segments.find((segment) => segment.key === legendItem.textContent);
+	changeLegendItemSelection(legendItem: SunburstLegendItemModel, multiModeKeyPressed: boolean) {
+		const segment = this.levels[legendItem.levelIndex].segments.find(
+			(segment) => segment.key === legendItem.textContent
+		);
 		if (segment) {
 			this.changeSegmentSelection(segment, multiModeKeyPressed);
 		}
