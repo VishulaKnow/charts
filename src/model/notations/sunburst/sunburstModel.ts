@@ -2,6 +2,7 @@ import { DesignerConfig } from "../../../designer/designerConfig";
 import { MdtChartsSunburstOptions } from "../../../main";
 import { ChartStyleModelService } from "../../chartStyleModel/chartStyleModel";
 import { LegendItemModel, SunburstOptionsModel, SunburstLevel } from "../../model";
+import { SunburstConfigReader } from "../../modelInstance/configReader/sunburstConifgReader/sunburstConifgReader";
 import { ModelInstance } from "../../modelInstance/modelInstance";
 import { TitleConfigReader } from "../../modelInstance/titleConfigReader";
 import { DonutAggregatorService } from "../polar/donut/donutAggregatorService";
@@ -16,6 +17,7 @@ export class SunburstModel {
 		designerConfig: DesignerConfig,
 		modelInstance: ModelInstance
 	): SunburstOptionsModel {
+		const configReader = new SunburstConfigReader(options, designerConfig);
 		const titleConfig = TitleConfigReader.create(options.title, modelInstance);
 
 		//TODO: extract to function and remove duplicate with levelModelBuilder
@@ -39,6 +41,19 @@ export class SunburstModel {
 			levels: options.levels
 		});
 
+		const totalLegendItems: LegendItemModel[] = [];
+		for (const { levelIndex } of configReader.getLevelsWithLegendTurnedOn()) {
+			const levelLegendItems = levels[levelIndex].segments.map<LegendItemModel>((segment) => ({
+				marker: POLAR_LEGEND_MARKER,
+				markerColor: segment.color,
+				textContent: segment.key.toString(),
+				tooltip: {
+					content: segment.tooltip.content
+				}
+			}));
+			totalLegendItems.push(...levelLegendItems);
+		}
+
 		return {
 			type: "sunburst",
 			title: {
@@ -48,14 +63,7 @@ export class SunburstModel {
 			selectable: !!options.selectable,
 			legend: {
 				position: modelInstance.canvasModel.legendCanvas.getPosition(),
-				items: levels[0].segments.map<LegendItemModel>((segment, index) => ({
-					marker: POLAR_LEGEND_MARKER,
-					markerColor: segment.color,
-					textContent: segment.key.toString(),
-					tooltip: {
-						content: segment.tooltip.content
-					}
-				}))
+				items: totalLegendItems
 			},
 			aggregator: options.aggregator
 				? {

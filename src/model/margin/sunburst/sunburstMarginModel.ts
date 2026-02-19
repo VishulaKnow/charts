@@ -14,8 +14,9 @@ export class SunburstMarginModel {
 	) {}
 
 	recalcMargin(otherComponents: OtherCommonComponents, modelInstance: ModelInstance) {
-		const fieldInLegendName = this.configReader.getFieldInLegend();
-		const legendValues = extractLegendValues(modelInstance.dataModel.repository.getRawRows(), fieldInLegendName);
+		const fieldNamesInLegend = this.configReader.getFieldsInLegend();
+		const legendValues = extractLegendValues(modelInstance.dataModel.repository.getRawRows(), fieldNamesInLegend);
+
 		this.polarLegendParamsBuilder.calculateParamsAndSetMargin(
 			modelInstance.canvasModel,
 			legendValues,

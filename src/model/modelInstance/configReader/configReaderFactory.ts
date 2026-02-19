@@ -8,6 +8,6 @@ import { TwoDimConfigReader } from "./twoDimConfigReader/twoDimConfigReader";
 export function getConfigReader(config: MdtChartsConfig, designerConfig: DesignerConfig): BaseConfigReader {
 	if (config.options.type === "2d") return new TwoDimConfigReader(config, designerConfig);
 	if (config.options.type === "polar") return new PolarConfigReader(config, designerConfig);
-	if (config.options.type === "sunburst") return new SunburstConfigReader(config, designerConfig);
+	if (config.options.type === "sunburst") return SunburstConfigReader.createFromGlobalConfig(config, designerConfig);
 	throw new Error(`Config reader for type "${(config.options as any).type}" not exists`);
 }

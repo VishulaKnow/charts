@@ -125,6 +125,9 @@ export interface MdtChartsSunburstLevel {
 		thickness?: MdtChartsDonutThicknessOptions;
 	};
 	valueLabels?: SunburstChartValueLabelsConfig;
+	legend?: {
+		show: boolean;
+	};
 }
 
 //====================================================== Options
