@@ -54,7 +54,7 @@ interface GraphicNotationOptions {
 
 export interface MdtChartsTwoDimensionalOptions extends GraphicNotationOptions {
 	type: "2d";
-	legend: MdtChartsTwoDimLegend;
+	legend: LegendConfig;
 	axis: TwoDimensionalAxis;
 	additionalElements: AdditionalElements;
 	charts: MdtChartsTwoDimensionalChart[];
@@ -90,7 +90,7 @@ export type PolarChartType = DonutChart["type"];
 
 export interface MdtChartsPolarOptions extends GraphicNotationOptions {
 	type: "polar";
-	legend: Legend;
+	legend: LegendConfig;
 	chart: DonutChart;
 }
 
@@ -98,7 +98,7 @@ export interface MdtChartsSunburstOptions {
 	type: "sunburst";
 	title?: Title;
 	selectable?: boolean;
-	legend?: Legend;
+	legend?: LegendConfig;
 	aggregator?: MdtChartsDonutAggregator;
 	data: {
 		dataSource: string;
@@ -128,15 +128,12 @@ export interface MdtChartsSunburstLevel {
 }
 
 //====================================================== Options
-export interface Legend {
+export interface LegendConfig {
 	show: boolean;
+	position?: LegendPublicPosition;
 }
 
-export type TwoDimLegendPosition = "top" | "bottom";
-
-export interface MdtChartsTwoDimLegend extends Legend {
-	position?: TwoDimLegendPosition;
-}
+export type LegendPublicPosition = "top" | "bottom" | "left" | "right";
 
 export interface RecordOverflowAlertOptions {
 	textContent: RecordOverflowBlockTextContent;

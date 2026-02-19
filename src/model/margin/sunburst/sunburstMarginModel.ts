@@ -8,16 +8,20 @@ import { extractLegendValues } from "../../notations/sunburst/sunburstLegendValu
 export class SunburstMarginModel {
 	private readonly polarLegendParamsBuilder = new PolarLikeLegendParamsBuilder();
 
-	constructor(private readonly designerConfig: DesignerConfig, private configReader: SunburstConfigReader) {}
+	constructor(
+		private readonly designerConfig: DesignerConfig,
+		private configReader: SunburstConfigReader
+	) {}
 
 	recalcMargin(otherComponents: OtherCommonComponents, modelInstance: ModelInstance) {
 		const fieldInLegendName = this.configReader.getFieldInLegend();
 		const legendValues = extractLegendValues(modelInstance.dataModel.repository.getRawRows(), fieldInLegendName);
 		this.polarLegendParamsBuilder.calculateParamsAndSetMargin(
-			modelInstance,
+			modelInstance.canvasModel,
 			legendValues,
 			otherComponents.legendBlock,
-			this.designerConfig.canvas.legendBlock
+			this.designerConfig.canvas.legendBlock,
+			this.configReader.options.legend?.position
 		);
 	}
 }

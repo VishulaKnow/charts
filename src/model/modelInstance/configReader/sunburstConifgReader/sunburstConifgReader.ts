@@ -3,7 +3,7 @@ import { DesignerConfig } from "../../../../designer/designerConfig";
 import { BaseConfigReader } from "../baseConfigReader";
 
 export class SunburstConfigReader implements BaseConfigReader {
-	private readonly options: MdtChartsSunburstOptions;
+	public readonly options: MdtChartsSunburstOptions;
 
 	constructor(
 		config: MdtChartsConfig,

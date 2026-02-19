@@ -128,10 +128,11 @@ export class DataManagerModel {
 			(dataRow) => dataRow[configOptions.data.keyField.name]
 		);
 		const { shownKeys, hiddenKeysAmount } = this.polarLegendParamsBuilder.calculateParamsAndSetMargin(
-			modelInstance,
+			modelInstance.canvasModel,
 			valuesInLegend,
 			legendBlock,
-			legendCanvas
+			legendCanvas,
+			configOptions.legend.position
 		);
 
 		const limitParams = this.service.limitAllowableKeys(

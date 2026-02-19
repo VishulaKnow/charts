@@ -18,7 +18,10 @@ export class LegendCanvasModel {
 		legendBlockWidth: number,
 		legendBlockHeight: number
 	): DataLegendParams {
-		const legendWrapper = this.getLegendWrapperEl(legendBlockWidth, position === "right" ? "column" : "row");
+		const legendWrapper = this.getLegendWrapperEl(
+			legendBlockWidth,
+			position === "right" || position === "left" ? "column" : "row"
+		);
 		document.body.append(legendWrapper);
 		let amount = 0;
 

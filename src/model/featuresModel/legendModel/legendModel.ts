@@ -13,7 +13,7 @@ export class LegendModel {
 			coordinate: {
 				left: {
 					size: 0,
-					margin: { top: mt, bottom: mb, left: ml, right: 0 },
+					margin: { top: canvasModel.titleCanvas.getAllNeededSpace(), bottom: mb, left: 0, right: 15 },
 					pad: 0
 				},
 				bottom: {

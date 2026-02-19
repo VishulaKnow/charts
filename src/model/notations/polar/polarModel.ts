@@ -7,7 +7,8 @@ import {
 	DonutChartSettings,
 	LegendCoordinate,
 	BlockMargin,
-	ChartStyle
+	ChartStyle,
+	LegendPosition
 } from "../../model";
 import { CanvasModel } from "../../modelInstance/canvasModel/canvasModel";
 import { ModelInstance } from "../../modelInstance/modelInstance";
@@ -107,8 +108,7 @@ export class PolarModel {
 		};
 	}
 
-	//TODO: type for returned value
-	public static getLegendPositionByBlockSize(canvasModel: CanvasModel): "bottom" | "right" {
+	public static getLegendPositionByBlockSize(canvasModel: CanvasModel): LegendPosition {
 		const widthCoefficientWhenLegendShouldInBottom = 1.5;
 		const avgLegendWidth = 100;
 		const blockWidth = canvasModel.getBlockSize().width;
