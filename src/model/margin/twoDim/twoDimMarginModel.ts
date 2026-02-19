@@ -19,7 +19,10 @@ export const AXIS_VERTICAL_LABEL_PADDING = 8;
 export class TwoDimMarginModel {
 	private twoDimLegendModel = new TwoDimLegendModel(this.configReader);
 
-	constructor(private designerConfig: DesignerConfig, private configReader: TwoDimConfigReader) {}
+	constructor(
+		private designerConfig: DesignerConfig,
+		private configReader: TwoDimConfigReader
+	) {}
 
 	recalcMargin(otherComponents: OtherCommonComponents, modelInstance: ModelInstance) {
 		const canvasModel = modelInstance.canvasModel;
@@ -27,7 +30,8 @@ export class TwoDimMarginModel {
 		this.twoDimLegendModel.recalcMarginWith2DLegend(
 			modelInstance,
 			otherComponents.legendBlock,
-			this.configReader.options.legend
+			this.configReader.options.legend,
+			this.designerConfig.canvas.legendBlock
 		);
 		this.recalcVerticalMarginByAxisLabelHeight(LABEL_ELEMENT_HEIGHT_PX, canvasModel);
 		const labelSize = this.getMaxLabelSize(modelInstance);
@@ -40,7 +44,7 @@ export class TwoDimMarginModel {
 				? !TwoDimensionalModel.getChartsEmbeddedLabelsFlag(
 						this.configReader.options.charts,
 						this.configReader.options.orientation
-				  )
+					)
 				: true;
 
 		this.recalcHorizontalMarginByAxisLabelWidth(labelSize, canvasModel, showingFlag);

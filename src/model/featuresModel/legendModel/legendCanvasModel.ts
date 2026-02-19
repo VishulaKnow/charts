@@ -11,15 +11,15 @@ export interface LegendItemContentOptions {
 }
 
 export class LegendCanvasModel {
-	//TODO: find better solution
+	//TODO: find better solution to calculate legend size
 	public static findElementsAmountByLegendSize(
 		items: LegendItemContentOptions[],
 		position: LegendPosition,
-		legendBlockWidth: number,
-		legendBlockHeight: number
+		legendBlockMaxWidth: number,
+		legendBlockMaxHeight: number
 	): DataLegendParams {
 		const legendWrapper = this.getLegendWrapperEl(
-			legendBlockWidth,
+			legendBlockMaxWidth,
 			position === "right" || position === "left" ? "column" : "row"
 		);
 		document.body.append(legendWrapper);
@@ -53,9 +53,13 @@ export class LegendCanvasModel {
 
 			amount++;
 
-			if (legendWrapper.offsetHeight > legendBlockHeight) {
+			if (legendWrapper.offsetHeight > legendBlockMaxHeight) {
 				itemWrapper.remove();
-				if (legendBlockHeight - legendWrapper.offsetHeight >= 15 && position !== "bottom" && position !== "top")
+				if (
+					legendBlockMaxHeight - legendWrapper.offsetHeight >= 15 &&
+					position !== "bottom" &&
+					position !== "top"
+				)
 					amount = amount; //TODO: remove
 				else amount -= 1;
 				break;
@@ -74,7 +78,7 @@ export class LegendCanvasModel {
 		};
 	}
 
-	private static getLegendWrapperEl(legendBlockWidth: number, itemsDirection: LegendItemsDirection) {
+	private static getLegendWrapperEl(legendBlockMaxWidth: number, itemsDirection: LegendItemsDirection) {
 		const legendWrapper = document.createElement("div");
 		legendWrapper.style.opacity = "0";
 		legendWrapper.style.position = "absolute";
@@ -83,7 +87,7 @@ export class LegendCanvasModel {
 		if (itemsDirection === "column") legendWrapper.classList.add("legend-block-column");
 		else legendWrapper.classList.add("legend-block-row", "legend-wrapper-with-wrap");
 
-		legendWrapper.style.maxWidth = legendBlockWidth + "px";
+		legendWrapper.style.maxWidth = legendBlockMaxWidth + "px";
 
 		return legendWrapper;
 	}

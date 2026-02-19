@@ -1,11 +1,12 @@
 import { LegendConfig } from "../../../config/config";
+import { LegendBlockCanvas } from "../../../designer/designerConfig";
 import { LegendBlockModel, LegendPosition } from "../../model";
 import { styledElementValues } from "../../modelBuilder";
 import { TwoDimConfigReader } from "../../modelInstance/configReader/twoDimConfigReader/twoDimConfigReader";
 import { ModelInstance } from "../../modelInstance/modelInstance";
 import { getWidthOfLegendMarkerByType } from "../../notations/twoDimensional/styles";
 import { LegendCanvasModel } from "./legendCanvasModel";
-import { LegendModel } from "./legendModel";
+import { calculateLegendMaxSize, LegendModel } from "./legendModel";
 
 export class TwoDimLegendModel {
 	constructor(private configReader: TwoDimConfigReader) {}
@@ -13,16 +14,18 @@ export class TwoDimLegendModel {
 	recalcMarginWith2DLegend(
 		modelInstance: ModelInstance,
 		legendBlockModel: LegendBlockModel,
-		legendOptions: LegendConfig
+		legendOptions: LegendConfig,
+		legendCanvas: LegendBlockCanvas
 	): void {
 		const canvasModel = modelInstance.canvasModel;
 
 		const legendPosition = this.getLegendPosition(legendOptions);
 		modelInstance.canvasModel.legendCanvas.setPosition(legendPosition);
 
-		if (legendPosition !== "off") {
-			const legendItemInfo = this.configReader.getLegendItemInfo();
-			const legendSize = LegendCanvasModel.findElementsAmountByLegendSize(
+		const legendItemInfo = this.configReader.getLegendItemInfo();
+		if (legendPosition !== "off" && legendItemInfo.length > 0) {
+			const legendMaxSize = calculateLegendMaxSize(legendBlockModel, canvasModel, legendPosition, legendCanvas);
+			const legendBlockSize = LegendCanvasModel.findElementsAmountByLegendSize(
 				legendItemInfo.map((i) => ({
 					text: i.text,
 					markerSize: {
@@ -32,18 +35,18 @@ export class TwoDimLegendModel {
 					wrapperSize: { marginRightPx: styledElementValues.legend.inlineItemWrapperMarginRightPx }
 				})),
 				legendPosition,
-				modelInstance.canvasModel.getBlockSize().width,
-				legendBlockModel.static.maxLinesAmount * styledElementValues.legend.inlineLegendOneLineHeightPx
-			).size.height;
+				legendMaxSize.width,
+				legendMaxSize.height
+			).size;
 
-			if (legendSize !== 0) {
-				const legendTotalMargin = LegendModel.getLegendTotalMargin(legendPosition, legendBlockModel);
-				modelInstance.canvasModel.legendCanvas.initSizeAndPad(legendSize, legendTotalMargin);
-				canvasModel.increaseMarginSide(
-					legendPosition,
-					modelInstance.canvasModel.legendCanvas.getAllNeededSpace()
-				);
-			}
+			const legendSize =
+				legendPosition === "top" || legendPosition === "bottom"
+					? legendBlockSize.height
+					: legendBlockSize.width;
+
+			const legendTotalMargin = LegendModel.getLegendTotalMargin(legendPosition, legendBlockModel);
+			modelInstance.canvasModel.legendCanvas.initSizeAndPad(legendSize, legendTotalMargin);
+			canvasModel.increaseMarginSide(legendPosition, modelInstance.canvasModel.legendCanvas.getAllNeededSpace());
 
 			legendBlockModel.coordinate[legendPosition].size = legendSize;
 		}

@@ -1,6 +1,8 @@
 import { LegendBlockCanvas } from "../../../designer/designerConfig";
-import { LegendBlockModel, Orient } from "../../model";
+import { getPxPercentUnitByValue } from "../../helpers/unitsFromConfigReader";
+import { LegendBlockModel, LegendPosition, Orient } from "../../model";
 import { CanvasModel } from "../../modelInstance/canvasModel/canvasModel";
+import { MIN_DONUT_BLOCK_SIZE } from "../../notations/polar/polarModel";
 import { LegendItemsDirection } from "./legendCanvasModel";
 
 export class LegendModel {
@@ -45,4 +47,42 @@ export class LegendModel {
 			return legendCoordinate[position].margin.left + legendCoordinate[position].margin.right;
 		else return legendCoordinate[position].margin.top + legendCoordinate[position].margin.bottom;
 	}
+}
+
+export function getMaxLegendWidth(legendCanvas: LegendBlockCanvas, blockWidth: number) {
+	const maxWidth = legendCanvas.maxWidth;
+	if (typeof maxWidth === "number") return maxWidth;
+
+	const unit = getPxPercentUnitByValue(maxWidth);
+	const maxWidthNumber = parseInt(maxWidth);
+
+	if (unit === "px") return maxWidthNumber;
+	return (maxWidthNumber / 100) * blockWidth;
+}
+
+export function calculateLegendMaxSize(
+	legendBlock: LegendBlockModel,
+	canvasModel: CanvasModel,
+	position: LegendPosition,
+	legendCanvas: LegendBlockCanvas
+): { width: number; height: number } {
+	if (position === "right" || position === "left") {
+		return {
+			width: getMaxLegendWidth(legendCanvas, canvasModel.getBlockSize().width),
+			height: canvasModel.getChartBlockHeight() - legendBlock.coordinate.right.margin.bottom
+		};
+	}
+	if (position === "top" || position === "bottom") {
+		return {
+			width:
+				canvasModel.getChartBlockWidth() -
+				legendBlock.coordinate.bottom.margin.left -
+				legendBlock.coordinate.bottom.margin.right,
+			height:
+				canvasModel.getChartBlockHeight() -
+				legendBlock.coordinate.bottom.margin.bottom -
+				legendBlock.coordinate.bottom.margin.top
+		};
+	}
+	throw new Error(`No legend size for orient: ${position}`);
 }

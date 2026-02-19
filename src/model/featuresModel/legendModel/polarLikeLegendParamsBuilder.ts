@@ -4,6 +4,7 @@ import { styledElementValues } from "../../modelBuilder";
 import { CanvasModel } from "../../modelInstance/canvasModel/canvasModel";
 import { MIN_DONUT_BLOCK_SIZE, PolarModel } from "../../notations/polar/polarModel";
 import { LegendCanvasModel, LegendItemContentOptions } from "./legendCanvasModel";
+import { calculateLegendMaxSize, getMaxLegendWidth } from "./legendModel";
 import { LegendPolarMarginCalculator } from "./polarMarginCalculator";
 
 export class PolarLikeLegendParamsBuilder {
@@ -82,25 +83,12 @@ export class PolarLikeLegendParamsBuilder {
 			markerSize: styledElementValues.defaultLegendMarkerSizes,
 			wrapperSize: { marginRightPx: styledElementValues.legend.inlineDynamicItemWrapperMarginRightPx }
 		}));
-		if (position === "right" || position === "left") {
-			return LegendCanvasModel.findElementsAmountByLegendSize(
-				legendItemContentOptions,
-				position,
-				this.polarMarginCalculator.getMaxLegendWidth(legendCanvas, canvasModel.getBlockSize().width),
-				canvasModel.getChartBlockHeight() - legendBlock.coordinate.right.margin.bottom
-			);
-		} else {
-			return LegendCanvasModel.findElementsAmountByLegendSize(
-				legendItemContentOptions,
-				position,
-				canvasModel.getChartBlockWidth() -
-					legendBlock.coordinate.bottom.margin.left -
-					legendBlock.coordinate.bottom.margin.right,
-				canvasModel.getChartBlockHeight() -
-					legendBlock.coordinate.bottom.margin.bottom -
-					legendBlock.coordinate.bottom.margin.top -
-					MIN_DONUT_BLOCK_SIZE
-			);
-		}
+		const legendMaxSize = calculateLegendMaxSize(legendBlock, canvasModel, position, legendCanvas);
+		return LegendCanvasModel.findElementsAmountByLegendSize(
+			legendItemContentOptions,
+			position,
+			legendMaxSize.width,
+			legendMaxSize.height
+		);
 	}
 }
