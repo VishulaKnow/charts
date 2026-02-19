@@ -113,7 +113,8 @@ export class TwoDimensionalModel {
 			canvasModel,
 			otherComponentSizes: {
 				titleTotalNeededSpace: canvasModel.titleCanvas.getAllNeededSpace(),
-				legendTotalNeededSpace: canvasModel.legendCanvas.getAllNeededSpace()
+				legendTotalNeededSpace: canvasModel.legendCanvas.getAllNeededSpace(),
+				legendPosition: canvasModel.legendCanvas.getPosition()
 			},
 			groupingItemSizes: configReader.grouping.getSlicesSizesByOrients(
 				modelInstance.dataModel.repository.getScopedRows()

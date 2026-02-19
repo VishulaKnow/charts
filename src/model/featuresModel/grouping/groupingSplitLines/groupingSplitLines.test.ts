@@ -17,7 +17,8 @@ describe("GroupingSplitLinesGenerator", () => {
 					canvasModel,
 					otherComponentSizes: {
 						legendTotalNeededSpace: 10,
-						titleTotalNeededSpace: 10
+						titleTotalNeededSpace: 10,
+						legendPosition: "bottom"
 					},
 					groupingItemSizes: [{ orient: "top", size: 10 }]
 				}),
@@ -52,7 +53,8 @@ describe("GroupingSplitLinesGenerator", () => {
 				canvasModel,
 				otherComponentSizes: {
 					legendTotalNeededSpace: 10,
-					titleTotalNeededSpace: 10
+					titleTotalNeededSpace: 10,
+					legendPosition: "bottom"
 				},
 				groupingItemSizes: [{ orient: "top", size: 10 }]
 			});
@@ -95,7 +97,8 @@ describe("GroupingSplitLinesGenerator", () => {
 				canvasModel,
 				otherComponentSizes: {
 					legendTotalNeededSpace: 10,
-					titleTotalNeededSpace: 10
+					titleTotalNeededSpace: 10,
+					legendPosition: "bottom"
 				},
 				groupingItemSizes: [{ orient: "top", size: 10 }]
 			});

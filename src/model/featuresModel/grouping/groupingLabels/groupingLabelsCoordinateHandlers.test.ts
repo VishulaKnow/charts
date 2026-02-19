@@ -17,7 +17,8 @@ describe("GroupingLabelsCoordinateHandlers", () => {
 					canvasModel,
 					otherComponentSizes: {
 						titleTotalNeededSpace: 20,
-						legendTotalNeededSpace: 30
+						legendTotalNeededSpace: 30,
+						legendPosition: "bottom"
 					},
 					groupingItemSizes: [{ orient: "top", size: 20 }]
 				})
@@ -35,7 +36,8 @@ describe("GroupingLabelsCoordinateHandlers", () => {
 					canvasModel,
 					otherComponentSizes: {
 						titleTotalNeededSpace: 20,
-						legendTotalNeededSpace: 30
+						legendTotalNeededSpace: 30,
+						legendPosition: "bottom"
 					},
 					groupingItemSizes: [{ orient: "bottom", size: 20 }]
 				})
@@ -53,7 +55,8 @@ describe("GroupingLabelsCoordinateHandlers", () => {
 					canvasModel,
 					otherComponentSizes: {
 						titleTotalNeededSpace: 20,
-						legendTotalNeededSpace: 30
+						legendTotalNeededSpace: 30,
+						legendPosition: "bottom"
 					},
 					groupingItemSizes: [
 						{ orient: "left", size: 15 },
@@ -75,7 +78,8 @@ describe("GroupingLabelsCoordinateHandlers", () => {
 					canvasModel,
 					otherComponentSizes: {
 						titleTotalNeededSpace: 20,
-						legendTotalNeededSpace: 30
+						legendTotalNeededSpace: 30,
+						legendPosition: "bottom"
 					},
 					groupingItemSizes: [
 						{ orient: "right", size: 15 },
@@ -99,7 +103,8 @@ describe("GroupingLabelsCoordinateHandlers", () => {
 					canvasModel,
 					otherComponentSizes: {
 						titleTotalNeededSpace: 20,
-						legendTotalNeededSpace: 30
+						legendTotalNeededSpace: 30,
+						legendPosition: "bottom"
 					},
 					groupingItemSizes: [{ orient: "top", size: 20 }]
 				})
@@ -117,7 +122,8 @@ describe("GroupingLabelsCoordinateHandlers", () => {
 					canvasModel,
 					otherComponentSizes: {
 						titleTotalNeededSpace: 20,
-						legendTotalNeededSpace: 30
+						legendTotalNeededSpace: 30,
+						legendPosition: "bottom"
 					},
 					groupingItemSizes: [{ orient: "bottom", size: 20 }]
 				})
@@ -135,7 +141,8 @@ describe("GroupingLabelsCoordinateHandlers", () => {
 					canvasModel,
 					otherComponentSizes: {
 						titleTotalNeededSpace: 20,
-						legendTotalNeededSpace: 30
+						legendTotalNeededSpace: 30,
+						legendPosition: "bottom"
 					},
 					groupingItemSizes: [
 						{ orient: "top", size: 10 },

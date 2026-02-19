@@ -1,4 +1,4 @@
-import { Orient } from "../../../model";
+import { LegendPosition, Orient } from "../../../model";
 import { CanvasModel } from "../../../modelInstance/canvasModel/canvasModel";
 import { GroupingItemSize } from "../../../modelInstance/configReader/twoDimConfigReader/groupingConfigReader/groupingConfigReader";
 
@@ -6,6 +6,7 @@ interface GroupingStaticCoordinateCalculatorOptions {
 	otherComponentSizes: {
 		titleTotalNeededSpace: number;
 		legendTotalNeededSpace: number;
+		legendPosition: LegendPosition;
 	};
 	groupingItemSizes: GroupingItemSize[];
 	canvasModel: CanvasModel;
@@ -23,11 +24,18 @@ export class GroupingStaticCoordinateCalculator {
 		let staticCoordinate: number | undefined;
 
 		if (orient === "top")
-			staticCoordinate = this.options.otherComponentSizes.titleTotalNeededSpace + prevSlicesSizes * sideIndex;
+			staticCoordinate =
+				this.options.otherComponentSizes.titleTotalNeededSpace +
+				prevSlicesSizes * sideIndex +
+				(this.options.otherComponentSizes.legendPosition === "top"
+					? this.options.otherComponentSizes.legendTotalNeededSpace
+					: 0);
 		if (orient === "bottom")
 			staticCoordinate =
 				this.options.canvasModel.getBlockSize().height -
-				this.options.otherComponentSizes.legendTotalNeededSpace -
+				(this.options.otherComponentSizes.legendPosition === "bottom"
+					? this.options.otherComponentSizes.legendTotalNeededSpace
+					: 0) -
 				prevSlicesSizes * sideIndex;
 		if (orient === "left") staticCoordinate = prevSlicesSizes * sideIndex;
 		if (orient === "right")

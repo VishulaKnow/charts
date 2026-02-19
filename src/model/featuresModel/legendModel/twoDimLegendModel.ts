@@ -31,7 +31,7 @@ export class TwoDimLegendModel {
 					},
 					wrapperSize: { marginRightPx: styledElementValues.legend.inlineItemWrapperMarginRightPx }
 				})),
-				"top",
+				legendPosition,
 				modelInstance.canvasModel.getBlockSize().width,
 				legendBlockModel.static.maxLinesAmount * styledElementValues.legend.inlineLegendOneLineHeightPx
 			).size.height;
@@ -50,7 +50,6 @@ export class TwoDimLegendModel {
 	}
 
 	private getLegendPosition(legendOptions: LegendConfig): LegendPosition {
-		const position: LegendPosition = legendOptions.show ? (legendOptions.position ?? "top") : "off";
-		return position;
+		return legendOptions.show ? (legendOptions.position ?? "top") : "off";
 	}
 }
