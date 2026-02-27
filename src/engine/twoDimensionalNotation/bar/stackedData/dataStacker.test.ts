@@ -61,6 +61,59 @@ describe("DataStacker", () => {
 				]);
 			});
 		});
+
+		describe("for negative and empty values", () => {
+			let dataRows: MdtChartsDataRow[] = [
+				{ price: -12, count: -30, count2: -10 },
+				{ count: -12, count2: -10 },
+				{ price: 0, count: -100, count2: -10 },
+				{ price: -10, count: 0 }
+			];
+
+			test("should return right stack", () => {
+				const valueFields = ["price", "count"];
+				const res = stacker.getStackedData(dataRows, valueFields);
+				expect(res).toEqual<StackedDataFull>([
+					[
+						{ "0": 0, "1": -12, data: dataRows[0], fieldName: "price" },
+						{ "0": 0, "1": 0, data: dataRows[1], fieldName: "price" },
+						{ "0": 0, "1": 0, data: dataRows[2], fieldName: "price" },
+						{ "0": 0, "1": -10, data: dataRows[3], fieldName: "price" }
+					],
+					[
+						{ "0": -12, "1": -42, data: dataRows[0], fieldName: "count" },
+						{ "0": 0, "1": -12, data: dataRows[1], fieldName: "count" },
+						{ "0": 0, "1": -100, data: dataRows[2], fieldName: "count" },
+						{ "0": -10, "1": -10, data: dataRows[3], fieldName: "count" }
+					]
+				]);
+			});
+
+			test("should return right stack when empty segment in the middle of non-empty segments", () => {
+				const valueFields = ["price", "count", "count2"];
+				const res = stacker.getStackedData(dataRows, valueFields);
+				expect(res).toEqual<StackedDataFull>([
+					[
+						{ "0": 0, "1": -12, data: dataRows[0], fieldName: "price" },
+						{ "0": 0, "1": 0, data: dataRows[1], fieldName: "price" },
+						{ "0": 0, "1": 0, data: dataRows[2], fieldName: "price" },
+						{ "0": 0, "1": -10, data: dataRows[3], fieldName: "price" }
+					],
+					[
+						{ "0": -12, "1": -42, data: dataRows[0], fieldName: "count" },
+						{ "0": 0, "1": -12, data: dataRows[1], fieldName: "count" },
+						{ "0": 0, "1": -100, data: dataRows[2], fieldName: "count" },
+						{ "0": -10, "1": -10, data: dataRows[3], fieldName: "count" }
+					],
+					[
+						{ "0": -42, "1": -52, data: dataRows[0], fieldName: "count2" },
+						{ "0": -12, "1": -22, data: dataRows[1], fieldName: "count2" },
+						{ "0": -100, "1": -110, data: dataRows[2], fieldName: "count2" },
+						{ "0": -10, "1": -10, data: dataRows[3], fieldName: "count2" }
+					]
+				]);
+			});
+		});
 	});
 });
 

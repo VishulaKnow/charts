@@ -20,6 +20,6 @@ export class DataStackerService {
 	}
 
 	getValue1(value0: number, valueFromData: number) {
-		return value0 + valueFromData;
+		return value0 + (valueFromData ?? 0);
 	}
 }

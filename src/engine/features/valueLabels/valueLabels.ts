@@ -56,7 +56,10 @@ export class ChartValueLabels {
 	private readonly attrsProvider = new ValueLabelsAttrsProvider();
 	private options: TwoDimChartValueLabelsOptions;
 
-	constructor(private readonly globalOptions: ValueLabelsOptions, private readonly chart: TwoDimensionalChartModel) {
+	constructor(
+		private readonly globalOptions: ValueLabelsOptions,
+		private readonly chart: TwoDimensionalChartModel
+	) {
 		this.options = chart.valueLabels;
 
 		this.renderPipeline.push((valueLabels, { style }) => {
