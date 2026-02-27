@@ -1,7 +1,7 @@
 export interface PolarSegmentLabelDataItem {
 	key: string | number;
 	value: number;
-	textContent: string;
+	textContent: string | number;
 	rotation: {
 		type: "none" | "tangential";
 	};

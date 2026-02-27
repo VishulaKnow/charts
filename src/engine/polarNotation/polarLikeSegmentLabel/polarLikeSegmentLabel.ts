@@ -51,7 +51,7 @@ export class PolarLikeSegmentLabel {
 			.classed(PolarLikeSegmentLabel.arcLabelClass, true)
 			.each(function (d) {
 				select(this).selectAll("tspan").remove();
-				createHtmlForMultilineSvgText(this, 0, d.data.textContent.split("\n"));
+				createHtmlForMultilineSvgText(this, 0, d.data.textContent.toString().split("\n"));
 
 				if (d.data.cssClass) select(this).classed(d.data.cssClass, true);
 
@@ -89,7 +89,7 @@ export class PolarLikeSegmentLabel {
 
 		onlyNewLabels.each(function (d) {
 			select(this).selectAll("tspan").remove();
-			createHtmlForMultilineSvgText(this, 0, d.data.textContent.split("\n"));
+			createHtmlForMultilineSvgText(this, 0, d.data.textContent.toString().split("\n"));
 		});
 
 		const thisClass = this;
