@@ -5,6 +5,7 @@ import { PolarSegmentLabelDataItem } from "../../../model/modelTypes/valueLabels
 import { DonutHelper } from "../donut/donutHelper";
 import { DonutChartTranslateModel } from "../../../model/model";
 import { Block } from "../../block/block";
+import { createHtmlForMultilineSvgText } from "../../utils/createHtmlForMultilineSvgText";
 
 interface SunburstSegmentLabelOptions {
 	sizesForGenerators: {
@@ -48,8 +49,10 @@ export class PolarLikeSegmentLabel {
 				return this.getTransformAttrValue(arcGenerator, d);
 			})
 			.classed(PolarLikeSegmentLabel.arcLabelClass, true)
-			.text((d) => d.data.textContent)
 			.each(function (d) {
+				select(this).selectAll("tspan").remove();
+				createHtmlForMultilineSvgText(this, 0, d.data.textContent.split("\n"));
+
 				if (d.data.cssClass) select(this).classed(d.data.cssClass, true);
 
 				(this as any)._currentDataForUsingOnUpdate = d;
@@ -84,7 +87,10 @@ export class PolarLikeSegmentLabel {
 			.selectAll<SVGTextElement, PieArcDatum<PolarSegmentLabelDataItem>>("text")
 			.data(pieGenerator(segments), (d) => d.data.key);
 
-		onlyNewLabels.text((d) => d.data.textContent);
+		onlyNewLabels.each(function (d) {
+			select(this).selectAll("tspan").remove();
+			createHtmlForMultilineSvgText(this, 0, d.data.textContent.split("\n"));
+		});
 
 		const thisClass = this;
 

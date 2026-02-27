@@ -23,6 +23,7 @@ import { Pipeline } from "../../helpers/pipeline/Pipeline";
 import { getStackedData } from "../../twoDimensionalNotation/line/lineHelper";
 import { Segment } from "../../twoDimensionalNotation/lineLike/generatorMiddleware/lineLikeGeneratorDefineMiddleware";
 import { Transition } from "d3-transition";
+import { createHtmlForMultilineSvgText } from "../../utils/createHtmlForMultilineSvgText";
 
 export interface ValueLabelsOptions {
 	elementAccessors: {
@@ -220,15 +221,7 @@ export class ChartValueLabels {
 		selection.each(function (d) {
 			select(this).selectAll("tspan").remove();
 			const content = thisClass.options.setContent({ dataRow: dataRowAccessor(d), fieldName: valueFieldName });
-			content.rows.forEach((row, rowIndex) => {
-				const tspan = document.createElementNS("http://www.w3.org/2000/svg", "tspan");
-				// Pass an empty string so this element is counted, ensuring correct `dy` attribute behavior
-				// https://stackoverflow.com/questions/34078357/empty-tspan-not-rendered-dy-value-ignored
-				tspan.textContent = row.toString() || " ";
-				if (rowIndex !== 0) tspan.setAttribute("dy", `1em`);
-				tspan.setAttribute("x", attrs.x(d).toString());
-				this.appendChild(tspan);
-			});
+			createHtmlForMultilineSvgText(this, attrs.x(d), content.rows);
 		});
 
 		selection.classed(ChartValueLabels.valueLabelHiddenClass, (d) => {
